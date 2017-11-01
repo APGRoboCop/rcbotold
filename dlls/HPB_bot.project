@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Project Name="HPB_bot">
+  <Plugins>
+    <Plugin Name="CMakePlugin">
+      <![CDATA[[{
+  "name": "MetaMod Release_Win32",
+  "enabled": false,
+  "buildDirectory": "build",
+  "sourceDirectory": "$(ProjectPath)",
+  "generator": "",
+  "buildType": "",
+  "arguments": [],
+  "parentProject": ""
+ }]]]>
+    </Plugin>
+    <Plugin Name="qmake">
+      <![CDATA[00010001N0021MetaMod Release_Win32000000000000]]>
+    </Plugin>
+  </Plugins>
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="Source Files">
+    <File Name="bits.cpp"/>
+    <File Name="bot.cpp"/>
+    <File Name="bot_client.cpp"/>
+    <File Name="bot_commands.cpp"/>
+    <VirtualDirectory Name="ga">
+      <File Name="bot_ga.cpp"/>
+      <File Name="ga.cpp"/>
+      <File Name="bot_ga.h"/>
+      <File Name="ga.h"/>
+      <File Name="gannconst.h"/>
+    </VirtualDirectory>
+    <File Name="bot_menu.cpp"/>
+    <File Name="bot_navigate.cpp"/>
+    <VirtualDirectory Name="nn">
+      <File Name="bot_nn.cpp"/>
+      <File Name="perceptron.cpp"/>
+      <File Name="som.cpp"/>
+      <File Name="nn.h"/>
+      <File Name="perceptron.h"/>
+      <File Name="som.h"/>
+    </VirtualDirectory>
+    <File Name="bot_rep.cpp"/>
+    <File Name="bot_visibles.cpp"/>
+    <File Name="bot_weapons.cpp"/>
+    <File Name="client.cpp"/>
+    <File Name="dir.cpp"/>
+    <File Name="dll.cpp"/>
+    <File Name="engine.cpp"/>
+    <File Name="globals.cpp"/>
+    <File Name="h_export.cpp" ExcludeProjConfig="MetaMod Debug_Win32;MetaMod Release_Win32"/>
+    <File Name="linkfunc.cpp" ExcludeProjConfig="MetaMod Debug_Win32"/>
+    <File Name="megahal.cpp"/>
+    <File Name="netmessages.cpp"/>
+    <File Name="rcbot_meta_api.cpp" ExcludeProjConfig="Release_Win32"/>
+    <File Name="util.cpp"/>
+    <File Name="waypoint.cpp"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="Header Files">
+    <File Name="actionutility.h"/>
+    <File Name="bits.h"/>
+    <File Name="bot.h"/>
+    <File Name="bot_builder.h"/>
+    <File Name="bot_client.h"/>
+    <File Name="bot_commands.h"/>
+    <File Name="bot_const.h"/>
+    <File Name="bot_menu.h"/>
+    <File Name="bot_tick.h"/>
+    <File Name="bot_visibles.h"/>
+    <File Name="bot_weapons.h"/>
+    <File Name="cdll_dll.h"/>
+    <File Name="dir.h"/>
+    <File Name="enginecallback.h"/>
+    <File Name="extdll.h"/>
+    <File Name="generic_class.h"/>
+    <File Name="h_export_meta.h"/>
+    <File Name="megahal.h"/>
+    <File Name="player.h"/>
+    <File Name="usercmd.h"/>
+    <File Name="vector.h"/>
+    <File Name="waypoint.h"/>
+  </VirtualDirectory>
+  <File Name="notes.txt"/>
+  <File Name="todo.txt"/>
+  <File Name="version.txt"/>
+  <Settings Type="Dynamic Library">
+    <GlobalSettings>
+      <Compiler Options="" C_Options="" Assembler="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+    <Configuration Name="Debug_Win32" CompilerType="Cross GCC ( i686-w64-mingw32 )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -Wall" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="../dlls"/>
+        <IncludePath Value="../engine"/>
+        <IncludePath Value="../common"/>
+        <IncludePath Value="../pm_shared"/>
+        <IncludePath Value="../"/>
+        <Preprocessor Value="_DEBUG"/>
+        <Preprocessor Value="WIN32"/>
+        <Preprocessor Value="_WINDOWS"/>
+        <Preprocessor Value="VALVE_DLL"/>
+      </Compiler>
+      <Linker Options="-O0" Required="yes">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="Debug"/>
+        <Library Value="user32.a"/>
+        <Library Value="advapi32.a"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="./Debug/HPB_bot.dll" IntermediateDirectory="./Debug/" Command="./HPB_bot.dll" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./Debug" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <Environment EnvVarSetName="&lt;Use Workspace Settings&gt;" DbgSetName="&lt;Use Global Settings&gt;">
+        <![CDATA[VS_Configuration=Debug
+VS_IntDir=./Debug/
+VS_OutDir=./Debug/
+VS_Platform=Win32
+VS_ProjectDir=/root/Dropbox/src/rcbot/dlls/
+VS_ProjectName=HPB_bot
+VS_SolutionDir=/root/Dropbox/src/rcbot/dlls/
+]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="MetaMod Debug_Win32" CompilerType="Cross GCC ( i686-w64-mingw32 )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -Wall" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="../dlls"/>
+        <IncludePath Value="../engine"/>
+        <IncludePath Value="../common"/>
+        <IncludePath Value="../pm_shared"/>
+        <IncludePath Value="../"/>
+        <IncludePath Value="../metamod"/>
+        <Preprocessor Value="WIN32"/>
+        <Preprocessor Value="_DEBUG"/>
+        <Preprocessor Value="_WINDOWS"/>
+        <Preprocessor Value="_USRDLL"/>
+        <Preprocessor Value="VALVE_DLL"/>
+        <Preprocessor Value="RCBOT_META_BUILD"/>
+        <Preprocessor Value="HPB_bot_EXPORTS"/>
+        <Preprocessor Value="_WIN32"/>
+      </Compiler>
+      <Linker Options="-O0" Required="yes">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="Debug"/>
+        <Library Value="kernel32.a"/>
+        <Library Value="user32.a"/>
+        <Library Value="gdi32.a"/>
+        <Library Value="advapi32.a"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="./HPB_bot___Win32_MetaMod_Debug/HPB_bot.dll" IntermediateDirectory="./HPB_bot___Win32_MetaMod_Debug/" Command="./HPB_bot.dll" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./HPB_bot___Win32_MetaMod_Debug" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <Environment EnvVarSetName="&lt;Use Workspace Settings&gt;" DbgSetName="&lt;Use Global Settings&gt;">
+        <![CDATA[VS_Configuration=MetaMod_Debug
+VS_IntDir=./HPB_bot___Win32_MetaMod_Debug/
+VS_OutDir=./HPB_bot___Win32_MetaMod_Debug/
+VS_Platform=Win32
+VS_ProjectDir=/root/Dropbox/src/rcbot/dlls/
+VS_ProjectName=HPB_bot
+VS_SolutionDir=/root/Dropbox/src/rcbot/dlls/
+]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="MetaMod Release_Win32" CompilerType="Cross GCC ( i686-w64-mingw32 )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -Wall -O2 -fpermissive" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="../dlls"/>
+        <IncludePath Value="../"/>
+        <IncludePath Value="../../hlsdk2015/dlls"/>
+        <IncludePath Value="../../hlsdk2015/engine"/>
+        <IncludePath Value="../../hlsdk2015/common"/>
+        <IncludePath Value="../../hlsdk2015/pm_shared"/>
+        <IncludePath Value="../../hlsdk2015/public"/>
+        <IncludePath Value="../../metamod-p-37/metamod"/>
+        <Preprocessor Value="NDEBUG"/>
+        <Preprocessor Value="WIN32"/>
+        <Preprocessor Value="_WINDOWS"/>
+        <Preprocessor Value="VALVE_DLL"/>
+        <Preprocessor Value="RCBOT_META_BUILD"/>
+        <Preprocessor Value="HPB_bot_EXPORTS"/>
+      </Compiler>
+      <Linker Options="-O0" Required="yes">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="Debug"/>
+        <Library Value="kernel32.a"/>
+        <Library Value="user32.a"/>
+        <Library Value="gdi32.a"/>
+        <Library Value="winspool.a"/>
+        <Library Value="comdlg32.a"/>
+        <Library Value="advapi32.a"/>
+        <Library Value="shell32.a"/>
+        <Library Value="ole32.a"/>
+        <Library Value="oleaut32.a"/>
+        <Library Value="uuid.a"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="./HPB_bot___Win32_MetaMod_Release/HPB_bot.dll" IntermediateDirectory="./HPB_bot___Win32_MetaMod_Release/" Command="./HPB_bot.dll" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./HPB_bot___Win32_MetaMod_Release" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[VS_Configuration=MetaMod_Release
+VS_IntDir=./HPB_bot___Win32_MetaMod_Release/
+VS_OutDir=./HPB_bot___Win32_MetaMod_Release/
+VS_Platform=Win32
+VS_ProjectDir=/root/Dropbox/src/rcbot/dlls/
+VS_ProjectName=HPB_bot
+VS_SolutionDir=/root/Dropbox/src/rcbot/dlls/]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="Release_Win32" CompilerType="Cross GCC ( i686-w64-mingw32 )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -Wall" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="../dlls"/>
+        <IncludePath Value="../engine"/>
+        <IncludePath Value="../common"/>
+        <IncludePath Value="../pm_shared"/>
+        <IncludePath Value="../"/>
+        <Preprocessor Value="NDEBUG"/>
+        <Preprocessor Value="WIN32"/>
+        <Preprocessor Value="_WINDOWS"/>
+        <Preprocessor Value="VALVE_DLL"/>
+      </Compiler>
+      <Linker Options="-O0" Required="yes">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="Debug"/>
+        <Library Value="kernel32.a"/>
+        <Library Value="user32.a"/>
+        <Library Value="gdi32.a"/>
+        <Library Value="winspool.a"/>
+        <Library Value="comdlg32.a"/>
+        <Library Value="advapi32.a"/>
+        <Library Value="shell32.a"/>
+        <Library Value="ole32.a"/>
+        <Library Value="oleaut32.a"/>
+        <Library Value="uuid.a"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="./Release/HPB_bot.dll" IntermediateDirectory="./Release/" Command="./HPB_bot.dll" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./Release" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <Environment EnvVarSetName="&lt;Use Workspace Settings&gt;" DbgSetName="&lt;Use Global Settings&gt;">
+        <![CDATA[VS_Configuration=Release
+VS_IntDir=./Release/
+VS_OutDir=./Release/
+VS_Platform=Win32
+VS_ProjectDir=/root/Dropbox/src/rcbot/dlls/
+VS_ProjectName=HPB_bot
+VS_SolutionDir=/root/Dropbox/src/rcbot/dlls/
+]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="TFC Debug metamod_Win32" CompilerType="Cross GCC ( i686-w64-mingw32 )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -Wall" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="../dlls"/>
+        <IncludePath Value="../engine"/>
+        <IncludePath Value="../common"/>
+        <IncludePath Value="../pm_shared"/>
+        <IncludePath Value="../"/>
+        <Preprocessor Value="RCBOT_META_BUILD"/>
+        <Preprocessor Value="_DEBUG"/>
+        <Preprocessor Value="WIN32"/>
+        <Preprocessor Value="_WINDOWS"/>
+        <Preprocessor Value="VALVE_DLL"/>
+      </Compiler>
+      <Linker Options="-O0" Required="yes">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="Debug"/>
+        <Library Value="user32.a"/>
+        <Library Value="advapi32.a"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="./HPB_bot___Win32_TFC_Debug_metamod/HPB_bot.dll" IntermediateDirectory="./HPB_bot___Win32_TFC_Debug_metamod/" Command="./HPB_bot.dll" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./HPB_bot___Win32_TFC_Debug_metamod" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <Environment EnvVarSetName="&lt;Use Workspace Settings&gt;" DbgSetName="&lt;Use Global Settings&gt;">
+        <![CDATA[VS_Configuration=TFC_Debug_metamod
+VS_IntDir=./HPB_bot___Win32_TFC_Debug_metamod/
+VS_OutDir=./HPB_bot___Win32_TFC_Debug_metamod/
+VS_Platform=Win32
+VS_ProjectDir=/root/Dropbox/src/rcbot/dlls/
+VS_ProjectName=HPB_bot
+VS_SolutionDir=/root/Dropbox/src/rcbot/dlls/
+]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="TFC Debug_Win32" CompilerType="Cross GCC ( i686-w64-mingw32 )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -Wall" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="../dlls"/>
+        <IncludePath Value="../engine"/>
+        <IncludePath Value="../common"/>
+        <IncludePath Value="../pm_shared"/>
+        <IncludePath Value="../"/>
+        <Preprocessor Value="_DEBUG"/>
+        <Preprocessor Value="WIN32"/>
+        <Preprocessor Value="_WINDOWS"/>
+        <Preprocessor Value="VALVE_DLL"/>
+      </Compiler>
+      <Linker Options="-O0" Required="yes">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="Debug"/>
+        <Library Value="user32.a"/>
+        <Library Value="advapi32.a"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="./HPB_bot___Win32_TFC_Debug/HPB_bot.dll" IntermediateDirectory="./HPB_bot___Win32_TFC_Debug/" Command="./HPB_bot.dll" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./HPB_bot___Win32_TFC_Debug" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <Environment EnvVarSetName="&lt;Use Workspace Settings&gt;" DbgSetName="&lt;Use Global Settings&gt;">
+        <![CDATA[VS_Configuration=TFC_Debug
+VS_IntDir=./HPB_bot___Win32_TFC_Debug/
+VS_OutDir=./HPB_bot___Win32_TFC_Debug/
+VS_Platform=Win32
+VS_ProjectDir=/root/Dropbox/src/rcbot/dlls/
+VS_ProjectName=HPB_bot
+VS_SolutionDir=/root/Dropbox/src/rcbot/dlls/
+]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+  </Settings>
+</CodeLite_Project>

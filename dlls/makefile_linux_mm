@@ -1,0 +1,34 @@
+#
+# HPB_bot makefile for Linux
+#
+# created: 12/16/2000 botman (botman@mailandnews.com)
+#
+
+# the following specifies the path to your MOD...
+MOD_DIR = /home/paul/hlds_l/rcbot
+
+CPP = g++
+
+BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -DRCBOT_META_BUILD
+
+CPPFLAGS = ${BASEFLAGS} -m486 -O2 -w -I../engine -I../common -I../pm_shared
+
+OBJ = bits.o bot.o bot_client.o bot_commands.o bot_ga.o bot_menu.o \
+	bot_navigate.o bot_nn.o bot_rep.o \
+	bot_visibles.o bot_weapons.o client.o dir.o dll.o engine.o ga.o globals.o h_export.o linkfunc.o megahal.o \
+	netmessages.o perceptron.o rcbot_meta_api.o util.o waypoint.o
+
+rcbot_mm_i486.so: ${OBJ}
+	${CPP} -fPIC -shared -o $@ ${OBJ} -ldl -lm
+	cp -f rcbot_mm_i486.so ${MOD_DIR}/dlls
+
+clean:
+	-rm -f *.o
+	-rm -f rcbot_mm_i486.so	
+
+%.o:	%.cpp
+	${CPP} ${CPPFLAGS} -c $< -o $@
+
+%.o:	%.c
+	${CPP} ${CPPFLAGS} -c $< -o $@
+

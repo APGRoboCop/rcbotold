@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Workspace Name="HPB_bot" Database="">
+  <Project Name="HPB_bot" Path="HPB_bot.project" Active="Yes"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="no">
+      <Project Name="HPB_bot" ConfigName="Debug_Win32"/>
+      <Project Name="HPB_bot" ConfigName="MetaMod Debug_Win32"/>
+      <Project Name="HPB_bot" ConfigName="TFC Debug metamod_Win32"/>
+      <Project Name="HPB_bot" ConfigName="TFC Debug_Win32"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="yes">
+      <Project Name="HPB_bot" ConfigName="MetaMod Release_Win32"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>

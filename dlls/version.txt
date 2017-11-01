@@ -1,0 +1,86 @@
+added: implemented detpack for demoman TFC
+fixed: improved snipers and fixed some sniper bugs in TFC
+added: GA learning of combat upgrades for both teams
+fixed: aliens not upgrading in ns combat
+fixed: some GA data resetting after map change when it shouldn't
+fixed: unwaypointed navigation improved
+added: support TS zombie maps for gsg-9 and nemesis models
+fixed: some problems such as bots not finding hive/cc in mvm or ava maps
+added: bots try to find attacking enemies when going back to an attacked hive/cc
+fixed: loading of learned data causing overflow/possible crashing
+fixed: bots using objectives in release dll on tm_ maps
+fixed: bots attaking stunt behaviour
+fixed: changed bots weapon-dropping & reloading behaviour in TS
+fixed: changed bots breakable shooting behaviour in TS
+fixed: changed auto-waypoint behaviour to include stunt waypoints
+fixed: rcbot debug message command crashing server
+fixed: shows messages to human clients with debug message on
+added: better grenade avoidance
+fixed: hanging in TS when grenade thrown
+added: marines use lerk-like learning for flying with jetpack
+added: stunt waypoint for TS
+added: command "rcbot config disable_bot_squads" to stop bots forming squads themselves
+added: support for tm_ maps (hacking/defusing) 
+added: bots now use weapons in The Specialists
+added: bots learn best weapons in The Specialists
+added: Specialists command "rcbot config disable_weapon_learning" (bots choose random weapons instead)
+added: Specialists command "rcbot config kungfu" (bots kungfu only.. and steal weapons :p)
+added: NS command "rcbot config wait_at_res" - marines wait at resource fountains when commander is active
+added: support for Team Fortress Classic
+added: TFC teleporter support
+added: standalone bot compatible with latest NS & bumpercars.
+added: marines and aliens use upgrades in NS combat
+added: onos and fully upgraded fades don't group up with gorges and instead attack
+added: new 'pushable point' waypoint for pushable objects
+added: bots will push a nearby pushable to a pushable waypoint
+added: error appears when using wrong bot dll (e.g. metamod on non-metamod platform)
+added: new tooltips shown, can disable with new 'rcbot tooltips' command
+added: new 'throw grenade' waypoint, bots try to throw grenades at the waypoint
+added: command wall_stick_tolerance for altering skulk wall stick behaviour
+added: updated bot_weapons.ini
+added: lerk and marine bots fly in combat with jetpack
+added: new "rcbot help" command
+added: bots use scientist/barneys in svencoop if scientist/barney waypoints exist on the map
+added: new autowaypoint command, places waypoints where players go (bots or human players, preferrably humans)
+added: somewhat better unwaypointed navigation
+added: bot users can be added by steam id (users with steam id will auto-log in)
+added: command to add bot users via the console (for the run-time of the server only)
+added: can change 'max_update_vision_revs' and other performance settings individually for each bot
+added: new command "rcbot users", has ability to re-read the botusers.ini file to refresh bot users
+added: command 'rcbot util showreps' (shows bot reputations with players on the server)
+added: "rcbot debug bot <name>" command [shows bot task info on client]
+added: bots in NS react to detected players by team [hivemind/motion tracking/scent of fear??]
+added: waypoint conversion command to whichbot waypoints "rcbot waypoint save wb"
+added: now uses 3d hashtable for waypoints for quicker waypoint accessing in big maps
+added: now can change the rcbot folder with rcbot_folder.ini
+added: support for blink/web/charge/leap/mines in NS
+added: learning data saves to files
+fixed: pathfinding sometimes returned wrong path to goal waypoint causing havok with bots path finding
+fixed: less waypoints drawn (shows only visible) to solve some lag when they are displayed
+fixed: squads reset combat types after changing leader (bots always held fire if previous leader told squad to hold fire)
+fixed: bots use minigun better in Sven-Coop
+fixed: bots not shooting breakables after a new round
+fixed: bug with bots not choosing correct weapons
+fixed: improved avoidance code
+fixed: bot skulks wall sticking improved
+fixed: gorges shooting players with bile bomb
+fixed: overflow in fix float angle function causing a freeze
+fixed: marines welding team mates even when they have full armour
+fixed: crash fixes with reputation code
+fixed: crash fixes with squad code 
+fixed: bots not spamming battlegrounds messages as much when joining teams
+fixed: many memory leaks
+fixed: memory allocation bugs in MegaHAL
+fixed: data structures more stable, less/no memory errors/crashes
+fixed: bots choosing from all player models again in SvenCoop etc
+fixed: marine_auto_build not working with metamod
+fixed: crash in bot tasks
+fixed: marine bots don't always see cloaked aliens (unless they are detected)
+fixed: engineers not upgrading sentries
+
+more new commands:
+
+config abnormal_game (for marine v. marine/alien v. alien games)
+config tfc_map_type (for tfc games)
+config unstick (make bots jump/duck before they walk into other bots)
+
