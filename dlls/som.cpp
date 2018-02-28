@@ -164,7 +164,7 @@ CSomNeuron :: CSomNeuron ( int iInp, int iX, int iY )
 		fWeights.push_back(RANDOM_FLOAT(0,1));
 }
 
-void CSomNeuron :: update ( vector<ga_value> *inputs, ga_value inf );
+//void CSomNeuron :: update ( vector<ga_value> *inputs, ga_value inf );
 
 ga_value CSomNeuron :: distance ( vector <ga_value> *inputs )
 {

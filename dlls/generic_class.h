@@ -989,11 +989,11 @@ class dataUnconstArray
 			for ( it = array.begin(); it != array.end(); ++ it )
 			{
 				/* pointer comparison only */
-#if defined(_WIN32) && !defined(__CYGWIN__)
-				if ( it == obj )
-#else
+//#if defined(_WIN32) && !defined(__CYGWIN__)
+				//if ( it == obj )
+//#else
 				if ( &*it == obj )
-#endif
+//#endif
 				{
 					array.erase(it);
 					return;

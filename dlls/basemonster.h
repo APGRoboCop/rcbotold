@@ -61,15 +61,10 @@ struct WayPoint_t
 	int		iType;
 };
 
-#ifdef linux
+// Fix for compiling Win32 on VS 2013+ [APG]RoboCop[CL]
 	typedef void Schedule_t;
 	typedef void Task_t;
 	typedef void CPathMonsterGoal;
-#else
-	typedef Schedule_t;
-	typedef Task_t;
-	typedef CPathMonsterGoal;
-#endif
 
 #define MOVEGOAL_NONE				(0)
 #define MOVEGOAL_TARGETENT			(bits_MF_TO_TARGETENT)

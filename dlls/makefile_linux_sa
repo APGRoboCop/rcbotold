@@ -5,27 +5,30 @@
 #
 
 # the following specifies the path to your MOD...
-MOD_DIR = /home/paul/hlds_l/rcbot
+#MOD_DIR = /home/paul/hlds_l/rcbot
 
-CPP = g++
+CPP = clang++
 
-BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp
+BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -D__linux__ # -D_DEBUG
 
-CPPFLAGS = ${BASEFLAGS} -m486 -O2 -w -I../engine -I../common -I../pm_shared
+#CPPFLAGS = ${BASEFLAGS} -g -ggdb -I. -I../engine -I../common -I../pm_shared
 
-OBJ = bot.o bot_client.o bot_commands.o bot_menu.o bot_navigate.o bot_rep.o bot_weapons.o client.o dir.o dll.o engine.o globals.o h_export.o linkfunc.o megahal.o netmessages.o rcbot_meta_api.o util.o waypoint.o
+CPPFLAGS = ${BASEFLAGS} -w -mtune=generic -march=i686 -msse -msse2 -mfpmath=sse -O2 \
+	-m32 -finline-functions -pipe -I. -I../engine -I../common -I../pm_shared
 
-rcbot_i486.so: ${OBJ}
+OBJ = bot.o bot_client.o bot_commands.o bot_menu.o bot_navigate.o bot_rep.o bot_weapons.o client.o dir.o dll.o \
+	engine.o globals.o h_export.o linkfunc.o megahal.o netmessages.o rcbot_meta_api.o util.o waypoint.o 
+
+rcbot.so: ${OBJ}
 	${CPP} -fPIC -shared -o $@ ${OBJ} -ldl -lm
-	cp -f rcbot_i486.so ${MOD_DIR}/dlls
+	cp -f rcbot.so ./Release
 
 clean:
 	-rm -f *.o
-	-rm -f rcbot_i486.so	
+	-rm -f rcbot.so	
 
 %.o:	%.cpp
 	${CPP} ${CPPFLAGS} -c $< -o $@
 
 %.o:	%.c
 	${CPP} ${CPPFLAGS} -c $< -o $@
-

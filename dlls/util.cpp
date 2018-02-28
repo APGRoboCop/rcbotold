@@ -927,7 +927,7 @@ int UTIL_GetTeam(edict_t *pEntity)
 			{
 				const char *teamlist = CVAR_GET_STRING("mp_teamlist");
 				
-				char *pos = strstr(teamlist,model);
+				const char *pos = strstr(teamlist,model);
 			    char *sofar = (char*)teamlist;
 
 				int team = 0;

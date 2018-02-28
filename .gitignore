@@ -286,3 +286,7 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+/dlls/HPB_bot___Win32_MetaMod_Debug/HPB_bot.tlog/unsuccessfulbuild
+/dlls/HPB_bot___Win32_MetaMod_Release
+/dlls/Standalone_Release/HPB_bot.tlog
+/dlls/Standalone_Release

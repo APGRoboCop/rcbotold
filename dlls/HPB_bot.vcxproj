@@ -30,38 +30,38 @@
     <SccProjectName>"$/SDKSrc/Public/dlls", NVGBAAAA</SccProjectName>
     <SccLocalPath>.</SccLocalPath>
     <ProjectGuid>{01733971-5040-4E19-915F-0E81FD25715D}</ProjectGuid>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TFC Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MetaMod Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TFC Debug metamod|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MetaMod Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -93,8 +93,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>.\Release\</OutDir>
-    <IntDir>.\Release\</IntDir>
+    <OutDir>.\Standalone_Release</OutDir>
+    <IntDir>.\Standalone_Release</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MetaMod Release|Win32'">
@@ -133,11 +133,7 @@
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>..\dlls;..\engine;..\common;..\pm_shared;..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;VALVE_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
       <BrowseInformation>true</BrowseInformation>
-      <PrecompiledHeaderOutputFile>.\Release\HPB_bot.pch</PrecompiledHeaderOutputFile>
-      <ObjectFileName>.\Release\</ObjectFileName>
-      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -152,7 +148,7 @@
     </ResourceCompile>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Release\HPB_bot.bsc</OutputFile>
+      <OutputFile>.\Standalone_Release\HPB_bot.bsc</OutputFile>
     </Bscmake>
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -160,15 +156,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>.\HPB_bot.def</ModuleDefinitionFile>
-      <OutputFile>.\Release\HPB_bot.dll</OutputFile>
-      <ImportLibrary>.\Release\HPB_bot.lib</ImportLibrary>
+      <OutputFile>.\Standalone_Release\HPB_bot.dll</OutputFile>
+      <ImportLibrary>.\Standalone_Release\HPB_bot.lib</ImportLibrary>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy $(TargetPath) "C:\Program Files\Steam\SteamApps\paul.murphy%40ntlworld.com\half-life\rcbot\dlls\rcbot.dll" 
-copy $(TargetPath) g:\half-life\rcbot\dlls\rcbot.dll </Command>
-      <Message>Copying to DLL folder(s)</Message>
-      <Outputs>$(TargetName);%(Outputs)</Outputs>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MetaMod Release|Win32'">
@@ -184,7 +182,6 @@ copy $(TargetPath) g:\half-life\rcbot\dlls\rcbot.dll </Command>
       <AssemblerListingLocation>.\HPB_bot___Win32_MetaMod_Release\</AssemblerListingLocation>
       <BrowseInformation>true</BrowseInformation>
       <PrecompiledHeaderOutputFile>.\HPB_bot___Win32_MetaMod_Release\HPB_bot.pch</PrecompiledHeaderOutputFile>
-      <ObjectFileName>.\HPB_bot___Win32_MetaMod_Release\</ObjectFileName>
       <ProgramDataBaseFileName>.\HPB_bot___Win32_MetaMod_Release\</ProgramDataBaseFileName>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -217,10 +214,12 @@ copy $(TargetPath) g:\half-life\rcbot\dlls\rcbot.dll </Command>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy $(TargetPath) g:\half-life\rcbot\dlls\rcbot_mm.dll 
-copy $(TargetPath) "C:\Program Files\Steam\SteamApps\paul.murphy%40ntlworld.com\half-life\rcbot\dlls\rcbot_mm.dll" </Command>
-      <Message>Copying to DLL folder(s)</Message>
-      <Outputs>$(TargetName);%(Outputs)</Outputs>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='TFC Debug metamod|Win32'">
@@ -268,10 +267,11 @@ copy $(TargetPath) "C:\Program Files\Steam\SteamApps\paul.murphy%40ntlworld.com\
       <AdditionalDependencies>user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy $(TargetPath) g:\Half-Life\rcbot\dlls 
-copy $(TargetPath) "c:\program files\steam\steamapps\paul.murphy%40ntlworld.com\half-life\rcbot\dlls" 
-copy $(TargetPath) "c:\program files\steam\steamapps\paul.murphy%40ntlworld.com\team fortress classic\rcbot\dlls" </Command>
-      <Outputs>$(TargetName);%(Outputs)</Outputs>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+      <Message />
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -319,9 +319,11 @@ copy $(TargetPath) "c:\program files\steam\steamapps\paul.murphy%40ntlworld.com\
       <AdditionalDependencies>user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy $(TargetPath) g:\Half-Life\rcbot\dlls 
-copy $(TargetPath) "c:\program files\steam\steamapps\paul.murphy%40ntlworld.com\half-life\rcbot\dlls" </Command>
-      <Outputs>$(TargetName);%(Outputs)</Outputs>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+      <Message />
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MetaMod Debug|Win32'">
@@ -368,9 +370,11 @@ copy $(TargetPath) "c:\program files\steam\steamapps\paul.murphy%40ntlworld.com\
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy $(TargetPath) "C:\Program Files\Steam\SteamApps\paul.murphy%40ntlworld.com\half-life\rcbot\dlls" 
-copy                         $(TargetPath)                         g:\half-life\rcbot\dlls\  </Command>
-      <Outputs>$(TargetName);%(Outputs)</Outputs>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+      <Message />
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='TFC Debug|Win32'">
@@ -418,10 +422,11 @@ copy                         $(TargetPath)                         g:\half-life\
       <AdditionalDependencies>user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy $(TargetPath) g:\Half-Life\rcbot\dlls 
-copy $(TargetPath) "c:\program files\steam\steamapps\paul.murphy%40ntlworld.com\half-life\rcbot\dlls" 
-copy $(TargetPath) "c:\program files\steam\steamapps\paul.murphy%40ntlworld.com\team fortress classic\rcbot\dlls" </Command>
-      <Outputs>$(TargetName);%(Outputs)</Outputs>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+      <Message />
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>

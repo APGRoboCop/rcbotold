@@ -61,7 +61,7 @@
 	{"frontline",	"front_i386.so",	"frontline.dll",	"Frontline Force"},
 	{"gangstawars",	"gansta_i386.so",	"hl.dll",	"GangstaWars"},
 	{"gangwars",	"mp_i386.so",	"mp.dll",	"Gangwars"},
-	{"gearbox",	"opfor_i386.so",	"opfor.dll",	"Opposing Force"},
+	{"gearbox",	"opfor.so",	"opfor.dll",	"Opposing Force"},
 	{"globalwarfare",	"gw_i386.so",	"mp.dll",	"Global Warfare"},
 	{"goldeneye",	"golden_i386.so",	"mp.dll",	"Goldeneye"},
 	{"hlrally",	"hlr_i386.so",	"hlrally.dll",	"HL-Rally"},

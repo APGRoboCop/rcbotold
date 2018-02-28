@@ -62,7 +62,7 @@
 #include "bot_weapons.h"
 #include "perceptron.h"
 
-#include <sys/queue.h>
+#include <queue>
 
 // begin -- TS metamod weapon restriction plugin
 
