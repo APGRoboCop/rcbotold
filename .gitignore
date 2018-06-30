@@ -290,3 +290,4 @@ __pycache__/
 /dlls/HPB_bot___Win32_MetaMod_Release
 /dlls/Standalone_Release/HPB_bot.tlog
 /dlls/Standalone_Release
+*.so
