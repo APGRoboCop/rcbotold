@@ -1,8 +1,6 @@
 # rcbot1
 RCbot created by Cheeseh
-
 =======
-
 
 RCBot versions
 --------------
@@ -756,4 +754,3 @@ SandMan : For waypointing NS maps
 -Sven Viking : for SvenCoop and allowing me access to Beta versions to allow bot support  
 -PM (@RACC-ai.com) : for good FakeClientCommand code.
 -SandMan : For waypointing NS maps
->>>>>>> 2010373f218e547c89e0bfe2ac225cb0ea0c9e59
