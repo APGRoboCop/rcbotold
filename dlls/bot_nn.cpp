@@ -313,7 +313,7 @@ void NNLayer :: freeMemory ()
 
 NNGATrained::NNGATrained (int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs )
 {
-	NN::NN(iNumHiddenLayers,iNumInputs,iNumNeuronsPerHiddenLayer,iNumOutputs);
+	//NN::NN(iNumHiddenLayers,iNumInputs,iNumNeuronsPerHiddenLayer,iNumOutputs); //Fails on newer compilers? [APG]RoboCop[CL]
 	
 	m_pGA = new CGA(12);
 	m_pInd = new CBotGAValues();

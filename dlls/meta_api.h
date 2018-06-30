@@ -37,6 +37,7 @@
 #ifndef META_API_H
 #define META_API_H
 
+#include "comp_dep.h"			// Metamod API now using 5:13 for RCBot [APG]RoboCop[CL]
 #include "dllapi.h"				// GETENTITYAPI_FN, etc
 #include "engine_api.h"			// GET_ENGINE_FUNCTIONS_FN, etc
 #include "plinfo.h"				// plugin_info_t, etc
@@ -59,7 +60,10 @@
 // Version 5:8	added GetPluginPath [v1.11]
 // Version 5:9	added GetGameInfo [v1.14]
 // Version 5:10 added GINFO_REALDLL_FULLPATH for GetGameInfo [v1.17]
-#define META_INTERFACE_VERSION "5:10"
+// Version 5:11 added plugin loading and unloading API [v1.18]
+// Version 5:12 added IS_QUERYING_CLIENT_CVAR to mutils [v1.18]
+// Version 5:13 added MAKE_REQUESTID and GET_HOOK_TABLES to mutils [v1.19]
+#define META_INTERFACE_VERSION "5:13"
 
 #ifdef UNFINISHED
 // Version 5:99	added event hook utility functions [v.???]
@@ -95,7 +99,7 @@ typedef struct meta_globals_s {
 	void *override_ret;		// readable; return value from overriding/superceding plugin
 } meta_globals_t;
 
-extern meta_globals_t *gpMetaGlobals;
+extern meta_globals_t *gpMetaGlobals DLLHIDDEN;
 #define SET_META_RESULT(result)			gpMetaGlobals->mres=result
 #define RETURN_META(result) \
 	do { gpMetaGlobals->mres=result; return; } while(0)
@@ -125,8 +129,8 @@ typedef struct {
 } gamedll_funcs_t;
 
 // Declared in plugin; referenced in macros.
-extern gamedll_funcs_t *gpGamedllFuncs;
-extern mutil_funcs_t *gpMetaUtilFuncs;
+extern gamedll_funcs_t *gpGamedllFuncs DLLHIDDEN;
+extern mutil_funcs_t *gpMetaUtilFuncs DLLHIDDEN;
 
 // Tell the dll that we'll be loading it as a metamod plugin, in case it
 // needs to do something special prior to the standard query/attach
@@ -238,5 +242,6 @@ C_DLLEXPORT int GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,
 #define MNEW_OnFreeEntPrivateData		MNEW_FUNC->pfnOnFreeEntPrivateData
 #define MNEW_GameShutdown				MNEW_FUNC->pfnGameShutdown
 #define MNEW_ShouldCollide				MNEW_FUNC->pfnShouldCollide
+#define MNEW_CvarValue					MNEW_FUNC->pfnCvarValue
 
 #endif /* META_API_H */
