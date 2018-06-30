@@ -1,9 +1,8 @@
 # rcbot1
 RCbot created by Cheeseh
 <<<<<<< HEAD
-<<<<<<< HEAD
 =======
->>>>>>> 23dbcb13e4598579a3729239565f68c174785926
+>>>>>>>
 
 RCBot versions
 --------------
