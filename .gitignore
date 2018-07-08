@@ -291,3 +291,4 @@ __pycache__/
 /dlls/Standalone_Release/HPB_bot.tlog
 /dlls/Standalone_Release
 *.so
+*.o
