@@ -1,4 +1,4 @@
-# rcbot1
+# rcbotold
 RCbot created by Cheeseh
 
 RCBot versions
