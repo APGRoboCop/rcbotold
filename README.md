@@ -7,144 +7,144 @@ RCBot versions
 V 1.443_beta4
 =---------=
 
-added: support for Sven Co-op v5 for both Win32 and Linux builds
-added: waypoint console info for adding and delete a single waypoint
-added: support for Metamod 1.19 or higher
-added: support for new Sven Co-op v5 weapons like the M16, Deagle, SporeGun and ShockRoach 
-changed: bot_navigate.cpp line 471
-changed: RCBot compiled with HLSDK 2.3-p4 and Metamod SDK v1.21
-changed: all builds optimised for Pentium 4 SSE2 or higher processors
-note: bot_ga.cpp appears to be unstable with BotGAValues::get(int)()
+* added: waypoint console info for adding and delete a single waypoint
+* added: support for Metamod 1.19 or higher
+* added: support for new Sven Co-op v5 weapons like the M16, Deagle, SporeGun and ShockRoach 
+* changed: bot_navigate.cpp line 471
+* changed: RCBot compiled with HLSDK 2.3-p4 and Metamod SDK v1.21
+* changed: all builds optimised for Pentium 4 SSE2 or higher processors
+* fixed: extdll.h that appears to fail to compile on GCC 6+ for #ifndef min and max
+* note: bot_ga.cpp appears to be unstable with BotGAValues::get(int)()
 
 V 1.3
 =---------=
 
-added: support for Battlegrounds mod.
-added: support for half-life deathmatch.
-added: megaHAL bot chatting [thanks pierre at racc bot (racc.bots-united.com)].
-added: new command "rcbot config chat_percent" and "rcbot config chat_reply_percent" (See commands text file)
-added: new command "rcbot config marine_auto_build". If set to 1, an infantry portal
+* added: support for Battlegrounds mod.
+* added: support for half-life deathmatch.
+* added: megaHAL bot chatting [thanks pierre at racc bot (racc.bots-united.com)].
+* added: new command "rcbot config chat_percent" and "rcbot config chat_reply_percent" (See commands text file)
+* added: new command "rcbot config marine_auto_build". If set to 1, an infantry portal
        will automatically be built nearby the command console when a bot joins the server.
-added: program does not allow clients to join if min bots has not been reached (if bots still need to join).
-added: new config command reserve_bot_slots (to configure above addition).
-added: ability to kick bots from certain team in natural selection in bot menu.
-added: ability to make a squad through squad menu.
-added: ability to return bots in squad back to formation in squad menu.
-added: more lift/elevator functionality.
-added: bots in svencoop search for weapons they need if they dont have weapon to kill gargantuas etc.
-added: improved Aliens in NS (they check out buildings under attack etc)
-added: new commands "config balance_teams" "config
-fixed: fixed NS Gorges not building much.
-fixed: bots using all weapons in DMC/all known bugs in DMC fixed.
-fixed: crash bug in natural selection attack code.
-fixed: bots now treat "func_train" entities like doors/lifts.
-fixed: bots killing themselves when waiting for commander orders in NS.
-fixed: bots join team in NS one at a time incase of crashing.
-fixed: wait_for_orders command not working in NS.
+* added: program does not allow clients to join if min bots has not been reached (if bots still need to join).
+* added: new config command reserve_bot_slots (to configure above addition).
+* added: ability to kick bots from certain team in natural selection in bot menu.
+* added: ability to make a squad through squad menu.
+* added: ability to return bots in squad back to formation in squad menu.
+* added: more lift/elevator functionality.
+* added: bots in svencoop search for weapons they need if they dont have weapon to kill gargantuas etc.
+* added: improved Aliens in NS (they check out buildings under attack etc)
+* added: new commands "config balance_teams" "config
+* fixed: fixed NS Gorges not building much.
+* fixed: bots using all weapons in DMC/all known bugs in DMC fixed.
+* fixed: crash bug in natural selection attack code.
+* fixed: bots now treat "func_train" entities like doors/lifts.
+* fixed: bots killing themselves when waiting for commander orders in NS.
+* fixed: bots join team in NS one at a time incase of crashing.
+* fixed: wait_for_orders command not working in NS.
 
 V 1.2
 =---------=
 
 All Mods
 --------
-fixed: bots going out of water better.
-fixed: bots 'hearing' dead players (spectators)
-fixed: bots not moving sometimes when they cant find an objective waypoint.
-fixed: bot menus interfering with other metamod plugin menus
-fixed: bots know what buttons to press (hopefully) for doors that use 'masters'
-fixed: bots know if doors can be opened if there is an opens later waypoint through it.
-fixed: bots know buttons that can open doors that use masters.
-fixed: bug when bots re-joining server after map change if kicked.
-fixed: bug when bots not returning to server with max bots set after clients leave game.
-fixed: Waypoint visibility files reduced in size
+* fixed: bots going out of water better.
+* fixed: bots 'hearing' dead players (spectators)
+* fixed: bots not moving sometimes when they cant find an objective waypoint.
+* fixed: bot menus interfering with other metamod plugin menus
+* fixed: bots know what buttons to press (hopefully) for doors that use 'masters'
+* fixed: bots know if doors can be opened if there is an opens later waypoint through it.
+* fixed: bots know buttons that can open doors that use masters.
+* fixed: bug when bots re-joining server after map change if kicked.
+* fixed: bug when bots not returning to server with max bots set after clients leave game.
+* fixed: Waypoint visibility files reduced in size
 
-changed: some ladder stuff
+* changed: some ladder stuff
 
-added: more performance commands (max_update_vision_revs, update_vision_time) see commands text file
-added: some stuck in water code
-added: bots kill self if they can't move for a while (can configure with 'bot_stuck_speed' command)
-added: update_ladder_time command for configuring bots ladder behaviour
-added: bots look for/attack enemies that killed team mates that they see die.
-added: Squad code, player can make bots join their squad, bots can create their own squads, ability to alter formation, leave squad (as leader), remove squad, remove all squads (in case of problems)
-added: classic +force_grip command from old rcbot
+* added: more performance commands (max_update_vision_revs, update_vision_time) see commands text file
+* added: some stuck in water code
+* added: bots kill self if they can't move for a while (can configure with 'bot_stuck_speed' command)
+* added: update_ladder_time command for configuring bots ladder behaviour
+* added: bots look for/attack enemies that killed team mates that they see die.
+* added: Squad code, player can make bots join their squad, bots can create their own squads, ability to alter formation, leave squad (as leader), remove squad, remove all squads (in case of problems)
+* added: classic +force_grip command from old rcbot
 
 Sven Coop
 ---------
-fixed: bots not using teleports very often
+* fixed: bots not using teleports very often
 
 Natural Selection
 -----------------
-added: aliens won't melee attack electrified structures
-added: marines don't waste ammo when attacking defense chambers and resource towers (use knife or welder)
+* added: aliens won't melee attack electrified structures
+* added: marines don't waste ammo when attacking defense chambers and resource towers (use knife or welder)
 
 Bumper Cars
 -----------
-added: bots using bombs in bumpercars
-added: bots choosing random model in bumpercars
-added: some better movement in bumpercars
-added: bots attack grunts in hunt the grunt maps
+* added: bots using bombs in bumpercars
+* added: bots choosing random model in bumpercars
+* added: some better movement in bumpercars
+* added: bots attack grunts in hunt the grunt maps
 
 V 1.1
 =---------=
-fixed : killbot command not working in metamod
-fixed : bot menu kick bot option not working
-fixed : crash bugs in task code
-fixed : weapon selection problems (when having to reload)
-fixed : problems when marines are out of ammo in NS (didnt attempt to change weapon?).
-fixed : some DMC weapon problems.
-fixed : aliens getting stuck trying to evolve in places where they cant.
-fixed : problem with some config files not loading in linux
-fixed : bots trying to use buttons too high up.
-fixed : bots shooting all enemies in svencoop and not shooting all allies.
-fixed : crashes in metamod when using other plugins. ("no meta return in args()" bug)
-fixed : crash bugs with bot chat & bot events
-fixed : bots go closer to hev/health chargers, they sometimes got stuck.
-fixed : when bots visit all enemy positions they will continue to objective.
-fixed : bots will only try to use armor chargers/pick up armor when they have less than 50 armor.
-fixed : couldn't delete waypoints that wern't visible (e.g. through walls)
-fixed : bots listening to sounds better.
-fixed : gorge behaviour, should build hives & resource towers more often
-fixed : bots staying in team their were added to after map change
-fixed : marines properly avoiding infantry portals in NS to avoid telefrag kills.
-fixed : bots shoot 'explosive only' breakables / gargantuas with RPGs or grenades, 
+* fixed: killbot command not working in metamod
+* fixed: bot menu kick bot option not working
+* fixed: crash bugs in task code
+* fixed: weapon selection problems (when having to reload)
+* fixed: problems when marines are out of ammo in NS (didnt attempt to change weapon?).
+* fixed: some DMC weapon problems.
+* fixed: aliens getting stuck trying to evolve in places where they cant.
+* fixed: problem with some config files not loading in linux
+* fixed: bots trying to use buttons too high up.
+* fixed: bots shooting all enemies in svencoop and not shooting all allies.
+* fixed: crashes in metamod when using other plugins. ("no meta return in args()" bug)
+* fixed: crash bugs with bot chat & bot events
+* fixed: bots go closer to hev/health chargers, they sometimes got stuck.
+* fixed: when bots visit all enemy positions they will continue to objective.
+* fixed: bots will only try to use armor chargers/pick up armor when they have less than 50 armor.
+* fixed: couldn't delete waypoints that wern't visible (e.g. through walls)
+* fixed: bots listening to sounds better.
+* fixed: gorge behaviour, should build hives & resource towers more often
+* fixed: bots staying in team their were added to after map change
+* fixed: marines properly avoiding infantry portals in NS to avoid telefrag kills.
+* fixed: bots shoot 'explosive only' breakables / gargantuas with RPGs or grenades, 
         and dont shoot them if they dont have any explosive weapons (in Svencoop)
-fixed : bots should be able to shoot barnacles in svencoop
-added : alien gorges & marines build objects as they see them.
-added : bots take cover when reloading (in svencoop)
-added : map specific configs
-added : 'unreachable' waypoint types (helps bots find cover areas)
+* fixed: bots should be able to shoot barnacles in svencoop
+* added: alien gorges & marines build objects as they see them.
+* added: bots take cover when reloading (in svencoop)
+* added: map specific configs
+* added: 'unreachable' waypoint types (helps bots find cover areas)
 
 V 1.01
 =--------=
 
-fixed: Altered weapons config (you can also edit it) to make bots not to use
+* fixed: Altered weapons config (you can also edit it) to make bots not to use
        the sniper rifle too close to the enemy in SvenCoop beta 3.0.
 
-fixed: Small bug with bot menu (couldn't exit menu)
+* fixed: Small bug with bot menu (couldn't exit menu)
 
-fixed: Small bug where NS alien bots might try to drop their leap 
+* fixed: Small bug where NS alien bots might try to drop their leap 
        weapon before attacking (which they cant do) causing them 
        not to shoot.
 
-fixed: Bug with alien bots not when they dont have any long range weapons
+* fixed: Bug with alien bots not when they dont have any long range weapons
 
-fixed: fixed bot profile layout (removed [bot] from each one, not needed in this version)
+* fixed: fixed bot profile layout (removed [bot] from each one, not needed in this version)
        and fixed repetitions of names in some profiles.
 
-fixed: Bug in pathfinding algorithm, causing long loops.
+* fixed: Bug in pathfinding algorithm, causing long loops.
 
-fixed: error in linux_install text file.
+* fixed: error in linux_install text file.
 
-added: Significant reduce in CPU Usage
+* added: Significant reduce in CPU Usage
 
-added: New command "rcbot config max_path_revs" the lower the value, better CPU
+* added: New command "rcbot config max_path_revs" the lower the value, better CPU
        performance, but takes bots slightly longer in time to find a path.
 
-added: Human tower waypoint, bots will crouch for a player to jump on them or jump
+* added: Human tower waypoint, bots will crouch for a player to jump on them or jump
        on a player thats already crouching nearby it. (I have added this waypoint into
        the map "extension" to test it)
 
-added: ability to add bots to certain teams in Natural-selection using the bot menu.
+* added: ability to add bots to certain teams in Natural-selection using the bot menu.
 
 V. 1.0
 =--------=

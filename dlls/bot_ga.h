@@ -45,8 +45,8 @@ public:
 	void load ( FILE *bfp, int req_size );
 	void save ( FILE *bfp );
 
-	void loadForBot ( char *file, int iProfile );
-	void saveForBot ( char *file, int iProfile );
+	//void loadForBot ( char *file, int iProfile );
+	//void saveForBot ( char *file, int iProfile );
 
 	//~CBotGAValues();
 

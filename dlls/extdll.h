@@ -64,13 +64,19 @@
 #define FALSE 0
 #define TRUE  1
  
+//Fix for GCC 7 - [APG]RoboCop[CL]
+#include <algorithm> 
+
 #ifndef max
-#define max(a,b)    (((a) > (b)) ? (a) : (b))
+#define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif
- 
+
 #ifndef min
-#define min(a,b)    (((a) < (b)) ? (a) : (b))
+#define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
+
+#undef max
+#undef min
  
 #define itoa(a,b,c) sprintf(b, "%d", a)
  
