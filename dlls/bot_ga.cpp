@@ -38,7 +38,7 @@
 #include "meta_api.h"
 #endif
 #include "cbase.h" // Need CBASE for classify()
-#include "player.h"
+//#include "player.h"
 #include "bot_const.h"
 #include "bot.h"
 #include "bot_ga.h"
