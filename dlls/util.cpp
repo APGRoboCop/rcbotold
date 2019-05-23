@@ -93,7 +93,7 @@ BOOL UTIL_EntityHasClassname ( edict_t *pEntity, char *classname )
 
 BOOL UTIL_IsGrenadeRocket ( edict_t *pEntity )
 {
-	const char *szClassname = (const char*)STRING(pEntity->v.classname);
+	const char *szClassname = static_cast<const char*>(STRING(pEntity->v.classname));
 
 	return (strstr(szClassname,"grenade") !=NULL) || (strstr(szClassname,"rpg_rocket") !=NULL);
 }
@@ -928,7 +928,7 @@ int UTIL_GetTeam(edict_t *pEntity)
 				const char *teamlist = CVAR_GET_STRING("mp_teamlist");
 				
 				const char *pos = strstr(teamlist,model);
-			    char *sofar = (char*)teamlist;
+			    char *sofar = const_cast<char*>(teamlist);
 
 				int team = 0;
 
@@ -1672,7 +1672,7 @@ void RadiusDamage( Vector vecSrc, entvars_t *pevInflictor, entvars_t *pevAttacke
 	// iterate on all entities in the vicinity.
 	while ((pEdict = UTIL_FindEntityInSphere( pEdict, vecSrc, flRadius )) != NULL)
 	{
-		pEntity = (CBaseEntity *)GET_PRIVATE(pEdict);
+		pEntity = static_cast<CBaseEntity *>(GET_PRIVATE(pEdict));
 		
 		if ( pEntity && pEntity->pev && pEntity->edict() && !pEntity->edict()->free )
 		{
@@ -1747,7 +1747,7 @@ CBaseEntity *CreateEnt( char *szName, const Vector &vecOrigin, const Vector &vec
 
 	if ( !pent )
 		pent = ENT(0);
-	pEntity = (CBaseEntity *)GET_PRIVATE(pent); 
+	pEntity = static_cast<CBaseEntity *>(GET_PRIVATE(pent)); 
 
 	pEntity->pev->owner = pentOwner;
 	pEntity->pev->origin = vecOrigin;
@@ -2191,7 +2191,7 @@ unsigned short FixedUnsigned16( float value, float scale )
 	if ( output > 0xFFFF )
 		output = 0xFFFF;
 
-	return (unsigned short)output;
+	return static_cast<unsigned short>(output);
 }
 
 short FixedSigned16( float value, float scale )
@@ -2264,9 +2264,9 @@ void UTIL_BotToolTip ( edict_t *pEntity, eLanguage iLang, eToolTip iTooltip )
 		// name in message
 		if ( strstr(final_message,"%n") != NULL )
 		{
-			char *szName = (char*)STRING(pEntity->v.netname);
+			char *szName = const_cast<char*>(STRING(pEntity->v.netname));
 			int iLen = strlen(szName);
-			char *szNewName = (char*)malloc(sizeof(char)*(iLen+1));
+			char *szNewName = static_cast<char*>(malloc(sizeof(char) * (iLen + 1)));
 			
 			RemoveNameTags(szName,szNewName);
 			
@@ -2387,11 +2387,10 @@ BOOL UTIL_IsButton ( edict_t *pButton )
 	if ( pButton == NULL )
 		return FALSE;
 
-	szClassname = (char*)STRING(pButton->v.classname);
+	szClassname = const_cast<char*>(STRING(pButton->v.classname));
 
 	return ( strncmp(szClassname,"func_",5) == 0 );
 }
-
 
 edict_t *UTIL_FindNearestEntity ( char **szClassnames, int iNames, Vector vOrigin, float fRange, BOOL bVisible, edict_t *pIgnore )
 {
@@ -2648,7 +2647,7 @@ edict_t *UTIL_CheckTeleExit ( Vector vOrigin, edict_t *pOwner, edict_t *pEntranc
 
 int UTIL_SentryLevel ( edict_t *pEntity )
 {
-	char *model = (char*)STRING(pEntity->v.model);
+	char *model = const_cast<char*>(STRING(pEntity->v.model));
 
 	if ( model[13] == '1' )
 		return 1;

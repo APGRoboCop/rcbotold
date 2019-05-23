@@ -511,7 +511,7 @@ public:
 	{
 		int iSize = g_iMaxVisibilityByte;
 		//create a heap...
-		m_VisTable = (unsigned char*)malloc(iSize);
+		m_VisTable = static_cast<unsigned char*>(malloc(iSize));
 
 		memset(m_VisTable,0,iSize);
 	}

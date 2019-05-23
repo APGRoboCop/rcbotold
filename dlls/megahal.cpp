@@ -421,7 +421,7 @@ void BotHALGenerateReply (CBot *pBot, char *output)
 
    if (output_template == NULL)
    {
-      output_template = (char *) malloc (sizeof (char));
+      output_template = static_cast<char *>(malloc(sizeof(char)));
 
       if (output_template == NULL)
          BotMessage(NULL,1,"HAL: BotHALGenerateReply() unable to allocate output\n");
@@ -461,7 +461,7 @@ void BotHALGenerateReply (CBot *pBot, char *output)
          for (i = 0; i < (int) replywords->size; ++i)
             length += replywords->entry[i].length;
 
-         output_template = (char *) realloc (output_template, sizeof (char) * length);
+         output_template = static_cast<char *>(realloc(output_template, sizeof(char) * length));
          if (output_template == NULL)
             BotMessage(NULL,1,"HAL: HAL_MakeOutput() unable to reallocate output\n");
 
@@ -495,7 +495,7 @@ void BotHALGenerateReply (CBot *pBot, char *output)
       for (i = 0; i < (int) replywords->size; ++i)
          length += replywords->entry[i].length;
 
-      output_template = (char *) realloc (output_template, sizeof (char) * length);
+      output_template = static_cast<char *>(realloc(output_template, sizeof(char) * length));
       if (output_template == NULL)
          BotMessage(NULL,1,"HAL: HAL_MakeOutput() unable to reallocate output\n");
 
@@ -535,25 +535,27 @@ unsigned short HAL_AddWord (HAL_DICTIONARY *dictionary, HAL_STRING word)
 
    // allocate one more entry for the word index
    if (dictionary->index == NULL)
-      dictionary->index = (unsigned short *) malloc (sizeof (unsigned short) * (dictionary->size));
+      dictionary->index = static_cast<unsigned short *>(malloc(sizeof(unsigned short) * (dictionary->size)));
    else
-      dictionary->index = (unsigned short *) realloc (dictionary->index, sizeof (unsigned short) * dictionary->size);
+      dictionary->index = static_cast<unsigned short *>(realloc(dictionary->index,
+                                                                sizeof(unsigned short) * dictionary->size));
 
    if (dictionary->index == NULL)
       BotMessage(NULL,1,"HAL: HAL_AddWord() unable to reallocate the dictionary index\n");
 
    // allocate one more entry for the word array
    if (dictionary->entry == NULL)
-      dictionary->entry = (HAL_STRING *) malloc (sizeof (HAL_STRING) * (dictionary->size));
+      dictionary->entry = static_cast<HAL_STRING *>(malloc(sizeof(HAL_STRING) * (dictionary->size)));
    else
-      dictionary->entry = (HAL_STRING *) realloc ((HAL_STRING *) dictionary->entry, sizeof (HAL_STRING) * dictionary->size);
+      dictionary->entry = static_cast<HAL_STRING *>(realloc(static_cast<HAL_STRING *>(dictionary->entry),
+                                                            sizeof(HAL_STRING) * dictionary->size));
 
    if (dictionary->entry == NULL)
       BotMessage(NULL,1,"HAL: HAL_AddWord() unable to reallocate the dictionary to %d elements\n", dictionary->size);
 
    // copy the new word into the word array
    dictionary->entry[dictionary->size - 1].length = word.length;
-   dictionary->entry[dictionary->size - 1].word = (char *) malloc (sizeof (char) * (word.length+1));
+   dictionary->entry[dictionary->size - 1].word = static_cast<char *>(malloc(sizeof(char) * (word.length + 1)));
    if (dictionary->entry[dictionary->size - 1].word == NULL)
       BotMessage(NULL,1,"HAL: HAL_AddWord() unable to allocate the word\n");
 
@@ -566,7 +568,7 @@ unsigned short HAL_AddWord (HAL_DICTIONARY *dictionary, HAL_STRING word)
       dictionary->index[i] = dictionary->index[i - 1];
 
    // copy the new symbol identifier into the word index
-   dictionary->index[position] = (unsigned short) dictionary->size - 1;
+   dictionary->index[position] = static_cast<unsigned short>(dictionary->size) - 1;
 
    return (dictionary->index[position]);
 }
@@ -703,7 +705,7 @@ HAL_DICTIONARY *HAL_NewDictionary (void)
 
    HAL_DICTIONARY *dictionary = NULL;
 
-   dictionary = (HAL_DICTIONARY *) malloc (sizeof (HAL_DICTIONARY));
+   dictionary = static_cast<HAL_DICTIONARY *>(malloc(sizeof(HAL_DICTIONARY)));
    if (dictionary == NULL)
       BotMessage(NULL,1,"HAL: HAL_NewDictionary() unable to allocate dictionary\n");
 
@@ -751,7 +753,7 @@ void HAL_LoadDictionary (FILE *file, HAL_DICTIONARY *dictionary)
    {
       fread (&word.length, sizeof (unsigned char), 1, file);
 
-      word.word = (char *) malloc (sizeof (char) * (word.length+1));
+      word.word = static_cast<char *>(malloc(sizeof(char) * (word.length + 1)));
 
       if (word.word == NULL)
          BotMessage(NULL,1,"HAL: HAL_LoadDictionary() unable to allocate word\n");
@@ -779,7 +781,7 @@ HAL_TREE *HAL_NewNode (void)
    HAL_TREE *node = NULL;
 
    // allocate memory for the new node
-   node = (HAL_TREE *) malloc (sizeof (HAL_TREE));
+   node = static_cast<HAL_TREE *>(malloc(sizeof(HAL_TREE)));
    if (node == NULL)
       BotMessage(NULL,1,"HAL: HAL_NewNode() unable to allocate node\n");
 
@@ -800,14 +802,14 @@ HAL_MODEL *HAL_NewModel (int order)
 
    HAL_MODEL *model = NULL;
 
-   model = (HAL_MODEL *) malloc (sizeof (HAL_MODEL));
+   model = static_cast<HAL_MODEL *>(malloc(sizeof(HAL_MODEL)));
    if (model == NULL)
       BotMessage(NULL,1,"HAL: HAL_NewModel() unable to allocate model\n");
 
-   model->order = (unsigned char) order;
+   model->order = static_cast<unsigned char>(order);
    model->forward = HAL_NewNode ();
    model->backward = HAL_NewNode ();
-   model->context = (HAL_TREE **) malloc (sizeof (HAL_TREE *) * (order + 2));
+   model->context = static_cast<HAL_TREE **>(malloc(sizeof(HAL_TREE *) * (order + 2)));
    if (model->context == NULL)
       BotMessage(NULL,1,"HAL: HAL_NewModel() unable to allocate context array\n");
 
@@ -828,7 +830,7 @@ void HAL_UpdateModel (HAL_MODEL *model, int symbol)
    // update all of the models in the current context with the specified symbol
    for (i = model->order + 1; i > 0; --i)
       if (model->context[i - 1] != NULL)
-         model->context[i] = HAL_AddSymbol (model->context[i - 1], (unsigned short) symbol);
+         model->context[i] = HAL_AddSymbol (model->context[i - 1], static_cast<unsigned short>(symbol));
 
    return;
 }
@@ -902,7 +904,7 @@ HAL_TREE *HAL_FindSymbolAdd (HAL_TREE *node, int symbol)
    else
    {
       found = HAL_NewNode ();
-      found->symbol = (unsigned short) symbol;
+      found->symbol = static_cast<unsigned short>(symbol);
       HAL_AddNode (node, found, i);
    }
 
@@ -918,10 +920,10 @@ void HAL_AddNode (HAL_TREE *tree, HAL_TREE *node, int position)
 	
 	// allocate room for one more child node, which may mean allocating the sub-tree from scratch
 	if (tree->tree == NULL)
-		tree->tree = (HAL_TREE **) malloc (sizeof (HAL_TREE *) * (tree->branch+1));
+		tree->tree = static_cast<HAL_TREE **>(malloc(sizeof(HAL_TREE *) * (tree->branch + 1)));
 	else
 	{
-		tree->tree = (HAL_TREE **) realloc ((HAL_TREE **) tree->tree, sizeof (HAL_TREE *) * (tree->branch + 1));
+		tree->tree = static_cast<HAL_TREE **>(realloc(static_cast<HAL_TREE **>(tree->tree), sizeof(HAL_TREE *) * (tree->branch + 1)));
 	}
 
    if (tree->tree == NULL)
@@ -1081,7 +1083,7 @@ void HAL_LoadTree (FILE *file, HAL_TREE *node)
    if (node->branch == 0)
       return; // reliability check
 
-   node->tree = (HAL_TREE **) malloc (sizeof (HAL_TREE *) * node->branch);
+   node->tree = static_cast<HAL_TREE **>(malloc(sizeof(HAL_TREE *) * node->branch));
    if (node->tree == NULL)
       BotMessage(NULL,1,"HAL: HAL_LoadTree() unable to allocate subtree\n");
 
@@ -1117,14 +1119,14 @@ void HAL_MakeWords (char *input, HAL_DICTIONARY *words)
 	  {
 		 // add the word to the dictionary
 		 if (words->entry == NULL)
-			words->entry = (HAL_STRING *) malloc ((words->size + 1) * sizeof (HAL_STRING));
+			words->entry = static_cast<HAL_STRING *>(malloc((words->size + 1) * sizeof(HAL_STRING)));
 		 else
-			words->entry = (HAL_STRING *) realloc (words->entry,  (words->size + 1) * sizeof (HAL_STRING));
+			words->entry = static_cast<HAL_STRING *>(realloc(words->entry, (words->size + 1) * sizeof(HAL_STRING)));
 
 		 if (words->entry == NULL)
 			BotMessage (NULL,1,"HAL_MakeWords() unable to reallocate dictionary\n");
 
-		 words->entry[words->size].length = (unsigned char) offset;
+		 words->entry[words->size].length = static_cast<unsigned char>(offset);
 		 words->entry[words->size].word = input;
 		 words->size ++;
 
@@ -1331,8 +1333,8 @@ void FillStringArea ( char *string, int maxstring, char *fill, int maxfill, int 
 {	
 	int size = sizeof(char) * (maxstring+1);
 
-	char *before = (char*)malloc(size);
-	char *after = (char*)malloc(size);
+	char *before = static_cast<char*>(malloc(size));
+	char *after = static_cast<char*>(malloc(size));
 
 	memset(before,0,size);
 	memset(after,0,size);
@@ -1532,9 +1534,9 @@ HAL_DICTIONARY *BotHALBuildReplyDictionary (CBot *pBot, HAL_DICTIONARY *keys)
 
       // append the symbol to the reply dictionary
       if (replies->entry == NULL)
-         replies->entry = (HAL_STRING *) malloc ((replies->size + 1) * sizeof (HAL_STRING));
+         replies->entry = static_cast<HAL_STRING *>(malloc((replies->size + 1) * sizeof(HAL_STRING)));
       else
-         replies->entry = (HAL_STRING *) realloc (replies->entry, (replies->size + 1) * sizeof (HAL_STRING));
+         replies->entry = static_cast<HAL_STRING *>(realloc(replies->entry, (replies->size + 1) * sizeof(HAL_STRING)));
 
       if (replies->entry == NULL)
          BotMessage(NULL,1,"HAL: BotHALBuildReplyDictionary() unable to reallocate dictionary\n");
@@ -1570,9 +1572,9 @@ HAL_DICTIONARY *BotHALBuildReplyDictionary (CBot *pBot, HAL_DICTIONARY *keys)
 
       // prepend the symbol to the reply dictionary
       if (replies->entry == NULL)
-         replies->entry = (HAL_STRING *) malloc ((replies->size + 1) * sizeof (HAL_STRING));
+         replies->entry = static_cast<HAL_STRING *>(malloc((replies->size + 1) * sizeof(HAL_STRING)));
       else
-         replies->entry = (HAL_STRING *) realloc (replies->entry, (replies->size + 1) * sizeof (HAL_STRING));
+         replies->entry = static_cast<HAL_STRING *>(realloc(replies->entry, (replies->size + 1) * sizeof(HAL_STRING)));
 
       if (replies->entry == NULL)
          BotMessage(NULL,1,"HAL: BotHALBuildReplyDictionary() unable to reallocate dictionary\n");
@@ -1706,7 +1708,7 @@ HAL_SWAP *HAL_NewSwap (void)
 {
    // allocate a new swap structure.
 
-   HAL_SWAP *list = (HAL_SWAP *) malloc (sizeof (HAL_SWAP));
+   HAL_SWAP *list = static_cast<HAL_SWAP *>(malloc(sizeof(HAL_SWAP)));
    if (list == NULL)
       BotMessage(NULL,1,"HAL: HAL_NewSwap() unable to allocate swap\n");
 
@@ -1724,29 +1726,29 @@ void HAL_AddSwap (HAL_SWAP *list, char *s, char *d)
 
    if (list->from == NULL)
    {
-      list->from = (HAL_STRING *) malloc (sizeof (HAL_STRING));
+      list->from = static_cast<HAL_STRING *>(malloc(sizeof(HAL_STRING)));
       if (list->from == NULL)
          BotMessage(NULL,1,"HAL: HAL_AddSwap() unable to allocate list->from\n");
    }
 
    if (list->to == NULL)
    {
-      list->to = (HAL_STRING *) malloc (sizeof (HAL_STRING));
+      list->to = static_cast<HAL_STRING *>(malloc(sizeof(HAL_STRING)));
       if (list->to == NULL)
          BotMessage(NULL,1,"HAL: HAL_AddSwap() unable to allocate list->to\n");
    }
 
-   list->from = (HAL_STRING *) realloc (list->from, sizeof (HAL_STRING) * (list->size + 1));
+   list->from = static_cast<HAL_STRING *>(realloc(list->from, sizeof(HAL_STRING) * (list->size + 1)));
    if (list->from == NULL)
       BotMessage(NULL,1,"HAL: HAL_AddSwap() unable to reallocate from\n");
 
-   list->to = (HAL_STRING *) realloc (list->to, sizeof (HAL_STRING) * (list->size + 1));
+   list->to = static_cast<HAL_STRING *>(realloc(list->to, sizeof(HAL_STRING) * (list->size + 1)));
    if (list->to == NULL)
       BotMessage(NULL,1,"HAL: HAL_AddSwap() unable to reallocate to\n");
 
-   list->from[list->size].length = (unsigned char) strlen (s);
+   list->from[list->size].length = static_cast<unsigned char>(strlen(s));
    list->from[list->size].word = strdup (s);
-   list->to[list->size].length = (unsigned char) strlen (d);
+   list->to[list->size].length = static_cast<unsigned char>(strlen(d));
    list->to[list->size].word = strdup (d);
    list->size++;
 }
@@ -1821,7 +1823,7 @@ HAL_DICTIONARY *HAL_InitializeList (char *filename)
 
       if ((string != NULL) && (strlen (string) > 0))
       {
-         word.length = (unsigned char) strlen (string);
+         word.length = static_cast<unsigned char>(strlen(string));
          word.word = strdup (buffer); // strdup - duplicates string
          HAL_AddWord (list, word);
       }
@@ -1987,7 +1989,7 @@ BOOL PrepareHALBrainForPersonality (bot_profile_t *pBotProfile)
    
    char cookie[32];
 
-   pBotProfile->m_HAL = (HAL_bot_t*)malloc(sizeof(HAL_bot_t));
+   pBotProfile->m_HAL = static_cast<HAL_bot_t*>(malloc(sizeof(HAL_bot_t)));
    pBotProfile->m_HAL->auxiliary_keywords = NULL;
    pBotProfile->m_HAL->banned_keywords = NULL;
    pBotProfile->m_HAL->bot_model = NULL;

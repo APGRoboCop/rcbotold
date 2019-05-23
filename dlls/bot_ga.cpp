@@ -70,7 +70,7 @@ void CBotGAValues :: crossOver ( IIndividual *other )
 	unsigned int iPoint = RANDOM_LONG(0,m_theValues.size());
 	float fTemp;
 
-	CBotGAValues *vother = (CBotGAValues*)other;
+	CBotGAValues *vother = static_cast<CBotGAValues*>(other);
 
 	unsigned int i;
 
@@ -272,10 +272,10 @@ CBitsGAValues :: CBitsGAValues( CBits *bits )
 void CBitsGAValues ::  crossOver ( IIndividual *other )
 {
 	unsigned int iNumBits = m_theBits->numBits();
-	unsigned int iCrossoverPoint = (unsigned int)RANDOM_LONG(0,iNumBits);
+	unsigned int iCrossoverPoint = static_cast<unsigned int>(RANDOM_LONG(0, iNumBits));
 	CBits *tempBits = new CBits(iNumBits);
 
-	CBitsGAValues *otherBits = (CBitsGAValues*)other;
+	CBitsGAValues *otherBits = static_cast<CBitsGAValues*>(other);
 
 	unsigned int i;
 

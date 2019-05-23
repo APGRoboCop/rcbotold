@@ -455,15 +455,15 @@ int BotNavigate_AStarAlgo ( CBot *pBot, int iFrom, int iTo, BOOL bContinue )
 						char *szClassname;
 						eMasterType iMasterVal;
 
-						szClassname = (char*)STRING(tr.pHit->v.classname);
+						szClassname = const_cast<char*>(STRING(tr.pHit->v.classname));
 
 						if ( !tr.pHit )
 							continue; // hit something we can't check
 						if ( strcmp(szClassname,"worldspawn") == 0 )
 							continue; // hit a wall that can't be opened
 						
-						pentArea = (CBaseEntity*)GET_PRIVATE(tr.pHit);
-						pentActivator = (CBaseEntity*)GET_PRIVATE(pBot->m_pEdict);
+						pentArea = static_cast<CBaseEntity*>(GET_PRIVATE(tr.pHit));
+						pentActivator = static_cast<CBaseEntity*>(GET_PRIVATE(pBot->m_pEdict));
 						
 						if ( pentArea && pentActivator && !pentArea->IsTriggered(pentActivator) )
 							continue; // it can't be opened yet..
@@ -476,7 +476,7 @@ int BotNavigate_AStarAlgo ( CBot *pBot, int iFrom, int iTo, BOOL bContinue )
 						case MASTER_NONE:
 							// bot cant open it without using something?
 							{
-								char *szTargetname = (char*)STRING(tr.pHit->v.targetname);
+								char *szTargetname = const_cast<char*>(STRING(tr.pHit->v.targetname));
 								
 								if ( szTargetname && *szTargetname )
 								{
@@ -1981,7 +1981,7 @@ BOOL CheckLift ( CBot *pBot, Vector vCheckOrigin, Vector vCheckToOrigin )
 				( strncmp("func_plat",STRING(pHit->v.classname),9) == 0 ) ||
 				( strncmp("func_train",STRING(pHit->v.classname),9) == 0 ))
 			{
-				char *szTargetname = (char*)STRING(pHit->v.targetname);
+				char *szTargetname = const_cast<char*>(STRING(pHit->v.targetname));
 				
 				// a way to find out if this is a lift (big enough for the bot to walk on)
 				BOOL bIsLift =  ( ( pHit->v.movedir.z ) && 

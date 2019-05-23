@@ -215,7 +215,7 @@ void BotClient_TS_State :: execute ( void *p, int iIndex )
 	switch ( POINTER_VALUE(state) )
 	{
 	case 0:
-		gBotGlobals.m_Bots[iIndex].m_iTS_State = (eTS_State)(*(int*)p);
+		gBotGlobals.m_Bots[iIndex].m_iTS_State = (eTS_State)(*static_cast<int*>(p));
 		break;
 	case 1:
 		break;
@@ -296,7 +296,7 @@ void BotClient_TS_Objective :: execute ( void *p, int iIndex )
 		id = POINTER_TO_INT(p);
 		break;
 	case 4://name
-		name = (char*)p;
+		name = static_cast<char*>(p);
 
 		gBotGlobals.m_Bots[iIndex].UpdateCondition(BOT_CONDITION_DONT_CLEAR_OBJECTIVES);
 		gBotGlobals.m_Bots[iIndex].m_TSObjectives.Add(TSObjective(id,origin,name));
@@ -317,7 +317,7 @@ void BotClient_TS_WStatus :: execute ( void *p, int iIndex )
 	switch(gBotGlobals.m_iCurrentMessageState++)
 	{
 	case 1:
-		if ( !*(int*)p )
+		if ( !*static_cast<int*>(p) )
 		{
 			CBot *pBot = &gBotGlobals.m_Bots[iIndex];
 			pBot->m_pCurrentWeapon = pBot->m_Weapons.GetWeapon(36);
@@ -346,10 +346,10 @@ void BotClient_TS_ClipInfo :: execute ( void *p, int iIndex )
 
 				if ( pBot->m_pCurrentWeapon )
 				{
-					pBot->m_pCurrentWeapon->UpdateWeapon(*(int*)p);
+					pBot->m_pCurrentWeapon->UpdateWeapon(*static_cast<int*>(p));
 					pBot->m_fLastBulletFired = gpGlobals->time;
 
-					if ( !*(int*)p && (pBot->m_pCurrentWeapon->getReserve()<=pBot->m_pCurrentWeapon->getMaxClip()) )
+					if ( !*static_cast<int*>(p) && (pBot->m_pCurrentWeapon->getReserve()<=pBot->m_pCurrentWeapon->getMaxClip()) )
 					{				// drop weapon
 						gBotGlobals.m_Bots[iIndex].AddPriorityTask(CBotTask(BOT_TASK_DROP_WEAPON));				
 					}
@@ -388,7 +388,7 @@ void BotClient_TS_DelObj :: execute ( void *p, int iIndex )
 		{
 			CBot *pBot;
 
-			int id = *(int*)p;
+			int id = *static_cast<int*>(p);
 			
 			for ( int i = 0; i < 32; i ++ )
 			{
@@ -440,21 +440,21 @@ void BotClient_TS_WeaponInfo :: execute ( void *p, int iIndex )
 	switch(gBotGlobals.m_iCurrentMessageState)
 	{
 	case 0:
-		id =  *(int*)p;
+		id =  *static_cast<int*>(p);
 
 		if ( !id ) 
 			id = 36; // kung fu
 		
 		break;
 	case 1:
-		clip = *(int*)p;
+		clip = *static_cast<int*>(p);
 		break;
 	case 2:
-		ammo = *(int*)p;
+		ammo = *static_cast<int*>(p);
 		break;
 	case 3:
 		{
-			int mode = *(int*)p;
+			int mode = *static_cast<int*>(p);
 			
 			gBotGlobals.m_Weapons.AddWeapon(id,"tsweapon",ammo,ammo,0,0,0,0,0);
 
@@ -754,7 +754,7 @@ void BotClient_Generic_TextMessage :: execute ( void *p, int iIndex )
 		{
 			// begin- foxbot
 			char builder[255];
-			strcpy(builder, (char *)p);
+			strcpy(builder, static_cast<char *>(p));
 			// end
 
 			edict_t *pent = gBotGlobals.m_Clients.FindClient(builder);
@@ -993,7 +993,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 		if ( gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
 			BotMessage(NULL,0,"---- BEGIN Alien Info Message ----");
 
-		message_type = *(int*)p;// 0 means upgrades, 1 means hive info		
+		message_type = *static_cast<int*>(p);// 0 means upgrades, 1 means hive info		
 
 		if ( gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
 		{
@@ -1024,7 +1024,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 		{
 			if ( state == 0 )
 			{
-				num_loops = *(int*)p;
+				num_loops = *static_cast<int*>(p);
 				state ++;
 
 				read_states = 0;
@@ -1041,10 +1041,10 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 				if ( gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
 				{
 					//BotMessage(NULL,0,"reading upgrade info : %d...",got_loops);
-					BotMessage(NULL,0,"Upgrade Info : %d...",*(int*)p);
+					BotMessage(NULL,0,"Upgrade Info : %d...",*static_cast<int*>(p));
 				}
 
-				switch ( *(int*)p )
+				switch ( *static_cast<int*>(p) )
 				{
 				case 1:
 					gBotGlobals.m_bCanUpgradeDef = TRUE;
@@ -1067,7 +1067,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 		{
 			if ( state == 0 )
 			{
-				num_loops = *(int*)p;
+				num_loops = *static_cast<int*>(p);
 
 				state = 1;
 
@@ -1084,7 +1084,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 				
 				if ( read_states == 0 )
 				{
-					theHiveInfoChanged = *(int*)p;
+					theHiveInfoChanged = *static_cast<int*>(p);
 					read_states ++;
 					
 					if ( gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
@@ -1097,7 +1097,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 				{
 					if ( theHiveInfoChanged )
 					{
-						theSentCoords = *(int*)p;						
+						theSentCoords = *static_cast<int*>(p);						
 						read_states ++;
 						
 						if ( gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
@@ -1113,7 +1113,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 				{
 					if ( theSentCoords )
 					{
-						theX = *(float*)p;
+						theX = *static_cast<float*>(p);
 						read_states ++;
 
 						gBotGlobals.m_Hives[got_loops].vOrigin.x = theX;
@@ -1123,7 +1123,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 					}
 					else
 					{
-						mStatus = *(int*)p;						
+						mStatus = *static_cast<int*>(p);						
 						read_states = 3;
 
 						gBotGlobals.m_Hives[got_loops].mStatus = mStatus;
@@ -1136,7 +1136,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 				{
 					if ( theSentCoords )
 					{
-						theY = *(float*)p;
+						theY = *static_cast<float*>(p);
 						read_states ++;
 
 						gBotGlobals.m_Hives[got_loops].vOrigin.y = theY;
@@ -1146,7 +1146,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 					}
 					else
 					{
-						mUnderAttack = *(int*)p;
+						mUnderAttack = *static_cast<int*>(p);
 						read_states = 4;
 
 						gBotGlobals.m_Hives[got_loops].mUnderAttack = mUnderAttack;
@@ -1161,7 +1161,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 					{
 						edict_t *pHive = NULL;
 
-						theZ = *(float*)p;
+						theZ = *static_cast<float*>(p);
 						read_states ++;
 
 						gBotGlobals.m_Hives[got_loops].vOrigin.z = theZ;
@@ -1180,7 +1180,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 					}
 					else
 					{
-						mTechnology = *(int*)p;
+						mTechnology = *static_cast<int*>(p);
 						
 						got_loops ++;
 						read_states = 0;
@@ -1195,7 +1195,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 				{
 					if ( theSentCoords )
 					{
-						mStatus = *(int*)p;
+						mStatus = *static_cast<int*>(p);
 						read_states ++;
 
 						gBotGlobals.m_Hives[got_loops].mStatus = mStatus;
@@ -1208,7 +1208,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 				{
 					if ( theSentCoords )
 					{
-						mUnderAttack = *(int*)p;
+						mUnderAttack = *static_cast<int*>(p);
 						read_states ++;
 
 						gBotGlobals.m_Hives[got_loops].mUnderAttack = mUnderAttack;
@@ -1221,7 +1221,7 @@ void BotClient_NS_AlienInfo :: execute (void *p, int iIndex)
 				{
 					if ( theSentCoords )
 					{
-						mTechnology = *(int*)p;
+						mTechnology = *static_cast<int*>(p);
 												
 						read_states = 0;
 
@@ -1287,7 +1287,7 @@ void BotClient_NS_HudText :: execute (void *p, int iIndex)
 
 	if ( state == 0 )
 	{
-		msg = (char *)p;
+		msg = static_cast<char *>(p);
 
 		if ( msg )
 		{
@@ -1341,7 +1341,7 @@ void BotClient_NS_Commndr :: execute ( void *p, int iIndex )
 	if ( !p )	
 		return;	
 
-	index = *(int*)p;
+	index = *static_cast<int*>(p);
 
 	if (( index > 0 ) && ( index <= gpGlobals->maxClients ))
 	{
@@ -1830,7 +1830,7 @@ void BotClient_Generic_WeaponList :: execute ( void *p, int iIndex )
    switch ( POINTER_VALUE(state) )
    {
    case 0:
-	   szClassname = gBotGlobals.m_Strings.GetString((char *)p);
+	   szClassname = gBotGlobals.m_Strings.GetString(static_cast<char *>(p));
 	   break;
    case 1:
 	   iAmmo1 = POINTER_TO_INT(p);  // ammo index 1
@@ -2228,7 +2228,7 @@ void BotClient_Generic_Damage :: execute ( void *p, int iIndex )
 
 		 pBot = &gBotGlobals.m_Bots[iIndex];
 
-		 pBot->BotEvent(BOT_EVENT_HURT,NULL,NULL,(float*)damage_origin);
+		 pBot->BotEvent(BOT_EVENT_HURT,NULL,NULL,static_cast<float*>(damage_origin));
 		
 		 //if ( damage_taken > (int)(pBot->pev->max_health/4) )
 		//	 pBot->BotEvent(BOT_EVENT_HEAVY_DAMAGE,NULL,NULL,(float*)damage_origin);

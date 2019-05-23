@@ -704,7 +704,7 @@ void pfnMessageEnd(void)
 				ALERT(at_console,"---------MESSAGE_END(\"%s\")-------\n",gBotGlobals.m_CurrentMessage->getMessageName());
 
 			if ( gBotGlobals.m_CurrentMessage->isStateMsg() )
-				((CBotStatedNetMessage*)gBotGlobals.m_CurrentMessage)->messageEnd();
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->messageEnd();
 			else
 				gBotGlobals.m_CurrentMessage->execute(NULL, gBotGlobals.m_iBotMsgIndex);  // NULL indicated msg end
 		}
@@ -737,9 +737,9 @@ void pfnWriteByte(int iValue)
 				ALERT(at_console,"WRITE_BYTE(%d)\n",iValue);
 
 			if ( gBotGlobals.m_CurrentMessage->isStateMsg() )
-				((CBotStatedNetMessage*)gBotGlobals.m_CurrentMessage)->writeByte(iValue);
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeByte(iValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute((void *)&iValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void *>(&iValue), gBotGlobals.m_iBotMsgIndex);
 		}
     }
 #ifdef RCBOT_META_BUILD
@@ -761,9 +761,9 @@ void pfnWriteChar(int iValue)
 				ALERT(at_console,"WRITE_CHAR(%c)\n",(char)iValue);
 
 			if ( gBotGlobals.m_CurrentMessage->isStateMsg() )
-				((CBotStatedNetMessage*)gBotGlobals.m_CurrentMessage)->writeChar((char)iValue);
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeChar((char)iValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute((void *)&iValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void *>(&iValue), gBotGlobals.m_iBotMsgIndex);
 		}
     }
 #ifdef RCBOT_META_BUILD
@@ -786,9 +786,9 @@ void pfnWriteShort(int iValue)
 				ALERT(at_console,"WRITE_SHORT(%d)\n",iValue);
 
 			if ( gBotGlobals.m_CurrentMessage->isStateMsg() )
-				((CBotStatedNetMessage*)gBotGlobals.m_CurrentMessage)->writeShort(iValue);
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeShort(iValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute((void *)&iValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void *>(&iValue), gBotGlobals.m_iBotMsgIndex);
 		}
     }
 #ifdef RCBOT_META_BUILD
@@ -806,13 +806,14 @@ void pfnWriteLong(int iValue)
         // if this message is for a bot, call the client message function...
         if (gBotGlobals.m_CurrentMessage)
 		{
-			if ( gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage )//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
+			if (gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage)
+				//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
 				ALERT(at_console,"WRITE_LONG(%d)\n",iValue);
 
 			if ( gBotGlobals.m_CurrentMessage->isStateMsg() )
-				((CBotStatedNetMessage*)gBotGlobals.m_CurrentMessage)->writeLong(iValue);
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeLong(iValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute((void *)&iValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void *>(&iValue), gBotGlobals.m_iBotMsgIndex);
 		}
     }
 #ifdef RCBOT_META_BUILD
@@ -830,13 +831,14 @@ void pfnWriteAngle(float flValue)
         // if this message is for a bot, call the client message function...
         if (gBotGlobals.m_CurrentMessage)
 		{
-			if ( gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage )//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
+			if (gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage)
+				//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
 				ALERT(at_console,"WRITE_ANGLE(%0.3f)\n",flValue);
 
 			if ( gBotGlobals.m_CurrentMessage->isStateMsg() )
-				((CBotStatedNetMessage*)gBotGlobals.m_CurrentMessage)->writeAngle(flValue);
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeAngle(flValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute((void *)&flValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void *>(&flValue), gBotGlobals.m_iBotMsgIndex);
 		}
     }
 #ifdef RCBOT_META_BUILD
@@ -854,13 +856,14 @@ void pfnWriteCoord(float flValue)
         // if this message is for a bot, call the client message function...
         if (gBotGlobals.m_CurrentMessage)
 		{
-			if ( gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage )//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
+			if (gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage)
+				//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
 				ALERT(at_console,"WRITE_COORD(%0.3f)\n",flValue);
 
 			if ( gBotGlobals.m_CurrentMessage->isStateMsg() )
-				((CBotStatedNetMessage*)gBotGlobals.m_CurrentMessage)->writeCoord(flValue);
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeCoord(flValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute((void *)&flValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void *>(&flValue), gBotGlobals.m_iBotMsgIndex);
 		}
     }
 #ifdef RCBOT_META_BUILD
@@ -878,11 +881,12 @@ void pfnWriteString(const char *sz)
         // if this message is for a bot, call the client message function...
         if (gBotGlobals.m_CurrentMessage)
 		{
-			if ( gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage )//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
+			if (gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage)
+				//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
 				ALERT(at_console,"WRITE_STRING(%s)\n",sz);
 
 			if ( gBotGlobals.m_CurrentMessage->isStateMsg() )
-				((CBotStatedNetMessage*)gBotGlobals.m_CurrentMessage)->writeString(sz);
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeString(sz);
 			else
 				gBotGlobals.m_CurrentMessage->execute((void *)sz, gBotGlobals.m_iBotMsgIndex);
 		}
@@ -902,13 +906,14 @@ void pfnWriteEntity(int iValue)
         // if this message is for a bot, call the client message function...
         if (gBotGlobals.m_CurrentMessage)
 		{
-			if ( gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage )//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
+			if (gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage)
+				//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
 				ALERT(at_console,"WRITE_ENTITY(%d)\n",iValue);
 
 			if ( gBotGlobals.m_CurrentMessage->isStateMsg() )
-				((CBotStatedNetMessage*)gBotGlobals.m_CurrentMessage)->writeEntity(INDEXENT(iValue));
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeEntity(INDEXENT(iValue));
 			else
-				gBotGlobals.m_CurrentMessage->execute((void *)&iValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void *>(&iValue), gBotGlobals.m_iBotMsgIndex);
 		}
     }
 #ifdef RCBOT_META_BUILD

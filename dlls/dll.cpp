@@ -181,7 +181,7 @@ int DispatchSpawn( edict_t *pent )
 {
    if (gpGlobals->deathmatch)
    {
-      char *pClassname = (char *)STRING(pent->v.classname);
+      char *pClassname = const_cast<char *>(STRING(pent->v.classname));
 
       if (debug_engine)
       {

@@ -43,6 +43,16 @@
 #define	SOUND_FLASHLIGHT_OFF	"items/flashlight1.wav"
 
 #define TEAM_NAME_LENGTH	16
+#include <basemonster.h>
+#include <const.h>
+#include "cdll_dll.h"
+#include <util.h>
+#include <cbase.h>
+#include "vector.h"
+#include <progdefs.h>
+#include <eiface.h>
+#include "bot.h"
+#include <minwindef.h>
 
 typedef enum
 {
@@ -180,11 +190,23 @@ public:
 	virtual void TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType);
 	virtual int TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType);
 	virtual void	Killed( entvars_t *pevAttacker, int iGib );
-	virtual Vector BodyTarget( const Vector &posSrc ) { return Center( ) + pev->view_ofs * RANDOM_FLOAT( 0.5, 1.1 ); };		// position to shoot at
+	virtual Vector BodyTarget( const Vector &posSrc )
+
+	{
+		int pev;
+		return Center( ) + pev->view_ofs * RANDOM_FLOAT( 0.5, 1.1 );
+	};		// position to shoot at
+
 	virtual void StartSneaking( void ) { m_tSneaking = gpGlobals->time - 1; }
 	virtual void StopSneaking( void ) { m_tSneaking = gpGlobals->time + 30; }
 	virtual BOOL IsSneaking( void ) { return m_tSneaking <= gpGlobals->time; }
-	virtual BOOL IsAlive( void ) { return (pev->deadflag == DEAD_NO) && pev->health > 0; }
+	virtual BOOL IsAlive( void )
+
+	{
+		BOOL pev;
+		return (pev->deadflag == DEAD_NO) && pev->health > 0;
+	}
+
 	virtual BOOL ShouldFadeOnDeath( void ) { return FALSE; }
 	virtual	BOOL IsPlayer( void ) { return TRUE; }			// Spectators should return FALSE for this, they aren't "players" as far as game logic is concerned
 

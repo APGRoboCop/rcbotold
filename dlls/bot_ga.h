@@ -117,7 +117,7 @@ public:
 	// crossover with other individual
 	void crossOver ( IIndividual *other )
 	{
-		CIntGAValues *p = (CIntGAValues*)other;
+		CIntGAValues *p = static_cast<CIntGAValues*>(other);
 
 		int iOther = p->get();
 

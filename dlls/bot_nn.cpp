@@ -343,7 +343,7 @@ void NNGATrained :: train ( vector<CNNTrainSet> trainingsets )
 		m_pInd = m_pGA->pick();
 
 		m_pInd->setFitness(0);
-		setWeights(((CBotGAValues*)m_pInd)->returnVector());
+		setWeights(static_cast<CBotGAValues*>(m_pInd)->returnVector());
 	}
 	else
 	{
@@ -356,7 +356,7 @@ void NNGATrained :: train ( vector<CNNTrainSet> trainingsets )
 
 		getWeights(&weights);
 
-		((CBotGAValues*)m_pInd)->setVector(weights);				
+		static_cast<CBotGAValues*>(m_pInd)->setVector(weights);				
 	}
 
 	vector<ga_value> outputs;

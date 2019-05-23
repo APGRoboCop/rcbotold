@@ -2286,7 +2286,7 @@ public:
 
 	inline edict_t *GetLeader ( void ) const
 	{
-		return (edict_t*)m_pLeader.Get();
+		return static_cast<edict_t*>(m_pLeader.Get());
 	}
 
 	void SetCombatType ( eCombatType iCombatType )
@@ -4290,7 +4290,7 @@ public:
 			
 			while ( !s_tempStack.IsEmpty() )
 			{
-				pFree = (void*)s_tempStack.ChooseFromStack();
+				pFree = static_cast<void*>(s_tempStack.ChooseFromStack());
 				
 				if ( pFree )
 				{
@@ -4341,7 +4341,7 @@ public:
 		
 		//BotFunc_StringCopy(szNewString,szString);
 		
-		szNewString = (char*)malloc((sizeof(char)*strlen(szString))+1);
+		szNewString = static_cast<char*>(malloc((sizeof(char) * strlen(szString)) + 1));
 		strcpy(szNewString,szString);
 		
 		szStringsHead[iHashValue].Push(szNewString);
@@ -4458,7 +4458,7 @@ public:
 	BOOL HasPlayerName ( const char *szPlayerName )
 	{
 		// Pointers the same somehow?? Well thats the same :)
-		if ( szPlayerName == (char*)STRING(m_pPlayer->v.netname) )
+		if ( szPlayerName == const_cast<char*>(STRING(m_pPlayer->v.netname)) )
 			return TRUE;
 
 		return ( strcmp(szPlayerName,STRING(m_pPlayer->v.netname)) == 0 );

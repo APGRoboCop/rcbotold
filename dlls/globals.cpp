@@ -218,7 +218,7 @@ BOOL CBotGlobals :: NetMessageStarted ( int msg_dest, int msg_type, const float 
 				m_pMessageEntity = ed;
 
 				if ( m_CurrentMessage->isStateMsg() )
-					((CBotStatedNetMessage*)m_CurrentMessage)->init(index);
+					static_cast<CBotStatedNetMessage*>(m_CurrentMessage)->init(index);
 				// is this message for a bot?
 				if ( m_CurrentMessage->humansAllowed() || (index != -1) )
 				{                     
@@ -1252,7 +1252,7 @@ void CBotGlobals :: MapInit (void)
 	prevFlagInvalid = FALSE;
 	
 	
-	const char *mapname = (const char*)STRING(gpGlobals->mapname);	
+	const char *mapname = static_cast<const char*>(STRING(gpGlobals->mapname));	
 
 	if ( IsMod(MOD_TFC) )
 	{

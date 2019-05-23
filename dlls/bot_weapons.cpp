@@ -276,7 +276,7 @@ void CWeaponPresets :: ReadPresets ( void )
 		   memset(&sWeaponPreset,0,sizeof(weapon_preset_t));
 
 		   sWeaponPreset.m_iId = iWeaponId;
-		   sWeaponPreset.m_iModId = (short int)iModId;	
+		   sWeaponPreset.m_iModId = static_cast<short int>(iModId);	
 		   continue;
 	   }
 	   

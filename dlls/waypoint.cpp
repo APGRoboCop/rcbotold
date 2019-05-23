@@ -431,7 +431,7 @@ void CWaypointLocations :: DrawWaypoints ( edict_t *pEntity, Vector &vOrigin, fl
 				
 				if ( fabs(vWpt.z - vOrigin.z) <= 256.0 )
 				{
-					pvs = ENGINE_SET_PVS ((float *)&vWpt);
+					pvs = ENGINE_SET_PVS (reinterpret_cast<float *>(&vWpt));
 					
 					if( !ENGINE_CHECK_VISIBILITY(pEntity,pvs) )
 						continue;
@@ -537,7 +537,7 @@ BOOL WaypointLoad(edict_t *pEntity)
 				   continue;
 			   }
 
-			   WaypointLocations.AddWptLocation(i,(float*)waypoints[i].origin);
+			   WaypointLocations.AddWptLocation(i,static_cast<float*>(waypoints[i].origin));
 
 			   if ( iConvertFrom == WPT_CONVERT_FROM_HPBBOT )
 			   {
@@ -965,7 +965,7 @@ void WaypointAddPath(short int add_index, short int path_index)
 #endif
    }
 
-   p = (PATH *)malloc(sizeof(PATH));
+   p = static_cast<PATH *>(malloc(sizeof(PATH)));
 
    if (p == NULL)
    {
@@ -1621,7 +1621,7 @@ int WaypointAddOrigin ( Vector vOrigin, int iFlags, edict_t *pEntity, BOOL bDraw
 	   
 	   if ( (tr.flFraction >= 1.0) || (tr.pHit == pEnt) )
 	   {		   
-		   szClassname = (char*)STRING(pEnt->v.classname);
+		   szClassname = const_cast<char*>(STRING(pEnt->v.classname));
 		   
 		   if ( strncmp("ammo_",szClassname,5) == 0 )
 			   new_waypoint->flags |= W_FL_AMMO;
@@ -1832,12 +1832,11 @@ void WaypointDelete(CClient *pClient)
    waypoints[index].flags = W_FL_DELETED;  // not being used
    waypoints[index].origin = Vector(0,0,0);
 
-   WaypointLocations.DeleteWptLocation(index,(float*)&waypoints[index].origin);
+   WaypointLocations.DeleteWptLocation(index,reinterpret_cast<float*>(&waypoints[index].origin));
 
    UTIL_PlaySound(pEntity,"weapons/mine_activate.wav");
                    
 }
-
 
 // allow player to manually create a path from one waypoint to another
 void WaypointCreatePath(CClient *pClient, int cmd)

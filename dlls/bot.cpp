@@ -1602,7 +1602,7 @@ void CBot :: SpawnInit ( BOOL bInit )
 			m_pPersonalGAVals->freeMemory();
 			delete m_pPersonalGAVals;
 
-			m_pPersonalGAVals = (CBotGAValues*)ind;
+			m_pPersonalGAVals = static_cast<CBotGAValues*>(ind);
 			m_pPersonalGAVals->setFitness(0);
 		}
 		else
@@ -1650,7 +1650,7 @@ void CBot :: SpawnInit ( BOOL bInit )
 			m_GASurvival->freeMemory();
 			delete m_GASurvival;
 
-			m_GASurvival = (CBotGAValues*)costs;
+			m_GASurvival = static_cast<CBotGAValues*>(costs);
 			m_GASurvival->setFitness(0);
 		}
 		else
@@ -2191,8 +2191,8 @@ BOOL BotFunc_FillString ( char *string, const char *fill_point, const char *fill
 	while ( (ptr = strstr(ptr,fill_point)) != NULL )
 	{
 		// found a point
-		before = (char*)malloc(sizeof(char)*len);
-		after = (char*)malloc(sizeof(char)*len);
+		before = static_cast<char*>(malloc(sizeof(char) * len));
+		after = static_cast<char*>(malloc(sizeof(char) * len));
 		
 		// initialize them to empty (don't need to null terminate at the right point)
 		memset(before,0,len);
@@ -2552,7 +2552,7 @@ void CBot :: StartGame ( void )
 					if ( m_pCombatBits )
 						delete m_pCombatBits;
 					
-					m_pCombatBits = (CIntGAValues*)gBotGlobals.m_pCombatGA[m_iCombatTeam].pick();
+					m_pCombatBits = static_cast<CIntGAValues*>(gBotGlobals.m_pCombatGA[m_iCombatTeam].pick());
 					
 					m_iCombatInfo = m_pCombatBits->get();
 				}
@@ -2790,7 +2790,7 @@ void CBot :: Think ( void )
 	{
 		// If I am not the leader of the squad update the squad leader
 		if ( !m_stSquad->IsLeader(m_pEdict) )
-			m_pSquadLeader = (edict_t*)m_stSquad->GetLeader();
+			m_pSquadLeader = static_cast<edict_t*>(m_stSquad->GetLeader());
 		else
 		{
 			// See if I have to say some stuff to my squad if I am leader
@@ -2990,7 +2990,7 @@ void CBot :: Think ( void )
 				m_pTSWeaponSelect->freeMemory();
 				delete m_pTSWeaponSelect;
 				
-				m_pTSWeaponSelect = (CBotGAValues*)costs;
+				m_pTSWeaponSelect = static_cast<CBotGAValues*>(costs);
 				m_pTSWeaponSelect->setFitness(0);
 				
 				if ( gBotGlobals.IsConfigSettingOn(BOT_CONFIG_DISABLE_WEAPON_LEARN) )
@@ -3205,7 +3205,7 @@ void CBot :: Think ( void )
 			// keep checking for cover and shout for grenades
 			if ( m_pAvoidEntity && (m_fNextCheckCover < gpGlobals->time))
 			{
-				char *szClassname = (char*)STRING(m_pAvoidEntity->v.classname);
+				char *szClassname = const_cast<char*>(STRING(m_pAvoidEntity->v.classname));
 				BOOL is_grenade = UTIL_IsGrenadeRocket(m_pAvoidEntity);
 				
 				// run for cover from grenades and exploding robo grunts
@@ -3383,7 +3383,7 @@ void CBot :: Think ( void )
 					// make origin behind bot so it looks around
 					origin = GetGunPosition() - (gpGlobals->v_forward *128);
 
-					BotEvent(BOT_EVENT_HURT,NULL,NULL,(float*)origin);
+					BotEvent(BOT_EVENT_HURT,NULL,NULL,static_cast<float*>(origin));
 				}
 			}
 		}
@@ -3974,7 +3974,7 @@ void CBot :: LookForNewTasks ( void )
 		
 		fDistance = DistanceFrom(vOrigin);
 		
-		szClassname = (char*)STRING(pEntitypev->classname);
+		szClassname = const_cast<char*>(STRING(pEntitypev->classname));
 		
 		// --- new Tasks ---
 		// MOD specific Stuff
@@ -4505,7 +4505,8 @@ void CBot :: LookForNewTasks ( void )
                     }
                     */
                     // stop going gorge, look for a new species to evolve into
-                    if ( bNotCombatMap && (UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2,TRUE) > (int)(UTIL_PlayersOnTeam(TEAM_ALIEN)*gBotGlobals.m_fGorgeAmount)))
+                    if (bNotCombatMap && (UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2,TRUE) > (int)(
+	                    UTIL_PlayersOnTeam(TEAM_ALIEN) * gBotGlobals.m_fGorgeAmount)))
                     {
                         m_bHasGestated = FALSE;
                     }
@@ -4683,7 +4684,8 @@ void CBot :: LookForNewTasks ( void )
                         // Not enough gorges on team?
                         BOOL bGoGorge = TRUE;
                         
-                        if ( (UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2) >= (int)(UTIL_PlayersOnTeam(TEAM_ALIEN)*gBotGlobals.m_fGorgeAmount)) )
+                        if ((UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2) >= (int)(UTIL_PlayersOnTeam(TEAM_ALIEN) *
+	                        gBotGlobals.m_fGorgeAmount)))
                             bGoGorge = FALSE;
                         else if ( this->m_Profile.m_GorgePercent > 0 )
                             bGoGorge = TRUE;
@@ -5269,7 +5271,7 @@ void CBot :: LookForNewTasks ( void )
                                 // Try finding a changelevel entity
                                 edict_t *pChangeLevel;
                                 
-                                pChangeLevel = UTIL_FindEntityByClassname((edict_t*)NULL,"trigger_changelevel");
+                                pChangeLevel = UTIL_FindEntityByClassname(static_cast<edict_t*>(NULL),"trigger_changelevel");
                                 
                                 if ( pChangeLevel )
                                 {
@@ -5284,13 +5286,13 @@ void CBot :: LookForNewTasks ( void )
                                     // hmm... try...
                                     // findind something that triggers a game_end entity...
                                     
-                                    edict_t *pGameEnd = UTIL_FindEntityByClassname((edict_t*)NULL,"game_end");
+                                    edict_t *pGameEnd = UTIL_FindEntityByClassname(static_cast<edict_t*>(NULL),"game_end");
                                     
                                     if ( pGameEnd )
                                     {
                                         const char *szTargetname = STRING(pGameEnd->v.targetname);
                                         
-                                        pChangeLevel = UTIL_FindEntityByTarget((edict_t*)NULL,szTargetname);
+                                        pChangeLevel = UTIL_FindEntityByTarget(static_cast<edict_t*>(NULL),szTargetname);
                                         
                                         if ( pChangeLevel )
                                         {
@@ -5413,10 +5415,22 @@ void CBot :: LookForNewTasks ( void )
 										}
 										
 										actions.add(BOT_CAN_BUILD_SENTRY,pSentry==NULL,1*(int)(m_iLastFailedTask != BOT_TASK_TFC_BUILD_SENTRY));
-										actions.add(BOT_CAN_BUILD_TELE_ENTRANCE,(pSentry!=NULL)&&(!builtTeleporterEntrance()),0.5*(int)(m_iLastFailedTask != BOT_TASK_TFC_BUILD_TELEPORT_ENTRANCE));
-										actions.add(BOT_CAN_BUILD_TELE_EXIT,m_vLastSeeEnemyPosition.IsVectorSet()&&(pSentry!=NULL)&&builtTeleporterEntrance()&&(!builtTeleporterExit()),0.5*(int)(m_iLastFailedTask != BOT_TASK_TFC_BUILD_TELEPORT_EXIT));
-										actions.add(BOT_CAN_UPGRADE_SENTRY,(pSentry!=NULL)&&((iSentryLevel<3)||(sentryHealth<1)),(((1-sentryHealth)*0.25) + ((4-iSentryLevel)*0.25)) * (int)(m_iLastFailedTask != BOT_TASK_TFC_REPAIR_BUILDABLE));
-										actions.add(BOT_CAN_BUILD_DISPENSER,m_vLastSeeEnemyPosition.IsVectorSet()&&!m_bBuiltDispenser,sentryHealth*(4-iSentryLevel)*(int)(m_iLastFailedTask != BOT_TASK_TFC_BUILD_DISPENSER));
+										actions.add(BOT_CAN_BUILD_TELE_ENTRANCE,
+										            (pSentry != NULL) && (!builtTeleporterEntrance()),
+										            0.5 * (int)(m_iLastFailedTask !=
+											            BOT_TASK_TFC_BUILD_TELEPORT_ENTRANCE));
+										actions.add(BOT_CAN_BUILD_TELE_EXIT,
+										            m_vLastSeeEnemyPosition.IsVectorSet() && (pSentry != NULL) &&
+										            builtTeleporterEntrance() && (!builtTeleporterExit()),
+										            0.5 * (int)(m_iLastFailedTask != BOT_TASK_TFC_BUILD_TELEPORT_EXIT));
+										actions.add(BOT_CAN_UPGRADE_SENTRY,
+										            (pSentry != NULL) && ((iSentryLevel < 3) || (sentryHealth < 1)),
+										            (((1 - sentryHealth) * 0.25) + ((4 - iSentryLevel) * 0.25)) * (int)(
+											            m_iLastFailedTask != BOT_TASK_TFC_REPAIR_BUILDABLE));
+										actions.add(BOT_CAN_BUILD_DISPENSER,
+										            m_vLastSeeEnemyPosition.IsVectorSet() && !m_bBuiltDispenser,
+										            sentryHealth * (4 - iSentryLevel) * (int)(m_iLastFailedTask !=
+											            BOT_TASK_TFC_BUILD_DISPENSER));
 										actions.add(BOT_CAN_GET_METAL,metal<1.0f,metal);
 										actions.add(BOT_CAN_REPAIR_TELE_EXIT,pTele!=NULL,fTeleExit);
 										
@@ -6272,7 +6286,7 @@ BOOL CBot :: UpdateVisibles ( void )
 		}
 
 		// quick visible checking
-		pvs = ENGINE_SET_PVS ( (float *)&vOrigin );
+		pvs = ENGINE_SET_PVS ( reinterpret_cast<float *>(&vOrigin) );
 
 		if( !ENGINE_CHECK_VISIBILITY(m_pEdict,pvs) )
 		{
@@ -6646,7 +6660,8 @@ BOOL CBot :: UpdateVisibles ( void )
 	{
 		int iSched = m_Tasks.GetNewScheduleId();
 		
-		AddPriorityTask(CBotTask(BOT_TASK_USE_TELEPORTER,iSched,pTeleporter->v.euser1,(int)pTeleporter,0,pTeleporter->v.origin));
+		AddPriorityTask(CBotTask(BOT_TASK_USE_TELEPORTER, iSched, pTeleporter->v.euser1, (int)pTeleporter, 0,
+		                         pTeleporter->v.origin));
 		AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH,iSched,pTeleporter));
 		
 		m_Tasks.SetTimeToCompleteSchedule(iSched,15.0);			
@@ -6695,7 +6710,7 @@ BOOL CBot :: CanAvoid ( edict_t *pEntity, float fDistanceToEntity, float fAvoidD
 		return FALSE;
 	}
 
-	szClassname = (char*)STRING(pEntity->v.classname);
+	szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
 	BOOL bIsSvenCoop = gBotGlobals.IsMod(MOD_SVENCOOP);
 	// check for grenades.
@@ -8051,7 +8066,7 @@ void CBot :: touchedWpt ()
 				m_pFlyGAVals->freeMemory();
 				delete m_pFlyGAVals;
 				
-				m_pFlyGAVals = (CBotGAValues*)ind;
+				m_pFlyGAVals = static_cast<CBotGAValues*>(ind);
 				m_pFlyGAVals->setFitness(0);
 				
 				float x1 = m_pFlyGAVals->get(0);
@@ -8180,7 +8195,7 @@ void CBot :: WorkMoveDirection ( void )
 									m_pFlyGAVals->freeMemory();
 									delete m_pFlyGAVals;
 									
-									m_pFlyGAVals = (CBotGAValues*)ind;
+									m_pFlyGAVals = static_cast<CBotGAValues*>(ind);
 									m_pFlyGAVals->setFitness(0);
 
 									float x1 = m_pFlyGAVals->get(0);
@@ -8582,7 +8597,7 @@ BOOL CBot :: CanPickup ( edict_t *pPickup )
 		break;
 	case MOD_TFC:
 		{
-			char *szClassname = (char*)STRING(pPickup->v.classname);
+			char *szClassname = const_cast<char*>(STRING(pPickup->v.classname));
 			
 			if ( pev->playerclass == TFC_CLASS_ENGINEER )
 			{
@@ -8604,7 +8619,7 @@ BOOL CBot :: CanPickup ( edict_t *pPickup )
 	case MOD_RC2:
 	case MOD_SVENCOOP:
 		{
-			char *szClassname = (char*)STRING(pPickup->v.classname);
+			char *szClassname = const_cast<char*>(STRING(pPickup->v.classname));
 
 			// i can pick up weapons...
 			if ( strncmp(szClassname,"weapon_",7) == 0 )		
@@ -8629,7 +8644,7 @@ BOOL CBot :: CanPickup ( edict_t *pPickup )
 		break;
 	case MOD_DMC:
 		{
-			char *szClassname = (char*)STRING(pPickup->v.classname);
+			char *szClassname = const_cast<char*>(STRING(pPickup->v.classname));
 
 			// quad damage etc..
 			if ( strncmp(szClassname,"item_artifact",13) == 0 )
@@ -8638,7 +8653,7 @@ BOOL CBot :: CanPickup ( edict_t *pPickup )
 		break;
 	case MOD_TS:
 		{
-			char *szClassname = (char*)STRING(pPickup->v.classname);
+			char *szClassname = const_cast<char*>(STRING(pPickup->v.classname));
 
 			// quad damage etc..
 			if ( strncmp(szClassname,"ts_powerup",12) == 0 )
@@ -8663,7 +8678,7 @@ BOOL CBot :: Touch ( edict_t *pentTouched )
 
 	pentTouchedpev = &pentTouched->v;
 
-	szClassname = (char*)STRING(pentTouched->v.classname);
+	szClassname = const_cast<char*>(STRING(pentTouched->v.classname));
 
 	// to avoid sticking to other bots..
 	if ( gBotGlobals.IsConfigSettingOn(BOT_CONFIG_UNSTICK) )
@@ -8891,7 +8906,7 @@ BOOL BotFunc_EntityIsMoving ( entvars_t *pev )
 
 void CBot :: Blocked ( edict_t *pentBlocked )
 {
-	char *szClassname = (char*)STRING(pentBlocked->v.classname);
+	char *szClassname = const_cast<char*>(STRING(pentBlocked->v.classname));
 
 	entvars_t *pentBlockedpev = &pentBlocked->v;
 
@@ -8963,7 +8978,8 @@ void CBot :: RunPlayerMove ( void )
 		}
 	}
 
-	(*g_engfuncs.pfnRunPlayerMove)(m_pEdict,pev->angles,m_fMoveSpeed,m_fStrafeSpeed,m_fUpSpeed,pev->button,pev->impulse,(byte)m_iMsecVal);
+	(*g_engfuncs.pfnRunPlayerMove)(m_pEdict, pev->angles, m_fMoveSpeed, m_fStrafeSpeed, m_fUpSpeed, pev->button,
+	                               pev->impulse, (byte)m_iMsecVal);
 }
 
 void CBot :: ThrowGrenade ( edict_t *pEnemy, int preference, BOOL bDontPrime )
@@ -9142,7 +9158,7 @@ edict_t *CBot :: FindEnemy ( void )
 
 				fFitness = fDistance + pEnemypev->velocity.Length(); 
 
-				szClassname = (char*)STRING(pEnemypev->classname);
+				szClassname = const_cast<char*>(STRING(pEnemypev->classname));
 
 				if ( strcmp("func_breakable",szClassname) == 0 )
 				{
@@ -9434,7 +9450,7 @@ BOOL CBot :: IsEnemy ( edict_t *pEntity )
 		}
 		else
 		{			
-			char *szClassname = (char*)STRING(pEntity->v.classname);			
+			char *szClassname = const_cast<char*>(STRING(pEntity->v.classname));			
 			
 			if ( strcmp(szClassname,"func_breakable") == 0 )
 			{
@@ -9470,7 +9486,7 @@ BOOL CBot :: IsEnemy ( edict_t *pEntity )
 		
 		if (pEntity->v.flags & FL_MONSTER)
 		{
-			char *szClassname = (char*)STRING(pEntity->v.classname);
+			char *szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
 			if ( FStrEq(szClassname,"monster_barney") )
 				return FALSE;
@@ -9505,7 +9521,7 @@ BOOL CBot :: IsEnemy ( edict_t *pEntity )
 			{
 				if ( pEntity->v.flags & FL_MONSTER ) // could be a sentry/teleport/dispenser
 				{
-					char *szClassname = (char*)STRING(pEntity->v.classname);
+					char *szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
 					if ( FStrEq(szClassname,"building_sentrygun") || 
 						/* FStrEq(szClassname,"building_dispenser") ||*/
@@ -9539,7 +9555,7 @@ BOOL CBot :: IsEnemy ( edict_t *pEntity )
 	case MOD_HL_DM:
 		{
 
-			char *szClassname = (char*)STRING(pEntity->v.classname);			
+			char *szClassname = const_cast<char*>(STRING(pEntity->v.classname));			
 			
 			if ( strcmp(szClassname,"func_breakable") == 0 )
 			{
@@ -9554,8 +9570,8 @@ BOOL CBot :: IsEnemy ( edict_t *pEntity )
 				char *infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)( m_pEdict );
 				char *infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)( pEntity );
 				
-				const char *model1 = (const char*)(g_engfuncs.pfnInfoKeyValue(infobuffer1, "model"));
-				const char *model2 = (const char*)(g_engfuncs.pfnInfoKeyValue(infobuffer2, "model"));
+				const char *model1 = static_cast<const char*>(g_engfuncs.pfnInfoKeyValue(infobuffer1, "model"));
+				const char *model2 = static_cast<const char*>(g_engfuncs.pfnInfoKeyValue(infobuffer2, "model"));
 				
 				return !FStrEq(model1,model2);
 			}
@@ -9563,7 +9579,7 @@ BOOL CBot :: IsEnemy ( edict_t *pEntity )
 		break;
 	case MOD_BG:
 		{
-			char *szClassname = (char*)STRING(pEntity->v.classname);
+			char *szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
 			// bot cant see next waypoint, breakable could be blocking it
 			if ( !HasCondition(BOT_CONDITION_SEE_NEXT_WAYPOINT) )
@@ -9579,7 +9595,7 @@ BOOL CBot :: IsEnemy ( edict_t *pEntity )
 		break;
 	case MOD_SVENCOOP:
 		{
-			char *szClassname = (char*)STRING(pEntity->v.classname);
+			char *szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 			int iBestWeapon;
 			CBotWeapon *pWeapon;
 			entvars_t *pEnemypev = &pEntity->v;
@@ -9597,7 +9613,7 @@ BOOL CBot :: IsEnemy ( edict_t *pEntity )
 			
 			if ( pEnemypev->flags & FL_MONSTER )
 			{
-				CBaseEntity *pEnt = (CBaseEntity*)GET_PRIVATE(pEntity);
+				CBaseEntity *pEnt = static_cast<CBaseEntity*>(GET_PRIVATE(pEntity));
 				
 				int iClass = pEnt->Classify();
 				
@@ -9772,7 +9788,8 @@ BOOL CBot :: CanBuild (edict_t *pEdict, int *metal)
 		if ( metal )
 			*metal = 10;
 
-		return ((((int)pev->health)<pev->max_health)&&(pEdict->v.flags & FL_MONSTER) && (pev->team == gBotGlobals.TFC_getTeamViaColorMap(pEdict)));
+		return ((((int)pev->health) < pev->max_health) && (pEdict->v.flags & FL_MONSTER) && (pev->team == gBotGlobals.
+			TFC_getTeamViaColorMap(pEdict)));
 	}
 
 	return TRUE;
@@ -10235,7 +10252,7 @@ edict_t *BotFunc_FindNearestButton ( Vector vOrigin, entvars_t *pDoor, Vector *v
 	edict_t *pBestTarget = NULL;
 	edict_t *pTarget = NULL;
 	
-	char *szTargetname = (char*)STRING(pDoor->targetname);
+	char *szTargetname = const_cast<char*>(STRING(pDoor->targetname));
 	
 	Vector vEntityOrigin;
 
@@ -10867,11 +10884,11 @@ eMasterType CMasterEntity :: CanFire ( edict_t *pActivator )
 	
 	if ( pMaster )
 	{
-		pentMaster = (CBaseEntity*)GET_PRIVATE(pMaster);
+		pentMaster = static_cast<CBaseEntity*>(GET_PRIVATE(pMaster));
 		
 		if ( pentMaster )
 		{
-			pentActivator = (CBaseEntity*)GET_PRIVATE(pActivator);
+			pentActivator = static_cast<CBaseEntity*>(GET_PRIVATE(pActivator));
 			
 			if ( pentActivator )
 			{
@@ -11028,7 +11045,7 @@ edict_t *CMasterEntity :: FindButton ( Vector vOrigin )
 		}
 		else
 		{
-			szRelayName = (char*)STRING(pButton->v.targetname);
+			szRelayName = const_cast<char*>(STRING(pButton->v.targetname));
 			
 			pButton2 = NULL;
 			pStart2 = NULL;
@@ -12548,7 +12565,7 @@ void CBot :: DoTasks ()
 			// set vector:- source teleporter origin
 			{
 				edict_t *pDestinationTeleporter = m_CurrentTask->TaskEdict();
-				edict_t *pSourceTeleporter = (edict_t*)(m_CurrentTask->TaskInt());
+				edict_t *pSourceTeleporter = reinterpret_cast<edict_t*>(m_CurrentTask->TaskInt());
 
 				Vector vSourceTeleporter = m_CurrentTask->TaskVector();
 
@@ -14103,7 +14120,9 @@ void CBot :: DoTasks ()
 						else  //( BotWantsCombatItem(BOT_COMBAT_WANT_LERK) )
 							m_iPossibleUpgrades.Add(ALIEN_LIFEFORM_THREE); // lerk
 						
-						if ( (UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2) == 0) || (UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2) < (int)(UTIL_PlayersOnTeam(TEAM_ALIEN)*gBotGlobals.m_fGorgeAmount/2)) )
+						if ((UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2) == 0) || (
+							UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2) < (int)(UTIL_PlayersOnTeam(TEAM_ALIEN) *
+								gBotGlobals.m_fGorgeAmount / 2)))
 							m_iPossibleUpgrades.Add(ALIEN_LIFEFORM_TWO); //gorge
 					}
 					else if ( IsFade() )
@@ -16863,7 +16882,7 @@ void CBot :: workEnemyCosts ( edict_t *pEntity, Vector vOrigin, float fDistance 
 		enemyState = 1;
 	else
 	{
-		char *szClassname = (char*)STRING(pEntity->v.classname);
+		char *szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 		// grenade
 		if ( UTIL_IsGrenadeRocket(pEntity) || ((pEntity->v.deadflag != DEAD_NO)&&(strcmp(szClassname,"monster_robogrunt") == 0)) )
 			enemyState = 3;
