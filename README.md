@@ -4,12 +4,13 @@ RCbot created by Cheeseh
 RCBot versions
 --------------
 
-V 1.443_beta4
+V 1.443
 =---------=
 
+* added: linux build optimised for floating-point arithmetic and tuned for newer arch
 * added: waypoint console info for adding and delete a single waypoint
 * added: support for Metamod 1.19 or higher
-* added: support for new Sven Co-op v5 weapons like the M16, Deagle, SporeGun and ShockRoach 
+* added: support for new Sven Co-op v5 weapons like the M16, Deagle, SporeGun and ShockRoach (not crucial)
 * changed: bot_navigate.cpp line 471
 * changed: RCBot compiled with HLSDK 2.3-p4 and Metamod SDK v1.21
 * changed: all builds optimised for Pentium 4 SSE2 or higher processors
