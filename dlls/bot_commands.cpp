@@ -1986,8 +1986,8 @@ eBotCvarState BotFunc_AddBot ( CClient *pClient, const char *arg1, const char *a
     
     (*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "rate", "3500");
     (*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_updaterate", "20");
-    (*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_lw", "1");
-    (*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_lc", "1");
+    //(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_lw", "1"); // jeefo
+    //(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_lc", "1");
     (*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_dlmax", "128");
     
     if ( !gBotGlobals.IsMod(MOD_TS) )
@@ -2141,7 +2141,7 @@ eBotCvarState CHelpCommand :: action ( CClient *pClient, const char *arg1, const
 //////////////////////////////////////////////////////////////////////////////
 // CVAR HANDLING
 
-void CBotCvar :: setupCommand (const char *szCvarName, int iAccessLevel, BOOL bCanUseOnDedicatedServer )
+void CBotCvar :: setupCommand (const char *szCvarName, const int iAccessLevel, const BOOL bCanUseOnDedicatedServer )
 {
     m_szCvarName = gBotGlobals.m_Strings.GetString(szCvarName);
     

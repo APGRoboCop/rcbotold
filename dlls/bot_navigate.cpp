@@ -81,7 +81,7 @@ BOOL AStarNode::heuristicSet ()
 	return (flags & FL_ASTAR_HEURISTIC)==FL_ASTAR_HEURISTIC;
 }
 
-void AStarNode::setHeuristic (float botDist, float goalDist,BOOL bIsTeleport)
+void AStarNode::setHeuristic (const float botDist, const float goalDist, const BOOL bIsTeleport)
 {	
 	if ( bIsTeleport )
 		m_fHeuristic = goalDist;
@@ -136,7 +136,7 @@ short int AStarNode::getParent ()
 	return m_iParent;
 }
 
-void AStarNode::setParent ( int iWpt )
+void AStarNode::setParent ( const int iWpt )
 {
 	m_iParent = iWpt;
 	flags |= FL_ASTAR_PARENT;
@@ -1716,7 +1716,7 @@ BOOL BotNavigate_UpdateWaypoint ( CBot *pBot )
 	return TRUE;
 }
 
-PATH *BotNavigate_FindPathFromTo ( int iFrom, int iTo, int iTeam )
+PATH *BotNavigate_FindPathFromTo (const int iFrom, const int iTo, const int iTeam )
 {
 	PATH *pPath = NULL;
 	int iPathIndex = 0;

@@ -244,8 +244,6 @@ void BotClient_TS_Frags :: execute ( void *p, int iIndex )
 	POINTER_INCREMENT_VALUE(state);
 }
 
-
-
 void BotClient_TS_RoundTime :: execute ( void *p, int iIndex )
 {
 	short int *state = &gBotGlobals.m_iCurrentMessageState;
@@ -596,7 +594,7 @@ void BotClient_BG_MakeMessage :: execute ( void *p, int iIndex )
 	POINTER_INCREMENT_VALUE(iState);
 }
 
-void BotClient_Generic_TextMessage :: execute ( void *p, int iIndex )
+void BotClient_Generic_TextMessage :: execute ( void *p, const int iIndex )
 {
 	CBot *pBot;
 	short int *iState = &gBotGlobals.m_iCurrentMessageState;
@@ -877,7 +875,7 @@ void BotClient_Generic_SayText :: execute ( void *p, int iIndex )
 }
 
 // PM - use QItems!
-void BotClient_DMC_QuakeItem :: execute ( void *p, int iIndex )
+void BotClient_DMC_QuakeItem :: execute ( void *p, const int iIndex )
 {
 	CBot *pBot;
 	int i;
@@ -901,7 +899,7 @@ void BotClient_DMC_QuakeItem :: execute ( void *p, int iIndex )
 	}
 }
 
-void BotClient_Generic_VGUIMenu :: execute ( void *p, int iIndex )
+void BotClient_Generic_VGUIMenu :: execute ( void *p, const int iIndex )
 {
 	CBot *pBot;
 
@@ -1809,7 +1807,7 @@ void BotClient_Generic_DeathMessage :: execute ( void *p, int iIndex )
    POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_WeaponList :: execute ( void *p, int iIndex )
+void BotClient_Generic_WeaponList :: execute ( void *p, const int iIndex )
 {
    short int *state;   // current state machine state
    static char *szClassname;
@@ -1885,7 +1883,7 @@ void BotClient_Generic_WeaponList :: execute ( void *p, int iIndex )
    POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_CurrentWeapon :: execute ( void *p, int iIndex )
+void BotClient_Generic_CurrentWeapon :: execute ( void *p, const int iIndex )
 {
 	static int iState;
 	static int iId;
@@ -1979,7 +1977,7 @@ void BotClient_Generic_CurrentWeapon :: execute ( void *p, int iIndex )
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_AmmoX :: execute ( void *p, int iIndex )
+void BotClient_Generic_AmmoX :: execute ( void *p, const int iIndex )
 {
 	static int index;
 	static int amount;
@@ -2009,7 +2007,7 @@ void BotClient_Generic_AmmoX :: execute ( void *p, int iIndex )
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_AmmoPickup :: execute ( void *p, int iIndex )
+void BotClient_Generic_AmmoPickup :: execute ( void *p, const int iIndex )
 {
    static int index;
    static int amount;
@@ -2039,7 +2037,7 @@ void BotClient_Generic_AmmoPickup :: execute ( void *p, int iIndex )
    POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_WeaponPickup	:: execute ( void *p, int iIndex )
+void BotClient_Generic_WeaponPickup	:: execute ( void *p, const int iIndex )
 {
 	int iWeaponIndex;
 	
@@ -2084,7 +2082,7 @@ void BotClient_Generic_WeaponPickup	:: execute ( void *p, int iIndex )
 	pBot->m_iBotWeapons |= (1<<iWeaponIndex);
 }
 
-void BotClient_Generic_ItemPickup :: execute ( void *p, int iIndex )
+void BotClient_Generic_ItemPickup :: execute ( void *p, const int iIndex )
 {	
 	CBot *pBot;
 
@@ -2097,7 +2095,7 @@ void BotClient_Generic_ItemPickup :: execute ( void *p, int iIndex )
 	   pBot->m_pPickupEntity = NULL;
 }
 
-void BotClient_Generic_Health :: execute ( void *p, int iIndex )
+void BotClient_Generic_Health :: execute ( void *p, const int iIndex )
 {
    if ( (p == NULL) || (iIndex==-1) )
 	   return;
@@ -2151,11 +2149,10 @@ void BotClient_Generic_Health :: execute ( void *p, int iIndex )
 				}
 		   }
 	   }
-   }
-	   
+   }   
 }
 
-void BotClient_Generic_Battery :: execute ( void *p, int iIndex )
+void BotClient_Generic_Battery :: execute ( void *p, const int iIndex )
 {
    if ( (p == NULL) || (iIndex==-1) )
 	   return;
@@ -2177,7 +2174,7 @@ void BotClient_TS_TSMessage :: execute ( void *p, int iIndex )
   // ALERT(at_console,"TS_TSMessage message (iIndex = %d) message = \"%s\"\n",iIndex,(char*)p);
 }
 
-void BotClient_Generic_Damage :: execute ( void *p, int iIndex )
+void BotClient_Generic_Damage :: execute ( void *p, const int iIndex )
 {   
    static int damage_armor;
    static int damage_taken;
@@ -2247,7 +2244,7 @@ void BotClient_Generic_Damage :: execute ( void *p, int iIndex )
    POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_ScreenFade :: execute ( void *p, int iIndex )
+void BotClient_Generic_ScreenFade :: execute ( void *p, const int iIndex )
 {
    if ( (p == NULL) || (iIndex==-1) )
 	   return;	

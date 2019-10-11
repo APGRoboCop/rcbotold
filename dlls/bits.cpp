@@ -57,7 +57,7 @@
 #include "bits.h"
 #include "gannconst.h"
 
-CBits :: CBits ( unsigned int iNumBits )
+CBits :: CBits (const unsigned int iNumBits )
 {
 	setup(iNumBits);
 }
@@ -74,7 +74,7 @@ void CBits :: freeMemory ()
 	m_iNumBits = 0;
 }
 
-void CBits :: setBit ( int iBit, BOOL bSet )
+void CBits :: setBit (const int iBit, const BOOL bSet )
 {
 	int iBitStart = iBit/8;
 	int iBitOffset = iBit%8;
@@ -87,7 +87,7 @@ void CBits :: setBit ( int iBit, BOOL bSet )
 		*c &= ~(1<<iBitOffset);
 }
 
-BOOL CBits :: getBit ( int iBit )
+BOOL CBits :: getBit (const int iBit )
 {
 	int iBitStart = iBit/8;
 	int iBitOffset = iBit%8;
@@ -132,7 +132,7 @@ void CBits :: randomize ()
 	}
 }
 
-void CBits :: setup ( int iNumBits )
+void CBits :: setup (const int iNumBits)
 {
 	int iSize; 
 

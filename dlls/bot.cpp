@@ -364,7 +364,7 @@ BOOL CBot :: IsInVisibleList ( edict_t *pEntity )
 	return m_pVisibles->isVisible(ENTINDEX(pEntity));
 }
 
-void CBot :: BotEvent ( eBotEvent iEvent, edict_t *pInfo, edict_t *pExtInfo, float *pFloatInfo )
+void CBot :: BotEvent ( const eBotEvent iEvent, edict_t *pInfo, edict_t *pExtInfo, float *pFloatInfo )
 // a type of event happens on the bot
 {
 	CClient *pClient;
@@ -756,7 +756,7 @@ void CBot :: BotEvent ( eBotEvent iEvent, edict_t *pInfo, edict_t *pExtInfo, flo
 	}
 }
 
-BOOL BotFunc_IncreaseRep ( int iRep, float fInfo, float fSkill )
+BOOL BotFunc_IncreaseRep (const int iRep, const float fInfo, const float fSkill)
 // Basically More chance of increasing rep if current
 // rep is good.
 {
@@ -767,7 +767,7 @@ BOOL BotFunc_IncreaseRep ( int iRep, float fInfo, float fSkill )
 }
 
 
-BOOL BotFunc_DecreaseRep ( int iRep, float fInfo, float fSkill )
+BOOL BotFunc_DecreaseRep ( const int iRep, float fInfo, const float fSkill )
 // more chance of decreasing rep if current rep
 // is bad.
 // input the distance of enemy
@@ -899,7 +899,7 @@ BOOL CBot :: HasSeenEnemy ( edict_t *pEnemy )
 	return m_pLastEnemy == pEnemy;
 }
 
-void CBot :: ReplyToMessage ( char *szMessage, edict_t *pSender, int iTeamOnly )
+void CBot :: ReplyToMessage ( char *szMessage, edict_t *pSender, const int iTeamOnly )
 // make a reply using megaHAL from a message by another player
 {
 	char m_TempMessage[BOT_CHAT_MESSAGE_LENGTH];
@@ -921,7 +921,7 @@ void CBot :: ReplyToMessage ( char *szMessage, edict_t *pSender, int iTeamOnly )
 	}
 }
 
-CLearnedHeader :: CLearnedHeader (int iId)
+CLearnedHeader :: CLearnedHeader (const int iId)
 {
 	strncpy(this->szBotVersion,BOT_VER,31);
 	szBotVersion[31] = 0;
@@ -1490,7 +1490,7 @@ void CBot :: setupDataStructures ()
 	loadLearnedData();
 }
 
-void CBot :: SpawnInit ( BOOL bInit )
+void CBot :: SpawnInit (const BOOL bInit)
 {	
 	m_fLastPlaceDetpack = 0;
 	m_fNextShootButton = 0;
@@ -1847,7 +1847,7 @@ int CBot :: GetTeam ( void )
     return UTIL_GetTeam(m_pEdict);
 }
 
-void CBot :: BotChat ( eBotChatType iChatType, edict_t *pChatEdict, BOOL bSayNow )
+void CBot :: BotChat (const eBotChatType iChatType, edict_t *pChatEdict, const BOOL bSayNow)
 // pChatEdict will be NULL if not directly talking to someone
 {
 	CClient *pClient = NULL;
@@ -2088,7 +2088,7 @@ void CBot :: BotChat ( eBotChatType iChatType, edict_t *pChatEdict, BOOL bSayNow
 	}
 }
 
-const char *BotFunc_GetRandomPlayerName ( CBot *pBot, int iState )
+const char *BotFunc_GetRandomPlayerName ( CBot *pBot, const int iState )
 // Get a random playername, depending on iState...
 	// iState 0 will return any random player name
 	// iState -1 will return a random bad rep player name
@@ -2169,7 +2169,7 @@ const char *BotFunc_GetRandomPlayerName ( CBot *pBot, int iState )
 
 // Fill string, a neat function I made
 // fills the points of a string with %l, %r, %whatever with readable text
-BOOL BotFunc_FillString ( char *string, const char *fill_point, const char *fill_with, int max_len )
+BOOL BotFunc_FillString ( char *string, const char *fill_point, const char *fill_with, const int max_len )
 {
 	// keep a big string to make sure everything fits
 	static char temp[1024];
@@ -2292,7 +2292,7 @@ edict_t *CBot :: getTeleporterExit ()
 	return pent;
 }
 
-int CBot :: GetLadderDir ( BOOL bCheckWaypoint )
+int CBot :: GetLadderDir (const BOOL bCheckWaypoint)
 // Get ladder dir, simply find if the bot
 // wants to go up or down..
 //return -1 (down), 0 (jump off), 1 (up)
@@ -6675,7 +6675,7 @@ BOOL CBot :: UpdateVisibles ( void )
 	return bFinished;
 }
 
-BOOL CBot :: CanAvoid ( edict_t *pEntity, float fDistanceToEntity, float fAvoidDistance )
+BOOL CBot :: CanAvoid ( edict_t *pEntity, const float fDistanceToEntity, const float fAvoidDistance )
 // return 
 {
 	char *szClassname;
@@ -7052,7 +7052,7 @@ Vector CBot :: GetAimVector ( edict_t *pBotEnemy )
 	return (vEnemyOrigin + m_vOffsetVector);
 }
 
-float CBot :: DistanceFrom ( const Vector &vOrigin, BOOL twoD )
+float CBot :: DistanceFrom ( const Vector &vOrigin, const BOOL twoD )
 {
 	// get distance from origin
 
@@ -7265,7 +7265,7 @@ void CBot :: UpdateConditions ( void )
 }
 
 // changes the bot's weapon
-BOOL CBot :: SwitchWeapon ( int iId )
+BOOL CBot :: SwitchWeapon (const int iId)
 {
 	// already using this weapon?
 	// nothing to do
@@ -8982,7 +8982,7 @@ void CBot :: RunPlayerMove ( void )
 	                               pev->impulse, (byte)m_iMsecVal);
 }
 
-void CBot :: ThrowGrenade ( edict_t *pEnemy, int preference, BOOL bDontPrime )
+void CBot :: ThrowGrenade ( edict_t *pEnemy, int preference, const BOOL bDontPrime )
 {
 	// choose error
 	float gren_speed = RANDOM_FLOAT(330.0,390.0);
@@ -9706,7 +9706,7 @@ BOOL CBot :: IsEnemy ( edict_t *pEntity )
 //////////////////////////////////////////////////////////////////////////////
 // NON-CLASS RELATED FUNCTIONS
 
-BOOL BotFunc_IsLongRangeWeapon(int iId)
+BOOL BotFunc_IsLongRangeWeapon(const int iId)
 {
 	switch ( gBotGlobals.m_iCurrentMod )
 	{
@@ -9825,7 +9825,7 @@ void BugMessage (edict_t *pEntity, char *fmt, ...)
 	UTIL_LogPrintf("%s%s%s%s","BUG: ",string," Report bugs to : ",BOT_AUTHOR);
 }
 
-void AssertMessage ( BOOL bAssert, char *fmt, ... )
+void AssertMessage ( const BOOL bAssert, char *fmt, ... )
 {
 	if ( !bAssert )
 	{
@@ -10106,7 +10106,7 @@ BOOL EntityIsWeldable ( edict_t *pEntity )
 	return FALSE;
 }
 
-void CBot :: HearSound ( eSoundType iSound, Vector vOrigin, edict_t *pEdict )
+void CBot :: HearSound (const eSoundType iSound, Vector vOrigin, edict_t *pEdict)
 // bot hears a type of sound
 {
 	CBotTask TaskToAdd = CBotTask(BOT_TASK_NONE);
@@ -10459,7 +10459,7 @@ void CBot :: AddVisitedResourceTower ( edict_t *pEdict )
 }
 
 // Remember Position of enemy or something else important
-void CBot :: RememberPosition ( Vector vOrigin, edict_t *pEntity, int flags )
+void CBot :: RememberPosition (const Vector vOrigin, edict_t *pEntity, int flags)
 {
 	m_vRememberedPositions.addPosition(vOrigin,pEntity,flags,pev->origin);
 }
@@ -10487,7 +10487,7 @@ void CBot :: SetMoveVector ( const Vector &vOrigin )
 }
 
 // Get proper Id value for weapon, DMC mucks things up
-int BotFunc_GetBitSetOf ( int iId )
+int BotFunc_GetBitSetOf (const int iId)
 {	
 	int weapon_index = 0;
 	int value = iId;
@@ -10501,7 +10501,7 @@ int BotFunc_GetBitSetOf ( int iId )
 	return weapon_index;
 }
 
-BOOL CBot :: HasWeapon ( int iWeapon ) 
+BOOL CBot :: HasWeapon (const int iWeapon)
 { 			
 //	if ( gBotGlobals.IsMod(MOD_DMC) )
 //		return ((m_iBotWeapons) & (1<<(iWeapon-1))) != 0; 
@@ -11390,7 +11390,7 @@ BOOL CBot :: IsHoldingMiniGun ( void )
 	return ( (gBotGlobals.IsMod(MOD_SVENCOOP)) && (m_pCurrentWeapon) && (m_pCurrentWeapon->GetID() == SVEN_WEAPON_MINIGUN) );
 }
 
-void CBot :: RunForCover (Vector vOrigin, BOOL bDoItNow, int iScheduleId)
+void CBot :: RunForCover (Vector vOrigin, const BOOL bDoItNow, int iScheduleId)
 {
 	BOOL bCovering = m_Tasks.HasSchedule(BOT_SCHED_RUN_FOR_COVER);
 
@@ -11470,7 +11470,7 @@ BOOL CBot :: IsLerk         ( void ) { return gBotGlobals.IsNS() && (pev->iuser3
 BOOL CBot :: IsFade         ( void ) { return gBotGlobals.IsNS() && (pev->iuser3 == AVH_USER3_ALIEN_PLAYER4); }
 BOOL CBot :: IsOnos         ( void ) { return gBotGlobals.IsNS() && (pev->iuser3 == AVH_USER3_ALIEN_PLAYER5); }
 
-void CBot :: NeedMetal (BOOL flush, BOOL priority, int iSched)
+void CBot :: NeedMetal (const BOOL flush, const BOOL priority, const int iSched)
 {
 
 	if ( flush )
@@ -11502,7 +11502,8 @@ void CBot :: NeedMetal (BOOL flush, BOOL priority, int iSched)
 	
 }
 
-void CBot :: FindBackPack (int health, int cells, int armour, int ammo, BOOL flush, BOOL priority, int iSched)
+void CBot::FindBackPack(const int health, const int cells, const int armour, const int ammo, const BOOL flush,
+                        const BOOL priority, const int iSched)
 {
 
 	if ( flush )
@@ -16858,7 +16859,7 @@ BOOL CBot :: IsUsingTank ( void )
 	return FALSE;
 }
 
-void CBot :: workEnemyCosts ( edict_t *pEntity, Vector vOrigin, float fDistance )
+void CBot :: workEnemyCosts ( edict_t *pEntity, Vector vOrigin, const float fDistance )
 {
 	
 	if ( m_fNextWorkRangeCosts > gpGlobals->time )
@@ -16919,7 +16920,7 @@ void CBot :: workEnemyCosts ( edict_t *pEntity, Vector vOrigin, float fDistance 
 	}
 }
 
-void CBot :: decideJumpDuckStrafe (float fEnemyDist, Vector vEnemyOrigin)
+void CBot :: decideJumpDuckStrafe (const float fEnemyDist, Vector vEnemyOrigin)
 {
 	vector<ga_value> inputs;
 	

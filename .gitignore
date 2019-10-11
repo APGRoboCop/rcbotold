@@ -292,3 +292,6 @@ __pycache__/
 /dlls/Standalone_Release
 *.so
 *.o
+*.tlog
+dlls/HPB_bot___Win32_MetaMod_Debug/HPB_bot.vcxproj.FileListAbsolute.txt
+*.dll

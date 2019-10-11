@@ -859,7 +859,7 @@ void CClient :: FreeGlobalMemory ( void )
 	memset(this,0,sizeof(CClient));
 }	
 
-void CClient :: AddNewToolTip ( eToolTip iToolTip )
+void CClient :: AddNewToolTip (const eToolTip iToolTip)
 {
 	if ( !gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) )
 		return; // tooltips switched off
@@ -1028,7 +1028,7 @@ void CClients :: ClientDisconnected ( edict_t *pPlayer )
 	}
 }
 
-CClient *CClients :: GetClientByRepId(int iRepId)
+CClient *CClients :: GetClientByRepId(const int iRepId)
 {
 	int i;
 	CClient *pClient = NULL;

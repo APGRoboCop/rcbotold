@@ -1025,7 +1025,7 @@ typedef enum
 ////////////////////////////////
 // AUTHOR SHIP & PLUGIN INFO
 
-#define BOT_NAME "RCBot For Half-Life"
+#define BOT_NAME "RCBot"
 #define BOT_WEBSITE "http://rcbot.bots-united.com"
 #define BOT_DBG_MSG_TAG "[RCBOT>] "
 #define BOT_DEBUG_TAG "[DEBUG"
@@ -1091,17 +1091,17 @@ typedef enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.443_mm_debug"
+#define BOT_VER "1.5_mm_debug"
 #else
-#define BOT_VER "1.443_mm"
+#define BOT_VER "1.5_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.443_debug"
+#define BOT_VER "1.5_debug"
 #else
-#define BOT_VER "1.443"
+#define BOT_VER "1.5"
 #endif
 
 #endif
@@ -1115,17 +1115,17 @@ typedef enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.443_mm_debug"
+#define BOT_VER "1.5_mm_debug"
 #else
-#define BOT_VER "1.443_mm"
+#define BOT_VER "1.5_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.443_debug"
+#define BOT_VER "1.5_debug"
 #else
-#define BOT_VER "1.443"
+#define BOT_VER "1.5"
 #endif
 
 #endif

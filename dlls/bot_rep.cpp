@@ -62,7 +62,7 @@ extern CBotGlobals gBotGlobals;
 ////////////////////////////////////////////////////////////
 // REPUTATION HANDLING
 
-int BotFunc_GetRepArrayNum ( int iRep )
+int BotFunc_GetRepArrayNum (const int iRep)
 // Return the array index for chat arrays for the right rep.
 // 0 = enemy
 // 1 = neutral
@@ -83,14 +83,14 @@ int BotFunc_GetRepArrayNum ( int iRep )
 }
 
 
-CBotReputation :: CBotReputation( int iPlayerRepId, int iRep )
+CBotReputation :: CBotReputation(const int iPlayerRepId, const int iRep)
 {
 	m_iPlayerRepId = iPlayerRepId;
 	
 	m_iRep = iRep;
 }
 
-CClient *CBotReputations :: GetRandomClient ( int iRep )
+CClient *CBotReputations :: GetRandomClient ( const int iRep )
 // return a random client that conforms to the iRep (reputation)
 // -1 will return a random bad client
 // 0 : a random neutral client
@@ -146,7 +146,7 @@ CClient *CBotReputations :: GetRandomClient ( int iRep )
 
 ////////////////////////////////
 // Saves ONE rep and removes it
-void CBotReputations :: RemoveSaveRep ( int iBotProfile, int iPlayerRepId )
+void CBotReputations :: RemoveSaveRep (const int iBotProfile, const int iPlayerRepId)
 {
 	CBotReputation *pRep = this->GetRep(iPlayerRepId);
 
@@ -159,7 +159,7 @@ void CBotReputations :: RemoveSaveRep ( int iBotProfile, int iPlayerRepId )
 }
 ////////////////////////////////
 // Saves ALL rep
-void CBotReputations :: SaveAllRep ( int iBotProfile )
+void CBotReputations :: SaveAllRep (const int iBotProfile)
 {
 	dataStack <CBotReputation> tempStack = m_RepList;
 	CBotReputation *pRep;
@@ -177,7 +177,7 @@ void CBotReputations :: SaveAllRep ( int iBotProfile )
 	return;
 }
 
-void CBotReputations :: AddLoadRep ( int iBotProfile, int iPlayerRepId )
+void CBotReputations :: AddLoadRep (const int iBotProfile, const int iPlayerRepId )
 {
 	FILE *fp;
 
@@ -242,7 +242,7 @@ void CBotReputations :: AddLoadRep ( int iBotProfile, int iPlayerRepId )
 
 }
 
-void CBotReputations :: WriteToFile ( int iBotProfile, CBotReputation *pRep )
+void CBotReputations :: WriteToFile (const int iBotProfile, CBotReputation *pRep)
 {
 	FILE *fp;
 

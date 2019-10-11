@@ -4,6 +4,13 @@ RCbot created by Cheeseh
 RCBot versions
 --------------
 
+V 1.5
+
+* changed: Replaced most of the C style casts with C++ casts
+* changed: Sven Co-op v5 or later aren't supported anymore use RCBot AngelScript instead
+* fixed: Some potential errors and bugs have been wiped
+* note: gcc-4.8 appears to compile better for RCBot Linux servers
+
 V 1.443
 =---------=
 

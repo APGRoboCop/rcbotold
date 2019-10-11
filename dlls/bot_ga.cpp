@@ -51,7 +51,7 @@ CBotGAValues :: CBotGAValues()
 	setFitness(0);
 }
 
-CBotGAValues :: CBotGAValues( vector<ga_value> values )
+CBotGAValues :: CBotGAValues(const vector<ga_value> values )
 {
 	clear();	
 	setFitness(0);
@@ -103,12 +103,12 @@ void CBotGAValues :: mutate ()
 	}
 }
 
-float CBotGAValues :: get ( int iIndex )
+float CBotGAValues :: get (const int iIndex)
 {
 	return m_theValues[iIndex];
 }
 
-void CBotGAValues :: set ( int iIndex, ga_value fVal )
+void CBotGAValues :: set (const int iIndex, const ga_value fVal)
 {
 	m_theValues[iIndex] = fVal;
 }
@@ -190,7 +190,7 @@ void CBotGAValues :: save (FILE *bfp)
 	fwrite(&m_fFitness,sizeof(ga_value),1,bfp);
 }
 
-void CBotGAValues :: load (FILE *bfp,int req_size)
+void CBotGAValues :: load (FILE *bfp, const int req_size)
 {
 	unsigned int iSize;
 	ga_value fRead;
@@ -240,7 +240,7 @@ void CBitsGAValues :: convert ( int *iBits )
 	}
 }
 
-CBitsGAValues :: CBitsGAValues( unsigned int iNumBits )
+CBitsGAValues :: CBitsGAValues(const unsigned int iNumBits)
 {
 	m_theBits = new CBits(iNumBits);
 }
@@ -257,7 +257,7 @@ void CBitsGAValues :: save ( FILE *bfp )
 	m_theBits->save(bfp);
 }
 
-	//void loadForBot ( char *file, int iProfile );
+//void loadForBot ( char *file, int iProfile );
 //void saveForBot ( char *file, int iProfile );
 
 //~CBotGAValues();
@@ -318,12 +318,12 @@ IIndividual *CBitsGAValues :: copy ()
 //void setBits ( CBits values );
 //void getBits ( CBits *values );
 
-BOOL CBitsGAValues :: get ( int iIndex )
+BOOL CBitsGAValues :: get (const int iIndex)
 {
 	return m_theBits->getBit(iIndex);
 }
 
-void CBitsGAValues :: set ( int iIndex, BOOL bSet )
+void CBitsGAValues :: set (const int iIndex, const BOOL bSet)
 {
 	m_theBits->setBit(iIndex,bSet);
 }

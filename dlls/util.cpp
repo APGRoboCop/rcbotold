@@ -1062,7 +1062,7 @@ CBot *UTIL_GetBotPointer(const edict_t *pEdict)
    int index;
    CBot *pBot;
 
-   assert(pEdict != NULL);
+   //assert(pEdict != NULL);
 
    for (index=0; index < MAX_PLAYERS; index++)
    {
