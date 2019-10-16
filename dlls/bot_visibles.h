@@ -28,21 +28,21 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// Based on botman's High Ping Bastard bot
-//
-// (http://planethalflife.com/botman/)
-//
-// bot_visibles.h
-//
-//////////////////////////////////////////////////
-//
-// Bot definitions header
-//
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // Based on botman's High Ping Bastard bot
+ //
+ // (http://planethalflife.com/botman/)
+ //
+ // bot_visibles.h
+ //
+ //////////////////////////////////////////////////
+ //
+ // Bot definitions header
+ //
 #ifndef __RCBOT_BOT_VISIBLES_H__
 #define __RCBOT_BOT_VISIBLES_H__
 
@@ -53,19 +53,19 @@
 class CBotVisibles
 {
 public:
-	CBotVisibles ();
+	CBotVisibles();
 
-	BOOL isVisible ( int iIndex );
+	BOOL isVisible(int iIndex);
 
-	void setVisible (int iIndex, BOOL bVisible);
+	void setVisible(int iIndex, BOOL bVisible);
 
-	void resetIter ();
+	void resetIter();
 
-	edict_t *nextVisible ();
+	edict_t* nextVisible();
 
-	void freeMemory ();
+	void freeMemory();
 private:
-	CBits *m_iVisibles;
+	CBits* m_iVisibles;
 	dataUnconstArray<int> m_iVisibleList;
 	int m_iIter;
 };

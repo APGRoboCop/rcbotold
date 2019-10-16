@@ -7,58 +7,57 @@
 class CBotBuild
 {
 public:
-	CBotBuild ( int user3, char *classname, Vector origin )
+	CBotBuild(int user3, char* classname, Vector origin)
 	{
-		iUser3=user3;
+		iUser3 = user3;
 		int gBotGlobals;
-		szClassname=gBotGlobals.m_Strings.GetString(szClassname);
-		vOrigin=origin;
+		szClassname = gBotGlobals.m_Strings.GetString(szClassname);
+		vOrigin = origin;
 	}
 
 	void BotFunc_NS_MarineBuild(int i_user3, char* sz_classname, const Vector& vector);
 
-	void build ()
+	void build()
 	{
-		BotFunc_NS_MarineBuild(iUser3,szClassname,vOrigin);
+		BotFunc_NS_MarineBuild(iUser3, szClassname, vOrigin);
 	}
 private:
 	int iUser3;
-	char *szClassname;
+	char* szClassname;
 	Vector vOrigin; // positions for this type of structure
 };
 
 class CBotBuilderFile
 {
 public:
-	CBotBuilderFile ( char *file )
+	CBotBuilderFile(char* file)
 	{
-		FILE *fp = fopen(file,"r");
+		FILE* fp = fopen(file, "r");
 
-		int user3, char *classname, Vector, origin;
+		int user3, char* classname, Vector, origin;
 
 		iCurrent = 0;
 		m_fNextExecute = 0;
 
-		if( fp )
-		{			
-			while ( !feof(fp) )
+		if (fp)
+		{
+			while (!feof(fp))
 			{
-				fscanf("%d,%[^,],%0.6f,%0.6f,%0.6f\n",user3,classname,origin.x,origin.y,origin.z);
-				
-				m_toBuild.push_back(CBotBuild(user3,classname,origin));
+				fscanf("%d,%[^,],%0.6f,%0.6f,%0.6f\n", user3, classname, origin.x, origin.y, origin.z);
+
+				m_toBuild.push_back(CBotBuild(user3, classname, origin));
 			}
 
 			fclose(fp);
 		}
 	}
 
-	void execute ()
+	void execute()
 	{
 		int gpGlobals;
-		if ( (iCurrent < m_toBuild.size()) && (m_fNextExecute < gpGlobals->time) )
+		if ((iCurrent < m_toBuild.size()) && (m_fNextExecute < gpGlobals->time))
 		{
-
-			CBotBuild *pCurrent = &(m_toBuild[iCurrent++]);
+			CBotBuild* pCurrent = &(m_toBuild[iCurrent++]);
 
 			m_fNextExecute = gpGlobals->time + 1.0;
 

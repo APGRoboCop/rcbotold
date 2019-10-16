@@ -41,31 +41,31 @@ using namespace std;
 class CSomNeuron
 {
 public:
-	~CSomNeuron ();
+	~CSomNeuron();
 
-	CSomNeuron ();
+	CSomNeuron();
 
-	CSomNeuron ( int iInp, int iX, int iY );
+	CSomNeuron(int iInp, int iX, int iY);
 
 	inline ga_value getX()
 	{
 		return m_iX;
 	}
 
-	inline ga_value getY()	
+	inline ga_value getY()
 	{
 		return m_iY;
 	}
 
-	void update ( vector<ga_value> *inputs, ga_value inf );
+	void update(vector<ga_value>* inputs, ga_value inf);
 
-	ga_value distance ( vector <ga_value> *inputs );
-	
-	vector <ga_value> *weights ();
+	ga_value distance(vector <ga_value>* inputs);
 
-	void displayWeights ();
-	
-	ga_value neighbourDistance ( CSomNeuron *other, ga_value fDistance );
+	vector <ga_value>* weights();
+
+	void displayWeights();
+
+	ga_value neighbourDistance(CSomNeuron* other, ga_value fDistance);
 
 private:
 	vector<ga_value> fWeights;
@@ -78,23 +78,23 @@ class CSom
 public:
 	static ga_value m_fLearnRate;
 
-	CSom ( int iW, int iH, int iIn );
+	CSom(int iW, int iH, int iIn);
 
-	~CSom ();
+	~CSom();
 
-	CSomNeuron *getBMU ( vector <ga_value> *inputs );
+	CSomNeuron* getBMU(vector <ga_value>* inputs);
 
-	void updateAround ( vector<ga_value> *inputs, CSomNeuron *bmu );
+	void updateAround(vector<ga_value>* inputs, CSomNeuron* bmu);
 
-	CSomNeuron *input ( vector < vector <ga_value> > *inputs );
+	CSomNeuron* input(vector < vector <ga_value> >* inputs);
 
-	CSomNeuron *inputOne ( vector < ga_value > *inputs );
+	CSomNeuron* inputOne(vector < ga_value >* inputs);
 
-	void input ( vector < vector <ga_value> > *inputs, int epochs );
+	void input(vector < vector <ga_value> >* inputs, int epochs);
 
-	void display ();
+	void display();
 
-	inline unsigned int epochs ()
+	inline unsigned int epochs()
 	{
 		return m_iEpochs;
 	}

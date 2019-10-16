@@ -42,8 +42,8 @@ typedef float ga_value;
 class ILearnInfo
 {
 public:
-	virtual void load ( FILE *bfp, int req_size ) = 0;
-	virtual void save ( FILE *bfp ) = 0;
+	virtual void load(FILE* bfp, int req_size) = 0;
+	virtual void save(FILE* bfp) = 0;
 };
 
 class CGenericHeader
@@ -54,31 +54,31 @@ public:
 		m_szHeader[0] = 0;
 	}
 
-	CGenericHeader ( int iType, int iSize )
+	CGenericHeader(int iType, int iSize)
 	{
-		sprintf(m_szHeader,"t-%d-s-%d",iType,iSize);
+		sprintf(m_szHeader, "t-%d-s-%d", iType, iSize);
 	}
 
-	const char *getHeader ()
+	const char* getHeader()
 	{
-		return m_szHeader;		
+		return m_szHeader;
 	}
 
-	BOOL operator == ( CGenericHeader other )
+	BOOL operator == (CGenericHeader other)
 	{
-		return (strcmp(m_szHeader,other.getHeader()) == 0);
+		return (strcmp(m_szHeader, other.getHeader()) == 0);
 	}
 
-	void write ( FILE *bfp )
+	void write(FILE* bfp)
 	{
-		fwrite(this,sizeof(CGenericHeader),1,bfp);
+		fwrite(this, sizeof(CGenericHeader), 1, bfp);
 	}
 
-	BOOL read ( FILE *bfp, CGenericHeader compare )
+	BOOL read(FILE* bfp, CGenericHeader compare)
 	{
 		CGenericHeader read;
 
-		fread(&read,sizeof(CGenericHeader),1,bfp);
+		fread(&read, sizeof(CGenericHeader), 1, bfp);
 
 		return (read == compare);
 	}

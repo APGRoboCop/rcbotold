@@ -42,40 +42,40 @@ class CBotGAValues : public IIndividual
 public:
 	CBotGAValues();
 
-	void load ( FILE *bfp, int req_size );
-	void save ( FILE *bfp );
+	void load(FILE* bfp, int req_size);
+	void save(FILE* bfp);
 
 	//void loadForBot ( char *file, int iProfile );
 	//void saveForBot ( char *file, int iProfile );
 
 	//~CBotGAValues();
 
-	CBotGAValues( vector<ga_value> values );
+	CBotGAValues(vector<ga_value> values);
 
 	// crossover with other individual
-	void crossOver ( IIndividual *other );
+	void crossOver(IIndividual* other);
 
 	// mutate some values
-	void mutate ();
+	void mutate();
 
 	// get new copy of this
 	// sub classes return their class with own values
-	IIndividual *copy ();
+	IIndividual* copy();
 
-	void setVector ( vector<ga_value> values );
-	void getVector ( vector<ga_value> *values );
+	void setVector(vector<ga_value> values);
+	void getVector(vector<ga_value>* values);
 
-	float get ( int iIndex );
+	float get(int iIndex);
 
-	void set ( int iIndex, ga_value fVal );
+	void set(int iIndex, ga_value fVal);
 
-	void clear ();
+	void clear();
 
-	inline void add ( ga_value val ) { m_theValues.push_back(val); }
+	inline void add(ga_value val) { m_theValues.push_back(val); }
 
-	inline vector<ga_value> *returnVector () { return &m_theValues; }
+	inline vector<ga_value>* returnVector() { return &m_theValues; }
 
-	void freeMemory ();
+	void freeMemory();
 
 private:
 	vector<ga_value> m_theValues;
@@ -87,83 +87,83 @@ class CIntGAValues : public IIndividual
 {
 public:
 
-	CIntGAValues ( int val = 0 )
+	CIntGAValues(int val = 0)
 	{
 		m_Value = val;
 	}
 
-	void load ( FILE *bfp, int req_size )
+	void load(FILE* bfp, int req_size)
 	{
 		int check;
 
-		fread(&check,sizeof(int),1,bfp);
+		fread(&check, sizeof(int), 1, bfp);
 
-		if ( check == 1 )
-			fread(&m_Value,sizeof(int),1,bfp);
+		if (check == 1)
+			fread(&m_Value, sizeof(int), 1, bfp);
 		else
 		{
-			fread(&check,sizeof(int),1,bfp);
-			m_Value = RANDOM_LONG(0,4294967295);
+			fread(&check, sizeof(int), 1, bfp);
+			m_Value = RANDOM_LONG(0, 4294967295);
 		}
 	}
 
-	void save ( FILE *bfp )
+	void save(FILE* bfp)
 	{
 		int iSiz = 1;
-		fwrite(&iSiz,sizeof(int),1,bfp);
-		fwrite(&m_Value,sizeof(int),1,bfp);
+		fwrite(&iSiz, sizeof(int), 1, bfp);
+		fwrite(&m_Value, sizeof(int), 1, bfp);
 	}
 
 	// crossover with other individual
-	void crossOver ( IIndividual *other )
+	void crossOver(IIndividual* other)
 	{
-		CIntGAValues *p = static_cast<CIntGAValues*>(other);
+		CIntGAValues* p = static_cast<CIntGAValues*>(other);
 
 		int iOther = p->get();
 
 		// unform/mixed crossover
 
-		for ( unsigned i = 0; i < 32; i ++ )
+		for (unsigned i = 0; i < 32; i++)
 		{
-			if ( RANDOM_FLOAT(0,1) >= 0.5f )
+			if (RANDOM_FLOAT(0, 1) >= 0.5f)
 			{
-				m_Value |= (iOther & (1<<i));
-				p->set(iOther |= (m_Value&(1<<i)));
+				m_Value |= (iOther & (1 << i));
+				p->set(iOther |= (m_Value & (1 << i)));
 			}
 		}
 	}
 
 	// mutate some values
-	void mutate () 
-	{ 
-		for ( unsigned i = 0; i < 32; i ++ )
+	void mutate()
+	{
+		for (unsigned i = 0; i < 32; i++)
 		{
-			if ( RANDOM_FLOAT(0,1) <= 0.1f )	
+			if (RANDOM_FLOAT(0, 1) <= 0.1f)
 			{
-				if ( m_Value & (1<<i) )
-					m_Value &= ~(1<<i);
+				if (m_Value & (1 << i))
+					m_Value &= ~(1 << i);
 				else
-					m_Value |= (i<<i);
+					m_Value |= (i << i);
 			}
 		}
 	}
 
-	void clear () 
-	{ 
+	void clear()
+	{
 		m_Value = 0;
 	};
 
 	// get new copy of this
 	// sub classes return their class with own values
-	IIndividual *copy ()
+	IIndividual* copy()
 	{
-		IIndividual *p = new CIntGAValues(m_Value);
+		IIndividual* p = new CIntGAValues(m_Value);
 		p->setFitness(getFitness());
 		return p;
 	}
 
-	inline int get () { return m_Value;}
-	inline void set ( int value ) { m_Value = value; }
+	inline int get() { return m_Value; }
+	inline void set(int value) { m_Value = value; }
 private:
 	int m_Value;
 };
@@ -171,47 +171,47 @@ private:
 class CBitsGAValues : public IIndividual
 {
 public:
-	CBitsGAValues ( unsigned int iNumBits );
+	CBitsGAValues(unsigned int iNumBits);
 
-	void load ( FILE *bfp, int req_size );
-	void save ( FILE *bfp );
+	void load(FILE* bfp, int req_size);
+	void save(FILE* bfp);
 
 	//void loadForBot ( char *file, int iProfile );
 	//void saveForBot ( char *file, int iProfile );
 
 	//~CBotGAValues();
-	void convert ( int *iBits );
-	CBitsGAValues( CBits *bits );
+	void convert(int* iBits);
+	CBitsGAValues(CBits* bits);
 
 	// crossover with other individual
-	void crossOver ( IIndividual *other );
+	void crossOver(IIndividual* other);
 
 	// mutate some values
-	void mutate ();
+	void mutate();
 
 	// get new copy of this
 	// sub classes return their class with own values
-	IIndividual *copy ();
+	IIndividual* copy();
 
-	unsigned int size ();
+	unsigned int size();
 
 	//void setBits ( CBits values );
 	//void getBits ( CBits *values );
 
-	BOOL get ( int iIndex );
+	BOOL get(int iIndex);
 
-	void set ( int iIndex, BOOL bSet );
+	void set(int iIndex, BOOL bSet);
 
-	void clear ();
+	void clear();
 
-	inline void random ();
+	inline void random();
 
-	inline CBits *returnBits () { return m_theBits; }
+	inline CBits* returnBits() { return m_theBits; }
 
-	void freeMemory ();
+	void freeMemory();
 
 private:
-	CBits *m_theBits;
+	CBits* m_theBits;
 };
 
 #endif

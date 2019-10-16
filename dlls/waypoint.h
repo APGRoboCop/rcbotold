@@ -28,22 +28,21 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// Based on botman's High Ping Bastard bot
-//
-// (http://planethalflife.com/botman/)
-//
-// waypoint.h
-//
-//////////////////////////////////////////////////
-//
-// Waypoint definitions
-//
-
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // Based on botman's High Ping Bastard bot
+ //
+ // (http://planethalflife.com/botman/)
+ //
+ // waypoint.h
+ //
+ //////////////////////////////////////////////////
+ //
+ // Waypoint definitions
+ //
 
 #ifndef WAYPOINT_H
 #define WAYPOINT_H
@@ -56,12 +55,12 @@
 #define MAX_WPT_LOC 31
 
 class CWaypointLocations
-// Hash table of waypoint indexes accross certian
-// buckets in the map on X/Y Co-ords for quicker
-// nearest waypoint finding and waypoint displaying.
+	// Hash table of waypoint indexes accross certian
+	// buckets in the map on X/Y Co-ords for quicker
+	// nearest waypoint finding and waypoint displaying.
 {
 public:
-	
+
 	CWaypointLocations()
 	{
 		Init();
@@ -69,55 +68,54 @@ public:
 
 	void Init()
 	{
-		int i,j,k;
+		int i, j, k;
 
-		for ( i = 0; i < MAX_WPT_LOCATIONS; i ++ )
+		for (i = 0; i < MAX_WPT_LOCATIONS; i++)
 		{
-			for ( j = 0; j < MAX_WPT_LOCATIONS; j ++ )
+			for (j = 0; j < MAX_WPT_LOCATIONS; j++)
 			{
-				for ( k = 0; k < MAX_WPT_LOCATIONS; k ++ )
-					m_iLocations[i][j][k].Init();	
+				for (k = 0; k < MAX_WPT_LOCATIONS; k++)
+					m_iLocations[i][j][k].Init();
 			}
 		}
 	}
 
-	void Clear ()
+	void Clear()
 	{
-		int i,j,k;
+		int i, j, k;
 
-		for ( i = 0; i < MAX_WPT_LOCATIONS; i ++ )
+		for (i = 0; i < MAX_WPT_LOCATIONS; i++)
 		{
-			for ( j = 0; j < MAX_WPT_LOCATIONS; j ++ )
+			for (j = 0; j < MAX_WPT_LOCATIONS; j++)
 			{
-				for ( k = 0; k < MAX_WPT_LOCATIONS; k ++ )			
+				for (k = 0; k < MAX_WPT_LOCATIONS; k++)
 					m_iLocations[i][j][k].Destroy();
 			}
 		}
 	}
 
-	void getMaxMins ( Vector vOrigin, int &mini, int &minj, int &mink, int &maxi, int &maxj, int &maxk );
+	void getMaxMins(Vector vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk);
 
-	int GetCoverWaypoint ( Vector vPlayerOrigin, Vector vCoverFrom, dataStack<int> *iIgnoreWpts );
+	int GetCoverWaypoint(Vector vPlayerOrigin, Vector vCoverFrom, dataStack<int>* iIgnoreWpts);
 
-	void FindNearestCoverWaypointInBucket ( int i, int j, int k, const Vector &vOrigin, float *pfMinDist, int *piIndex, dataStack<int> *iIgnoreWpts, int iCoverFromWpt  );
+	void FindNearestCoverWaypointInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, dataStack<int>* iIgnoreWpts, int iCoverFromWpt);
 
-	void AddWptLocation ( int iIndex, const float *fOrigin );
+	void AddWptLocation(int iIndex, const float* fOrigin);
 
-	void FindNearestInBucket ( int i, int j, int k, const Vector &vOrigin, float *pfMinDist, int *piIndex,int iIgnoreWpt, BOOL bGetVisible = TRUE, BOOL bGetUnreachable = FALSE, BOOL bIsBot = FALSE, dataStack<int> *iFailedWpts = NULL, BOOL bNearestAimingOnly = FALSE );
+	void FindNearestInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, int iIgnoreWpt, BOOL bGetVisible = TRUE, BOOL bGetUnreachable = FALSE, BOOL bIsBot = FALSE, dataStack<int>* iFailedWpts = NULL, BOOL bNearestAimingOnly = FALSE);
 
-	void DrawWaypoints ( edict_t *pEntity, Vector &vOrigin, float fDist );
-	
-	void DeleteWptLocation ( int iIndex, const float *fOrigin );
-	
-	int NearestWaypoint ( const Vector &vOrigin, float fDist, int iIgnoreWpt, BOOL bGetVisible = TRUE, BOOL bGetUnreachable = FALSE, BOOL bIsBot = FALSE, dataStack<int> *iFailedWpts = NULL, BOOL bNearestAimingOnly = FALSE );
+	void DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float fDist);
 
-	void FillWaypointsInBucket ( int i, int j, int k, const Vector &vOrigin, dataStack<int> *iWaypoints, dataStack<int> *iFailedWpts = NULL );
+	void DeleteWptLocation(int iIndex, const float* fOrigin);
 
-	void FillNearbyWaypoints ( const Vector &vOrigin, dataStack<int> *iWaypoints, dataStack<int> *iFailedWpts = NULL );
-	
+	int NearestWaypoint(const Vector& vOrigin, float fDist, int iIgnoreWpt, BOOL bGetVisible = TRUE, BOOL bGetUnreachable = FALSE, BOOL bIsBot = FALSE, dataStack<int>* iFailedWpts = NULL, BOOL bNearestAimingOnly = FALSE);
+
+	void FillWaypointsInBucket(int i, int j, int k, const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = NULL);
+
+	void FillNearbyWaypoints(const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = NULL);
 
 private:
-	
+
 	dataStack<int> m_iLocations[MAX_WPT_LOCATIONS][MAX_WPT_LOCATIONS][MAX_WPT_LOCATIONS];
 };
 
@@ -174,13 +172,13 @@ private:
 #define W_FILE_FL_READ_VISIBILITY (1<<0) // require to read visibility file
 
 // define the waypoint file header structure...
-typedef struct 
+typedef struct
 {
-   char filetype[8];  // should be "RC_bot\0"
-   int  waypoint_file_version;
-   int  waypoint_file_flags;  // used for visualisation
-   int  number_of_waypoints;
-   char mapname[32];  // name of map for these waypoints
+	char filetype[8];  // should be "RC_bot\0"
+	int  waypoint_file_version;
+	int  waypoint_file_flags;  // used for visualisation
+	int  number_of_waypoints;
+	char mapname[32];  // name of map for these waypoints
 } WAYPOINT_HDR;
 
 // define the structure for waypoints...
@@ -194,7 +192,7 @@ class oldWAYPOINT
 {
 public:
    int  flags;		// button, lift, flag, health, ammo, etc.
-   Vector origin;   // location  
+   Vector origin;   // location
 
    WAYPOINT (int f, Vector vec)	{ flags = f; origin = vec;	};
    WAYPOINT ()					{ flags = 0; Vector(0,0,0);  };
@@ -204,7 +202,7 @@ class WAYPOINT
 {
 public:
    int  flags;		// button, lift, flag, health, ammo, etc.
-   Vector origin;   // location  
+   Vector origin;   // location
    int aiming;
    edict_t *connect;
 
@@ -215,13 +213,13 @@ public:
 class WAYPOINT
 {
 public:
-   int  flags;		// button, lift, flag, health, ammo, etc.
-   Vector origin;   // location  
+	int  flags;		// button, lift, flag, health, ammo, etc.
+	Vector origin;   // location
 
-   //virtual Vector getOrigin () { return origin; }
+	//virtual Vector getOrigin () { return origin; }
 
-   WAYPOINT (int f, Vector vec)	{ flags = f; origin = vec;	};
-   WAYPOINT ()					{ flags = 0; Vector(0,0,0);  };
+	WAYPOINT(int f, Vector vec) { flags = f; origin = vec; };
+	WAYPOINT() { flags = 0; Vector(0, 0, 0); };
 };
 
 class WAYPOINT2 : public WAYPOINT
@@ -235,74 +233,72 @@ public:
 class WAYPOINTS
 {
 public:
-	WAYPOINT &operator [] (int index);	
+	WAYPOINT& operator [] (int index);
 private:
 	WAYPOINT m_Waypoints[MAX_WAYPOINTS];
 };
 //////////////////////
-
 
 #define MAX_BITS 32
 
 class CWaypointConversion
 {
 private:
-	int m_iConvertTo [MAX_BITS]; // e.g. jump, crouch etc
-	char *m_szName;
-	char *m_szFolder;
-	char *m_szExtension;
-	char *m_szHeader;
+	int m_iConvertTo[MAX_BITS]; // e.g. jump, crouch etc
+	char* m_szName;
+	char* m_szFolder;
+	char* m_szExtension;
+	char* m_szHeader;
 	int m_iVersion;
 public:
 
-	void FreeMemory ()
+	void FreeMemory()
 	{
-		if ( getName() )
+		if (getName())
 			free(getName());
-		if ( getFolder() )
+		if (getFolder())
 			free(getFolder());
-		if ( getExtension() )
+		if (getExtension())
 			free(getExtension());
-		if ( getHeader() )
+		if (getHeader())
 			free(getHeader());
 
 		init();
 	}
 
-	void setExtension ( char *szExt )
+	void setExtension(char* szExt)
 	{
 		m_szExtension = strdup(szExt);
 	}
 
-	void setFolder ( char *szFolder )
+	void setFolder(char* szFolder)
 	{
 		m_szFolder = strdup(szFolder);
 	}
 
-	void setName ( char *szName )
+	void setName(char* szName)
 	{
 		m_szName = strdup(szName); // duplicate the string
 	}
 
-	void setHeader ( char *szHeader )
+	void setHeader(char* szHeader)
 	{
 		m_szHeader = strdup(szHeader);
 	}
 
-	void setVersion ( int iVer )
+	void setVersion(int iVer)
 	{
 		m_iVersion = iVer;
 	}
 
+	FILE* openWaypoint();
 
-	FILE *openWaypoint ();
-
-	void setConvertBit ( int iBit, int iFlag )
+	void setConvertBit(int iBit, int iFlag)
 	{
 		m_iConvertTo[iBit] = iFlag;
 	}
 
-	void init ()
+	void init()
 	{
 		m_szName = NULL;
 		m_szFolder = NULL;
@@ -310,42 +306,42 @@ public:
 		m_szHeader = NULL;
 		m_iVersion = 0;
 
-		memset(m_iConvertTo,0,sizeof(int)*MAX_BITS);
+		memset(m_iConvertTo, 0, sizeof(int) * MAX_BITS);
 	}
 
-	inline char *getName ()
+	inline char* getName()
 	{
 		return m_szName;
 	}
 
-	inline char *getFolder ()
+	inline char* getFolder()
 	{
 		return m_szFolder;
 	}
 
-	inline char *getExtension ()
+	inline char* getExtension()
 	{
 		return m_szExtension;
 	}
 
-	inline char *getHeader ()
+	inline char* getHeader()
 	{
 		return m_szHeader;
 	}
 
-	WAYPOINT convert ( WAYPOINT *thisWaypoint )
+	WAYPOINT convert(WAYPOINT* thisWaypoint)
 	{
 		int i;
 
 		WAYPOINT convertedWpt;
 
-		memset(&convertedWpt,0,sizeof(WAYPOINT));
+		memset(&convertedWpt, 0, sizeof(WAYPOINT));
 
-		for ( i = 0; i < MAX_BITS; i ++ )
+		for (i = 0; i < MAX_BITS; i++)
 		{
-			if ( thisWaypoint->flags & (1<<i) )
+			if (thisWaypoint->flags & (1 << i))
 			{
-				convertedWpt.flags |= (1<<m_iConvertTo[i]);
+				convertedWpt.flags |= (1 << m_iConvertTo[i]);
 			}
 		}
 
@@ -354,7 +350,7 @@ public:
 		return convertedWpt;
 	}
 
-	int getVersion ()
+	int getVersion()
 	{
 		return m_iVersion;
 	}
@@ -365,7 +361,7 @@ class CWaypointConversions // list of
 private:
 	dataUnconstArray<CWaypointConversion*> m_Convertions;
 public:
-	void init () 
+	void init ()
 	{
 		m_Convertions.Clear();
 	}
@@ -389,54 +385,53 @@ public:
 
 		m_Convertions.Clear();
 	}
-
 };
 */
 class CWhichbotConvert : public CWaypointConversion
 {
 public:
-  CWhichbotConvert()
-  {
-	  setName("Whichbot");
-	  setExtension("wpt");
-	  setHeader("HPB_bot");
-	  setVersion(4);
+	CWhichbotConvert()
+	{
+		setName("Whichbot");
+		setExtension("wpt");
+		setHeader("HPB_bot");
+		setVersion(4);
 
 #ifndef __linux__
-	  setFolder("addons\\whichbot\\data");
+		setFolder("addons\\whichbot\\data");
 #else
-      setFolder("addons/whichbot/data");
+		setFolder("addons/whichbot/data");
 #endif
 
-	  setConvertBit(0,(1<<0));
-	  setConvertBit(1,(1<<1));
-	  setConvertBit(2,(1<<2));
-	  setConvertBit(3,W_FL_CROUCH);
-	  setConvertBit(4,W_FL_LADDER);
-	  setConvertBit(5,W_FL_WAIT_FOR_LIFT);
-	  setConvertBit(6,W_FL_DOOR);
-	  setConvertBit(7,W_FL_HEALTH);
-	  setConvertBit(8,W_FL_ARMOR);
-	  setConvertBit(9,W_FL_AMMO);
-	  setConvertBit(18,W_FL_JUMP);
-	  setConvertBit(9,W_FL_LIFT);
-	  setConvertBit(18,W_FL_JUMP);
-	  setConvertBit(31,W_FL_DELETED);
-/*
-#define W_FL_TEAM        ((1<<0) + (1<<1))  // allow for 4 teams (0-3)
-#define W_FL_TEAM_SPECIFIC (1<<2)  // waypoint only for specified team
-#define W_FL_CROUCH      (1<<3)  // must crouch to reach this waypoint
-#define W_FL_LADDER      (1<<4)  // waypoint on a ladder
-W_FL_WAIT_FOR_LIFT #define W_FL_LIFT        (1<<5)  // wait for lift to be down before approaching this waypoint
-#define W_FL_DOOR        (1<<6)  // wait for door to open
-#define W_FL_HEALTH      (1<<7)  // health kit (or wall mounted) location
-#define W_FL_ARMOR       (1<<8)  // armor (or HEV) location
-#define W_FL_AMMO        (1<<9)  // ammo location
-#define W_FL_JUMP        (1<<18) // must jump to reach this waypoint
-W_FL_LIFT #define W_FL_LIFT_SWITCH (1<<21) // press this switch to activate the nearby lift
-W_FL_CHECK_FOR_LIFT #define W_FL_LIFT_WAIT (1 << 22) // wait at this waypoint for the lift to move
-#define W_FL_DELETED     (1<<31) // used by waypoint allocation code*/
-  }
+		setConvertBit(0, (1 << 0));
+		setConvertBit(1, (1 << 1));
+		setConvertBit(2, (1 << 2));
+		setConvertBit(3, W_FL_CROUCH);
+		setConvertBit(4, W_FL_LADDER);
+		setConvertBit(5, W_FL_WAIT_FOR_LIFT);
+		setConvertBit(6, W_FL_DOOR);
+		setConvertBit(7, W_FL_HEALTH);
+		setConvertBit(8, W_FL_ARMOR);
+		setConvertBit(9, W_FL_AMMO);
+		setConvertBit(18, W_FL_JUMP);
+		setConvertBit(9, W_FL_LIFT);
+		setConvertBit(18, W_FL_JUMP);
+		setConvertBit(31, W_FL_DELETED);
+		/*
+		#define W_FL_TEAM        ((1<<0) + (1<<1))  // allow for 4 teams (0-3)
+		#define W_FL_TEAM_SPECIFIC (1<<2)  // waypoint only for specified team
+		#define W_FL_CROUCH      (1<<3)  // must crouch to reach this waypoint
+		#define W_FL_LADDER      (1<<4)  // waypoint on a ladder
+		W_FL_WAIT_FOR_LIFT #define W_FL_LIFT        (1<<5)  // wait for lift to be down before approaching this waypoint
+		#define W_FL_DOOR        (1<<6)  // wait for door to open
+		#define W_FL_HEALTH      (1<<7)  // health kit (or wall mounted) location
+		#define W_FL_ARMOR       (1<<8)  // armor (or HEV) location
+		#define W_FL_AMMO        (1<<9)  // ammo location
+		#define W_FL_JUMP        (1<<18) // must jump to reach this waypoint
+		W_FL_LIFT #define W_FL_LIFT_SWITCH (1<<21) // press this switch to activate the nearby lift
+		W_FL_CHECK_FOR_LIFT #define W_FL_LIFT_WAIT (1 << 22) // wait at this waypoint for the lift to move
+		#define W_FL_DELETED     (1<<31) // used by waypoint allocation code*/
+	}
 };
 /*
 class CWhichbotConvert : public CWaypointConversion
@@ -452,7 +447,7 @@ public:
 #ifndef __linux__
 	  setFolder("addons\\whichbot\\data");
 #else
-      setFolder("addons/whichbot/data");
+	  setFolder("addons/whichbot/data");
 #endif
 
 	  setConvertBit(10,(1<<30));
@@ -502,7 +497,7 @@ public:
 };*/
 ///////////////////////
 
-const int g_iMaxVisibilityByte = (MAX_WAYPOINTS*MAX_WAYPOINTS)/8;
+const int g_iMaxVisibilityByte = (MAX_WAYPOINTS * MAX_WAYPOINTS) / 8;
 
 class CWaypointVisibilityTable
 {
@@ -513,69 +508,69 @@ public:
 		//create a heap...
 		m_VisTable = static_cast<unsigned char*>(malloc(iSize));
 
-		memset(m_VisTable,0,iSize);
+		memset(m_VisTable, 0, iSize);
 	}
 
-	BOOL SaveToFile ( void );
+	BOOL SaveToFile(void);
 
-	BOOL ReadFromFile ( void );
+	BOOL ReadFromFile(void);
 
-	BOOL GetVisibilityFromTo ( int iFrom, int iTo )
+	BOOL GetVisibilityFromTo(int iFrom, int iTo)
 	{
-		// work out the position 
-		int iPosition = (iFrom*MAX_WAYPOINTS)+iTo;
+		// work out the position
+		int iPosition = (iFrom * MAX_WAYPOINTS) + iTo;
 
-		int iByte = (int)(iPosition/8);
-		int iBit = iPosition%8;
+		int iByte = (int)(iPosition / 8);
+		int iBit = iPosition % 8;
 
-		if ( iByte < g_iMaxVisibilityByte )
-		{			
-			unsigned char *ToReturn = (m_VisTable+iByte);
-			
-			return ( (*ToReturn & (1<<iBit)) > 0 );
+		if (iByte < g_iMaxVisibilityByte)
+		{
+			unsigned char* ToReturn = (m_VisTable + iByte);
+
+			return ((*ToReturn & (1 << iBit)) > 0);
 		}
 
 		return FALSE;
 	}
 
-	void ClearVisibilityTable ( void )
+	void ClearVisibilityTable(void)
 	{
-		if ( m_VisTable )
-			memset(m_VisTable,0,g_iMaxVisibilityByte);
+		if (m_VisTable)
+			memset(m_VisTable, 0, g_iMaxVisibilityByte);
 	}
 
-	void FreeVisibilityTable ( void )
+	void FreeVisibilityTable(void)
 	{
-		if ( m_VisTable != NULL )
+		if (m_VisTable != NULL)
 		{
 			free(m_VisTable);
 			m_VisTable = NULL;
 		}
 	}
 
-	void SetVisibilityFromTo ( int iFrom, int iTo, BOOL bVisible )
+	void SetVisibilityFromTo(int iFrom, int iTo, BOOL bVisible)
 	{
-		int iPosition = (iFrom*MAX_WAYPOINTS)+iTo;
+		int iPosition = (iFrom * MAX_WAYPOINTS) + iTo;
 
-		int iByte = (int)(iPosition/8);
-		int iBit = iPosition%8;
+		int iByte = (int)(iPosition / 8);
+		int iBit = iPosition % 8;
 
-		if ( iByte < g_iMaxVisibilityByte )
+		if (iByte < g_iMaxVisibilityByte)
 		{
-			unsigned char *ToChange = (m_VisTable+iByte);
-			
-			if ( bVisible )
-				*ToChange |= (1<<iBit);
+			unsigned char* ToChange = (m_VisTable + iByte);
+
+			if (bVisible)
+				*ToChange |= (1 << iBit);
 			else
-				*ToChange &= ~(1<<iBit);
+				*ToChange &= ~(1 << iBit);
 		}
 	}
 
-	void WorkOutVisibilityTable ( int iNumWaypoints );
+	void WorkOutVisibilityTable(int iNumWaypoints);
 
 private:
 
-	unsigned char *m_VisTable;
+	unsigned char* m_VisTable;
 	// use a heap of 1 byte * size to keep things simple.
 };
 
@@ -586,41 +581,41 @@ private:
 
 // waypoint function prototypes...
 
-BOOL WaypointFlagsOnLadderOrFly ( int iWaypointFlags );
-void WaypointDrawBeam(edict_t *pEntity, Vector start, Vector end, int width,
-        int noise, int red, int green, int blue, int brightness, int speed);
+BOOL WaypointFlagsOnLadderOrFly(int iWaypointFlags);
+void WaypointDrawBeam(edict_t* pEntity, Vector start, Vector end, int width,
+	int noise, int red, int green, int blue, int brightness, int speed);
 void WaypointInit(void);
-int  WaypointFindPath(PATH **pPath, int *path_index, int waypoint_index, int team);
-int  WaypointFindNearest(edict_t *pEntity, float distance, int team);
-int  WaypointFindNearest(Vector v_src, edict_t *pEntity, float range, int team);
-int  WaypointFindNearestGoal(Vector v_src, edict_t *pEntity, float range, int team, int flags, dataStack<int> *iIgnoreWpts);
-int WaypointFindRandomGoal(edict_t *pEntity, int team, dataStack<int> *iIgnoreWpts );
-int WaypointFindRandomGoal(edict_t *pEntity, int team, int flags, dataStack<int> *iIgnoreWpts );
-int WaypointFindRandomGoal(Vector v_src, edict_t *pEntity, float range, int team, int flags, dataStack<int> *iIgnoreWpts);
+int  WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team);
+int  WaypointFindNearest(edict_t* pEntity, float distance, int team);
+int  WaypointFindNearest(Vector v_src, edict_t* pEntity, float range, int team);
+int  WaypointFindNearestGoal(Vector v_src, edict_t* pEntity, float range, int team, int flags, dataStack<int>* iIgnoreWpts);
+int WaypointFindRandomGoal(edict_t* pEntity, int team, dataStack<int>* iIgnoreWpts);
+int WaypointFindRandomGoal(edict_t* pEntity, int team, int flags, dataStack<int>* iIgnoreWpts);
+int WaypointFindRandomGoal(Vector v_src, edict_t* pEntity, float range, int team, int flags, dataStack<int>* iIgnoreWpts);
 int  WaypointFindNearestAiming(Vector v_origin);
-void WaypointAdd(CClient *pClient);
+void WaypointAdd(CClient* pClient);
 void WaypointAddPath(short int add_index, short int path_index);
-void WaypointAddAiming(edict_t *pEntity);
-void WaypointDelete(CClient *pClient);
+void WaypointAddAiming(edict_t* pEntity);
+void WaypointDelete(CClient* pClient);
 void WaypointDeletePath(short int del_index);
 void WaypointDeletePath(short int path_index, short int del_index);
-void WaypointCreatePath(CClient *pClient, int cmd);
-void WaypointRemovePath(CClient *pClient, int cmd);
-BOOL WaypointLoad(edict_t *pEntity);
-BOOL WaypointSave(BOOL bVisibilityMade, CWaypointConversion *theConverter = NULL);
+void WaypointCreatePath(CClient* pClient, int cmd);
+void WaypointRemovePath(CClient* pClient, int cmd);
+BOOL WaypointLoad(edict_t* pEntity);
+BOOL WaypointSave(BOOL bVisibilityMade, CWaypointConversion* theConverter = NULL);
 BOOL WaypointReachable(Vector v_src, Vector v_dest, BOOL bDistCheck = TRUE);
-int  WaypointFindReachable(edict_t *pEntity, float range, int team);
-void WaypointPrintInfo(edict_t *pEntity);
+int  WaypointFindReachable(edict_t* pEntity, float range, int team);
+void WaypointPrintInfo(edict_t* pEntity);
 //void WaypointThink(void);
-void WaypointDrawIndex( edict_t *pEntity, int index );
-float WaypointDistance ( const Vector &vOrigin, int iWaypointIndex );
-Vector WaypointOrigin ( int iWaypointIndex );
-int NearestWaypointToEdict ( edict_t *pEdict, int iIgnoreWpt, dataStack<int> *iFailedWpts );
-int NearestWaypointToOrigin ( const Vector &vOrigin, int iIgnoreWpt, dataStack<int> *iFailedWpts = NULL );
-int WaypointFlags ( int iWaypointIndex );
-int WaypointAddOrigin ( Vector vOrigin, int iFlags, edict_t *pEntity, BOOL bDraw = TRUE, BOOL bSound = TRUE, BOOL bAutoSetFlagsForPlayer = TRUE );
-void AutoWaypoint (void);
-Vector BotNavigate_ScanFOV ( CBot *pBot );
-edict_t *PlayerNearVector ( Vector vOrigin, float fRange );
-BOOL CheckLift ( CBot *pBot, Vector vCheckOrigin, Vector vCheckToOrigin );
+void WaypointDrawIndex(edict_t* pEntity, int index);
+float WaypointDistance(const Vector& vOrigin, int iWaypointIndex);
+Vector WaypointOrigin(int iWaypointIndex);
+int NearestWaypointToEdict(edict_t* pEdict, int iIgnoreWpt, dataStack<int>* iFailedWpts);
+int NearestWaypointToOrigin(const Vector& vOrigin, int iIgnoreWpt, dataStack<int>* iFailedWpts = NULL);
+int WaypointFlags(int iWaypointIndex);
+int WaypointAddOrigin(Vector vOrigin, int iFlags, edict_t* pEntity, BOOL bDraw = TRUE, BOOL bSound = TRUE, BOOL bAutoSetFlagsForPlayer = TRUE);
+void AutoWaypoint(void);
+Vector BotNavigate_ScanFOV(CBot* pBot);
+edict_t* PlayerNearVector(Vector vOrigin, float fRange);
+BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin);
 #endif // WAYPOINT_H

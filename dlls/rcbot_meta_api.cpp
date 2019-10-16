@@ -28,21 +28,21 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// Based on botman's High Ping Bastard bot
-//
-// (http://planethalflife.com/botman/)
-//
-// rcbot_meta_api.cpp
-//
-//////////////////////////////////////////////////
-//
-// Required for metamod.
-//
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // Based on botman's High Ping Bastard bot
+ //
+ // (http://planethalflife.com/botman/)
+ //
+ // rcbot_meta_api.cpp
+ //
+ //////////////////////////////////////////////////
+ //
+ // Required for metamod.
+ //
 
 #ifdef RCBOT_META_BUILD
 
@@ -57,18 +57,18 @@
 
 #include "engine.h"
 
-meta_globals_t *gpMetaGlobals;      // metamod globals
+meta_globals_t* gpMetaGlobals;      // metamod globals
 
 // From SDK dlls/h_export.cpp:
-	extern cvar_t bot_ver_cvar;
+extern cvar_t bot_ver_cvar;
 //! Holds engine functionality callbacks
 enginefuncs_t g_engfuncs;
-globalvars_t  *gpGlobals;
+globalvars_t* gpGlobals;
 
 int debug_engine;
-char *g_argv;
+char* g_argv;
 
-enginefuncs_t meta_engfuncs = 
+enginefuncs_t meta_engfuncs =
 {
 	NULL,						// pfnPrecacheModel()
 	NULL,						// pfnPrecacheSound()
@@ -261,166 +261,164 @@ enginefuncs_t meta_engfuncs =
 };
 // Global vars from metamod:
 
-gamedll_funcs_t *gpGamedllFuncs;    // gameDLL function tables
-mutil_funcs_t *gpMetaUtilFuncs;     // metamod utility functions
+gamedll_funcs_t* gpGamedllFuncs;    // gameDLL function tables
+mutil_funcs_t* gpMetaUtilFuncs;     // metamod utility functions
 
-META_FUNCTIONS gMetaFunctionTable = 
-{ 
-        NULL, // pfnGetEntityAPI() 
-		NULL, // pfnGetEntityAPI_Post() 
-		GetEntityAPI2, // pfnGetEntityAPI2() 
-		NULL, // pfnGetEntityAPI2_Post() 
-		NULL, // pfnGetNewDLLFunctions() 
-		NULL, // pfnGetNewDLLFunctions_Post() 
-		GetEngineFunctions, // pfnGetEngineFunctions() 
-		NULL // pfnGetEngineFunctions_Post() 
-}; 
+META_FUNCTIONS gMetaFunctionTable =
+{
+		NULL, // pfnGetEntityAPI()
+		NULL, // pfnGetEntityAPI_Post()
+		GetEntityAPI2, // pfnGetEntityAPI2()
+		NULL, // pfnGetEntityAPI2_Post()
+		NULL, // pfnGetNewDLLFunctions()
+		NULL, // pfnGetNewDLLFunctions_Post()
+		GetEngineFunctions, // pfnGetEngineFunctions()
+		NULL // pfnGetEngineFunctions_Post()
+};
 
-plugin_info_t Plugin_info = { 
-    META_INTERFACE_VERSION, // interface version 
-		BOT_NAME, // plugin name 
-		BOT_VER, // plugin version 
-		__DATE__, // date of creation 
-		BOT_AUTHOR, // plugin author 
-		BOT_WEBSITE, // plugin URL 
-		BOT_DBG_MSG_TAG, // plugin logtag 
-		PT_STARTUP, // when loadable 
+plugin_info_t Plugin_info = {
+	META_INTERFACE_VERSION, // interface version
+		BOT_NAME, // plugin name
+		BOT_VER, // plugin version
+		__DATE__, // date of creation
+		BOT_AUTHOR, // plugin author
+		BOT_WEBSITE, // plugin URL
+		BOT_DBG_MSG_TAG, // plugin logtag
+		PT_STARTUP, // when loadable
 		PT_NEVER, // when unloadable (used to be PT_ANYTIME)
-}; 
+};
 
 extern CBotGlobals gBotGlobals;
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
 // Required DLL entry point
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
-{   
-   if (fdwReason == DLL_PROCESS_DETACH)
-   {
-	  gBotGlobals.FreeGlobalMemory();
-   }
+{
+	if (fdwReason == DLL_PROCESS_DETACH)
+	{
+		gBotGlobals.FreeGlobalMemory();
+	}
 
-   return TRUE;
+	return TRUE;
 }
 #else
-void _fini (void)
+void _fini(void)
 {
 	gBotGlobals.FreeGlobalMemory();
 }
 #endif
 
-C_DLLEXPORT int Meta_Query(char *interfaceVersion, plugin_info_t **plinfo, mutil_funcs_t *pMetaUtilFuncs)
-{ 
-	// this function is the first function ever called by metamod in the plugin DLL. Its purpose 
-	// is for metamod to retrieve basic information about the plugin, such as its meta-interface 
-	// version, for ensuring compatibility with the current version of the running metamod. 
-	
-	// keep track of the pointers to metamod function tables metamod gives us 
-	gpMetaUtilFuncs = pMetaUtilFuncs; 
-	*plinfo = &Plugin_info; 
-	
-	// check for interface version compatibility 
-	if (strcmp (interfaceVersion, Plugin_info.ifvers) != 0) 
-	{ 
-		int mmajor = 0, mminor = 0, pmajor = 0, pminor = 0; 
-		
-		LOG_CONSOLE (PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, interfaceVersion, Plugin_info.name, Plugin_info.ifvers); 
-		LOG_MESSAGE (PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, interfaceVersion, Plugin_info.name, Plugin_info.ifvers); 
-		
-		// if plugin has later interface version, it's incompatible (update metamod) 
-		sscanf (interfaceVersion, "%d:%d", &mmajor, &mminor); 
-		sscanf (META_INTERFACE_VERSION, "%d:%d", &pmajor, &pminor); 
-		
-		if ((pmajor > mmajor) || ((pmajor == mmajor) && (pminor > mminor))) 
-		{ 
-			LOG_CONSOLE (PLID, "metamod version is too old for this plugin; update metamod"); 
-			LOG_ERROR (PLID, "metamod version is too old for this plugin; update metamod"); 
-			return (FALSE); 
-		} 
-		
-		// if plugin has older major interface version, it's incompatible (update plugin) 
-		else if (pmajor < mmajor) 
-		{ 
-			LOG_CONSOLE (PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin"); 
-			LOG_ERROR (PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin"); 
-			return (FALSE); 
-		} 
-	} 
-	
-	return (TRUE); // tell metamod this plugin looks safe 
-} 
+C_DLLEXPORT int Meta_Query(char* interfaceVersion, plugin_info_t** plinfo, mutil_funcs_t* pMetaUtilFuncs)
+{
+	// this function is the first function ever called by metamod in the plugin DLL. Its purpose
+	// is for metamod to retrieve basic information about the plugin, such as its meta-interface
+	// version, for ensuring compatibility with the current version of the running metamod.
 
+	// keep track of the pointers to metamod function tables metamod gives us
+	gpMetaUtilFuncs = pMetaUtilFuncs;
+	*plinfo = &Plugin_info;
 
-C_DLLEXPORT int Meta_Attach (PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs) 
-{ 
-	// this function is called when metamod attempts to load the plugin. Since it's the place 
-	// where we can tell if the plugin will be allowed to run or not, we wait until here to make 
-	// our initialization stuff, like registering CVARs and dedicated server commands. 
-	
-	// are we allowed to load this plugin now ? 
-	if (now > Plugin_info.loadable) 
-	{ 
-		LOG_CONSOLE (PLID, "%s: plugin NOT attaching (can't load plugin right now)", Plugin_info.name); 
-		LOG_ERROR (PLID, "%s: plugin NOT attaching (can't load plugin right now)", Plugin_info.name); 
-		return (FALSE); // returning FALSE prevents metamod from attaching this plugin 
-	} 
-
-	if ( pFunctionTable == NULL )
+	// check for interface version compatibility
+	if (strcmp(interfaceVersion, Plugin_info.ifvers) != 0)
 	{
-		BotMessage(NULL,2,"Err: Received NULL pFunctionTable from Metamod... not my fault... check running plugins!!!");
+		int mmajor = 0, mminor = 0, pmajor = 0, pminor = 0;
+
+		LOG_CONSOLE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, interfaceVersion, Plugin_info.name, Plugin_info.ifvers);
+		LOG_MESSAGE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, interfaceVersion, Plugin_info.name, Plugin_info.ifvers);
+
+		// if plugin has later interface version, it's incompatible (update metamod)
+		sscanf(interfaceVersion, "%d:%d", &mmajor, &mminor);
+		sscanf(META_INTERFACE_VERSION, "%d:%d", &pmajor, &pminor);
+
+		if ((pmajor > mmajor) || ((pmajor == mmajor) && (pminor > mminor)))
+		{
+			LOG_CONSOLE(PLID, "metamod version is too old for this plugin; update metamod");
+			LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
+			return (FALSE);
+		}
+
+		// if plugin has older major interface version, it's incompatible (update plugin)
+		else if (pmajor < mmajor)
+		{
+			LOG_CONSOLE(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
+			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
+			return (FALSE);
+		}
 	}
-	
-	// keep track of the pointers to engine function tables metamod gives us 
-	gpMetaGlobals = pMGlobals; 
-	memcpy (pFunctionTable, &gMetaFunctionTable, sizeof (META_FUNCTIONS)); 
-	gpGamedllFuncs = pGamedllFuncs; 
-	
-	// print a message to notify about plugin attaching 
-	LOG_CONSOLE (PLID, "%s: plugin attaching", Plugin_info.name); 
-	LOG_MESSAGE (PLID, "%s: plugin attaching", Plugin_info.name); 
-	
-	CVAR_REGISTER(&bot_ver_cvar);
-	// ask the engine to register the CVARs this plugin uses 
-	/*CVAR_REGISTER (&cheesys_cvar_1); 
-	CVAR_REGISTER (&cheesys_cvar_2); 
-	CVAR_REGISTER (&and_so_on); 
-	
-	// ask the engine to register the server commands this plugin uses 
-	REG_SVR_COMMAND ("cheesys_command_1", TheFunctionToHandleCheesysCommand1); 
-	REG_SVR_COMMAND ("cheesys_command_2", TheFunctionToHandleCheesysCommand2); */
 
-	REG_SVR_COMMAND (BOT_COMMAND_ACCESS, RCBot_ServerCommand);
-	
-	return (TRUE); // returning TRUE enables metamod to attach this plugin 
-} 
-
-
-C_DLLEXPORT int Meta_Detach (PLUG_LOADTIME now, PL_UNLOAD_REASON reason) 
-{ 
-	// this function is called when metamod unloads the plugin. A basic check is made in order 
-	// to prevent unloading the plugin if its processing should not be interrupted. 
-	
-	// is metamod allowed to unload the plugin ? 
-	if ((now > Plugin_info.unloadable) && (reason != PNL_CMD_FORCED)) 
-	{ 
-		LOG_CONSOLE (PLID, "%s: plugin NOT detaching (can't unload plugin right now)", Plugin_info.name); 
-		LOG_ERROR (PLID, "%s: plugin NOT detaching (can't unload plugin right now)", Plugin_info.name); 
-		return (FALSE); // returning FALSE prevents metamod from unloading this plugin 
-	} 	
-
-	gBotGlobals.FreeGlobalMemory();
-	
-	return (TRUE); // returning TRUE enables metamod to unload this plugin 
+	return (TRUE); // tell metamod this plugin looks safe
 }
 
-C_DLLEXPORT int GetEngineFunctions (enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion) 
-{ 
-	// this is one of the initialization functions hooked by metamod in the engine API 
-	
-	// keep track of pointers to the functions we use in the engine API 
+C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS* pFunctionTable, meta_globals_t* pMGlobals, gamedll_funcs_t* pGamedllFuncs)
+{
+	// this function is called when metamod attempts to load the plugin. Since it's the place
+	// where we can tell if the plugin will be allowed to run or not, we wait until here to make
+	// our initialization stuff, like registering CVARs and dedicated server commands.
+
+	// are we allowed to load this plugin now ?
+	if (now > Plugin_info.loadable)
+	{
+		LOG_CONSOLE(PLID, "%s: plugin NOT attaching (can't load plugin right now)", Plugin_info.name);
+		LOG_ERROR(PLID, "%s: plugin NOT attaching (can't load plugin right now)", Plugin_info.name);
+		return (FALSE); // returning FALSE prevents metamod from attaching this plugin
+	}
+
+	if (pFunctionTable == NULL)
+	{
+		BotMessage(NULL, 2, "Err: Received NULL pFunctionTable from Metamod... not my fault... check running plugins!!!");
+	}
+
+	// keep track of the pointers to engine function tables metamod gives us
+	gpMetaGlobals = pMGlobals;
+	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
+	gpGamedllFuncs = pGamedllFuncs;
+
+	// print a message to notify about plugin attaching
+	LOG_CONSOLE(PLID, "%s: plugin attaching", Plugin_info.name);
+	LOG_MESSAGE(PLID, "%s: plugin attaching", Plugin_info.name);
+
+	CVAR_REGISTER(&bot_ver_cvar);
+	// ask the engine to register the CVARs this plugin uses
+	/*CVAR_REGISTER (&cheesys_cvar_1);
+	CVAR_REGISTER (&cheesys_cvar_2);
+	CVAR_REGISTER (&and_so_on);
+
+	// ask the engine to register the server commands this plugin uses
+	REG_SVR_COMMAND ("cheesys_command_1", TheFunctionToHandleCheesysCommand1);
+	REG_SVR_COMMAND ("cheesys_command_2", TheFunctionToHandleCheesysCommand2); */
+
+	REG_SVR_COMMAND(BOT_COMMAND_ACCESS, RCBot_ServerCommand);
+
+	return (TRUE); // returning TRUE enables metamod to attach this plugin
+}
+
+C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
+{
+	// this function is called when metamod unloads the plugin. A basic check is made in order
+	// to prevent unloading the plugin if its processing should not be interrupted.
+
+	// is metamod allowed to unload the plugin ?
+	if ((now > Plugin_info.unloadable) && (reason != PNL_CMD_FORCED))
+	{
+		LOG_CONSOLE(PLID, "%s: plugin NOT detaching (can't unload plugin right now)", Plugin_info.name);
+		LOG_ERROR(PLID, "%s: plugin NOT detaching (can't unload plugin right now)", Plugin_info.name);
+		return (FALSE); // returning FALSE prevents metamod from unloading this plugin
+	}
+
+	gBotGlobals.FreeGlobalMemory();
+
+	return (TRUE); // returning TRUE enables metamod to unload this plugin
+}
+
+C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* interfaceVersion)
+{
+	// this is one of the initialization functions hooked by metamod in the engine API
+
+	// keep track of pointers to the functions we use in the engine API
 
 	meta_engfuncs.pfnCmd_Args = pfnCmd_Args;
 	meta_engfuncs.pfnCmd_Argv = pfnCmd_Argv;
-	meta_engfuncs.pfnCmd_Argc = pfnCmd_Argc;   
+	meta_engfuncs.pfnCmd_Argc = pfnCmd_Argc;
 	meta_engfuncs.pfnPrecacheModel = pfnPrecacheModel;
 	meta_engfuncs.pfnPrecacheSound = pfnPrecacheSound;
 	meta_engfuncs.pfnSetModel = pfnSetModel;
@@ -462,9 +460,9 @@ C_DLLEXPORT int GetEngineFunctions (enginefuncs_t *pengfuncsFromEngine, int *int
 	meta_engfuncs.pfnGetAimVector = pfnGetAimVector;
 	meta_engfuncs.pfnServerCommand = pfnServerCommand;
 	meta_engfuncs.pfnServerExecute = pfnServerExecute;
-	
+
 	meta_engfuncs.pfnClientCommand = pfnClientCommand;
-	
+
 	meta_engfuncs.pfnParticleEffect = pfnParticleEffect;
 	meta_engfuncs.pfnLightStyle = pfnLightStyle;
 	meta_engfuncs.pfnDecalIndex = pfnDecalIndex;
@@ -536,31 +534,31 @@ C_DLLEXPORT int GetEngineFunctions (enginefuncs_t *pengfuncsFromEngine, int *int
 	meta_engfuncs.pfnIsDedicatedServer = pfnIsDedicatedServer;
 	meta_engfuncs.pfnCVarGetPointer = pfnCVarGetPointer;
 	meta_engfuncs.pfnGetPlayerWONId = pfnGetPlayerWONId;
-	
+
 	// Do these at start
-	gBotGlobals.Init();	
+	gBotGlobals.Init();
 	gBotGlobals.GetModInfo();
-	
+
 	SetupMenus();
 
 	//gBotGlobals.GameInit();
 
-	// copy the whole table for metamod to know which functions we are using here 
-	memcpy (pengfuncsFromEngine,&meta_engfuncs, sizeof (enginefuncs_t)); 	
-	
-	return (TRUE); // alright 
+	// copy the whole table for metamod to know which functions we are using here
+	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
+
+	return (TRUE); // alright
 }
 
 //#if defined(_WIN32) && !defined(__CYGWIN__)
-void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals )
+void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pGlobals)
 //#else
 //extern "C" DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals )
 //#endif
-{	
+{
 	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
 	gpGlobals = pGlobals;
 
-	g_argv = static_cast<char *>(malloc(1024));
+	g_argv = static_cast<char*>(malloc(1024));
 }
 
 #endif

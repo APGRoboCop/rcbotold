@@ -28,35 +28,35 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// Based on botman's High Ping Bastard bot
-//
-// (http://planethalflife.com/botman/)
-//
-// bot_weapons.h
-//
-//////////////////////////////////////////////////
-//
-//
-//
-/****************************************************
- * RCBOT Weapon Classes                             *
- *                                                  *
- * Code by : Paul Murphy {paul.murphy@ntlworld.com} *
- *                       {cheeseh@rcbot.net}        *
- *                                                  *
- ****************************************************
- *
- * Paul M'(cheeseh@rcbot.net/paul.murphy@ntlworld.com)
- * If using any of the class components please keep 
- * this tag.. Please :p
- *
- ****************************************************
-*/
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // Based on botman's High Ping Bastard bot
+ //
+ // (http://planethalflife.com/botman/)
+ //
+ // bot_weapons.h
+ //
+ //////////////////////////////////////////////////
+ //
+ //
+ //
+ /****************************************************
+  * RCBOT Weapon Classes                             *
+  *                                                  *
+  * Code by : Paul Murphy {paul.murphy@ntlworld.com} *
+  *                       {cheeseh@rcbot.net}        *
+  *                                                  *
+  ****************************************************
+  *
+  * Paul M'(cheeseh@rcbot.net/paul.murphy@ntlworld.com)
+  * If using any of the class components please keep
+  * this tag.. Please :p
+  *
+  ****************************************************
+ */
 
 #ifndef __BOT_WEAPONS_H__
 #define __BOT_WEAPONS_H__
@@ -64,12 +64,12 @@
 #include "generic_class.h"
 #include "weaponinfo.h"
 
-///////////////////////////////////////
-// WEAPON ID's BELOW...
+ ///////////////////////////////////////
+ // WEAPON ID's BELOW...
 
-////////////////////////////////////////
-// NATURAL SELECTION
-// FLYRA (Charlie Cleveland : flayra@overmind.org)
+ ////////////////////////////////////////
+ // NATURAL SELECTION
+ // FLYRA (Charlie Cleveland : flayra@overmind.org)
 enum
 {
 	NS_WEAPON_NONE = 0,
@@ -112,7 +112,6 @@ enum
 	NS_WEAPON_DEVOUR
 
 	// Can't go over 32 (client.cpp, GetWeaponData())
-
 };
 
 ////////////////////
@@ -120,22 +119,22 @@ enum
 
 enum
 {
-// weapon ID values for Valve's Half-Life Deathmatch
- VALVE_WEAPON_CROWBAR=1,
- VALVE_WEAPON_GLOCK,
- VALVE_WEAPON_PYTHON,
- VALVE_WEAPON_MP5,
- VALVE_WEAPON_CHAINGUN,
- VALVE_WEAPON_CROSSBOW,
- VALVE_WEAPON_SHOTGUN,
- VALVE_WEAPON_RPG,
- VALVE_WEAPON_GAUSS,
- VALVE_WEAPON_EGON,
- VALVE_WEAPON_HORNETGUN,
- VALVE_WEAPON_HANDGRENADE,
- VALVE_WEAPON_TRIPMINE,
- VALVE_WEAPON_SATCHEL,
- VALVE_WEAPON_SNARK
+	// weapon ID values for Valve's Half-Life Deathmatch
+	VALVE_WEAPON_CROWBAR = 1,
+	VALVE_WEAPON_GLOCK,
+	VALVE_WEAPON_PYTHON,
+	VALVE_WEAPON_MP5,
+	VALVE_WEAPON_CHAINGUN,
+	VALVE_WEAPON_CROSSBOW,
+	VALVE_WEAPON_SHOTGUN,
+	VALVE_WEAPON_RPG,
+	VALVE_WEAPON_GAUSS,
+	VALVE_WEAPON_EGON,
+	VALVE_WEAPON_HORNETGUN,
+	VALVE_WEAPON_HANDGRENADE,
+	VALVE_WEAPON_TRIPMINE,
+	VALVE_WEAPON_SATCHEL,
+	VALVE_WEAPON_SNARK
 };
 
 #define SVEN_WEAPON_UZIAKIMBO	  16
@@ -148,7 +147,6 @@ enum
 
 #define VALVE_MAX_NORMAL_BATTERY   100
 #define VALVE_HORNET_MAX_CARRY      8
-
 
 // weapon ID values for Valve's Team Fortress Classic & 1.5
 #define TF_WEAPON_UNKNOWN1       1
@@ -174,7 +172,6 @@ enum
 #define TF_WEAPON_RAILGUN       21
 #define TF_WEAPON_PL            22
 #define TF_WEAPON_KNIFE         23
-
 
 // weapon ID values for Counter-Strike
 #define CS_WEAPON_P228           1
@@ -208,7 +205,6 @@ enum
 #define CS_WEAPON_KNIFE         29
 #define CS_WEAPON_P90           30
 
-
 // weapon ID values for Gearbox's OpFor Deathmatch
 #define GEARBOX_WEAPON_CROWBAR       1
 #define GEARBOX_WEAPON_GLOCK         2
@@ -235,7 +231,6 @@ enum
 #define GEARBOX_WEAPON_SPORELAUNCHER 23
 #define GEARBOX_WEAPON_SNIPERRIFLE  24
 #define GEARBOX_WEAPON_KNIFE        25
-
 
 // weapon ID values for FrontLineForce
 #define FLF_WEAPON_AK5           10
@@ -288,46 +283,44 @@ enum
 #define DMC_SUIT                         21
 #define DMC_QUAD                         22
 
-typedef enum 
-{	
-	TS_Glock18= 1,
-	TS_MiniUzi= 3,
-	TS_BenelliM3 =4,
-	TS_M4A1= 5,
-	TS_MP5SD= 6,
-	TS_MP5K=7,
-	TS_AkimboBerettas =8,
+typedef enum
+{
+	TS_Glock18 = 1,
+	TS_MiniUzi = 3,
+	TS_BenelliM3 = 4,
+	TS_M4A1 = 5,
+	TS_MP5SD = 6,
+	TS_MP5K = 7,
+	TS_AkimboBerettas = 8,
 	TS_SocomMk23 = 9,
-	TS_Usas12= 11,
+	TS_Usas12 = 11,
 	TS_DesertEagle = 12,
-	TS_Ak47= 13,
+	TS_Ak47 = 13,
 	TS_FiveSeven = 14,
 	TS_SteyrAug = 15,
 	TS_SteyrTmp = 17,
 	TS_BarrettM82 = 18,
 	TS_HKPdw = 19,
-	TS_Spas12= 20,
+	TS_Spas12 = 20,
 	TS_Akimbocolts = 21,
 	TS_Glock20 = 22,
-	TS_Mac10= 23,
+	TS_Mac10 = 23,
 	TS_CombatKnife = 25,
 	TS_Mossberg500 = 26,
-	TS_M16A4= 27,
+	TS_M16A4 = 27,
 	TS_RugerMk1 = 28,
 	TS_M61Grenade = 24,
-	TS_C4= 29,
+	TS_C4 = 29,
 	TS_RagingBull = 31,
-	TS_M60= 32,
+	TS_M60 = 32,
 	TS_Sawedoff = 33,
-	TS_Katana= 34,
+	TS_Katana = 34,
 	TS_SealKnife = 35,
 	TS_KungFu = 36
 }eTSWeaponID;
 
-
-void GetNoWeaponArray ( int *Array );
-void GetArrayOfExplosives ( int *Array );
-
+void GetNoWeaponArray(int* Array);
+void GetArrayOfExplosives(int* Array);
 
 class CBot;
 /////////////////////////////////
@@ -345,40 +338,37 @@ typedef struct
 	int m_iId;
 	BOOL m_bCanFireUnderWater;
 
-    BOOL m_bHasPrimaryFire;
+	BOOL m_bHasPrimaryFire;
 	BOOL m_bHasSecondaryFire;
 
 	int m_fPrimMinRange;
 	int m_fPrimMaxRange;
 
-    int m_fSecMinRange;
+	int m_fSecMinRange;
 	int m_fSecMaxRange;
 
 	BOOL m_bIsMelee;
 
 	short int m_iModId;
 	int m_iPriority;
-
 }weapon_preset_t;
-
-
 
 class CWeaponPresets
 {
 public:
-	void ReadPresets ( void );
-	
-	weapon_preset_t *GetPreset(short int iModId, int iWeaponId)
+	void ReadPresets(void);
+
+	weapon_preset_t* GetPreset(short int iModId, int iWeaponId)
 	{
 		dataStack<weapon_preset_t> tempStack = m_Presets;
-		weapon_preset_t *pPreset;
+		weapon_preset_t* pPreset;
 
-		while ( !tempStack.IsEmpty() )
+		while (!tempStack.IsEmpty())
 		{
 			pPreset = tempStack.ChoosePointerFromStack();
 
-			if (( pPreset->m_iId == iWeaponId ) &&
-			    ( pPreset->m_iModId == iModId ))
+			if ((pPreset->m_iId == iWeaponId) &&
+				(pPreset->m_iModId == iModId))
 			{
 				tempStack.Init();
 
@@ -389,7 +379,7 @@ public:
 		return NULL;
 	}
 
-	void Destroy ( void )
+	void Destroy(void)
 	{
 		m_Presets.Destroy();
 	}
@@ -401,110 +391,110 @@ private:
 class CWeapon
 {
 public:
-	CWeapon ( )
+	CWeapon()
 	{
 		this->Init();
 	}
 
-	void Init ( void )
+	void Init(void)
 	{
 		m_iAmmoIndex1 = -1;
 		m_iAmmoIndex2 = -1;
-		
+
 		m_szClassname = NULL;
-		
+
 		m_bRegistered = FALSE; // Registered by the mod.
-		
+
 		m_iPrimAmmoMax = -1;
 		m_iSecAmmoMax = -1;
-		
+
 		m_iHudSlot = -1;
 		m_iHudPosition = -1;
-		
+
 		m_iFlags = 0;
-		
+
 		m_iId = 0;
-		
+
 		//memset(this,0,sizeof(CWeapon));
 	}
 
-	void SetWeapon ( int iId, const char *szClassname, int iPrimAmmoMax, int iSecAmmoMax, int iHudSlot, int iHudPosition, int iFlags, int iAmmoIndex1, int iAmmoIndex2 );
+	void SetWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int iSecAmmoMax, int iHudSlot, int iHudPosition, int iFlags, int iAmmoIndex1, int iAmmoIndex2);
 
-	virtual BOOL CanBeUsedUnderWater ( void )
+	virtual BOOL CanBeUsedUnderWater(void)
 	{
 		// no preset
-			return TRUE;
+		return TRUE;
 	}
 
-	inline int MaxPrimaryAmmo ( void )
+	inline int MaxPrimaryAmmo(void)
 	{
 		return m_iPrimAmmoMax;
 	}
 
-	virtual BOOL CanUsePrimary ( void )
+	virtual BOOL CanUsePrimary(void)
 	{
 		return TRUE;
 	}
 
-	virtual BOOL CanUseSecondary ( void )
+	virtual BOOL CanUseSecondary(void)
 	{
 		// no preset
 		return TRUE;
 	}
 
-	BOOL IsRegistered ( void )
+	BOOL IsRegistered(void)
 	{
 		return m_bRegistered;
 	}
 
-	virtual int GetPriority ( void )
+	virtual int GetPriority(void)
 	{
 		return 0;
 	}
 
-	inline char *GetClassname ( void )
+	inline char* GetClassname(void)
 	{
 		return m_szClassname;
 	}
 
-	virtual BOOL PrimaryInRange ( float fRange )
+	virtual BOOL PrimaryInRange(float fRange)
 	{
 		return TRUE;
 	}
 
-	virtual float PrimMaxRange ( void )
+	virtual float PrimMaxRange(void)
 	{
 		return BOT_VIEW_DISTANCE;
 	}
 
-	virtual float PrimMinRange ( void )
+	virtual float PrimMinRange(void)
 	{
 		return BOT_VIEW_DISTANCE;
 	}
 
-	virtual BOOL SecondaryInRange ( float fRange )
+	virtual BOOL SecondaryInRange(float fRange)
 	{
 		return TRUE;
 	}
 
-	int HudSlot ( void )
+	int HudSlot(void)
 	{
 		return m_iHudSlot;
-	}	
+	}
 
-	int HudPosition ( void )
+	int HudPosition(void)
 	{
 		return m_iHudPosition;
 	}
 
-	virtual BOOL IsMelee ( void )
+	virtual BOOL IsMelee(void)
 	{
 		return (m_iAmmoIndex1 == -1);
 	}
 
-	BOOL IsPrimary ( void );
+	BOOL IsPrimary(void);
 
-	BOOL IsSecondary ( void );
+	BOOL IsSecondary(void);
 
 	int m_iAmmoIndex1;
 	int m_iAmmoIndex2;
@@ -513,7 +503,7 @@ private:
 
 	//weapon_preset_t *m_pWeaponPreset;
 
-	char *m_szClassname;
+	char* m_szClassname;
 
 	BOOL m_bRegistered; // Registered by the mod.
 
@@ -534,96 +524,95 @@ public:
 	//int m_iId;
 	BOOL m_bCanFireUnderWater;
 
-    BOOL m_bHasPrimaryFire;
+	BOOL m_bHasPrimaryFire;
 	BOOL m_bHasSecondaryFire;
 
 	int m_fPrimMinRange;
 	int m_fPrimMaxRange;
 
-    int m_fSecMinRange;
+	int m_fSecMinRange;
 	int m_fSecMaxRange;
 
 	BOOL m_bIsMelee;
 
 	//short int m_iModId;
 	int m_iPriority;
-	
-	CWeaponPreset ( )
+
+	CWeaponPreset()
 	{
 		this->Init();
 	}
-	
-	CWeaponPreset ( weapon_preset_t *pPreset )
+
+	CWeaponPreset(weapon_preset_t* pPreset)
 	{
 		m_bCanFireUnderWater = pPreset->m_bCanFireUnderWater;
-		
+
 		m_bHasPrimaryFire = pPreset->m_bHasPrimaryFire;
 		m_bHasSecondaryFire = pPreset->m_bHasSecondaryFire;
-		
+
 		m_fPrimMinRange = pPreset->m_fPrimMinRange;
 		m_fPrimMaxRange = pPreset->m_fPrimMaxRange;
-		
+
 		m_fSecMinRange = pPreset->m_fSecMinRange;
 		m_fSecMaxRange = pPreset->m_fSecMaxRange;
-		
+
 		m_bIsMelee = pPreset->m_bIsMelee;
-		
+
 		//m_iModId;
 		m_iPriority = pPreset->m_iPriority;
 	}
-	
-	void Init ( void )
-	{
-		memset(this,0,sizeof(CWeaponPreset));
-	}	
 
-	BOOL CanBeUsedUnderWater ( void )
+	void Init(void)
+	{
+		memset(this, 0, sizeof(CWeaponPreset));
+	}
+
+	BOOL CanBeUsedUnderWater(void)
 	{
 		return m_bCanFireUnderWater;
 	}
 
-	BOOL CanUsePrimary ( void )
+	BOOL CanUsePrimary(void)
 	{
 		return (m_bHasPrimaryFire);
 	}
 
-	BOOL CanUseSecondary ( void )
+	BOOL CanUseSecondary(void)
 	{
 		return (m_bHasSecondaryFire);
 	}
 
-	int GetPriority ( void )
+	int GetPriority(void)
 	{
-		return ( m_iPriority );
+		return (m_iPriority);
 	}
 
-	BOOL PrimaryInRange ( float fRange )
+	BOOL PrimaryInRange(float fRange)
 	{
-		return (( fRange >= m_fPrimMinRange )&&
-			    ( fRange <= m_fPrimMaxRange ));
+		return ((fRange >= m_fPrimMinRange) &&
+			(fRange <= m_fPrimMaxRange));
 	}
 
-	float PrimMaxRange ( void )
+	float PrimMaxRange(void)
 	{
 		return m_fPrimMinRange;
 	}
 
-	float PrimMinRange ( void )
+	float PrimMinRange(void)
 	{
 		return m_fPrimMaxRange;
 	}
 
-	BOOL SecondaryInRange ( float fRange )
+	BOOL SecondaryInRange(float fRange)
 	{
-		return (( fRange >= m_fSecMinRange )&&
-			    ( fRange <= m_fSecMaxRange ));
+		return ((fRange >= m_fSecMinRange) &&
+			(fRange <= m_fSecMaxRange));
 	}
 
-	BOOL IsMelee ( void )
+	BOOL IsMelee(void)
 	{
-		return ( m_bIsMelee == 1 );
+		return (m_bIsMelee == 1);
 	}
-
 };
 
 class CWeapons
@@ -639,9 +628,9 @@ public:
 	{
 		int i;
 
-		for ( i = 0; i < MAX_WEAPONS; i ++ )
+		for (i = 0; i < MAX_WEAPONS; i++)
 		{
-			if ( m_Weapons[i] != NULL )
+			if (m_Weapons[i] != NULL)
 			{
 				delete m_Weapons[i];
 				m_Weapons[i] = NULL;
@@ -649,108 +638,106 @@ public:
 		}
 	}
 
-	void AddWeapon ( int iId, const char *szClassname, int iPrimAmmoMax, int iSecAmmoMax, int iHudSlot, int iHudPosition, int iFlags, int iAmmoIndex1, int iAmmoIndex2 );
+	void AddWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int iSecAmmoMax, int iHudSlot, int iHudPosition, int iFlags, int iAmmoIndex1, int iAmmoIndex2);
 
-	void Init ( void )
+	void Init(void)
 	{
 		int i;
 
-		for ( i = 0; i < MAX_WEAPONS; i ++ )
+		for (i = 0; i < MAX_WEAPONS; i++)
 		{
 			m_Weapons[i] = NULL;
 		}
 		//memset(m_Weapons,0,sizeof(CWeapon)*MAX_WEAPONS);
 	}
 
-	CWeapon *GetWeapon ( int iId )
+	CWeapon* GetWeapon(int iId)
 	{
-		if (( iId >= 0 ) && ( iId < MAX_WEAPONS ))
+		if ((iId >= 0) && (iId < MAX_WEAPONS))
 		{
 			//if ( m_Weapons[iId].IsRegistered() )
 			return m_Weapons[iId];
 		}
 		return NULL;
-	}	
+	}
 
 private:
-	CWeapon *m_Weapons[MAX_WEAPONS];
-
+	CWeapon* m_Weapons[MAX_WEAPONS];
 };
 
 class CBotWeapon
 {
 public:
 
-	inline int GetID ( void ) const
+	inline int GetID(void) const
 	{
 		return m_iId;
 	}
 
-	int HudSlot ( void )
+	int HudSlot(void)
 	{
-		if ( m_pWeaponInfo )
+		if (m_pWeaponInfo)
 			return m_pWeaponInfo->HudSlot();
-		
+
 		return -1;
 	}
 
-	CBotWeapon ()
+	CBotWeapon()
 	{
-		memset(this,0,sizeof(CBotWeapon));
+		memset(this, 0, sizeof(CBotWeapon));
 	}
 
-	void SetWeapon ( int iId, int *iAmmoList );
+	void SetWeapon(int iId, int* iAmmoList);
 
-	void setHasWeapon ( BOOL bVal );
+	void setHasWeapon(BOOL bVal);
 
-	BOOL LowOnAmmo ( void )
+	BOOL LowOnAmmo(void)
 	{
 		// less in reserve than current clip
-		return (!IsMelee() && m_iAmmo1 && (*m_iAmmo1 < m_iClip) );
+		return (!IsMelee() && m_iAmmo1 && (*m_iAmmo1 < m_iClip));
 	}
 
-
-	BOOL OutOfAmmo ( void )
+	BOOL OutOfAmmo(void)
 	{
-		if ( m_iAmmo1 )
+		if (m_iAmmo1)
 		{
-			return ( (m_iClip <= 0) && !*m_iAmmo1 );
+			return ((m_iClip <= 0) && !*m_iAmmo1);
 		}
 
-		return FALSE;		
+		return FALSE;
 	}
 
-	int PrimaryInRange ( float fRange )
+	int PrimaryInRange(float fRange)
 	{
-		if ( m_pWeaponInfo->PrimaryInRange(fRange) )
+		if (m_pWeaponInfo->PrimaryInRange(fRange))
 			return 0;
 
-		if ( m_pWeaponInfo->PrimMinRange() > fRange )
+		if (m_pWeaponInfo->PrimMinRange() > fRange)
 			return -1;
 
-		if ( m_pWeaponInfo->PrimMaxRange() < fRange )
+		if (m_pWeaponInfo->PrimMaxRange() < fRange)
 			return 1;
-		
+
 		return 0;
 	}
 
-	float PrimMinRange ( void )
+	float PrimMinRange(void)
 	{
-		if ( m_pWeaponInfo )
+		if (m_pWeaponInfo)
 			return m_pWeaponInfo->PrimMinRange();
 		return 0;
 	}
 
-	BOOL SecondaryInRange ( float fRange )
+	BOOL SecondaryInRange(float fRange)
 	{
-		if ( m_pWeaponInfo )
+		if (m_pWeaponInfo)
 			return m_pWeaponInfo->SecondaryInRange(fRange);
 		return 1;
 	}
 
-	BOOL CanGetMorePrimaryAmmo ( void )
+	BOOL CanGetMorePrimaryAmmo(void)
 	{
-		switch ( m_iId )
+		switch (m_iId)
 		{
 		case NS_WEAPON_MINE:
 		case NS_WEAPON_KNIFE:
@@ -761,90 +748,90 @@ public:
 			break;
 		}
 
-		return ( !IsMelee() && ( PrimaryAmmo() < m_pWeaponInfo->MaxPrimaryAmmo() ) );
+		return (!IsMelee() && (PrimaryAmmo() < m_pWeaponInfo->MaxPrimaryAmmo()));
 	}
 
-	BOOL IsPrimary ( void )
+	BOOL IsPrimary(void)
 	{
 		assert(m_pWeaponInfo != NULL);
 
 		return m_pWeaponInfo->IsPrimary();
 	}
 
-	BOOL IsSecondary ( void )
+	BOOL IsSecondary(void)
 	{
 		assert(m_pWeaponInfo != NULL);
 
 		return m_pWeaponInfo->IsSecondary();
 	}
 
-	BOOL NeedToReload ( void );
+	BOOL NeedToReload(void);
 
-	BOOL CanReload ( void );
+	BOOL CanReload(void);
 
-	BOOL CanShootPrimary ( edict_t *pEdict, float flFireDist, float flWallDist );
+	BOOL CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist);
 
-	BOOL CanShootSecondary ( void )
+	BOOL CanShootSecondary(void)
 	{
 		int iSecAmmo = SecondaryAmmo();
 
 		return ((iSecAmmo == -1) || (iSecAmmo > 0));
 	}
 
-	inline int PrimaryAmmo ( void )
+	inline int PrimaryAmmo(void)
 	{
-		if ( m_iAmmo1 )
+		if (m_iAmmo1)
 			return *m_iAmmo1;
 
 		return -1;
 	}
 
-	inline int SecondaryAmmo ( void )
+	inline int SecondaryAmmo(void)
 	{
-		if ( m_iAmmo2 )
+		if (m_iAmmo2)
 			return *m_iAmmo2;
 
 		return -1;
 	}
 
-	BOOL HasWeapon ( edict_t *pEdict );
+	BOOL HasWeapon(edict_t* pEdict);
 
-	void RemoveWeapon ( void )
+	void RemoveWeapon(void)
 	{
 		m_bHasWeapon = FALSE;
 	}
 
-	void UpdateWeapon ( int iClip )
+	void UpdateWeapon(int iClip)
 	{
 		m_iClip = iClip;
 	}
 
-    char *GetClassname ( void )
+	char* GetClassname(void)
 	{
-		if ( m_pWeaponInfo )
+		if (m_pWeaponInfo)
 			return m_pWeaponInfo->GetClassname();
 		else
 			return NULL;
 	}
 
-	BOOL IsMelee ( void )
+	BOOL IsMelee(void)
 	{
-		if ( m_pWeaponInfo == NULL )
+		if (m_pWeaponInfo == NULL)
 			return TRUE;
 		return m_pWeaponInfo->IsMelee();
 	}
 
-	BOOL CanBeUsedUnderWater ( void )
-	{		
-		if ( m_pWeaponInfo == NULL )
+	BOOL CanBeUsedUnderWater(void)
+	{
+		if (m_pWeaponInfo == NULL)
 			return TRUE;
 
 		return m_pWeaponInfo->CanBeUsedUnderWater();
 	}
 
-	int GetPriority ( void )
+	int GetPriority(void)
 	{
-		if ( m_pWeaponInfo == NULL )
+		if (m_pWeaponInfo == NULL)
 		{
 			return 0;
 		}
@@ -852,36 +839,35 @@ public:
 		return m_pWeaponInfo->GetPriority();
 	}
 
-	inline void setAmmoArray ( int *pAmmo1, int *pAmmo2 = NULL )
+	inline void setAmmoArray(int* pAmmo1, int* pAmmo2 = NULL)
 	{
-		if ( pAmmo1 )
+		if (pAmmo1)
 		{
 			m_iAmmo1 = pAmmo1;
 			m_iAmmo2 = pAmmo1;
 		}
-		if ( pAmmo2 )
+		if (pAmmo2)
 			m_iAmmo2 = pAmmo2;
-
 	}
 
-	inline void setReserve ( int iRes )
+	inline void setReserve(int iRes)
 	{
 		m_iReserve = iRes;
 	}
 
-	int getReserve ()
+	int getReserve()
 	{
 		return m_iReserve;
 	}
 
-	int getMaxClip ()
+	int getMaxClip()
 	{
 		return m_iMaxClip;
 	}
 
-	void checkMaxClip (int clip)
+	void checkMaxClip(int clip)
 	{
-		if ( clip > m_iMaxClip )
+		if (clip > m_iMaxClip)
 			m_iMaxClip = clip;
 	}
 
@@ -894,12 +880,12 @@ private:
 	int m_iReserve;
 
 	// store pointers to ammo stored
-	int *m_iAmmo1;
-	int *m_iAmmo2;
+	int* m_iAmmo1;
+	int* m_iAmmo2;
 
 	int m_iMaxClip;
-	
-	CWeapon *m_pWeaponInfo;
+
+	CWeapon* m_pWeaponInfo;
 
 	BOOL m_bHasWeapon;
 };
@@ -908,36 +894,36 @@ class CBotWeapons
 {
 public:
 
-	int GetBestWeaponId( CBot *pBot, edict_t *pEnemy );
+	int GetBestWeaponId(CBot* pBot, edict_t* pEnemy);
 
-	void RemoveWeapon ( int iId )
+	void RemoveWeapon(int iId)
 	{
 		m_Weapons[iId].RemoveWeapon();
 	}
 
-	void RemoveWeapons ( void )
+	void RemoveWeapons(void)
 	{
 		int i;
 
-		for ( i = 0; i < MAX_WEAPONS; i ++ )
+		for (i = 0; i < MAX_WEAPONS; i++)
 			this->RemoveWeapon(i);
 	}
 
-	BOOL HasWeapon ( edict_t *pEdict, char *szClassname );
+	BOOL HasWeapon(edict_t* pEdict, char* szClassname);
 
-	BOOL HasWeapon ( edict_t *pEdict, int iId )
+	BOOL HasWeapon(edict_t* pEdict, int iId)
 	{
-		if ((iId > 0 ) && (iId < MAX_WEAPONS))
+		if ((iId > 0) && (iId < MAX_WEAPONS))
 			return m_Weapons[iId].HasWeapon(pEdict);
 		else
 			return FALSE;
 	}
 
-	void setHasWeapon ( int id, BOOL bVal )
+	void setHasWeapon(int id, BOOL bVal)
 	{
-		for ( int i = 0; i < MAX_WEAPONS; i ++ )
+		for (int i = 0; i < MAX_WEAPONS; i++)
 		{
-			if ( m_Weapons[i].GetID() == id )
+			if (m_Weapons[i].GetID() == id)
 			{
 				m_Weapons[i].setHasWeapon(bVal);
 				return;
@@ -945,54 +931,54 @@ public:
 		}
 	}
 
-	void AddWeapon ( int iId );
+	void AddWeapon(int iId);
 
-	void UpdateWeapon ( int iId, int iClip )
+	void UpdateWeapon(int iId, int iClip)
 	{
 		m_Weapons[iId].UpdateWeapon(iClip);
 	}
 
-	CBotWeapon *GetWeapon ( int iId )
+	CBotWeapon* GetWeapon(int iId)
 	{
-		if (( iId >= 0 ) && ( iId < MAX_WEAPONS ))
+		if ((iId >= 0) && (iId < MAX_WEAPONS))
 			return &m_Weapons[iId];
 
 		return NULL;
 	}
 
-	int GetPrimaryWeaponId ( void )
+	int GetPrimaryWeaponId(void)
 	{
 		int i;
 
-		for ( i = 0; i < MAX_WEAPONS; i ++ )
+		for (i = 0; i < MAX_WEAPONS; i++)
 		{
-			if ( !m_Weapons[i].HasWeapon(NULL) )
+			if (!m_Weapons[i].HasWeapon(NULL))
 				continue;
-			if ( m_Weapons[i].IsPrimary() )
+			if (m_Weapons[i].IsPrimary())
 				return i;
 		}
 
 		return 0;
 	}
 
-	int GetSecondaryWeaponId ( void )
+	int GetSecondaryWeaponId(void)
 	{
 		int i;
 
-		for ( i = 0; i < MAX_WEAPONS; i ++ )
+		for (i = 0; i < MAX_WEAPONS; i++)
 		{
-			if ( !m_Weapons[i].HasWeapon(NULL) )
+			if (!m_Weapons[i].HasWeapon(NULL))
 				continue;
-			if ( m_Weapons[i].IsSecondary() )
+			if (m_Weapons[i].IsSecondary())
 				return i;
 		}
 
 		return 0;
 	}
 
-	void UpdateAmmo ( int iIndex, int iAmount )
+	void UpdateAmmo(int iIndex, int iAmount)
 	{
-		if (( iIndex >= 0 ) && ( iIndex < MAX_AMMO_SLOTS ))
+		if ((iIndex >= 0) && (iIndex < MAX_AMMO_SLOTS))
 			m_iAmmo[iIndex] = iAmount;
 	}
 
@@ -1005,12 +991,10 @@ private:
 class CompareBotWeapon
 {
 public:
-	bool operator()(CBotWeapon *a, CBotWeapon *b)
+	bool operator()(CBotWeapon* a, CBotWeapon* b)
 	{
-		return a->GetPriority()<b->GetPriority();
+		return a->GetPriority() < b->GetPriority();
 	}
 };
 
-
 #endif // BOT_WEAPONS_H
-

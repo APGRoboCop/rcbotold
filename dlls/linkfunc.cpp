@@ -28,23 +28,23 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// Based on botman's High Ping Bastard bot
-//
-// (http://planethalflife.com/botman/)
-//
-// dll.cpp
-//
-//////////////////////////////////////////////////
-//
-// functions for entities
-//
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // Based on botman's High Ping Bastard bot
+ //
+ // (http://planethalflife.com/botman/)
+ //
+ // dll.cpp
+ //
+ //////////////////////////////////////////////////
+ //
+ // functions for entities
+ //
 
-/// Only for NON-METAMOD build only...
+ /// Only for NON-METAMOD build only...
 #ifndef RCBOT_META_BUILD
 
 #include "extdll.h"
@@ -58,7 +58,7 @@ extern HINSTANCE _h_Library;
 #elif defined(_WIN32) && !defined(__CYGWIN__)
 extern HINSTANCE h_Library;
 #else
-extern void *h_Library;
+extern void* h_Library;
 #endif
 
 #ifdef __BORLANDC__
@@ -870,7 +870,5 @@ LINK_ENTITY_TO_FUNC(ambient_generic);
 LINK_ENTITY_TO_FUNC(aiscripted_sequence);
 LINK_ENTITY_TO_FUNC(DelayedUse);
 LINK_ENTITY_TO_FUNC(CreateInterface);
-
-
 
 #endif

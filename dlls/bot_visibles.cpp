@@ -28,21 +28,21 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// Based on botman's High Ping Bastard bot
-//
-// (http://planethalflife.com/botman/)
-//
-// bot_visible.cpp
-//
-//////////////////////////////////////////////////
-//
-// Bot definitions header
-//
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // Based on botman's High Ping Bastard bot
+ //
+ // (http://planethalflife.com/botman/)
+ //
+ // bot_visible.cpp
+ //
+ //////////////////////////////////////////////////
+ //
+ // Bot definitions header
+ //
 #include "extdll.h"
 
 #ifndef RCBOT_META_BUILD
@@ -57,37 +57,36 @@
 #include "bot_visibles.h"
 #include "bits.h"
 
-
-CBotVisibles :: CBotVisibles ()
+CBotVisibles::CBotVisibles()
 {
-	m_iVisibles = new CBits(gpGlobals->maxEntities+1);
+	m_iVisibles = new CBits(gpGlobals->maxEntities + 1);
 	m_iIter = 0;
 	m_iVisibleList.Clear();
 }
 
-BOOL CBotVisibles :: isVisible ( int iIndex )
+BOOL CBotVisibles::isVisible(int iIndex)
 {
 	return m_iVisibles->getBit(iIndex);
 }
 
-void CBotVisibles :: setVisible (int iIndex, BOOL bVisible)
+void CBotVisibles::setVisible(int iIndex, BOOL bVisible)
 {
 	BOOL bCurrentlyVisible = isVisible(iIndex);
 
-	if ( bCurrentlyVisible && !bVisible )
+	if (bCurrentlyVisible && !bVisible)
 		m_iVisibleList.Remove(iIndex);
-	else if ( !bCurrentlyVisible && bVisible )
+	else if (!bCurrentlyVisible && bVisible)
 		m_iVisibleList.Add(iIndex);
 
-	m_iVisibles->setBit(iIndex,bVisible);
+	m_iVisibles->setBit(iIndex, bVisible);
 }
 
-void CBotVisibles :: resetIter ()
+void CBotVisibles::resetIter()
 {
 	m_iIter = 0;
 }
 
-void CBotVisibles :: freeMemory ()
+void CBotVisibles::freeMemory()
 {
 	m_iVisibleList.Destroy();
 	m_iVisibleList.Clear();
@@ -96,23 +95,23 @@ void CBotVisibles :: freeMemory ()
 	m_iVisibles = NULL;
 }
 
-edict_t *CBotVisibles :: nextVisible ()
+edict_t* CBotVisibles::nextVisible()
 {
-	if ( m_iIter < m_iVisibleList.Size() )
+	if (m_iIter < m_iVisibleList.Size())
 	{
 		int iEntityIndex = 0;
 
-	    iEntityIndex = m_iVisibleList.ReturnValueFromIndex(m_iIter);
+		iEntityIndex = m_iVisibleList.ReturnValueFromIndex(m_iIter);
 
 		m_iIter++;
 
 		// reliability checks
-		if ( !iEntityIndex || (iEntityIndex > gpGlobals->maxEntities) )
+		if (!iEntityIndex || (iEntityIndex > gpGlobals->maxEntities))
 			m_iVisibleList.Clear();
 		else
 			return INDEXENT(iEntityIndex);
 	}
-	
+
 	resetIter();
 
 	return NULL;

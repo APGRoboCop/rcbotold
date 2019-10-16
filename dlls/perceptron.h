@@ -32,7 +32,7 @@
 #ifndef __PERCEPTRON_H__
 #define __PERCEPTRON_H__
 
-//#include "ga.h"
+ //#include "ga.h"
 #include "gannconst.h"
 #include <vector>
 using namespace std;
@@ -44,14 +44,13 @@ class CBotGAValues;
 class ITransfer
 {
 public:
-	virtual ga_value transfer ( ga_value netInput ) = 0;
+	virtual ga_value transfer(ga_value netInput) = 0;
 };
-
 
 class CSigmoidTransfer : public ITransfer
 {
 public:
-	ga_value transfer ( ga_value netInput );
+	ga_value transfer(ga_value netInput);
 };
 
 class CPerceptron //: public IIndividual
@@ -81,63 +80,63 @@ public:
 	virtual IIndividual *copy () = 0;
 */
 
-	CPerceptron (unsigned int iInputs,ITransfer *transferFunction=NULL,float fLearnRate=0.0f);
+	CPerceptron(unsigned int iInputs, ITransfer* transferFunction = NULL, float fLearnRate = 0.0f);
 
-	CPerceptron (FILE *bfp)
+	CPerceptron(FILE* bfp)
 	{
 		load(bfp);
 	}
 
-	void setWeights ( vector <ga_value> weights );
+	void setWeights(vector <ga_value> weights);
 
-	void setWeights ( vector <ga_value> weights, int iFrom, int iNum );
+	void setWeights(vector <ga_value> weights, int iFrom, int iNum);
 
-	void setWeights ( CBotGAValues *vals, int iFrom, int iNum );
+	void setWeights(CBotGAValues* vals, int iFrom, int iNum);
 
-	inline int numWeights () { return m_weights.size();}
+	inline int numWeights() { return m_weights.size(); }
 
-	inline void setWeight ( int iWeight, ga_value fVal ) { m_weights[iWeight] = fVal;}
+	inline void setWeight(int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
 
-	inline ga_value getWeight ( int iWeight ) { return m_weights[iWeight];}
+	inline ga_value getWeight(int iWeight) { return m_weights[iWeight]; }
 
-	void input ( vector <ga_value> *inputs );
+	void input(vector <ga_value>* inputs);
 
-	ga_value execute ();
+	ga_value execute();
 
-	BOOL fired ();
+	BOOL fired();
 
-	ga_value getOutput ();
+	ga_value getOutput();
 
-	void train ( ga_value expectedOutput );
+	void train(ga_value expectedOutput);
 
-	void randomize ();
+	void randomize();
 
-	~CPerceptron ()
+	~CPerceptron()
 	{
-		if ( m_transferFunction )
+		if (m_transferFunction)
 			delete m_transferFunction;
 		m_transferFunction = NULL;
 	}
 
-	inline BOOL trained () { return m_bTrained; }
+	inline BOOL trained() { return m_bTrained; }
 
-	inline void setTrained () { m_bTrained = TRUE; }
+	inline void setTrained() { m_bTrained = TRUE; }
 
-	void save ( FILE *bfp );
-	void load ( FILE *bfp );
+	void save(FILE* bfp);
+	void load(FILE* bfp);
 
-	void load ( char *filename, int iProfileId );
-	void save ( char *filename, int iProfileId );
+	void load(char* filename, int iProfileId);
+	void save(char* filename, int iProfileId);
 
 private:
-	
+
 	unsigned int m_iInputs;
 	ga_value m_Bias;
 	ga_value m_LearnRate;
 	vector <ga_value> m_inputs;
 	vector <ga_value> m_weights;
 	ga_value m_output;
-	ITransfer *m_transferFunction;
+	ITransfer* m_transferFunction;
 	BOOL m_bTrained;
 };
 

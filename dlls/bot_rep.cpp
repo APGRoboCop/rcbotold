@@ -28,21 +28,21 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// Based on botman's High Ping Bastard bot
-//
-// (http://planethalflife.com/botman/)
-//
-// bot_rep.cpp
-//
-//////////////////////////////////////////////////
-//
-// Bot reputation handling
-//
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // Based on botman's High Ping Bastard bot
+ //
+ // (http://planethalflife.com/botman/)
+ //
+ // bot_rep.cpp
+ //
+ //////////////////////////////////////////////////
+ //
+ // Bot reputation handling
+ //
 
 #include "extdll.h"
 
@@ -62,35 +62,34 @@ extern CBotGlobals gBotGlobals;
 ////////////////////////////////////////////////////////////
 // REPUTATION HANDLING
 
-int BotFunc_GetRepArrayNum (const int iRep)
+int BotFunc_GetRepArrayNum(const int iRep)
 // Return the array index for chat arrays for the right rep.
 // 0 = enemy
 // 1 = neutral
 // 2 = friendly
 {
-	if ( iRep == -1 )
+	if (iRep == -1)
 	{
-		BugMessage(NULL,"GetRepArrayNum: Bad rep recieved (%d)",iRep);
+		BugMessage(NULL, "GetRepArrayNum: Bad rep recieved (%d)", iRep);
 		return 1;
 	}
 
-	if ( iRep < 3 )
+	if (iRep < 3)
 		return 0;
-	else if (( iRep >= 3 )&&( iRep <= 6 ))
+	else if ((iRep >= 3) && (iRep <= 6))
 		return 1;
-	
+
 	return 2;
 }
 
-
-CBotReputation :: CBotReputation(const int iPlayerRepId, const int iRep)
+CBotReputation::CBotReputation(const int iPlayerRepId, const int iRep)
 {
 	m_iPlayerRepId = iPlayerRepId;
-	
+
 	m_iRep = iRep;
 }
 
-CClient *CBotReputations :: GetRandomClient ( const int iRep )
+CClient* CBotReputations::GetRandomClient(const int iRep)
 // return a random client that conforms to the iRep (reputation)
 // -1 will return a random bad client
 // 0 : a random neutral client
@@ -99,29 +98,29 @@ CClient *CBotReputations :: GetRandomClient ( const int iRep )
 	int iGotRep;
 
 	dataStack <CBotReputation> tempStack = m_RepList;
-	CBotReputation *pRep;
+	CBotReputation* pRep;
 	dataUnconstArray<CBotReputation*> iIdList;
 
 	iIdList.Init();
 
-	while ( !tempStack.IsEmpty() )
+	while (!tempStack.IsEmpty())
 	{
 		pRep = tempStack.ChoosePointerFromStack();
 
 		iGotRep = pRep->CurrentRep();
-		
-		switch ( iRep )
+
+		switch (iRep)
 		{
 		case -1: // bad
-			if ( iGotRep <= 3 )
+			if (iGotRep <= 3)
 				iIdList.Add(pRep);
 			break;
 		case 0: // neutral
-			if (( iGotRep > 3 ) && ( iGotRep < 7 ))
+			if ((iGotRep > 3) && (iGotRep < 7))
 				iIdList.Add(pRep);
 			break;
 		case 1: // good
-			if ( iGotRep >= 7 )
+			if (iGotRep >= 7)
 				iIdList.Add(pRep);
 			break;
 		}
@@ -129,16 +128,16 @@ CClient *CBotReputations :: GetRandomClient ( const int iRep )
 
 	tempStack.Init();
 
-	if ( iIdList.IsEmpty() )
+	if (iIdList.IsEmpty())
 		return NULL;
 
-	assert ( iIdList.Size() > 0 );
+	assert(iIdList.Size() > 0);
 
 	pRep = iIdList.Random();
 
 	iIdList.Clear();
 
-	if ( pRep == NULL )
+	if (pRep == NULL)
 		return NULL;
 
 	return gBotGlobals.m_Clients.GetClientByRepId(pRep->GetRepId());
@@ -146,40 +145,40 @@ CClient *CBotReputations :: GetRandomClient ( const int iRep )
 
 ////////////////////////////////
 // Saves ONE rep and removes it
-void CBotReputations :: RemoveSaveRep (const int iBotProfile, const int iPlayerRepId)
+void CBotReputations::RemoveSaveRep(const int iBotProfile, const int iPlayerRepId)
 {
-	CBotReputation *pRep = this->GetRep(iPlayerRepId);
+	CBotReputation* pRep = this->GetRep(iPlayerRepId);
 
-	if ( pRep )
+	if (pRep)
 	{
-		WriteToFile(iBotProfile,pRep);
+		WriteToFile(iBotProfile, pRep);
 	}
 
 	m_RepList.RemoveByPointer(pRep);
 }
 ////////////////////////////////
 // Saves ALL rep
-void CBotReputations :: SaveAllRep (const int iBotProfile)
+void CBotReputations::SaveAllRep(const int iBotProfile)
 {
 	dataStack <CBotReputation> tempStack = m_RepList;
-	CBotReputation *pRep;
+	CBotReputation* pRep;
 
-	while ( !tempStack.IsEmpty() )
+	while (!tempStack.IsEmpty())
 	{
 		pRep = tempStack.ChoosePointerFromStack();
 
-		if ( pRep )
+		if (pRep)
 		{
-			WriteToFile(iBotProfile,pRep);
+			WriteToFile(iBotProfile, pRep);
 		}
 	}
 
 	return;
 }
 
-void CBotReputations :: AddLoadRep (const int iBotProfile, const int iPlayerRepId )
+void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 {
-	FILE *fp;
+	FILE* fp;
 
 	char filename[256];
 	char repfile[16];
@@ -188,63 +187,62 @@ void CBotReputations :: AddLoadRep (const int iBotProfile, const int iPlayerRepI
 
 	BOOL bFound = FALSE;
 
-	sprintf(repfile,"%d.rcr",iBotProfile);
+	sprintf(repfile, "%d.rcr", iBotProfile);
 
-	UTIL_BuildFileName(filename,"botprofiles",repfile);
+	UTIL_BuildFileName(filename, "botprofiles", repfile);
 
-	fp = fopen (filename, "rb"); // open the file in ascii read/write mode
+	fp = fopen(filename, "rb"); // open the file in ascii read/write mode
 
-	if ( fp == NULL )
+	if (fp == NULL)
 	{
-		m_RepList.Push(CBotReputation(iPlayerRepId,BOT_MID_REP));
+		m_RepList.Push(CBotReputation(iPlayerRepId, BOT_MID_REP));
 
-		WriteToFile(iBotProfile,m_RepList.GetHeadInfoPointer());
+		WriteToFile(iBotProfile, m_RepList.GetHeadInfoPointer());
 
 		return;
 	}
 
-	fseek(fp,0,SEEK_END); // move pos to end of file
+	fseek(fp, 0, SEEK_END); // move pos to end of file
 	long   fPos = ftell(fp);  // get length of file
-	
+
 	// do some error checking - verify the file is not corrupt
-	if (fPos%sizeof(CBotReputation)!=0) return;
-	
+	if (fPos % sizeof(CBotReputation) != 0) return;
+
 	// get the count of items in the file
-	long   count = fPos/sizeof(CBotReputation);
-	
-	fseek(fp,0,SEEK_SET); // move pos back to beginning
-	
-	while ((bFound == FALSE) && !feof(fp) && count>0)
+	long   count = fPos / sizeof(CBotReputation);
+
+	fseek(fp, 0, SEEK_SET); // move pos back to beginning
+
+	while ((bFound == FALSE) && !feof(fp) && count > 0)
 	{
-		fread(&Rep,sizeof(CBotReputation),1,fp);
+		fread(&Rep, sizeof(CBotReputation), 1, fp);
 
 		// is for the player input into function (player id)?
-		if ( Rep.IsForPlayer(iPlayerRepId) )
+		if (Rep.IsForPlayer(iPlayerRepId))
 		{
 			m_RepList.Push(Rep);
 			bFound = TRUE;
 		}
-		
+
 		count--;
 	}
 
 	fclose(fp);
 
-	if ( bFound == FALSE )
+	if (bFound == FALSE)
 	{
-		m_RepList.Push(CBotReputation(iPlayerRepId,BOT_MID_REP));
+		m_RepList.Push(CBotReputation(iPlayerRepId, BOT_MID_REP));
 
 		// save new
-		WriteToFile(iBotProfile,m_RepList.GetHeadInfoPointer());
+		WriteToFile(iBotProfile, m_RepList.GetHeadInfoPointer());
 	}
 
 	return;
-
 }
 
-void CBotReputations :: WriteToFile (const int iBotProfile, CBotReputation *pRep)
+void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 {
-	FILE *fp;
+	FILE* fp;
 
 	char filename[256];
 	char repfile[16];
@@ -253,132 +251,132 @@ void CBotReputations :: WriteToFile (const int iBotProfile, CBotReputation *pRep
 
 	BOOL bChanged = FALSE;
 
-	if ( pRep == NULL ) // error
+	if (pRep == NULL) // error
 		return;
 
-	sprintf(repfile,"%d.rcr",iBotProfile);
+	sprintf(repfile, "%d.rcr", iBotProfile);
 
-	UTIL_BuildFileName(filename,"botprofiles",repfile);
+	UTIL_BuildFileName(filename, "botprofiles", repfile);
 
-	fp = fopen (filename, "rb+"); // open the file in ascii read/write mode
+	fp = fopen(filename, "rb+"); // open the file in ascii read/write mode
 
-	if ( fp == NULL )
+	if (fp == NULL)
 	{
-		fp = fopen (filename, "wb");
+		fp = fopen(filename, "wb");
 
-		if ( fp == NULL )
+		if (fp == NULL)
 		{
-			BotMessage(NULL,0,"could not save Bot id %d's rep file",iBotProfile);
+			BotMessage(NULL, 0, "could not save Bot id %d's rep file", iBotProfile);
 			return;
 		}
-		
-		fwrite(pRep,sizeof(CBotReputation),1,fp);
-		fclose(fp);
-		
-		return;
-	}	
-	
-	fseek(fp,0,SEEK_END); // move pos to end of file
-	long   fPos = ftell(fp);  // get length of file
-	
-	// do some error checking - verify the file is not corrupt
-	if (fPos%sizeof(CBotReputation)!=0) return;
-	
-	// get the count of items in the file
-	long   count = fPos/sizeof(CBotReputation);
-	
-	fseek(fp,0,SEEK_SET); // move pos back to beginning
-	
-	while ((bChanged == FALSE) && !feof(fp) && count>0)
-	{
-		fread(&Rep,sizeof(CBotReputation),1,fp);
 
-		if ( Rep == *pRep )
+		fwrite(pRep, sizeof(CBotReputation), 1, fp);
+		fclose(fp);
+
+		return;
+	}
+
+	fseek(fp, 0, SEEK_END); // move pos to end of file
+	long   fPos = ftell(fp);  // get length of file
+
+	// do some error checking - verify the file is not corrupt
+	if (fPos % sizeof(CBotReputation) != 0) return;
+
+	// get the count of items in the file
+	long   count = fPos / sizeof(CBotReputation);
+
+	fseek(fp, 0, SEEK_SET); // move pos back to beginning
+
+	while ((bChanged == FALSE) && !feof(fp) && count > 0)
+	{
+		fread(&Rep, sizeof(CBotReputation), 1, fp);
+
+		if (Rep == *pRep)
 		{
 			fPos = ftell(fp);   // get the current position
 			// move marker back to start of this record
-			fseek(fp,0-sizeof(CBotReputation),SEEK_CUR);
-			fwrite(pRep,sizeof(CBotReputation),1,fp);
+			fseek(fp, 0 - sizeof(CBotReputation), SEEK_CUR);
+			fwrite(pRep, sizeof(CBotReputation), 1, fp);
 			fflush(fp);
-			// now reset the marker to same as before we 
+			// now reset the marker to same as before we
 			// deleted this record so that everything continues
 			// as normal
-			fseek(fp,fPos,SEEK_SET);
+			fseek(fp, fPos, SEEK_SET);
 
 			bChanged = TRUE;
 		}
 		count--;
 	}
 	fclose(fp);
-	
-	if ( bChanged == FALSE )
-	{
-		fp = fopen(filename,"ab"); // append binary
 
-		if ( fp == NULL )
+	if (bChanged == FALSE)
+	{
+		fp = fopen(filename, "ab"); // append binary
+
+		if (fp == NULL)
 		{
-			BotMessage(NULL,0,"Can't open reputation file \"%s\" for appending",filename);
+			BotMessage(NULL, 0, "Can't open reputation file \"%s\" for appending", filename);
 			return; // error
 		}
 		else
 		{
-		   fwrite(pRep,sizeof(CBotReputation),1,fp);
+			fwrite(pRep, sizeof(CBotReputation), 1, fp);
 
-		   fclose(fp);
+			fclose(fp);
 		}
 	}
 }
 
-int GetPlayerEdictRepId ( edict_t *pEdict )
+int GetPlayerEdictRepId(edict_t* pEdict)
 // return rep id of pEdict
 {
-	CClient *pClient;
-	
-	if ( pEdict == NULL )
+	CClient* pClient;
+
+	if (pEdict == NULL)
 		return -1;
-	
+
 	pClient = gBotGlobals.m_Clients.GetClientByEdict(pEdict);
 
-	if ( pClient )
+	if (pClient)
 		return pClient->GetPlayerRepId();
 
 	return -1;
 }
 
-int GetPlayerRepId ( const char *szPlayerName )
+int GetPlayerRepId(const char* szPlayerName)
 // each player is uniquely identified by an integer id
 // held in the playersid.ini file. theire id is basically
 // the line number that their name is on in the .ini file.
 {
-	FILE *fp;
+	FILE* fp;
 
-	if ( szPlayerName == NULL )
+	if (szPlayerName == NULL)
 		return -1;
-	if ( *szPlayerName == 0 )
+	if (*szPlayerName == 0)
 		return -1;
 
 	char filename[512];
-	UTIL_BuildFileName(filename,BOT_PLAYER_ID_FILE);
+	UTIL_BuildFileName(filename, BOT_PLAYER_ID_FILE);
 
-	fp = fopen(filename,"r");
-	
-	if ( fp == NULL )
+	fp = fopen(filename, "r");
+
+	if (fp == NULL)
 	{
-		fp = fopen(filename,"w");
-		
-		if ( fp != NULL )
+		fp = fopen(filename, "w");
+
+		if (fp != NULL)
 		{
-			fprintf(fp,"%s",BOT_PLAYER_ID_FILE_HEADER);
-			fprintf(fp,"\"%s\"\n",szPlayerName);
-			
+			fprintf(fp, "%s", BOT_PLAYER_ID_FILE_HEADER);
+			fprintf(fp, "\"%s\"\n", szPlayerName);
+
 			fclose(fp);
-			
+
 			return 0;
 		}
 		else
 		{
-			BugMessage(NULL,"Cannot open/write to bot player id file");
-			
+			BugMessage(NULL, "Cannot open/write to bot player id file");
+
 			return -1;
 		}
 	}
@@ -390,18 +388,18 @@ int GetPlayerRepId ( const char *szPlayerName )
 		int iId = 0;
 		int i;
 		int iPlayerChar;
-		
-		while ( fgets(buffer,127,fp) )
+
+		while (fgets(buffer, 127, fp))
 		{
-			if ( buffer[0] == '#' ) // comment
+			if (buffer[0] == '#') // comment
 				continue;
-			
+
 			length = strlen(buffer);
-			
-			if ( length == 0 )
+
+			if (length == 0)
 				continue; // nothing on this line
 
-			if ( buffer[length-1] == '\n' )
+			if (buffer[length - 1] == '\n')
 			{
 				length--;
 				buffer[length] = 0;
@@ -419,55 +417,55 @@ int GetPlayerRepId ( const char *szPlayerName )
 			while ((i < length) && (buffer[i] != '"') && (iPlayerChar < 64))
 				playername[iPlayerChar++] = buffer[i++];
 
-			if ( iPlayerChar < 64 )
+			if (iPlayerChar < 64)
 				playername[iPlayerChar] = 0;
 
 			//sscanf(buffer,"\"%s\"",playername);
-			
-			if ( strcmp(playername,szPlayerName) == 0 )
+
+			if (strcmp(playername, szPlayerName) == 0)
 			{
 				fclose(fp);
 				return iId;
 			}
-			
-			iId ++;
+
+			iId++;
 		}
-		
+
 		fclose(fp);
-		
-		fp = fopen(filename,"a");
-		
-		if ( fp != NULL )
+
+		fp = fopen(filename, "a");
+
+		if (fp != NULL)
 		{
-			fprintf(fp,"\"%s\"\n",szPlayerName);
+			fprintf(fp, "\"%s\"\n", szPlayerName);
 			fclose(fp);
-			
+
 			return iId;
 		}
 	}
-	
+
 	// error
 	return -1;
 }
 
-int CBotReputations ::GetClientRep(CClient *pClient)
+int CBotReputations::GetClientRep(CClient* pClient)
 {
-	if ( pClient == NULL )
+	if (pClient == NULL)
 	{
-		BotMessage(NULL,0,"warning: GetClientRep(): Bad pClient recieved (NULL) (returning default)");
+		BotMessage(NULL, 0, "warning: GetClientRep(): Bad pClient recieved (NULL) (returning default)");
 		return BOT_MID_REP;
 	}
-	
+
 	int iRepId = pClient->GetPlayerRepId();
 
-	if ( iRepId == -1 )
+	if (iRepId == -1)
 		return BOT_MID_REP;
 
-	CBotReputation *pRep = this->GetRep(iRepId);
+	CBotReputation* pRep = this->GetRep(iRepId);
 
-	if ( pRep == NULL )
+	if (pRep == NULL)
 	{
-		BotMessage(NULL,0,"warning: GetClientRep(): No Rep for pClient (id: %d) (returning default)",pClient->GetPlayerRepId());
+		BotMessage(NULL, 0, "warning: GetClientRep(): No Rep for pClient (id: %d) (returning default)", pClient->GetPlayerRepId());
 		return BOT_MID_REP;
 	}
 

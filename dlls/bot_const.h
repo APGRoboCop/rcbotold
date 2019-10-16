@@ -28,25 +28,24 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// Based on botman's High Ping Bastard bot
-//
-// (http://planethalflife.com/botman/)
-//
-// bot_const.h
-//
-//////////////////////////////////////////////////
-//
-// Constants and macros
-//
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // Based on botman's High Ping Bastard bot
+ //
+ // (http://planethalflife.com/botman/)
+ //
+ // bot_const.h
+ //
+ //////////////////////////////////////////////////
+ //
+ // Constants and macros
+ //
 
 #ifndef __BOT_CONST_H__
 #define __BOT_CONST_H__
-
 
 #define EXPLODE_RADIUS 300
 
@@ -68,34 +67,33 @@ class AStarNode
 {
 public:
 	AStarNode();
-	BOOL heuristicSet ();
+	BOOL heuristicSet();
 
-	void setHeuristic (float botDist,float goalDist,BOOL bIsTeleport=FALSE);
+	void setHeuristic(float botDist, float goalDist, BOOL bIsTeleport = FALSE);
 
-	BOOL hasParent ();
+	BOOL hasParent();
 
-	BOOL isOpen ();
+	BOOL isOpen();
 
-	BOOL isClosed ();
+	BOOL isClosed();
 
-	void unClose ();
+	void unClose();
 
-	void close ();
+	void close();
 
+	void unOpen();
 
-	void unOpen ();
+	void open();
+	float getHeuristic();
 
-	void open ();
-	float getHeuristic ();
+	short int getParent();
+	void setParent(int iWpt);
 
-	short int getParent ();
-	void setParent ( int iWpt );
+	bool operator()(AStarNode* a, AStarNode* b);
 
-	bool operator()(AStarNode *a, AStarNode *b);
+	bool operator<(AStarNode* b);
 
-	bool operator<(AStarNode *b);
-
-	bool precedes (AStarNode *b);
+	bool precedes(AStarNode* b);
 
 	short int m_iWaypoint;
 
@@ -104,13 +102,12 @@ private:
 	float m_fHeuristic;
 	short int m_iParent;
 	short int flags;
-	
 };
 
 class CompareAStarNode
 {
 public:
-	bool operator()(AStarNode *a, AStarNode *b)
+	bool operator()(AStarNode* a, AStarNode* b)
 	{
 		return a->precedes(b);
 	}
@@ -142,7 +139,6 @@ typedef enum
 	BOT_CAN_BUILD_DISPENSER,
 	BOT_CAN_GET_METAL,
 	BOT_CAN_REPAIR_TELE_EXIT
-
 }eCanDoStuff;
 
 // macros
@@ -166,7 +162,6 @@ typedef enum
 #define R_DL	1// (DISLIKE) will attack
 #define R_HT	2// (HATE)will attack this character instead of any visible DISLIKEd characters
 #define R_NM	3// (NEMESIS)  A monster Will ALWAYS attack its nemsis, no matter what
-
 
 // these bits represent the monster's memory
 #define MEMORY_CLEAR					0
@@ -230,31 +225,29 @@ typedef enum
 typedef enum
 {
 	SOUND_UNKNOWN = 0,
-		SOUND_PLAYER,
-		SOUND_DOOR,
-		SOUND_WEAPON,
-		SOUND_FOLLOW,
-		SOUND_NEEDBACKUP,
-		SOUND_NEEDHEALTH,
-		SOUND_NEEDAMMO,
-		SOUND_COVERING,
-		SOUND_TAUNT,
-		SOUND_INPOSITION,
-		SOUND_INCOMING,
-		SOUND_MOVEOUT,
-		SOUND_ALLCLEAR,
-		SOUND_HUD,
-		SOUND_BUTTON,
-		SOUND_TURRETS,
-		SOUND_MISC,
-		SOUND_ATTACK,
-		SOUND_BUILDINGHERE,
-		SOUND_TAKE_COVER,
-		SOUND_PLAYER_PAIN
+	SOUND_PLAYER,
+	SOUND_DOOR,
+	SOUND_WEAPON,
+	SOUND_FOLLOW,
+	SOUND_NEEDBACKUP,
+	SOUND_NEEDHEALTH,
+	SOUND_NEEDAMMO,
+	SOUND_COVERING,
+	SOUND_TAUNT,
+	SOUND_INPOSITION,
+	SOUND_INCOMING,
+	SOUND_MOVEOUT,
+	SOUND_ALLCLEAR,
+	SOUND_HUD,
+	SOUND_BUTTON,
+	SOUND_TURRETS,
+	SOUND_MISC,
+	SOUND_ATTACK,
+	SOUND_BUILDINGHERE,
+	SOUND_TAKE_COVER,
+	SOUND_PLAYER_PAIN
 }eSoundType;
 // Bot Hear Prototypes
-
-
 
 ///////////////////////////////////////////////////////////////////////
 // NATURAL SELECTION
@@ -262,29 +255,29 @@ typedef enum
 
 typedef enum
 {
-    // Special or misc. actions
-    MESSAGE_NULL = 0,
+	// Special or misc. actions
+	MESSAGE_NULL = 0,
 
-    // Use an item or ability (these are currently forced to be less than 10 because it's
-    // used as an index into some weapons/equipment array <sigh>)
-    WEAPON_NEXT = 1,
-    WEAPON_RELOAD = 2,
-    WEAPON_DROP = 3,
+	// Use an item or ability (these are currently forced to be less than 10 because it's
+	// used as an index into some weapons/equipment array <sigh>)
+	WEAPON_NEXT = 1,
+	WEAPON_RELOAD = 2,
+	WEAPON_DROP = 3,
 
 	// Admin commands
 	ADMIN_READYROOM = 5,
 	ADMIN_VOTEDOWNCOMMANDER = 6,
 
-    // Talk to your teammates
-    SAYING_1 = 7,
-    SAYING_2 = 8,
-    SAYING_3 = 9,
-    SAYING_4 = 10,
-    SAYING_5 = 11,
-    SAYING_6 = 12,
-    SAYING_7 = 13,
-    SAYING_8 = 14,
-    SAYING_9 = 15,
+	// Talk to your teammates
+	SAYING_1 = 7,
+	SAYING_2 = 8,
+	SAYING_3 = 9,
+	SAYING_4 = 10,
+	SAYING_5 = 11,
+	SAYING_6 = 12,
+	SAYING_7 = 13,
+	SAYING_8 = 14,
+	SAYING_9 = 15,
 
 	// Chat
 	COMM_CHAT_PUBLIC = 16,
@@ -309,8 +302,8 @@ typedef enum
 	RESEARCH_PHASETECH = 34,
 	RESOURCE_UPGRADE = 35,
 	RESEARCH_ELECTRICAL = 36,
-    RESEARCH_GRENADES = 37,
-	
+	RESEARCH_GRENADES = 37,
+
 	// Buildings
 	BUILD_HEAVY = 38,
 	BUILD_JETPACK = 39,
@@ -331,7 +324,7 @@ typedef enum
 	BUILD_TURRET = 56,
 	BUILD_SIEGE = 57,
 	BUILD_COMMANDSTATION = 58,
-	
+
 	// Weapons and items
 	BUILD_HEALTH = 59,
 	BUILD_AMMO = 60,
@@ -357,19 +350,19 @@ typedef enum
 	GROUP_SELECT_3 = 77,
 	GROUP_SELECT_4 = 78,
 	GROUP_SELECT_5 = 79,
-	
+
 	// Orders
 	ORDER_REQUEST = 80,
 	ORDER_ACK = 81,
 
-	// Commander mode 
+	// Commander mode
 	COMMANDER_MOUSECOORD = 82,
 	COMMANDER_MOVETO = 83,
 	COMMANDER_SCROLL = 84,
 	COMMANDER_DEFAULTORDER = 104,
 	COMMANDER_SELECTALL = 105,
 	COMMANDER_REMOVESELECTION = 96,
-	
+
 	// Sub-menus
 	MENU_BUILD = 85,
 	MENU_BUILD_ADVANCED = 86,
@@ -414,7 +407,7 @@ typedef enum
 	ALIEN_HIVE_THREE_UNLOCK = 126,
 	COMBAT_TIER2_UNLOCK = 31,
 	COMBAT_TIER3_UNLOCK = 54,
-	
+
 	// Alien abilities
 	ALIEN_ABILITY_LEAP = 119,
 	ALIEN_ABILITY_BLINK = 120,
@@ -425,10 +418,9 @@ typedef enum
 	COMMANDER_NEXTHEALTH = 125,
 
 	MESSAGE_LAST = 127
-	
+
 	// NOTE: If this gets larger then a byte, AvHTechNode will have to change it's networking, possibly other code too
 	// NOTE: When changing any of these values, make sure to update titles.txt, skill.cfg and dlls\game.cpp, and tech*s.spr
-	
 } AvHMessageID;
 
 // 200 units away max from building (2d distance)
@@ -492,11 +484,11 @@ typedef enum
 	AVH_USER3_AUDIO_OFF,
 	AVH_USER3_FUNC_RESOURCE,
 	AVH_USER3_COMMANDER_STATION,
-	AVH_USER3_TURRET_FACTORY, 
-	AVH_USER3_ARMORY, 
+	AVH_USER3_TURRET_FACTORY,
+	AVH_USER3_ARMORY,
 	AVH_USER3_ADVANCED_ARMORY,
 	AVH_USER3_ARMSLAB,
-	AVH_USER3_PROTOTYPE_LAB, 
+	AVH_USER3_PROTOTYPE_LAB,
 	AVH_USER3_OBSERVATORY,
 	AVH_USER3_CHEMLAB,
 	AVH_USER3_MEDLAB,
@@ -532,9 +524,9 @@ typedef enum
 
 typedef enum
 {
-	WEAPON_ON_TARGET	= 0x01,
-	WEAPON_IS_CURRENT	= 0x02,
-	WEAPON_IS_ENABLED	= 0x04
+	WEAPON_ON_TARGET = 0x01,
+	WEAPON_IS_CURRENT = 0x02,
+	WEAPON_IS_ENABLED = 0x04
 } CurWeaponStateFlags;
 
 typedef enum
@@ -548,49 +540,49 @@ typedef enum
 	BALANCE_ACTION_NOTIFY_FINISHED = 6
 } BalanceMessageAction;
 
-// AvHSpecials, only one per entity, stored in pev->iuser4.  
+// AvHSpecials, only one per entity, stored in pev->iuser4.
 // Stored in iuser4.  Some entities don't use these values, but most do.  The ones that don't include:
 // AVH_USER3_AUDIO_OFF
 // AVH_USER3_AUDIO_ON
 typedef enum
 {
-	MASK_NONE			= 0x00000000,
-	MASK_VIS_SIGHTED	= 0x00000001,	// This means this is an entity that can be seen by at least one member of the opposing team.  Assumes commanders can never be seen.
-	MASK_VIS_DETECTED 	= 0x00000002,	// This entity has been detected by the other team but isn't currently seen
-	MASK_BUILDABLE		= 0x00000004,	// This entity is buildable
-	MASK_UPGRADE_1		= 0x00000008,	// Marine weapons 1, armor, marine basebuildable slot #0
-	MASK_UPGRADE_2		= 0x00000010,	// Marine weapons 2, regen, marine basebuildable slot #1
-	MASK_UPGRADE_3		= 0x00000020,	// Marine weapons 3, redemption, marine basebuildable slot #2
-	MASK_UPGRADE_4		= 0x00000040,	// Marine armor 1, speed, marine basebuildable slot #3
-	MASK_UPGRADE_5		= 0x00000080,	// Marine armor 2, adrenaline, marine basebuildable slot #4
-	MASK_UPGRADE_6		= 0x00000100,	// Marine armor 3, silence, marine basebuildable slot #5
-	MASK_UPGRADE_7		= 0x00000200,	// Marine jetpacks, Cloaking, marine basebuildable slot #6
-	MASK_UPGRADE_8		= 0x00000400,	// Pheromone, motion-tracking, marine basebuildable slot #7
-	MASK_UPGRADE_9		= 0x00000800,	// Scent of fear, exoskeleton
-	MASK_UPGRADE_10		= 0x00001000,	// Defensive level 2, power armor
-	MASK_UPGRADE_11		= 0x00002000,	// Defensive level 3, electrical defense
-	MASK_UPGRADE_12		= 0x00004000,	// Movement level 2, 
-	MASK_UPGRADE_13		= 0x00008000,	// Movement level 3, marine heavy armor
-	MASK_UPGRADE_14		= 0x00010000,	// Sensory level 2
-	MASK_UPGRADE_15		= 0x00020000,	// Sensory level 3
-	MASK_ALIEN_MOVEMENT	= 0x00040000,	// Onos is charging
-	MASK_WALLSTICKING	= 0x00080000,	// Flag for wall-sticking
-	MASK_BUFFED			= 0x00100000,	// Alien is in range of active primal scream, or marine is under effects of catalyst
-	MASK_UMBRA			= 0x00200000,
-	MASK_DIGESTING		= 0x00400000,	// When set on a visible player, player is digesting.  When set on invisible player, player is being digested
-	MASK_RECYCLING		= 0x00800000,
-	MASK_TOPDOWN		= 0x01000000,
-	MASK_PLAYER_STUNNED	= 0x02000000,	// Player has been stunned by stomp
-	MASK_ENSNARED		= 0x04000000,
-	MASK_ALIEN_EMBRYO	= 0x08000000,
-	MASK_SELECTABLE		= 0x10000000,
-	MASK_PARASITED		= 0x20000000,
-	MASK_SENSORY_NEARBY	= 0x40000000
+	MASK_NONE = 0x00000000,
+	MASK_VIS_SIGHTED = 0x00000001,	// This means this is an entity that can be seen by at least one member of the opposing team.  Assumes commanders can never be seen.
+	MASK_VIS_DETECTED = 0x00000002,	// This entity has been detected by the other team but isn't currently seen
+	MASK_BUILDABLE = 0x00000004,	// This entity is buildable
+	MASK_UPGRADE_1 = 0x00000008,	// Marine weapons 1, armor, marine basebuildable slot #0
+	MASK_UPGRADE_2 = 0x00000010,	// Marine weapons 2, regen, marine basebuildable slot #1
+	MASK_UPGRADE_3 = 0x00000020,	// Marine weapons 3, redemption, marine basebuildable slot #2
+	MASK_UPGRADE_4 = 0x00000040,	// Marine armor 1, speed, marine basebuildable slot #3
+	MASK_UPGRADE_5 = 0x00000080,	// Marine armor 2, adrenaline, marine basebuildable slot #4
+	MASK_UPGRADE_6 = 0x00000100,	// Marine armor 3, silence, marine basebuildable slot #5
+	MASK_UPGRADE_7 = 0x00000200,	// Marine jetpacks, Cloaking, marine basebuildable slot #6
+	MASK_UPGRADE_8 = 0x00000400,	// Pheromone, motion-tracking, marine basebuildable slot #7
+	MASK_UPGRADE_9 = 0x00000800,	// Scent of fear, exoskeleton
+	MASK_UPGRADE_10 = 0x00001000,	// Defensive level 2, power armor
+	MASK_UPGRADE_11 = 0x00002000,	// Defensive level 3, electrical defense
+	MASK_UPGRADE_12 = 0x00004000,	// Movement level 2,
+	MASK_UPGRADE_13 = 0x00008000,	// Movement level 3, marine heavy armor
+	MASK_UPGRADE_14 = 0x00010000,	// Sensory level 2
+	MASK_UPGRADE_15 = 0x00020000,	// Sensory level 3
+	MASK_ALIEN_MOVEMENT = 0x00040000,	// Onos is charging
+	MASK_WALLSTICKING = 0x00080000,	// Flag for wall-sticking
+	MASK_BUFFED = 0x00100000,	// Alien is in range of active primal scream, or marine is under effects of catalyst
+	MASK_UMBRA = 0x00200000,
+	MASK_DIGESTING = 0x00400000,	// When set on a visible player, player is digesting.  When set on invisible player, player is being digested
+	MASK_RECYCLING = 0x00800000,
+	MASK_TOPDOWN = 0x01000000,
+	MASK_PLAYER_STUNNED = 0x02000000,	// Player has been stunned by stomp
+	MASK_ENSNARED = 0x04000000,
+	MASK_ALIEN_EMBRYO = 0x08000000,
+	MASK_SELECTABLE = 0x10000000,
+	MASK_PARASITED = 0x20000000,
+	MASK_SENSORY_NEARBY = 0x40000000
 } AvHUpgradeMask;
 
 typedef enum
 {
-	ALIEN_UPGRADE_CATEGORY_INVALID = 0, 
+	ALIEN_UPGRADE_CATEGORY_INVALID = 0,
 	ALIEN_UPGRADE_CATEGORY_DEFENSE,
 	ALIEN_UPGRADE_CATEGORY_OFFENSE,
 	ALIEN_UPGRADE_CATEGORY_MOVEMENT,
@@ -606,26 +598,25 @@ typedef enum
 	ORDERTARGETTYPE_TARGET = 3
 }AvHOrderTargetType;
 
-
 typedef enum
 {
 	ORDERTYPE_UNDEFINED = 0,
-		ORDERTYPEL_DEFAULT,
-		ORDERTYPEL_MOVE,
-		
-		ORDERTYPET_ATTACK,
-		ORDERTYPET_BUILD,
-		ORDERTYPET_GUARD,
-		ORDERTYPET_WELD,
-		ORDERTYPET_GET,
-		
-		ORDERTYPEG_HOLD_POSITION,
-		ORDERTYPEG_CODE_DEPLOY_MINES,
-		ORDERTYPEG_CODE_GREEN,
-		ORDERTYPEG_CODE_YELLOW,
-		ORDERTYPEG_CODE_RED,
-		
-		ORDERTYPE_MAX
+	ORDERTYPEL_DEFAULT,
+	ORDERTYPEL_MOVE,
+
+	ORDERTYPET_ATTACK,
+	ORDERTYPET_BUILD,
+	ORDERTYPET_GUARD,
+	ORDERTYPET_WELD,
+	ORDERTYPET_GET,
+
+	ORDERTYPEG_HOLD_POSITION,
+	ORDERTYPEG_CODE_DEPLOY_MINES,
+	ORDERTYPEG_CODE_GREEN,
+	ORDERTYPEG_CODE_YELLOW,
+	ORDERTYPEG_CODE_RED,
+
+	ORDERTYPE_MAX
 }AvHOrderType;
 
 typedef enum {
@@ -704,7 +695,7 @@ typedef enum {
 */
 
 typedef enum
-// collection of tasks 
+// collection of tasks
 // (Not really.. just told to be so when you make the tasks)
 // see bot_navigate lift tasks.
 {
@@ -726,15 +717,15 @@ typedef enum
 	// etc
 }eScheduleDesc;
 
-typedef enum 
-{	
+typedef enum
+{
 	/*								*
 	 *  General + NS bot tasks		*
 	 */
 	BOT_TASK_NONE,
 	BOT_TASK_USE_TANK,				// currently using a turret
 	BOT_TASK_WAIT_FOR_LIFT,
-    BOT_TASK_RELOAD,
+	BOT_TASK_RELOAD,
 	BOT_TASK_LISTEN_TO_SOUND,
 	BOT_TASK_FIND_ENEMY_PATH,
 	BOT_TASK_FOLLOW_ENEMY,
@@ -788,64 +779,63 @@ typedef enum
 	 *								*
 	 *  not used!					*
 	 */
-	BOT_COMMAND_TASK_MOVE_TO_VECTOR,
-	BOT_COMMAND_TASK_SELECT_PLAYERS,
-	BOT_COMMAND_TASK_BUILD_OBJECT,
-	BOT_COMMAND_TASK_ISSUE_ORDER,
-	BOT_COMMAND_TASK_SELECT_POINT,
-	BOT_COMMAND_TASK_SELECT_AREA,
-	BOT_COMMAND_TASK_ISSUE_COMMAND,
-	/*								*
-	 *  example TFC tasks			*
-	 */
-	 // engineer build tasks
-	 // take integer
-	 // 1 to build, 0 to destroy
-	BOT_TASK_TFC_BUILD_SENTRY,
-	// take edict of sentry
-	BOT_TASK_TFC_REPAIR_BUILDABLE,
-	BOT_TASK_TFC_BUILD_TELEPORT_ENTRANCE,
-	BOT_TASK_TFC_BUILD_TELEPORT_EXIT,
-	BOT_TASK_TFC_BUILD_DISPENSER,
-	BOT_TASK_TFC_DETONATE_DISPENSER,
-	// Feign, taskint = 0 for silent feign, 
-	// 1 for non silent feign
-	BOT_TASK_TFC_FEIGN_DEATH,
-	BOT_TASK_TFC_SNIPE,
-	BOT_TASK_TFC_PLACE_DETPACK,
-	BOT_TASK_TFC_CONC_JUMP,
-	BOT_TASK_TFC_ROCKET_JUMP,
-	BOT_TASK_TFC_PLACE_PIPES,
-	BOT_TASK_TFC_DETONATE_PIPES,
-	BOT_TASK_TFC_DISGUISE,
-	BOT_TASK_TFC_DETONATE_ENTRY_TELEPORT,
-	BOT_TASK_TFC_DETONATE_EXIT_TELEPORT,
-	BOT_TASK_TFC_ROTATE_SENTRY,
-	BOT_TASK_TFC_DISCARD,
-	///////////////////////////////////////
-	/* find cover pos, Take an integer which 
-	 * will represent memory position of 
-	 * vector to alter 
-	 */
-	BOT_TASK_FIND_COVER_POS,
-	BOT_TASK_USE_TELEPORT,
-	BOT_TASK_COMBAT_UPGRADE,
-	BOT_TASK_CROUCH,
-	BOT_TASK_ACCEPT_HEALTH,
-	BOT_TASK_WAIT_FOR_BOT_AT_WPT,
-	BOT_TASK_BLINK,
-	BOT_TASK_WEB,
-	BOT_TASK_USE_TELEPORTER,
-	BOT_TASK_WAIT_FOR_RESOURCE_TOWER_BUILD,
-	BOT_TASK_IMPULSE,
-	BOT_TASK_DROP_WEAPON,
-	BOT_TASK_SENSE_ENEMY
-
+	 BOT_COMMAND_TASK_MOVE_TO_VECTOR,
+	 BOT_COMMAND_TASK_SELECT_PLAYERS,
+	 BOT_COMMAND_TASK_BUILD_OBJECT,
+	 BOT_COMMAND_TASK_ISSUE_ORDER,
+	 BOT_COMMAND_TASK_SELECT_POINT,
+	 BOT_COMMAND_TASK_SELECT_AREA,
+	 BOT_COMMAND_TASK_ISSUE_COMMAND,
+	 /*								*
+	  *  example TFC tasks			*
+	  */
+	  // engineer build tasks
+	  // take integer
+	  // 1 to build, 0 to destroy
+	  BOT_TASK_TFC_BUILD_SENTRY,
+	  // take edict of sentry
+	  BOT_TASK_TFC_REPAIR_BUILDABLE,
+	  BOT_TASK_TFC_BUILD_TELEPORT_ENTRANCE,
+	  BOT_TASK_TFC_BUILD_TELEPORT_EXIT,
+	  BOT_TASK_TFC_BUILD_DISPENSER,
+	  BOT_TASK_TFC_DETONATE_DISPENSER,
+	  // Feign, taskint = 0 for silent feign,
+	  // 1 for non silent feign
+	  BOT_TASK_TFC_FEIGN_DEATH,
+	  BOT_TASK_TFC_SNIPE,
+	  BOT_TASK_TFC_PLACE_DETPACK,
+	  BOT_TASK_TFC_CONC_JUMP,
+	  BOT_TASK_TFC_ROCKET_JUMP,
+	  BOT_TASK_TFC_PLACE_PIPES,
+	  BOT_TASK_TFC_DETONATE_PIPES,
+	  BOT_TASK_TFC_DISGUISE,
+	  BOT_TASK_TFC_DETONATE_ENTRY_TELEPORT,
+	  BOT_TASK_TFC_DETONATE_EXIT_TELEPORT,
+	  BOT_TASK_TFC_ROTATE_SENTRY,
+	  BOT_TASK_TFC_DISCARD,
+	  ///////////////////////////////////////
+	  /* find cover pos, Take an integer which
+	   * will represent memory position of
+	   * vector to alter
+	   */
+	   BOT_TASK_FIND_COVER_POS,
+	   BOT_TASK_USE_TELEPORT,
+	   BOT_TASK_COMBAT_UPGRADE,
+	   BOT_TASK_CROUCH,
+	   BOT_TASK_ACCEPT_HEALTH,
+	   BOT_TASK_WAIT_FOR_BOT_AT_WPT,
+	   BOT_TASK_BLINK,
+	   BOT_TASK_WEB,
+	   BOT_TASK_USE_TELEPORTER,
+	   BOT_TASK_WAIT_FOR_RESOURCE_TOWER_BUILD,
+	   BOT_TASK_IMPULSE,
+	   BOT_TASK_DROP_WEAPON,
+	   BOT_TASK_SENSE_ENEMY
 }eBotTask;
 
 // A Task the bot should only change its view angles for
 // i.e. turning
-typedef enum 
+typedef enum
 {
 	BOT_LOOK_TASK_NONE,
 	BOT_LOOK_TASK_NEXT_WAYPOINT,
@@ -879,12 +869,11 @@ typedef enum
 	BOT_EVENT_FAIL_TASK,
 	BOT_EVENT_COMPLETE_TASK,
 	BOT_EVENT_LEAVING
-
 }eBotEvent;
 
 enum eBotCvarState
 {
-	BOT_CVAR_NOTEXIST = 0, 
+	BOT_CVAR_NOTEXIST = 0,
 	BOT_CVAR_ACCESSED,
 	BOT_CVAR_NEEDACCESS,
 	BOT_CVAR_ERROR,
@@ -959,7 +948,7 @@ enum
 	MOD_COUNTERSTRIKE = 6,
 	MOD_DMC = 7,		// deathmatch classic
 	MOD_TS = 8,			// the specialists (no weaponlist info [can't make bots shoot!])
-	MOD_SVENCOOP = 9, 
+	MOD_SVENCOOP = 9,
 	MOD_IOS = 10,		// international online soccer (gave up :p)
 	MOD_BG = 11,		// battlegrounds
 	MOD_TFC = 12,		// team fortress classic (not started yet..)
@@ -1020,7 +1009,6 @@ typedef enum
 	TFC_MAP_VIP = 7, // hunted type map
 	NON_TFC_TS_TEAMPLAY = 12
 }eTFCMapType;
-
 
 ////////////////////////////////
 // AUTHOR SHIP & PLUGIN INFO
@@ -1132,9 +1120,9 @@ typedef enum
 //////////////////////
 
 #endif
-				// bot version 
-//#define BOT_DATE "10/03/2006"		// date of creation 
-#define BOT_AUTHOR "Cheeseh (cheeseh@bots-united.com)" // bot author 
+				// bot version
+//#define BOT_DATE "10/03/2006"		// date of creation
+#define BOT_AUTHOR "Cheeseh (cheeseh@bots-united.com)" // bot author
 #define BOT_TAG "[RCBOT]"
 #define BOT_VER_CVAR "rcbot_ver"
 #define BOT_COMMAND_ACCESS "rcbot" // main bot command

@@ -28,20 +28,20 @@
  *    version.
  *
  */
-/****************************************************
- * RCBOT Bot Menu's                                 *
- *                                                  *
- * Code by : Paul Murphy {paul.murphy@ntlworld.com} *
- *                       {cheeseh@rcbot.net}   *
- *                                                  *
- ****************************************************
- *
- * Paul M'(cheeseh@rcbot.net/paul.murphy@ntlworld.com)
- * If using any of these components please keep this tag
- * pa..please .. I know its a nice way of using menus :-p
- *
- ****************************************************
-*/
+ /****************************************************
+  * RCBOT Bot Menu's                                 *
+  *                                                  *
+  * Code by : Paul Murphy {paul.murphy@ntlworld.com} *
+  *                       {cheeseh@rcbot.net}   *
+  *                                                  *
+  ****************************************************
+  *
+  * Paul M'(cheeseh@rcbot.net/paul.murphy@ntlworld.com)
+  * If using any of these components please keep this tag
+  * pa..please .. I know its a nice way of using menus :-p
+  *
+  ****************************************************
+ */
 
 #ifndef __BOT_MENU_H__
 #define __BOT_MENU_H__
@@ -87,7 +87,7 @@ public:
 
 	~CBotMenuItem();
 
-	void Init (void)
+	void Init(void)
 	{
 		m_szMenuCaption = NULL;
 		m_pNextMenu = NULL;
@@ -99,30 +99,30 @@ public:
 		this->Init();
 	}
 
-	CBotMenuItem(const char *szMenuCaption);
+	CBotMenuItem(const char* szMenuCaption);
 
-	CBotMenuItem( const char *szMenuCaption, CBotMenu *pNextMenu );
+	CBotMenuItem(const char* szMenuCaption, CBotMenu* pNextMenu);
 
-	CBotMenuItem( const char *szMenuCaption, void (*pMenuFunction)(CClient*) );
+	CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CClient*));
 
-	inline BOOL HasNextMenu ( void )
+	inline BOOL HasNextMenu(void)
 	{
 		return (m_pNextMenu != NULL);
 	}
 
-	void Activate ( CClient *pClient );
+	void Activate(CClient* pClient);
 
-	inline const char *GetCaption ( void )
+	inline const char* GetCaption(void)
 	{
 		return m_szMenuCaption;
 	}
 
 private:
-	char *m_szMenuCaption;
+	char* m_szMenuCaption;
 
-	CBotMenu *m_pNextMenu;
+	CBotMenu* m_pNextMenu;
 
-	void (*m_pMenuFunction)(CClient *);
+	void (*m_pMenuFunction)(CClient*);
 };
 
 class CBotMenu
@@ -139,11 +139,11 @@ public:
 
 	void DestroyMenu(void);
 
-	void InitMenu (void);
+	void InitMenu(void);
 
-	CBotMenu( const char *szCaption );
+	CBotMenu(const char* szCaption);
 
-	void AddExitMenuItem ( int iMenuNum )
+	void AddExitMenuItem(int iMenuNum)
 	{
 		//if ( m_Menus[iMenuNum] )
 		//	delete m_Menus[iMenuNum];
@@ -151,80 +151,80 @@ public:
 		m_Menus[iMenuNum] = new CBotMenuItem("Exit");
 	}
 
-	void AddMenuItem ( int iMenuNum, const char *szMenuCaption, CBotMenu *pNextMenu )
+	void AddMenuItem(int iMenuNum, const char* szMenuCaption, CBotMenu* pNextMenu)
 	{
 		//if ( m_Menus[iMenuNum] )
 		//	delete m_Menus[iMenuNum];
 
-		m_Menus[iMenuNum] = new CBotMenuItem(szMenuCaption,pNextMenu);
+		m_Menus[iMenuNum] = new CBotMenuItem(szMenuCaption, pNextMenu);
 	}
 
-	void AddMenuItem ( int iMenuNum, const char *szMenuCaption, void (*m_pMenuFunction)(CClient*) )
+	void AddMenuItem(int iMenuNum, const char* szMenuCaption, void (*m_pMenuFunction)(CClient*))
 	{
 		//if ( m_Menus[iMenuNum] )
 		//	delete m_Menus[iMenuNum];
 
-		m_Menus[iMenuNum] = new CBotMenuItem(szMenuCaption,m_pMenuFunction);
+		m_Menus[iMenuNum] = new CBotMenuItem(szMenuCaption, m_pMenuFunction);
 	}
 
-	void Activate ( int iMenuItem, CClient *pClient )
+	void Activate(int iMenuItem, CClient* pClient)
 	{
-		if ( (iMenuItem < 0) || (iMenuItem >= 10) )
+		if ((iMenuItem < 0) || (iMenuItem >= 10))
 			return;
 
-		if ( m_Menus[iMenuItem] )
+		if (m_Menus[iMenuItem])
 			m_Menus[iMenuItem]->Activate(pClient);
 	}
 
-	void Render ( CClient *pClient );
+	void Render(CClient* pClient);
 
 private:
 
-//	int m_iExitItem;
+	//	int m_iExitItem;
 
-	CBotMenuItem *m_Menus[10]; // Maximum of ten sub-menu's
+	CBotMenuItem* m_Menus[10]; // Maximum of ten sub-menu's
 
-	char *m_szCaption;
+	char* m_szCaption;
 };
 
-void SetupMenus ( void );
-void BotMenu_Func_DeleteWaypoints ( CClient *pClient );
-void BotMenu_Func_Ladder_Waypoint       ( CClient *pClient );
-void BotMenu_Func_Squad_Form			( CClient *pClient );
-void BotMenu_Func_Squad_Spread			( CClient *pClient );
-void BotMenu_Func_AddBotToTeam			( CClient *pClient );
-void BotMenu_Func_Jump_Waypoint			( CClient *pClient );
-void BotMenu_Func_CrouchJump_Waypoint	( CClient *pClient );
-void BotMenu_Func_Crouch_Waypoint		( CClient *pClient );
-void BotMenu_Func_Wall_Stick_Waypoint	( CClient *pClient );
-void BotMenu_Func_Remove_All_Paths		( CClient *pClient );
-void BotMenu_Func_Remove_Paths_To		( CClient *pClient );
-void BotMenu_Func_Remove_Paths_From		( CClient *pClient );
-void BotMenu_Func_Team_Waypoint			( CClient *pClient );
-void BotMenu_Func_Lift_Waypoint         ( CClient *pClient );
-void BotMenu_Func_Fly_Waypoint			( CClient *pClient );
-void BotMenu_Func_Teleport_Waypoint		( CClient *pClient );
-void BotMenu_Func_Tank_Waypoint			( CClient *pClient );
-void BotMenu_Func_WaitLift_Waypoint		( CClient *pClient );
-void BotMenu_Func_EndLevel_Waypoint		( CClient *pClient );
-void BotMenu_Func_KickBot               ( CClient *pClient );
-void BotMenu_Func_AddBot                ( CClient *pClient );
-void BotMenu_Func_StayClose_Waypoint	( CClient *pClient );
-void BotMenu_Func_OpensLater_Waypoint	( CClient *pClient );
-void BotMenu_Func_HumanTower_Waypoint   ( CClient *pClient );
-void BotMenu_Func_KickBotFromTeam		( CClient *pClient );
-void BotMenu_Func_Unreachable_Waypoint  ( CClient *pClient );
-void BotMenu_Func_Squad_Leave           ( CClient *pClient );
-void BotMenu_Func_Squad_Remove			( CClient *pClient );
-void BotMenu_Func_Squad_Form2			( CClient *pClient );
-void Bot_Menu_Important_Waypoint		( CClient *pClient );
-void BotMenu_Func_Squad_RemoveAllBotSquads			( CClient *pClient );
-void BotMenu_Func_SquadMode1			( CClient *pClient );
-void BotMenu_Func_Pushable_Waypoint		( CClient *pClient );
-void BotMenu_Func_Sci_Waypoint			( CClient *pClient );
-void BotMenu_Func_Barney_Waypoint		( CClient *pClient );
-void Bot_Menu_GrenThrow_Waypoint		( CClient *pClient );
-void BotMenu_CheckForLift_Waypoint		( CClient *pClient );
-void BotMenu_Func_Defend_Waypoint		( CClient *pClient );
+void SetupMenus(void);
+void BotMenu_Func_DeleteWaypoints(CClient* pClient);
+void BotMenu_Func_Ladder_Waypoint(CClient* pClient);
+void BotMenu_Func_Squad_Form(CClient* pClient);
+void BotMenu_Func_Squad_Spread(CClient* pClient);
+void BotMenu_Func_AddBotToTeam(CClient* pClient);
+void BotMenu_Func_Jump_Waypoint(CClient* pClient);
+void BotMenu_Func_CrouchJump_Waypoint(CClient* pClient);
+void BotMenu_Func_Crouch_Waypoint(CClient* pClient);
+void BotMenu_Func_Wall_Stick_Waypoint(CClient* pClient);
+void BotMenu_Func_Remove_All_Paths(CClient* pClient);
+void BotMenu_Func_Remove_Paths_To(CClient* pClient);
+void BotMenu_Func_Remove_Paths_From(CClient* pClient);
+void BotMenu_Func_Team_Waypoint(CClient* pClient);
+void BotMenu_Func_Lift_Waypoint(CClient* pClient);
+void BotMenu_Func_Fly_Waypoint(CClient* pClient);
+void BotMenu_Func_Teleport_Waypoint(CClient* pClient);
+void BotMenu_Func_Tank_Waypoint(CClient* pClient);
+void BotMenu_Func_WaitLift_Waypoint(CClient* pClient);
+void BotMenu_Func_EndLevel_Waypoint(CClient* pClient);
+void BotMenu_Func_KickBot(CClient* pClient);
+void BotMenu_Func_AddBot(CClient* pClient);
+void BotMenu_Func_StayClose_Waypoint(CClient* pClient);
+void BotMenu_Func_OpensLater_Waypoint(CClient* pClient);
+void BotMenu_Func_HumanTower_Waypoint(CClient* pClient);
+void BotMenu_Func_KickBotFromTeam(CClient* pClient);
+void BotMenu_Func_Unreachable_Waypoint(CClient* pClient);
+void BotMenu_Func_Squad_Leave(CClient* pClient);
+void BotMenu_Func_Squad_Remove(CClient* pClient);
+void BotMenu_Func_Squad_Form2(CClient* pClient);
+void Bot_Menu_Important_Waypoint(CClient* pClient);
+void BotMenu_Func_Squad_RemoveAllBotSquads(CClient* pClient);
+void BotMenu_Func_SquadMode1(CClient* pClient);
+void BotMenu_Func_Pushable_Waypoint(CClient* pClient);
+void BotMenu_Func_Sci_Waypoint(CClient* pClient);
+void BotMenu_Func_Barney_Waypoint(CClient* pClient);
+void Bot_Menu_GrenThrow_Waypoint(CClient* pClient);
+void BotMenu_CheckForLift_Waypoint(CClient* pClient);
+void BotMenu_Func_Defend_Waypoint(CClient* pClient);
 
 #endif

@@ -50,24 +50,24 @@ public:
 class NNLayer
 {
 public:
-	NNLayer( FILE *bfp )
+	NNLayer(FILE* bfp)
 	{
 		load(bfp);
 	}
 
-	NNLayer( int iNumNeurons, int iNumInputs );
+	NNLayer(int iNumNeurons, int iNumInputs);
 
-	inline int numNeurons () { return m_Neurons.size(); }
+	inline int numNeurons() { return m_Neurons.size(); }
 
-	CPerceptron *getNeuron ( int iNeuron ) { return m_Neurons[iNeuron]; }
+	CPerceptron* getNeuron(int iNeuron) { return m_Neurons[iNeuron]; }
 
-	void freeMemory ();
+	void freeMemory();
 
-	void save ( FILE *bfp );
+	void save(FILE* bfp);
 
-	void load ( FILE *bfp );
+	void load(FILE* bfp);
 private:
-    vector<CPerceptron*> m_Neurons;
+	vector<CPerceptron*> m_Neurons;
 };
 
 class NN
@@ -76,31 +76,31 @@ public:
 
 	static float g_learnRate;
 
-	NN () 
-	{ 
+	NN()
+	{
 		m_iNumInputs = 0;
 	};
 
-	NN ( int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs );
+	NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
 
-	void setWeights ( vector<ga_value> *weights );
+	void setWeights(vector<ga_value>* weights);
 
-	void getWeights ( vector<ga_value> *weights );
+	void getWeights(vector<ga_value>* weights);
 
-	void execute ( vector <ga_value> *outputs, vector <ga_value> *inputs );
+	void execute(vector <ga_value>* outputs, vector <ga_value>* inputs);
 
-	void freeMemory ();
+	void freeMemory();
 
-	void randomize ();
+	void randomize();
 
-	void getOutputs ( vector<ga_value> *outputs );
-	void trainOutputs ( vector<ga_value> *wanted_outputs );
+	void getOutputs(vector<ga_value>* outputs);
+	void trainOutputs(vector<ga_value>* wanted_outputs);
 
-	void load ( FILE *bfp );
+	void load(FILE* bfp);
 
-	void save ( FILE *bfp );
+	void save(FILE* bfp);
 
-	virtual void train ( vector<CNNTrainSet> trainingsets )
+	virtual void train(vector<CNNTrainSet> trainingsets)
 	{
 		return;
 	}
@@ -112,14 +112,14 @@ private:
 class NNGATrained : public NN
 {
 public:
-	NNGATrained (int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs );
+	NNGATrained(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
 
-	~NNGATrained ();
+	~NNGATrained();
 
-	virtual void train ( vector<CNNTrainSet> trainingsets );
+	virtual void train(vector<CNNTrainSet> trainingsets);
 private:
-	CGA *m_pGA;
-	IIndividual *m_pInd;
+	CGA* m_pGA;
+	IIndividual* m_pInd;
 };
 
 #endif

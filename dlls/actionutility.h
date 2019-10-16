@@ -8,18 +8,18 @@ using namespace std;
 class CActionUtility
 {
 public:
-	CActionUtility(eCanDoStuff action,float utility)
+	CActionUtility(eCanDoStuff action, float utility)
 	{
 		m_Action = action;
 		m_fUtility = utility;
 	}
 
-	inline float getUtility ()
+	inline float getUtility()
 	{
 		return m_fUtility;
 	}
 
-	inline eCanDoStuff getAction ()
+	inline eCanDoStuff getAction()
 	{
 		return m_Action;
 	}
@@ -29,36 +29,36 @@ private:
 	float m_fUtility;
 };
 
-class CActionUtilities 
+class CActionUtilities
 {
 public:
-	void add (eCanDoStuff action,BOOL CanDo, float utility)
+	void add(eCanDoStuff action, BOOL CanDo, float utility)
 	{
-		m_Utilities.push_back(CActionUtility(action,(float)CanDo*utility));
+		m_Utilities.push_back(CActionUtility(action, (float)CanDo * utility));
 	}
 
-	eCanDoStuff getBestAction ()		
+	eCanDoStuff getBestAction()
 	{
-		float rand = RANDOM_FLOAT(0,getTotalUtility());
+		float rand = RANDOM_FLOAT(0, getTotalUtility());
 
 		float total = 0;
 
-		for ( unsigned int i = 0; i < m_Utilities.size(); i ++ )
+		for (unsigned int i = 0; i < m_Utilities.size(); i++)
 		{
 			total += m_Utilities[i].getUtility();
-			
-			if ( m_Utilities[i].getUtility() && (rand < total) )
+
+			if (m_Utilities[i].getUtility() && (rand < total))
 				return m_Utilities[i].getAction();
 		}
 
 		return BOT_CAN_NONE;
 	}
 
-	float getTotalUtility ()
+	float getTotalUtility()
 	{
 		float total = 0;
 
-		for ( unsigned int i = 0; i < m_Utilities.size(); i ++ )
+		for (unsigned int i = 0; i < m_Utilities.size(); i++)
 		{
 			total += m_Utilities[i].getUtility();
 		}

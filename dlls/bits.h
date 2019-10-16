@@ -28,21 +28,21 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// Based on botman's High Ping Bastard bot
-//
-// (http://planethalflife.com/botman/)
-//
-// bits.h
-//
-//////////////////////////////////////////////////
-//
-// Bot definitions header
-//
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // Based on botman's High Ping Bastard bot
+ //
+ // (http://planethalflife.com/botman/)
+ //
+ // bits.h
+ //
+ //////////////////////////////////////////////////
+ //
+ // Bot definitions header
+ //
 #ifndef __RCBOT_BITS_H__
 #define __RCBOT_BITS_H__
 
@@ -51,36 +51,36 @@
 class CBits
 {
 public:
-	CBits ( unsigned int iNumBits );
-	CBits ( CBits *copyBits );
+	CBits(unsigned int iNumBits);
+	CBits(CBits* copyBits);
 
-	void setBit ( int iBit, BOOL bSet );
+	void setBit(int iBit, BOOL bSet);
 
-	BOOL getBit ( int iBit );
+	BOOL getBit(int iBit);
 
-	void freeMemory ();
+	void freeMemory();
 
-	void load ( FILE *bfp );
+	void load(FILE* bfp);
 
-	void save ( FILE *bfp );
+	void save(FILE* bfp);
 
-	void setup ( int iNumBits );
+	void setup(int iNumBits);
 
-	inline unsigned int numBits () { return m_iNumBits; }
+	inline unsigned int numBits() { return m_iNumBits; }
 
-	void copy ( CBits *otherBits );
+	void copy(CBits* otherBits);
 
-	inline unsigned char *getBits () { return m_cBits; }
+	inline unsigned char* getBits() { return m_cBits; }
 
-	void randomize ();
+	void randomize();
 
-	void clear ();
+	void clear();
 
-	int size ();
+	int size();
 
 private:
 	unsigned int m_iNumBits;
-	unsigned char *m_cBits;
+	unsigned char* m_cBits;
 	int m_iSize; // bits' mem size
 };
 

@@ -28,21 +28,21 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// Based on botman's High Ping Bastard bot
-//
-// (http://planethalflife.com/botman/)
-//
-// bits.cpp
-//
-//////////////////////////////////////////////////
-//
-// Bot definitions header
-//
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // Based on botman's High Ping Bastard bot
+ //
+ // (http://planethalflife.com/botman/)
+ //
+ // bits.cpp
+ //
+ //////////////////////////////////////////////////
+ //
+ // Bot definitions header
+ //
 #include "extdll.h"
 
 #ifndef RCBOT_META_BUILD
@@ -57,118 +57,118 @@
 #include "bits.h"
 #include "gannconst.h"
 
-CBits :: CBits (const unsigned int iNumBits )
+CBits::CBits(const unsigned int iNumBits)
 {
 	setup(iNumBits);
 }
 
-CBits :: CBits ( CBits *copyBits )
+CBits::CBits(CBits* copyBits)
 {
 	copy(copyBits);
 }
 
-void CBits :: freeMemory ()
+void CBits::freeMemory()
 {
 	delete m_cBits;
 	m_cBits = NULL;
 	m_iNumBits = 0;
 }
 
-void CBits :: setBit (const int iBit, const BOOL bSet )
+void CBits::setBit(const int iBit, const BOOL bSet)
 {
-	int iBitStart = iBit/8;
-	int iBitOffset = iBit%8;
+	int iBitStart = iBit / 8;
+	int iBitOffset = iBit % 8;
 
-	unsigned char *c = &m_cBits[iBitStart];
+	unsigned char* c = &m_cBits[iBitStart];
 
-	if ( bSet )
-		*c |= (1<<iBitOffset);
+	if (bSet)
+		*c |= (1 << iBitOffset);
 	else
-		*c &= ~(1<<iBitOffset);
+		*c &= ~(1 << iBitOffset);
 }
 
-BOOL CBits :: getBit (const int iBit )
+BOOL CBits::getBit(const int iBit)
 {
-	int iBitStart = iBit/8;
-	int iBitOffset = iBit%8;
+	int iBitStart = iBit / 8;
+	int iBitOffset = iBit % 8;
 
-	unsigned char *c = &m_cBits[iBitStart];
+	unsigned char* c = &m_cBits[iBitStart];
 
-	return ((*c & (1<<iBitOffset)) == (1<<iBitOffset));
+	return ((*c & (1 << iBitOffset)) == (1 << iBitOffset));
 }
 
-void CBits :: load ( FILE *bfp )
+void CBits::load(FILE* bfp)
 {
-	CGenericHeader header = CGenericHeader(LEARNTYPE_BITS,(int)m_iNumBits);
+	CGenericHeader header = CGenericHeader(LEARNTYPE_BITS, (int)m_iNumBits);
 
-	if ( !header.read(bfp,header) )
+	if (!header.read(bfp, header))
 	{
-		BotMessage(NULL,0,"Learn data version mismatch - wiping");
+		BotMessage(NULL, 0, "Learn data version mismatch - wiping");
 		return;
 	}
 
 	unsigned int iNumBits;
 
-	fread(&iNumBits,sizeof(unsigned int),1,bfp);
+	fread(&iNumBits, sizeof(unsigned int), 1, bfp);
 
 	m_iNumBits = iNumBits;
 
-	if ( m_cBits != NULL )
+	if (m_cBits != NULL)
 	{
 		delete m_cBits;
-		m_cBits=NULL;
+		m_cBits = NULL;
 	}
 
 	setup(m_iNumBits);
 
-	fread(&m_cBits,size(),1,bfp);
+	fread(&m_cBits, size(), 1, bfp);
 }
 
-void CBits :: randomize ()
+void CBits::randomize()
 {
-	for ( unsigned int i = 0; i < m_iNumBits; i ++ )
+	for (unsigned int i = 0; i < m_iNumBits; i++)
 	{
-		setBit(i,RANDOM_FLOAT(0.0,1.0)>=0.5);
+		setBit(i, RANDOM_FLOAT(0.0, 1.0) >= 0.5);
 	}
 }
 
-void CBits :: setup (const int iNumBits)
+void CBits::setup(const int iNumBits)
 {
-	int iSize; 
+	int iSize;
 
 	m_iNumBits = iNumBits;
 
 	iSize = size();
 
-	m_cBits = new unsigned char [iSize];
+	m_cBits = new unsigned char[iSize];
 
-	memset(m_cBits,0,iSize);
+	memset(m_cBits, 0, iSize);
 }
 
 // memory size
-int CBits :: size ()
+int CBits::size()
 {
-	return Ceiling(((float)m_iNumBits)/8);
+	return Ceiling(((float)m_iNumBits) / 8);
 }
 
-void CBits :: save ( FILE *bfp )
+void CBits::save(FILE* bfp)
 {
-	CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS,(int)m_iNumBits);
+	CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS, (int)m_iNumBits);
 
 	checkHeader.write(bfp);
 
-	fwrite(&m_iNumBits,sizeof(unsigned int),1,bfp);
-	
-	fwrite(&m_cBits,size(),1,bfp);
+	fwrite(&m_iNumBits, sizeof(unsigned int), 1, bfp);
+
+	fwrite(&m_cBits, size(), 1, bfp);
 }
 
-void CBits :: copy ( CBits *otherBits )
+void CBits::copy(CBits* otherBits)
 {
 	m_iNumBits = numBits();
-	memcpy(m_cBits,otherBits->getBits(),size());
+	memcpy(m_cBits, otherBits->getBits(), size());
 }
 
-void CBits :: clear ()
+void CBits::clear()
 {
-	memset(m_cBits,0,size());
+	memset(m_cBits, 0, size());
 }

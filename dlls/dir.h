@@ -28,8 +28,8 @@
  *    version.
  *
  */
-/////////////////////////////////////////////
-// DIRECTORY ROUTINES...
+ /////////////////////////////////////////////
+ // DIRECTORY ROUTINES...
 
 #ifndef __RCBOT_DIR_H__
 #define __RCBOT_DIR_H__
@@ -48,11 +48,11 @@
 // Windows OS Routine...
 // MS-DOS directory wildcard routines...
 
-HANDLE FindDirectory(HANDLE hFile, char *dirname, char *dirspec);
+HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec);
 
 #else
 
-DIR *FindDirectory(DIR *directory, char *dirname, char *dirspec);
+DIR* FindDirectory(DIR* directory, char* dirname, char* dirspec);
 
 #endif
 

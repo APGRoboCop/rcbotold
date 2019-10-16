@@ -39,12 +39,11 @@
 
 #include "osdep.h"			// DLLEXPORT, WINAPI, etc
 
-// Our GiveFnptrsToDll, called by engine.
+ // Our GiveFnptrsToDll, called by engine.
 
-
-//#if defined(_WIN32) && !defined(__CYGWIN__)
-typedef void (WINAPI *GIVE_ENGINE_FUNCTIONS_FN) (enginefuncs_t *pengfuncsFromEngine, globalvars_t *);
-C_DLLEXPORT void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals );
+ //#if defined(_WIN32) && !defined(__CYGWIN__)
+typedef void (WINAPI* GIVE_ENGINE_FUNCTIONS_FN) (enginefuncs_t* pengfuncsFromEngine, globalvars_t*);
+C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pGlobals);
 //#else
 //	extern "C" DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals );
 //#endif
@@ -53,6 +52,5 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, glo
 //#else
 //C_DLLEXPORT void WINAPI GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals );
 //#endif
-
 
 #endif /* H_EXPORT_H */

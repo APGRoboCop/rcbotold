@@ -28,21 +28,21 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// Based on botman's High Ping Bastard bot
-//
-// (http://planethalflife.com/botman/)
-//
-// bot_client.h
-//
-//////////////////////////////////////////////////
-//
-// Prototypes for network message functions
-//
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // Based on botman's High Ping Bastard bot
+ //
+ // (http://planethalflife.com/botman/)
+ //
+ // bot_client.h
+ //
+ //////////////////////////////////////////////////
+ //
+ // Prototypes for network message functions
+ //
 
 #ifndef __BOT_CLIENT_H__
 #define __BOT_CLIENT_H__
@@ -75,7 +75,7 @@ typedef enum
 class CBotNetMessage
 {
 public:
-	
+
 	CBotNetMessage()
 	{
 		m_iMessage = 0;
@@ -84,21 +84,21 @@ public:
 		m_bAllowHumans = FALSE;
 	}
 
-	virtual BOOL isStateMsg () { return FALSE; }
+	virtual BOOL isStateMsg() { return FALSE; }
 
-	BOOL humansAllowed ()
+	BOOL humansAllowed()
 	{
 		return m_bAllowHumans;
 	}
 
-	CBotNetMessage(/*void (*fpBotFunction)(void *, int),*/const char *szMessageName, int iModId, BOOL bAllowHumans = FALSE );
+	CBotNetMessage(/*void (*fpBotFunction)(void *, int),*/const char* szMessageName, int iModId, BOOL bAllowHumans = FALSE);
 
-	BOOL MessageForMod ( int iModId )
+	BOOL MessageForMod(int iModId)
 	{
 		return ((m_iModId == MOD_ANY) || (iModId == m_iModId));
 	}
 
-	virtual void execute ( void *p, int iIndex )
+	virtual void execute(void* p, int iIndex)
 	{
 		return;
 	}
@@ -117,42 +117,41 @@ public:
 			(*m_fpMsgFunction)(p,i);
 	}*/
 
-
-	const char *getMessageName ()
+	const char* getMessageName()
 	{
 		return m_szMessageName;
 	}
 
-	int MessageNum ( void )
+	int MessageNum(void)
 	{
 		return m_iMessage;
 	}
 
-	BOOL IsMessage ( const int iMessage );
+	BOOL IsMessage(const int iMessage);
 
-	BOOL IsMessageName ( const char *szMessage )
+	BOOL IsMessageName(const char* szMessage)
 	{
-		return (strcmp(m_szMessageName,szMessage) == 0);
+		return (strcmp(m_szMessageName, szMessage) == 0);
 	}
-	
-	void UpdateMsgId ( int iMessage )
+
+	void UpdateMsgId(int iMessage)
 	{
 		m_iMessage = iMessage;
 	}
 
-	void UpdateMessageSize ( int iSize )
+	void UpdateMessageSize(int iSize)
 	{
 		m_iSize = iSize;
 	}
 
-	void setName ( char *szName );
+	void setName(char* szName);
 
-	void setMod ( int iModId )
+	void setMod(int iModId)
 	{
 		m_iModId = iModId;
 	}
 
-	void allowHumans ()
+	void allowHumans()
 	{
 		m_bAllowHumans = TRUE;
 	}
@@ -160,7 +159,7 @@ public:
 private:
 
 	int m_iMessage;
-	char *m_szMessageName;
+	char* m_szMessageName;
 	int m_iModId;
 	int m_iSize;
 
@@ -168,40 +167,38 @@ private:
 
 	//void (*m_fpMsgFunction)(void *, int);
 };
-	
 
 /////////////////////////////////////
 class CBotNetMessages
 {
 public:
 
-	void AddNetMessage (CBotNetMessage *pMessage)
+	void AddNetMessage(CBotNetMessage* pMessage)
 	{
 		m_NetMessages.Push(pMessage);
 	}
 
-	void execute ( int iMessage, void *p, int i );
+	void execute(int iMessage, void* p, int i);
 
 	//void *GetFunction ( int iMessage );
 
-	CBotNetMessage *GetMessage ( int iMessage, const char *szName );
+	CBotNetMessage* GetMessage(int iMessage, const char* szName);
 
-	void UpdateMessage ( const char *szMessageName, int iMessage, int iSize )
+	void UpdateMessage(const char* szMessageName, int iMessage, int iSize)
 	{
-		CBotNetMessage *l_Msg = GetMessage(iMessage,szMessageName);
-		
-		if ( l_Msg )
+		CBotNetMessage* l_Msg = GetMessage(iMessage, szMessageName);
+
+		if (l_Msg)
 		{
 			l_Msg->UpdateMsgId(iMessage);
 			l_Msg->UpdateMessageSize(iSize);
 		}
 	}
 
-	void Destroy ( void )
+	void Destroy(void)
 	{
 		m_NetMessages.Destroy();
 	}
-
 
 private:
 	dataStack<CBotNetMessage*> m_NetMessages;
@@ -217,7 +214,7 @@ public:
 		setMod(MOD_TS);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_TS_DelObj : public CBotNetMessage
@@ -229,9 +226,8 @@ public:
 		setMod(MOD_TS);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
-
 
 class BotClient_TS_WStatus : public CBotNetMessage
 {
@@ -242,7 +238,7 @@ public:
 		setMod(MOD_TS);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_TS_WeaponInfo : public CBotNetMessage
@@ -254,7 +250,7 @@ public:
 		setMod(MOD_TS);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_WeaponList : public CBotNetMessage
@@ -265,7 +261,7 @@ public:
 		setName("WeaponList");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_CurrentWeapon : public CBotNetMessage
@@ -276,7 +272,7 @@ public:
 		setName("CurWeapon");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_AmmoX : public CBotNetMessage
@@ -287,7 +283,7 @@ public:
 		setName("AmmoX");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_AmmoPickup : public CBotNetMessage
@@ -298,7 +294,7 @@ public:
 		setName("AmmoPickup");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_WeaponPickup : public CBotNetMessage
@@ -309,7 +305,7 @@ public:
 		setName("WeapPickup");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_ItemPickup : public CBotNetMessage
@@ -320,7 +316,7 @@ public:
 		setName("ItemPickup");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_Health : public CBotNetMessage
@@ -331,7 +327,7 @@ public:
 		setName("Health");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_Battery : public CBotNetMessage
@@ -342,7 +338,7 @@ public:
 		setName("Battery");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_Damage : public CBotNetMessage
@@ -353,7 +349,7 @@ public:
 		setName("Damage");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_TS_TeamInfo : public CBotNetMessage
@@ -364,7 +360,7 @@ public:
 		setName("TeamInfo");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_ScreenFade : public CBotNetMessage
@@ -375,20 +371,20 @@ public:
 		setName("ScreenFade");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
-	// DMC Items
+// DMC Items
 class BotClient_DMC_QuakeItem : public CBotNetMessage
 {
 public:
-	BotClient_DMC_QuakeItem	()
+	BotClient_DMC_QuakeItem()
 	{
 		setName("QItems");
 		setMod(MOD_DMC);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
-	// get vgui message
+// get vgui message
 class BotClient_Generic_VGUIMenu : public CBotNetMessage
 {
 public:
@@ -397,9 +393,9 @@ public:
 		setName("VGUIMenu");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
-	// ns 3.0 tech upgrades??
+// ns 3.0 tech upgrades??
 class BotClient_NS_TechSlots : public CBotNetMessage
 {
 public:
@@ -408,9 +404,9 @@ public:
 		setName("TechSlots");
 		setMod(MOD_NS);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
-	// need to catch message to show a menu
+// need to catch message to show a menu
 class BotClient_Generic_ShowMenu : public CBotNetMessage
 {
 public:
@@ -431,7 +427,7 @@ public:
 		setMod(MOD_TS);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_TS_Health : public CBotNetMessage
@@ -443,7 +439,7 @@ public:
 		setMod(MOD_TS);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_TS_State : public CBotNetMessage
@@ -455,7 +451,7 @@ public:
 		setMod(MOD_TS);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_TS_Frags : public CBotNetMessage
@@ -467,7 +463,7 @@ public:
 		setMod(MOD_TS);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_TS_Objective : public CBotNetMessage
@@ -479,7 +475,7 @@ public:
 		setMod(MOD_TS);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_TS_TSMessage : public CBotNetMessage
@@ -491,7 +487,7 @@ public:
 		setMod(MOD_TS);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_TS_RoundTime : public CBotNetMessage
@@ -503,11 +499,8 @@ public:
 		setMod(MOD_TS);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
-
-
-
 
 class BotClient_Generic_TeamScore : public CBotNetMessage
 {
@@ -518,7 +511,7 @@ public:
 		setMod(MOD_ANY);
 	}
 
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_NS_Commndr : public CBotNetMessage
@@ -529,7 +522,7 @@ public:
 		setName("Commndr");
 		setMod(MOD_NS);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_NS_HudText : public CBotNetMessage
@@ -540,7 +533,7 @@ public:
 		setName("HudText");
 		setMod(MOD_NS);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_NS_SetOrder : public CBotNetMessage
@@ -551,7 +544,7 @@ public:
 		setName("SetOrder");
 		setMod(MOD_NS);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_NS_SetTech : public CBotNetMessage
@@ -562,7 +555,7 @@ public:
 		setName("SetTech");
 		setMod(MOD_NS);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_NS_AlienInfo : public CBotNetMessage
@@ -573,7 +566,7 @@ public:
 		setName("AlienInfo");
 		setMod(MOD_NS);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_BG_MakeMessage : public CBotNetMessage
@@ -584,7 +577,7 @@ public:
 		setName("MakeMessage");
 		setMod(MOD_BG);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_ScreenShake : public CBotNetMessage
@@ -607,9 +600,9 @@ public:
 		setMod(MOD_ANY);
 		allowHumans();
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
-	// say to team etc.?
+// say to team etc.?
 class BotClient_Generic_SayText : public CBotNetMessage
 {
 public:
@@ -618,7 +611,7 @@ public:
 		setName("SayText");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 //////////////////////////
@@ -631,7 +624,7 @@ public:
 		setName("SayText");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
+	void execute(void* p, int iIndex); // override base function
 };
 
 class BotClient_Generic_DeathMessage : public CBotNetMessage
@@ -642,45 +635,45 @@ public:
 		setName("DeathMsg");
 		setMod(MOD_ANY);
 	}
-	void execute ( void *p, int iIndex); // override base function
-};	
-void SetupNetMessages ( void );
+	void execute(void* p, int iIndex); // override base function
+};
+void SetupNetMessages(void);
 
-class CBotStatedNetMessage : public CBotNetMessage 
+class CBotStatedNetMessage : public CBotNetMessage
 {
 public:
 	CBotStatedNetMessage();
 
-	void init (int index) { iState = 0; m_pEdict = NULL; if ( index ) { m_pEdict = INDEXENT(index); } msg_init(); }
+	void init(int index) { iState = 0; m_pEdict = NULL; if (index) { m_pEdict = INDEXENT(index); } msg_init(); }
 
-	virtual void writeChar ( char c ) { write_char(c); iState++; };
-	virtual void writeByte ( int b ) { write_byte(b); iState++; };
-	virtual void writeShort ( int s ) {write_short(s); iState++;};
-	virtual void writeLong ( int l ) {write_long(l); iState++;};
-	virtual void writeString ( const char *s ) {write_string(s); iState++;};
-	virtual void writeCoord ( float f ) {write_coord(f); iState++;};
-	virtual void writeEntity ( edict_t *p ) {write_entity(p); iState++;};
-	virtual void writeAngle ( float f ) {write_angle(f); iState++;};
+	virtual void writeChar(char c) { write_char(c); iState++; };
+	virtual void writeByte(int b) { write_byte(b); iState++; };
+	virtual void writeShort(int s) { write_short(s); iState++; };
+	virtual void writeLong(int l) { write_long(l); iState++; };
+	virtual void writeString(const char* s) { write_string(s); iState++; };
+	virtual void writeCoord(float f) { write_coord(f); iState++; };
+	virtual void writeEntity(edict_t* p) { write_entity(p); iState++; };
+	virtual void writeAngle(float f) { write_angle(f); iState++; };
 
-	virtual void messageEnd () { iState = 0; message_end(); };
+	virtual void messageEnd() { iState = 0; message_end(); };
 
-	BOOL isStateMsg () { return TRUE; }
+	BOOL isStateMsg() { return TRUE; }
 
 private:
-	virtual void msg_init () {};
+	virtual void msg_init() {};
 
-	virtual void write_char ( char c ) {};
-	virtual void write_byte ( int b ) {};
-	virtual void write_short ( int s ) {};
-	virtual void write_long ( int l ) {};
-	virtual void write_string ( const char *s ) {};
-	virtual void write_coord ( float p ) {};
-	virtual void write_entity ( edict_t *p ) {};
-	virtual void write_angle ( float f ) {};
-	virtual void message_end () {};
+	virtual void write_char(char c) {};
+	virtual void write_byte(int b) {};
+	virtual void write_short(int s) {};
+	virtual void write_long(int l) {};
+	virtual void write_string(const char* s) {};
+	virtual void write_coord(float p) {};
+	virtual void write_entity(edict_t* p) {};
+	virtual void write_angle(float f) {};
+	virtual void message_end() {};
 
 protected:
-	edict_t *m_pEdict; // player receiving message	
+	edict_t* m_pEdict; // player receiving message
 	int iState;
 };
 
@@ -690,7 +683,7 @@ using namespace std;
 class CSetOrderMessage : public CBotStatedNetMessage
 {
 public:
-	void msg_init ()
+	void msg_init()
 	{
 		m_ReceivedPlayers.clear();
 		m_iOrderType = (AvHOrderType)0;
@@ -700,31 +693,28 @@ public:
 		iEntityUser3 = 0;
 	}
 
-	void write_short ( int s )
+	void write_short(int s)
 	{
-		if ( !m_ReceivedPlayers.size() )		
+		if (!m_ReceivedPlayers.size())
 			m_ReceivedPlayers.push_back(INDEXENT(s));
-		else if ( !m_iOrderType )		
+		else if (!m_iOrderType)
 			m_iOrderType = (AvHOrderType)s;
 		//else if ( m_iOrderType == )
 	}
 
-	void write_byte ( int b )
+	void write_byte(int b)
 	{
-
 	}
 
-	void write_coord ( float p )
+	void write_coord(float p)
 	{
-
 	}
 
-	void message_end ()
+	void message_end()
 	{
-		
 	}
 private:
-	vector <edict_t *> m_ReceivedPlayers;
+	vector <edict_t*> m_ReceivedPlayers;
 	Vector m_vOrderOrigin;
 	AvHOrderType m_iOrderType;
 	AvHOrderTargetType m_iOrderTargetType;

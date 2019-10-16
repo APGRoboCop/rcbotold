@@ -1,9 +1,9 @@
 /***
 *
 *	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
-*	
-*	This product contains software technology licensed from Id 
-*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc. 
+*
+*	This product contains software technology licensed from Id
+*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
 *	All Rights Reserved.
 *
 *   Use, distribution, and modification of this source code and/or resulting
@@ -21,7 +21,7 @@
 #define CDLL_DLL_H
 
 //#ifdef RCBOT_TS_BUILD
-	#define MAX_WEAPONS	37		// ??? 37 for TS
+#define MAX_WEAPONS	37		// ??? 37 for TS
 //#else
 //	#define MAX_WEAPONS	32
 //#endif
@@ -43,7 +43,6 @@
 #define HUD_PRINTCONSOLE	2
 #define HUD_PRINTTALK		3
 #define HUD_PRINTCENTER		4
-
 
 #define WEAPON_SUIT			31
 

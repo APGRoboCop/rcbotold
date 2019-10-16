@@ -1,9 +1,9 @@
 /***
 *
 *	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
-*	
-*	This product contains software technology licensed from Id 
-*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc. 
+*
+*	This product contains software technology licensed from Id
+*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
 *	All Rights Reserved.
 *
 *   Use, distribution, and modification of this source code and/or resulting
@@ -14,7 +14,6 @@
 ****/
 #ifndef EXTDLL_H
 #define EXTDLL_H
-
 
 //
 // Global header file for extension DLLs
@@ -40,12 +39,12 @@
 #define NOMCX
 #define NOIME
 #include <windows.h>
- 
+
 // Misc C-runtime library headers
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
- 
+
 #else
 #include <stdarg.h>
 #include <stdio.h>
@@ -54,7 +53,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <limits.h>
- 
+
 #define MAX_PATH PATH_MAX
 #ifdef __CYGWIN__
 #define ULONG unsigned long
@@ -63,9 +62,9 @@
 #endif
 #define FALSE 0
 #define TRUE  1
- 
+
 //Fix for GCC 7 - [APG]RoboCop[CL]
-#include <algorithm> 
+#include <algorithm>
 
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
@@ -77,9 +76,9 @@
 
 #undef max
 #undef min
- 
+
 #define itoa(a,b,c) sprintf(b, "%d", a)
- 
+
 typedef unsigned char BYTE;
 #endif
 

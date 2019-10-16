@@ -28,11 +28,11 @@
  *    version.
  *
  */
-//////////////////////
-// Directory code
-//
-// from botman's HPB_Bot
-//
+ //////////////////////
+ // Directory code
+ //
+ // from botman's HPB_Bot
+ //
 #include "extdll.h"
 
 #ifndef RCBOT_META_BUILD
@@ -55,103 +55,103 @@
 
 // Call Find Directory with dirspec = the starting directory you want to look in
 
-HANDLE FindDirectory(HANDLE hFile, char *dirname, char *dirspec)
+HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec)
 {
-   WIN32_FIND_DATA pFindFileData;
+	WIN32_FIND_DATA pFindFileData;
 
-   dirname[0] = 0;
+	dirname[0] = 0;
 
-   if (hFile == NULL)
-   {
-      hFile = FindFirstFile(dirspec, &pFindFileData);
+	if (hFile == NULL)
+	{
+		hFile = FindFirstFile(dirspec, &pFindFileData);
 
-      if (hFile == INVALID_HANDLE_VALUE)
-	  {
-		  // PM : bugfix
-         return NULL;
-	  }
+		if (hFile == INVALID_HANDLE_VALUE)
+		{
+			// PM : bugfix
+			return NULL;
+		}
 
-      while ( (pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY )
-      {
-         if (FindNextFile(hFile, &pFindFileData) == 0)
-         {
-            FindClose(hFile);
-            hFile = NULL;
-            return hFile;
-         }
-      }
+		while ((pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY)
+		{
+			if (FindNextFile(hFile, &pFindFileData) == 0)
+			{
+				FindClose(hFile);
+				hFile = NULL;
+				return hFile;
+			}
+		}
 
-      strcpy(dirname, pFindFileData.cFileName);
+		strcpy(dirname, pFindFileData.cFileName);
 
-      return hFile;
-   }
-   else
-   {
-      if (FindNextFile(hFile, &pFindFileData) == 0)
-      {
-         FindClose(hFile);
-         hFile = NULL;
-         return hFile;
-      }
+		return hFile;
+	}
+	else
+	{
+		if (FindNextFile(hFile, &pFindFileData) == 0)
+		{
+			FindClose(hFile);
+			hFile = NULL;
+			return hFile;
+		}
 
-	  // BUGGG FIXXX....!!!
+		// BUGGG FIXXX....!!!
 
-	  // Fixes bots only choosing OTIS and HELMET in svencoop with some peoples half-life!
-      while ( (pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY )
-      {
-         if (FindNextFile(hFile, &pFindFileData) == 0)
-         {
-            FindClose(hFile);
-            hFile = NULL;
-            return hFile;
-         }	 
-      }
+		// Fixes bots only choosing OTIS and HELMET in svencoop with some peoples half-life!
+		while ((pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY)
+		{
+			if (FindNextFile(hFile, &pFindFileData) == 0)
+			{
+				FindClose(hFile);
+				hFile = NULL;
+				return hFile;
+			}
+		}
 
-      strcpy(dirname, pFindFileData.cFileName);
+		strcpy(dirname, pFindFileData.cFileName);
 
-      return hFile;
-   }
+		return hFile;
+	}
 }
 
 #else
 
 // Linux directory wildcard routines...
 
-DIR *FindDirectory(DIR *directory, char *dirname, char *dirspec)
+DIR* FindDirectory(DIR* directory, char* dirname, char* dirspec)
 {
-   char pathname[256];
-   struct dirent *dirent;
-   struct stat stat_str;
+	char pathname[256];
+	struct dirent* dirent;
+	struct stat stat_str;
 
-   if (directory == NULL)
-   {
-      if ((directory = opendir(dirspec)) == NULL)
-         return NULL;
-   }
+	if (directory == NULL)
+	{
+		if ((directory = opendir(dirspec)) == NULL)
+			return NULL;
+	}
 
-   while (1)
-   {
-      dirent = readdir(directory);
+	while (1)
+	{
+		dirent = readdir(directory);
 
-      if (dirent == NULL)  // at end of directory?
-      {
-         closedir(directory);
-         return NULL;
-      }
+		if (dirent == NULL)  // at end of directory?
+		{
+			closedir(directory);
+			return NULL;
+		}
 
-      strcpy(pathname, dirspec);
-      strcat(pathname, "/");
-      strcat(pathname, dirent->d_name);
+		strcpy(pathname, dirspec);
+		strcat(pathname, "/");
+		strcat(pathname, dirent->d_name);
 
-      if (stat(pathname, &stat_str) == 0)
-      {
-         if (stat_str.st_mode & S_IFDIR)
-         {
-            strcpy(dirname, dirent->d_name);
-            return directory;
-         }
-      }
-   }
+		if (stat(pathname, &stat_str) == 0)
+		{
+			if (stat_str.st_mode & S_IFDIR)
+			{
+				strcpy(dirname, dirent->d_name);
+				return directory;
+			}
+		}
+	}
 }
 
 #endif
