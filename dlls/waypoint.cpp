@@ -90,7 +90,7 @@ static unsigned char g_iFailedWaypoints[MAX_WAYPOINTS];
 
 extern CBotGlobals gBotGlobals;
 
-void CWaypointLocations::getMaxMins(Vector vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk)
+void CWaypointLocations::getMaxMins(Vector const vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk)
 {
 	const int iLoc = abs((int)((int)(vOrigin.x + 4096.0) / 256));
 	const int jLoc = abs((int)((int)(vOrigin.y + 4096.0) / 256));
@@ -140,7 +140,7 @@ void CWaypointLocations::getMaxMins(Vector vOrigin, int& mini, int& minj, int& m
 
 ///////////////
 // return nearest waypoint that can be used to cover from vCoverFrom vector
-int CWaypointLocations::GetCoverWaypoint(Vector vPlayerOrigin, Vector vCoverFrom, dataStack<int>* iIgnoreWpts)
+int CWaypointLocations::GetCoverWaypoint(Vector const vPlayerOrigin, Vector vCoverFrom, dataStack<int>* iIgnoreWpts)
 {
 	int iWaypoint;
 
@@ -530,8 +530,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 				{
 					fread(&waypoints[i], sizeof(waypoints[0]), 1, bfp);
 
-					if ((waypoints[i].origin.x > 4096.0f) || (waypoints[i].origin.y > 4096.0f) || (waypoints[i].origin.z > 4096.0f) ||
-						(waypoints[i].origin.x < -4096.0f) || (waypoints[i].origin.y < -4096.0f) || (waypoints[i].origin.z < -4096.0f))
+					if ((waypoints[i].origin.x > 4096.0f) || (waypoints[i].origin.y > 4096.0f) || (waypoints[i].origin.z > 4096.0f))
 					{
 						BotMessage(pEntity, 0, "ERROR!!! Invalid waypoint (id: %d) origin outside map !!!", i);
 						waypoints[i].flags |= W_FL_DELETED;
@@ -866,8 +865,8 @@ void WaypointDebug(void)
 	fprintf(fp, "WaypointDebug: LINKED LIST ERROR!!!\n");
 	fclose(fp);
 
-	x = x - 1;  // x is zero
-	y = y / x;  // cause an divide by zero exception
+	//x = x - 1;  // x is zero
+	//y = y / x;  // cause an divide by zero exception
 
 	return;
 }
@@ -1545,7 +1544,8 @@ void WaypointDrawBeam(edict_t* pEntity, Vector start, Vector end, int width,
 	MESSAGE_END();
 }
 
-int WaypointAddOrigin(Vector vOrigin, const int iFlags, edict_t* pEntity, const BOOL bDraw, const BOOL bSound, const BOOL bAutoSetFlagsForPlayer)
+int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity, 
+	const BOOL bDraw, const BOOL bSound, const BOOL bAutoSetFlagsForPlayer)
 {
 	int index;
 	TraceResult tr;

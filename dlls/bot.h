@@ -722,7 +722,8 @@ public:
 		memset(this, 0, sizeof(CBotTask));
 	}
 
-	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = NULL, int iInfo = 0, float fInfo = 0, Vector vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0/*, CBotTask *GoalTask = NULL */)
+	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = NULL, int iInfo = 0, float fInfo = 0, 
+		Vector vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0/*, CBotTask *GoalTask = NULL */)
 	{
 		// cheap way of adding schedules.. ;)
 		// means if this task fails we can fail every other task with the same
@@ -760,7 +761,7 @@ public:
 		return (m_fTimeToComplete - gpGlobals->time);
 	}
 
-	inline void SetVector(Vector vNewVector)
+	inline void SetVector(Vector const vNewVector)
 	{
 		m_vInfo = vNewVector;
 	}
@@ -1371,7 +1372,7 @@ public:
 		*GotTask = CBotTask(BOT_TASK_NONE);
 	}
 
-	BOOL HasTask(CBotTask Task)
+	BOOL HasTask(CBotTask const Task)
 	{
 		return m_Tasks.IsMember(Task);//changed
 	}
@@ -1769,7 +1770,7 @@ protected:
 class CAutoWaypointCheck : public CTypeVector<float>
 {
 public:
-	void SetPoint(Vector vec, int iFlags)
+	void SetPoint(Vector const vec, int iFlags)
 	{
 		m_iFlags = iFlags;
 
@@ -1844,7 +1845,7 @@ public:
 		return m_vOrigin;
 	}
 
-	inline void setVisibleOrigin(Vector vVis)
+	inline void setVisibleOrigin(Vector const vVis)
 	{
 		m_vVisibleOrigin = vVis;
 	}
@@ -1961,7 +1962,7 @@ public:
 			}
 		}*/
 
-	void addPosition(Vector vOrigin, edict_t* pEntity, int flags, Vector vVisibleOrigin)
+	void addPosition(Vector const vOrigin, edict_t* pEntity, int flags, Vector vVisibleOrigin)
 	{
 		CRememberPosition newPosition = CRememberPosition(vOrigin, pEntity);
 		newPosition.setFlags(flags);
@@ -2570,7 +2571,7 @@ class CTFCBackpacks
 {
 public:
 	// makes new back pack & returns pointer
-	CTFCBackpack* addBackpack(CTFCBackpack backpack)
+	CTFCBackpack* addBackpack(CTFCBackpack const backpack)
 	{
 		m_Backpacks.Push(backpack);
 
@@ -2582,7 +2583,7 @@ public:
 		m_Backpacks.Pop();
 	}
 
-	edict_t* findBackpack(Vector location, int team, int min_health, int min_cells, int min_armor, int min_ammo)
+	edict_t* findBackpack(Vector const location, int team, int min_health, int min_cells, int min_armor, int min_ammo)
 	{
 		float fDist;
 		float fNearestDist;
@@ -2637,7 +2638,7 @@ public:
 	CLearnedHeader(int iId);
 
 	BOOL operator == (CLearnedHeader other);
-	BOOL operator != (CLearnedHeader other)
+	BOOL operator != (CLearnedHeader const other)
 	{
 		return !(*this == other);
 	}
@@ -2660,7 +2661,7 @@ public:
 		{
 			pSquad = tempStack.ChooseFromStack();
 
-			if (pSquad)
+//			if (pSquad)
 				delete pSquad;
 			pSquad = NULL;
 		}
@@ -3553,7 +3554,7 @@ public:
 	// keep bot facing one certain angle
 	// when climbing ladder so bot doesn't
 	// jerk around like crazy
-	void SetLadderAngles(Vector vAngles)
+	void SetLadderAngles(Vector const vAngles)
 	{
 		m_vLadderAngles = vAngles;
 		m_bLadderAnglesSet = TRUE;
@@ -4232,8 +4233,8 @@ public:
 	void SayMessage(const char* message, edict_t* pPlayer);
 	void SayMessage(const char* message, Vector colour1, Vector colour2, edict_t* pPlayer);
 	void Initialise(void);
-	void SetColour1(Vector colours, int alpha) { m_textParms.r1 = (int)colours.x, m_textParms.g1 = (int)colours.y, m_textParms.b1 = (int)colours.z; m_textParms.a1 = alpha; };
-	void SetColour2(Vector colours, int alpha) { m_textParms.r2 = (int)colours.x, m_textParms.g2 = (int)colours.y, m_textParms.b2 = (int)colours.z; m_textParms.a2 = alpha; };
+	void SetColour1(Vector const colours, int alpha) { m_textParms.r1 = (int)colours.x, m_textParms.g1 = (int)colours.y, m_textParms.b1 = (int)colours.z; m_textParms.a1 = alpha; };
+	void SetColour2(Vector const colours, int alpha) { m_textParms.r2 = (int)colours.x, m_textParms.g2 = (int)colours.y, m_textParms.b2 = (int)colours.z; m_textParms.a2 = alpha; };
 	void InitMessage(const char* message);
 
 private:
@@ -4477,7 +4478,7 @@ public:
 
 	void setSteamID();
 
-	void SetTeleportVector(Vector vOrigin)
+	void SetTeleportVector(Vector const vOrigin)
 	{
 		RemoveTeleportVector();
 		m_vTeleportVector = new Vector(vOrigin);
@@ -5258,7 +5259,7 @@ public:
 		return MASTER_NONE;
 	}
 
-	edict_t* GetButtonForEntity(edict_t* pEntity, Vector vOrigin)
+	edict_t* GetButtonForEntity(edict_t* pEntity, Vector const vOrigin)
 	{
 		CMasterEntity* pMaster;
 
@@ -6068,7 +6069,7 @@ public:
 		m_iRad = iRadius;
 	}
 
-	inline BOOL operator == (CBotNSTech other)
+	inline BOOL operator == (CBotNSTech const other)
 	{
 		return other.getID() == getID();
 	}
@@ -6088,7 +6089,7 @@ public:
 		return (int)m_iCost;
 	}
 
-	void update(CBotNSTech tech)
+	void update(CBotNSTech const tech)
 	{
 		m_bAvailable = tech.getAvailable();
 		m_iCost = tech.getCost();
@@ -6689,7 +6690,7 @@ public:
 		return (theMapType == m_TFCMapType);
 	}
 
-	edict_t* findBackpack(Vector location, int team, int min_health, int min_cells, int min_armor, int min_ammo)
+	edict_t* findBackpack(Vector const location, int team, int min_health, int min_cells, int min_armor, int min_ammo)
 	{
 		return m_Backpacks.findBackpack(location, team, min_health, min_cells, min_armor, min_ammo);
 	}

@@ -129,7 +129,7 @@ IIndividual* CBotGAValues::copy()
 	return individual;
 }
 
-void CBotGAValues::setVector(vector<ga_value> values)
+void CBotGAValues::setVector(vector<ga_value> const values)
 {
 	m_theValues.clear();
 

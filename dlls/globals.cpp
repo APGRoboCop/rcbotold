@@ -1361,7 +1361,7 @@ const char* CBotGlobals::GetModInfo(void)
 
 	int pos = 0;
 
-	if (strstr(game_dir, "/") != NULL)
+	if (strchr(game_dir, '/') != NULL)
 	{
 		pos = strlen(game_dir) - 1;
 

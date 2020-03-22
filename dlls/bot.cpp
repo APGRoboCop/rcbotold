@@ -920,7 +920,7 @@ CLearnedHeader::CLearnedHeader(const int iId)
 	iProfileId = iId;
 }
 
-BOOL CLearnedHeader :: operator == (CLearnedHeader other)
+BOOL CLearnedHeader :: operator == (CLearnedHeader const other)
 {
 	return (!strcmp(szBotVersion, other.szBotVersion) &&
 		(iProfileId == other.iProfileId) &&
@@ -1203,7 +1203,7 @@ void CBot::FreeLocalMemory(void)
 	{
 		FreeHALBrain(&m_Profile);
 
-		if (m_Profile.m_HAL != NULL)
+//		if (m_Profile.m_HAL != NULL)
 			free(m_Profile.m_HAL);
 
 		m_Profile.m_HAL = NULL;
@@ -2207,12 +2207,12 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		ptr = string;
 
 		// free memory used
-		if (before != NULL)
+//		if (before != NULL)
 			free(before);
 
 		before = NULL;
 
-		if (after != NULL)
+//		if (after != NULL)
 			free(after);
 
 		after = NULL;
@@ -2529,7 +2529,7 @@ void CBot::StartGame(void)
 		{
 			if (gBotGlobals.m_pCombatGA[m_iCombatTeam].canPick())
 			{
-				if (m_pCombatBits)
+//				if (m_pCombatBits)
 					delete m_pCombatBits;
 
 				m_pCombatBits = static_cast<CIntGAValues*>(gBotGlobals.m_pCombatGA[m_iCombatTeam].pick());
@@ -2542,7 +2542,7 @@ void CBot::StartGame(void)
 				{
 					m_iCombatInfo = RANDOM_LONG(0, (BOT_COMBAT_WANT_SENUP3 * 2) - 1);
 
-					if (m_pCombatBits)
+//					if (m_pCombatBits)
 						delete m_pCombatBits;
 
 					m_pCombatBits = new CIntGAValues(m_iCombatInfo);
@@ -10020,7 +10020,7 @@ BOOL EntityIsWeldable(edict_t* pEntity)
 	return FALSE;
 }
 
-void CBot::HearSound(const eSoundType iSound, Vector vOrigin, edict_t* pEdict)
+void CBot::HearSound(const eSoundType iSound, Vector const vOrigin, edict_t* pEdict)
 // bot hears a type of sound
 {
 	CBotTask TaskToAdd = CBotTask(BOT_TASK_NONE);
@@ -10623,7 +10623,7 @@ void CBotSquads::RemoveSquad(CBotSquad* pSquad)
 
 	m_theSquads.Remove(pSquad);
 
-	if (pSquad != NULL)
+//	if (pSquad != NULL)
 		delete pSquad;
 }
 
@@ -11296,7 +11296,7 @@ BOOL CBot::IsHoldingMiniGun(void)
 	return ((gBotGlobals.IsMod(MOD_SVENCOOP)) && (m_pCurrentWeapon) && (m_pCurrentWeapon->GetID() == SVEN_WEAPON_MINIGUN));
 }
 
-void CBot::RunForCover(Vector vOrigin, const BOOL bDoItNow, int iScheduleId)
+void CBot::RunForCover(Vector const vOrigin, const BOOL bDoItNow, int iScheduleId)
 {
 	BOOL bCovering = m_Tasks.HasSchedule(BOT_SCHED_RUN_FOR_COVER);
 
@@ -16682,10 +16682,10 @@ void CBot::UseTank(edict_t* pTank)
 
 	AddPriorityTask(CBotTask(BOT_TASK_USE_TANK, iSchedId, pTank, 0, RANDOM_FLOAT(12.0, 22.0)));
 
-	CBotTask Tasks[] =
-	{
-		CBotTask(BOT_TASK_USE,0,pTank,-2),
-	};
+//	CBotTask Tasks[] =
+//	{
+//		CBotTask(BOT_TASK_USE,0,pTank,-2),
+//	};
 
 	m_Tasks.GiveSchedIdDescription(iSchedId, BOT_SCHED_USE_TANK);
 }

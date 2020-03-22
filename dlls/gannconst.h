@@ -74,7 +74,7 @@ public:
 		fwrite(this, sizeof(CGenericHeader), 1, bfp);
 	}
 
-	BOOL read(FILE* bfp, CGenericHeader compare)
+	BOOL read(FILE* bfp, CGenericHeader const compare)
 	{
 		CGenericHeader read;
 

@@ -298,7 +298,7 @@ public:
 		return FALSE;
 	}*/
 
-	BOOL IsMember(const T pObj)
+	BOOL IsMember(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 
@@ -347,7 +347,7 @@ public:
 		}
 	}*/
 
-	BOOL Remove(const T pObj)
+	BOOL Remove(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 		dataNode<T>* deleteNode = NULL;
@@ -532,7 +532,7 @@ public:
 		this->Destroy();
 	}
 
-	BOOL IsMember(const T pObj)
+	BOOL IsMember(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 
@@ -591,7 +591,7 @@ public:
 		return FALSE;
 	}
 
-	BOOL Remove(const T pObj)
+	BOOL Remove(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 		dataNode<T>* deleteNode;
@@ -654,7 +654,7 @@ public:
 		return (m_Head == NULL);
 	}
 
-	void Push(const T pObj)
+	void Push(const T &pObj)
 	{
 		dataNode<T>* newNode = new dataNode<T>;
 
@@ -1021,7 +1021,7 @@ public:
 		return array[RANDOM_LONG(0, array.size() - 1)];
 	}
 
-	void Add(const T pObj)
+	void Add(const T &pObj)
 	{
 		array.push_back(pObj);
 	}
