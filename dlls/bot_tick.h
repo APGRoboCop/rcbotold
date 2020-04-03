@@ -22,10 +22,10 @@ public:
 	virtual void _reset();
 
 	virtual void tick();
-	inline bool isDone() { return m_bDone; }
+	bool isDone() { return m_bDone; }
 	// more priorty with those with more ticks required to complete
 	bool operator < (CTickable* other) { return m_iTicksLeft > other->ticksLeft(); }
-	inline unsigned int ticksLeft() { return m_iTicksLeft; }
+	unsigned int ticksLeft() { return m_iTicksLeft; }
 
 private:
 	bool m_bDone;

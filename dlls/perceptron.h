@@ -93,11 +93,11 @@ public:
 
 	void setWeights(CBotGAValues* vals, int iFrom, int iNum);
 
-	inline int numWeights() { return m_weights.size(); }
+	int numWeights() { return m_weights.size(); }
 
-	inline void setWeight(int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
+	void setWeight(int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
 
-	inline ga_value getWeight(int iWeight) { return m_weights[iWeight]; }
+	ga_value getWeight(int iWeight) { return m_weights[iWeight]; }
 
 	void input(vector <ga_value>* inputs);
 
@@ -118,9 +118,9 @@ public:
 		m_transferFunction = NULL;
 	}
 
-	inline BOOL trained() { return m_bTrained; }
+	BOOL trained() { return m_bTrained; }
 
-	inline void setTrained() { m_bTrained = TRUE; }
+	void setTrained() { m_bTrained = TRUE; }
 
 	void save(FILE* bfp);
 	void load(FILE* bfp);

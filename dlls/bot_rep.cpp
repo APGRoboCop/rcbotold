@@ -76,7 +76,7 @@ int BotFunc_GetRepArrayNum(const int iRep)
 
 	if (iRep < 3)
 		return 0;
-	else if ((iRep >= 3) && (iRep <= 6))
+	else if (iRep >= 3 && iRep <= 6)
 		return 1;
 
 	return 2;
@@ -116,7 +116,7 @@ CClient* CBotReputations::GetRandomClient(const int iRep)
 				iIdList.Add(pRep);
 			break;
 		case 0: // neutral
-			if ((iGotRep > 3) && (iGotRep < 7))
+			if (iGotRep > 3 && iGotRep < 7)
 				iIdList.Add(pRep);
 			break;
 		case 1: // good
@@ -213,7 +213,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 
 	fseek(fp, 0, SEEK_SET); // move pos back to beginning
 
-	while ((bFound == FALSE) && !feof(fp) && count > 0)
+	while (bFound == FALSE && !feof(fp) && count > 0)
 	{
 		fread(&Rep, sizeof(CBotReputation), 1, fp);
 
@@ -287,7 +287,7 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 
 	fseek(fp, 0, SEEK_SET); // move pos back to beginning
 
-	while ((bChanged == FALSE) && !feof(fp) && count > 0)
+	while (bChanged == FALSE && !feof(fp) && count > 0)
 	{
 		fread(&Rep, sizeof(CBotReputation), 1, fp);
 
@@ -407,14 +407,14 @@ int GetPlayerRepId(const char* szPlayerName)
 
 			i = 0;
 
-			while ((i < length) && (buffer[i] != '"'))
+			while (i < length && buffer[i] != '"')
 				i++;
 
 			i++;
 
 			iPlayerChar = 0;
 
-			while ((i < length) && (buffer[i] != '"') && (iPlayerChar < 64))
+			while (i < length && buffer[i] != '"' && iPlayerChar < 64)
 				playername[iPlayerChar++] = buffer[i++];
 
 			if (iPlayerChar < 64)

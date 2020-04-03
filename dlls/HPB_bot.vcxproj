@@ -187,6 +187,7 @@
       <ProgramDataBaseFileName>.\HPB_bot___Win32_MetaMod_Release\</ProgramDataBaseFileName>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>

@@ -309,22 +309,22 @@ public:
 		memset(m_iConvertTo, 0, sizeof(int) * MAX_BITS);
 	}
 
-	inline char* getName()
+	char* getName()
 	{
 		return m_szName;
 	}
 
-	inline char* getFolder()
+	char* getFolder()
 	{
 		return m_szFolder;
 	}
 
-	inline char* getExtension()
+	char* getExtension()
 	{
 		return m_szExtension;
 	}
 
-	inline char* getHeader()
+	char* getHeader()
 	{
 		return m_szHeader;
 	}
@@ -339,9 +339,9 @@ public:
 
 		for (i = 0; i < MAX_BITS; i++)
 		{
-			if (thisWaypoint->flags & (1 << i))
+			if (thisWaypoint->flags & 1 << i)
 			{
-				convertedWpt.flags |= (1 << m_iConvertTo[i]);
+				convertedWpt.flags |= 1 << m_iConvertTo[i];
 			}
 		}
 
@@ -403,9 +403,9 @@ public:
 		setFolder("addons/whichbot/data");
 #endif
 
-		setConvertBit(0, (1 << 0));
-		setConvertBit(1, (1 << 1));
-		setConvertBit(2, (1 << 2));
+		setConvertBit(0, 1 << 0);
+		setConvertBit(1, 1 << 1);
+		setConvertBit(2, 1 << 2);
 		setConvertBit(3, W_FL_CROUCH);
 		setConvertBit(4, W_FL_LADDER);
 		setConvertBit(5, W_FL_WAIT_FOR_LIFT);
@@ -497,7 +497,7 @@ public:
 };*/
 ///////////////////////
 
-const int g_iMaxVisibilityByte = (MAX_WAYPOINTS * MAX_WAYPOINTS) / 8;
+const int g_iMaxVisibilityByte = MAX_WAYPOINTS * MAX_WAYPOINTS / 8;
 
 class CWaypointVisibilityTable
 {
@@ -518,16 +518,16 @@ public:
 	BOOL GetVisibilityFromTo(int iFrom, int iTo)
 	{
 		// work out the position
-		int iPosition = (iFrom * MAX_WAYPOINTS) + iTo;
+		int iPosition = iFrom * MAX_WAYPOINTS + iTo;
 
 		int iByte = (int)(iPosition / 8);
 		int iBit = iPosition % 8;
 
 		if (iByte < g_iMaxVisibilityByte)
 		{
-			unsigned char* ToReturn = (m_VisTable + iByte);
+			unsigned char* ToReturn = m_VisTable + iByte;
 
-			return ((*ToReturn & (1 << iBit)) > 0);
+			return (*ToReturn & 1 << iBit) > 0;
 		}
 
 		return FALSE;
@@ -550,17 +550,17 @@ public:
 
 	void SetVisibilityFromTo(int iFrom, int iTo, BOOL bVisible)
 	{
-		int iPosition = (iFrom * MAX_WAYPOINTS) + iTo;
+		int iPosition = iFrom * MAX_WAYPOINTS + iTo;
 
 		int iByte = (int)(iPosition / 8);
 		int iBit = iPosition % 8;
 
 		if (iByte < g_iMaxVisibilityByte)
 		{
-			unsigned char* ToChange = (m_VisTable + iByte);
+			unsigned char* ToChange = m_VisTable + iByte;
 
 			if (bVisible)
-				*ToChange |= (1 << iBit);
+				*ToChange |= 1 << iBit;
 			else
 				*ToChange &= ~(1 << iBit);
 		}

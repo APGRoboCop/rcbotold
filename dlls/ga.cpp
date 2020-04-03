@@ -64,7 +64,7 @@ IIndividual* CPopulation::getBestIndividual()
 	{
 		curr = m_theIndividuals[i];
 
-		if (!best || (curr->getFitness() > best->getFitness()))
+		if (!best || curr->getFitness() > best->getFitness())
 			best = curr;
 	}
 
@@ -167,7 +167,7 @@ ga_value CPopulation::bestFitness()
 	{
 		fFitness = m_theIndividuals[i]->getFitness();
 
-		if (!gotBestFitness || (fFitness > fBestFitness))
+		if (!gotBestFitness || fFitness > fBestFitness)
 		{
 			fBestFitness = fFitness;
 			gotBestFitness = TRUE;
@@ -213,11 +213,11 @@ void CGA::addToPopulation(IIndividual* individual)
 
 		IIndividual* best = m_thePopulation.getBestIndividual();
 
-		if ((best && !m_bestIndividual) || (best && (m_bestIndividual->getFitness() < best->getFitness())))
+		if (best && !m_bestIndividual || best && m_bestIndividual->getFitness() < best->getFitness())
 		{
 			BOOL set = TRUE;
 
-			if (m_bestIndividual && (m_bestIndividual != best))
+			if (m_bestIndividual && m_bestIndividual != best)
 			{
 				delete m_bestIndividual;
 				m_bestIndividual = NULL;
@@ -351,7 +351,7 @@ void CGA::freeGlobalMemory()
 
 bool CGA::canPick()
 {
-	return (m_theNewPopulation.size() > 0);
+	return m_theNewPopulation.size() > 0;
 }
 
 IIndividual* CGA::pick()

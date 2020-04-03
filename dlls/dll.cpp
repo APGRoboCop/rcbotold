@@ -118,7 +118,7 @@ BOOL CAllowedPlayer::IsForClient(CClient* pClient)
 
 	bSamePass = IsForPass(pClient->GetPass());
 
-	return (bSameName && bSamePass);
+	return bSameName && bSamePass;
 }
 //
 ///////////////////////////////////////////////////////////
@@ -187,7 +187,7 @@ int DispatchSpawn(edict_t* pent)
 			FILE* fp;
 
 			fp = fopen("bot.txt", "a");
-			fprintf(fp, "DispatchSpawn: %x %s\n", pent, pClassname);
+			fprintf(fp, "DispatchSpawn: %p %s\n", pent, pClassname);
 			if (pent->v.model != 0)
 				fprintf(fp, " model=%s\n", STRING(pent->v.model));
 			fclose(fp);
@@ -430,7 +430,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 			pClient->Init();
 		}
 
-		if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a"); fprintf(fp, "ClientConnect: pent=%x name=%s\n", pEntity, pszName); fclose(fp); }
+		if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a"); fprintf(fp, "ClientConnect: pent=%p name=%s\n", pEntity, pszName); fclose(fp); }
 
 		if (!IS_DEDICATED_SERVER())
 		{
@@ -459,7 +459,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 			{
 				int iNumPlayerCheck = UTIL_GetNumClients(TRUE) + 1 + gBotGlobals.GetNumJoiningClients();
 
-				if ((gBotGlobals.m_iNumBots > gBotGlobals.m_iMinBots) && (iNumPlayerCheck > gBotGlobals.m_iMaxBots))
+				if (gBotGlobals.m_iNumBots > gBotGlobals.m_iMinBots && iNumPlayerCheck > gBotGlobals.m_iMaxBots)
 					// Can it kick a bot to free a slot?
 				{
 					int i;
@@ -496,11 +496,11 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 					}
 					// kick the bot
 				}
-				else if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_RESERVE_BOT_SLOTS) && (gBotGlobals.m_iNumBots < gBotGlobals.m_iMinBots))
+				else if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_RESERVE_BOT_SLOTS) && gBotGlobals.m_iNumBots < gBotGlobals.m_iMinBots)
 				{
 					int iNumPlayers = UTIL_GetNumClients(TRUE) + 1;
 					int iBotsStillToJoin = gBotGlobals.m_iMinBots - gBotGlobals.m_iNumBots;
-					int iNewSlotsFree = (gpGlobals->maxClients - iNumPlayers);
+					int iNewSlotsFree = gpGlobals->maxClients - iNumPlayers;
 					// dont allow player to connect as the number of bots
 					// have not been reached yet.
 
@@ -677,7 +677,9 @@ void ClientDisconnect(edict_t* pEntity)
 ///////////////////////////////////////////////////////////////////////////
 void ClientKill(edict_t* pEntity)
 {
-	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a"); fprintf(fp, "ClientKill: %x\n", pEntity); fclose(fp); }
+	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a");
+		fprintf(fp, "ClientKill: %x\n", unsigned(pEntity));
+		fclose(fp); }
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -688,7 +690,9 @@ void ClientKill(edict_t* pEntity)
 ///////////////////////////////////////////////////////////////////////////
 void ClientPutInServer(edict_t* pEntity)
 {
-	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a"); fprintf(fp, "ClientPutInServer: %x\n", pEntity); fclose(fp); }
+	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a");
+		fprintf(fp, "ClientPutInServer: %x\n", unsigned(pEntity));
+		fclose(fp); }
 
 	gBotGlobals.m_Clients.ClientConnected(pEntity);
 
@@ -744,7 +748,7 @@ void BotFunc_TraceToss(edict_t* ent, edict_t* ignore, TraceResult* tr)
 	}
 
 	// final draw to end
-	UTIL_TraceLine(tempent.v.origin, tempent.v.origin + (tempent.v.velocity * 256), dont_ignore_monsters, dont_ignore_glass, ignore, tr);
+	UTIL_TraceLine(tempent.v.origin, tempent.v.origin + tempent.v.velocity * 256, dont_ignore_monsters, dont_ignore_glass, ignore, tr);
 	//WaypointDrawBeam(gBotGlobals.m_Clients.GetClientByIndex(0)->GetPlayer(),tempent.v.origin,tr->vecEndPos,16,0,255,255,255,200,10);
 }
 
@@ -798,15 +802,15 @@ void ClientCommand(edict_t* pEntity)
 		iState = BOT_CVAR_ACCESSED;
 	}
 	// someone said something
-	else if (((bSayMsg = FStrEq(pcmd, "say")) == TRUE) || ((bSayTeamMsg = FStrEq(pcmd, "say_team")) == TRUE))
+	else if ((bSayMsg = FStrEq(pcmd, "say")) == TRUE || (bSayTeamMsg = FStrEq(pcmd, "say_team")) == TRUE)
 	{
 		BOOL bMadeSquad = FALSE;
 
 		if (bSayTeamMsg)
 		{
 			// player wants to lead squad?
-			if ((strncmp(arg1, "form", 4) == 0) &&
-				((strncmp(&arg1[4], " up", 3) == 0) || (strncmp(arg2, "up", 2) == 0)))
+			if (strncmp(arg1, "form", 4) == 0 &&
+				(strncmp(&arg1[4], " up", 3) == 0 || strncmp(arg2, "up", 2) == 0))
 			{
 				// loop through bots in team
 				BotFunc_MakeSquad(pClient);
@@ -819,7 +823,7 @@ void ClientCommand(edict_t* pEntity)
 		{
 			///////
 			// see if bot can learn its HAL brain from this person speaking
-			BOOL bSenderIsBot = (UTIL_GetBotPointer(pEntity) != NULL);
+			BOOL bSenderIsBot = UTIL_GetBotPointer(pEntity) != NULL;
 
 			if (!bSenderIsBot || gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHAT_REPLY_TO_BOTS))
 			{
@@ -887,7 +891,7 @@ void ClientCommand(edict_t* pEntity)
 							// so can spaces argh :-@
 							if (!bSenderIsBot)
 							{
-								bIsQuote = (szArgument[0] == '\'') && (szArgument[1] == 0);
+								bIsQuote = szArgument[0] == '\'' && szArgument[1] == 0;
 							}
 							if (bIsQuote || bWasQuote)
 							{
@@ -928,7 +932,7 @@ void ClientCommand(edict_t* pEntity)
 						if (pBot && pBot->IsUsed())
 						{
 							// say message, everyone can see, team message only team mates can see
-							if (bSayMsg || (bSayTeamMsg && (UTIL_GetTeam(pEntity) == pBot->GetTeam())))
+							if (bSayMsg || bSayTeamMsg && UTIL_GetTeam(pEntity) == pBot->GetTeam())
 							{
 								pBot->ReplyToMessage(szMessage, pEntity, iTeamOnly);
 							}
@@ -1001,7 +1005,7 @@ void ClientCommand(edict_t* pEntity)
 		}
 	}
 	else if (FStrEq(pcmd, BOT_COMMAND_ACCESS) &&
-		((!IS_DEDICATED_SERVER() && (pEntity != gBotGlobals.m_pListenServerEdict)) ||
+		(!IS_DEDICATED_SERVER() && pEntity != gBotGlobals.m_pListenServerEdict ||
 			IS_DEDICATED_SERVER()))
 	{
 		gBotGlobals.m_CurrentHandledCvar = gBotGlobals.m_BotCvars.GetCvar(arg1);
@@ -1036,7 +1040,7 @@ void ClientCommand(edict_t* pEntity)
 
 	FreeArgs(pcmd, arg1, arg2, arg3, arg4, arg5);
 
-	if ((iState == BOT_CVAR_ERROR) || (iState == BOT_CVAR_ACCESSED) || (iState == BOT_CVAR_NEEDACCESS) || (iState == BOT_CVAR_NOTEXIST))
+	if (iState == BOT_CVAR_ERROR || iState == BOT_CVAR_ACCESSED || iState == BOT_CVAR_NEEDACCESS || iState == BOT_CVAR_NOTEXIST)
 	{
 		if (iState == BOT_CVAR_NEEDACCESS)
 		{
@@ -1062,7 +1066,7 @@ void ClientCommand(edict_t* pEntity)
 #endif
 	}
 
-	if ((pcmd[0] != 0) && (strstr(pcmd, "addbot") != NULL))
+	if (pcmd[0] != 0 && strstr(pcmd, "addbot") != NULL)
 	{
 		BotMessage(pEntity, 0, "Tip: If you want to add an RCBOT use the command \"rcbot addbot\"\n");
 	}
@@ -1076,7 +1080,9 @@ void ClientCommand(edict_t* pEntity)
 ///////////////////////////////////////////////////////////////////////////
 void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
 {
-	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a"); fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", pEntity, infobuffer); fclose(fp); }
+	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a");
+		fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", unsigned(pEntity), infobuffer);
+		fclose(fp); }
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1137,7 +1143,7 @@ void ServerDeactivate(void)
 		// when server was deactivated
 		// assume that bots were just kicked because the server changed map
 		// and let them reconnect upon map change.
-		if ((pBot->m_fKickTime + 0.5) >= gpGlobals->time)
+		if (pBot->m_fKickTime + 0.5 >= gpGlobals->time)
 			pBot->m_iRespawnState = RESPAWN_NEED_TO_REJOIN;
 	}
 
@@ -1230,7 +1236,9 @@ const char* GetGameDescription(void)
 
 void PlayerCustomization(edict_t* pEntity, customization_t* pCust)
 {
-	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a"); fprintf(fp, "PlayerCustomization: %x\n", pEntity); fclose(fp); }
+	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a");
+		fprintf(fp, "PlayerCustomization: %x\n", unsigned(pEntity));
+		fclose(fp); }
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1410,7 +1418,9 @@ void CreateInstancedBaselines(void)
 
 int InconsistentFile(const edict_t* player, const char* filename, char* disconnect_message)
 {
-	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a"); fprintf(fp, "InconsistentFile: %x filename=%s\n", player, filename); fclose(fp); }
+	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a");
+		fprintf(fp, "InconsistentFile: %x filename=%s\n", unsigned(player), filename);
+		fclose(fp); }
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
@@ -1568,7 +1578,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	vsprintf(command, fmt, argptr);
 	va_end(argptr);
 
-	if ((command == NULL) || (*command == 0) || (*command == '\n'))
+	if (command == NULL || *command == 0 || *command == '\n')
 	{
 		BugMessage(NULL, "FakeClientCommand : No command!");
 		return; // if nothing in the command buffer, return
@@ -1581,7 +1591,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	while (stringindex < length)
 	{
 		fieldstart = stringindex; // save field start position (first character)
-		while ((stringindex < length) && (command[stringindex] != ';'))
+		while (stringindex < length && command[stringindex] != ';')
 			stringindex++; // reach end of field
 		if (command[stringindex - 1] == '\n')
 			fieldstop = stringindex - 2; // discard any trailing '\n' if needed
@@ -1598,19 +1608,19 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 		// count the number of arguments
 		while (index < i - fieldstart)
 		{
-			while ((index < i - fieldstart) && (g_argv[index] == ' '))
+			while (index < i - fieldstart && g_argv[index] == ' ')
 				index++; // ignore spaces
 
 			// is this field a group of words between quotes or a single word ?
 			if (g_argv[index] == '"')
 			{
 				index++; // move one step further to bypass the quote
-				while ((index < i - fieldstart) && (g_argv[index] != '"'))
+				while (index < i - fieldstart && g_argv[index] != '"')
 					index++; // reach end of field
 				index++; // move one step further to bypass the quote
 			}
 			else
-				while ((index < i - fieldstart) && (g_argv[index] != ' '))
+				while (index < i - fieldstart && g_argv[index] != ' ')
 					index++; // this is a single word, so reach the end of field
 
 			gBotGlobals.m_iFakeArgCount++; // we have processed one argument more
@@ -1786,7 +1796,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 			j = 0;
 			i = 6;
 
-			while ((i < iLength) && (szBuffer[i] != '\"'))
+			while (i < iLength && szBuffer[i] != '\"')
 				szTemp[j++] = szBuffer[i++];
 
 			szTemp[j] = 0;
@@ -1802,7 +1812,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 			j = 0;
 			i = 6;
 
-			while ((i < iLength) && (szBuffer[i] != '\"'))
+			while (i < iLength && szBuffer[i] != '\"')
 				szTemp[j++] = szBuffer[i++];
 
 			szTemp[j] = 0;
@@ -1822,7 +1832,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 			j = 0;
 			i = 8;
 
-			while ((i < iLength) && (szBuffer[i] != '\"'))
+			while (i < iLength && szBuffer[i] != '\"')
 				szTemp[j++] = szBuffer[i++];
 
 			szTemp[j] = 0;
@@ -1838,7 +1848,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 			j = 0;
 			i = 7;
 
-			while ((i < iLength) && (szBuffer[i] != '\"'))
+			while (i < iLength && szBuffer[i] != '\"')
 				szTemp[j++] = szBuffer[i++];
 
 			szTemp[j] = 0;
@@ -1894,7 +1904,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 			j = 0;
 			i = 19;
 
-			while ((i < iLength) && (szBuffer[i] != '\"'))
+			while (i < iLength && szBuffer[i] != '\"')
 				szTemp[j++] = szBuffer[i++];
 
 			szTemp[j] = 0;
@@ -1906,7 +1916,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 			j = 0;
 			i = 14;
 
-			while ((i < iLength) && (szBuffer[i] != '\"'))
+			while (i < iLength && szBuffer[i] != '\"')
 				szTemp[j++] = szBuffer[i++];
 
 			szTemp[j] = 0;
@@ -1918,7 +1928,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 			j = 0;
 			i = 14;
 
-			while ((i < iLength) && (szBuffer[i] != '\"'))
+			while (i < iLength && szBuffer[i] != '\"')
 				szTemp[j++] = szBuffer[i++];
 
 			szTemp[j] = 0;
@@ -1930,7 +1940,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 			j = 0;
 			i = 15;
 
-			while ((i < iLength) && (szBuffer[i] != '\"'))
+			while (i < iLength && szBuffer[i] != '\"')
 				szTemp[j++] = szBuffer[i++];
 
 			szTemp[j] = 0;
@@ -2013,43 +2023,43 @@ void ReadBotUsersConfig(void)
 
 			i = 0;
 
-			while ((i < length) && (buffer[i] != '"'))
+			while (i < length && buffer[i] != '"')
 				i++;
 			i++;
 
 			j = 0;
 
-			while ((i < length) && (buffer[i] != '"') && (j < 64))
+			while (i < length && buffer[i] != '"' && j < 64)
 				szName[j++] = buffer[i++];
 			szName[j] = 0;
 			i++;
 
-			while ((i < length) && (buffer[i] == ' '))
+			while (i < length && buffer[i] == ' ')
 				i++;
 
 			j = 0;
-			while ((i < length) && (buffer[i] != ' ') && (j < 16))
+			while (i < length && buffer[i] != ' ' && j < 16)
 				szPass[j++] = buffer[i++];
 			szPass[j] = 0;
 
-			while ((i < length) && (buffer[i] == ' '))
+			while (i < length && buffer[i] == ' ')
 				i++;
 
 			j = 0;
-			while ((i < length) && (buffer[i] != ' ') && (j < 8))
+			while (i < length && buffer[i] != ' ' && j < 8)
 				szAccessLevel[j++] = buffer[i++];
 			szAccessLevel[j] = 0;
 
 			// skip spaces...
-			while ((i < length) && (buffer[i] == ' '))
+			while (i < length && buffer[i] == ' ')
 				i++;
 
 			j = 0;
-			while ((i < length) && (buffer[i] != ' ') && (j < STEAM_ID_LEN))
+			while (i < length && buffer[i] != ' ' && j < STEAM_ID_LEN)
 				szSteamId[j++] = buffer[i++];
 			szSteamId[j] = 0;
 
-			if ((*szName && *szPass && *szAccessLevel) || (*szSteamId && *szAccessLevel))
+			if (*szName && *szPass && *szAccessLevel || *szSteamId && *szAccessLevel)
 			{
 				BotMessage(NULL, 0, "Added: name=\"%s\", pass=%s, accesslev=%s, steamid=%s", szName, szPass, szAccessLevel, szSteamId);
 
@@ -2234,7 +2244,7 @@ CBotCam::CBotCam()
 
 BOOL CBotCam::IsWorking()
 {
-	return (m_pCameraEdict != NULL) && gBotGlobals.IsConfigSettingOn(BOT_CONFIG_ENABLE_BOTCAM);
+	return m_pCameraEdict != NULL && gBotGlobals.IsConfigSettingOn(BOT_CONFIG_ENABLE_BOTCAM);
 }
 
 void CBotCam::Spawn()
@@ -2273,9 +2283,9 @@ void CBotCam::Think()
 	if (gBotGlobals.m_iNumBots == 0)
 		return;
 
-	bNotAlive = (m_pCurrentBot && !m_pCurrentBot->IsAlive());
+	bNotAlive = m_pCurrentBot && !m_pCurrentBot->IsAlive();
 
-	if ((m_pCurrentBot == NULL) || (m_fNextChangeBotTime < gpGlobals->time) || !m_pCurrentBot->IsUsed() || bNotAlive)
+	if (m_pCurrentBot == NULL || m_fNextChangeBotTime < gpGlobals->time || !m_pCurrentBot->IsUsed() || bNotAlive)
 	{
 		int i;
 		CBot* pOldBot = m_pCurrentBot;
@@ -2306,7 +2316,7 @@ void CBotCam::Think()
 				//else
 				fDistance = pBot->DistanceFrom(m_pCameraEdict->v.origin);
 
-				if ((m_pCurrentBot == NULL) || (fDistance < fNearest))
+				if (m_pCurrentBot == NULL || fDistance < fNearest)
 				{
 					m_pCurrentBot = pBot;
 					fNearest = fDistance;
@@ -2349,7 +2359,7 @@ void CBotCam::Think()
 		}
 	}
 
-	if (m_pCurrentBot && ((m_iState == BOTCAM_NONE) || (m_fNextChangeState < gpGlobals->time)))
+	if (m_pCurrentBot && (m_iState == BOTCAM_NONE || m_fNextChangeState < gpGlobals->time))
 	{
 		dataUnconstArray<eCamLookState> iPossibleStates;
 
@@ -2379,7 +2389,7 @@ void CBotCam::Think()
 
 	BOOL bSetAngle = TRUE;
 
-	vBotOrigin = (m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs);
+	vBotOrigin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 
 	oldOrigin = m_pCameraEdict->v.origin;//
 
@@ -2392,23 +2402,23 @@ void CBotCam::Think()
 		if (m_pCurrentBot->m_pEnemy)
 		{
 			UTIL_MakeVectors(m_pCurrentBot->pev->v_angle);
-			m_pCameraEdict->v.origin = vBotOrigin - (gpGlobals->v_forward * 128);
+			m_pCameraEdict->v.origin = vBotOrigin - gpGlobals->v_forward * 128;
 
 			if (m_iPositionSet == -1)
 				m_iPositionSet = RANDOM_LONG(0, 1);
 
 			// looking from the right
 			if (m_iPositionSet == 1)
-				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + (gpGlobals->v_right * 64.0);
+				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + gpGlobals->v_right * 64.0;
 			else
-				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + (-gpGlobals->v_right * 64.0);
+				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + -gpGlobals->v_right * 64.0;
 
 			vBotOrigin = EntityOrigin(m_pCurrentBot->m_pEnemy);
 		}
 		else
 		{
 			UTIL_MakeVectors(m_pCurrentBot->pev->angles);
-			m_pCameraEdict->v.origin = vBotOrigin - (gpGlobals->v_forward * 256);
+			m_pCameraEdict->v.origin = vBotOrigin - gpGlobals->v_forward * 256;
 		}
 
 		UTIL_TraceLine(vBotOrigin, m_pCameraEdict->v.origin, ignore_monsters, ignore_glass, m_pCameraEdict, &tr);
@@ -2432,7 +2442,7 @@ void CBotCam::Think()
 	{
 		if (m_pCurrentBot->m_pEnemy)
 		{
-			Vector vComp = ((m_pCurrentBot->m_pEnemy->v.origin + m_pCurrentBot->m_pEnemy->v.view_ofs) - vBotOrigin);
+			Vector vComp = m_pCurrentBot->m_pEnemy->v.origin + m_pCurrentBot->m_pEnemy->v.view_ofs - vBotOrigin;
 
 			float fLength = vComp.Length();
 
@@ -2448,16 +2458,16 @@ void CBotCam::Think()
 
 			// looking from the right
 			if (m_iPositionSet == 1)
-				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + (CrossProduct(vComp.Normalize(), Vector(0, 0, 1)) * m_pCurrentBot->m_pEnemy->v.size.Length2D());
+				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + CrossProduct(vComp.Normalize(), Vector(0, 0, 1)) * m_pCurrentBot->m_pEnemy->v.size.Length2D();
 			else
-				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + (-CrossProduct(vComp.Normalize(), Vector(0, 0, 1)) * m_pCurrentBot->m_pEnemy->v.size.Length2D());
+				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + -CrossProduct(vComp.Normalize(), Vector(0, 0, 1)) * m_pCurrentBot->m_pEnemy->v.size.Length2D();
 
 			//----
 			UTIL_TraceLine(m_pCurrentBot->m_pEnemy->v.origin, m_pCameraEdict->v.origin, ignore_monsters, ignore_glass, m_pCameraEdict, &tr);
 
 			if (tr.flFraction < 1.0)
 			{
-				m_pCameraEdict->v.origin = tr.vecEndPos - (vComp.Normalize() * 32.0);
+				m_pCameraEdict->v.origin = tr.vecEndPos - vComp.Normalize() * 32.0;
 			}
 
 			//bSetAngle = FALSE;
@@ -2473,7 +2483,7 @@ void CBotCam::Think()
 			m_pCameraEdict->v.origin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 
 			UTIL_MakeVectors(m_pCurrentBot->pev->v_angle);
-			vBotOrigin = m_pCameraEdict->v.origin + (gpGlobals->v_forward * 512);
+			vBotOrigin = m_pCameraEdict->v.origin + gpGlobals->v_forward * 512;
 
 			m_pCameraEdict->v.angles = m_pCurrentBot->pev->angles;
 			m_pCameraEdict->v.v_angle = m_pCurrentBot->pev->v_angle;
@@ -2487,7 +2497,7 @@ void CBotCam::Think()
 		Vector ideal = UTIL_VecToAngles(vBotOrigin - m_pCameraEdict->v.origin);
 		UTIL_FixAngles(&ideal);
 
-		float fTurnSpeed = fabs((180 + ideal.x) - (180 + m_pCameraEdict->v.angles.x)) / 10;
+		float fTurnSpeed = fabs(180 + ideal.x - (180 + m_pCameraEdict->v.angles.x)) / 10;
 
 		//	ideal.x = -ideal.x;
 		BotFunc_ChangeAngles(&fTurnSpeed, &ideal.x, &m_pCameraEdict->v.v_angle.x, &m_pCameraEdict->v.angles.x);
@@ -2495,10 +2505,10 @@ void CBotCam::Think()
 		//	m_pCameraEdict->v.angles.x = -m_pCameraEdict->v.v_angle.x/3;
 		//	m_pCameraEdict->v.v_angle.x = -m_pCameraEdict->v.v_angle.x;
 
-		fTurnSpeed = fabs((180 + ideal.y) - (180 + m_pCameraEdict->v.angles.y)) / 20;
+		fTurnSpeed = fabs(180 + ideal.y - (180 + m_pCameraEdict->v.angles.y)) / 20;
 		BotFunc_ChangeAngles(&fTurnSpeed, &ideal.y, &m_pCameraEdict->v.v_angle.y, &m_pCameraEdict->v.angles.y);
 
-		m_pCameraEdict->v.origin = m_pCameraEdict->v.origin - ((m_pCameraEdict->v.origin - oldOrigin) * 0.5);
+		m_pCameraEdict->v.origin = m_pCameraEdict->v.origin - (m_pCameraEdict->v.origin - oldOrigin) * 0.5;
 		/*
 		m_pCameraEdict->v.angles = UTIL_VecToAngles(vBotOrigin - m_pCameraEdict->v.origin);
 
@@ -2571,7 +2581,7 @@ edict_t* CTFCCapturePoints::getCapturePoint(int group, int goal, int team, BOOL 
 		}
 		else
 		{
-			if ((group && pGotCap->isForGroup(group)) || (goal && pGotCap->isForGoal(goal)) && pGotCap->isForTeam(team))
+			if (group && pGotCap->isForGroup(group) || goal && pGotCap->isForGoal(goal) && pGotCap->isForTeam(team))
 			{
 				if (gBotGlobals.isMapType(TFC_MAP_CAPTURE_FLAG_MULTIPLE))
 				{
@@ -2607,20 +2617,20 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS* pFunctionTable, int* interfaceVersi
 	// this is one of the initialization functions hooked by metamod in the gamedll API
 	if (!pFunctionTable) {
 		UTIL_LogPrintf("GetEntityAPI2 called with null pFunctionTable");
-		return(FALSE);
+		return FALSE;
 	}
 	else if (*interfaceVersion != INTERFACE_VERSION) {
 		UTIL_LogPrintf("GetEntityAPI2 version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
 		//! Tell engine what version we had, so it can figure out who is out of date.
 		*interfaceVersion = INTERFACE_VERSION;
-		return(FALSE);
+		return FALSE;
 	}
 
 	// gFunctionTable defined in dll.cpp
 	// copy the whole table for metamod to know which functions we are using here
 	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
 
-	return (TRUE); // alright
+	return TRUE; // alright
 }
 
 #endif

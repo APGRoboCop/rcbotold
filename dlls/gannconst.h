@@ -66,7 +66,7 @@ public:
 
 	BOOL operator == (CGenericHeader other)
 	{
-		return (strcmp(m_szHeader, other.getHeader()) == 0);
+		return strcmp(m_szHeader, other.getHeader()) == 0;
 	}
 
 	void write(FILE* bfp)
@@ -80,7 +80,7 @@ public:
 
 		fread(&read, sizeof(CGenericHeader), 1, bfp);
 
-		return (read == compare);
+		return read == compare;
 	}
 
 private:

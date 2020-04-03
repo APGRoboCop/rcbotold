@@ -14,12 +14,12 @@ public:
 		m_fUtility = utility;
 	}
 
-	inline float getUtility()
+	float getUtility()
 	{
 		return m_fUtility;
 	}
 
-	inline eCanDoStuff getAction()
+	eCanDoStuff getAction()
 	{
 		return m_Action;
 	}
@@ -47,7 +47,7 @@ public:
 		{
 			total += m_Utilities[i].getUtility();
 
-			if (m_Utilities[i].getUtility() && (rand < total))
+			if (m_Utilities[i].getUtility() && rand < total)
 				return m_Utilities[i].getAction();
 		}
 

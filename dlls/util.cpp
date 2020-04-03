@@ -83,19 +83,19 @@ extern CWaypointLocations WaypointLocations;
 
 BOOL UTIL_TankUsed(edict_t* pTank)
 {
-	return (pTank->v.netname && *STRING(pTank->v.netname));
+	return pTank->v.netname && *STRING(pTank->v.netname);
 }
 
 BOOL UTIL_EntityHasClassname(edict_t* pEntity, char* classname)
 {
-	return (strcmp(STRING(pEntity->v.classname), classname) == 0);
+	return strcmp(STRING(pEntity->v.classname), classname) == 0;
 }
 
 BOOL UTIL_IsGrenadeRocket(edict_t* pEntity)
 {
 	const char* szClassname = static_cast<const char*>(STRING(pEntity->v.classname));
 
-	return (strstr(szClassname, "grenade") != NULL) || (strstr(szClassname, "rpg_rocket") != NULL);
+	return strstr(szClassname, "grenade") != NULL || strstr(szClassname, "rpg_rocket") != NULL;
 }
 // from old RCBot
 void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency, float duration, float radius)
@@ -187,7 +187,7 @@ Vector UTIL_GetGroundVector(edict_t* pEdict)
 
 BOOL UTIL_EntityIsHive(edict_t* pEdict)
 {
-	return (pEdict->v.iuser3 == AVH_USER3_HIVE);
+	return pEdict->v.iuser3 == AVH_USER3_HIVE;
 }
 /*
 typedef struct
@@ -361,7 +361,7 @@ void UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTER
 
 void UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon, edict_t* pentIgnore, TraceResult* ptr)
 {
-	TRACE_LINE(vecStart, vecEnd, (igmon == ignore_monsters ? TRUE : FALSE), pentIgnore, ptr);
+	TRACE_LINE(vecStart, vecEnd, igmon == ignore_monsters ? TRUE : FALSE, pentIgnore, ptr);
 }
 
 void UTIL_MakeVectors(const Vector& vecAngles)
@@ -626,7 +626,7 @@ float UTIL_AngleBetweenVectors(Vector const vec1, Vector const vec2)
 	double vec1Dotvec2 = vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
 	double veclengths = vec1.Length() * vec2.Length();
 
-	return (acos(vec1Dotvec2 / veclengths) * (180 / PI));
+	return acos(vec1Dotvec2 / veclengths) * (180 / PI);
 }
 
 float UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector const vOrigin)
@@ -675,9 +675,9 @@ BOOL UTIL_IsFacingEntity(entvars_t* pev, entvars_t* pevEntity)
 
 	fDistance = (EntityOrigin(ENT(pevEntity)) - vSrc).Length();
 
-	Vector vDst = vSrc + (gpGlobals->v_forward * fDistance);
+	Vector vDst = vSrc + gpGlobals->v_forward * fDistance;
 
-	return ((vDst <= pevEntity->absmax) && (vDst >= pevEntity->absmin));
+	return vDst <= pevEntity->absmax && vDst >= pevEntity->absmin;
 }
 /*
 
@@ -785,7 +785,7 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 	else
 		sprintf(text, "%c%s: ", 2, STRING(pEntity->v.netname));
 
-	j = sizeof(text) - 2 - strlen(text);  // -2 for /n and null terminator
+	j = sizeof text - 2 - strlen(text);  // -2 for /n and null terminator
 	if ((int)strlen(message) > j)
 		message[j] = 0;
 
@@ -807,15 +807,15 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 	sender_team = UTIL_GetTeam(pEntity);
 
 	client = NULL;
-	while (((client = UTIL_FindEntityByClassname(client, "player")) != NULL) &&
-		(!FNullEnt(client)))
+	while ((client = UTIL_FindEntityByClassname(client, "player")) != NULL &&
+		!FNullEnt(client))
 	{
 		if (client == pEntity)  // skip sender of message
 			continue;
 
 		player_team = UTIL_GetTeam(client);
 
-		if (teamonly && (sender_team != player_team))
+		if (teamonly && sender_team != player_team)
 			continue;
 
 		g_engfuncs.pfnMessageBegin(MSG_ONE, msg_id, NULL, client);
@@ -907,7 +907,7 @@ int UTIL_GetTeam(edict_t* pEntity)
 
 		char model[64];
 
-		strcpy(model, (g_engfuncs.pfnInfoKeyValue(infobuffer, "model")));
+		strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
 
 		if (strncmp("tm_", STRING(gpGlobals->mapname), 3) == 0)
 		{
@@ -969,7 +969,7 @@ void BotFunc_KickBotFromTeam(int iTeam)
 
 		if (pBot && pBot->IsUsed())
 		{
-			if ((iTeam == -1) || (pBot->pev->team == iTeam))
+			if (iTeam == -1 || pBot->pev->team == iTeam)
 				theBots.Add(pBot);
 		}
 	}
@@ -991,10 +991,10 @@ void UTIL_GetArgFromString(char** szString, char* szArg)
 {
 	*szArg = 0;
 
-	while ((**szString) && (**szString == ' '))
+	while (**szString && **szString == ' ')
 		szString = szString + 1;
 
-	while ((**szString) && (**szString != ' '))
+	while (**szString && **szString != ' ')
 	{
 		*szArg = **szString;
 		szString = szString + 1; // add size of char (i know it's 1 for a fact :p)
@@ -1017,7 +1017,7 @@ int UTIL_GetClass(edict_t* pEntity)
 	char model_name[32];
 
 	infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-	strcpy(model_name, (g_engfuncs.pfnInfoKeyValue(infobuffer, "model")));
+	strcpy(model_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
 
 	return 0;
 }
@@ -1083,7 +1083,7 @@ float UTIL_EntityAnglesToVector2D(entvars_t* pev, const Vector* pOrigin) // For 
 
 	flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-	return (float)((acos(flDot) / (3.141592654)) * 180);
+	return (float)(acos(flDot) / 3.141592654 * 180);
 }
 
 float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin) // For 3d Movement (e.g. swimming)
@@ -1093,7 +1093,7 @@ float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin) // For 
 
 	UTIL_MakeVectors(pev->v_angle);
 
-	vecLOS = (*pOrigin - pev->origin);
+	vecLOS = *pOrigin - pev->origin;
 	vecLOS = vecLOS.Normalize();
 
 	flDot = DotProduct(vecLOS, gpGlobals->v_forward);
@@ -1115,9 +1115,9 @@ int UTIL_ClassOnTeam(int iClass, int iTeam)
 			continue;
 		if (FNullEnt(pPlayer))
 			continue;
-		if (!pPlayer->v.classname || !(*STRING(pPlayer->v.classname)))
+		if (!pPlayer->v.classname || !*STRING(pPlayer->v.classname))
 			continue;
-		if ((pPlayer->v.team == iTeam) && (pPlayer->v.playerclass == iClass))
+		if (pPlayer->v.team == iTeam && pPlayer->v.playerclass == iClass)
 			iPlayers++;
 	}
 
@@ -1138,7 +1138,7 @@ int UTIL_PlayersOnTeam(int iTeam)
 			continue;
 		if (FNullEnt(pPlayer))
 			continue;
-		if (!pPlayer->v.classname || !(*STRING(pPlayer->v.classname)))
+		if (!pPlayer->v.classname || !*STRING(pPlayer->v.classname))
 			continue;
 		if (pPlayer->v.team == iTeam)
 			iPlayers++;
@@ -1157,7 +1157,7 @@ BOOL UTIL_CanEvolveInto(int iSpecies)
 	case ALIEN_LIFEFORM_THREE:
 	case ALIEN_LIFEFORM_FOUR:
 	case ALIEN_LIFEFORM_FIVE:
-		return (UTIL_GetNumHives() > 1);
+		return UTIL_GetNumHives() > 1;
 	}
 
 	return FALSE;
@@ -1170,7 +1170,7 @@ int UTIL_GetNumHives(void)
 
 	while ((pHive = UTIL_FindEntityByClassname(pHive, "team_hive")) != NULL)
 	{
-		if ((pHive->v.fuser1 > 0) && !(pHive->v.iuser4 & MASK_BUILDABLE))//EntityIsAlive(pHive) )
+		if (pHive->v.fuser1 > 0 && !(pHive->v.iuser4 & MASK_BUILDABLE))//EntityIsAlive(pHive) )
 			iNum++;
 	}
 
@@ -1237,9 +1237,9 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 		}
 		else
 		{
-			if ((pResourceTower->v.origin.x == pFuncResource->v.origin.x) &&
-				(pResourceTower->v.origin.y == pFuncResource->v.origin.y) &&
-				(fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1.0))
+			if (pResourceTower->v.origin.x == pFuncResource->v.origin.x &&
+				pResourceTower->v.origin.y == pFuncResource->v.origin.y &&
+				fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1.0)
 			{
 				return TRUE;
 			}
@@ -1258,9 +1258,9 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 		}
 		else
 		{
-			if ((pResourceTower->v.origin.x == pFuncResource->v.origin.x) &&
-				(pResourceTower->v.origin.y == pFuncResource->v.origin.y) &&
-				(fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1.0))
+			if (pResourceTower->v.origin.x == pFuncResource->v.origin.x &&
+				pResourceTower->v.origin.y == pFuncResource->v.origin.y &&
+				fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1.0)
 			{
 				return TRUE;
 			}
@@ -1273,7 +1273,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 // from old RCBOT
 Vector UTIL_LengthFromVector(Vector const relation, float length)
 {
-	return ((relation / relation.Length()) * length);
+	return relation / relation.Length() * length;
 }
 
 BOOL UTIL_IsResourceFountainUsed(edict_t* pFountain)
@@ -1371,12 +1371,12 @@ int UTIL_CountEntitiesInRange(char* classname, Vector vOrigin, float fRange)
 
 BOOL UTIL_CanBuildHive(entvars_t* pev)
 {
-	return (pev->fuser1 == 0.0f);
+	return pev->fuser1 == 0.0f;
 }
 
 BOOL UTIL_OnGround(entvars_t* pev)
 {
-	return (pev->flags & FL_ONGROUND) && (pev->movetype == MOVETYPE_WALK);
+	return pev->flags & FL_ONGROUND && pev->movetype == MOVETYPE_WALK;
 }
 
 edict_t* UTIL_GetRandomUnbuiltHive(void)
@@ -1471,7 +1471,7 @@ int UTIL_SpeciesOnTeam(int iSpecies, BOOL bIgnoreEmbryos)
 			iPlayers++;
 		// Add gestating players to it, since we dont know what they're
 		// transforming into
-		if (!bIgnoreEmbryos && (pPlayer->v.iuser3 == AVH_USER3_ALIEN_EMBRYO))
+		if (!bIgnoreEmbryos && pPlayer->v.iuser3 == AVH_USER3_ALIEN_EMBRYO)
 			iPlayers++;
 	}
 	return iPlayers;
@@ -1518,7 +1518,7 @@ BOOL BotFunc_FInViewCone(Vector* pOrigin, edict_t* pEdict)
 
 	flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-	return (flDot > 0.50);  // 60 degree field of view
+	return flDot > 0.50;  // 60 degree field of view
 }
 
 BOOL BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict)
@@ -1529,8 +1529,8 @@ BOOL BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict)
 	// look through caller's eyes
 	vecLookerOrigin = pEdict->v.origin + pEdict->v.view_ofs;
 
-	int bInWater = (UTIL_PointContents(vecOrigin) == CONTENTS_WATER);
-	int bLookerInWater = (UTIL_PointContents(vecLookerOrigin) == CONTENTS_WATER);
+	int bInWater = UTIL_PointContents(vecOrigin) == CONTENTS_WATER;
+	int bLookerInWater = UTIL_PointContents(vecLookerOrigin) == CONTENTS_WATER;
 
 	// don't look through water
 	if (bInWater != bLookerInWater)
@@ -1550,7 +1550,7 @@ BOOL BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict)
 
 Vector GetGunPosition(edict_t* pEdict)
 {
-	return (pEdict->v.origin + pEdict->v.view_ofs);
+	return pEdict->v.origin + pEdict->v.view_ofs;
 }
 
 void UTIL_SelectItem(edict_t* pEdict, char* item_name)
@@ -1630,7 +1630,7 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 		{
 			//g_engfuncs.
 			//extern void RadiusDamage( Vector vecSrc, entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, float flRadius, int iClassIgnore, int bitsDamageType );
-			RadiusDamage(center, &pOwner->v, &pOwner->v, magnitude, magnitude / 2, 0, (1 << 6));
+			RadiusDamage(center, &pOwner->v, &pOwner->v, magnitude, magnitude / 2, 0, 1 << 6);
 		}
 	}
 }
@@ -1649,7 +1649,7 @@ void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker
 	else
 		falloff = 1.0;
 
-	int bInWater = (UTIL_PointContents(vecSrc) == CONTENTS_WATER);
+	int bInWater = UTIL_PointContents(vecSrc) == CONTENTS_WATER;
 
 	vecSrc.z += 1;// in case grenade is lying on the ground
 
@@ -1750,17 +1750,17 @@ Vector EntityOrigin(edict_t* pEdict)
 {
 	//if ( pEdict->v.flags & FL_WORLDBRUSH )
 
-	if ((gBotGlobals.m_iCurrentMod == MOD_SVENCOOP) && (pEdict->v.flags & FL_MONSTER))
-		return pEdict->v.origin + (pEdict->v.view_ofs / 2);
+	if (gBotGlobals.m_iCurrentMod == MOD_SVENCOOP && pEdict->v.flags & FL_MONSTER)
+		return pEdict->v.origin + pEdict->v.view_ofs / 2;
 
-	return pEdict->v.absmin + (pEdict->v.size / 2);
+	return pEdict->v.absmin + pEdict->v.size / 2;
 
 	//return pEdict->v.origin;
 }
 
 Vector AbsOrigin(edict_t* pEdict)
 {
-	return ((pEdict->v.absmin + pEdict->v.absmax) / 2);
+	return (pEdict->v.absmin + pEdict->v.absmax) / 2;
 }
 
 void UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, BOOL needmore, char* pText)
@@ -1795,9 +1795,9 @@ BOOL UTIL_CanStand(Vector const origin, Vector* v_floor)
 
 	UTIL_TraceLine(v_src, v_src + Vector(0, 0, 144), ignore_monsters, ignore_glass, NULL, &tr);
 
-	len += (tr.vecEndPos.z - v_src.z);
+	len += tr.vecEndPos.z - v_src.z;
 
-	return (len > 72);
+	return len > 72;
 }
 
 BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid)
@@ -1807,7 +1807,7 @@ BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid)
 
 	edict_t* pWeapon = CREATE_NAMED_ENTITY(MAKE_STRING("ts_groundweapon"));
 
-	if ((pWeapon == NULL) || FNullEnt(pWeapon))
+	if (pWeapon == NULL || FNullEnt(pWeapon))
 		return FALSE;
 
 	char* keyname = "tsweaponid";
@@ -1858,7 +1858,7 @@ BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid)
 	MDLL_KeyValue(pWeapon, &key);
 #endif
 
-	pWeapon->v.spawnflags = (1 << 30);
+	pWeapon->v.spawnflags = 1 << 30;
 
 #ifndef RCBOT_META_BUILD
 	DispatchSpawn(pWeapon);
@@ -1891,7 +1891,7 @@ void UTIL_BuildFileName(char* filename, char* arg1, char* arg2)
 	strcat(filename, "/");
 #endif
 
-	if ((arg1) && (*arg1) && (arg2) && (*arg2))
+	if (arg1 && *arg1 && arg2 && *arg2)
 	{
 		strcat(filename, arg1);
 
@@ -1903,7 +1903,7 @@ void UTIL_BuildFileName(char* filename, char* arg1, char* arg2)
 
 		strcat(filename, arg2);
 	}
-	else if ((arg1) && (*arg1))
+	else if (arg1 && *arg1)
 	{
 		strcat(filename, arg1);
 	}
@@ -1920,13 +1920,13 @@ edict_t* UTIL_FacingEnt(edict_t* pPlayer, BOOL any)
 	UTIL_MakeVectors(pev->v_angle);
 
 	vSrc = pev->origin + pev->view_ofs;
-	vEnd = vSrc + (gpGlobals->v_forward * 4096.0);
+	vEnd = vSrc + gpGlobals->v_forward * 4096.0;
 
 	UTIL_TraceLine(vSrc, vEnd, dont_ignore_monsters, dont_ignore_glass, pPlayer, &tr);
 
 	if (tr.pHit)
 	{
-		if (any || ((tr.pHit->v.flags & FL_CLIENT) || (tr.pHit->v.flags & FL_MONSTER)))
+		if (any || (tr.pHit->v.flags & FL_CLIENT || tr.pHit->v.flags & FL_MONSTER))
 			return tr.pHit;
 	}
 
@@ -1965,7 +1965,7 @@ void UTIL_FixFloatAngle(float* fAngle)
 
 	if (*fAngle < -180)
 	{
-		while ((iLoops < 4) && (*fAngle < -180))
+		while (iLoops < 4 && *fAngle < -180)
 		{
 			*fAngle += 360.0;
 			iLoops++;
@@ -1973,7 +1973,7 @@ void UTIL_FixFloatAngle(float* fAngle)
 	}
 	else if (*fAngle > 180)
 	{
-		while ((iLoops < 4) && (*fAngle > 180))
+		while (iLoops < 4 && *fAngle > 180)
 		{
 			*fAngle -= 360.0;
 			iLoops++;
@@ -2032,12 +2032,12 @@ Vector UTIL_GetDesiredPushableVector(Vector vOrigin, edict_t* pPushable)
 {
 	Vector vPushable = EntityOrigin(pPushable);
 
-	return vPushable - ((vOrigin - vPushable).Normalize() * UTIL_GetBestPushableDistance(pPushable));
+	return vPushable - (vOrigin - vPushable).Normalize() * UTIL_GetBestPushableDistance(pPushable);
 }
 
 BOOL UTIL_AcceptablePushableVector(edict_t* pPushable, Vector const vOrigin)
 {
-	return (UTIL_EntityDistance2D(&pPushable->v, vOrigin) <= UTIL_GetBestPushableDistance(pPushable));
+	return UTIL_EntityDistance2D(&pPushable->v, vOrigin) <= UTIL_GetBestPushableDistance(pPushable);
 }
 
 void HudText::SayMessage(const char* message, Vector const colour1, Vector const colour2, edict_t* pPlayer)
@@ -2121,7 +2121,7 @@ void UTIL_BotHudMessageAll(const hudtextparms_t& textparms, const char* pMessage
 
 void UTIL_BotHudMessage(edict_t* pEntity, const hudtextparms_t& textparms, const char* pMessage)
 {
-	if (!pEntity || !(pEntity->v.flags & FL_CLIENT) || (pEntity->v.flags & FL_FAKECLIENT))
+	if (!pEntity || !(pEntity->v.flags & FL_CLIENT) || pEntity->v.flags & FL_FAKECLIENT)
 		return;
 
 	MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, NULL, pEntity);
@@ -2237,7 +2237,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 
 	// check it tooltips are on
 	// check if array positions are in bounds
-	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) && gBotGlobals.IsConfigSettingOn(iLang < BOT_LANG_MAX) && (iTooltip < BOT_TOOL_TIP_MAX))
+	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) && gBotGlobals.IsConfigSettingOn(iLang < BOT_LANG_MAX) && iTooltip < BOT_TOOL_TIP_MAX)
 	{
 		char final_message[1024];
 
@@ -2292,7 +2292,7 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 	// i. footsteps are on AND..
 	// ii. mod isnt svencoop (dont listen to teammates... (except when shooting)
 	// iii. OR mod is bumpercars (hear engine always)
-	BOOL bListenToFootSteps = ((CVAR_GET_FLOAT("mp_footsteps") > 0) && ((gBotGlobals.m_iCurrentMod != MOD_SVENCOOP) || (gBotGlobals.m_iCurrentMod == MOD_BUMPERCARS)));
+	BOOL bListenToFootSteps = CVAR_GET_FLOAT("mp_footsteps") > 0 && (gBotGlobals.m_iCurrentMod != MOD_SVENCOOP || gBotGlobals.m_iCurrentMod == MOD_BUMPERCARS);
 
 	for (i = 1; i <= gpGlobals->maxClients; i++)
 	{
@@ -2314,19 +2314,19 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 		if (!*STRING(pPlayerpev->netname))
 			continue;
 
-		bSameTeam = (UTIL_GetTeam(pPlayer) == iMyTeam);
+		bSameTeam = UTIL_GetTeam(pPlayer) == iMyTeam;
 
 		bAdd = FALSE;
 
 		if (bListenToFootSteps && !bSameTeam)
 		{
-			if ((pPlayerpev->velocity.Length2D() > 120))
+			if (pPlayerpev->velocity.Length2D() > 120)
 				bAdd = TRUE;
 
 			if (gBotGlobals.IsNS())
 			{
 				// silence upgrade? can't hear
-				if (EntityIsAlien(pPlayer) && (pPlayerpev->iuser4 & MASK_UPGRADE_6))
+				if (EntityIsAlien(pPlayer) && pPlayerpev->iuser4 & MASK_UPGRADE_6)
 					bAdd = FALSE;
 				if (pPlayerpev->iuser4 & MASK_VIS_DETECTED) // detected though...?
 					bAdd = TRUE;
@@ -2343,9 +2343,9 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 
 			if (fDistance < fNearest)
 			{
-				if (bSameTeam && (fDistance > 128))
+				if (bSameTeam && fDistance > 128)
 					bAdd = TRUE;
-				else if (!bSameTeam && (fDistance > 64))
+				else if (!bSameTeam && fDistance > 64)
 					bAdd = TRUE;
 			}
 
@@ -2369,7 +2369,7 @@ BOOL UTIL_IsButton(edict_t* pButton)
 
 	szClassname = const_cast<char*>(STRING(pButton->v.classname));
 
-	return (strncmp(szClassname, "func_", 5) == 0);
+	return strncmp(szClassname, "func_", 5) == 0;
 }
 
 edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, Vector vOrigin, float fRange, BOOL bVisible, edict_t* pIgnore)
@@ -2413,7 +2413,7 @@ edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, Vector vOrigin,
 				{
 					UTIL_TraceLine(vOrigin, vEntOrigin, ignore_monsters, ignore_glass, NULL, &tr);
 
-					bAdd = ((tr.flFraction >= 1.0) || (tr.pHit == pEntity));
+					bAdd = tr.flFraction >= 1.0 || tr.pHit == pEntity;
 				}
 
 				if (bAdd)
@@ -2489,7 +2489,7 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot)
 
 		UTIL_MakeVectors(vAngles);
 
-		vEnd = vStart + (gpGlobals->v_forward * 4096);
+		vEnd = vStart + gpGlobals->v_forward * 4096;
 
 		UTIL_TraceLine(vStart, vEnd, ignore_monsters, ignore_glass, pBot->m_pEdict, &tr);
 
@@ -2505,7 +2505,7 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot)
 
 			vPositions.Add(vEnd);
 		}
-		else if (!vPositions.IsEmpty() && (fDistance == fMaxDistance))
+		else if (!vPositions.IsEmpty() && fDistance == fMaxDistance)
 		{
 			vPositions.Add(vEnd);
 		}
@@ -2519,7 +2519,7 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot)
 
 		UTIL_MakeVectors(Vector(0, pev->angles.y, 0));
 
-		UTIL_TraceLine(vStart, vStart + (-gpGlobals->v_forward * REACHABLE_RANGE), ignore_monsters, ignore_glass, pev->pContainingEntity, &tr);
+		UTIL_TraceLine(vStart, vStart + -gpGlobals->v_forward * REACHABLE_RANGE, ignore_monsters, ignore_glass, pev->pContainingEntity, &tr);
 
 		return tr.vecEndPos;
 	}

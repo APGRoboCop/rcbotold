@@ -310,7 +310,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 
 		iWptFlags = curr_wpt->flags;
 
-		if (!bGetUnReachable && (iWptFlags & W_FL_UNREACHABLE))
+		if (!bGetUnReachable && iWptFlags & W_FL_UNREACHABLE)
 			continue;
 
 		if (iWptFlags & W_FL_DELETED)
@@ -333,7 +333,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 					continue;
 				if (iWptFlags & W_FL_FLY)
 					continue;
-				if (!gBotGlobals.IsMod(MOD_TS) && (iWptFlags & W_FL_WALL_STICK))
+				if (!gBotGlobals.IsMod(MOD_TS) && iWptFlags & W_FL_WALL_STICK)
 					continue;
 			}
 		}
@@ -347,7 +347,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 			else
 			{
 				UTIL_TraceLine(vOrigin, curr_wpt->origin, ignore_monsters, dont_ignore_glass, NULL, &tr);
-				bAdd = (tr.flFraction >= 1.0);
+				bAdd = tr.flFraction >= 1.0;
 			}
 
 			if (bAdd)
@@ -503,13 +503,13 @@ BOOL WaypointLoad(edict_t* pEntity)
 	// if file exists, read the waypoint structure from it
 	if (bfp != NULL)
 	{
-		fread(&header, sizeof(header), 1, bfp);
+		fread(&header, sizeof header, 1, bfp);
 
 		header.filetype[7] = 0;
 
-		bWorkOutVisibility = ((header.waypoint_file_flags & W_FILE_FL_READ_VISIBILITY) == W_FILE_FL_READ_VISIBILITY);
+		bWorkOutVisibility = (header.waypoint_file_flags & W_FILE_FL_READ_VISIBILITY) == W_FILE_FL_READ_VISIBILITY;
 
-		if ((strcmp(header.filetype, "RCBot") == 0) || (strcmp(header.filetype, "HPB_bot") == 0))
+		if (strcmp(header.filetype, "RCBot") == 0 || strcmp(header.filetype, "HPB_bot") == 0)
 		{
 			if (header.waypoint_file_version != WAYPOINT_VERSION)
 			{
@@ -528,9 +528,9 @@ BOOL WaypointLoad(edict_t* pEntity)
 
 				for (i = 0; i < header.number_of_waypoints; i++)
 				{
-					fread(&waypoints[i], sizeof(waypoints[0]), 1, bfp);
+					fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
 
-					if ((waypoints[i].origin.x > 4096.0f) || (waypoints[i].origin.y > 4096.0f) || (waypoints[i].origin.z > 4096.0f))
+					if (waypoints[i].origin.x > 4096.0f || waypoints[i].origin.y > 4096.0f || waypoints[i].origin.z > 4096.0f)
 					{
 						BotMessage(pEntity, 0, "ERROR!!! Invalid waypoint (id: %d) origin outside map !!!", i);
 						waypoints[i].flags |= W_FL_DELETED;
@@ -551,11 +551,11 @@ BOOL WaypointLoad(edict_t* pEntity)
 				for (index = 0; index < num_waypoints; index++)
 				{
 					// read the number of paths from this node...
-					fread(&num, sizeof(num), 1, bfp);
+					fread(&num, sizeof num, 1, bfp);
 
 					for (i = 0; i < num; i++)
 					{
-						fread(&path_index, sizeof(path_index), 1, bfp);
+						fread(&path_index, sizeof path_index, 1, bfp);
 
 						WaypointAddPath(index, path_index);
 					}
@@ -720,7 +720,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 
 	header.number_of_waypoints = num_waypoints;
 
-	memset(header.mapname, 0, sizeof(header.mapname));
+	memset(header.mapname, 0, sizeof header.mapname);
 	strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
 	header.mapname[31] = 0;
 
@@ -780,7 +780,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	}*/
 
 	// write the waypoint header to the file...
-	fwrite(&header, sizeof(header), 1, bfp);
+	fwrite(&header, sizeof header, 1, bfp);
 
 	if (theConverter != NULL) // write converted waypoints
 	{
@@ -790,7 +790,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 		{
 			convertedWpt = theConverter->convert(&waypoints[index]);
 
-			fwrite(&convertedWpt, sizeof(waypoints[0]), 1, bfp);
+			fwrite(&convertedWpt, sizeof waypoints[0], 1, bfp);
 		}
 	}
 	else
@@ -798,7 +798,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 		// write the waypoint data to the file...
 		for (index = 0; index < num_waypoints; index++)
 		{
-			fwrite(&waypoints[index], sizeof(waypoints[0]), 1, bfp);
+			fwrite(&waypoints[index], sizeof waypoints[0], 1, bfp);
 		}
 	}
 
@@ -825,7 +825,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 			p = p->next;  // go to next node in linked list
 		}
 
-		fwrite(&num, sizeof(num), 1, bfp);  // write the count
+		fwrite(&num, sizeof num, 1, bfp);  // write the count
 
 		// now write out each path index...
 
@@ -838,7 +838,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 			while (i < MAX_PATH_INDEX)
 			{
 				if (p->index[i] != -1)  // save path node if it's used
-					fwrite(&p->index[i], sizeof(p->index[0]), 1, bfp);
+					fwrite(&p->index[i], sizeof p->index[0], 1, bfp);
 
 				i++;
 			}
@@ -1083,8 +1083,8 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 				index = (*pPath)->index[*path_index];
 
 				// skip this path if next waypoint is team specific and NOT this team
-				if ((team != -1) && (waypoints[index].flags & W_FL_TEAM_SPECIFIC) &&
-					((waypoints[index].flags & W_FL_TEAM) != team))
+				if (team != -1 && waypoints[index].flags & W_FL_TEAM_SPECIFIC &&
+					(waypoints[index].flags & W_FL_TEAM) != team)
 				{
 					(*path_index)++;
 					continue;
@@ -1138,13 +1138,13 @@ int WaypointFindNearest(edict_t* pEntity, const float range, const int team)
 			continue;  // skip any aiming waypoints
 
 		 // skip this waypoint if it's team specific and teams don't match...
-		if ((team != -1) && (waypoints[i].flags & W_FL_TEAM_SPECIFIC) &&
-			((waypoints[i].flags & W_FL_TEAM) != team))
+		if (team != -1 && waypoints[i].flags & W_FL_TEAM_SPECIFIC &&
+			(waypoints[i].flags & W_FL_TEAM) != team)
 			continue;
 
 		distance = (waypoints[i].origin - pEntity->v.origin).Length();
 
-		if ((distance < min_distance) && (distance < range))
+		if (distance < min_distance && distance < range)
 		{
 			// if waypoint is visible from current position (even behind head)...
 			UTIL_TraceLine(pEntity->v.origin + pEntity->v.view_ofs, waypoints[i].origin,
@@ -1187,13 +1187,13 @@ int WaypointFindNearest(Vector v_src, edict_t* pEntity, const float range, const
 			continue;  // skip any aiming waypoints
 
 		 // skip this waypoint if it's team specific and teams don't match...
-		if ((team != -1) && (waypoints[index].flags & W_FL_TEAM_SPECIFIC) &&
-			((waypoints[index].flags & W_FL_TEAM) != team))
+		if (team != -1 && waypoints[index].flags & W_FL_TEAM_SPECIFIC &&
+			(waypoints[index].flags & W_FL_TEAM) != team)
 			continue;
 
 		distance = (waypoints[index].origin - v_src).Length();
 
-		if ((distance < min_distance) && (distance < range))
+		if (distance < min_distance && distance < range)
 		{
 			// if waypoint is visible from source position...
 			UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters,
@@ -1263,8 +1263,8 @@ int WaypointFindNearestGoal(Vector v_src, edict_t* pEntity, const float range, c
 			continue;  // skip any aiming waypoints
 
 		 // skip this waypoint if it's team specific and teams don't match...
-		if ((team != -1) && (wpt_flags & W_FL_TEAM_SPECIFIC) &&
-			((wpt_flags & W_FL_TEAM) != team))
+		if (team != -1 && wpt_flags & W_FL_TEAM_SPECIFIC &&
+			(wpt_flags & W_FL_TEAM) != team)
 			continue;
 
 		if ((wpt_flags & flags) != flags)
@@ -1272,7 +1272,7 @@ int WaypointFindNearestGoal(Vector v_src, edict_t* pEntity, const float range, c
 
 		distance = (waypoint->origin - v_src).Length();
 
-		if ((distance < range) && (distance < min_distance))
+		if (distance < range && distance < min_distance)
 		{
 			//UTIL_TraceLine(v_src,waypoint->origin,ignore_monsters,pEntity,&tr);
 
@@ -1329,8 +1329,8 @@ int WaypointFindRandomGoal(edict_t* pEntity, const int team, const int flags, da
 			continue;  // skip any aiming waypoints
 
 		 // skip this waypoint if it's team specific and teams don't match...
-		if ((team != -1) && (waypoint->flags & W_FL_TEAM_SPECIFIC) &&
-			((waypoint->flags & W_FL_TEAM) != team))
+		if (team != -1 && waypoint->flags & W_FL_TEAM_SPECIFIC &&
+			(waypoint->flags & W_FL_TEAM) != team)
 			continue;
 
 		if ((waypoint->flags & flags) != flags)
@@ -1393,8 +1393,8 @@ int WaypointFindRandomGoal(edict_t* pEntity, const int team, dataStack<int>* iIg
 			continue;  // skip any aiming waypoints
 
 		 // skip this waypoint if it's team specific and teams don't match...
-		if ((team != -1) && (waypoint->flags & W_FL_TEAM_SPECIFIC) &&
-			((waypoint->flags & W_FL_TEAM) != team))
+		if (team != -1 && waypoint->flags & W_FL_TEAM_SPECIFIC &&
+			(waypoint->flags & W_FL_TEAM) != team)
 			continue;
 
 		if (count < 50)
@@ -1458,8 +1458,8 @@ int WaypointFindRandomGoal(Vector v_src, edict_t* pEntity, const float range, co
 			continue;  // skip any aiming waypoints
 
 		 // skip this waypoint if it's team specific and teams don't match...
-		if ((team != -1) && (waypoint->flags & W_FL_TEAM_SPECIFIC) &&
-			((waypoint->flags & W_FL_TEAM) != team))
+		if (team != -1 && waypoint->flags & W_FL_TEAM_SPECIFIC &&
+			(waypoint->flags & W_FL_TEAM) != team)
 			continue;
 
 		if ((waypoint->flags & flags) != flags)
@@ -1467,7 +1467,7 @@ int WaypointFindRandomGoal(Vector v_src, edict_t* pEntity, const float range, co
 
 		distance = (waypoint->origin - v_src).Length();
 
-		if ((distance < range) && (count < 50))
+		if (distance < range && count < 50)
 		{
 			indexes[count] = index;
 
@@ -1505,7 +1505,7 @@ int WaypointFindNearestAiming(Vector v_origin)
 
 		distance = (v_origin - waypoints[index].origin).Length();
 
-		if ((distance < min_distance) && (distance < 40))
+		if (distance < min_distance && distance < 40)
 		{
 			min_index = index;
 			min_distance = distance;
@@ -1610,7 +1610,7 @@ int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
 
 		UTIL_TraceLine(vOrigin, vEntOrigin, ignore_monsters, pEntity, &tr);
 
-		if ((tr.flFraction >= 1.0) || (tr.pHit == pEnt))
+		if (tr.flFraction >= 1.0 || tr.pHit == pEnt)
 		{
 			szClassname = const_cast<char*>(STRING(pEnt->v.classname));
 
@@ -1618,7 +1618,7 @@ int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
 				new_waypoint->flags |= W_FL_AMMO;
 			else if (strncmp("weapon_", szClassname, 7) == 0)
 				new_waypoint->flags |= W_FL_WEAPON;
-			else if ((strncmp("item_health", szClassname, 11) == 0) || (strcmp("func_healthcharger", szClassname) == 0))
+			else if (strncmp("item_health", szClassname, 11) == 0 || strcmp("func_healthcharger", szClassname) == 0)
 				new_waypoint->flags |= W_FL_HEALTH;
 			else if (strncmp("item_armor", szClassname, 10) == 0)
 				new_waypoint->flags |= W_FL_ARMOR;
@@ -1655,8 +1655,8 @@ int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
 
 			UTIL_TraceLine(vOrigin, temp_waypoint->origin, ignore_monsters, ignore_glass, NULL, &tr);
 
-			WaypointVisibility.SetVisibilityFromTo(index, i, (tr.flFraction >= 1.0));
-			WaypointVisibility.SetVisibilityFromTo(i, index, (tr.flFraction >= 1.0));
+			WaypointVisibility.SetVisibilityFromTo(index, i, tr.flFraction >= 1.0);
+			WaypointVisibility.SetVisibilityFromTo(i, index, tr.flFraction >= 1.0);
 
 			// check if the waypoint is reachable from the new one (one-way)
 			if (WaypointReachable(vOrigin, temp_waypoint->origin))
@@ -1868,7 +1868,7 @@ void WaypointCreatePath(CClient* pClient, const int cmd)
 			BotMessage(pEdict, 0, "Error: Waypoint is the same waypoint");
 			bError = TRUE;
 		}
-		else if ((waypoint1 == -1) || (waypoint2 == -1))
+		else if (waypoint1 == -1 || waypoint2 == -1)
 		{
 			BotMessage(pEdict, 0, "Error: Waypoint invalid");
 			bError = TRUE;
@@ -1929,7 +1929,7 @@ void WaypointRemovePath(CClient* pClient, const int cmd)
 	{
 		const int waypoint2 = WaypointLocations.NearestWaypoint(pEdict->v.origin, 50.0, -1);
 
-		if ((pClient->m_iPathWaypointRemoveIndex == -1) || (waypoint2 == -1))
+		if (pClient->m_iPathWaypointRemoveIndex == -1 || waypoint2 == -1)
 		{
 			// play "error" sound...
 			UTIL_PlaySound(pEdict, "common/wpn_denyselect.wav");
@@ -1952,7 +1952,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 	float distance = (v_dest - v_src).Length();
 
 	// is the destination close enough?
-	if (!bDistCheck || (distance < REACHABLE_RANGE))
+	if (!bDistCheck || distance < REACHABLE_RANGE)
 	{
 		// check if this waypoint is "visible"...
 
@@ -1963,8 +1963,8 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 		if (tr.flFraction >= 1.0)
 		{
 			// check for special case of both waypoints being underwater...
-			if ((POINT_CONTENTS(v_src) == CONTENTS_WATER) &&
-				(POINT_CONTENTS(v_dest) == CONTENTS_WATER))
+			if (POINT_CONTENTS(v_src) == CONTENTS_WATER &&
+				POINT_CONTENTS(v_dest) == CONTENTS_WATER)
 			{
 				return TRUE;
 			}
@@ -1972,7 +1972,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 			// check for special case of waypoint being suspended in mid-air...
 
 			// is dest waypoint higher than src? (45 is max jump height)
-			if (v_dest.z > (v_src.z + MAX_JUMP_HEIGHT))
+			if (v_dest.z > v_src.z + MAX_JUMP_HEIGHT)
 			{
 				const Vector v_new_src = v_dest;
 				Vector v_new_dest = v_dest;
@@ -2008,7 +2008,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 			while (distance > 10.0)
 			{
 				// move 10 units closer to the goal...
-				v_check = v_check + (v_direction * 10.0);
+				v_check = v_check + v_direction * 10.0;
 
 				v_down = v_check;
 				v_down.z = v_down.z - 1000.0;  // straight down 1000 units
@@ -2020,7 +2020,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 
 				// is the difference in the last height and the current height
 				// higher that the jump height?
-				if ((last_height - curr_height) > MAX_JUMP_HEIGHT)
+				if (last_height - curr_height > MAX_JUMP_HEIGHT)
 				{
 					// can't get there from here...
 					return FALSE;
@@ -2059,8 +2059,8 @@ int WaypointFindReachable(edict_t* pEntity, const float range, const int team)
 			continue;  // skip any aiming waypoints
 
 		 // skip this waypoint if it's team specific and teams don't match...
-		if ((team != -1) && (waypoints[i].flags & W_FL_TEAM_SPECIFIC) &&
-			((waypoints[i].flags & W_FL_TEAM) != team))
+		if (team != -1 && waypoints[i].flags & W_FL_TEAM_SPECIFIC &&
+			(waypoints[i].flags & W_FL_TEAM) != team)
 			continue;
 
 		distance = (waypoints[i].origin - pEntity->v.origin).Length();
@@ -2250,7 +2250,7 @@ void WaypointDrawIndex(edict_t* pEntity, int index)
 
 		while ((inextwpt = WaypointFindPath(&pPath, &pathindex, index, -1)) != -1)
 		{
-			if ((WaypointFlags(inextwpt) & W_FL_LADDER) && ((vnextwpt = WaypointOrigin(inextwpt)).z > waypoint->origin.z))
+			if (WaypointFlags(inextwpt) & W_FL_LADDER && (vnextwpt = WaypointOrigin(inextwpt)).z > waypoint->origin.z)
 				break;
 		}
 
@@ -2260,7 +2260,7 @@ void WaypointDrawIndex(edict_t* pEntity, int index)
 
 			vComp = vComp.Normalize();
 
-			WaypointDrawBeam(pEntity, waypoint->origin, waypoint->origin + (vComp * 128), 32, 2, 0, 0, 255, 200, 1);
+			WaypointDrawBeam(pEntity, waypoint->origin, waypoint->origin + vComp * 128, 32, 2, 0, 0, 255, 200, 1);
 		}
 
 		colour = Vector(255.0, 255.0, 0.0);
@@ -2396,7 +2396,7 @@ float WaypointDistance(const Vector& vOrigin, const int iWaypointIndex)
 		return 0;
 	}
 
-	return ((waypoints[iWaypointIndex].origin - vOrigin).Length());
+	return (waypoints[iWaypointIndex].origin - vOrigin).Length();
 }
 
 Vector WaypointOrigin(const int iWaypointIndex)
@@ -2409,20 +2409,20 @@ Vector WaypointOrigin(const int iWaypointIndex)
 		return Vector(0, 0, 0);
 	}
 
-	return (waypoints[iWaypointIndex].origin);
+	return waypoints[iWaypointIndex].origin;
 }
 
 int WaypointFlags(const int iWaypointIndex)
 {
 	//assert ( iWaypointIndex != -1 );
 
-	if ((iWaypointIndex < 0) || (iWaypointIndex > MAX_WAYPOINTS))
+	if (iWaypointIndex < 0 || iWaypointIndex > MAX_WAYPOINTS)
 	{
 		//BotMessage(NULL,0,"Caution: WaypointFlags() received invalid waypoint index!");
 		return 0;
 	}
 
-	return (waypoints[iWaypointIndex].flags);
+	return waypoints[iWaypointIndex].flags;
 }
 
 int NearestWaypointToEdict(edict_t* pEdict, const int iIgnoreWpt, dataStack<int>* iFailedWpts)
@@ -2437,7 +2437,7 @@ int NearestWaypointToOrigin(const Vector& vOrigin, const int iIgnoreWpt, dataSta
 
 WAYPOINT& WAYPOINTS :: operator [] (const int index)
 {
-	if ((index >= 0) && (index < MAX_WAYPOINTS)) // Inside array bounds?
+	if (index >= 0 && index < MAX_WAYPOINTS) // Inside array bounds?
 		return m_Waypoints[index];  // Return index
 	else
 	{
@@ -2481,7 +2481,7 @@ void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints)
 
 			UTIL_TraceLine(Waypoint1->origin, Waypoint2->origin + Vector(0, 0, 16.0), ignore_monsters, ignore_glass, NULL, &tr);
 
-			SetVisibilityFromTo(i, j, (tr.flFraction >= 1.0));
+			SetVisibilityFromTo(i, j, tr.flFraction >= 1.0);
 		}
 	}
 }
@@ -2509,7 +2509,7 @@ BOOL CWaypointVisibilityTable::SaveToFile(void)
 		return FALSE;
 	}
 
-	fwrite(m_VisTable, sizeof(unsigned char), Ceiling(((float)(num_waypoints * num_waypoints) / 8)), bfp);
+	fwrite(m_VisTable, sizeof(unsigned char), Ceiling((float)(num_waypoints * num_waypoints) / 8), bfp);
 
 	fclose(bfp);
 
@@ -2545,7 +2545,7 @@ BOOL CWaypointVisibilityTable::ReadFromFile(void)
 	fseek(bfp, 0, SEEK_END); // seek at end
 
 	iSize = ftell(bfp); // get file size
-	iDesiredSize = Ceiling(((float)(num_waypoints * num_waypoints) / 8));
+	iDesiredSize = Ceiling((float)(num_waypoints * num_waypoints) / 8);
 
 	// size not right, return false to re workout table
 	if (iSize != iDesiredSize)
@@ -2557,7 +2557,7 @@ BOOL CWaypointVisibilityTable::ReadFromFile(void)
 	fseek(bfp, 0, SEEK_SET); // seek at start
 
 	// clear table
-	memset(m_VisTable, 0, sizeof(g_iMaxVisibilityByte));
+	memset(m_VisTable, 0, sizeof g_iMaxVisibilityByte);
 
 	// read vis table
 	fread(m_VisTable, sizeof(unsigned char), iDesiredSize, bfp);
@@ -2570,7 +2570,7 @@ BOOL CWaypointVisibilityTable::ReadFromFile(void)
 BOOL WaypointFlagsOnLadderOrFly(const int iWaypointFlags)
 {
 	// return true if waypoint index is on a ladder or a fly waypoint.
-	return ((iWaypointFlags & (W_FL_FLY | W_FL_LADDER)) > 0);
+	return (iWaypointFlags & (W_FL_FLY | W_FL_LADDER)) > 0;
 }
 
 // return player edict pointer nearby origin within range.

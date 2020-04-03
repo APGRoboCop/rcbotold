@@ -75,7 +75,7 @@ CSomNeuron* CSom::getBMU(vector <ga_value>* inputs)
 	{
 		dist = m_Neurons[i]->distance(inputs);
 
-		if (!winner || (dist < bestdistance))
+		if (!winner || dist < bestdistance)
 		{
 			winner = m_Neurons[i];
 			bestdistance = dist;
@@ -88,7 +88,7 @@ CSomNeuron* CSom::getBMU(vector <ga_value>* inputs)
 void CSom::updateAround(vector<ga_value>* inputs, CSomNeuron* bmu)
 {
 	ga_value dist;
-	ga_value nsiz = (m_fNSize * m_fNSize);
+	ga_value nsiz = m_fNSize * m_fNSize;
 
 	for (unsigned int i = 0; i < m_Neurons.size(); i++)
 	{
@@ -96,7 +96,7 @@ void CSom::updateAround(vector<ga_value>* inputs, CSomNeuron* bmu)
 
 		if ((dist = bmu->neighbourDistance(current, nsiz)) <= nsiz)
 		{
-			bmu->update(inputs, exp(-(dist) / (2 * nsiz)));
+			bmu->update(inputs, exp(-dist / (2 * nsiz)));
 		}
 	}
 }
@@ -116,7 +116,7 @@ CSomNeuron* CSom::inputOne(vector <ga_value>* inputs)
 
 CSomNeuron* CSom::input(vector < vector <ga_value> >* inputs)
 {
-	return inputOne(&((*inputs)[RANDOM_LONG(0, (int)inputs->size() - 1)]));
+	return inputOne(&(*inputs)[RANDOM_LONG(0, (int)inputs->size() - 1)]);
 }
 
 void CSom::display()
@@ -137,9 +137,9 @@ void CSomNeuron::update(vector<ga_value>* inputs, ga_value inf)
 
 	for (unsigned int i = 0; i < inputs->size(); i++)
 	{
-		change = ((*inputs)[i] - fWeights[i]);
+		change = (*inputs)[i] - fWeights[i];
 
-		fWeights[i] += (change * CSom::m_fLearnRate * inf);
+		fWeights[i] += change * CSom::m_fLearnRate * inf;
 	}
 }
 
@@ -173,7 +173,7 @@ ga_value CSomNeuron::distance(vector <ga_value>* inputs)
 	{
 		comp = fWeights[i] - (*inputs)[i];
 
-		dist += (comp * comp);
+		dist += comp * comp;
 	}
 
 	return dist;
@@ -197,5 +197,5 @@ ga_value CSomNeuron::neighbourDistance(CSomNeuron* other, ga_value fDistance)
 	ga_value distx = getX() - other->getX();
 	ga_value disty = getY() - other->getY();
 
-	return (distx * distx) + (disty * disty);
+	return distx * distx + disty * disty;
 }

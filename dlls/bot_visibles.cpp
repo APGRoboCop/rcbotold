@@ -106,7 +106,7 @@ edict_t* CBotVisibles::nextVisible()
 		m_iIter++;
 
 		// reliability checks
-		if (!iEntityIndex || (iEntityIndex > gpGlobals->maxEntities))
+		if (!iEntityIndex || iEntityIndex > gpGlobals->maxEntities)
 			m_iVisibleList.Clear();
 		else
 			return INDEXENT(iEntityIndex);

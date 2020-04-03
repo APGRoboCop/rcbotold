@@ -363,13 +363,13 @@ void NNGATrained::train(vector<CNNTrainSet> trainingsets)
 
 	for (unsigned int i = 0; i < trainingsets.size(); i++)
 	{
-		this->execute(&outputs, &(trainingsets[i].inputs));
+		this->execute(&outputs, &trainingsets[i].inputs);
 
 		for (unsigned int j = 0; j < outputs.size(); j++)
 		{
 			ga_value fError;
 
-			fError = (outputs[j] - (trainingsets[i].outputs[j]));
+			fError = outputs[j] - trainingsets[i].outputs[j];
 
 			fTotalError += fError * fError;
 			iNum++;

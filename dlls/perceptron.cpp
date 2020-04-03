@@ -80,7 +80,7 @@ void CPerceptron::setWeights(CBotGAValues* vals, int iFrom, int iNum)
 {
 	m_weights.clear();
 
-	for (int i = iFrom; i < (iFrom + iNum); i++)
+	for (int i = iFrom; i < iFrom + iNum; i++)
 	{
 		m_weights.push_back(vals->get(i));
 	}
@@ -90,7 +90,7 @@ void CPerceptron::setWeights(vector <ga_value> const weights, int iFrom, int iNu
 {
 	m_weights.clear();
 
-	for (int i = iFrom; i < (iFrom + iNum); i++)
+	for (int i = iFrom; i < iFrom + iNum; i++)
 	{
 		m_weights.push_back(weights[i]);
 	}
@@ -173,13 +173,13 @@ void CPerceptron::save(FILE* bfp)
 
 	fwrite(&iTemp, sizeof(int), 1, bfp);
 	for (i = 0; i < iTemp; i++)
-		fwrite(&(m_inputs[i]), sizeof(ga_value), 1, bfp);
+		fwrite(&m_inputs[i], sizeof(ga_value), 1, bfp);
 
 	iTemp = m_weights.size();
 
 	fwrite(&iTemp, sizeof(int), 1, bfp);
 	for (i = 0; i < iTemp; i++)
-		fwrite(&(m_weights[i]), sizeof(ga_value), 1, bfp);
+		fwrite(&m_weights[i], sizeof(ga_value), 1, bfp);
 
 	fwrite(&m_output, sizeof(ga_value), 1, bfp);
 	fwrite(&m_bTrained, sizeof(BOOL), 1, bfp);

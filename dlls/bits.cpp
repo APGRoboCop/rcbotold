@@ -82,7 +82,7 @@ void CBits::setBit(const int iBit, const BOOL bSet)
 	unsigned char* c = &m_cBits[iBitStart];
 
 	if (bSet)
-		*c |= (1 << iBitOffset);
+		*c |= 1 << iBitOffset;
 	else
 		*c &= ~(1 << iBitOffset);
 }
@@ -94,7 +94,7 @@ BOOL CBits::getBit(const int iBit)
 
 	unsigned char* c = &m_cBits[iBitStart];
 
-	return ((*c & (1 << iBitOffset)) == (1 << iBitOffset));
+	return (*c & 1 << iBitOffset) == 1 << iBitOffset;
 }
 
 void CBits::load(FILE* bfp)
@@ -148,7 +148,7 @@ void CBits::setup(const int iNumBits)
 // memory size
 int CBits::size()
 {
-	return Ceiling(((float)m_iNumBits) / 8);
+	return Ceiling((float)m_iNumBits / 8);
 }
 
 void CBits::save(FILE* bfp)

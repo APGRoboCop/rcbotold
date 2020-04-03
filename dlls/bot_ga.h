@@ -71,9 +71,9 @@ public:
 
 	void clear();
 
-	inline void add(ga_value val) { m_theValues.push_back(val); }
+	void add(ga_value val) { m_theValues.push_back(val); }
 
-	inline vector<ga_value>* returnVector() { return &m_theValues; }
+	vector<ga_value>* returnVector() { return &m_theValues; }
 
 	void freeMemory();
 
@@ -127,8 +127,8 @@ public:
 		{
 			if (RANDOM_FLOAT(0, 1) >= 0.5f)
 			{
-				m_Value |= (iOther & (1 << i));
-				p->set(iOther |= (m_Value & (1 << i)));
+				m_Value |= iOther & 1 << i;
+				p->set(iOther |= m_Value & 1 << i);
 			}
 		}
 	}
@@ -140,10 +140,10 @@ public:
 		{
 			if (RANDOM_FLOAT(0, 1) <= 0.1f)
 			{
-				if (m_Value & (1 << i))
+				if (m_Value & 1 << i)
 					m_Value &= ~(1 << i);
 				else
-					m_Value |= (i << i);
+					m_Value |= i << i;
 			}
 		}
 	}
@@ -162,8 +162,8 @@ public:
 		return p;
 	}
 
-	inline int get() { return m_Value; }
-	inline void set(int value) { m_Value = value; }
+	int get() { return m_Value; }
+	void set(int value) { m_Value = value; }
 private:
 	int m_Value;
 };
@@ -206,7 +206,7 @@ public:
 
 	inline void random();
 
-	inline CBits* returnBits() { return m_theBits; }
+	CBits* returnBits() { return m_theBits; }
 
 	void freeMemory();
 

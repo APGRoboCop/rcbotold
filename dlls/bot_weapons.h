@@ -367,8 +367,8 @@ public:
 		{
 			pPreset = tempStack.ChoosePointerFromStack();
 
-			if ((pPreset->m_iId == iWeaponId) &&
-				(pPreset->m_iModId == iModId))
+			if (pPreset->m_iId == iWeaponId &&
+				pPreset->m_iModId == iModId)
 			{
 				tempStack.Init();
 
@@ -426,7 +426,7 @@ public:
 		return TRUE;
 	}
 
-	inline int MaxPrimaryAmmo(void)
+	int MaxPrimaryAmmo(void)
 	{
 		return m_iPrimAmmoMax;
 	}
@@ -452,7 +452,7 @@ public:
 		return 0;
 	}
 
-	inline char* GetClassname(void)
+	char* GetClassname(void)
 	{
 		return m_szClassname;
 	}
@@ -489,7 +489,7 @@ public:
 
 	virtual BOOL IsMelee(void)
 	{
-		return (m_iAmmoIndex1 == -1);
+		return m_iAmmoIndex1 == -1;
 	}
 
 	BOOL IsPrimary(void);
@@ -574,23 +574,23 @@ public:
 
 	BOOL CanUsePrimary(void)
 	{
-		return (m_bHasPrimaryFire);
+		return m_bHasPrimaryFire;
 	}
 
 	BOOL CanUseSecondary(void)
 	{
-		return (m_bHasSecondaryFire);
+		return m_bHasSecondaryFire;
 	}
 
 	int GetPriority(void)
 	{
-		return (m_iPriority);
+		return m_iPriority;
 	}
 
 	BOOL PrimaryInRange(float fRange)
 	{
-		return ((fRange >= m_fPrimMinRange) &&
-			(fRange <= m_fPrimMaxRange));
+		return fRange >= m_fPrimMinRange &&
+			fRange <= m_fPrimMaxRange;
 	}
 
 	float PrimMaxRange(void)
@@ -605,13 +605,13 @@ public:
 
 	BOOL SecondaryInRange(float fRange)
 	{
-		return ((fRange >= m_fSecMinRange) &&
-			(fRange <= m_fSecMaxRange));
+		return fRange >= m_fSecMinRange &&
+			fRange <= m_fSecMaxRange;
 	}
 
 	BOOL IsMelee(void)
 	{
-		return (m_bIsMelee == 1);
+		return m_bIsMelee == 1;
 	}
 };
 
@@ -653,7 +653,7 @@ public:
 
 	CWeapon* GetWeapon(int iId)
 	{
-		if ((iId >= 0) && (iId < MAX_WEAPONS))
+		if (iId >= 0 && iId < MAX_WEAPONS)
 		{
 			//if ( m_Weapons[iId].IsRegistered() )
 			return m_Weapons[iId];
@@ -669,7 +669,7 @@ class CBotWeapon
 {
 public:
 
-	inline int GetID(void) const
+	int GetID(void) const
 	{
 		return m_iId;
 	}
@@ -694,14 +694,14 @@ public:
 	BOOL LowOnAmmo(void)
 	{
 		// less in reserve than current clip
-		return (!IsMelee() && m_iAmmo1 && (*m_iAmmo1 < m_iClip));
+		return !IsMelee() && m_iAmmo1 && *m_iAmmo1 < m_iClip;
 	}
 
 	BOOL OutOfAmmo(void)
 	{
 		if (m_iAmmo1)
 		{
-			return ((m_iClip <= 0) && !*m_iAmmo1);
+			return m_iClip <= 0 && !*m_iAmmo1;
 		}
 
 		return FALSE;
@@ -748,7 +748,7 @@ public:
 			break;
 		}
 
-		return (!IsMelee() && (PrimaryAmmo() < m_pWeaponInfo->MaxPrimaryAmmo()));
+		return !IsMelee() && PrimaryAmmo() < m_pWeaponInfo->MaxPrimaryAmmo();
 	}
 
 	BOOL IsPrimary(void)
@@ -775,10 +775,10 @@ public:
 	{
 		int iSecAmmo = SecondaryAmmo();
 
-		return ((iSecAmmo == -1) || (iSecAmmo > 0));
+		return iSecAmmo == -1 || iSecAmmo > 0;
 	}
 
-	inline int PrimaryAmmo(void)
+	int PrimaryAmmo(void)
 	{
 		if (m_iAmmo1)
 			return *m_iAmmo1;
@@ -786,7 +786,7 @@ public:
 		return -1;
 	}
 
-	inline int SecondaryAmmo(void)
+	int SecondaryAmmo(void)
 	{
 		if (m_iAmmo2)
 			return *m_iAmmo2;
@@ -839,7 +839,7 @@ public:
 		return m_pWeaponInfo->GetPriority();
 	}
 
-	inline void setAmmoArray(int* pAmmo1, int* pAmmo2 = NULL)
+	void setAmmoArray(int* pAmmo1, int* pAmmo2 = NULL)
 	{
 		if (pAmmo1)
 		{
@@ -850,7 +850,7 @@ public:
 			m_iAmmo2 = pAmmo2;
 	}
 
-	inline void setReserve(int iRes)
+	void setReserve(int iRes)
 	{
 		m_iReserve = iRes;
 	}
@@ -913,7 +913,7 @@ public:
 
 	BOOL HasWeapon(edict_t* pEdict, int iId)
 	{
-		if ((iId > 0) && (iId < MAX_WEAPONS))
+		if (iId > 0 && iId < MAX_WEAPONS)
 			return m_Weapons[iId].HasWeapon(pEdict);
 		else
 			return FALSE;
@@ -940,7 +940,7 @@ public:
 
 	CBotWeapon* GetWeapon(int iId)
 	{
-		if ((iId >= 0) && (iId < MAX_WEAPONS))
+		if (iId >= 0 && iId < MAX_WEAPONS)
 			return &m_Weapons[iId];
 
 		return NULL;
@@ -978,7 +978,7 @@ public:
 
 	void UpdateAmmo(int iIndex, int iAmount)
 	{
-		if ((iIndex >= 0) && (iIndex < MAX_AMMO_SLOTS))
+		if (iIndex >= 0 && iIndex < MAX_AMMO_SLOTS)
 			m_iAmmo[iIndex] = iAmount;
 	}
 

@@ -203,7 +203,7 @@ public:
 
 	{
 		BOOL pev;
-		return (pev->deadflag == DEAD_NO) && pev->health > 0;
+		return pev->deadflag == DEAD_NO && pev->health > 0;
 	}
 
 	virtual BOOL ShouldFadeOnDeath(void) { return FALSE; }

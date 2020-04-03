@@ -105,14 +105,14 @@ public:
 
 	CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CClient*));
 
-	inline BOOL HasNextMenu(void)
+	BOOL HasNextMenu(void)
 	{
-		return (m_pNextMenu != NULL);
+		return m_pNextMenu != NULL;
 	}
 
 	void Activate(CClient* pClient);
 
-	inline const char* GetCaption(void)
+	const char* GetCaption(void)
 	{
 		return m_szMenuCaption;
 	}
@@ -169,7 +169,7 @@ public:
 
 	void Activate(int iMenuItem, CClient* pClient)
 	{
-		if ((iMenuItem < 0) || (iMenuItem >= 10))
+		if (iMenuItem < 0 || iMenuItem >= 10)
 			return;
 
 		if (m_Menus[iMenuItem])

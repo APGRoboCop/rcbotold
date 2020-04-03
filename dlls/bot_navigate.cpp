@@ -144,7 +144,7 @@ void AStarNode::setParent(const int iWpt)
 bool AStarNode::precedes(AStarNode* b)
 {
 	// lowest cost first
-	return (m_fCost + getHeuristic()) > (b->m_fCost + b->getHeuristic());
+	return m_fCost + getHeuristic() > b->m_fCost + b->getHeuristic();
 }
 
 bool AStarNode::operator()(AStarNode* a, AStarNode* b)
@@ -191,7 +191,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 	TraceResult tr;
 
-	if ((iTo == -1) || (iFrom == -1))
+	if (iTo == -1 || iFrom == -1)
 		// Can't find a path from/to invalid waypoints
 	{
 		if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
@@ -237,7 +237,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		AStarNode* curr = &aPathsFound[iFrom];
 		curr->open();
 		curr->m_iWaypoint = iFrom;
-		curr->setHeuristic(pBot->DistanceFrom(waypoints[iFrom].origin), ((waypoints[iFrom].origin - waypoints[iTo].origin).Length()));
+		curr->setHeuristic(pBot->DistanceFrom(waypoints[iFrom].origin), (waypoints[iFrom].origin - waypoints[iTo].origin).Length());
 		sOpenList->push(&aPathsFound[iFrom]);
 		pBot->iDetPackWaypoints.Clear();
 		//	sOpenList->Push(iFrom);
@@ -261,7 +261,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	BOOL bBotCanUseFlyWpt;
 	BOOL bBotCanUseWallStickWpt;
 
-	bBotCanUseFlyWpt = gBotGlobals.IsMod(MOD_NS) && ((pBot->IsFade() && pBot->hasBlink()) || pBot->IsLerk() || (pBot->IsMarine() && pBot->HasJetPack()));
+	bBotCanUseFlyWpt = gBotGlobals.IsMod(MOD_NS) && (pBot->IsFade() && pBot->hasBlink() || pBot->IsLerk() || pBot->IsMarine() && pBot->HasJetPack());
 	bBotCanUseWallStickWpt = gBotGlobals.IsMod(MOD_TS) || (gBotGlobals.IsMod(MOD_NS) && bBotCanUseFlyWpt || pBot->IsSkulk());
 
 	Vector vGoalWptOrigin = WaypointOrigin(iTo);
@@ -269,7 +269,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 	int iSuccNodeFlags;
 
-	BOOL m_bIsLerk = (pBot->IsLerk());
+	BOOL m_bIsLerk = pBot->IsLerk();
 
 	int iBotTeam = pBot->GetTeam();
 	BOOL bCanThrowGren = pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE);
@@ -282,7 +282,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	int iPrevWpt = -1;
 	BOOL bDetpackWpt;
 
-	while ((bFoundGoal == FALSE) && !sOpenList->empty()/*IsEmpty()*/ && (iLoops < iMaxLoops))
+	while (bFoundGoal == FALSE && !sOpenList->empty()/*IsEmpty()*/ && iLoops < iMaxLoops)
 	{
 		iLoops++;
 
@@ -296,7 +296,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		sOpenList->pop();
 
 		// We've found a goal once the current node is the goal waypoint.
-		bFoundGoal = (iCurrentNode == iTo);
+		bFoundGoal = iCurrentNode == iTo;
 
 		if (bFoundGoal)
 			break;
@@ -309,7 +309,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		pPath = NULL;
 		iPathIndex = 0;
 
-		bDetpackWpt = (pCurWpt->flags & W_FL_TFC_DETPACK);
+		bDetpackWpt = pCurWpt->flags & W_FL_TFC_DETPACK;
 
 		bDeleteLoopPath = FALSE;
 
@@ -322,7 +322,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 				continue;
 			}
 			// going backwards :S Not good
-			if ((iPrevWpt != -1) && (iPrevWpt == iSuccNode))
+			if (iPrevWpt != -1 && iPrevWpt == iSuccNode)
 			{
 				continue;
 			}
@@ -341,8 +341,8 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 			iSuccNodeFlags = WaypointFlags(iSuccNode);
 
-			if ((iBotTeam != -1) && (iSuccNodeFlags & W_FL_TEAM_SPECIFIC) &&
-				((iSuccNodeFlags & W_FL_TEAM) != iBotTeam))
+			if (iBotTeam != -1 && iSuccNodeFlags & W_FL_TEAM_SPECIFIC &&
+				(iSuccNodeFlags & W_FL_TEAM) != iBotTeam)
 			{
 				continue;
 			}
@@ -355,7 +355,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 			{
 				if (iSuccNodeFlags & W_FL_OPENS_LATER)
 				{
-					if (gBotGlobals.IsMod(MOD_TFC) && (pBot->pev->playerclass == TFC_CLASS_DEMOMAN))
+					if (gBotGlobals.IsMod(MOD_TFC) && pBot->pev->playerclass == TFC_CLASS_DEMOMAN)
 					{
 						// first do a traceline
 						UTIL_TraceLine(vOrigin, WaypointOrigin(iSuccNode), ignore_monsters, dont_ignore_glass, NULL, &tr);
@@ -378,7 +378,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 			if (gBotGlobals.IsMod(MOD_SVENCOOP) || gBotGlobals.IsMod(MOD_TFC))
 			{
-				if (!gBotGlobals.IsMod(MOD_TFC) && ((iSuccNodeFlags & W_FL_GREN_THROW) && !bCanThrowGren))
+				if (!gBotGlobals.IsMod(MOD_TFC) && (iSuccNodeFlags & W_FL_GREN_THROW && !bCanThrowGren))
 					continue; // can't throw a grenade at a "throw gren waypoint"
 
 				if (iSuccNodeFlags & W_FL_PAIN)
@@ -392,11 +392,11 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 					{
 						if (!strcmp("trigger_hurt", STRING(pent->v.classname)))
 						{
-							if (!(pent->v.spawnflags & 8) && (pent->v.solid == SOLID_TRIGGER))
+							if (!(pent->v.spawnflags & 8) && pent->v.solid == SOLID_TRIGGER)
 							{
 								float fDist = (AbsOrigin(pent) - WaypointOrigin(iSuccNode)).Length();
 
-								if (!pNearest || (fDist < fNearestDist))
+								if (!pNearest || fDist < fNearestDist)
 								{
 									pNearest = pent;
 									fNearestDist = fDist;
@@ -419,10 +419,10 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 				}
 			}
 
-			if ((iSuccNodeFlags & W_FL_FLY) && !bBotCanUseFlyWpt)
+			if (iSuccNodeFlags & W_FL_FLY && !bBotCanUseFlyWpt)
 			{
 				// if its also a wall stick waypoint and can use it
-				if ((iSuccNodeFlags & W_FL_WALL_STICK) && bBotCanUseWallStickWpt)
+				if (iSuccNodeFlags & W_FL_WALL_STICK && bBotCanUseWallStickWpt)
 				{
 					// nothing
 				}
@@ -514,7 +514,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 			sSuccNodeInfo = &aPathsFound[iSuccNode];
 
-			if (sSuccNodeInfo->isOpen() || (sSuccNodeInfo->isClosed()))
+			if (sSuccNodeInfo->isOpen() || sSuccNodeInfo->isClosed())
 			{
 				if (sSuccNodeInfo->hasParent()) // Already has a parent path? Seems to speed up A*
 				{
@@ -560,7 +560,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	}
 
 	// looped out! too many loops
-	if (!bFoundGoal && (iLoops >= iMaxLoops))
+	if (!bFoundGoal && iLoops >= iMaxLoops)
 		return -2; // tell the program we need to continue next time
 
 	// free all the stuff in the openlist
@@ -597,7 +597,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		// Free any previous path info
 		pBot->m_stBotPaths.Destroy();
 
-		while ((iCurrentNode != -1) && (iCurrentNode != iFrom) && (iLoops < MAX_WAYPOINTS))
+		while (iCurrentNode != -1 && iCurrentNode != iFrom && iLoops < MAX_WAYPOINTS)
 		{
 			iLoops++;
 			// Add to the bots waypoint visit stack (path)
@@ -1028,7 +1028,7 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 
 	int iIndex = -1;
 
-	if ((pBot->m_iWaypointGoalIndex != -1)/* && (pBot->m_iPrevWaypointGoalIndex == pBot->m_iWaypointGoalIndex)*/)
+	if (pBot->m_iWaypointGoalIndex != -1/* && (pBot->m_iPrevWaypointGoalIndex == pBot->m_iWaypointGoalIndex)*/)
 	{
 		// Need to find path?
 		if (!pBot->m_stBotPaths.IsEmpty())
@@ -1155,7 +1155,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 				if (!getNew)
 				{
-					getNew = (pBot->DistanceFrom(pBot->m_vMoveToVector, TRUE) < BOT_WAYPOINT_TOUCH_DIST);
+					getNew = pBot->DistanceFrom(pBot->m_vMoveToVector, TRUE) < BOT_WAYPOINT_TOUCH_DIST;
 				}
 
 				if (getNew)
@@ -1178,10 +1178,10 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		{
 			float fMaxWaypointSeeTime = 2.0;
 
-			if (gBotGlobals.IsNS() && pBot->IsSkulk() && (pBot->m_iCurrentWaypointFlags & W_FL_WALL_STICK))
+			if (gBotGlobals.IsNS() && pBot->IsSkulk() && pBot->m_iCurrentWaypointFlags & W_FL_WALL_STICK)
 				fMaxWaypointSeeTime = 10.0;
 			// Bot hasn't seen this waypoint for two seconds
-			if (pBot->m_fLastSeeWaypoint && (pBot->m_fLastSeeWaypoint + fMaxWaypointSeeTime) <= gpGlobals->time)
+			if (pBot->m_fLastSeeWaypoint && pBot->m_fLastSeeWaypoint + fMaxWaypointSeeTime <= gpGlobals->time)
 			{
 				//Clear this waypoint, get a new one and flush path info.
 
@@ -1244,7 +1244,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		fDistance = (vWptOrigin - vBotOrigin).Length();
 	else
 	{
-		float fzComp = (vWptOrigin.z - pBot->pev->origin.z);
+		float fzComp = vWptOrigin.z - pBot->pev->origin.z;
 
 		if (fzComp < 0)
 		{
@@ -1258,7 +1258,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	}
 
 	// bot trying to get on a ladder/fly waypoint and is currently on a ladder
-	if (WaypointFlagsOnLadderOrFly(iWptFlags) || (pBot->GetClimbType() == BOT_CLIMB_CLIMBING))
+	if (WaypointFlagsOnLadderOrFly(iWptFlags) || pBot->GetClimbType() == BOT_CLIMB_CLIMBING)
 	{
 		int iNextWaypoint = pBot->GetNextWaypoint();
 
@@ -1272,13 +1272,13 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			if (!pBot->CanFly()) // WTF?????
 				bTouchedWpt = TRUE;
 			else
-				bTouchedWpt = (vWptOrigin.z < pBot->pev->absmin.z) && ((vWptOrigin - vBotOrigin).Length2D() < 96);
+				bTouchedWpt = vWptOrigin.z < pBot->pev->absmin.z && (vWptOrigin - vBotOrigin).Length2D() < 96;
 		}
-		else if ((iNextWaypoint != -1) && WaypointFlagsOnLadderOrFly(waypoints[iNextWaypoint].flags))
+		else if (iNextWaypoint != -1 && WaypointFlagsOnLadderOrFly(waypoints[iNextWaypoint].flags))
 		{
 			int iLadderDir = pBot->GetLadderDir();
 			int iNextLadderDir = pBot->GetLadderDir(TRUE);
-			BOOL bTouchingLadder = (gBotGlobals.IsNS() && pBot->IsLerk()) || ((vWptOrigin - vBotOrigin).Length2D() <= (pBot->pev->size.Length2D() / 2));
+			BOOL bTouchingLadder = gBotGlobals.IsNS() && pBot->IsLerk() || (vWptOrigin - vBotOrigin).Length2D() <= pBot->pev->size.Length2D() / 2;
 
 			bTouchedWpt = bTouchingLadder;
 
@@ -1298,7 +1298,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 						bTouchedWpt = TRUE;
 						break;
 					case -1:
-						bTouchedWpt = (vWptOrigin.z >= vBotOrigin.z);
+						bTouchedWpt = vWptOrigin.z >= vBotOrigin.z;
 						break;
 					case 1:
 						// bot has gone passed the waypoint and is going in the right direction
@@ -1317,7 +1317,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 						bTouchedWpt = TRUE;
 						break;
 					case 1:
-						bTouchedWpt = (vWptOrigin.z <= vBotOrigin.z);
+						bTouchedWpt = vWptOrigin.z <= vBotOrigin.z;
 						break;
 					}
 					break;
@@ -1329,9 +1329,9 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			//
 			// On ladder, and current waypoint trying to get to is not on ladder
 			// and is some 2d distance away.. jump off ladder
-			if (pBot->IsOnLadder() && !(pBot->m_iCurrentWaypointFlags & W_FL_LADDER) && (iNextWaypoint != -1) && (pBot->m_iPrevWaypointIndex != -1))
+			if (pBot->IsOnLadder() && !(pBot->m_iCurrentWaypointFlags & W_FL_LADDER) && iNextWaypoint != -1 && pBot->m_iPrevWaypointIndex != -1)
 			{
-				if ((WaypointOrigin(pBot->m_iCurrentWaypointIndex).z <= WaypointOrigin(pBot->m_iPrevWaypointIndex).z) && ((vBotOrigin - WaypointOrigin(iNextWaypoint)).Length2D() > 100.0))
+				if (WaypointOrigin(pBot->m_iCurrentWaypointIndex).z <= WaypointOrigin(pBot->m_iPrevWaypointIndex).z && (vBotOrigin - WaypointOrigin(iNextWaypoint)).Length2D() > 100.0)
 				{
 					if (RANDOM_LONG(0, 1))
 						pBot->Jump();
@@ -1339,16 +1339,16 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			}
 			// Make lerk stay away from the ladder, it will bounce off it
 			// otherwise make sure we are near it 2 dimensionally aswell
-			if (pBot->IsLerk() || ((vWptOrigin - vBotOrigin).Length2D() <= (pBot->pev->size.Length2D() / 2)))
+			if (pBot->IsLerk() || (vWptOrigin - vBotOrigin).Length2D() <= pBot->pev->size.Length2D() / 2)
 			{
-				float fzComp = (vWptOrigin.z - pBot->pev->origin.z);
+				float fzComp = vWptOrigin.z - pBot->pev->origin.z;
 
 				if (fzComp < 0)
 				{
 					fzComp = -fzComp;
 				}
 
-				bTouchedWpt = (fzComp <= (pBot->pev->size.z / 2));
+				bTouchedWpt = fzComp <= pBot->pev->size.z / 2;
 			}
 			else
 				bTouchedWpt = FALSE;
@@ -1366,22 +1366,22 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			{
 				if (!*STRING(pPlayer->v.netname))
 					continue;
-				if ((pPlayer->v.flags & FL_DUCKING) || (pPlayer->v.button & IN_DUCK))
+				if (pPlayer->v.flags & FL_DUCKING || pPlayer->v.button & IN_DUCK)
 				{
 					break;
 				}
 			}
 		}
 
-		if (pBot->pev->origin.z < (vWptOrigin.z - 16.0)) // not high enough yet
+		if (pBot->pev->origin.z < vWptOrigin.z - 16.0) // not high enough yet
 			bTouchedWpt = FALSE;
 		// player in way so cant get much closer, start human tower here.
 		else if (pPlayer)
 		{
-			bTouchedWpt = (fDistance <= 100);
+			bTouchedWpt = fDistance <= 100;
 		}
 		else // get closer before crouching
-			bTouchedWpt = (fDistance <= 24);
+			bTouchedWpt = fDistance <= 24;
 	}
 
 	/*
@@ -1423,32 +1423,32 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			}
 		}
 	}*/
-	else if ((iWptFlags & W_FL_STAY_NEAR) || (iWptFlags & W_FL_CROUCH))
+	else if (iWptFlags & W_FL_STAY_NEAR || iWptFlags & W_FL_CROUCH)
 	{
 		if (fDistance <= 24.0)
 			bTouchedWpt = TRUE;
 		else if (fDistance <= 64.0)
 		{
-			bTouchedWpt = (PlayerNearVector(vWptOrigin, 24.0) != NULL);
+			bTouchedWpt = PlayerNearVector(vWptOrigin, 24.0) != NULL;
 		}
 	}
-	else if ((iWptFlags & W_FL_JUMP) || (iWptFlags & W_FL_CROUCHJUMP) || (gBotGlobals.IsMod(MOD_TS) && (iWptFlags & W_FL_STUNT)))
+	else if (iWptFlags & W_FL_JUMP || iWptFlags & W_FL_CROUCHJUMP || gBotGlobals.IsMod(MOD_TS) && iWptFlags & W_FL_STUNT)
 	{
 		if (fDistance < 32.0)
 			bTouchedWpt = TRUE;
 	}
-	else if ((pBot->DistanceFrom(vWptOrigin, TRUE) < BOT_WAYPOINT_TOUCH_DIST) && (fabs(vWptOrigin.z - vBotOrigin.z) <= pBot->pev->size.z))
+	else if (pBot->DistanceFrom(vWptOrigin, TRUE) < BOT_WAYPOINT_TOUCH_DIST && fabs(vWptOrigin.z - vBotOrigin.z) <= pBot->pev->size.z)
 	{
 		bTouchedWpt = TRUE;
 	}
 	else if (pBot->pev->waterlevel > 1)
 	{
-		bTouchedWpt = fDistance < (BOT_WAYPOINT_TOUCH_DIST * 2);
+		bTouchedWpt = fDistance < BOT_WAYPOINT_TOUCH_DIST * 2;
 	}
 	// normal waypoint walking
 	else if (pBot->m_pEnemy == NULL)
 	{
-		bTouchedWpt = (fDistance - 1) > pBot->m_fPrevWaypointDist;
+		bTouchedWpt = fDistance - 1 > pBot->m_fPrevWaypointDist;
 	}
 
 	// Acceptable touch distance
@@ -1491,11 +1491,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			pBot->JumpAndDuck();
 		else if (pBot->m_iCurrentWaypointFlags & W_FL_CROUCHJUMP)
 			pBot->DuckAndJump();
-		if (gBotGlobals.IsMod(MOD_TS) && (pBot->m_iCurrentWaypointFlags & W_FL_STUNT))
+		if (gBotGlobals.IsMod(MOD_TS) && pBot->m_iCurrentWaypointFlags & W_FL_STUNT)
 		{
-			BOOL kungfu = (!pBot->m_pCurrentWeapon || (pBot->m_pCurrentWeapon->GetID() == 36));
+			BOOL kungfu = !pBot->m_pCurrentWeapon || pBot->m_pCurrentWeapon->GetID() == 36;
 
-			if ((kungfu && !pBot->m_pEnemy) || !kungfu)
+			if (kungfu && !pBot->m_pEnemy || !kungfu)
 				pBot->AltButton();
 		}
 
@@ -1545,7 +1545,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 					{
 						pBot->m_Tasks.FinishedCurrentTask();
 
-						if (((vMoveTo.z - pBot->pev->origin.z) <= MAX_JUMP_HEIGHT) && (pBot->DistanceFrom(vMoveTo) > BOT_WAYPOINT_TOUCH_DIST))
+						if (vMoveTo.z - pBot->pev->origin.z <= MAX_JUMP_HEIGHT && pBot->DistanceFrom(vMoveTo) > BOT_WAYPOINT_TOUCH_DIST)
 							pBot->AddPriorityTask(CBotTask(BOT_TASK_MOVE_TO_VECTOR, pBot->m_Tasks.GetNewScheduleId(), pMoveTo, 0, 0, vMoveTo));
 					}
 				}
@@ -1563,7 +1563,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		pBot->m_iPrevWaypointIndex = pBot->m_iCurrentWaypointIndex;
 		pBot->m_iCurrentWaypointIndex = BotNavigate_FindNextWaypoint(pBot);
 
-		if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_BOTS_WAIT_FOR_BOTS) && (pBot->m_iCurrentWaypointIndex != -1))
+		if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_BOTS_WAIT_FOR_BOTS) && pBot->m_iCurrentWaypointIndex != -1)
 		{
 			CBot* pOtherBot;
 
@@ -1586,11 +1586,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
 			pBot->m_iCurrentWaypointFlags = WaypointFlags(pBot->m_iCurrentWaypointIndex);
 
-			if (!gBotGlobals.IsMod(MOD_TFC) && (pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE) && (pBot->m_iCurrentWaypointFlags & W_FL_GREN_THROW)))
+			if (!gBotGlobals.IsMod(MOD_TFC) && (pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE) && pBot->m_iCurrentWaypointFlags & W_FL_GREN_THROW))
 			{
 				pBot->AddPriorityTask(CBotTask(BOT_TASK_THROW_GRENADE, 0, NULL, 0, 0, vWptOrigin));
 			}
-			else if ((pBot->pev->flags & FL_ONGROUND) && (pBot->pev->waterlevel < 3) && (((pBot->m_iCurrentWaypointFlags & W_FL_JUMP) && (iPrevFlags & W_FL_CROUCH)) || ((pBot->m_iCurrentWaypointFlags & W_FL_JUMP) && (pBot->m_iCurrentWaypointFlags & W_FL_STAY_NEAR))))
+			else if (pBot->pev->flags & FL_ONGROUND && pBot->pev->waterlevel < 3 && (pBot->m_iCurrentWaypointFlags & W_FL_JUMP && iPrevFlags & W_FL_CROUCH || pBot->m_iCurrentWaypointFlags & W_FL_JUMP && pBot->m_iCurrentWaypointFlags & W_FL_STAY_NEAR))
 			{
 				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_AND_FACE_VECTOR, 0, NULL, 0, 0.75, vWptOrigin));
 			}
@@ -1605,11 +1605,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 			if (pBot->m_iCurrentWaypointFlags & W_FL_WAIT_FOR_LIFT)
 				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, NULL, 0, 0, vWptOrigin));
-			else if ((pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP)) && ((iNextwpt != -1) && (WaypointFlags(iNextwpt) & W_FL_WAIT_FOR_LIFT)))
+			else if (pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) && (iNextwpt != -1 && WaypointFlags(iNextwpt) & W_FL_WAIT_FOR_LIFT))
 				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, NULL, 0, 0, WaypointOrigin(iNextwpt)));
 			else if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_LIFT))
 			{
-				BOOL bCheckNext = ((iNextwpt != -1) && (pBot->m_iCurrentWaypointFlags & W_FL_CHECK_LIFT));
+				BOOL bCheckNext = iNextwpt != -1 && pBot->m_iCurrentWaypointFlags & W_FL_CHECK_LIFT;
 
 				if (bCheckNext && CheckLift(pBot, WaypointOrigin(pBot->m_iCurrentWaypointIndex), WaypointOrigin(iNextwpt)))
 				{
@@ -1627,13 +1627,13 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 		if (!bOnLadder && bWptOnLadder)
 		{
-			if ((vWptOrigin.z - 16) > pBot->pev->origin.z)
+			if (vWptOrigin.z - 16 > pBot->pev->origin.z)
 			{
 				// try jumping onto ladder to avoid being stuck at the bottom.
 				pBot->Jump();
 			}
 		}
-		else if (gBotGlobals.IsNS() && gBotGlobals.IsConfigSettingOn(BOT_CONFIG_BLINKING) && pBot->IsFade() && pBot->hasBlink() && (pBot->m_iCurrentWaypointFlags & (W_FL_WALL_STICK | W_FL_FLY)))
+		else if (gBotGlobals.IsNS() && gBotGlobals.IsConfigSettingOn(BOT_CONFIG_BLINKING) && pBot->IsFade() && pBot->hasBlink() && pBot->m_iCurrentWaypointFlags & (W_FL_WALL_STICK | W_FL_FLY))
 		{
 			pBot->AddPriorityTask(CBotTask(BOT_TASK_BLINK));
 		}
@@ -1683,7 +1683,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	pBot->m_iCurrentWaypointFlags = WaypointFlags(pBot->m_iCurrentWaypointIndex);
 
 	// Wall stick waypoint
-	if (gBotGlobals.IsNS() && (pBot->IsSkulk() && (pBot->m_iCurrentWaypointFlags & (W_FL_WALL_STICK | W_FL_LADDER)) && (pBot->m_iPrevWaypointIndex != -1)))
+	if (gBotGlobals.IsNS() && (pBot->IsSkulk() && pBot->m_iCurrentWaypointFlags & (W_FL_WALL_STICK | W_FL_LADDER) && pBot->m_iPrevWaypointIndex != -1))
 	{
 		Vector vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
 		Vector vTemp = WaypointOrigin(pBot->m_iPrevWaypointIndex);
@@ -1692,7 +1692,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 		Vector vComp = (vWptOrigin - vTemp).Normalize();
 
-		pBot->SetMoveVector(vWptOrigin + (vComp * (gBotGlobals.m_fWallStickTol)));
+		pBot->SetMoveVector(vWptOrigin + vComp * gBotGlobals.m_fWallStickTol);
 
 		pBot->m_CurrentLookTask = BOT_LOOK_TASK_NEXT_WAYPOINT;
 		//WaypointDrawBeam(gBotGlobals.m_pListenServerEdict,pBot->pev->origin,pBot->m_vMoveToVector,20,10,200,200,200,100,10);
@@ -1835,13 +1835,13 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 		vAngles = pBot->m_pEdict->v.angles;
 
-		vAngles.y = vAngles.y + (fAngle - (iMaxStep / 2));
+		vAngles.y = vAngles.y + (fAngle - iMaxStep / 2);
 
 		UTIL_FixFloatAngle(&vAngles.y);
 
 		UTIL_MakeVectors(vAngles);
 
-		vEnd = vStart + (gpGlobals->v_forward * REACHABLE_RANGE);
+		vEnd = vStart + gpGlobals->v_forward * REACHABLE_RANGE;
 
 		UTIL_TraceLine(vStart, vEnd, ignore_monsters, ignore_glass, pBot->m_pEdict, &tr);
 
@@ -1857,7 +1857,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 			vPositions.Add(vEnd);
 		}
-		else if (!vPositions.IsEmpty() && (fDistance == fMaxDistance))
+		else if (!vPositions.IsEmpty() && fDistance == fMaxDistance)
 		{
 			vPositions.Add(vEnd);
 		}
@@ -1877,13 +1877,13 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 		vAngles = UTIL_VecToAngles(pBot->m_pEdict->v.velocity);
 
-		vAngles.y = vAngles.y + (fAngle - (iMaxStep / 2));
+		vAngles.y = vAngles.y + (fAngle - iMaxStep / 2);
 
 		UTIL_FixFloatAngle(&vAngles.y);
 
 		UTIL_MakeVectors(vAngles);
 
-		vEnd = vStart + (gpGlobals->v_forward * REACHABLE_RANGE);
+		vEnd = vStart + gpGlobals->v_forward * REACHABLE_RANGE;
 
 		UTIL_TraceLine(vStart, vEnd, ignore_monsters, ignore_glass, pBot->m_pEdict, &tr);
 
@@ -1902,14 +1902,14 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 			vPositions.Add(vEnd);
 		}
-		else if (!vPositions.IsEmpty() && (fDistance == fMaxDistance))
+		else if (!vPositions.IsEmpty() && fDistance == fMaxDistance)
 		{
 			vPositions.Add(vEnd);
 		}
 	}
 
 	Vector vLow = pBot->pev->origin;
-	vLow.z -= (pBot->pev->size.z / 3);
+	vLow.z -= pBot->pev->size.z / 3;
 	float fLowDistance;
 
 	UTIL_TraceLine(vLow, vLow + pBot->pev->velocity * 2, ignore_monsters, ignore_glass, pBot->m_pEdict, &tr);
@@ -1918,7 +1918,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 	fLowDistance = pBot->DistanceFrom(vEnd);
 
-	if ((fLowDistance < 64) && (fLowDistance < fHighDistance))
+	if (fLowDistance < 64 && fLowDistance < fHighDistance)
 		pBot->Jump();
 
 	///////////////////////////////////
@@ -1930,7 +1930,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 		UTIL_MakeVectors(Vector(0, pev->angles.y, 0));
 
-		UTIL_TraceLine(vStart, vStart + (-gpGlobals->v_forward * REACHABLE_RANGE), ignore_monsters, ignore_glass, pev->pContainingEntity, &tr);
+		UTIL_TraceLine(vStart, vStart + -gpGlobals->v_forward * REACHABLE_RANGE, ignore_monsters, ignore_glass, pev->pContainingEntity, &tr);
 
 		return tr.vecEndPos;
 	}
@@ -1953,26 +1953,26 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 
 	Vector vComp = (vCheckToOrigin - vCheckOrigin).Normalize();
 
-	(*g_engfuncs.pfnTraceHull)(vCheckOrigin, (vCheckOrigin + (vComp * 4096.0)), ignore_monsters, point_hull, pBot->m_pEdict, &tr);
+	(*g_engfuncs.pfnTraceHull)(vCheckOrigin, vCheckOrigin + vComp * 4096.0, ignore_monsters, point_hull, pBot->m_pEdict, &tr);
 
 	if (tr.flFraction < 1.0) // hit something
 		pHit = tr.pHit;
 
 	if (pHit)
 	{
-		if (pHit && (pHit->v.targetname))
+		if (pHit && pHit->v.targetname)
 		{
-			if ((strcmp("func_seethroughdoor", STRING(pHit->v.classname)) == 0) ||
-				(strncmp("func_door", STRING(pHit->v.classname), 9) == 0) ||
-				(strncmp("func_plat", STRING(pHit->v.classname), 9) == 0) ||
-				(strncmp("func_train", STRING(pHit->v.classname), 9) == 0))
+			if (strcmp("func_seethroughdoor", STRING(pHit->v.classname)) == 0 ||
+				strncmp("func_door", STRING(pHit->v.classname), 9) == 0 ||
+				strncmp("func_plat", STRING(pHit->v.classname), 9) == 0 ||
+				strncmp("func_train", STRING(pHit->v.classname), 9) == 0)
 			{
 				char* szTargetname = const_cast<char*>(STRING(pHit->v.targetname));
 
 				// a way to find out if this is a lift (big enough for the bot to walk on)
-				BOOL bIsLift = ((pHit->v.movedir.z) &&
-					((pHit->v.size.x > pBot->pev->size.z) &&
-					(pHit->v.size.y > pBot->pev->size.z)));
+				BOOL bIsLift = pHit->v.movedir.z &&
+				(pHit->v.size.x > pBot->pev->size.z &&
+					pHit->v.size.y > pBot->pev->size.z);
 
 				if (BotFunc_EntityIsMoving(&pHit->v))
 				{
@@ -2045,7 +2045,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 						if (bNormalDoor)
 						{
 							// if its a typical door, press the button only
-							if ((gBotGlobals.m_iCurrentMod == MOD_DMC) && (pButton->v.health > 0))
+							if (gBotGlobals.m_iCurrentMod == MOD_DMC && pButton->v.health > 0)
 							{
 								// if DMC and the button can  be shot, just shoot it, dont walk over to it.
 								pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pButton, -1, 1.0));

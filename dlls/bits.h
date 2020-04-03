@@ -66,11 +66,11 @@ public:
 
 	void setup(int iNumBits);
 
-	inline unsigned int numBits() { return m_iNumBits; }
+	unsigned int numBits() { return m_iNumBits; }
 
 	void copy(CBits* otherBits);
 
-	inline unsigned char* getBits() { return m_cBits; }
+	unsigned char* getBits() { return m_cBits; }
 
 	void randomize();
 

@@ -100,7 +100,7 @@ public:
 		this->Destroy();
 	}
 
-	inline void Init(void)
+	void Init(void)
 	{
 		m_Head = NULL;
 		m_Tail = NULL;
@@ -139,7 +139,7 @@ public:
 		m_Tail = NULL;
 	}
 
-	inline BOOL IsEmpty(void)
+	BOOL IsEmpty(void)
 	{
 		return ((m_Head == NULL) || (m_Tail == NULL));
 	}
@@ -181,12 +181,12 @@ public:
 		}
 	}
 
-	inline T GetFrontInfo(void)
+	T GetFrontInfo(void)
 	{
 		return m_Head->m_NodeData;
 	}
 
-	inline T* GetFrontPointer(void)
+	T* GetFrontPointer(void)
 	{
 		return &m_Head->m_NodeData;
 	}
@@ -649,7 +649,7 @@ public:
 		m_Head = NULL;
 	}
 
-	inline BOOL IsEmpty(void)
+	BOOL IsEmpty(void)
 	{
 		return (m_Head == NULL);
 	}
@@ -758,13 +758,13 @@ public:
 		this->Clear();
 	}
 
-	inline void Clear(void)
+	void Clear(void)
 	{
 		free(m_pArray);
 		this->Init();
 	}
 
-	inline void Init(void)
+	void Init(void)
 	{
 		m_pArray = NULL;
 		m_iArrayMax = 0;
@@ -806,7 +806,7 @@ public:
 		assert(iIndex >= 0);
 		assert(iIndex < m_iArrayMax);
 
-		if ((m_pArray != NULL) && ((iIndex >= 0) && (iIndex < m_iArrayMax)))
+		if ((m_pArray != NULL) && (iIndex >= 0 && iIndex < m_iArrayMax))
 			return m_pArray[iIndex];
 		else
 		{
@@ -943,7 +943,7 @@ public:
 		this->Clear();
 	}
 
-	inline int Size(void)
+	int Size(void)
 	{
 		return array.size();
 	}
@@ -995,22 +995,22 @@ public:
 		}
 	}
 
-	inline void Destroy(void)
+	void Destroy(void)
 	{
 		array.clear();
 	}
 
-	inline void Init(void)
+	void Init(void)
 	{
 		array.clear();
 	}
 
-	inline bool IsEmpty(void)
+	bool IsEmpty(void)
 	{
 		return array.empty();
 	}
 
-	inline void Clear(void)
+	void Clear(void)
 	{
 		this->Destroy();
 		this->Init();
@@ -1038,7 +1038,7 @@ public:
 
 	T& operator [] (int iIndex)
 	{
-		if ((iIndex >= Size()) || (iIndex < 0))
+		if (iIndex >= Size() || iIndex < 0)
 		{
 			throw "[RCBOT>] dataUnconstarray[] Array exception: index out of bounds";
 		}

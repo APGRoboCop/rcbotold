@@ -316,3 +316,5 @@ dlls/bot_commands.PVS-Studio.i
 dlls/HPB_bot___Win32_MetaMod_Debug/HPB_bot.bsc
 dlls/HPB_bot___Win32_MetaMod_Debug/HPB_bot.exp
 dlls/HPB_bot___Win32_MetaMod_Debug/HPB_bot.lib
+dlls/bot_client.cpp.PVS-Studio.cfg
+dlls/bot_client.cpp.PVS-Studio.cmd

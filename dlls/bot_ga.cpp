@@ -98,7 +98,7 @@ void CBotGAValues::mutate()
 		{
 			float fCurrentVal = get(i);
 
-			set(i, fCurrentVal + ((fCurrentVal * (-1 + RANDOM_FLOAT(0, 2))) * CGA::g_fMaxPerturbation));
+			set(i, fCurrentVal + fCurrentVal * (-1 + RANDOM_FLOAT(0, 2)) * CGA::g_fMaxPerturbation);
 		}
 	}
 }
@@ -184,7 +184,7 @@ void CBotGAValues::save(FILE* bfp)
 
 	for (int i = 0; i < iSize; i++)
 	{
-		fwrite(&(m_theValues[i]), sizeof(ga_value), 1, bfp);
+		fwrite(&m_theValues[i], sizeof(ga_value), 1, bfp);
 	}
 
 	fwrite(&m_fFitness, sizeof(ga_value), 1, bfp);

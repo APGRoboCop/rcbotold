@@ -153,7 +153,9 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 	{
 		index = -1;
 
-		if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnMessageBegin: edict=%x dest=%d type=%d\n", ed, msg_dest, msg_type); fclose(fp); }
+		if (debug_engine) { fp = fopen("bot.txt", "a");
+			fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
+			fclose(fp); }
 
 		m_CurrentMessage = NULL;
 		m_iCurrentMessageState = 0;
@@ -217,7 +219,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 				if (m_CurrentMessage->isStateMsg())
 					static_cast<CBotStatedNetMessage*>(m_CurrentMessage)->init(index);
 				// is this message for a bot?
-				if (m_CurrentMessage->humansAllowed() || (index != -1))
+				if (m_CurrentMessage->humansAllowed() || index != -1)
 				{
 					// keep current message set so it wil be called whan messages are sent
 					// and update current bot index being affected by messages.
@@ -258,12 +260,12 @@ void CBotGlobals::StartFrame(void)
 
 	if (!bCheckedTeamplay)
 	{
-		m_bTeamPlay = (CVAR_GET_FLOAT("mp_teamplay") > 0) || (CVAR_GET_FLOAT("mp_theonemode") > 0);
+		m_bTeamPlay = CVAR_GET_FLOAT("mp_teamplay") > 0 || CVAR_GET_FLOAT("mp_theonemode") > 0;
 		bCheckedTeamplay = TRUE;
 	}
 
 	// new map?
-	if ((gpGlobals->time + 0.1) < fPreviousTime)
+	if (gpGlobals->time + 0.1 < fPreviousTime)
 	{
 		bCheckedTeamplay = FALSE;
 		//RoundInit();
@@ -278,10 +280,10 @@ void CBotGlobals::StartFrame(void)
 			m_iMaxPathRevs = 150;
 		///////////////////////////
 
-		if ((fpMapConfig != NULL) && (m_fMapInitTime + 10.0 < gpGlobals->time) && (m_fReadConfigTime < gpGlobals->time))
+		if (fpMapConfig != NULL && m_fMapInitTime + 10.0 < gpGlobals->time && m_fReadConfigTime < gpGlobals->time)
 			ReadMapConfig();
 
-		bUpdateClientData = (!IsMod(MOD_DMC) && !IsMod(MOD_TS) && (m_fClientUpdateTime <= gpGlobals->time));
+		bUpdateClientData = !IsMod(MOD_DMC) && !IsMod(MOD_TS) && m_fClientUpdateTime <= gpGlobals->time;
 
 		if (bUpdateClientData)
 		{
@@ -290,7 +292,7 @@ void CBotGlobals::StartFrame(void)
 
 		if (m_bBotCanRejoin == FALSE)
 		{
-			if ((m_fMapInitTime + 10) < gpGlobals->time)
+			if (m_fMapInitTime + 10 < gpGlobals->time)
 			{
 				if (m_fBotRejoinTime < gpGlobals->time)
 				{
@@ -320,7 +322,7 @@ void CBotGlobals::StartFrame(void)
 			// update who is commander
 			SetCommander(UTIL_GetCommander());
 
-			if (!IsCombatMap() && IsConfigSettingOn(BOT_CONFIG_MARINE_AUTO_BUILD) && (!m_bAutoBuilt && (m_fAutoBuildTime && (m_fAutoBuildTime < gpGlobals->time))))
+			if (!IsCombatMap() && IsConfigSettingOn(BOT_CONFIG_MARINE_AUTO_BUILD) && (!m_bAutoBuilt && (m_fAutoBuildTime && m_fAutoBuildTime < gpGlobals->time)))
 			{
 				int iWpt;
 				Vector vOrigin;
@@ -409,9 +411,9 @@ void CBotGlobals::StartFrame(void)
 
 			if (UTIL_GetNumHives() == iNumUpgrades)
 			{
-				m_bHasDefTech = (m_bCanUpgradeDef);
-				m_bHasMovTech = (m_bCanUpgradeMov);
-				m_bHasSensTech = (m_bCanUpgradeSens);
+				m_bHasDefTech = m_bCanUpgradeDef;
+				m_bHasMovTech = m_bCanUpgradeMov;
+				m_bHasSensTech = m_bCanUpgradeSens;
 			}
 			else
 			{
@@ -515,14 +517,14 @@ void CBotGlobals::StartFrame(void)
 
 					if (pBot->IsUsed())
 					{
-						int iGotoChance = (int)((((float)iBuildingPriority) / 6) * 100);
+						int iGotoChance = (int)((float)iBuildingPriority / 6 * 100);
 
 						if (pBuildingUnderAttack->v.iuser3 == AVH_USER3_HIVE)
 						{
 							if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_NS_CHECK_HIVE))
 							{
 								// get some alien bots to check out the hive
-								if (pBot->IsAlien() && !pBot->IsGorge() && (RANDOM_LONG(0, 100) < iGotoChance))
+								if (pBot->IsAlien() && !pBot->IsGorge() && RANDOM_LONG(0, 100) < iGotoChance)
 								{
 									pBot->m_Tasks.FlushTasks();
 									pBot->m_Tasks.AddNewSchedule(BOT_SCHED_NS_CHECK_HIVE, m_NewSchedule, 3);
@@ -532,7 +534,7 @@ void CBotGlobals::StartFrame(void)
 						else if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_NS_CHECK_STRUCTURE))
 						{
 							// get some alien bots to check out the hive
-							if (pBot->IsAlien() && !pBot->IsGorge() && (RANDOM_LONG(0, 100) < iGotoChance))
+							if (pBot->IsAlien() && !pBot->IsGorge() && RANDOM_LONG(0, 100) < iGotoChance)
 							{
 								pBot->m_Tasks.FlushTasks();
 								pBot->m_Tasks.AddNewSchedule(BOT_SCHED_NS_CHECK_STRUCTURE, m_NewSchedule, 3);
@@ -591,14 +593,14 @@ void CBotGlobals::StartFrame(void)
 		if (IsConfigSettingOn(BOT_CONFIG_BOTS_LEAVE_AND_JOIN))
 		{
 			int iClientsInGame = iNumClients; // argh, can't debug static variables
-			float val = ((float)iClientsInGame / gpGlobals->maxClients) * RANDOM_FLOAT(0.9, 1.3);
+			float val = (float)iClientsInGame / gpGlobals->maxClients * RANDOM_FLOAT(0.9, 1.3);
 
-			bBotJoin = (val < 0.75);
+			bBotJoin = val < 0.75;
 		}
 
 		BOOL bAddBot = FALSE;
 
-		BOOL bServerFull = (iNumClients >= gpGlobals->maxClients);
+		BOOL bServerFull = iNumClients >= gpGlobals->maxClients;
 
 		for (iIndex = 0; iIndex < MAX_PLAYERS; iIndex++)
 		{
@@ -624,8 +626,8 @@ void CBotGlobals::StartFrame(void)
 					bAddBot = FALSE;
 
 					// Bot was in last game so is re-connecting
-					if ((m_iMaxBots == -1) &&
-						(m_iMinBots == -1))
+					if (m_iMaxBots == -1 &&
+						m_iMinBots == -1)
 					{
 						if (pBot->m_iRespawnState == RESPAWN_NEED_TO_REJOIN)
 							bAddBot = TRUE;
@@ -746,7 +748,7 @@ void CBotGlobals::StartFrame(void)
 									{
 										bHasWeapon = pBot->HasWeapon(j);
 
-										if ((pBot->pev->weapons & (1 << j)) && !bHasWeapon)
+										if (pBot->pev->weapons & 1 << j && !bHasWeapon)
 										{
 											CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(j);
 
@@ -763,9 +765,9 @@ void CBotGlobals::StartFrame(void)
 											if (pWeapon)
 												pWeapon->setHasWeapon(bWeaponStatus);
 
-											pBot->m_iBotWeapons |= (1 << j);
+											pBot->m_iBotWeapons |= 1 << j;
 										}
-										else if (!(pBot->pev->weapons & (1 << j)) && bHasWeapon)
+										else if (!(pBot->pev->weapons & 1 << j) && bHasWeapon)
 										{
 											CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(j);
 
@@ -789,7 +791,7 @@ void CBotGlobals::StartFrame(void)
 
 									for (j = 1; j < MAX_WEAPONS; j++)
 									{
-										if (pBot->pev->weapons & (1 << j))
+										if (pBot->pev->weapons & 1 << j)
 										{
 											pBot->m_Weapons.AddWeapon(j);
 										}
@@ -894,7 +896,7 @@ BOOL CBotGlobals::TFC_canGoClass(int iClass, int iTeam)
 	int iLimit = -1;
 
 	// can't go this class
-	if (team_class_limits[iTeam - 1] & (1 << (iClass - 1)))
+	if (team_class_limits[iTeam - 1] & 1 << iClass - 1)
 		return FALSE;
 
 	switch (iClass)
@@ -931,21 +933,21 @@ BOOL CBotGlobals::TFC_canGoClass(int iClass, int iTeam)
 		break;
 	}
 
-	return (!iLimit || (UTIL_ClassOnTeam(iClass, iTeam) < iLimit));
+	return !iLimit || UTIL_ClassOnTeam(iClass, iTeam) < iLimit;
 }
 
 int CBotGlobals::TFC_getBestTeam(int team)
 {
 	// Input the preffered team, if we can't do that get the best team
 
-	if ((team >= 5) || (team < 1)) // auto-assign or invalid
+	if (team >= 5 || team < 1) // auto-assign or invalid
 		return 5; // auto-assign OK
 
 	int players = UTIL_PlayersOnTeam(team);
 	/*int max_team_players[MAX_TEAMS];
 	int team_class_limits[MAX_TEAMS];
 	int team_allies[MAX_TEAMS];*/
-	if (max_team_players[team - 1] && (players > max_team_players[team - 1]))
+	if (max_team_players[team - 1] && players > max_team_players[team - 1])
 	{
 		// find new team
 
@@ -957,7 +959,7 @@ int CBotGlobals::TFC_getBestTeam(int team)
 			if (newteam == team)
 				continue;
 
-			if ((max_team_players[newteam - 1]) && (UTIL_PlayersOnTeam(newteam) < max_team_players[newteam - 1]))
+			if (max_team_players[newteam - 1] && UTIL_PlayersOnTeam(newteam) < max_team_players[newteam - 1])
 				return newteam;
 		}
 	}
@@ -969,7 +971,7 @@ BOOL CBotGlobals::TFC_IsAvailableFlag(edict_t* pFlag, int team, BOOL bEnemyFlag)
 {
 	if (m_Flags.isFlag(pFlag, team, bEnemyFlag))
 	{
-		return (pFlag->v.owner == NULL);
+		return pFlag->v.owner == NULL;
 	}
 
 	return FALSE;
@@ -993,9 +995,9 @@ BOOL CBotGlobals::TFC_getCaptureLocationForFlag(Vector* vec, edict_t* pFlag)
 			Vector mins = pCapture->v.mins;
 			Vector maxs = pCapture->v.maxs;
 
-			vec->x = (mins.x - ((mins.x - maxs.x) / 2));
-			vec->y = (mins.y - ((mins.y - maxs.y) / 2));
-			vec->z = (mins.z - ((mins.z - maxs.z) / 2));
+			vec->x = mins.x - (mins.x - maxs.x) / 2;
+			vec->y = mins.y - (mins.y - maxs.y) / 2;
+			vec->z = mins.z - (mins.z - maxs.z) / 2;
 
 			return TRUE;
 		}
@@ -1120,8 +1122,8 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 		}
 		else if (!strcmp(pkvd->szKeyName, "classname"))
 		{
-			if ((!strcmp("item_tfgoal", pkvd->szValue)) ||
-				(!strcmp("info_tfgoal_timer", pkvd->szValue))/* ||
+			if (!strcmp("item_tfgoal", pkvd->szValue) ||
+				!strcmp("info_tfgoal_timer", pkvd->szValue)/* ||
 				(!strcmp("i_t_g", pkvd->szValue))*/)
 			{
 				if (m_currFlag && prevFlagInvalid)
@@ -1134,10 +1136,10 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 			}
 		}
 
-		if (((strcmp(pkvd->szKeyName, "classname") == 0) &&
-			(strcmp(pkvd->szValue, "info_tfgoal") == 0)) ||
-			((strcmp(pkvd->szKeyName, "classname") == 0) &&
-			(strcmp(pkvd->szValue, "i_t_g") == 0)))
+		if (strcmp(pkvd->szKeyName, "classname") == 0 &&
+			strcmp(pkvd->szValue, "info_tfgoal") == 0 ||
+			strcmp(pkvd->szKeyName, "classname") == 0 &&
+			strcmp(pkvd->szValue, "i_t_g") == 0)
 		{
 			if (m_currBackPack && prevBackPackInvalid)
 			{
@@ -1148,7 +1150,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 
 			prevBackPackInvalid = TRUE;
 		}
-		else if (m_currBackPack && (m_currBackPack->isEdict(pentKeyvalue)))
+		else if (m_currBackPack && m_currBackPack->isEdict(pentKeyvalue))
 		{
 			if (strcmp(pkvd->szKeyName, "team_no") == 0)
 				m_currBackPack->setTeam(atoi(pkvd->szValue));
@@ -1156,9 +1158,9 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 				m_currBackPack->setArmor(atoi(pkvd->szValue));
 			else if (strcmp(pkvd->szKeyName, "health") == 0)
 				m_currBackPack->setHealth(atoi(pkvd->szValue));
-			else if ((strcmp(pkvd->szKeyName, "ammo_nails") == 0) ||
-				(strcmp(pkvd->szKeyName, "ammo_rockets") == 0) ||
-				(strcmp(pkvd->szKeyName, "ammo_shells") == 0))
+			else if (strcmp(pkvd->szKeyName, "ammo_nails") == 0 ||
+				strcmp(pkvd->szKeyName, "ammo_rockets") == 0 ||
+				strcmp(pkvd->szKeyName, "ammo_shells") == 0)
 			{
 				m_currBackPack->setAmmo(atoi(pkvd->szValue));
 			}
@@ -1322,7 +1324,7 @@ void CBotGlobals::MapInit(void)
 	m_bCanUpgradeSens = FALSE;
 	m_bCanUpgradeMov = FALSE;
 
-	m_bCombatMap = (strncmp("co_", STRING(gpGlobals->mapname), 3) == 0);
+	m_bCombatMap = strncmp("co_", STRING(gpGlobals->mapname), 3) == 0;
 
 #ifdef __linux__
 	sprintf(szTemp, "map_configs/%s/%s.cfg", m_szModFolder, STRING(gpGlobals->mapname));
@@ -1366,7 +1368,7 @@ const char* CBotGlobals::GetModInfo(void)
 		pos = strlen(game_dir) - 1;
 
 		// scan backwards till first directory separator...
-		while ((pos) && (game_dir[pos] != '/'))
+		while (pos && game_dir[pos] != '/')
 			pos--;
 
 		if (pos == 0)
@@ -1387,7 +1389,7 @@ const char* CBotGlobals::GetModInfo(void)
 	{
 		m_iCurrentMod = pModInfo->GetModId();
 
-		m_bIsNS = (m_iCurrentMod == MOD_NS);
+		m_bIsNS = m_iCurrentMod == MOD_NS;
 
 		GameInit();
 
@@ -1452,7 +1454,7 @@ void CBotGlobals::LoadBotModels(void)
 	{
 		// don't want to get stuck looking in the same directory again and again (".")
 		// don't wan't to search parent directories ("..")
-		if ((strcmp(dirname, ".") == 0) || (strcmp(dirname, "..") == 0))
+		if (strcmp(dirname, ".") == 0 || strcmp(dirname, "..") == 0)
 			continue;
 
 		// looking for .mdl file inside a folder of same name
@@ -1513,44 +1515,44 @@ void CBotGlobals::ReadConfig(void)
 			if (length == 0) // nothing on line
 				continue;
 
-			while ((i < length) && (buffer[i] == ' '))
+			while (i < length && buffer[i] == ' ')
 				i++;
 
 			j = 0;
 
-			while ((i < length) && (buffer[i] != ' '))
+			while (i < length && buffer[i] != ' ')
 				cmd_line[j++] = buffer[i++];
 			cmd_line[j] = 0;
-			while ((i < length) && (buffer[i] == ' '))
+			while (i < length && buffer[i] == ' ')
 				i++;
 
 			j = 0;
 
-			while ((i < length) && (buffer[i] != ' '))
+			while (i < length && buffer[i] != ' ')
 				arg1[j++] = buffer[i++];
 			arg1[j] = 0;
-			while ((i < length) && (buffer[i] == ' '))
+			while (i < length && buffer[i] == ' ')
 				i++;
 
 			j = 0;
 
-			while ((i < length) && (buffer[i] != ' '))
+			while (i < length && buffer[i] != ' ')
 				arg2[j++] = buffer[i++];
 			arg2[j] = 0;
-			while ((i < length) && (buffer[i] == ' '))
+			while (i < length && buffer[i] == ' ')
 				i++;
 
 			j = 0;
 
-			while ((i < length) && (buffer[i] != ' '))
+			while (i < length && buffer[i] != ' ')
 				arg3[j++] = buffer[i++];
 			arg3[j] = 0;
-			while ((i < length) && (buffer[i] == ' '))
+			while (i < length && buffer[i] == ' ')
 				i++;
 
 			j = 0;
 
-			while ((i < length) && (buffer[i] != ' '))
+			while (i < length && buffer[i] != ' ')
 				arg4[j++] = buffer[i++];
 			arg4[j] = 0;
 
@@ -1849,7 +1851,7 @@ void CBotGlobals::ReadThingsToBuild(void)
 				i = 1;
 				j = 0;
 
-				while ((i < ilen) && (szbuffer[i] != ']'))
+				while (i < ilen && szbuffer[i] != ']')
 					szline[j++] = szbuffer[i++];
 				szline[j] = 0;
 

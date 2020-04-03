@@ -88,7 +88,7 @@ void CClient::Think(void)
 	// debugging a bot
 	if (m_iDebugBot != -1)
 	{
-		if ((m_iDebugBot >= MAX_PLAYERS) || (m_iDebugBot < 0))
+		if (m_iDebugBot >= MAX_PLAYERS || m_iDebugBot < 0)
 			m_iDebugBot = -1;
 		else if (m_fDebugBotTime < gpGlobals->time)
 		{
@@ -142,7 +142,7 @@ void InitMessage ( const char *message );
 		}
 	}
 
-	if (m_pDebugEnt && (m_fDebugEntTime < gpGlobals->time))
+	if (m_pDebugEnt && m_fDebugEntTime < gpGlobals->time)
 	{
 		HudText hudmessage;
 
@@ -202,7 +202,7 @@ void InitMessage ( const char *message );
 		m_bRecheckAuth = FALSE;
 	}
 
-	if (m_fCheckSentryTime && (m_fCheckSentryTime < gpGlobals->time))
+	if (m_fCheckSentryTime && m_fCheckSentryTime < gpGlobals->time)
 	{
 		edict_t* pent = NULL;
 
@@ -210,7 +210,7 @@ void InitMessage ( const char *message );
 
 		while ((pent = UTIL_FindEntityByClassname(pent, "building_sentrygun")) != NULL)
 		{
-			if (!ignoreSentries.IsMember(pent) && (gBotGlobals.TFC_getTeamViaColorMap(pent) == m_pPlayer->v.team))
+			if (!ignoreSentries.IsMember(pent) && gBotGlobals.TFC_getTeamViaColorMap(pent) == m_pPlayer->v.team)
 			{
 				if (BotFunc_DistanceBetweenEdicts(pent, m_pPlayer) < 128)
 				{
@@ -245,7 +245,7 @@ void InitMessage ( const char *message );
 			fDist = vComp.Length();
 			vComp = vComp / fDist;
 
-			vEnd = vSrc + (vComp * (fDist - m_pForceGripEntity->v.size.Length2D()));
+			vEnd = vSrc + vComp * (fDist - m_pForceGripEntity->v.size.Length2D());
 		}
 
 		vComp = vSrc - vEnd;
@@ -275,7 +275,7 @@ void InitMessage ( const char *message );
 		if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) && !HasToolTipSent(BOT_TOOL_TIP_SERVER_WELCOME) && !HasToolTipSent(BOT_TOOL_TIP_CLIENT_WELCOME))
 		{
 			// joined 5 seconds ago
-			if ((m_fJoinServerTime + 5.0) < gpGlobals->time)
+			if (m_fJoinServerTime + 5.0 < gpGlobals->time)
 			{
 				// send message
 
@@ -312,12 +312,12 @@ void InitMessage ( const char *message );
 			}
 		}
 		// given a welcome
-		else if (!HasToolTipSent(BOT_TOOL_TIP_CREATE_SQUAD) && (m_pPlayer->v.flags & FL_ONGROUND))
+		else if (!HasToolTipSent(BOT_TOOL_TIP_CREATE_SQUAD) && m_pPlayer->v.flags & FL_ONGROUND)
 		{
 			if (gBotGlobals.m_iNumBots > 1)
 			{
 				// joined at least 30 seconds ago
-				if ((m_fJoinServerTime + 30.0) < gpGlobals->time)
+				if (m_fJoinServerTime + 30.0 < gpGlobals->time)
 				{
 					AddNewToolTip(BOT_TOOL_TIP_CREATE_SQUAD);
 
@@ -372,7 +372,7 @@ void InitMessage ( const char *message );
 	}
 
 	// Waypoints ON???
-	if (m_bWaypointOn && (m_fWaypointDisplayTime < gpGlobals->time))
+	if (m_bWaypointOn && m_fWaypointDisplayTime < gpGlobals->time)
 	{
 		int n;
 
@@ -476,12 +476,12 @@ void InitMessage ( const char *message );
 			//
 			// ****************************************************
 
-			if ((pev->waterlevel < 3) && (m_fCanPlaceJump < gpGlobals->time))
+			if (pev->waterlevel < 3 && m_fCanPlaceJump < gpGlobals->time)
 			{
-				BOOL bStunt = gBotGlobals.IsMod(MOD_TS) && (m_iLastButtons & IN_ALT1);
+				BOOL bStunt = gBotGlobals.IsMod(MOD_TS) && m_iLastButtons & IN_ALT1;
 				Vector v_floor;
 
-				if ((m_fCanPlaceJump != -1) && (bStunt || (m_iLastButtons & IN_JUMP)) && !(pev->flags & FL_ONGROUND))
+				if (m_fCanPlaceJump != -1 && (bStunt || m_iLastButtons & IN_JUMP) && !(pev->flags & FL_ONGROUND))
 				{
 					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, NULL);
 
@@ -493,7 +493,7 @@ void InitMessage ( const char *message );
 						{
 							m_iLastJumpWaypointIndex = WaypointAddOrigin(vPlayerOrigin, W_FL_STUNT, m_pPlayer, m_bWaypointOn, m_bWaypointOn);
 
-							if ((m_iLastJumpWaypointIndex != -1) && UTIL_CanStand(waypoints[m_iLastJumpWaypointIndex].origin, &v_floor))
+							if (m_iLastJumpWaypointIndex != -1 && UTIL_CanStand(waypoints[m_iLastJumpWaypointIndex].origin, &v_floor))
 							{
 								waypoints[m_iLastJumpWaypointIndex].flags &= ~W_FL_CROUCH;
 								waypoints[m_iLastJumpWaypointIndex].origin = v_floor + Vector(0, 0, 36);
@@ -517,7 +517,7 @@ void InitMessage ( const char *message );
 				// ****************************************************
 				// Join jump waypoint to the landed waypoint
 				// ****************************************************
-				else if ((m_fCanPlaceJump == -1) && (pev->flags & FL_ONGROUND))
+				else if (m_fCanPlaceJump == -1 && pev->flags & FL_ONGROUND)
 				{
 					if (m_iLastJumpWaypointIndex != -1)
 					{
@@ -567,13 +567,13 @@ void InitMessage ( const char *message );
 				}
 			}
 
-			BOOL bCheckDistance = (pev->movetype != MOVETYPE_FLY) && (m_fCanPlaceLadder == 0); // always check distance unless ladder climbing
+			BOOL bCheckDistance = pev->movetype != MOVETYPE_FLY && m_fCanPlaceLadder == 0; // always check distance unless ladder climbing
 
 			// ****************************************************
 			// Ladder waypoint
 			// make the frist waypoint (e.g. bottom waypoint)
 			// ****************************************************
-			if ((pev->movetype == MOVETYPE_FLY) && !(m_iLastMoveType == MOVETYPE_FLY))
+			if (pev->movetype == MOVETYPE_FLY && !(m_iLastMoveType == MOVETYPE_FLY))
 			{
 				// went ON to a ladder
 
@@ -602,7 +602,7 @@ void InitMessage ( const char *message );
 					m_vLastAutoWaypointCheckPos[i].UnSetPoint();
 				}
 			}
-			else if (!(pev->movetype == MOVETYPE_FLY) && (m_iLastMoveType == MOVETYPE_FLY))
+			else if (!(pev->movetype == MOVETYPE_FLY) && m_iLastMoveType == MOVETYPE_FLY)
 			{
 				// went OFF a ladder
 				m_fCanPlaceLadder = gpGlobals->time + 0.2;
@@ -612,7 +612,7 @@ void InitMessage ( const char *message );
 			// If we have walked off a ladder for a small amount of time
 			// Make the top/bottom ladder waypoint
 			// ****************************************************
-			if (m_fCanPlaceLadder && (m_fCanPlaceLadder < gpGlobals->time))
+			if (m_fCanPlaceLadder && m_fCanPlaceLadder < gpGlobals->time)
 			{
 				if (m_iLastLadderWaypointIndex != -1)
 					// place a ladder waypoint before jumping off
@@ -650,7 +650,7 @@ void InitMessage ( const char *message );
 			// ****************************************************
 			// Join top ladder waypoint to a ground waypoint
 			// ****************************************************
-			if ((m_iJoinLadderWaypointIndex != -1) && (pev->flags & FL_ONGROUND) && (pev->movetype == MOVETYPE_WALK))
+			if (m_iJoinLadderWaypointIndex != -1 && pev->flags & FL_ONGROUND && pev->movetype == MOVETYPE_WALK)
 			{
 				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 40.0, m_iJoinLadderWaypointIndex, TRUE, FALSE, FALSE, NULL);
 
@@ -711,7 +711,7 @@ void InitMessage ( const char *message );
 				if (numset == MAX_STORED_AUTOWAYPOINT)
 				{
 					// move check points down
-					for (n = 0; n < (MAX_STORED_AUTOWAYPOINT - 1); n++)
+					for (n = 0; n < MAX_STORED_AUTOWAYPOINT - 1; n++)
 					{
 						m_vLastAutoWaypointCheckPos[n] = m_vLastAutoWaypointCheckPos[n + 1];
 					}
@@ -736,7 +736,7 @@ void InitMessage ( const char *message );
 
 				m_vLastAutoWaypointCheckPos[last].SetPoint(vPlayerOrigin, iFlags);
 
-				if ((m_iLastJumpWaypointIndex == -1) && bCheckDistance && ((vPlayerOrigin - m_vLastAutoWaypointPlacePos).Length() > 200))
+				if (m_iLastJumpWaypointIndex == -1 && bCheckDistance && (vPlayerOrigin - m_vLastAutoWaypointPlacePos).Length() > 200)
 				{
 					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 150.0, -1, TRUE, FALSE, FALSE, NULL);
 
@@ -814,7 +814,7 @@ void InitMessage ( const char *message );
 
 					m_vLastAutoWaypointPlacePos = vPlacePosition;
 
-					if ((m_iLastJumpWaypointIndex != -1) && UTIL_CanStand(waypoints[inewwpt].origin, &v_floor))
+					if (m_iLastJumpWaypointIndex != -1 && UTIL_CanStand(waypoints[inewwpt].origin, &v_floor))
 					{
 						waypoints[inewwpt].flags &= ~W_FL_CROUCH;
 						//waypoints[inewwpt].origin = v_floor+Vector(0,0,36);
@@ -1072,7 +1072,7 @@ void CClients::ClientDisconnected(CClient* pClient)
 	// give a few seconds before adding more bots.
 	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 2.0;
 
-	BOOL RemoveGreeting = (iPlayerIndex != -1);
+	BOOL RemoveGreeting = iPlayerIndex != -1;
 
 	if (iPlayerRepId >= 0)
 	{

@@ -57,7 +57,7 @@ public:
 
 	NNLayer(int iNumNeurons, int iNumInputs);
 
-	inline int numNeurons() { return m_Neurons.size(); }
+	int numNeurons() { return m_Neurons.size(); }
 
 	CPerceptron* getNeuron(int iNeuron) { return m_Neurons[iNeuron]; }
 

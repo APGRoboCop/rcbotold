@@ -95,7 +95,7 @@ public:
 
 	BOOL MessageForMod(int iModId)
 	{
-		return ((m_iModId == MOD_ANY) || (iModId == m_iModId));
+		return m_iModId == MOD_ANY || iModId == m_iModId;
 	}
 
 	virtual void execute(void* p, int iIndex)
@@ -127,11 +127,11 @@ public:
 		return m_iMessage;
 	}
 
-	BOOL IsMessage(const int iMessage);
+	BOOL IsMessage(int iMessage);
 
 	BOOL IsMessageName(const char* szMessage)
 	{
-		return (strcmp(m_szMessageName, szMessage) == 0);
+		return strcmp(m_szMessageName, szMessage) == 0;
 	}
 
 	void UpdateMsgId(int iMessage)

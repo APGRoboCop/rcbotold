@@ -230,7 +230,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 			{
 				int iWpt = -1;
 
-				if ((arg3 && *arg3))
+				if (arg3 && *arg3)
 					iWpt = atoi(arg3);
 				else
 					iWpt = WaypointLocations.NearestWaypoint(pClient->GetPlayer()->v.origin, 100, -1);
@@ -312,9 +312,9 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		int magnitude = 400;
 		bool dodamage = TRUE;
 
-		if ((arg2 != NULL) && (*arg2 != 0))
+		if (arg2 != NULL && *arg2 != 0)
 			magnitude = atoi(arg2);
-		if ((arg3 != NULL) && (*arg3 != 0))
+		if (arg3 != NULL && *arg3 != 0)
 		{
 			int temp = atoi(arg3);
 
@@ -331,13 +331,13 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		UTIL_MakeVectors(pev->v_angle);
 
 		vSrc = pev->origin + pev->view_ofs;
-		vEnd = vSrc + (gpGlobals->v_forward * 4096.0);
+		vEnd = vSrc + gpGlobals->v_forward * 4096.0;
 
 		UTIL_TraceLine(vSrc, vEnd, dont_ignore_monsters, dont_ignore_glass, pEntity, &tr);
 
 		WaypointDrawBeam(pEntity, vSrc, tr.vecEndPos, 20, 10, 200, 1, 1, 160, 10);
 
-		ExplosionCreate(tr.vecEndPos - (gpGlobals->v_forward * 4), pEntity->v.v_angle, pEntity, magnitude, dodamage);
+		ExplosionCreate(tr.vecEndPos - gpGlobals->v_forward * 4, pEntity->v.v_angle, pEntity, magnitude, dodamage);
 		UTIL_BotScreenShake(tr.vecEndPos, 16, 100, 2, magnitude);
 	}
 	else if (FStrEq("showreps", arg1))
@@ -499,7 +499,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 				else
 					pPlayer->v.flags |= FL_NOTARGET;
 
-				BotPrintTalkMessage("%s used notarget_mode %d on %s\n", STRING(pEntity->v.netname), ((pPlayer->v.flags & FL_NOTARGET) == FL_NOTARGET), STRING(pPlayer->v.netname));
+				BotPrintTalkMessage("%s used notarget_mode %d on %s\n", STRING(pEntity->v.netname), (pPlayer->v.flags & FL_NOTARGET) == FL_NOTARGET, STRING(pPlayer->v.netname));
 			}
 		}
 		else if (pEntity)
@@ -509,7 +509,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 			else
 				pEntity->v.flags |= FL_NOTARGET;
 
-			BotPrintTalkMessage("%s used notarget_mode %d on self\n", STRING(pEntity->v.netname), ((pEntity->v.flags & FL_NOTARGET) == FL_NOTARGET));
+			BotPrintTalkMessage("%s used notarget_mode %d on self\n", STRING(pEntity->v.netname), (pEntity->v.flags & FL_NOTARGET) == FL_NOTARGET);
 		}
 	}
 	else if (FStrEq("send_sound", arg1))
@@ -626,7 +626,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 	}
 	else if (FStrEq(arg1, "adduser"))
 	{
-		if ((arg2 && *arg2) && (arg3 && *arg3))
+		if (arg2 && *arg2 && (arg3 && *arg3))
 		{
 			edict_t* pPlayer = UTIL_FindPlayerByTruncName(arg2);
 
@@ -822,10 +822,10 @@ eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const ch
 
 	if (IS_DEDICATED_SERVER())
 	{
-		bError = (pClient != NULL);
+		bError = pClient != NULL;
 	}
 	else
-		bError = (pClient->GetPlayer() != gBotGlobals.m_pListenServerEdict);
+		bError = pClient->GetPlayer() != gBotGlobals.m_pListenServerEdict;
 
 	if (bError)
 	{
@@ -835,7 +835,7 @@ eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const ch
 
 	BOOL bMsg = FALSE;
 
-	if ((!arg1 || !*arg1) || (!arg2 || !*arg2))
+	if (!arg1 || !*arg1 || (!arg2 || !*arg2))
 	{
 		BotMessage(NULL, 0, "Usage: rcbot_debug <level> <1 : on, 0 : off>");
 		return BOT_CVAR_ERROR;
@@ -901,7 +901,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 		return BOT_CVAR_ERROR;
 	}
 
-	BOOL bSetting = (arg2 && *arg2); // is player setting the value or wanting details?
+	BOOL bSetting = arg2 && *arg2; // is player setting the value or wanting details?
 	float fSetVal = 0;
 
 	int iState = atoi(arg2);
@@ -1112,7 +1112,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 		{
 			int iRevs = atoi(arg2);
 
-			bSuccess = (iRevs > 0);
+			bSuccess = iRevs > 0;
 
 			if (bSuccess)
 			{
@@ -1141,7 +1141,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 		{
 			int iRevs = atoi(arg2);
 
-			bSuccess = (iRevs > 0);
+			bSuccess = iRevs > 0;
 
 			if (bSuccess)
 			{
@@ -1170,7 +1170,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 		{
 			float fTime = atof(arg2);
 
-			bSuccess = (fTime >= 0);
+			bSuccess = fTime >= 0;
 
 			if (bSuccess)
 			{
@@ -1375,7 +1375,7 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 	if (pClient)
 		pEntity = pClient->GetPlayer();
 
-	if ((pEntity == NULL) && (!arg1 || !*arg1))
+	if (pEntity == NULL && (!arg1 || !*arg1))
 	{
 		BotMessage(NULL, 0, "You must issue a player name");
 		return BOT_CVAR_ERROR;
@@ -1587,7 +1587,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 	iBotIndex = 0;
 
-	while ((iBotIndex < MAX_PLAYERS) && (gBotGlobals.m_Bots[iBotIndex].IsUsed()))
+	while (iBotIndex < MAX_PLAYERS && gBotGlobals.m_Bots[iBotIndex].IsUsed())
 		iBotIndex++;
 
 	if (iBotIndex >= 32)
@@ -1598,7 +1598,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 	pBot = &gBotGlobals.m_Bots[iBotIndex];
 
-	if ((gBotGlobals.m_iMaxBots != -1) && (gBotGlobals.m_iNumBots >= gBotGlobals.m_iMaxBots))
+	if (gBotGlobals.m_iMaxBots != -1 && gBotGlobals.m_iNumBots >= gBotGlobals.m_iMaxBots)
 	{
 		if (pBot)
 		{
@@ -1616,9 +1616,9 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	char szBotProfile[10]; // Store integer value of bot profile in string as filename
 	int iBotProfile = -1; // Store integer value of bot profile
 
-	BOOL arg1valid = (arg1 && *arg1);
-	BOOL arg2valid = (arg2 && *arg2);
-	BOOL arg3valid = (arg3 && *arg3);
+	BOOL arg1valid = arg1 && *arg1;
+	BOOL arg2valid = arg2 && *arg2;
+	BOOL arg3valid = arg3 && *arg3;
 
 	///////////////////////////////////
 	// get bots previous team / class
@@ -1642,7 +1642,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	{
 		iTeam = atoi(arg1);
 
-		if ((iTeam <= 0) || (iTeam > 5))
+		if (iTeam <= 0 || iTeam > 5)
 			iTeam = 5;
 
 		gBotGlobals.m_Bots[iBotIndex].m_Profile.m_iFavTeam = iTeam;
@@ -1651,7 +1651,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	{
 		iClass = atoi(arg2);
 
-		if ((iClass < 0) || (iClass > TFC_MAX_CLASSES))
+		if (iClass < 0 || iClass > TFC_MAX_CLASSES)
 			iClass = RANDOM_LONG(0, 9);
 
 		gBotGlobals.m_Bots[iBotIndex].m_Profile.m_iClass = iClass;
@@ -1847,7 +1847,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		pProfileToOpen = fopen(szProfileToOpen, "r");
 	}
 
-	if (pProfileToOpen && (iBotProfile != -1))
+	if (pProfileToOpen && iBotProfile != -1)
 	{
 		BotFunc_InitProfile(&gBotGlobals.m_Bots[iBotIndex].m_Profile);
 		gBotGlobals.m_Bots[iBotIndex].m_Profile.m_iProfileId = iBotProfile;
@@ -1918,9 +1918,9 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		while (i < len)
 		{
-			if ((i == (len - 1)) || (teamlist[i] == ';'))
+			if (i == len - 1 || teamlist[i] == ';')
 			{
-				if (i == (len - 1))
+				if (i == len - 1)
 				{
 					newteam[j++] = teamlist[i];
 					newteam[j] = 0;

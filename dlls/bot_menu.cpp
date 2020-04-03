@@ -394,9 +394,9 @@ void CBotMenu::Render(CClient* pClient)
 		if (m_Menus[i] != NULL)
 		{
 			if (i == 0)
-				iSlots |= (1 << 9);
+				iSlots |= 1 << 9;
 			else
-				iSlots |= (1 << (i - 1));
+				iSlots |= 1 << i - 1;
 
 			if (m_Menus[i]->HasNextMenu())
 				sprintf(szMenuItemText, "%d. %s...\n", i, m_Menus[i]->GetCaption());
@@ -749,7 +749,7 @@ void BotMenu_Func_KickBot(CClient* pClient)
 	{
 		pBot = &gBotGlobals.m_Bots[i];
 
-		if (!pBot->m_bIsUsed || !pBot->m_pEdict || (pBot->m_iRespawnState != RESPAWN_IDLE))
+		if (!pBot->m_bIsUsed || !pBot->m_pEdict || pBot->m_iRespawnState != RESPAWN_IDLE)
 			continue;
 
 		m_Bots.Add(pBot);

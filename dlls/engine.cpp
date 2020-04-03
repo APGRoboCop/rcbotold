@@ -105,7 +105,9 @@ int pfnPrecacheSound(char* s)
 }
 void pfnSetModel(edict_t* e, const char* m)
 {
-	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnSetModel: edict=%x %s\n", e, m); fclose(fp); }
+	if (debug_engine) { fp = fopen("bot.txt", "a");
+		fprintf(fp, "pfnSetModel: edict=%x %s\n", unsigned(e), m);
+		fclose(fp); }
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -134,7 +136,9 @@ int pfnModelFrames(int modelIndex)
 }
 void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 {
-	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnSetSize: %x\n", e); fclose(fp); }
+	if (debug_engine) { fp = fopen("bot.txt", "a");
+		fprintf(fp, "pfnSetSize: %x\n", unsigned(e));
+		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -312,7 +316,7 @@ void pfnRemoveEntity(edict_t* e)
 	if (debug_engine)
 	{
 		fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnRemoveEntity: %x\n", e);
+		fprintf(fp, "pfnRemoveEntity: %x\n", unsigned(e));
 		if (e->v.model != 0)
 			fprintf(fp, " model=%s\n", STRING(e->v.model));
 		fclose(fp);
@@ -399,9 +403,9 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 		{
 			if (entity->v.flags & FL_CLIENT)
 			{
-				if ((strncmp(sample, "speech/saveme", 13) == 0))
+				if (strncmp(sample, "speech/saveme", 13) == 0)
 					iSound = SOUND_NEEDHEALTH;
-				else if ((strncmp(sample, "speech/grenade", 14) == 0))
+				else if (strncmp(sample, "speech/grenade", 14) == 0)
 					iSound = SOUND_TAKE_COVER;
 			}
 		}
@@ -414,20 +418,20 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 		if (iSound == SOUND_UNKNOWN)
 		{
 			// common sounds, like doors etc.
-			if ((sample[0] == 'd') && !strncmp(sample, "doors/", 6))
+			if (sample[0] == 'd' && !strncmp(sample, "doors/", 6))
 				iSound = SOUND_DOOR;
-			else if ((sample[0] == 'p') && !strncmp(sample, "plats/", 6))
+			else if (sample[0] == 'p' && !strncmp(sample, "plats/", 6))
 				iSound = SOUND_DOOR;
-			else if ((sample[0] == 'w') && !strncmp(sample, "weapons/", 8))
+			else if (sample[0] == 'w' && !strncmp(sample, "weapons/", 8))
 				iSound = SOUND_WEAPON;
-			else if ((sample[0] == 'p') && !strncmp(sample, "player/", 7))
+			else if (sample[0] == 'p' && !strncmp(sample, "player/", 7))
 			{
 				if (strncmp(&sample[7], "pain", 4) == 0)
 					iSound = SOUND_PLAYER_PAIN;
 				else
 					iSound = SOUND_PLAYER;
 			}
-			else if ((sample[0] == 'b') && !strncmp(sample, "buttons/", 8))
+			else if (sample[0] == 'b' && !strncmp(sample, "buttons/", 8))
 				iSound = SOUND_BUTTON;
 		}
 
@@ -441,14 +445,14 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 				int sample_num = 0;
 
 				// Starts with "vox/" ?? (Do it manually...)
-				if ((sample[0] == 'v') && (sample[1] == 'o') &&
-					(sample[2] == 'x') && (sample[3] == '/'))
+				if (sample[0] == 'v' && sample[1] == 'o' &&
+					sample[2] == 'x' && sample[3] == '/')
 				{
 					if (!strncmp(&sample[4], "ssay", 4)) // Marine Said Something
 					{
 						sample_num = atoi(&sample[8]);
 
-						if ((sample_num > 10) && (sample_num < 20))
+						if (sample_num > 10 && sample_num < 20)
 							iSound = SOUND_FOLLOW;
 						else if (sample_num < 30)
 							iSound = SOUND_COVERING;
@@ -1326,7 +1330,9 @@ void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 		pBot->m_fMaxSpeed = fNewMaxspeed;
 	}
 
-	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", pEdict, fNewMaxspeed); fclose(fp); }
+	if (debug_engine) { fp = fopen("bot.txt", "a");
+		fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", unsigned(pEdict), fNewMaxspeed);
+		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1409,7 +1415,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 				{
 					pBot = &gBotGlobals.m_Bots[i];
 
-					if (pBot && (pBot->m_iRespawnState == RESPAWN_IDLE))
+					if (pBot && pBot->m_iRespawnState == RESPAWN_IDLE)
 					{
 						if (pBot->m_pEdict && pBot->m_bIsUsed)
 						{
@@ -1438,7 +1444,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 
 			int iFlags = pEdict->v.flags;
 
-			if ((iFlags & FL_CLIENT) && !(iFlags & FL_FAKECLIENT))
+			if (iFlags & FL_CLIENT && !(iFlags & FL_FAKECLIENT))
 			{
 				CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEdict);
 
@@ -1488,7 +1494,9 @@ int pfnGetPlayerUserId(edict_t* e)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnGetPlayerUserId: %x\n", e); fclose(fp); }
+		if (debug_engine) { fp = fopen("bot.txt", "a");
+			fprintf(fp, "pfnGetPlayerUserId: %x\n", unsigned(e));
+			fclose(fp); }
 	}
 
 #ifdef RCBOT_META_BUILD
@@ -1501,7 +1509,7 @@ int pfnGetPlayerUserId(edict_t* e)
 const char* pfnGetPlayerAuthId(edict_t* e)
 {
 	static const char* BOT_STEAM_ID = "BOT";
-	BOOL bIsBot = (UTIL_GetBotPointer(e) != NULL);
+	BOOL bIsBot = UTIL_GetBotPointer(e) != NULL;
 #ifdef RCBOT_META_BUILD
 
 	if (bIsBot)
@@ -1558,7 +1566,9 @@ unsigned int pfnGetPlayerWONId(edict_t* e)
 		}
 	}
 
-	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnGetPlayerWONId: %x\n", e); fclose(fp); }
+	if (debug_engine) { fp = fopen("bot.txt", "a");
+		fprintf(fp, "pfnGetPlayerWONId: %x\n", unsigned(e));
+		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1883,9 +1893,9 @@ const char* GetArg(const char* command, int arg_number)
 	length = strlen(command); // get length of command
 
 	// while we have not reached end of line
-	while ((index < length) && (arg_count <= arg_number))
+	while (index < length && arg_count <= arg_number)
 	{
-		while ((index < length) && (command[index] == ' '))
+		while (index < length && command[index] == ' ')
 			index++; // ignore spaces
 
 		// is this field multi-word between quotes or single word ?
@@ -1893,7 +1903,7 @@ const char* GetArg(const char* command, int arg_number)
 		{
 			index++; // move one step further to bypass the quote
 			fieldstart = index; // save field start position
-			while ((index < length) && (command[index] != '"'))
+			while (index < length && command[index] != '"')
 				index++; // reach end of field
 			fieldstop = index - 1; // save field stop position
 			index++; // move one step further to bypass the quote
@@ -1901,7 +1911,7 @@ const char* GetArg(const char* command, int arg_number)
 		else
 		{
 			fieldstart = index; // save field start position
-			while ((index < length) && (command[index] != ' '))
+			while (index < length && command[index] != ' ')
 				index++; // reach end of field
 			fieldstop = index - 1; // save field stop position
 		}
@@ -1917,5 +1927,5 @@ const char* GetArg(const char* command, int arg_number)
 		arg_count++; // we have processed one argument more
 	}
 
-	return (&arg[0]); // returns the wanted argument
+	return &arg[0]; // returns the wanted argument
 }

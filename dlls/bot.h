@@ -317,24 +317,24 @@ public:
 		return Rep.IsForPlayer(m_iPlayerRepId);
 	}
 
-	inline void UpdateRep(int iRep)
+	void UpdateRep(int iRep)
 	{
 		m_iRep = iRep;
 	}
 
-	inline int CurrentRep(void)
+	int CurrentRep(void)
 	{
 		return m_iRep;
 	}
 
-	inline int GetRepId(void)
+	int GetRepId(void)
 	{
 		return m_iPlayerRepId;
 	}
 
-	inline BOOL IsForPlayer(int iPlayerRepId)
+	BOOL IsForPlayer(int iPlayerRepId)
 	{
-		return (m_iPlayerRepId == iPlayerRepId);
+		return m_iPlayerRepId == iPlayerRepId;
 	}
 
 	void printRep(CBot* forBot, edict_t* pPrintTo);
@@ -746,57 +746,57 @@ public:
 		//m_pGoalTask = GoalTask;
 	}
 
-	inline BOOL TimedOut(void)
+	BOOL TimedOut(void)
 	{
 		if (m_fTimeToComplete != -1.0)
 		{
-			return (m_fTimeToComplete < gpGlobals->time);
+			return m_fTimeToComplete < gpGlobals->time;
 		}
 
 		return FALSE;
 	}
 
-	inline float TimeToComplete()
+	float TimeToComplete()
 	{
-		return (m_fTimeToComplete - gpGlobals->time);
+		return m_fTimeToComplete - gpGlobals->time;
 	}
 
-	inline void SetVector(Vector const vNewVector)
+	void SetVector(Vector const vNewVector)
 	{
 		m_vInfo = vNewVector;
 	}
 
-	inline void SetFloat(float fNewFloat)
+	void SetFloat(float fNewFloat)
 	{
 		m_fInfo = fNewFloat;
 	}
 
-	inline void ChangeScheduleDesc(eScheduleDesc iSchedDesc)
+	void ChangeScheduleDesc(eScheduleDesc iSchedDesc)
 	{
 		m_iScheduleDescription = iSchedDesc;
 	}
 
-	inline BOOL IsOfSchedule(eScheduleDesc iSchedDesc)
+	BOOL IsOfSchedule(eScheduleDesc iSchedDesc)
 	{
-		return (m_iScheduleDescription == iSchedDesc);
+		return m_iScheduleDescription == iSchedDesc;
 	}
 
-	inline void SetInt(int iNewInt)
+	void SetInt(int iNewInt)
 	{
 		m_iInfo = iNewInt;
 	}
 
-	inline eBotTask Task(void) const
+	eBotTask Task(void) const
 	{
 		return m_Task;
 	}
 
-	inline edict_t* TaskEdict(void) const
+	edict_t* TaskEdict(void) const
 	{
 		return m_pInfo.Get();
 	}
 
-	inline void SetEdict(edict_t* pEdict)
+	void SetEdict(edict_t* pEdict)
 	{
 		m_pInfo.Set(pEdict);
 	}
@@ -806,32 +806,32 @@ public:
 		return m_vInfo;
 	}
 
-	inline int TaskInt(void) const
+	int TaskInt(void) const
 	{
 		return m_iInfo;
 	}
 
-	inline float TaskFloat(void) const
+	float TaskFloat(void) const
 	{
 		return m_fInfo;
 	}
 
-	inline BOOL HasPath(void) const
+	BOOL HasPath(void) const
 	{
 		return m_bFoundPath;
 	}
 
-	inline void SetPathInfo(BOOL bPathFound)
+	void SetPathInfo(BOOL bPathFound)
 	{
 		m_bFoundPath = bPathFound;
 	}
 
-	inline void SetScheduleId(int iScheduleId)
+	void SetScheduleId(int iScheduleId)
 	{
 		m_iScheduleId = iScheduleId;
 	}
 
-	inline int GetScheduleId(void) const
+	int GetScheduleId(void) const
 	{
 		return m_iScheduleId;
 	}
@@ -1024,7 +1024,7 @@ public:
 		return "Unknown";
 	}
 
-	inline eScheduleDesc GetScheduleDesc()
+	eScheduleDesc GetScheduleDesc()
 	{
 		return m_iScheduleDescription;
 	}
@@ -1128,7 +1128,7 @@ public:
 
 		int i;
 
-		for (i = (iNumTasks - 1); i >= 0; i--)
+		for (i = iNumTasks - 1; i >= 0; i--)
 		{
 			pTasks[i].SetScheduleId(iNewScheduleId);
 			pTasks[i].ChangeScheduleDesc(iScheduleDescription);
@@ -1552,7 +1552,7 @@ typedef struct path {
 ////////////////////////////
 // Bot Profile Info
 
-typedef struct bot_profile_s
+typedef struct bot_profile_s 
 {
 	int m_iProfileId;
 
@@ -1621,17 +1621,17 @@ public:
 		m_bViolated = FALSE;
 	}
 
-	inline BOOL IsForPath(PATH* pPath) const
+	BOOL IsForPath(PATH* pPath) const
 	{
-		return (m_pPath == pPath);
+		return m_pPath == pPath;
 	}
 
-	inline void Violate(void)
+	void Violate(void)
 	{
 		m_bViolated = TRUE;
 	}
 
-	inline BOOL IsViolated(void) const
+	BOOL IsViolated(void) const
 	{
 		return m_bViolated;
 	}
@@ -1747,17 +1747,17 @@ public:
 		m_bVectorSet = TRUE;
 	}
 
-	inline Vector GetVector(void) const
+	Vector GetVector(void) const
 	{
 		return Vector((float)m_x, (float)m_y, (float)m_z);
 	}
 
-	inline BOOL IsVectorSet()
+	BOOL IsVectorSet()
 	{
 		return m_bVectorSet;
 	}
 
-	inline void UnSet()
+	void UnSet()
 	{
 		m_bVectorSet = FALSE;
 	}
@@ -1782,7 +1782,7 @@ public:
 		return m_iFlags;
 	}
 
-	inline void UnSetPoint()
+	void UnSetPoint()
 	{
 		m_bVectorSet = FALSE;
 		m_iFlags = 0;
@@ -1819,45 +1819,45 @@ public:
 
 	BOOL hasFlags(int flags)
 	{
-		return ((m_iFlags & flags) > 0);
+		return (m_iFlags & flags) > 0;
 	}
 
-	inline void setEntity(edict_t* pEntity)
+	void setEntity(edict_t* pEntity)
 	{
 		m_pEntity.Set(pEntity);
 	}
 
-	inline edict_t* getEntity(void)
+	edict_t* getEntity(void)
 	{
 		return m_pEntity.Get();
 	}
 
-	inline BOOL isEntity(edict_t* pEntity)
+	BOOL isEntity(edict_t* pEntity)
 	{
 		if (pEntity == NULL)
 			return FALSE;
 
-		return (pEntity == getEntity());
+		return pEntity == getEntity();
 	}
 
-	inline Vector getVector(void)
+	Vector getVector(void)
 	{
 		return m_vOrigin;
 	}
 
-	inline void setVisibleOrigin(Vector const vVis)
+	void setVisibleOrigin(Vector const vVis)
 	{
 		m_vVisibleOrigin = vVis;
 	}
 
-	inline Vector getVisibleOrigin()
+	Vector getVisibleOrigin()
 	{
 		return m_vVisibleOrigin;
 	}
 
-	inline BOOL operator == (CRememberPosition other)
+	BOOL operator == (CRememberPosition other)
 	{
-		return (other.getEntity() == getEntity());
+		return other.getEntity() == getEntity();
 	}
 
 private:
@@ -2037,7 +2037,7 @@ public:
 		for (int i = 0; i < m_Positions.Size(); i++)
 		{
 			if (m_Positions[i].hasFlags(flags))
-				return &(m_Positions[i]);
+				return &m_Positions[i];
 		}
 
 		return NULL;
@@ -2079,7 +2079,7 @@ public:
 		for (int i = 0; i < m_Positions.Size(); i++)
 		{
 			if (m_Positions[i].hasFlags(BOT_REMEMBER_SENTRY))
-				return &(m_Positions[i]);
+				return &m_Positions[i];
 		}
 
 		return NULL;
@@ -2087,12 +2087,12 @@ public:
 
 	BOOL gotPosition()
 	{
-		return (!m_Positions.IsEmpty());
+		return !m_Positions.IsEmpty();
 	}
 
 	CRememberPosition* getNewest()
 	{
-		return &(m_Positions[m_Positions.Size() - 1]);//[m_iNewest]);//.getVector();
+		return &m_Positions[m_Positions.Size() - 1];//[m_iNewest]);//.getVector();
 	}
 
 	CRememberPosition* positionNearest(Vector vOrigin, Vector vFrom)
@@ -2103,11 +2103,11 @@ public:
 
 		for (int i = 0; i < m_Positions.Size(); i++)
 		{
-			fDistance = ((m_Positions[i].getVector() - vOrigin).Length()) + ((m_Positions[i].getVector() - vFrom).Length());
+			fDistance = (m_Positions[i].getVector() - vOrigin).Length() + (m_Positions[i].getVector() - vFrom).Length();
 
-			if (!nearest || (fDistance < fNearest))
+			if (!nearest || fDistance < fNearest)
 			{
-				nearest = &(m_Positions[i]);
+				nearest = &m_Positions[i];
 				fNearest = fDistance;
 			}
 		}
@@ -2238,7 +2238,7 @@ public:
 
 	void ReturnAllToFormation(void);
 
-	inline void SetLeader(edict_t* pLeader)
+	void SetLeader(edict_t* pLeader)
 	{
 		m_pLeader.Set(pLeader);
 	}
@@ -2253,27 +2253,27 @@ public:
 			BotPrintTalkMessageOne(m_pLeader.Get(), "Squad is now HOLDING FIRE");
 	}
 
-	inline BOOL SquadCanShoot(void)
+	BOOL SquadCanShoot(void)
 	{
 		return bCanFire;
 	}
 
-	inline BOOL IsStealthMode(void)
+	BOOL IsStealthMode(void)
 	{
-		return (m_CombatType == COMBAT_STEALTH);
+		return m_CombatType == COMBAT_STEALTH;
 	}
 
-	inline BOOL IsProneMode(void)
+	BOOL IsProneMode(void)
 	{
-		return (m_CombatType == COMBAT_PRONE);
+		return m_CombatType == COMBAT_PRONE;
 	}
 
-	inline BOOL IsCrouchMode(void)
+	BOOL IsCrouchMode(void)
 	{
-		return (m_CombatType == COMBAT_CROUCH);
+		return m_CombatType == COMBAT_CROUCH;
 	}
 
-	inline edict_t* GetLeader(void) const
+	edict_t* GetLeader(void) const
 	{
 		return static_cast<edict_t*>(m_pLeader.Get());
 	}
@@ -2350,9 +2350,9 @@ public:
 		}
 	}
 
-	inline BOOL IsLeader(edict_t* pLeader) const
+	BOOL IsLeader(edict_t* pLeader) const
 	{
-		return (GetLeader() == pLeader);
+		return GetLeader() == pLeader;
 	}
 
 	void AddMember(edict_t* pEdict)
@@ -2405,22 +2405,22 @@ public:
 		return FALSE;
 	}
 
-	inline BOOL isFormation(eSquadForm theFormation)
+	BOOL isFormation(eSquadForm theFormation)
 	{
 		return m_theDesiredFormation == theFormation;
 	}
 
-	inline void ChangeFormation(eSquadForm theNewFormation)
+	void ChangeFormation(eSquadForm theNewFormation)
 	{
 		m_theDesiredFormation = theNewFormation;
 	}
 
-	inline float GetSpread(void) const
+	float GetSpread(void) const
 	{
 		return m_fDesiredSpread;
 	}
 
-	inline void ChangeSpread(float fNewSpread)
+	void ChangeSpread(float fNewSpread)
 	{
 		m_fDesiredSpread = fNewSpread;
 	}
@@ -2490,22 +2490,22 @@ public:
 
 	BOOL givesHealth(int val)
 	{
-		return (m_iHealth >= val);
+		return m_iHealth >= val;
 	}
 
 	BOOL givesAmmo(int val)
 	{
-		return (m_iAmmo >= val);
+		return m_iAmmo >= val;
 	}
 
 	BOOL givesArmor(int val)
 	{
-		return (m_iArmor >= val);
+		return m_iArmor >= val;
 	}
 
 	BOOL givesCells(int val)
 	{
-		return (m_iCells >= val);
+		return m_iCells >= val;
 	}
 
 	edict_t* getEdict()
@@ -2515,7 +2515,7 @@ public:
 
 	BOOL isEdict(edict_t* pEdict)
 	{
-		return (m_pEdict == pEdict);
+		return m_pEdict == pEdict;
 	}
 
 	void setHealth(int val)
@@ -2543,7 +2543,7 @@ public:
 		if (m_iTeam == 0)
 			return TRUE; // any team
 
-		return (m_iTeam == team);
+		return m_iTeam == team;
 	}
 
 	void setTeam(int team)
@@ -2763,7 +2763,7 @@ public:
 		return m_iId == m_iId;
 	}
 	/*/guurk*/
-	inline int getID() { return m_iId; }
+	int getID() { return m_iId; }
 
 	Vector getOrigin() { return m_vOrigin; }
 private:
@@ -3102,7 +3102,7 @@ public:
 
 	BOOL hasFlag()
 	{
-		return (m_bHasFlag && m_pFlag);
+		return m_bHasFlag && m_pFlag;
 	}
 
 	edict_t* getSentry();
@@ -3158,7 +3158,7 @@ public:
 		return m_stSquad;
 	}
 
-	inline BOOL onGround()
+	BOOL onGround()
 	{
 		return UTIL_OnGround(pev);
 	}
@@ -3327,20 +3327,20 @@ public:
 
 	// Use secondary attack for one time only..
 	// not a worky??!
-	inline void UseRPGLaser(void)
+	void UseRPGLaser(void)
 	{
 		AddPriorityTask(CBotTask(BOT_TASK_SECONDARY_ATTACK, 0));
 	}
 
-	inline BOOL IsSquadLeader(void)
+	BOOL IsSquadLeader(void)
 	{
-		return (!m_pSquadLeader && m_stSquad);
+		return !m_pSquadLeader && m_stSquad;
 	}
 
 	BOOL IsHoldingMiniGun(void);
 
 	// temporary storage to later pick up weapons needed
-	inline void SetWeaponsNeeded(short int* iArray)
+	void SetWeaponsNeeded(short int* iArray)
 	{
 		memcpy(m_iWeaponsNeeded, iArray, sizeof(short int) * MAX_WEAPONS);
 	}
@@ -3367,15 +3367,15 @@ public:
 	BOOL CanAddToSquad(edict_t* pLeader);
 
 	// is used in the game?
-	inline BOOL IsUsed(void)
+	BOOL IsUsed(void)
 	{
-		return (m_bIsUsed && m_pEdict);
+		return m_bIsUsed && m_pEdict;
 	}
 
 	// is in the squad "theSquad"?
-	inline BOOL InSquad(CBotSquad* theSquad)
+	BOOL InSquad(CBotSquad* theSquad)
 	{
-		return (theSquad == m_stSquad);
+		return theSquad == m_stSquad;
 	}
 
 	// remove squad from bot
@@ -3391,17 +3391,17 @@ public:
 		m_stSquad = theSquad;
 	}
 
-	inline void SetVGUIState(int iVguiMenu)
+	void SetVGUIState(int iVguiMenu)
 	{
 		m_iVguiMenu = iVguiMenu;
 	}
 
-	inline BOOL BotWantsCombatItem(int iCombatItem)
+	BOOL BotWantsCombatItem(int iCombatItem)
 	{
 		return (m_iCombatInfo & iCombatItem) > 0;
 	}
 
-	inline void SetWantCombatItem(int iCombatItem, BOOL bSet)
+	void SetWantCombatItem(int iCombatItem, BOOL bSet)
 	{
 		if (bSet)
 			m_iCombatInfo |= iCombatItem;
@@ -3540,7 +3540,7 @@ public:
 		tempStack = m_stBotPaths;
 		iNextWaypoint = m_iCurrentWaypointIndex;
 
-		while (!tempStack.IsEmpty() && (iNextWaypoint == m_iCurrentWaypointIndex))
+		while (!tempStack.IsEmpty() && iNextWaypoint == m_iCurrentWaypointIndex)
 		{
 			iNextWaypoint = tempStack.ChooseFromStack();
 		}
@@ -3568,21 +3568,21 @@ public:
 	}
 
 	// get the angles....
-	inline Vector GetLadderAngles(void)
+	Vector GetLadderAngles(void)
 	{
 		return m_vLadderAngles;
 	}
 
 	// if we have set ladder angles?
-	inline BOOL LadderAnglesSet(void)
+	BOOL LadderAnglesSet(void)
 	{
 		return m_bLadderAnglesSet;
 	}
 
 	// >?
-	inline BOOL LadderMovementSet(void)
+	BOOL LadderMovementSet(void)
 	{
-		return (m_iLadderButtons != 0);
+		return m_iLadderButtons != 0;
 	}
 
 	//////////////////////////
@@ -3592,14 +3592,14 @@ public:
 	int m_iQuakeItems;
 
 	// returns TRUE if bot picked up invulnerabilty
-	inline BOOL DMC_HasInvulnerability(void)
+	BOOL DMC_HasInvulnerability(void)
 	{
-		return ((m_iQuakeItems & (1 << DMC_INVULNERABILITY)) > 0);
+		return (m_iQuakeItems & 1 << DMC_INVULNERABILITY) > 0;
 	}
 
-	inline BOOL DMC_HasInvisibility(void)
+	BOOL DMC_HasInvisibility(void)
 	{
-		return ((m_iQuakeItems & (1 << DMC_INVISIBILITY)) > 0);
+		return (m_iQuakeItems & 1 << DMC_INVISIBILITY) > 0;
 	}
 
 	///////////////////////////
@@ -3877,14 +3877,14 @@ public:
 
 	float DotProductFromOrigin(Vector* pOrigin);
 
-	inline Vector GetGunPosition(void)
+	Vector GetGunPosition(void)
 	{
-		return (pev->origin + pev->view_ofs);
+		return pev->origin + pev->view_ofs;
 	}
 
-	inline BOOL     IsAlive(void)
+	BOOL     IsAlive(void)
 	{
-		return ((pev->deadflag == DEAD_NO) && (pev->health > 0));
+		return pev->deadflag == DEAD_NO && pev->health > 0;
 	}
 
 	BOOL     SwitchWeapon(int iId);
@@ -3893,17 +3893,17 @@ public:
 	{
 		if (m_pCurrentWeapon == NULL)
 			return FALSE;
-		return (m_pCurrentWeapon->GetID() == iId);
+		return m_pCurrentWeapon->GetID() == iId;
 	}
 	// ----------------------------------------------------------
 	// Flashlight functions for putting a flashlight on or off
 
-	inline BOOL     FlashlightIsOn(void)
+	BOOL     FlashlightIsOn(void)
 	{
-		return ((pev->effects & EF_DIMLIGHT) == EF_DIMLIGHT);
+		return (pev->effects & EF_DIMLIGHT) == EF_DIMLIGHT;
 	};
 
-	inline void     FlashlightTurnOn(void)
+	void     FlashlightTurnOn(void)
 	{
 		if (!FlashlightIsOn())  // If flashlight is already on, we dont want to turn it off!
 		{
@@ -3911,7 +3911,7 @@ public:
 		}
 	};
 
-	inline void     FlashlightTurnOff(void)
+	void     FlashlightTurnOff(void)
 	{
 		if (FlashlightIsOn())
 		{
@@ -3927,12 +3927,12 @@ public:
 
 	void ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
 
-	inline BOOL IsOnLadder(void)
+	BOOL IsOnLadder(void)
 	{
-		return (pev->movetype == MOVETYPE_FLY);
+		return pev->movetype == MOVETYPE_FLY;
 	};
 
-	inline void     Jump(void)
+	void     Jump(void)
 	{
 		pev->button |= IN_JUMP;
 	}
@@ -3940,11 +3940,11 @@ public:
 	// if bot can fly, this will return true
 	BOOL CanFly(void)
 	{
-		return (IsLerk() || (IsMarine() && HasJetPack()));
+		return IsLerk() || IsMarine() && HasJetPack();
 	}
 
 	// set crouch button
-	inline void     Duck(void)
+	void     Duck(void)
 	{
 		pev->button |= IN_DUCK;
 	}
@@ -3965,17 +3965,17 @@ public:
 		return TRUE;
 	};
 
-	inline void Use(void)
+	void Use(void)
 	{
 		pev->button |= IN_USE;
 	};
 
-	inline void AltButton(void)
+	void AltButton(void)
 	{
 		pev->button |= IN_ALT1;
 	};
 
-	inline void Reload(void)
+	void Reload(void)
 	{
 		pev->button |= IN_RELOAD;
 	};
@@ -3984,17 +3984,17 @@ public:
 	// Bot Conditions
 	// Functions for setting, checking and removing conditions
 
-	inline void     UpdateCondition(int iCondition)
+	void     UpdateCondition(int iCondition)
 	{
 		m_ibBotConditions |= iCondition;
 	}
 
-	inline BOOL     HasCondition(int iCondition)
+	BOOL     HasCondition(int iCondition)
 	{
-		return ((m_ibBotConditions & iCondition) == iCondition);
+		return (m_ibBotConditions & iCondition) == iCondition;
 	}
 
-	inline void     RemoveCondition(int iCondition)
+	void     RemoveCondition(int iCondition)
 	{
 		m_ibBotConditions &= ~iCondition;
 	}
@@ -4084,9 +4084,9 @@ public:
 
 	BOOL     IsInReadyRoom(void);
 
-	inline float NS_AmountOfEnergy(void)
+	float NS_AmountOfEnergy(void)
 	{
-		return (pev->fuser3 / 10.0);
+		return pev->fuser3 / 10.0;
 	}
 
 	BOOL     IsCommander(void);
@@ -4117,7 +4117,7 @@ public:
 	void     BotSay(const char* msg);//, const char *arg1, int team_only );
 
 	// returns true when a bot is skulk and is sticking to a wall in NS mod.
-	inline BOOL     IsWallSticking(void) { return (((pev->iuser4 & MASK_WALLSTICKING) == MASK_WALLSTICKING) && ((pev->flags & FL_ONGROUND) == 0) && (pev->waterlevel < 2)); };
+	BOOL     IsWallSticking(void) { return (pev->iuser4 & MASK_WALLSTICKING) == MASK_WALLSTICKING && (pev->flags & FL_ONGROUND) == 0 && pev->waterlevel < 2; };
 
 	BOOL hasWeb();
 	BOOL hasBlink();
@@ -4125,8 +4125,8 @@ public:
 	// returns TRUE when bot thinks it is low on ammunition on its current weapon.
 	BOOL     LowOnAmmo(void);
 
-	inline BOOL     HasJetPack(void) { return (IsMarine() && ((pev->iuser4 & MASK_UPGRADE_7) == MASK_UPGRADE_7)); };
-	inline BOOL     HasUser4Mask(int iBits) { return ((pev->iuser4 & iBits) == iBits); };
+	BOOL     HasJetPack(void) { return IsMarine() && (pev->iuser4 & MASK_UPGRADE_7) == MASK_UPGRADE_7; };
+	BOOL     HasUser4Mask(int iBits) { return (pev->iuser4 & iBits) == iBits; };
 
 	/* Commander stuff */
 
@@ -4145,9 +4145,9 @@ public:
 	BOOL     HasWeapon(int iWeapon);
 
 	// Does bot have ANY weapons?
-	inline BOOL     HasWeapons(void)
+	BOOL     HasWeapons(void)
 	{
-		return (m_iBotWeapons == 0);
+		return m_iBotWeapons == 0;
 	}
 
 	//edict_t *m_pTeleExit;
@@ -4300,7 +4300,7 @@ public:
 		assert(iHashValue >= 0);
 		assert(iHashValue < STRING_HASHES);
 
-		if ((iHashValue < 0) || (iHashValue >= STRING_HASHES))
+		if (iHashValue < 0 || iHashValue >= STRING_HASHES)
 			return NULL; // problem...
 
 		dataStack<char*> s_tempStack = szStringsHead[iHashValue];
@@ -4324,7 +4324,7 @@ public:
 
 		//BotFunc_StringCopy(szNewString,szString);
 
-		szNewString = static_cast<char*>(malloc((sizeof(char) * strlen(szString)) + 1));
+		szNewString = static_cast<char*>(malloc(sizeof(char) * strlen(szString) + 1));
 		strcpy(szNewString, szString);
 
 		szStringsHead[iHashValue].Push(szNewString);
@@ -4415,7 +4415,7 @@ public:
 
 	BOOL IsUsed(void)
 	{
-		return (m_pPlayer != NULL);
+		return m_pPlayer != NULL;
 	}
 
 	void SetAccessLevel(int iAccessLevel)
@@ -4430,7 +4430,7 @@ public:
 
 	BOOL IsPlayer(edict_t* pPlayer)
 	{
-		return (m_pPlayer == pPlayer);
+		return m_pPlayer == pPlayer;
 	}
 
 	edict_t* GetPlayer(void) const
@@ -4444,7 +4444,7 @@ public:
 		if (szPlayerName == const_cast<char*>(STRING(m_pPlayer->v.netname)))
 			return TRUE;
 
-		return (strcmp(szPlayerName, STRING(m_pPlayer->v.netname)) == 0);
+		return strcmp(szPlayerName, STRING(m_pPlayer->v.netname)) == 0;
 	}
 
 	unsigned int GetWonId(void)
@@ -4489,10 +4489,10 @@ public:
 		return m_vTeleportVector;
 	}
 
-	inline void addCmd(int cmd) { m_iCmd |= cmd; }
-	inline void remCmd(int cmd) { m_iCmd &= ~cmd; }
-	inline BOOL hasCmd(int cmd) { return (m_iCmd & cmd) == cmd; }
-	inline void toggleCmd(int cmd) { if (hasCmd(cmd)) remCmd(cmd); else addCmd(cmd); }
+	void addCmd(int cmd) { m_iCmd |= cmd; }
+	void remCmd(int cmd) { m_iCmd &= ~cmd; }
+	BOOL hasCmd(int cmd) { return (m_iCmd & cmd) == cmd; }
+	void toggleCmd(int cmd) { if (hasCmd(cmd)) remCmd(cmd); else addCmd(cmd); }
 
 	void FreeGlobalMemory(void);
 
@@ -4534,15 +4534,15 @@ public:
 	}
 
 	// check if player has already had this tool-tip sent to them
-	inline BOOL HasToolTipSent(eToolTip iToolTip)
+	BOOL HasToolTipSent(eToolTip iToolTip)
 	{
-		return ((m_iToolTipsSent & (1 << (int)iToolTip)) != 0);
+		return (m_iToolTipsSent & 1 << (int)iToolTip) != 0;
 	}
 
 	// sets that the tool tip has been sent
-	inline void ToolTipSent(eToolTip iToolTip)
+	void ToolTipSent(eToolTip iToolTip)
 	{
-		m_iToolTipsSent |= (1 << (int)iToolTip);
+		m_iToolTipsSent |= 1 << (int)iToolTip;
 	}
 
 	// sets auto waypoint on/off or toggle
@@ -4558,11 +4558,11 @@ public:
 			m_bAutoWaypoint = !m_bAutoWaypoint;
 		else
 		{
-			m_bAutoWaypoint = (state > 0);
+			m_bAutoWaypoint = state > 0;
 		}
 	}
 
-	inline BOOL IsAutoWaypointOn()
+	BOOL IsAutoWaypointOn()
 	{
 		return m_bAutoWaypoint;
 	}
@@ -4716,7 +4716,7 @@ public:
 
 	CClient* GetClientByIndex(int iIndex)
 	{
-		if ((iIndex >= 0) && (iIndex < MAX_PLAYERS))
+		if (iIndex >= 0 && iIndex < MAX_PLAYERS)
 			return &m_Clients[iIndex];
 
 		return NULL;
@@ -4801,14 +4801,14 @@ public:
 
 	BOOL steamID_defined()
 	{
-		return (m_szSteamId[0] != 0);
+		return m_szSteamId[0] != 0;
 	}
 
 	BOOL IsForSteamID(char* steamID)
 	{
 		// gotta take care if no steam id is mentioned, could be WON we are playing
-		if ((steamID && *steamID) && (m_szSteamId && *m_szSteamId))
-			return (strcmp(m_szSteamId, steamID) == 0);
+		if (steamID && *steamID && (m_szSteamId && *m_szSteamId))
+			return strcmp(m_szSteamId, steamID) == 0;
 
 		return FALSE;
 	}
@@ -4816,12 +4816,12 @@ public:
 	BOOL operator == (CAllowedPlayer player)
 	{
 		// = Steam ID , or = name + password
-		return (player.IsForSteamID(m_szSteamId) || (player.IsForName(m_szName) && player.IsForPass(m_szPass)));
+		return player.IsForSteamID(m_szSteamId) || player.IsForName(m_szName) && player.IsForPass(m_szPass);
 	}
 
 	BOOL IsForName(const char* szName) const
 	{
-		return (strcmp(szName, m_szName) == 0);
+		return strcmp(szName, m_szName) == 0;
 	}
 
 	BOOL IsForPass(const char* szPass /*const unsigned int iWonId*/) const
@@ -4940,7 +4940,7 @@ public:
 		m_szCvarName = NULL;
 	}
 
-	inline const char* GetCommandName(void)
+	const char* GetCommandName(void)
 	{
 		return m_szCvarName;
 	}
@@ -4952,7 +4952,7 @@ public:
 
 	BOOL error()
 	{
-		return (!m_bCanUseOnDedicatedServer && IS_DEDICATED_SERVER());
+		return !m_bCanUseOnDedicatedServer && IS_DEDICATED_SERVER();
 	}
 
 	void setupCommand(const char* szCvarName, int iAccessLevel, BOOL bCanUseOnDedicatedServer = TRUE);
@@ -4960,7 +4960,7 @@ public:
 	BOOL needAccess(int iAccessLevel)
 	{
 		if (m_iAccessLevel > 0)
-			return ((iAccessLevel & m_iAccessLevel) == 0);
+			return (iAccessLevel & m_iAccessLevel) == 0;
 
 		return FALSE;
 	}
@@ -4971,7 +4971,7 @@ public:
 			return TRUE; // Same pointers, same string
 
 		// other wise do a string compare
-		return (strcmp(szCvarName, m_szCvarName) == 0);
+		return strcmp(szCvarName, m_szCvarName) == 0;
 	}
 
 	virtual void showHelp(edict_t* pEntity)
@@ -5097,7 +5097,7 @@ public:
 
 	BOOL IsForMod(const char* szFolder)
 	{
-		return (strcmpi(szFolder, m_szModFolder) == 0);
+		return strcmpi(szFolder, m_szModFolder) == 0;
 	}
 
 	int GetModId(void)
@@ -5209,7 +5209,7 @@ public:
 
 	BOOL IsForEntity(edict_t* pEntity)
 	{
-		return (m_pEntity == pEntity);
+		return m_pEntity == pEntity;
 	}
 
 	eMasterType CanFire(edict_t* pActivator);
@@ -5325,7 +5325,7 @@ public:
 
 	BOOL IsUnderAttack(void)
 	{
-		return (m_fEndAttack > gpGlobals->time);
+		return m_fEndAttack > gpGlobals->time;
 	}
 
 	void UnderAttack(void)
@@ -5350,8 +5350,8 @@ public:
 
 	BOOL IsValid(void)
 	{
-		return (m_pEntity && !m_pEntity->free &&
-			m_pEntity->v.health && (EntityIsAlienStruct(m_pEntity) || EntityIsMarineStruct(m_pEntity)));
+		return m_pEntity && !m_pEntity->free &&
+			m_pEntity->v.health && (EntityIsAlienStruct(m_pEntity) || EntityIsMarineStruct(m_pEntity));
 	}
 
 	int GetStructureType(void)
@@ -5366,7 +5366,7 @@ public:
 
 	BOOL operator == (CStructure pStruct)
 	{
-		return (m_pEntity == pStruct.GetEntity());
+		return m_pEntity == pStruct.GetEntity();
 	}
 
 private:
@@ -5621,7 +5621,7 @@ public:
 		if (!m_pCurrentBot)
 			return FALSE;
 
-		return (m_pCurrentBot->m_pEnemy != NULL);
+		return m_pCurrentBot->m_pEnemy != NULL;
 	}
 
 	void SetCurrentBot(CBot* pBot)
@@ -5667,57 +5667,57 @@ public:
 		m_pEntity = pEntity;
 	}
 
-	inline BOOL isEdict(edict_t* pEdict)
+	BOOL isEdict(edict_t* pEdict)
 	{
-		return (m_pEntity == pEdict);
+		return m_pEntity == pEdict;
 	}
 
-	inline void setTeam(int team)
+	void setTeam(int team)
 	{
 		m_iTeam = team;
 	}
 
-	inline BOOL isForTeam(int team)
+	BOOL isForTeam(int team)
 	{
 		return m_iTeam == team;
 	}
 
-	inline void setGoal(int goal)
+	void setGoal(int goal)
 	{
 		m_iGoal = goal;
 	}
 
-	inline void setGroup(int group)
+	void setGroup(int group)
 	{
 		m_iGroup = group;
 	}
 
-	inline int getGroup()
+	int getGroup()
 	{
 		return m_iGroup;
 	}
 
-	inline int getTeam()
+	int getTeam()
 	{
 		return m_iTeam;
 	}
 
-	inline int getGoal()
+	int getGoal()
 	{
 		return m_iGoal;
 	}
 
-	inline BOOL isForGroup(int iGroup)
+	BOOL isForGroup(int iGroup)
 	{
 		return m_iGroup;
 	}
 
-	inline BOOL isForGoal(int goal)
+	BOOL isForGoal(int goal)
 	{
 		return m_iGoal == goal;
 	}
 
-	inline edict_t* edict()
+	edict_t* edict()
 	{
 		return m_pEntity;
 	}
@@ -5843,9 +5843,9 @@ public:
 				bValid = FALSE;
 
 				if (bEnemyFlag) // for demoman, e.g., to pipe enemy flags
-					bValid = (pGotFlag->getTeam() && !pGotFlag->isForTeam(team));
+					bValid = pGotFlag->getTeam() && !pGotFlag->isForTeam(team);
 				else
-					bValid = (pGotFlag->isForTeam(0) || pGotFlag->isForTeam(team));
+					bValid = pGotFlag->isForTeam(0) || pGotFlag->isForTeam(team);
 
 				if (bValid)
 				{
@@ -5894,7 +5894,7 @@ public:
 
 			edict_t* pFlag = pGotFlag->edict();
 
-			if (pFlag->v.owner && (UTIL_GetTeam(pFlag->v.owner) == team))
+			if (pFlag->v.owner && UTIL_GetTeam(pFlag->v.owner) == team)
 			{
 				tempStack.Init();
 				return pFlag;
@@ -6069,12 +6069,12 @@ public:
 		m_iRad = iRadius;
 	}
 
-	inline BOOL operator == (CBotNSTech const other)
+	BOOL operator == (CBotNSTech const other)
 	{
 		return other.getID() == getID();
 	}
 
-	inline AvHMessageID getID() const
+	AvHMessageID getID() const
 	{
 		return m_iMessageId;
 	}
@@ -6126,7 +6126,7 @@ public:
 		for (int i = 0; i < m_Techs.Size(); i++)
 		{
 			if (m_Techs[i].getCost() < iMaxCost)
-				pvTechs.Add(&(m_Techs[i]));
+				pvTechs.Add(&m_Techs[i]);
 		}
 	}
 
@@ -6187,7 +6187,7 @@ public:
 	}
 	void ReadBotFolder(void);
 
-	inline TraceResult* Traceline(Vector& vecStart, Vector& vecEnd, IGNORE_MONSTERS igmon, IGNORE_GLASS ignoreGlass, edict_t* pentIgnore)
+	TraceResult* Traceline(Vector& vecStart, Vector& vecEnd, IGNORE_MONSTERS igmon, IGNORE_GLASS ignoreGlass, edict_t* pentIgnore)
 	{
 		UTIL_TraceLine(vecStart, vecEnd, igmon, ignoreGlass, pentIgnore, &m_tr);
 
@@ -6202,7 +6202,7 @@ public:
 		// returns a True value if the config setting iConfigSetting
 		// is On, False if Off..
 	{
-		return ((m_iConfigSettings & iConfigSetting) > 0);
+		return (m_iConfigSettings & iConfigSetting) > 0;
 	}
 
 	void ChangeConfigSetting(int iConfigSetting, int State)
@@ -6228,7 +6228,7 @@ public:
 	void MapInit(void);
 
 	//quicker "is NS" test
-	inline BOOL IsNS(void)
+	BOOL IsNS(void)
 	{
 		return m_bIsNS;
 	}
@@ -6250,12 +6250,12 @@ public:
 		return iNum;
 	}
 
-	inline edict_t* GetCommander(void)
+	edict_t* GetCommander(void)
 	{
 		return m_pCommander.Get();
 	}
 
-	inline void SetCommander(edict_t* pComm)
+	void SetCommander(edict_t* pComm)
 	{
 		m_pCommander.Set(pComm);
 	}
@@ -6448,17 +6448,18 @@ public:
 
 	void LoadBotModels(void);
 
+	//Initialise those variables needed added below [APG]RoboCop[CL]
 	CBotGlobals()
 	{
 		//Init();
 	}
 
-	inline void SayToolTip(edict_t* pEntity, eToolTip tooltip)
+	void SayToolTip(edict_t* pEntity, eToolTip tooltip)
 	{
 		UTIL_BotToolTip(pEntity, m_iLanguage, tooltip);
 	}
 
-	inline BOOL IsMod(int iMod)
+	BOOL IsMod(int iMod)
 	{
 		return m_iCurrentMod == iMod;
 	}
@@ -6467,18 +6468,18 @@ public:
 
 	const char* GetModInfo(void);
 
-	inline BOOL IsDebugLevelOn(int iDebugLevel)
+	BOOL IsDebugLevelOn(int iDebugLevel)
 	{
-		return ((m_iDebugLevels & iDebugLevel) > 0);
+		return (m_iDebugLevels & iDebugLevel) > 0;
 	}
 
 	void KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd);
 
 	BOOL TFC_IsAvailableFlag(edict_t* pFlag, int team, BOOL bEnemyFlag = FALSE);
 
-	inline BOOL TFC_teamsAreAllies(int team1, int team2)
+	BOOL TFC_teamsAreAllies(int team1, int team2)
 	{
-		return (team_allies[team1] & (1 << (team2 - 1)));
+		return team_allies[team1] & 1 << team2 - 1;
 	}
 
 	BOOL TFC_playerHasFlag(edict_t* pPlayer);
@@ -6687,7 +6688,7 @@ public:
 
 	BOOL isMapType(eTFCMapType theMapType)
 	{
-		return (theMapType == m_TFCMapType);
+		return theMapType == m_TFCMapType;
 	}
 
 	edict_t* findBackpack(Vector const location, int team, int min_health, int min_cells, int min_armor, int min_ammo)

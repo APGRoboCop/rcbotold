@@ -104,7 +104,7 @@ BOOL CBotWeapon::CanReload(void)
 
 	if (m_iAmmo1)
 	{
-		return (*m_iAmmo1 > 0);
+		return *m_iAmmo1 > 0;
 	}
 
 	return FALSE;
@@ -156,10 +156,10 @@ void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
 			int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
 			int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
 
-			if (iAmmoList && (iAmmoIndex1 != -1))
+			if (iAmmoList && iAmmoIndex1 != -1)
 				m_iAmmo1 = &iAmmoList[iAmmoIndex1];
 
-			if (iAmmoList && (iAmmoIndex2 != -1))
+			if (iAmmoList && iAmmoIndex2 != -1)
 				m_iAmmo2 = &iAmmoList[iAmmoIndex2];
 		}
 	}
@@ -177,7 +177,7 @@ void CBotWeapons::AddWeapon(int iId)
 
 void CWeapons::AddWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int iSecAmmoMax, int iHudSlot, int iHudPosition, int iFlags, int iAmmoIndex1, int iAmmoIndex2)
 {
-	if ((iId >= 0) && (iId < MAX_WEAPONS))
+	if (iId >= 0 && iId < MAX_WEAPONS)
 	{
 		if (m_Weapons[iId] == NULL)
 		{
@@ -255,7 +255,7 @@ void CWeaponPresets::ReadPresets(void)
 
 		if (sscanf(buffer, "[mod_id=%d]", &iValue) == 1)
 		{
-			bSkipMod = (iValue != gBotGlobals.m_iCurrentMod);
+			bSkipMod = iValue != gBotGlobals.m_iCurrentMod;
 
 			if (!bSkipMod)
 				iModId = iValue;
@@ -447,10 +447,10 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 
 	BOOL bEnemyIsElectrified = FALSE;
 	BOOL bEnemyTooHigh = FALSE;
-	BOOL bUnderwater = (pEdict->v.waterlevel == 3);
-	BOOL bIsDMC = (gBotGlobals.m_iCurrentMod == MOD_DMC);
+	BOOL bUnderwater = pEdict->v.waterlevel == 3;
+	BOOL bIsDMC = gBotGlobals.m_iCurrentMod == MOD_DMC;
 
-	BOOL bIsBattleGrounds = (gBotGlobals.m_iCurrentMod == MOD_BG);
+	BOOL bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
 	BOOL bWantToMelee = FALSE;
 
 	short int iAllowedWeapons[MAX_WEAPONS];
@@ -462,7 +462,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	{
 		vEnemyOrigin = EntityOrigin(pEnemy);
 		fEnemyDist = pBot->DistanceFrom(vEnemyOrigin);
-		bEnemyTooHigh = (vEnemyOrigin.z > (pBot->pev->origin.z + MAX_JUMP_HEIGHT));
+		bEnemyTooHigh = vEnemyOrigin.z > pBot->pev->origin.z + MAX_JUMP_HEIGHT;
 	}
 	else
 	{
@@ -477,7 +477,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		{
 			if (pEnemy)
 			{
-				if ((pEnemy->v.iuser3 == AVH_USER3_BREAKABLE) || EntityIsMarineStruct(pEnemy))
+				if (pEnemy->v.iuser3 == AVH_USER3_BREAKABLE || EntityIsMarineStruct(pEnemy))
 				{
 					// cant leap structures etc...
 					iAllowedWeapons[NS_WEAPON_UMBRA] = 0;
@@ -514,7 +514,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 
 		break;
 	case MOD_TFC:
-		if (pEnemy && (pEnemy->v.flags & FL_MONSTER))
+		if (pEnemy && pEnemy->v.flags & FL_MONSTER)
 		{
 			iAllowedWeapons[TF_WEAPON_MEDIKIT] = 0;
 		}
@@ -530,10 +530,10 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		{
 			// want to melee true if needing to reload OR enemy within melee range
 			// AND random factor due to skill
-			BOOL bMeleeRangeCheck = (pEnemy && (fEnemyDist < 80.0));
-			BOOL bMaxRangeCheck = (pEnemy && (fEnemyDist < 512.0));
+			BOOL bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0;
+			BOOL bMaxRangeCheck = pEnemy && fEnemyDist < 512.0;
 
-			bWantToMelee = ((bMeleeRangeCheck || (pBot->m_pCurrentWeapon->NeedToReload()) && (RANDOM_LONG(MIN_BOT_SKILL, MAX_BOT_SKILL) < pBot->m_Profile.m_iSkill)) && bMaxRangeCheck);
+			bWantToMelee = (bMeleeRangeCheck || pBot->m_pCurrentWeapon->NeedToReload() && RANDOM_LONG(MIN_BOT_SKILL, MAX_BOT_SKILL) < pBot->m_Profile.m_iSkill) && bMaxRangeCheck;
 		}
 
 		if (pEnemy != NULL)
@@ -606,7 +606,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 			else
 			{
 				// probably electrified
-				bEnemyIsElectrified = (pEnemy->v.iuser4 & MASK_UPGRADE_11);
+				bEnemyIsElectrified = pEnemy->v.iuser4 & MASK_UPGRADE_11;
 			}
 			break;
 		default:
@@ -635,7 +635,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		}*/
 
 		// use the weapon code to see if we have the weapon in DMC
-		if ((!bIsDMC && !pBot->HasWeapon(i)) || !pWeapon->HasWeapon(pBot->m_pEdict))
+		if (!bIsDMC && !pBot->HasWeapon(i) || !pWeapon->HasWeapon(pBot->m_pEdict))
 			continue;
 
 		if (gBotGlobals.IsNS())
@@ -854,7 +854,7 @@ BOOL CBotWeapon::NeedToReload(void)
 	switch (gBotGlobals.m_iCurrentMod)
 	{
 	case MOD_TS:
-		return (!m_iClip && (m_iReserve > 0));
+		return !m_iClip && m_iReserve > 0;
 	case MOD_BUMPERCARS:
 	case MOD_DMC:
 		return FALSE;
@@ -864,7 +864,7 @@ BOOL CBotWeapon::NeedToReload(void)
 
 	if (m_iAmmo1)
 	{
-		return (!m_iClip && (*m_iAmmo1 > 0));
+		return !m_iClip && *m_iAmmo1 > 0;
 	}
 
 	return FALSE;
@@ -876,11 +876,11 @@ BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWall
 		return TRUE;
 
 	if (gBotGlobals.m_iCurrentMod == MOD_DMC)
-		return (this->PrimaryAmmo() > 0);
+		return this->PrimaryAmmo() > 0;
 
 	if (this->OutOfAmmo())
 		return FALSE;
-	if ((pEdict->v.waterlevel == 3) && (CanBeUsedUnderWater() == FALSE))
+	if (pEdict->v.waterlevel == 3 && CanBeUsedUnderWater() == FALSE)
 		return FALSE;
 
 	if (!m_pWeaponInfo->CanUsePrimary())
