@@ -411,7 +411,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 	HAL_DICTIONARY* keywords, * replywords;
 	static char* output_template = NULL;
 	int tries_count, last_entry, last_character, length = 1;
-	register int i, j;
+	int i, j;
 
 	if (output_template == NULL)
 	{
@@ -515,7 +515,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	// word. If the word already exists in the dictionary, then return its current identifier
 	// without adding it again.
 
-	register int i;
+	int i;
 	int position;
 	BOOL found;
 
@@ -648,7 +648,7 @@ int HAL_CompareWords(HAL_STRING word1, HAL_STRING word2)
 	// this function compares two words, and return an integer indicating whether the first
 	// word is less than, equal to or greater than the second word
 
-	register int i;
+	int i;
 	int bound;
 
 	try
@@ -703,7 +703,7 @@ void HAL_SaveDictionary(FILE* file, HAL_DICTIONARY* dictionary)
 {
 	// this function saves a dictionary to the specified file
 
-	register int i, j;
+	int i, j;
 
 	fwrite(&dictionary->size, sizeof(unsigned long), 1, file);
 
@@ -803,7 +803,7 @@ void HAL_UpdateModel(HAL_MODEL* model, int symbol)
 {
 	// this function uppdates the model with the specified symbol
 
-	register int i;
+	int i;
 
 	// update all of the models in the current context with the specified symbol
 	for (i = model->order + 1; i > 0; --i)
@@ -817,7 +817,7 @@ void HAL_UpdateContext(HAL_MODEL* model, int symbol)
 {
 	// this function updates the context of the model without adding the symbol
 
-	register int i;
+	int i;
 
 	for (i = model->order + 1; i > 0; --i)
 		if (model->context[i - 1] != NULL)
@@ -865,7 +865,7 @@ HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, int symbol)
 	// this function is conceptually similar to HAL_FindSymbol, apart from the fact that if the
 	// symbol is not found, a new node is automatically allocated and added to the tree
 
-	register int i;
+	int i;
 	HAL_TREE* found = NULL;
 	BOOL found_symbol = FALSE;
 
@@ -889,7 +889,7 @@ void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position)
 {
 	// this function attachs a new child node to the sub-tree of the tree specified
 
-	register int i;
+	int i;
 
 	// allocate room for one more child node, which may mean allocating the sub-tree from scratch
 	if (tree->tree == NULL)
@@ -970,7 +970,7 @@ void HAL_InitializeContext(HAL_MODEL* model)
 {
 	// this function sets the context of the model to a default value
 
-	register int i;
+	int i;
 
 	for (i = 0; i <= model->order; ++i)
 		model->context[i] = NULL; // reset all the context elements
@@ -980,7 +980,7 @@ void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words)
 {
 	// this function learns from the user's input
 
-	register int i;
+	int i;
 	unsigned short symbol;
 
 	if (words->size <= model->order)
@@ -1021,7 +1021,7 @@ void HAL_SaveTree(FILE* file, HAL_TREE* node)
 {
 	// this function saves a tree structure to the specified file
 
-	register int i;
+	int i;
 
 	if (node)
 	{
@@ -1039,7 +1039,7 @@ void HAL_LoadTree(FILE* file, HAL_TREE* node)
 {
 	// this function loads a tree structure from the specified file
 
-	register int i;
+	int i;
 
 	fread(&node->symbol, sizeof(unsigned short), 1, file);
 	fread(&node->usage, sizeof(unsigned long), 1, file);
@@ -1209,7 +1209,7 @@ BOOL HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2)
 {
 	// this function returns TRUE if the dictionaries are NOT the same or FALSE if not
 
-	register int i;
+	int i;
 
 	if (words1->size != words2->size)
 		return TRUE; // if they haven't the same size, obviously they aren't the same
@@ -1228,8 +1228,8 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words)
 	// dictionary, which will be used when generating a reply
 
 	static HAL_DICTIONARY* keys = NULL;
-	register int i;
-	register int j;
+	int i;
+	int j;
 	int c;
 
 	if (!pBot)
@@ -1461,7 +1461,7 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 	// this function generates a dictionary of reply words relevant to the dictionary of keywords
 
 	static HAL_DICTIONARY* replies = NULL;
-	register int i;
+	int i;
 	int symbol;
 	BOOL start = TRUE;
 
@@ -1565,7 +1565,7 @@ int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 	// available context to choose the symbol
 
 	HAL_TREE* node = NULL;
-	register int i;
+	int i;
 	int count;
 	int symbol = 0;
 
@@ -1610,7 +1610,7 @@ BOOL HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word)
 {
 	// here's a silly brute-force searcher for the reply string
 
-	register int i;
+	int i;
 
 	// for each element of the dictionary, compare word with it...
 	for (i = 0; i < (int)dictionary->size; ++i)
@@ -1624,7 +1624,7 @@ int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys)
 {
 	// this function seeds the reply by guaranteeing that it contains a keyword, if one exists
 
-	register int i;
+	int i;
 	int symbol;
 	int stop;
 
@@ -1867,7 +1867,7 @@ void HAL_FreeTree(HAL_TREE* tree)
 {
 	// this function frees the memory space used by a model tree
 
-	register int i;
+	int i;
 
 	if (tree == NULL)
 		return; // reliability check
@@ -1890,7 +1890,7 @@ void HAL_FreeSwap(HAL_SWAP* swap)
 {
 	// this function frees the memory space used in a swap structure
 
-	register int i;
+	int i;
 
 	if (swap == NULL)
 		return; // if already freed, return

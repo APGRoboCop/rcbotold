@@ -56,7 +56,7 @@ public:
 			if (pCurrent->isDone())
 				continue;
 
-			for (register unsigned int i = 0; i < iTicks; i++)
+			for (unsigned int i = 0; i < iTicks; i++)
 				pCurrent->tick();
 
 			iTicks = iTicks / 2;

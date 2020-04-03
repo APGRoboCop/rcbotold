@@ -65,10 +65,10 @@ NN::NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int 
 
 void NN::setWeights(vector<ga_value>* weights)
 {
-	register unsigned short int i;
-	register unsigned short int j;
-	register unsigned short int k;
-	register unsigned short int w = 0;
+	unsigned short int i;
+	unsigned short int j;
+	unsigned short int k;
+	unsigned short int w = 0;
 
 	for (i = 0; i < m_Layers.size(); i++)
 	{
@@ -88,9 +88,9 @@ void NN::setWeights(vector<ga_value>* weights)
 
 void NN::getWeights(vector<ga_value>* weights)
 {
-	register unsigned short int i;
-	register unsigned short int j;
-	register unsigned short int k;
+	unsigned short int i;
+	unsigned short int j;
+	unsigned short int k;
 
 	for (i = 0; i < m_Layers.size(); i++)
 	{
@@ -110,9 +110,9 @@ void NN::getWeights(vector<ga_value>* weights)
 
 void NN::trainOutputs(vector<ga_value>* wanted_outputs)
 {
-	register unsigned short int i;
-	register unsigned short int j;
-	register unsigned short int w = 0;
+	unsigned short int i;
+	unsigned short int j;
+	unsigned short int w = 0;
 
 	for (i = 0; i < m_Layers.size(); i++)
 	{
@@ -129,9 +129,9 @@ void NN::trainOutputs(vector<ga_value>* wanted_outputs)
 
 void NN::getOutputs(vector<ga_value>* outputs)
 {
-	register unsigned short int i;
-	register unsigned short int j;
-	register unsigned short int w = 0;
+	unsigned short int i;
+	unsigned short int j;
+	unsigned short int w = 0;
 
 	outputs->clear();
 
@@ -150,8 +150,8 @@ void NN::getOutputs(vector<ga_value>* outputs)
 
 void NN::execute(vector <ga_value>* outputs, vector <ga_value>* inputs)
 {
-	register unsigned short int i;
-	register unsigned short int j;
+	unsigned short int i;
+	unsigned short int j;
 
 	vector<ga_value> newoutputs;
 
@@ -261,8 +261,8 @@ void NN::save(FILE* bfp)
 
 void NN::randomize()
 {
-	register unsigned short int i;
-	register unsigned short int j;
+	unsigned short int i;
+	unsigned short int j;
 
 	for (i = 0; i < m_Layers.size(); i++)
 	{
@@ -277,8 +277,8 @@ void NN::randomize()
 
 void NN::freeMemory()
 {
-	register unsigned short int i;
-	register unsigned short int j;
+	unsigned short int i;
+	unsigned short int j;
 
 	for (i = 0; i < m_Layers.size(); i++)
 	{
@@ -298,7 +298,7 @@ void NN::freeMemory()
 
 void NNLayer::freeMemory()
 {
-	register unsigned short int i;
+	unsigned short int i;
 
 	for (i = 0; i < m_Neurons.size(); i++)
 	{

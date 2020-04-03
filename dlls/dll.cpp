@@ -2234,6 +2234,7 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 // Make new BOTCAM.CPP soon!!!
 CBotCam::CBotCam()
 {
+	m_iPositionSet = 0;
 	m_pCurrentBot = NULL;
 	m_iState = BOTCAM_NONE;
 	m_pCameraEdict = NULL;

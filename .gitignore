@@ -318,3 +318,10 @@ dlls/HPB_bot___Win32_MetaMod_Debug/HPB_bot.exp
 dlls/HPB_bot___Win32_MetaMod_Debug/HPB_bot.lib
 dlls/bot_client.cpp.PVS-Studio.cfg
 dlls/bot_client.cpp.PVS-Studio.cmd
+dlls/bot_visibles.cpp.PVS-Studio.cfg
+dlls/bot_visibles.cpp.PVS-Studio.cmd
+dlls/bot_visibles.PVS-Studio.i
+dlls/bot_navigate.cpp.PVS-Studio.cfg
+dlls/bot_navigate.cpp.PVS-Studio.cmd
+dlls/bot_navigate.cpp.PVS-Studio.preprocess.cmd
+dlls/bot_navigate.PVS-Studio.i

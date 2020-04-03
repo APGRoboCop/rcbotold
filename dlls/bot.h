@@ -6293,7 +6293,7 @@ public:
 		m_Mods.AddMod("dmc", "dmc", MOD_DMC);
 		m_Mods.AddMod("rc2", "rc2", MOD_RC2);
 		m_Mods.AddMod("RockCrowbar", "rc", MOD_RC);
-		m_Mods.AddMod("SvenCoop", "hl", MOD_SVENCOOP);
+		//m_Mods.AddMod("SvenCoop", "hl", MOD_SVENCOOP);
 		m_Mods.AddMod("valve", "hl", MOD_HL_DM);
 		m_Mods.AddMod("hlrally", "hlrally", MOD_HL_RALLY);
 		m_Mods.AddMod("cstrike", "mp", MOD_COUNTERSTRIKE);
@@ -6315,7 +6315,7 @@ public:
 		m_Mods.AddMod("dmc", "dmc", MOD_DMC);
 		m_Mods.AddMod("rc2", "rc2", MOD_RC2);
 		m_Mods.AddMod("RockCrowbar", "rc", MOD_RC);
-		m_Mods.AddMod("SvenCoop", "hl", MOD_SVENCOOP);
+		//m_Mods.AddMod("SvenCoop", "hl", MOD_SVENCOOP);
 		m_Mods.AddMod("valve", "hl", MOD_HL_DM);
 		m_Mods.AddMod("hlrally", "hlr", MOD_HL_RALLY);
 		m_Mods.AddMod("cstrike", "mp", MOD_COUNTERSTRIKE);
@@ -6448,7 +6448,7 @@ public:
 
 	void LoadBotModels(void);
 
-	//Initialise those variables needed added below [APG]RoboCop[CL]
+	//Initialise those variables needed added below? [APG]RoboCop[CL]
 	CBotGlobals()
 	{
 		//Init();

@@ -310,6 +310,7 @@ CBotMenuItem :: ~CBotMenuItem()
 
 CBotMenuItem::CBotMenuItem(const char* szMenuCaption, CBotMenu* pNextMenu)
 {
+	m_pMenuFunction = NULL;
 	m_szMenuCaption = NULL;
 	m_pNextMenu = NULL;
 

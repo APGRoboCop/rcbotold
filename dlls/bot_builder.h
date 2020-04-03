@@ -54,7 +54,7 @@ public:
 
 	void execute()
 	{
-		int gpGlobals;
+		int gpGlobals = 0;
 		if (iCurrent < m_toBuild.size() && m_fNextExecute < gpGlobals->time)
 		{
 			CBotBuild* pCurrent = &m_toBuild[iCurrent++];
