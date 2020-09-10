@@ -202,7 +202,7 @@ void InitMessage ( const char *message );
 		m_bRecheckAuth = FALSE;
 	}
 
-	if (m_fCheckSentryTime && m_fCheckSentryTime < gpGlobals->time)
+	/*if (m_fCheckSentryTime && m_fCheckSentryTime < gpGlobals->time)
 	{
 		edict_t* pent = NULL;
 
@@ -221,7 +221,7 @@ void InitMessage ( const char *message );
 				}
 			}
 		}
-	}
+	}*/
 
 	if (m_pForceGripEntity)
 	{

@@ -54,6 +54,10 @@
 #include "h_export_meta.h"
 #include "meta_api.h"
 
+#ifdef _WIN32
+#define strcmpi _strcmpi
+#endif
+
 #define DMG_GENERIC			0			// generic damage was done
 #define DMG_CRUSH			(1 << 0)	// crushed by falling or moving object
 #define DMG_BULLET			(1 << 1)	// shot
@@ -1609,7 +1613,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 				{
 				case 1:
 				{
-					int iIndex = POINTER_TO_INT(p);
+					const int iIndex = POINTER_TO_INT(p);
 					pEntity = INDEXENT(iIndex);
 				}
 				break;
@@ -2112,11 +2116,11 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 					if (dist < nearest)
 					{
 						// crude way of checking player is holding fire
-						if (pPlayer->v.button & IN_ATTACK && pPlayer->v.weapons & SVEN_WEAPON_MEDKIT)
+						/*if (pPlayer->v.button & IN_ATTACK && pPlayer->v.weapons & SVEN_WEAPON_MEDKIT)
 						{
 							nearest = dist;
 							pSupplier = pPlayer;
-						}
+						}*/
 					}
 				}
 

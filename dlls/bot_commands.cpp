@@ -85,6 +85,10 @@ void player(entvars_t* pev)
 
 #endif // END RCBOT_META_BUILD
 
+#ifdef _WIN32
+#define strdup _strdup
+#endif
+
 eBotCvarState CMenuSelectCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
 	int iMenu;

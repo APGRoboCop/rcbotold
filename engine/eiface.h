@@ -394,7 +394,7 @@ typedef struct
 	short			flags;
 } TYPEDESCRIPTION;
 
-#define ARRAYSIZE(p)		(sizeof(p)/sizeof(p[0]))
+//#define ARRAYSIZE(p)		(sizeof(p)/sizeof(p[0]))
 
 typedef struct 
 {
@@ -504,4 +504,4 @@ extern NEW_DLL_FUNCTIONS	gNewDLLFunctions;
 typedef int	(*APIFUNCTION)( DLL_FUNCTIONS *pFunctionTable, int interfaceVersion );
 typedef int	(*APIFUNCTION2)( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion );
 
-#endif EIFACE_H
+#endif /*EIFACE_H*/

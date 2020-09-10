@@ -75,6 +75,10 @@ extern GETENTITYAPI other_GetEntityAPI;
 extern GETNEWDLLFUNCTIONS other_GetNewDLLFunctions;
 #endif
 
+#ifdef _WIN32
+#define strdup _strdup
+#endif
+
 extern enginefuncs_t g_engfuncs;
 extern int debug_engine;
 extern globalvars_t* gpGlobals;
@@ -1311,7 +1315,7 @@ void PM_Init(struct playermove_s* ppmove)
 char PM_FindTextureType(char* name)
 {
 #ifdef RCBOT_META_BUILD
-	RETURN_META_VALUE(MRES_IGNORED, NULL);
+	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
 	return (*other_gFunctionTable.pfnPM_FindTextureType)(name);
 #endif
@@ -1642,7 +1646,7 @@ void BotFunc_InitProfile(bot_profile_t* bpBotProfile)
 {
 	bpBotProfile->m_szModel = NULL;
 	bpBotProfile->m_iClass = -1;
-	bpBotProfile->m_FadePercent = NULL;
+	bpBotProfile->m_FadePercent = 0;
 	bpBotProfile->m_GorgePercent = 0;
 	bpBotProfile->m_iFavMod = 0;
 	bpBotProfile->m_iFavTeam = TEAM_AUTOTEAM;
@@ -2295,7 +2299,7 @@ void CBotCam::Think()
 		if (bNotAlive)
 		{
 			float fDistance;
-			float fNearest;
+			float fNearest = 0;
 
 			// think about next bot to view etc
 			m_fNextChangeBotTime = gpGlobals->time + RANDOM_FLOAT(7.5, 10.0);
@@ -2563,7 +2567,7 @@ void CBotCam::Clear()
 // when noInfo  is TRUE we want to find ...
 // any valid capture point for team...
 // and haven't given goal or group info
-edict_t* CTFCCapturePoints::getCapturePoint(int group, int goal, int team, BOOL noInfo)
+/*edict_t* CTFCCapturePoints::getCapturePoint(int group, int goal, int team, BOOL noInfo)
 {
 	dataStack<CTFCGoal> tempStack = m_CapPoints;
 	CTFCGoal* pGotCap;
@@ -2608,7 +2612,7 @@ edict_t* CTFCCapturePoints::getCapturePoint(int group, int goal, int team, BOOL 
 	}
 
 	return NULL;
-}
+}*/
 //////////////////////////////////////////////////////////////////////////////
 // METAMOD REQUIRED...
 

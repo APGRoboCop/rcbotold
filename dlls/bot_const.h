@@ -195,7 +195,7 @@ typedef enum
 #define BOT_MIN_SOUND_DIST 128
 
 #define BOT_MIN_MSECVAL 1
-#define BOT_MAX_MSECVAL 100
+#define BOT_MAX_MSECVAL 60
 #define BOT_DEF_MSECDELTIME 0.5
 
 #define BOT_MAX_PASSWORD_LEN 16
@@ -1172,10 +1172,10 @@ typedef enum
 
 ////////////////////////////////////////////
 // BOT CHAT
-
+// TODO: those need to be declared for bot_chat.ini to work [APG]RoboCop[CL]
 #define BOT_CHAT_FILE "bot_chat.ini"
 
-typedef enum eBotChatType
+enum eBotChatType
 {
 	BOT_CHAT_UNKNOWN = -1,
 	BOT_CHAT_KILLS = 0,
@@ -1189,7 +1189,7 @@ typedef enum eBotChatType
 	BOT_CHAT_MAX
 };
 
-typedef enum eBotRepType
+enum eBotRepType
 {
 	BOT_REP_UNKNOWN = 0,
 	BOT_REP_NEUTRAL,
@@ -1197,7 +1197,7 @@ typedef enum eBotRepType
 	BOT_REP_UNFRIENDLY
 };
 
-typedef enum eBattleGroundsMessage
+enum eBattleGroundsMessage
 {
 	BOT_BG_MSG_YES = 1,
 	BOT_BG_MSG_NO,
@@ -1217,6 +1217,7 @@ typedef enum eBattleGroundsMessage
 	BOT_BG_MSG_FIRE,
 	BOT_BG_MSG_CEASEFIRE
 };
+
 /*
 #define BOT_CHAT_LAUGH_TAG "laugh"
 #define BOT_CHAT_KILL_TAG "kills"

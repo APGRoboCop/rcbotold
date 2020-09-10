@@ -76,7 +76,7 @@
 
 #if defined (_WIN32) && defined (_MSC_VER)
 	// On x86 va_list is just a pointer.
-	#define va_copy(dst,src) ((dst)=(src))
+//	#define va_copy(dst,src) ((dst)=(src))
 #else
 	// Some systems that do not supply va_copy have __va_copy instead, since 
 	// that was the name used in the draft proposal.

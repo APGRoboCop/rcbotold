@@ -68,7 +68,7 @@ CSom :: ~CSom()
 CSomNeuron* CSom::getBMU(vector <ga_value>* inputs)
 {
 	CSomNeuron* winner = NULL;
-	ga_value bestdistance;
+	ga_value bestdistance = 0;
 	ga_value dist;
 
 	for (unsigned int i = 0; i < m_Neurons.size(); i++)

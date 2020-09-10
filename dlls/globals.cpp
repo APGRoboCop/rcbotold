@@ -65,6 +65,10 @@
 
 #include "dir.h"
 
+#ifdef _WIN32
+#define strcmpi _strcmpi
+#endif
+
 extern CWaypointVisibilityTable WaypointVisibility;
 extern CWaypointLocations WaypointLocations;
 
@@ -120,7 +124,7 @@ void CBotGlobals::ReadBotFolder(void)
 	}
 }
 
-char* CBotGlobals::TFC_getClassName(int iClass)
+/*char* CBotGlobals::TFC_getClassName(int iClass)
 {
 	static char* szClasses[] =
 	{
@@ -130,7 +134,7 @@ char* CBotGlobals::TFC_getClassName(int iClass)
 	};
 
 	return szClasses[iClass];
-}
+}*/
 
 BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
 {
@@ -837,7 +841,7 @@ void CBotGlobals::StartFrame(void)
 	fPreviousTime = gpGlobals->time;
 }
 
-int CBotGlobals::TFC_getBestClass(int prefclass, int iTeam)
+/*int CBotGlobals::TFC_getBestClass(int prefclass, int iTeam)
 {
 	// Input preffered class, if we can't do that then get the next best class
 
@@ -944,9 +948,9 @@ int CBotGlobals::TFC_getBestTeam(int team)
 		return 5; // auto-assign OK
 
 	int players = UTIL_PlayersOnTeam(team);
-	/*int max_team_players[MAX_TEAMS];
+	int max_team_players[MAX_TEAMS];
 	int team_class_limits[MAX_TEAMS];
-	int team_allies[MAX_TEAMS];*/
+	int team_allies[MAX_TEAMS];
 	if (max_team_players[team - 1] && players > max_team_players[team - 1])
 	{
 		// find new team
@@ -1005,7 +1009,7 @@ BOOL CBotGlobals::TFC_getCaptureLocationForFlag(Vector* vec, edict_t* pFlag)
 
 	return FALSE;
 }
-
+*/
 void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 {
 	// If there has been an entity needing a master add it to the

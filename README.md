@@ -6,10 +6,14 @@ RCBot versions
 
 V 1.5
 
+* added: Performance optimisations
 * changed: Replaced most of the C style casts with C++ casts
 * changed: Sven Co-op v5 or later aren't supported anymore use RCBot AngelScript instead
+* changed: dropped support for TFC in favour for FoxBot
 * fixed: Some potential errors and bugs have been wiped
-* note: gcc-4.8 appears to compile better for RCBot Linux servers
+* note: gcc-4.8 appears to compile better for RCBot Linux servers with older libstdc++.so.6
+* TODO: BOT_CHAT_FILE need to be declared for bot_chat.ini to work
+* TODO: bot_profile_s need to be initialised for Bot Profile to work
 
 V 1.443
 =---------=

@@ -90,6 +90,10 @@ char* name_in_msg = "%n";
 #define max(x,y) (((x) >= (y)) ? (x) : (y))
 #endif
 
+#ifdef _WIN32
+#define strdup _strdup
+#endif
+
 void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 {
 	// the purpose of this function is to make the bot keep an eye on what's happening in the
@@ -1570,7 +1574,7 @@ int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 	int symbol = 0;
 
 	if (!pBot || !pBot->IsUsed())
-		return NULL; // reliability check
+		return 0; // reliability check
 
 	 // select the longest available context
 	for (i = 0; i <= pBot->m_Profile.m_HAL->bot_model->order; ++i)

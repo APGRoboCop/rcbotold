@@ -1551,7 +1551,7 @@ typedef struct path {
 
 ////////////////////////////
 // Bot Profile Info
-
+// TODO: those need to be initialised for Bot Profile to work [APG]RoboCop[CL]
 typedef struct bot_profile_s 
 {
 	int m_iProfileId;
@@ -2181,10 +2181,10 @@ private:
 };*/
 /////////////////////////////////////////////////////
 // BOT CLASS
-
+// TODO: need to be initialised for Bot Class to work [APG]RoboCop[CL]
 #define SQUAD_DEFAULT_SPREAD 50.0// say 50 units between each member...?
 
-typedef enum eSquadForm
+enum eSquadForm
 {
 	SQUAD_FORM_NONE = 0,
 	SQUAD_FORM_WEDGE,
@@ -2195,7 +2195,7 @@ typedef enum eSquadForm
 	SQUAD_FORM_VEE
 };
 
-typedef enum eCombatType
+enum eCombatType
 {
 	COMBAT_NONE = 0,
 	COMBAT_STEALTH,
@@ -3255,12 +3255,12 @@ public:
 		UpdateCondition(BOT_CONDITION_STOPPED_BUILDING);
 	}
 
-	BOOL HasBuiltSentry();
+	/*BOOL HasBuiltSentry();
 
-	//void setSentry ( edict_t *pEdict )
-	//{
-	//	m_pSentry.Set(pEdict);
-	//}
+	void setSentry ( edict_t *pEdict )
+	{
+		m_pSentry.Set(pEdict);
+	}*/
 
 	BOOL builtTeleporterEntrance();
 
@@ -3277,9 +3277,9 @@ public:
 	{
 		m_bBuiltTeleportExit = FALSE;
 		//m_pTeleExit = NULL;
-	}*/
+	}
 
-	/*void SentryDestroyed ()
+	void SentryDestroyed ()
 	{
 		m_iSentryLevel = 0;
 		m_pSentry.Set(NULL);
@@ -3337,7 +3337,7 @@ public:
 		return !m_pSquadLeader && m_stSquad;
 	}
 
-	BOOL IsHoldingMiniGun(void);
+	//BOOL IsHoldingMiniGun(void);
 
 	// temporary storage to later pick up weapons needed
 	void SetWeaponsNeeded(short int* iArray)
@@ -4816,7 +4816,7 @@ public:
 	BOOL operator == (CAllowedPlayer player)
 	{
 		// = Steam ID , or = name + password
-		return player.IsForSteamID(m_szSteamId) || player.IsForName(m_szName) && player.IsForPass(m_szPass);
+		return player.IsForName(m_szName) && player.IsForPass(m_szPass) || player.IsForSteamID(m_szSteamId);
 	}
 
 	BOOL IsForName(const char* szName) const
@@ -6297,7 +6297,7 @@ public:
 		m_Mods.AddMod("valve", "hl", MOD_HL_DM);
 		m_Mods.AddMod("hlrally", "hlrally", MOD_HL_RALLY);
 		m_Mods.AddMod("cstrike", "mp", MOD_COUNTERSTRIKE);
-		m_Mods.AddMod("tfc", "tfc", MOD_TFC);
+		//m_Mods.AddMod("tfc", "tfc", MOD_TFC);
 		m_Mods.AddMod("rspecies", "hl", MOD_RS); // rival species meh..
 		//m_Mods.AddMod("gearbox","opfor",MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 #else
@@ -6319,7 +6319,7 @@ public:
 		m_Mods.AddMod("valve", "hl", MOD_HL_DM);
 		m_Mods.AddMod("hlrally", "hlr", MOD_HL_RALLY);
 		m_Mods.AddMod("cstrike", "mp", MOD_COUNTERSTRIKE);
-		m_Mods.AddMod("tfc", "tfc", MOD_TFC);
+		//m_Mods.AddMod("tfc", "tfc", MOD_TFC);
 		m_Mods.AddMod("rspecies", "hl", MOD_RS);
 		//m_Mods.AddMod("gearbox","opfor",MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 
@@ -6342,8 +6342,8 @@ public:
 		m_bIsNS = FALSE;
 
 		//m_pTFCGroup = NULL;
-		m_pTFCDetect = NULL;
-		m_pTFCGoal = NULL;
+		//m_pTFCDetect = NULL;
+		//m_pTFCGoal = NULL;
 		m_bCombatMap = FALSE;
 		m_pMarineStart = NULL;
 		//m_iJoiningClients = 0;
@@ -6448,10 +6448,77 @@ public:
 
 	void LoadBotModels(void);
 
-	//Initialise those variables needed added below? [APG]RoboCop[CL]
+	//TODO: Initialise those variables needed added below? [APG]RoboCop[CL]
 	CBotGlobals()
 	{
 		//Init();
+		/*m_bIsNS(0), m_sModelIndexFireball(0), m_bWaypointsHavePaths(0), m_iConfigSettings(0),
+		m_bAutoPathWaypoint(0),
+		m_bTeamPlay(0),
+		m_fNextJoinTeam(0),
+		m_fAutoWaypointCheckTime(0),
+		m_fAutoBuildTime(0),
+		m_bAutoBuilt(0),
+		m_bHasDefTech(0),
+		m_bHasSensTech(0), m_bHasMovTech(0),
+		m_fWallStickTol(0),
+		m_iJoiningClients{},
+		m_iTeamScores{},
+		m_bNetMessageStarted(0),
+		m_iMinBots(0),
+		m_iMaxBots(0),
+		m_iLanguage(),
+		m_iMaxVisUpdateRevs(0),
+		m_fHiveImportance(0),
+		m_fResTowerImportance(0),
+		m_fHealingImportance(0),
+		m_fStructureBuildingImportance(0),
+		m_fRefillStructureImportance(0),
+		m_fBotStuckSpeed(0),
+		m_fUpdateLadderTime(0), m_fUpdateVisTime(0),
+		m_szModFolder(nullptr),
+		m_iDebugLevels(0), m_Hives{},
+		m_pMarineStart(nullptr),
+		m_fReadConfigTime(0),
+		m_iBotChatPercent(0),
+		m_iBotChatReplyPercent(0),
+		m_iBotMsgIndex(0),
+		m_iCurrentMessageState(0),
+		m_iCurrentMessageState2(0),
+		m_iMaxPathRevs(0),
+		m_pMessageEntity(nullptr),
+		m_ThingsToBuild(nullptr),
+		m_CurrentMessage(nullptr),
+		m_pDebugMessage(nullptr),
+		m_CurrentHandledCvar(nullptr),
+		m_bIsFakeClientCommand(0),
+		m_iFakeArgCount(0), m_iForceTeam(0),
+		m_fGorgeAmount(0),
+		m_pListenServerEdict(nullptr),
+		m_iWaypointTexture(0),
+		m_bGameRules(0),
+		m_fClientUpdateTime(0),
+		m_bBotCanRejoin(0),
+		m_fMapInitTime(0), m_fBotRejoinTime(0),
+		m_iNumBots(0),
+		m_bCanUpgradeDef(0),
+		m_bCanUpgradeSens(0),
+		m_bCanUpgradeMov(0),
+		m_tr(),
+		m_iCurrentMod(0),
+		m_fTurnSpeed(0),
+		m_szBotFolder{},
+		m_bCombatMap(0),
+		m_pCommander(),
+		max_team_players{},
+		team_class_limits{},
+		team_allies{},
+		prevBackPackInvalid(0),
+		prevCapturePointInvalid(0),
+		prevFlagInvalid(0),
+		m_currBackPack(nullptr),
+		m_currCapPoint(nullptr),
+		m_currFlag(nullptr)*/
 	}
 
 	void SayToolTip(edict_t* pEntity, eToolTip tooltip)
@@ -6475,13 +6542,13 @@ public:
 
 	void KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd);
 
-	BOOL TFC_IsAvailableFlag(edict_t* pFlag, int team, BOOL bEnemyFlag = FALSE);
+	/*BOOL TFC_IsAvailableFlag(edict_t* pFlag, int team, BOOL bEnemyFlag = FALSE);
 
 	BOOL TFC_teamsAreAllies(int team1, int team2)
 	{
 		return team_allies[team1] & 1 << team2 - 1;
 	}
-
+	
 	BOOL TFC_playerHasFlag(edict_t* pPlayer);
 	BOOL TFC_getCaptureLocationForFlag(Vector* vec, edict_t* pFlag);
 
@@ -6493,11 +6560,11 @@ public:
 
 	//short int m_iNumHivesAdded;
 
-//	dataStack<entity_master_t> m_EntityMasters;
+	//dataStack<entity_master_t> m_EntityMasters;
 	//dataStack<entity_master_t> m_MultiManagers;
 
 	CTypeVector<short int> TFCGoals[MAX_TEAMS];
-
+	*/
 	CBotSquads m_Squads;
 
 	short int m_sModelIndexFireball;
@@ -6696,7 +6763,7 @@ public:
 		return m_Backpacks.findBackpack(location, team, min_health, min_cells, min_armor, min_ammo);
 	}
 
-	void TFC_setOnlyGoal(int goal, int team)
+	/*void TFC_setOnlyGoal(int goal, int team)
 	{
 		m_iValidGoals[team - 1].Clear();
 		m_iValidGoals[team - 1].Add(goal);
@@ -6723,13 +6790,13 @@ public:
 		return FALSE;
 	}
 
-	/*	void changeWelcomeMessage ( char *message )
+	void changeWelcomeMessage ( char *message )
 		{
 			if ( m_szWelcomeMessage )
 				free(m_szWelcomeMessage);
 			m_szWelcomeMessage = strdup(message);
-		}*/
-
+		}
+	*/
 	void buildFileName(const char* in_filename, char* out_filename)
 	{
 		sprintf(out_filename, "%s%s", m_szBotFolder, in_filename);

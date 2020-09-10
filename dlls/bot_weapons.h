@@ -137,19 +137,20 @@ enum
 	VALVE_WEAPON_SNARK
 };
 
-#define SVEN_WEAPON_UZIAKIMBO	  16
+//Sven Co-op 5.xx no longer supports Metamod [APG]RoboCop[CL]
+/*#define SVEN_WEAPON_UZIAKIMBO	  16
 #define SVEN_WEAPON_UZI	          17
 #define SVEN_WEAPON_MEDKIT        18
 #define SVEN_WEAPON_PIPEWRENCH    19
 #define SVEN_WEAPON_MINIGUN       21
 #define SVEN_WEAPON_GRAPPLE       22
-#define SVEN_WEAPON_SNIPERRIFLE   23
+#define SVEN_WEAPON_SNIPERRIFLE   23*/
 
 #define VALVE_MAX_NORMAL_BATTERY   100
 #define VALVE_HORNET_MAX_CARRY      8
 
 // weapon ID values for Valve's Team Fortress Classic & 1.5
-#define TF_WEAPON_UNKNOWN1       1
+/*#define TF_WEAPON_UNKNOWN1       1
 #define TF_WEAPON_UNKNOWN2       2
 #define TF_WEAPON_MEDIKIT        3
 #define TF_WEAPON_SPANNER        4
@@ -204,7 +205,7 @@ enum
 #define CS_WEAPON_AK47          28
 #define CS_WEAPON_KNIFE         29
 #define CS_WEAPON_P90           30
-
+*/
 // weapon ID values for Gearbox's OpFor Deathmatch
 #define GEARBOX_WEAPON_CROWBAR       1
 #define GEARBOX_WEAPON_GLOCK         2
