@@ -276,7 +276,9 @@ gamedll "<MOD_DLL>"
 
 to 
 
-gamedll "../rcbot/dlls/rcbot.dll"
+gamedll "..\rcbot\dlls\rcbot.dll"
+
+gamedll_linux "../rcbot/dlls/rcbot.so"
 
 --------------------------------------------------------------
 WITH METAMOD:
@@ -290,7 +292,9 @@ Go into addons/metamod directory and EDIT the plugins.ini file
 
 Add the line:
 
-win32 ../rcbot/dlls/rcbot_mm.dll
+win32 ..\rcbot\dlls\rcbot_mm.dll
+
+linux ../rcbot/dlls/rcbot_mm.so
 
 to the file.
 
