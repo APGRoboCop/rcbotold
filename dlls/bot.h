@@ -117,7 +117,7 @@ int GetPlayerEdictRepId(edict_t* pEdict);
 
 //////////////////////////////
 // BOT_H DEFINED FUNCTIONS
-void BotFunc_ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
+void BotFunc_ChangeAngles(float* fSpeed, const float* fIdeal, float* fCurrent, float* fUpdate);
 BOOL UTIL_FriendlyHatesPlayer(edict_t* pEntity, edict_t* pPlayer);
 edict_t* UTIL_getEntityInFront(edict_t* pEntity);
 void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, int magnitude, BOOL doDamage);

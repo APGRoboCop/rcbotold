@@ -25,7 +25,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include <math.h>
+#include <cmath>
 
 //=========================================================
 // 2DVector - used for many pathfinding and many other
@@ -77,7 +77,7 @@ public:
 	//inline Vector(double X, double Y, double Z)		{ x = (float)X; y = (float)Y; z = (float)Z;	}
 	//inline Vector(int X, int Y, int Z)				{ x = (float)X; y = (float)Y; z = (float)Z;	}
 	Vector(const Vector& v) { x = v.x; y = v.y; z = v.z; }
-	Vector(float rgfl[3]) { x = rgfl[0]; y = rgfl[1]; z = rgfl[2]; }
+	Vector(const float rgfl[3]) { x = rgfl[0]; y = rgfl[1]; z = rgfl[2]; }
 
 	// Operators
 	Vector operator-(void) const { return Vector(-x, -y, -z); }

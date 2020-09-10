@@ -47,7 +47,7 @@
 #ifndef WAYPOINT_H
 #define WAYPOINT_H
 
-#include <limits.h>
+#include <climits>
 
 #include "generic_class.h"
 
@@ -68,13 +68,11 @@ public:
 
 	void Init()
 	{
-		int i, j, k;
-
-		for (i = 0; i < MAX_WPT_LOCATIONS; i++)
+		for (int i = 0; i < MAX_WPT_LOCATIONS; i++)
 		{
-			for (j = 0; j < MAX_WPT_LOCATIONS; j++)
+			for (int j = 0; j < MAX_WPT_LOCATIONS; j++)
 			{
-				for (k = 0; k < MAX_WPT_LOCATIONS; k++)
+				for (int k = 0; k < MAX_WPT_LOCATIONS; k++)
 					m_iLocations[i][j][k].Init();
 			}
 		}
@@ -82,13 +80,11 @@ public:
 
 	void Clear()
 	{
-		int i, j, k;
-
-		for (i = 0; i < MAX_WPT_LOCATIONS; i++)
+		for (int i = 0; i < MAX_WPT_LOCATIONS; i++)
 		{
-			for (j = 0; j < MAX_WPT_LOCATIONS; j++)
+			for (int j = 0; j < MAX_WPT_LOCATIONS; j++)
 			{
-				for (k = 0; k < MAX_WPT_LOCATIONS; k++)
+				for (int k = 0; k < MAX_WPT_LOCATIONS; k++)
 					m_iLocations[i][j][k].Destroy();
 			}
 		}
@@ -331,13 +327,11 @@ public:
 
 	WAYPOINT convert(WAYPOINT* thisWaypoint)
 	{
-		int i;
-
 		WAYPOINT convertedWpt;
 
 		memset(&convertedWpt, 0, sizeof(WAYPOINT));
 
-		for (i = 0; i < MAX_BITS; i++)
+		for (int i = 0; i < MAX_BITS; i++)
 		{
 			if (thisWaypoint->flags & 1 << i)
 			{

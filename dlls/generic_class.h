@@ -45,7 +45,7 @@
 #ifndef __RCBOT_GENERIC_CLASS__
 #define __RCBOT_GENERIC_CLASS__
 
-#include <assert.h>
+#include <cassert>
 #include <vector>
 using namespace std;
 

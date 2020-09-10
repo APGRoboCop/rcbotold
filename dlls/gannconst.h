@@ -32,7 +32,7 @@
 #ifndef __GANN_CONST_H__
 #define __GANN_CONST_H__
 
-#include <string.h>
+#include <cstring>
 
 #define TYPE_BOTGAVALS 0
 #define TYPE_INTGAVALS 1

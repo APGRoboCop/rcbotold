@@ -70,7 +70,7 @@
 #include <sys/stat.h>
 
 // for logging
-#include <time.h>
+#include <ctime>
 
 // BOT GLOBALS
 
@@ -343,8 +343,8 @@ float CBot :: CommanderProbability ( eCommanderHappen happen, vector<comm_evid_t
 BOOL CBot::FacingIdeal(void)
 {
 	// looking within "2.0" degrees of target?
-	return fabs(UTIL_AngleDiff(pev->ideal_yaw, pev->v_angle.y)) < 2.0 &&
-		fabs(UTIL_AngleDiff(pev->idealpitch, pev->v_angle.x)) < 2.0;
+	return std::fabs(UTIL_AngleDiff(pev->ideal_yaw, pev->v_angle.y)) < 2.0 &&
+		std::fabs(UTIL_AngleDiff(pev->idealpitch, pev->v_angle.x)) < 2.0;
 }
 
 // get distance between edict1 and edict2
@@ -7523,7 +7523,7 @@ void CBot::WorkViewAngles(void)
 
 // ChangeAngles - adapted by Whistler (http://forums.bots-united.com/member.php?u=786)
 
-void BotFunc_ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate)
+void BotFunc_ChangeAngles(float* fSpeed, const float* fIdeal, float* fCurrent, float* fUpdate)
 {
 	float fCurrent180;  // current +/- 180 degrees
 	float fDiff;

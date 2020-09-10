@@ -28,7 +28,7 @@
  *    version.
  *
  */
-#include <time.h>
+#include <ctime>
 
 #include "extdll.h"
 #include "enginecallback.h"

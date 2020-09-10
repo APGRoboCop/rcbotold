@@ -41,9 +41,9 @@
 #include <windows.h>
 
 // Misc C-runtime library headers
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
 
 #else
 #include <stdarg.h>
