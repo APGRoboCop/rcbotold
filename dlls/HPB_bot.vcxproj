@@ -330,7 +330,6 @@
     <ClInclude Include="actionutility.h" />
     <ClInclude Include="bits.h" />
     <ClInclude Include="bot.h" />
-    <ClInclude Include="bot_builder.h" />
     <ClInclude Include="bot_client.h" />
     <ClInclude Include="bot_commands.h" />
     <ClInclude Include="bot_const.h" />

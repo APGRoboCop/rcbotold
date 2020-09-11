@@ -130,9 +130,6 @@
     <ClInclude Include="bot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="bot_builder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="bot_client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
