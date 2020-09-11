@@ -3,12 +3,12 @@
 
 #include <vector>
 
-using namespace std;
+//using namespace std;
 
 class CActionUtility
 {
 public:
-	CActionUtility(eCanDoStuff action, float utility)
+	CActionUtility(eCanDoStuff action, bool utility)
 	{
 		m_Action = action;
 		m_fUtility = utility;
@@ -26,7 +26,7 @@ public:
 
 private:
 	eCanDoStuff m_Action;
-	float m_fUtility;
+	bool m_fUtility;
 };
 
 class CActionUtilities

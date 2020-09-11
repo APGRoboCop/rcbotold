@@ -2760,7 +2760,7 @@ public:
 	}
 	/*guurk*/
 	bool operator ==(TSObjective& comp) {
-		return m_iId == m_iId;
+		return m_iId;
 	}
 	/*/guurk*/
 	int getID() { return m_iId; }
@@ -3940,7 +3940,7 @@ public:
 	// if bot can fly, this will return true
 	BOOL CanFly(void)
 	{
-		return IsLerk() || IsMarine() && HasJetPack();
+		return IsMarine() && HasJetPack() || IsLerk();
 	}
 
 	// set crouch button

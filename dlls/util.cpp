@@ -411,7 +411,7 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 		{
 			if (!pent->free)
 			{
-				int length = strlen(name);
+				const int length = strlen(name);
 
 				char arg_lwr[80];
 				char pent_lwr[80];

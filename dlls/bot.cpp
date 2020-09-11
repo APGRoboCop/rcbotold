@@ -7982,8 +7982,8 @@ void CBot::touchedWpt()
 		//dec_flapWings->train(1.0f);
 		m_bFlappedWings = FALSE;
 
-		if (m_iCurrentWaypointFlags & (W_FL_WALL_STICK | W_FL_FLY | W_FL_LADDER)
-			|| !bLeaderWalking && DistanceFrom(m_vMoveToVector) < BOT_WAYPOINT_TOUCH_DIST)
+		if (!bLeaderWalking && DistanceFrom(m_vMoveToVector) < BOT_WAYPOINT_TOUCH_DIST
+			|| m_iCurrentWaypointFlags & (W_FL_WALL_STICK | W_FL_FLY | W_FL_LADDER))
 		{
 			//BotMessage(NULL,0,"%s touched ma wpt",m_szBotName);
 
@@ -8790,7 +8790,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 			else
 			{
 				// Use only door
-				if (pentTouched->v.spawnflags & 256 || gBotGlobals.IsMod(MOD_DMC) && pentTouched->v.health > 0)
+				if (gBotGlobals.IsMod(MOD_DMC) && pentTouched->v.health > 0 || pentTouched->v.spawnflags & 256)
 				{
 					Vector vOrigin = EntityOrigin(pentTouched);
 
@@ -12297,7 +12297,7 @@ void CBot::DoTasks()
 			edict_t* pSound = m_CurrentTask->TaskEdict();
 			Vector vOrigin;
 
-			if (IsOnLadder() || m_pEnemy && HasCondition(BOT_CONDITION_SEE_ENEMY))
+			if (m_pEnemy && HasCondition(BOT_CONDITION_SEE_ENEMY) || IsOnLadder())
 			{
 				bTaskFailed = TRUE;
 				break;
@@ -16721,7 +16721,8 @@ void CBot::workEnemyCosts(edict_t* pEntity, Vector vOrigin, const float fDistanc
 	{
 		char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 		// grenade
-		if (UTIL_IsGrenadeRocket(pEntity) || pEntity->v.deadflag != DEAD_NO && strcmp(szClassname, "monster_robogrunt") == 0)
+		if (pEntity->v.deadflag != DEAD_NO && strcmp(szClassname, "monster_robogrunt") == 0 ||
+			UTIL_IsGrenadeRocket(pEntity))
 			enemyState = 3;
 		else if (EntityIsAlive(pEntity))
 			enemyState = 0;

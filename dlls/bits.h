@@ -51,7 +51,7 @@
 class CBits
 {
 public:
-	CBits(unsigned int iNumBits);
+	CBits(int iNumBits);
 	CBits(CBits* copyBits);
 
 	void setBit(int iBit, BOOL bSet);
@@ -79,7 +79,7 @@ public:
 	int size();
 
 private:
-	unsigned int m_iNumBits;
+	int m_iNumBits;
 	unsigned char* m_cBits;
 	int m_iSize; // bits' mem size
 };

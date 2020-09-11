@@ -936,7 +936,7 @@ void ClientCommand(edict_t* pEntity)
 						if (pBot && pBot->IsUsed())
 						{
 							// say message, everyone can see, team message only team mates can see
-							if (bSayMsg || bSayTeamMsg && UTIL_GetTeam(pEntity) == pBot->GetTeam())
+							if (bSayTeamMsg && UTIL_GetTeam(pEntity) == pBot->GetTeam() || bSayMsg)
 							{
 								pBot->ReplyToMessage(szMessage, pEntity, iTeamOnly);
 							}

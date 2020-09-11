@@ -533,7 +533,8 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 			BOOL bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0;
 			BOOL bMaxRangeCheck = pEnemy && fEnemyDist < 512.0;
 
-			bWantToMelee = (bMeleeRangeCheck || pBot->m_pCurrentWeapon->NeedToReload() && RANDOM_LONG(MIN_BOT_SKILL, MAX_BOT_SKILL) < pBot->m_Profile.m_iSkill) && bMaxRangeCheck;
+			bWantToMelee = (pBot->m_pCurrentWeapon->NeedToReload() && RANDOM_LONG(MIN_BOT_SKILL, MAX_BOT_SKILL) < pBot->
+				m_Profile.m_iSkill || bMeleeRangeCheck) && bMaxRangeCheck;
 		}
 
 		if (pEnemy != NULL)

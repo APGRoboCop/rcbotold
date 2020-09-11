@@ -155,8 +155,11 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		// does the bot feel concerned ? (more chances of replying if its name appears)
 		// if real mode is on, then bot chat is affected by bots rep with sender
 		// and depends on chat_reply_percent command
-		if (gBotGlobals.m_iBotChatReplyPercent && (bNameInMsg || /*gBotGlobals.m_Clients*/
-			(!gBotGlobals.IsConfigSettingOn(BOT_CONFIG_REAL_MODE) || RANDOM_LONG(BOT_MIN_REP, BOT_MAX_REP) < iRep) && RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatReplyPercent || UTIL_GetNumClients(FALSE) == 2))
+		if (gBotGlobals.m_iBotChatReplyPercent && (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatReplyPercent && (!
+				gBotGlobals.IsConfigSettingOn(BOT_CONFIG_REAL_MODE) ||
+			RANDOM_LONG(BOT_MIN_REP, BOT_MAX_REP) < iRep) ||
+			/*gBotGlobals.m_Clients*/
+			bNameInMsg || UTIL_GetNumClients(FALSE) == 2))
 		{
 			pBot->m_MegaHALTalkEdict = pSender;
 

@@ -57,7 +57,7 @@
 #include "bits.h"
 #include "gannconst.h"
 
-CBits::CBits(const unsigned int iNumBits)
+CBits::CBits(const int iNumBits)
 {
 	setup(iNumBits);
 }
@@ -107,7 +107,7 @@ void CBits::load(FILE* bfp)
 		return;
 	}
 
-	unsigned int iNumBits;
+	int iNumBits;
 
 	fread(&iNumBits, sizeof(unsigned int), 1, bfp);
 
@@ -126,7 +126,7 @@ void CBits::load(FILE* bfp)
 
 void CBits::randomize()
 {
-	for (unsigned int i = 0; i < m_iNumBits; i++)
+	for (int i = 0; i < m_iNumBits; i++)
 	{
 		setBit(i, RANDOM_FLOAT(0.0, 1.0) >= 0.5);
 	}

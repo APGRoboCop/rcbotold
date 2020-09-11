@@ -261,7 +261,8 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	BOOL bBotCanUseFlyWpt;
 	BOOL bBotCanUseWallStickWpt;
 
-	bBotCanUseFlyWpt = gBotGlobals.IsMod(MOD_NS) && (pBot->IsFade() && pBot->hasBlink() || pBot->IsLerk() || pBot->IsMarine() && pBot->HasJetPack());
+	bBotCanUseFlyWpt = gBotGlobals.IsMod(MOD_NS) && (pBot->IsMarine() && pBot->HasJetPack() || (pBot->IsFade() && pBot->
+		hasBlink() || pBot->IsLerk()));
 	bBotCanUseWallStickWpt = gBotGlobals.IsMod(MOD_TS) || (gBotGlobals.IsMod(MOD_NS) && bBotCanUseFlyWpt || pBot->IsSkulk());
 
 	Vector vGoalWptOrigin = WaypointOrigin(iTo);
@@ -1432,7 +1433,8 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			bTouchedWpt = PlayerNearVector(vWptOrigin, 24.0) != NULL;
 		}
 	}
-	else if (iWptFlags & W_FL_JUMP || iWptFlags & W_FL_CROUCHJUMP || gBotGlobals.IsMod(MOD_TS) && iWptFlags & W_FL_STUNT)
+	else if (gBotGlobals.IsMod(MOD_TS) && iWptFlags & W_FL_STUNT || (iWptFlags & W_FL_JUMP || iWptFlags &
+		W_FL_CROUCHJUMP))
 	{
 		if (fDistance < 32.0)
 			bTouchedWpt = TRUE;
