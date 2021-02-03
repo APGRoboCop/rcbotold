@@ -284,6 +284,8 @@ enum
 #define DMC_SUIT                         21
 #define DMC_QUAD                         22
 
+//#define TS_WEAPON_TSGUN			1
+
 typedef enum
 {
 	TS_Glock18 = 1,

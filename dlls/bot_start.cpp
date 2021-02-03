@@ -765,6 +765,18 @@ void BotStartGame( bot_t *pBot )
       }
 
    }
+   else if (mod_id == DMC_DLL)
+   {
+	   FakeClientCommand(pEdict, "_firstspawn", NULL, NULL);
+	   
+	   pBot->not_started = 0;
+   }
+   else if (mod_id == TS_DLL)
+   {
+	   FakeClientCommand(pEdict, "_firstspawn", NULL, NULL);
+	   
+	   pBot->not_started = 0;
+   }
    else
    {
       // otherwise, don't need to do anything to start game...
