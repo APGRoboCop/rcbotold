@@ -50,7 +50,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <cstring>
+#include <string.h>
 #include <ctype.h>
 #include <limits.h>
 
@@ -65,7 +65,7 @@
 
 //Fix for GCC 7 - [APG]RoboCop[CL]
 #include <algorithm>
-/*
+
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif
@@ -76,7 +76,7 @@
 
 #undef max
 #undef min
-*/
+
 #define itoa(a,b,c) sprintf(b, "%d", a)
 
 typedef unsigned char BYTE;

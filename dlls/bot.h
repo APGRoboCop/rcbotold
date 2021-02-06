@@ -6288,7 +6288,7 @@ public:
 		m_Mods.AddMod("ns", "ns", MOD_NS);
 		// steam ns 3 beta 1
 		m_Mods.AddMod("nsp", "ns", MOD_NS);
-		m_Mods.AddMod("TS", "mp", MOD_TS);
+		m_Mods.AddMod("ts", "mp", MOD_TS);
 		m_Mods.AddMod("BumperCars", "hl", MOD_BUMPERCARS);
 		m_Mods.AddMod("dmc", "dmc", MOD_DMC);
 		m_Mods.AddMod("rc2", "rc2", MOD_RC2);
@@ -6310,7 +6310,7 @@ public:
 		m_Mods.AddMod("ns", "ns", MOD_NS);
 		// steam ns 3 beta 1
 		m_Mods.AddMod("nsp", "ns", MOD_NS);
-		m_Mods.AddMod("TS", "mp", MOD_TS);
+		m_Mods.AddMod("ts", "ts", MOD_TS);
 		m_Mods.AddMod("BumperCars", "hl", MOD_BUMPERCARS);
 		m_Mods.AddMod("dmc", "dmc", MOD_DMC);
 		m_Mods.AddMod("rc2", "rc2", MOD_RC2);

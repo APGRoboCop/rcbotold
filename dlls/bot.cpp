@@ -130,7 +130,7 @@ void CBot::BotCommand(void)
 // Commanding not yet complete
 {
 	//	static BOOL s_bIssueCommand;
-	///	static Vector s_vCommandOrigin;
+	//	static Vector s_vCommandOrigin;
 	//	static edict_t *iPlayerToSelect;
 	/*
 	typedef struct usercmd_s
@@ -2574,8 +2574,22 @@ void CBot::StartGame(void)
 		}
 	}
 	break;
-	case MOD_TS:
-	{
+    case MOD_TS:
+    {
+	if (pBot->menuselected == false)
+		{ 
+			FakeClientCommand(m_pEdict, "menuselect 1");
+			pBot->spawntime=gpGlobals->time + 5.0;
+		}
+    else if (pBot->spawntime < gpGlobals->time)
+		{       
+			FakeClientCommand(m_pEdict, "respawn");
+			m_bStartedGame = TRUE;
+        }
+    break;
+    } 
+	
+	/*{
 		if (m_fNextUseVGUI > gpGlobals->time)
 			break;
 
@@ -2595,7 +2609,7 @@ void CBot::StartGame(void)
 			else
 				FakeClientCommand(m_pEdict, "menuselect 1");
 		}
-	}
+	}*/
 
 	break;
 	// battle grounds

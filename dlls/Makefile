@@ -23,7 +23,7 @@ OBJ = bits.o bot.o bot_client.o bot_commands.o bot_ga.o bot_menu.o bot_navigate.
 
 rcbot_mm.so: ${OBJ}
 	${CPP} -fPIC -shared -o $@ ${OBJ} -ldl -lm
-	cp -f rcbot_mm.so ./Release
+	#cp -f rcbot_mm.so ./Release
 
 clean:
 	-rm -f *.o
