@@ -459,7 +459,7 @@ public:
 	  setConvertBit(9,W_FL_LIFT);
 	  setConvertBit(18,W_FL_CHECK_LIFT);
 	  setConvertBit(31,W_FL_DELETED);
-/*
+
 #define W_FL_TEAM        ((1<<0) + (1<<1))  // allow for 4 teams (0-3) //
 #define W_FL_TEAM_SPECIFIC (1<<2)  // waypoint only for specified team //
 #define W_FL_CROUCH      (1<<3)  // must crouch to reach this waypoint //

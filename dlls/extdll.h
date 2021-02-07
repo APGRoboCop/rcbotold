@@ -24,6 +24,7 @@
 #define DEBUG 1
 #endif
 
+#ifndef __linux__
 // Silence certain warnings
 #pragma warning(disable : 4244)		// int or float down-conversion
 #pragma warning(disable : 4305)		// int or float data truncation
@@ -31,7 +32,6 @@
 #pragma warning(disable : 4514)		// unreferenced inline function removed
 #pragma warning(disable : 4100)		// unreferenced formal parameter
 
-#ifndef __linux__
 // Prevent tons of unused windows definitions
 #define WIN32_LEAN_AND_MEAN
 #define NOWINRES

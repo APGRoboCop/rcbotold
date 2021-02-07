@@ -1968,13 +1968,13 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		c_skin = gBotGlobals.m_uaBotModels.Random();
 	}
 
-	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "rate", "3500");
-	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_updaterate", "20");
+	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "rate", "5000");
+	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_updaterate", "30");
 	//(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_lw", "1"); // jeefo
 	//(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_lc", "1");
 	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_dlmax", "128");
 
-	if (!gBotGlobals.IsMod(MOD_TS))
+	if (!gBotGlobals.IsMod(MOD_TS)) //No longer required for TS 3.0? [APG]RoboCop[CL]
 		(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "_vgui_menus", "0");
 	else
 		(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "_vgui_menus", "1");

@@ -246,7 +246,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <Optimization>Disabled</Optimization>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>None</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\dlls;..\engine;..\common;..\pm_shared;..\;..\metamod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -256,6 +256,7 @@
       <PrecompiledHeaderOutputFile>.\HPB_bot___Win32_MetaMod_Debug\HPB_bot.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\HPB_bot___Win32_MetaMod_Debug\</ObjectFileName>
       <ProgramDataBaseFileName>.\HPB_bot___Win32_MetaMod_Debug\</ProgramDataBaseFileName>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>

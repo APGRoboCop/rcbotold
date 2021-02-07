@@ -2576,12 +2576,12 @@ void CBot::StartGame(void)
 	break;
     case MOD_TS:
     {
-	if (pBot->menuselected == false)
+		if (m_fNextUseVGUI == false) //Fix for TS 3.0? [APG]RoboCop[CL]
 		{ 
 			FakeClientCommand(m_pEdict, "menuselect 1");
-			pBot->spawntime=gpGlobals->time + 5.0;
+			m_fSpawnTime = gpGlobals->time + 7.0;
 		}
-    else if (pBot->spawntime < gpGlobals->time)
+		else if (m_fSpawnTime < gpGlobals->time)
 		{       
 			FakeClientCommand(m_pEdict, "respawn");
 			m_bStartedGame = TRUE;
@@ -2592,9 +2592,7 @@ void CBot::StartGame(void)
 	/*{
 		if (m_fNextUseVGUI > gpGlobals->time)
 			break;
-
 		m_fNextUseVGUI = gpGlobals->time + 1.0;
-
 		if (!m_bSelectedCar)
 		{
 			m_bSelectedCar = TRUE;
