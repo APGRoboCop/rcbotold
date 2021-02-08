@@ -12,7 +12,7 @@ V 1.5
 * changed: Sven Co-op v5 or later aren't supported anymore use RCBot AngelScript instead
 * changed: dropped support for TFC in favour for FoxBot
 * fixed: Some potential errors and bugs have been wiped
-* note: gcc-4.8 appears to compile better for RCBot Linux servers with older libstdc++.so.6
+* TODO: To prevent bots in TS v3.0 on firing empty rounds
 * TODO: BOT_CHAT_FILE need to be declared for bot_chat.ini to work
 * TODO: bot_profile_s need to be initialised for Bot Profile to work
 
@@ -392,3 +392,4 @@ Flayra : for NS and code needed to get a bot to work with NS
 Sven Viking : for SvenCoop and allowing me access to Beta versions to allow bot support  
 PM (@RACC-ai.com) : for good FakeClientCommand code.
 SandMan : For waypointing NS maps
+Tsmod.net : For allowing TS v3.0 support
