@@ -35,7 +35,6 @@
  //#include "ga.h"
 #include "gannconst.h"
 #include <vector>
-using namespace std;
 
 typedef float ga_value;
 
@@ -87,9 +86,9 @@ public:
 		load(bfp);
 	}
 
-	void setWeights(vector <ga_value> weights);
+	void setWeights(std::vector <ga_value> weights);
 
-	void setWeights(vector <ga_value> weights, int iFrom, int iNum);
+	void setWeights(std::vector <ga_value> weights, int iFrom, int iNum);
 
 	void setWeights(CBotGAValues* vals, int iFrom, int iNum);
 
@@ -99,7 +98,7 @@ public:
 
 	ga_value getWeight(int iWeight) { return m_weights[iWeight]; }
 
-	void input(vector <ga_value>* inputs);
+	void input(std::vector <ga_value>* inputs);
 
 	ga_value execute();
 
@@ -133,8 +132,8 @@ private:
 	unsigned int m_iInputs;
 	ga_value m_Bias;
 	ga_value m_LearnRate;
-	vector <ga_value> m_inputs;
-	vector <ga_value> m_weights;
+	std::vector <ga_value> m_inputs;
+	std::vector <ga_value> m_weights;
 	ga_value m_output;
 	ITransfer* m_transferFunction;
 	BOOL m_bTrained;

@@ -642,7 +642,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 
 			float fHealthLost = m_fPrevHealth - pev->health;
 
-			vector<ga_value> inputs;
+			std::vector<ga_value> inputs;
 
 			// percentage of health now
 			inputs.push_back(pev->health / pev->max_health);
@@ -660,7 +660,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			dec_runForCover->input(&inputs);
 			dec_faceHurtOrigin->input(&inputs);
 
-			vector<ga_value> weights;
+			std::vector<ga_value> weights;
 
 			//
 			// crap way of getting values from an individual !!!
@@ -1193,8 +1193,7 @@ void CBot::FreeLocalMemory(void)
 
 	m_Profile.m_Rep.Destroy();
 
-	while (!sOpenList.empty())
-		sOpenList.pop();
+	sOpenList.Clear();
 	//sOpenList.Destroy();
 
 	m_FailedGoals.Destroy();
@@ -1248,9 +1247,7 @@ void CBot::Init(void)
 	//	m_GoalTasks.Destroy();
 
 	//m_WptObjectiveTask = CBotTask(BOT_TASK_NONE);
-
-	while (!sOpenList.empty())
-		sOpenList.pop();
+	sOpenList.Clear();
 
 	//sOpenList.Init();
 
@@ -1527,7 +1524,7 @@ void CBot::SpawnInit(const BOOL bInit)
 	if (!bInit)
 	{
 		m_bHasAskedForOrder = FALSE;
-
+		m_fRespawnTime = 0;
 		CBotTask TypeMessageTask;
 
 		if (!m_Tasks.NoTasksLeft())
@@ -1573,8 +1570,7 @@ void CBot::SpawnInit(const BOOL bInit)
 		//m_stBotVisibles.Destroy();  // free the list of visible entities
 	//	m_stBotVisibles.Destroy();
 
-		while (!sOpenList.empty())
-			sOpenList.pop();
+		sOpenList.Clear();
 		//sOpenList.Destroy();
 
 		int team = GetTeam();
@@ -2574,40 +2570,10 @@ void CBot::StartGame(void)
 		}
 	}
 	break;
-    case MOD_TS:
-    {
-		if (m_fNextUseVGUI == false) //Fix for TS 3.0? [APG]RoboCop[CL]
-		{ 
-			FakeClientCommand(m_pEdict, "menuselect 1");
-			m_fSpawnTime = gpGlobals->time + 7.0;
-		}
-		else if (m_fSpawnTime < gpGlobals->time)
-		{       
-			FakeClientCommand(m_pEdict, "respawn");
-			m_bStartedGame = TRUE;
-        }
-    break;
-    } 
-	
-	/*{
-		if (m_fNextUseVGUI > gpGlobals->time)
-			break;
-		m_fNextUseVGUI = gpGlobals->time + 1.0;
-		if (!m_bSelectedCar)
-		{
-			m_bSelectedCar = TRUE;
-			FakeClientCommand(m_pEdict, "changeteam");
-		}
-		else
-		{
-			if (gBotGlobals.m_iForceTeam != -1)
-			{
-				FakeClientCommand(m_pEdict, "menuselect %d", gBotGlobals.m_iForceTeam);
-			}
-			else
-				FakeClientCommand(m_pEdict, "menuselect 1");
-		}
-	}*/
+	case MOD_TS:
+	{
+		m_bStartedGame = TRUE;
+	}
 
 	break;
 	// battle grounds
@@ -2627,7 +2593,7 @@ void CBot::StartGame(void)
 			int iTeam = m_Profile.m_iFavTeam;
 
 			// if team isn't valid then make iTeam 5. (keep it 1, 2 or 5 )
-			if (iTeam != 1 || iTeam != 2 || iTeam != 5)
+			if ( iTeam < 1 || iTeam > 5 || iTeam == 3 || iTeam == 4 )
 				iTeam = 5;
 
 			FakeClientCommand(m_pEdict, "jointeam %d", iTeam);
@@ -2892,6 +2858,15 @@ void CBot::Think(void)
 				{
 					FakeClientCommand(m_pEdict, "buy");
 					FakeClientCommand(m_pEdict, "menuselect 7"); // buy random
+				}
+			}
+
+			if (gBotGlobals.IsMod(MOD_TS))
+			{
+				if (m_fRespawnTime < gpGlobals->time)
+				{
+					FakeClientCommand(m_pEdict, "respawn");
+					m_fRespawnTime = gpGlobals->time + 5.0f;
 				}
 			}
 
@@ -8175,7 +8150,7 @@ void CBot::WorkMoveDirection(void)
 						m_fPrevFlyHeight = 0;
 					}
 
-					vector<ga_value> inputs;
+					std::vector<ga_value> inputs;
 
 					float fEnergy = NS_AmountOfEnergy();
 
@@ -10825,7 +10800,7 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 // return TRUE if bot wants to follow an enemy once out of sight
 // might want to add a few more things to it though
 {
-	vector<ga_value> weights;
+	std::vector<ga_value> weights;
 
 	/*if (gBotGlobals.IsMod(MOD_TFC))
 	{
@@ -10846,7 +10821,7 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 	weights.push_back(m_GASurvival->get(14));
 	weights.push_back(m_GASurvival->get(15));
 
-	vector<ga_value> inputs;
+	std::vector<ga_value> inputs;
 
 	dec_followEnemy->setWeights(weights);
 
@@ -15031,7 +15006,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 					{
 						dec_stunt->setWeights(m_pTSWeaponSelect, 3, 5);
 
-						vector<ga_value> inputs;
+						std::vector<ga_value> inputs;
 
 						inputs.push_back((float)m_iTS_State / 2);
 						inputs.push_back(pev->velocity.Length() / m_fMaxSpeed);
@@ -16771,7 +16746,7 @@ void CBot::workEnemyCosts(edict_t* pEntity, Vector vOrigin, const float fDistanc
 
 void CBot::decideJumpDuckStrafe(const float fEnemyDist, Vector vEnemyOrigin)
 {
-	vector<ga_value> inputs;
+	std::vector<ga_value> inputs;
 
 	dec_jump->setWeights(m_pPersonalGAVals, 0, 5);
 	dec_duck->setWeights(m_pPersonalGAVals, 5, 5);

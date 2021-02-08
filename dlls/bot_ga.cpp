@@ -51,7 +51,7 @@ CBotGAValues::CBotGAValues()
 	setFitness(0);
 }
 
-CBotGAValues::CBotGAValues(const vector<ga_value> values)
+CBotGAValues::CBotGAValues(const std::vector<ga_value> values)
 {
 	clear();
 	setFitness(0);
@@ -129,7 +129,7 @@ IIndividual* CBotGAValues::copy()
 	return individual;
 }
 
-void CBotGAValues::setVector(vector<ga_value> const values)
+void CBotGAValues::setVector(std::vector<ga_value> const values)
 {
 	m_theValues.clear();
 
@@ -137,7 +137,7 @@ void CBotGAValues::setVector(vector<ga_value> const values)
 		m_theValues.push_back(values[i]);
 }
 
-void CBotGAValues::getVector(vector<ga_value>* values)
+void CBotGAValues::getVector(std::vector<ga_value>* values)
 {
 	values->clear();
 

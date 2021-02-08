@@ -35,7 +35,6 @@
 #include "gannconst.h"
 #include "perceptron.h"
 #include <vector>
-using namespace std;
 
 class CPerceptron;
 class CGA;
@@ -43,8 +42,8 @@ class CGA;
 class CNNTrainSet
 {
 public:
-	vector<ga_value> inputs;
-	vector<ga_value> outputs;
+	std::vector<ga_value> inputs;
+	std::vector<ga_value> outputs;
 };
 
 class NNLayer
@@ -67,7 +66,7 @@ public:
 
 	void load(FILE* bfp);
 private:
-	vector<CPerceptron*> m_Neurons;
+	std::vector<CPerceptron*> m_Neurons;
 };
 
 class NN
@@ -83,29 +82,29 @@ public:
 
 	NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
 
-	void setWeights(vector<ga_value>* weights);
+	void setWeights(std::vector<ga_value>* weights);
 
-	void getWeights(vector<ga_value>* weights);
+	void getWeights(std::vector<ga_value>* weights);
 
-	void execute(vector <ga_value>* outputs, vector <ga_value>* inputs);
+	void execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs);
 
 	void freeMemory();
 
 	void randomize();
 
-	void getOutputs(vector<ga_value>* outputs);
-	void trainOutputs(vector<ga_value>* wanted_outputs);
+	void getOutputs(std::vector<ga_value>* outputs);
+	void trainOutputs(std::vector<ga_value>* wanted_outputs);
 
 	void load(FILE* bfp);
 
 	void save(FILE* bfp);
 
-	virtual void train(vector<CNNTrainSet> trainingsets)
+	virtual void train(std::vector<CNNTrainSet> trainingsets)
 	{
 		return;
 	}
 private:
-	vector<NNLayer*> m_Layers;
+	std::vector<NNLayer*> m_Layers;
 	int m_iNumInputs;
 };
 
@@ -116,7 +115,7 @@ public:
 
 	~NNGATrained();
 
-	virtual void train(vector<CNNTrainSet> trainingsets);
+	virtual void train(std::vector<CNNTrainSet> trainingsets);
 private:
 	CGA* m_pGA;
 	IIndividual* m_pInd;

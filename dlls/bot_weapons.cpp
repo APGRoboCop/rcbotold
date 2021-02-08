@@ -432,8 +432,8 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 {
 	int i;
 
-	priority_queue<CBotWeapon*, vector<CBotWeapon*>, CompareBotWeapon> Weapons;
-	priority_queue<CBotWeapon*, vector<CBotWeapon*>, CompareBotWeapon> otherWeapons;
+	std::priority_queue<CBotWeapon*, std::vector<CBotWeapon*>, CompareBotWeapon> Weapons;
+	std::priority_queue<CBotWeapon*, std::vector<CBotWeapon*>, CompareBotWeapon> otherWeapons;
 	//	dataQueue<int> Weapons;
 	//	dataQueue<int> otherWeapons;
 
@@ -675,7 +675,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 			}
 			else if (pEnemy && bEnemyIsElectrified)
 			{
-				vector<ga_value> inputs;
+				std::vector<ga_value> inputs;
 
 				int iweap = 0;
 

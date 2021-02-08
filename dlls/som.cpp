@@ -65,7 +65,7 @@ CSom :: ~CSom()
 	m_Neurons.clear();
 }
 
-CSomNeuron* CSom::getBMU(vector <ga_value>* inputs)
+CSomNeuron* CSom::getBMU(std::vector <ga_value>* inputs)
 {
 	CSomNeuron* winner = NULL;
 	ga_value bestdistance = 0;
@@ -85,7 +85,7 @@ CSomNeuron* CSom::getBMU(vector <ga_value>* inputs)
 	return winner;
 }
 
-void CSom::updateAround(vector<ga_value>* inputs, CSomNeuron* bmu)
+void CSom::updateAround(std::vector<ga_value>* inputs, CSomNeuron* bmu)
 {
 	ga_value dist;
 	ga_value nsiz = m_fNSize * m_fNSize;
@@ -101,7 +101,7 @@ void CSom::updateAround(vector<ga_value>* inputs, CSomNeuron* bmu)
 	}
 }
 
-CSomNeuron* CSom::inputOne(vector <ga_value>* inputs)
+CSomNeuron* CSom::inputOne(std::vector <ga_value>* inputs)
 {
 	CSomNeuron* winner = getBMU(inputs);
 
@@ -114,7 +114,7 @@ CSomNeuron* CSom::inputOne(vector <ga_value>* inputs)
 	return winner;
 }
 
-CSomNeuron* CSom::input(vector < vector <ga_value> >* inputs)
+CSomNeuron* CSom::input(std::vector < std::vector <ga_value> >* inputs)
 {
 	return inputOne(&(*inputs)[RANDOM_LONG(0, (int)inputs->size() - 1)]);
 }
@@ -131,7 +131,7 @@ void CSom::display()
 	}
 }
 
-void CSomNeuron::update(vector<ga_value>* inputs, ga_value inf)
+void CSomNeuron::update(std::vector<ga_value>* inputs, ga_value inf)
 {
 	ga_value change;
 
@@ -162,9 +162,9 @@ CSomNeuron::CSomNeuron(int iInp, int iX, int iY)
 		fWeights.push_back(RANDOM_FLOAT(0, 1));
 }
 
-//void CSomNeuron :: update ( vector<ga_value> *inputs, ga_value inf );
+//void CSomNeuron :: update ( std::vector<ga_value> *inputs, ga_value inf );
 
-ga_value CSomNeuron::distance(vector <ga_value>* inputs)
+ga_value CSomNeuron::distance(std::vector <ga_value>* inputs)
 {
 	ga_value dist = 0;
 	ga_value comp;
@@ -179,7 +179,7 @@ ga_value CSomNeuron::distance(vector <ga_value>* inputs)
 	return dist;
 }
 
-vector <ga_value>* CSomNeuron::weights()
+std::vector <ga_value>* CSomNeuron::weights()
 {
 	return &fWeights;
 }

@@ -60,8 +60,7 @@
 #include "waypoint.h"
 
 #include <vector>
-#include <queue>
-using namespace std;
+#include <algorithm>
 
 static FILE* fp;
 
@@ -144,7 +143,7 @@ void AStarNode::setParent(const int iWpt)
 bool AStarNode::precedes(AStarNode* b)
 {
 	// lowest cost first
-	return m_fCost + getHeuristic() > b->m_fCost + b->getHeuristic();
+	return m_fCost + getHeuristic() < b->m_fCost + b->getHeuristic();
 }
 
 bool AStarNode::operator()(AStarNode* a, AStarNode* b)
@@ -156,11 +155,15 @@ bool AStarNode::operator<(AStarNode* b)
 {
 	return precedes(b);
 }
-
+bool CompareAStarNode(AStarNode* a, AStarNode* b)
+{
+	return a->precedes(b);
+}
 int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 {
 	dataStack<int> sTempList;
-	priority_queue<AStarNode*, vector<AStarNode*>, CompareAStarNode>* sOpenList;
+	dataUnconstArray<AStarNode*> *sOpenList;
+	//std::priority_queue<AStarNode*, std::vector<AStarNode*>, CompareAStarNode>* sOpenList;
 
 	AStarNode* aPathsFound;
 	AStarNode* sCurrNodeInfo = NULL; // Info of the current node
@@ -229,16 +232,16 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		}
 
 		// The first node must be open
-
+		sOpenList->Clear();
 		// empty list
-		while (!sOpenList->empty())
-			sOpenList->pop();
+		//while (!sOpenList->empty())
+			//sOpenList->pop();
 		//sOpenList->Init();
 		AStarNode* curr = &aPathsFound[iFrom];
 		curr->open();
 		curr->m_iWaypoint = iFrom;
 		curr->setHeuristic(pBot->DistanceFrom(waypoints[iFrom].origin), (waypoints[iFrom].origin - waypoints[iTo].origin).Length());
-		sOpenList->push(&aPathsFound[iFrom]);
+		sOpenList->Add(&aPathsFound[iFrom]);
 		pBot->iDetPackWaypoints.Clear();
 		//	sOpenList->Push(iFrom);
 	}
@@ -283,18 +286,22 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	int iPrevWpt = -1;
 	BOOL bDetpackWpt;
 
-	while (bFoundGoal == FALSE && !sOpenList->empty()/*IsEmpty()*/ && iLoops < iMaxLoops)
+	while (bFoundGoal == FALSE && !sOpenList->IsEmpty()/*IsEmpty()*/ && iLoops < iMaxLoops)
 	{
 		iLoops++;
 
 		iCurrentNode = -1;
 
 		fMinCost = 0;
+		unsigned int bestIndex = 0;
 
-		sCurrNodeInfo = sOpenList->top();
+		bestIndex = sOpenList->GetBestNode(CompareAStarNode);
+
+		sCurrNodeInfo = (*sOpenList)[bestIndex];
+
 		iCurrentNode = sCurrNodeInfo->m_iWaypoint;
 		sCurrNodeInfo->unOpen();
-		sOpenList->pop();
+		sOpenList->RemoveByIndex(bestIndex);
 
 		// We've found a goal once the current node is the goal waypoint.
 		bFoundGoal = iCurrentNode == iTo;
@@ -546,7 +553,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 			if (!sSuccNodeInfo->isOpen())
 			{
 				// open list REQUIRES cost and heuristic set for prioritising!!!
-				sOpenList->push(sSuccNodeInfo);
+				sOpenList->Add(sSuccNodeInfo);
 				sSuccNodeInfo->open();
 			}
 		}
@@ -564,9 +571,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	if (!bFoundGoal && iLoops >= iMaxLoops)
 		return -2; // tell the program we need to continue next time
 
-	// free all the stuff in the openlist
-	while (!sOpenList->empty())
-		sOpenList->pop();
+	sOpenList->Clear();
 
 	// Bot could have just failed a lot of paths and ignored them
 	// Clear the failed waypoints / goals structure

@@ -66,7 +66,6 @@
 
 #include <vector>
 #include <queue>
-using namespace std;
 
 #ifndef RCBOT_META_BUILD
 
@@ -1970,10 +1969,12 @@ public:
 
 		CRememberPosition* e = m_Positions.getExisting(newPosition);
 
-		if (e != NULL)
-			m_Positions.Remove(*e);
+		int index = m_Positions.getExistingIndex(newPosition);
+
+		if (index != -1)
+			m_Positions.RemoveByIndex(index);
 		else if (m_Positions.Size() > MAX_REMEMBER_POSITIONS)
-			m_Positions.Remove(m_Positions[0]);
+			m_Positions.RemoveByIndex(0);
 
 		m_Positions.Add(newPosition);
 
@@ -2752,6 +2753,12 @@ class CBotVisibles;
 class TSObjective
 {
 public:
+	TSObjective()
+	{
+		m_iId = 0;
+		m_vOrigin = Vector(0, 0, 0);
+		m_szName = NULL;
+	}
 	TSObjective(int id, Vector origin, char* name)
 	{
 		m_iId = id;
@@ -2796,6 +2803,8 @@ private:
 	CPerceptron* dec_faceHurtOrigin;
 	CPerceptron* dec_followEnemy;
 	CPerceptron* dec_flapWings;
+
+	float m_fRespawnTime = 0.0f;
 
 	//CPerceptron *dec_useBlink;
 	//CPerceptron *dec_pressBlinkButton;
@@ -3456,7 +3465,7 @@ public:
 	// Navigation
 
 	// open list of waypoints for A*
-	priority_queue<AStarNode*, vector<AStarNode*>, CompareAStarNode> sOpenList;//dataStack<int>
+	dataUnconstArray<AStarNode*> sOpenList;//dataStack<int>
 	// A* nodes
 	AStarNode aPathsFound[MAX_WAYPOINTS];
 

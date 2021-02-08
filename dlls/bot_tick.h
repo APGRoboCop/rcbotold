@@ -2,7 +2,6 @@
 #define __BOT_TICK_H__
 
 #include <list>
-using namespace std;
 
 class CTickable
 {

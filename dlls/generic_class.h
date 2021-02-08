@@ -47,7 +47,6 @@
 
 #include <cassert>
 #include <vector>
-using namespace std;
 
 void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, char* fmt, ...);
 void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...);
@@ -945,24 +944,40 @@ public:
 
 	int Size(void)
 	{
-		return array.size();
+		return size;
+	}
+
+	void RemoveByIndex(int index)
+	{
+		for (unsigned int i = index; i < size - 1; i++)
+			buffer[i] = buffer[i + 1];
+		size--;
+	}
+
+	int GetBestNode(bool (*CompareFunction)(T a, T b))
+	{
+		int index = 0;
+		T best = buffer[0];
+
+		for (unsigned int i = 1; i < size; i++)
+		{
+			if (CompareFunction(buffer[i], best))
+			{
+				best = buffer[i];
+				index = i;
+			}
+		}
+
+		return index;
 	}
 
 	void Remove(T obj)
 	{
-		if (array.size() == 0)
-			return;
-#if defined(_WIN32) && !defined(__CYGWIN__)
-		vector<T>::iterator it;
-#else
-		/*anonym001*/
-		typename vector<T>::iterator it;
-#endif
-		for (it = array.begin(); it != array.end(); ++it)
+		for (unsigned int i = 0; i < size; i++)
 		{
-			if (*it == obj)
+			if (buffer[i] == obj)
 			{
-				array.erase(it);
+				RemoveByIndex(i);
 				return;
 			}
 		}
@@ -970,26 +985,11 @@ public:
 
 	void RemoveByPointer(T* obj)
 	{
-		if (array.size() == 0)
-			return;
-
-#if defined(_WIN32) && !defined(__CYGWIN__)
-		vector<T>::iterator it;
-#else
-		/*anonym001*/
-		typename vector<T>::iterator it;
-#endif
-
-		for (it = array.begin(); it != array.end(); ++it)
+		for (unsigned int i = 0; i < size; i++)
 		{
-			/* pointer comparison only */
-//#if defined(_WIN32) && !defined(__CYGWIN__)
-				//if ( it == obj )
-//#else
-			if (&*it == obj)
-				//#endif
+			if (&buffer[i] == obj)
 			{
-				array.erase(it);
+				RemoveByIndex(i);
 				return;
 			}
 		}
@@ -997,17 +997,22 @@ public:
 
 	void Destroy(void)
 	{
-		array.clear();
+		if (buffer != 0)
+			delete[] buffer;
+
+		Init();
 	}
 
 	void Init(void)
 	{
-		array.clear();
+		size = 0;
+		capacity = 0;
+		buffer = 0;
 	}
 
 	bool IsEmpty(void)
 	{
-		return array.empty();
+		return size == 0;
 	}
 
 	void Clear(void)
@@ -1018,22 +1023,44 @@ public:
 
 	T Random(void)
 	{
-		return array[RANDOM_LONG(0, array.size() - 1)];
+		return buffer[RANDOM_LONG(0, size - 1)];
 	}
 
 	void Add(const T &pObj)
 	{
-		array.push_back(pObj);
+		size++;
+
+		if (size > capacity)
+		{
+			if (capacity == 0)
+				capacity = 1;
+			else
+				capacity *= 2;
+
+			T* new_buffer = new T[capacity];
+
+			for (unsigned int i = 0; i < size - 1; i++)
+			{
+				new_buffer[i] = buffer[i];
+			}
+
+			if ( buffer != NULL )
+				delete[] buffer;
+
+			buffer = new_buffer;
+		}
+
+		buffer[size - 1] = pObj;
 	}
 
 	T ReturnValueFromIndex(int iIndex)
 	{
-		return array[iIndex];
+		return buffer[iIndex];
 	}
 
 	T* ReturnPointerFromIndex(int iIndex)
 	{
-		return &(array[iIndex]);
+		return &(buffer[iIndex]);
 	}
 
 	T& operator [] (int iIndex)
@@ -1043,15 +1070,26 @@ public:
 			throw "[RCBOT>] dataUnconstarray[] Array exception: index out of bounds";
 		}
 
-		return (array[iIndex]);
+		return (buffer[iIndex]);
+	}
+	
+	int getExistingIndex(T obj)
+	{
+		for (unsigned int i = 0; i < size; i++)
+		{
+			if (buffer[i] == obj)
+				return i;
+		}
+
+		return -1;
 	}
 
 	T* getExisting(T Obj)
 	{
-		for (unsigned int i = 0; i < array.size(); i++)
+		for (unsigned int i = 0; i < size; i++)
 		{
-			if (array[i] == Obj)
-				return &(array[i]);
+			if (buffer[i] == Obj)
+				return &(buffer[i]);
 		}
 
 		return NULL;
@@ -1059,16 +1097,18 @@ public:
 
 	BOOL IsMember(T Obj)
 	{
-		for (unsigned int i = 0; i < array.size(); i++)
+		for (unsigned int i = 0; i < size; i++)
 		{
-			if (array[i] == Obj)
+			if (buffer[i] == Obj)
 				return TRUE;
 		}
 
 		return FALSE;
 	}
 private:
-	vector<T> array;
+	T* buffer;
+	unsigned int capacity;
+	unsigned int size;
 };
 /*
 #define D_HASH_TABLE_SETS 1

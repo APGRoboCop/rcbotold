@@ -63,7 +63,7 @@ NN::NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int 
 	m_Layers.push_back(new NNLayer(iNumOutputs, iNumNeuronsPerHiddenLayer));
 }
 
-void NN::setWeights(vector<ga_value>* weights)
+void NN::setWeights(std::vector<ga_value>* weights)
 {
 	unsigned short int i;
 	unsigned short int j;
@@ -86,7 +86,7 @@ void NN::setWeights(vector<ga_value>* weights)
 	}
 }
 
-void NN::getWeights(vector<ga_value>* weights)
+void NN::getWeights(std::vector<ga_value>* weights)
 {
 	unsigned short int i;
 	unsigned short int j;
@@ -108,7 +108,7 @@ void NN::getWeights(vector<ga_value>* weights)
 	}
 }
 
-void NN::trainOutputs(vector<ga_value>* wanted_outputs)
+void NN::trainOutputs(std::vector<ga_value>* wanted_outputs)
 {
 	unsigned short int i;
 	unsigned short int j;
@@ -127,7 +127,7 @@ void NN::trainOutputs(vector<ga_value>* wanted_outputs)
 	}
 }
 
-void NN::getOutputs(vector<ga_value>* outputs)
+void NN::getOutputs(std::vector<ga_value>* outputs)
 {
 	unsigned short int i;
 	unsigned short int j;
@@ -148,12 +148,12 @@ void NN::getOutputs(vector<ga_value>* outputs)
 	}
 }
 
-void NN::execute(vector <ga_value>* outputs, vector <ga_value>* inputs)
+void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs)
 {
 	unsigned short int i;
 	unsigned short int j;
 
-	vector<ga_value> newoutputs;
+	std::vector<ga_value> newoutputs;
 
 	outputs->clear();
 
@@ -333,7 +333,7 @@ NNGATrained::~NNGATrained()
 	}
 }
 
-void NNGATrained::train(vector<CNNTrainSet> trainingsets)
+void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
 {
 	if (m_pGA->canPick())
 	{
@@ -344,7 +344,7 @@ void NNGATrained::train(vector<CNNTrainSet> trainingsets)
 	}
 	else
 	{
-		vector<ga_value> weights;
+		std::vector<ga_value> weights;
 
 		m_pInd->clear();
 		m_pInd->setFitness(0);
@@ -356,7 +356,7 @@ void NNGATrained::train(vector<CNNTrainSet> trainingsets)
 		static_cast<CBotGAValues*>(m_pInd)->setVector(weights);
 	}
 
-	vector<ga_value> outputs;
+	std::vector<ga_value> outputs;
 
 	ga_value fTotalError = 0;
 	unsigned int iNum = 0;

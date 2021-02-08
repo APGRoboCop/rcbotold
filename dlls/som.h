@@ -36,7 +36,6 @@
 #include "gannconst.h"
 
 #include <vector>
-using namespace std;
 
 class CSomNeuron
 {
@@ -57,18 +56,18 @@ public:
 		return m_iY;
 	}
 
-	void update(vector<ga_value>* inputs, ga_value inf);
+	void update(std::vector<ga_value>* inputs, ga_value inf);
 
-	ga_value distance(vector <ga_value>* inputs);
+	ga_value distance(std::vector <ga_value>* inputs);
 
-	vector <ga_value>* weights();
+	std::vector <ga_value>* weights();
 
 	void displayWeights();
 
 	ga_value neighbourDistance(CSomNeuron* other, ga_value fDistance);
 
 private:
-	vector<ga_value> fWeights;
+	std::vector<ga_value> fWeights;
 	ga_value m_iX;
 	ga_value m_iY;
 };
@@ -82,15 +81,15 @@ public:
 
 	~CSom();
 
-	CSomNeuron* getBMU(vector <ga_value>* inputs);
+	CSomNeuron* getBMU(std::vector <ga_value>* inputs);
 
-	void updateAround(vector<ga_value>* inputs, CSomNeuron* bmu);
+	void updateAround(std::vector<ga_value>* inputs, CSomNeuron* bmu);
 
-	CSomNeuron* input(vector < vector <ga_value> >* inputs);
+	CSomNeuron* input(std::vector < std::vector <ga_value> >* inputs);
 
-	CSomNeuron* inputOne(vector < ga_value >* inputs);
+	CSomNeuron* inputOne(std::vector < ga_value >* inputs);
 
-	void input(vector < vector <ga_value> >* inputs, int epochs);
+	void input(std::vector < std::vector <ga_value> >* inputs, int epochs);
 
 	void display();
 
@@ -100,7 +99,7 @@ public:
 	}
 
 private:
-	vector<CSomNeuron*> m_Neurons;
+	std::vector<CSomNeuron*> m_Neurons;
 	int m_iH;
 	int m_iW;
 	ga_value m_fNSize;

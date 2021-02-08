@@ -301,3 +301,4 @@ dlls/HPB_bot___Win32_MetaMod_Debug/HPB_bot.lib
 *.cmd
 *.i
 *.cfg
+*.recipe

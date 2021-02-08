@@ -34,8 +34,6 @@
 #include "gannconst.h"
 #include <vector>
 
-using namespace std;
-
 typedef enum
 {
 	SAVETYPE_BOT,
@@ -104,7 +102,7 @@ public:
 	IIndividual* pick();
 
 private:
-	vector<IIndividual*> m_theIndividuals;
+	std::vector<IIndividual*> m_theIndividuals;
 	CGA* m_ga;
 };
 

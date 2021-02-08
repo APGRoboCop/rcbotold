@@ -678,7 +678,6 @@ protected:
 };
 
 #include <vector>
-using namespace std;
 
 class CSetOrderMessage : public CBotStatedNetMessage
 {
@@ -714,7 +713,7 @@ public:
 	{
 	}
 private:
-	vector <edict_t*> m_ReceivedPlayers;
+	std::vector <edict_t*> m_ReceivedPlayers;
 	Vector m_vOrderOrigin;
 	AvHOrderType m_iOrderType;
 	AvHOrderTargetType m_iOrderTargetType;

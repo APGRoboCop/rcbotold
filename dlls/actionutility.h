@@ -67,7 +67,7 @@ public:
 		return total;
 	}
 private:
-	vector<CActionUtility> m_Utilities;
+	std::vector<CActionUtility> m_Utilities;
 };
 
 #endif

@@ -6,6 +6,7 @@ RCBot versions
 
 V 1.5
 
+* added: The Specialists v3.0 support, big thanks to Cheeseh and some admins from tsmod.net
 * added: Performance optimisations
 * changed: Replaced most of the C style casts with C++ casts
 * changed: Sven Co-op v5 or later aren't supported anymore use RCBot AngelScript instead

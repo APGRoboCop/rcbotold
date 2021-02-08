@@ -50,7 +50,7 @@ public:
 
 	//~CBotGAValues();
 
-	CBotGAValues(vector<ga_value> values);
+	CBotGAValues(std::vector<ga_value> values);
 
 	// crossover with other individual
 	void crossOver(IIndividual* other);
@@ -62,8 +62,8 @@ public:
 	// sub classes return their class with own values
 	IIndividual* copy();
 
-	void setVector(vector<ga_value> values);
-	void getVector(vector<ga_value>* values);
+	void setVector(std::vector<ga_value> values);
+	void getVector(std::vector<ga_value>* values);
 
 	float get(int iIndex);
 
@@ -73,12 +73,12 @@ public:
 
 	void add(ga_value val) { m_theValues.push_back(val); }
 
-	vector<ga_value>* returnVector() { return &m_theValues; }
+	std::vector<ga_value>* returnVector() { return &m_theValues; }
 
 	void freeMemory();
 
 private:
-	vector<ga_value> m_theValues;
+	std::vector<ga_value> m_theValues;
 };
 
 /////////////////////////////////////////////////

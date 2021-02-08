@@ -104,15 +104,6 @@ private:
 	short int flags;
 };
 
-class CompareAStarNode
-{
-public:
-	bool operator()(AStarNode* a, AStarNode* b)
-	{
-		return a->precedes(b);
-	}
-};
-
 typedef enum
 {
 	BOT_CLIMB_NONE = 0,
