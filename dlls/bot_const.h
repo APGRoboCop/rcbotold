@@ -938,7 +938,7 @@ enum
 	MOD_RC2 = 5,		// rocket crowbar 2
 	MOD_COUNTERSTRIKE = 6,
 	MOD_DMC = 7,		// deathmatch classic
-	MOD_TS = 8,			// the specialists (no weaponlist info [can't make bots shoot!])
+	MOD_TS = 8,			// the specialists
 	MOD_SVENCOOP = 9,
 	MOD_IOS = 10,		// international online soccer (gave up :p)
 	MOD_BG = 11,		// battlegrounds

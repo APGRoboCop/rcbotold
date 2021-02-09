@@ -74,12 +74,13 @@
 #include "bot.h"
 
 #include "waypoint.h"
+#include <math.h>
 
 extern CBotGlobals gBotGlobals;
 extern enginefuncs_t g_engfuncs;
 extern CWaypointLocations WaypointLocations;
 
-#define PI 3.141592654
+//#define PI 3.141592654
 
 BOOL UTIL_TankUsed(edict_t* pTank)
 {
@@ -411,6 +412,7 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 		{
 			if (!pent->free)
 			{
+				// 'strlen' function called too many times inside loop [APG]RoboCop[CL]
 				const int length = strlen(name);
 
 				char arg_lwr[80];
@@ -626,7 +628,7 @@ float UTIL_AngleBetweenVectors(Vector const vec1, Vector const vec2)
 	double vec1Dotvec2 = vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
 	double veclengths = vec1.Length() * vec2.Length();
 
-	return acos(vec1Dotvec2 / veclengths) * (180 / PI);
+	return acos(vec1Dotvec2 / veclengths) * (180 / M_PI);
 }
 
 float UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector const vOrigin)

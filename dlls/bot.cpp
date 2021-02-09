@@ -66,6 +66,7 @@
 
 #include "usercmd.h"
 
+#include <math.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -929,6 +930,8 @@ BOOL CLearnedHeader :: operator == (CLearnedHeader const other)
 
 void CBot::loadLearnedData()
 {
+	//The function was exited without closing the file referenced by the 'bfp' handle.
+	//A resource leak is possible. [APG]RoboCop[CL]
 	FILE* bfp;
 	char tmp_filename[64];
 	char filename[256];
@@ -2184,6 +2187,7 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		// always null terminate the last possible character
 		string[start] = 0;
 
+		// 'strlen' function called too many times inside loop [APG]RoboCop[CL]
 		end = start + strlen(fill_point);
 		strncpy(after, &string[end], len - end);
 		after[len - end] = 0;
@@ -7877,7 +7881,7 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 		iCurrentTask = m_CurrentTask->Task();
 
 	vAngles.z = 0;
-	pev->v_angle.z = pev->v_angle.z = 0;
+	pev->v_angle.z = 0;
 
 	float zComp = m_vMoveToVector.z - pev->origin.z;
 
@@ -8376,7 +8380,7 @@ void CBot::WorkMoveDirection(void)
 	UTIL_FixFloatAngle(&fAngle);
 
 	// botmans code! (me maths suxorz...sorta)
-	float radians = fAngle * 3.141592f / 180.f; // degrees to radians
+	float radians = fAngle * M_PI / 180.f; // degrees to radians
 	flMove = cos(radians);
 	flSide = sin(radians);
 	//
