@@ -156,7 +156,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		// if real mode is on, then bot chat is affected by bots rep with sender
 		// and depends on chat_reply_percent command
 		if (gBotGlobals.m_iBotChatReplyPercent && (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatReplyPercent && (!
-				gBotGlobals.IsConfigSettingOn(BOT_CONFIG_REAL_MODE) ||
+			gBotGlobals.IsConfigSettingOn(BOT_CONFIG_REAL_MODE) ||
 			RANDOM_LONG(BOT_MIN_REP, BOT_MAX_REP) < iRep) ||
 			/*gBotGlobals.m_Clients*/
 			bNameInMsg || UTIL_GetNumClients(FALSE) == 2))
@@ -178,8 +178,8 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		if (!gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHAT_DONT_LEARN) && UTIL_GetBotPointer(pSender) == NULL)
 			HAL_Learn(pBot->m_Profile.m_HAL->bot_model, pBot->m_Profile.m_HAL->input_words); // only learn from humans
 
-		delete [] szName;
-		delete [] szSenderName;
+		delete[] szName;
+		delete[] szSenderName;
 
 		szName = NULL;
 		szSenderName = NULL;
@@ -549,7 +549,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 		dictionary->entry = static_cast<HAL_STRING*>(malloc(sizeof(HAL_STRING) * dictionary->size));
 	else
 		dictionary->entry = static_cast<HAL_STRING*>(realloc(static_cast<HAL_STRING*>(dictionary->entry),
-			sizeof(HAL_STRING)* dictionary->size));
+			sizeof(HAL_STRING) * dictionary->size));
 
 	if (dictionary->entry == NULL)
 		BotMessage(NULL, 1, "HAL: HAL_AddWord() unable to reallocate the dictionary to %d elements\n", dictionary->size);
@@ -754,8 +754,8 @@ void HAL_LoadDictionary(FILE* file, HAL_DICTIONARY* dictionary)
 
 		HAL_AddWord(dictionary, word);
 
-//		if (word.word != NULL)
-			free(word.word);
+		//		if (word.word != NULL)
+		free(word.word);
 
 		word.word = NULL;
 	}
@@ -903,7 +903,7 @@ void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position)
 		tree->tree = static_cast<HAL_TREE**>(malloc(sizeof(HAL_TREE*) * (tree->branch + 1)));
 	else
 	{
-		tree->tree = static_cast<HAL_TREE**>(realloc(static_cast<HAL_TREE**>(tree->tree), sizeof(HAL_TREE*)* (tree->branch + 1)));
+		tree->tree = static_cast<HAL_TREE**>(realloc(static_cast<HAL_TREE**>(tree->tree), sizeof(HAL_TREE*) * (tree->branch + 1)));
 	}
 
 	if (tree->tree == NULL)
@@ -1249,8 +1249,8 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words)
 
 	for (i = 0; i < (int)keys->size; ++i)
 	{
-//		if (keys->entry[i].word != NULL)
-			free(keys->entry[i].word);
+		//		if (keys->entry[i].word != NULL)
+		free(keys->entry[i].word);
 
 		keys->entry[i].word = NULL;
 	}
@@ -1314,13 +1314,13 @@ void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int st
 
 	sprintf(string, "%s%s%s", before, fill, after);
 
-//	if (before != NULL)
-		free(before);
+	//	if (before != NULL)
+	free(before);
 
 	before = NULL;
 
-//	if (after != NULL)
-		free(after);
+	//	if (after != NULL)
+	free(after);
 
 	after = NULL;
 }
@@ -1851,8 +1851,8 @@ void HAL_FreeModel(HAL_MODEL* model)
 
 	model->backward = NULL;
 
-//	if (model->context != NULL)
-		free(model->context);
+	//	if (model->context != NULL)
+	free(model->context);
 
 	model->context = NULL;
 
@@ -1864,8 +1864,8 @@ void HAL_FreeModel(HAL_MODEL* model)
 
 	model->dictionary = NULL;
 
-//	if (model != NULL)
-		free(model);
+	//	if (model != NULL)
+	free(model);
 
 	model = NULL;
 }
@@ -1905,26 +1905,26 @@ void HAL_FreeSwap(HAL_SWAP* swap)
 	 // for each element of the swap structure...
 	for (i = 0; i < swap->size; ++i)
 	{
-//		if (swap->from[i].word != NULL)
-			free(swap->from[i].word); // free the "from" word
+		//		if (swap->from[i].word != NULL)
+		free(swap->from[i].word); // free the "from" word
 
 		swap->from[i].word = NULL;
 
 		// free TO
 
 //		if (swap->to[i].word != NULL)
-			free(swap->to[i].word); // free the "to" word
+		free(swap->to[i].word); // free the "to" word
 
 		swap->to[i].word = NULL;
 	}
 
-//	if (swap->from != NULL)
-		free(swap->from); // free the "from" array
+	//	if (swap->from != NULL)
+	free(swap->from); // free the "from" array
 
 	swap->from = NULL;
 
-//	if (swap->to != NULL)
-		free(swap->to); // free the "to" array
+	//	if (swap->to != NULL)
+	free(swap->to); // free the "to" array
 
 	swap->to = NULL;
 
@@ -2198,7 +2198,7 @@ void FreeHALBrain(bot_profile_t* pBotProfile)
 	{
 		for (int j = 0; j < (int)pBotProfile->m_HAL->bot_model->dictionary->size; j++)
 		{
-//			if (pBotProfile->m_HAL->bot_model->dictionary->entry[j].word != NULL)
+			//			if (pBotProfile->m_HAL->bot_model->dictionary->entry[j].word != NULL)
 			{
 				free(pBotProfile->m_HAL->bot_model->dictionary->entry[j].word); // free the word
 			}
@@ -2209,7 +2209,7 @@ void FreeHALBrain(bot_profile_t* pBotProfile)
 		HAL_EmptyDictionary(pBotProfile->m_HAL->bot_model->dictionary); // empty that dictionary itself
 
 //		if (pBotProfile->m_HAL->bot_model->dictionary != NULL)
-			free(pBotProfile->m_HAL->bot_model->dictionary); // now frees the dictionary
+		free(pBotProfile->m_HAL->bot_model->dictionary); // now frees the dictionary
 
 		pBotProfile->m_HAL->bot_model->dictionary = NULL; // and fools the pointer
 	}

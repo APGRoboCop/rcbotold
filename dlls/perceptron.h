@@ -112,8 +112,8 @@ public:
 
 	~CPerceptron()
 	{
-//		if (m_transferFunction)
-			delete m_transferFunction;
+		//		if (m_transferFunction)
+		delete m_transferFunction;
 		m_transferFunction = NULL;
 	}
 

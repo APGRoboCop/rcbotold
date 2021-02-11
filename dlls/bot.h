@@ -69,7 +69,7 @@
 
 #ifndef RCBOT_META_BUILD
 
-// stuff for Win32 vs. Linux builds
+ // stuff for Win32 vs. Linux builds
 
 #ifndef linux
 typedef int (FAR* GETENTITYAPI)(DLL_FUNCTIONS*, int);
@@ -721,7 +721,7 @@ public:
 		memset(this, 0, sizeof(CBotTask));
 	}
 
-	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = NULL, int iInfo = 0, float fInfo = 0, 
+	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = NULL, int iInfo = 0, float fInfo = 0,
 		Vector vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0/*, CBotTask *GoalTask = NULL */)
 	{
 		// cheap way of adding schedules.. ;)
@@ -1551,7 +1551,7 @@ typedef struct path {
 ////////////////////////////
 // Bot Profile Info
 // TODO: those need to be initialised for Bot Profile to work [APG]RoboCop[CL]
-typedef struct bot_profile_s 
+typedef struct bot_profile_s
 {
 	int m_iProfileId;
 
@@ -2662,8 +2662,8 @@ public:
 		{
 			pSquad = tempStack.ChooseFromStack();
 
-//			if (pSquad)
-				delete pSquad;
+			//			if (pSquad)
+			delete pSquad;
 			pSquad = NULL;
 		}
 
@@ -5481,7 +5481,7 @@ public:
 							break;
 						}
 
-						if (iPriority > * iBestPriority)
+						if (iPriority > *iBestPriority)
 						{
 							pUnderAttackStruct = pStructure->GetEntity();
 							*iBestPriority = iPriority;
@@ -6557,7 +6557,7 @@ public:
 	{
 		return team_allies[team1] & 1 << team2 - 1;
 	}
-	
+
 	BOOL TFC_playerHasFlag(edict_t* pPlayer);
 	BOOL TFC_getCaptureLocationForFlag(Vector* vec, edict_t* pFlag);
 

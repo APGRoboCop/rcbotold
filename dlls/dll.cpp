@@ -681,9 +681,11 @@ void ClientDisconnect(edict_t* pEntity)
 ///////////////////////////////////////////////////////////////////////////
 void ClientKill(edict_t* pEntity)
 {
-	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a");
+	if (debug_engine) {
+		FILE* fp; fp = fopen("bot.txt", "a");
 		fprintf(fp, "ClientKill: %x\n", unsigned(pEntity));
-		fclose(fp); }
+		fclose(fp);
+	}
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -694,9 +696,11 @@ void ClientKill(edict_t* pEntity)
 ///////////////////////////////////////////////////////////////////////////
 void ClientPutInServer(edict_t* pEntity)
 {
-	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a");
+	if (debug_engine) {
+		FILE* fp; fp = fopen("bot.txt", "a");
 		fprintf(fp, "ClientPutInServer: %x\n", unsigned(pEntity));
-		fclose(fp); }
+		fclose(fp);
+	}
 
 	gBotGlobals.m_Clients.ClientConnected(pEntity);
 
@@ -1084,9 +1088,11 @@ void ClientCommand(edict_t* pEntity)
 ///////////////////////////////////////////////////////////////////////////
 void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
 {
-	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a");
+	if (debug_engine) {
+		FILE* fp; fp = fopen("bot.txt", "a");
 		fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", unsigned(pEntity), infobuffer);
-		fclose(fp); }
+		fclose(fp);
+	}
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1240,9 +1246,11 @@ const char* GetGameDescription(void)
 
 void PlayerCustomization(edict_t* pEntity, customization_t* pCust)
 {
-	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a");
+	if (debug_engine) {
+		FILE* fp; fp = fopen("bot.txt", "a");
 		fprintf(fp, "PlayerCustomization: %x\n", unsigned(pEntity));
-		fclose(fp); }
+		fclose(fp);
+	}
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1422,9 +1430,11 @@ void CreateInstancedBaselines(void)
 
 int InconsistentFile(const edict_t* player, const char* filename, char* disconnect_message)
 {
-	if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a");
+	if (debug_engine) {
+		FILE* fp; fp = fopen("bot.txt", "a");
 		fprintf(fp, "InconsistentFile: %x filename=%s\n", unsigned(player), filename);
-		fclose(fp); }
+		fclose(fp);
+	}
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
