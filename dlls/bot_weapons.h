@@ -364,11 +364,10 @@ public:
 	weapon_preset_t* GetPreset(short int iModId, int iWeaponId) const
 	{
 		dataStack<weapon_preset_t> tempStack = m_Presets;
-		weapon_preset_t* pPreset;
 
 		while (!tempStack.IsEmpty())
 		{
-			pPreset = tempStack.ChoosePointerFromStack();
+			weapon_preset_t* pPreset = tempStack.ChoosePointerFromStack();
 
 			if (pPreset->m_iId == iWeaponId &&
 				pPreset->m_iModId == iModId)
@@ -629,9 +628,7 @@ public:
 
 	~CWeapons()
 	{
-		int i;
-
-		for (i = 0; i < MAX_WEAPONS; i++)
+		for (int i = 0; i < MAX_WEAPONS; i++)
 		{
 			if (m_Weapons[i] != nullptr)
 			{
@@ -645,9 +642,7 @@ public:
 
 	void Init(void)
 	{
-		int i;
-
-		for (i = 0; i < MAX_WEAPONS; i++)
+		for (int i = 0; i < MAX_WEAPONS; i++)
 		{
 			m_Weapons[i] = nullptr;
 		}
@@ -906,9 +901,7 @@ public:
 
 	void RemoveWeapons(void)
 	{
-		int i;
-
-		for (i = 0; i < MAX_WEAPONS; i++)
+		for (int i = 0; i < MAX_WEAPONS; i++)
 			this->RemoveWeapon(i);
 	}
 
@@ -951,9 +944,7 @@ public:
 
 	int GetPrimaryWeaponId(void) const
 	{
-		int i;
-
-		for (i = 0; i < MAX_WEAPONS; i++)
+		for (int i = 0; i < MAX_WEAPONS; i++)
 		{
 			if (!m_Weapons[i].HasWeapon(nullptr))
 				continue;
@@ -966,9 +957,7 @@ public:
 
 	int GetSecondaryWeaponId(void) const
 	{
-		int i;
-
-		for (i = 0; i < MAX_WEAPONS; i++)
+		for (int i = 0; i < MAX_WEAPONS; i++)
 		{
 			if (!m_Weapons[i].HasWeapon(nullptr))
 				continue;

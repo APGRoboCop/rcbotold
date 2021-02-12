@@ -387,24 +387,20 @@ void BotClient_TS_DelObj::execute(void* p, int iIndex)
 	{
 	case 0:
 	{
-		CBot* pBot;
-
 		const int id = *static_cast<int*>(p);
 
 		for (int i = 0; i < 32; i++)
 		{
-			pBot = &gBotGlobals.m_Bots[i];
+			CBot* pBot = &gBotGlobals.m_Bots[i];
 
 			if (pBot->IsUsed())
 			{
 				//delete gBotGlobals.m_Bots[iIndex].m_TSObjectives.top();
 				if (!pBot->m_TSObjectives.IsEmpty())
 				{
-					TSObjective* pObj = nullptr;
-
 					for (int j = 0; j < pBot->m_TSObjectives.Size(); j++)
 					{
-						pObj = pBot->m_TSObjectives.ReturnPointerFromIndex(j);
+						TSObjective* pObj = pBot->m_TSObjectives.ReturnPointerFromIndex(j);
 
 						if (pObj->getID() == id)
 						{
@@ -482,7 +478,6 @@ void BotClient_TS_WeaponInfo::execute(void* p, int iIndex)
 void BotClient_NS_TechSlots::execute(void* p, int iIndex)
 {
 	static int iSlots;
-	short int* iState;
 
 	if (p == nullptr || iIndex == -1)
 	{
@@ -490,7 +485,7 @@ void BotClient_NS_TechSlots::execute(void* p, int iIndex)
 		return;
 	}
 
-	iState = &gBotGlobals.m_iCurrentMessageState;
+	short int* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_TO_INT(iState))
 	{
@@ -512,12 +507,11 @@ void BotClient_BG_MakeMessage::execute(void* p, int iIndex)
 {
 	static int iSenderId = 0;
 	static int iMsg = 0;
-	short int* iState;
 
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	iState = &gBotGlobals.m_iCurrentMessageState;
+	short int* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	if (POINTER_TO_INT(iState) == 0)
 	{
@@ -872,21 +866,18 @@ void BotClient_Generic_SayText::execute(void* p, int iIndex)
 // PM - use QItems!
 void BotClient_DMC_QuakeItem::execute(void* p, const int iIndex)
 {
-	CBot* pBot;
-	int i;
-
 	if (p == nullptr || iIndex == -1)
 		return;
 
 	// new DMC Weapon info
-	pBot = &gBotGlobals.m_Bots[iIndex];
+	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 
 	pBot->m_iQuakeItems = POINTER_TO_INT(p);
 
 	// remove all weapons
 	pBot->m_Weapons.RemoveWeapons();
 
-	for (i = 0; i <= 7; i++)
+	for (int i = 0; i <= 7; i++)
 	{
 		// re add them from the info
 		if (pBot->m_iQuakeItems & 1 << i)
@@ -896,8 +887,6 @@ void BotClient_DMC_QuakeItem::execute(void* p, const int iIndex)
 
 void BotClient_Generic_VGUIMenu::execute(void* p, const int iIndex)
 {
-	CBot* pBot;
-
 	if (p == nullptr || iIndex == -1)
 	{
 		return;
@@ -917,7 +906,7 @@ void BotClient_Generic_VGUIMenu::execute(void* p, const int iIndex)
 	#endif
 	*/
 	// update bots current vgui menu that is on its screen
-	pBot = &gBotGlobals.m_Bots[iIndex];
+	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 
 	pBot->SetVGUIState(POINTER_TO_INT(p));
 }
@@ -1266,8 +1255,6 @@ void BotClient_Generic_TeamScore::execute(void* p, int iIndex)
 void BotClient_NS_HudText::execute(void* p, int iIndex)
 {
 	static short int state = 0;
-	int length = 0;
-	char* msg = nullptr;
 
 	if (p == nullptr /*|| (iIndex==-1) */)
 	{
@@ -1277,11 +1264,11 @@ void BotClient_NS_HudText::execute(void* p, int iIndex)
 
 	if (state == 0)
 	{
-		msg = static_cast<char*>(p);
+		char* msg = static_cast<char*>(p);
 
 		if (msg)
 		{
-			length = strlen(msg);
+			int length = strlen(msg);
 
 			// If a team has won (used to say "one" duhhh), round is over
 			if (!strcmpi(&msg[length - 3], "Won"))
@@ -1326,12 +1313,10 @@ void BotClient_NS_HudText::execute(void* p, int iIndex)
 // tells who is the commander
 void BotClient_NS_Commndr::execute(void* p, int iIndex)
 {
-	int index;
-
 	if (!p)
 		return;
 
-	index = *static_cast<int*>(p);
+	int index = *static_cast<int*>(p);
 
 	if (index > 0 && index <= gpGlobals->maxClients)
 	{
@@ -1405,8 +1390,6 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 // When a marine bot receives an order...
 void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 {
-	short int* state;
-	short int* state2;
 	static Vector				vOrigin;
 	static dataStack<int>		iReceiverIndexes;
 	static AvHOrderType			iOrderType = ORDERTYPE_UNDEFINED;
@@ -1416,25 +1399,20 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 	static int					iEntityUser3 = 0;
 	static edict_t* pEntity = nullptr;
 
-	state = &gBotGlobals.m_iCurrentMessageState;
-	state2 = &gBotGlobals.m_iCurrentMessageState2;
+	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short int* state2 = &gBotGlobals.m_iCurrentMessageState2;
 
 	if (p == nullptr || iIndex == -1)
 	{
-		CBot* pBot;
-
 		if (iIndex == -1)
 			return;
 
-		int iReceiverIndex;
 		//	   eBotTask GoalTask = BOT_TASK_NONE;
 		//	   CBotTask GoalTaskToAdd;
 		eBotTask TryOrderTask = BOT_TASK_NONE;
 		eBotTask OrderTask = BOT_TASK_NONE;
 		eScheduleDesc OrderSched = BOT_SCHED_NONE;
 		CBotTask WptObjectiveTask;
-
-		dataStack<int> tempStack;
 
 		if (pEntity == nullptr && iEntityUser3)
 		{
@@ -1491,7 +1469,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 			OrderTask = BOT_TASK_NONE;
 		}
 
-		tempStack = iReceiverIndexes;
+		dataStack<int> tempStack = iReceiverIndexes;
 
 		CBotTask OrderTaskToAdd = CBotTask(OrderTask, 1, pEntity, iEntityUser3, 0, vOrigin);
 
@@ -1499,9 +1477,9 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 
 		while (!tempStack.IsEmpty())
 		{
-			iReceiverIndex = tempStack.ChooseFromStack();
+			int iReceiverIndex = tempStack.ChooseFromStack();
 
-			pBot = UTIL_GetBotPointer(INDEXENT(iReceiverIndex));
+			CBot* pBot = UTIL_GetBotPointer(INDEXENT(iReceiverIndex));
 
 			if (pBot)
 			{
@@ -1638,12 +1616,10 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 	static int killer_index;
 	static int victim_index;
 
-	short int* state;
-
 	if (p == nullptr)
 		return;
 
-	state = &gBotGlobals.m_iCurrentMessageState;
+	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{
@@ -1677,17 +1653,14 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 		}
 		else if (victim_index != -1 && killer_index != -1)
 		{
-			CBot* pBotKiller;
-			CBot* pBotVictim;
-
 			CBot* pBot;
 			int i;
 
 			edict_t* killer_edict = INDEXENT(killer_index);
 			edict_t* victim_edict = INDEXENT(victim_index);
 
-			pBotKiller = UTIL_GetBotPointer(killer_edict);
-			pBotVictim = UTIL_GetBotPointer(victim_edict);
+			CBot* pBotKiller = UTIL_GetBotPointer(killer_edict);
+			CBot* pBotVictim = UTIL_GetBotPointer(victim_edict);
 
 			if (pBotKiller)
 			{
@@ -1796,7 +1769,6 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 
 void BotClient_Generic_WeaponList::execute(void* p, const int iIndex)
 {
-	short int* state;   // current state machine state
 	static char* szClassname;
 	static int iAmmo1Max;
 	static int iAmmo1;
@@ -1810,7 +1782,7 @@ void BotClient_Generic_WeaponList::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	state = &gBotGlobals.m_iCurrentMessageState;
+	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{
@@ -1876,12 +1848,10 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 	static int iId;
 	static int iClip;
 
-	short int* state;
-
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	state = &gBotGlobals.m_iCurrentMessageState;
+	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{
@@ -1967,13 +1937,11 @@ void BotClient_Generic_AmmoX::execute(void* p, const int iIndex)
 {
 	static int index;
 	static int amount;
-	//	int ammo_index;
-	short int* state;
 
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	state = &gBotGlobals.m_iCurrentMessageState;
+	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{
@@ -1997,13 +1965,11 @@ void BotClient_Generic_AmmoPickup::execute(void* p, const int iIndex)
 {
 	static int index;
 	static int amount;
-	//   int ammo_index;
-	short int* state;
 
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	state = &gBotGlobals.m_iCurrentMessageState;
+	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{
@@ -2025,12 +1991,10 @@ void BotClient_Generic_AmmoPickup::execute(void* p, const int iIndex)
 
 void BotClient_Generic_WeaponPickup::execute(void* p, const int iIndex)
 {
-	int iWeaponIndex;
-
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	iWeaponIndex = POINTER_TO_INT(p);
+	int iWeaponIndex = POINTER_TO_INT(p);
 
 	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 
@@ -2070,12 +2034,10 @@ void BotClient_Generic_WeaponPickup::execute(void* p, const int iIndex)
 
 void BotClient_Generic_ItemPickup::execute(void* p, const int iIndex)
 {
-	CBot* pBot;
-
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	pBot = &gBotGlobals.m_Bots[iIndex];
+	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 
 	if (p == pBot->m_pPickupEntity)
 		pBot->m_pPickupEntity = nullptr;
@@ -2096,14 +2058,11 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_ACCEPT_HEALTH))
 			{
 				edict_t* pSupplier = nullptr;
-				edict_t* pPlayer;
 				const float nearest = 96.0;
-				float dist;
-				int i;
 
-				for (i = 1; i <= gpGlobals->maxClients; i++)
+				for (int i = 1; i <= gpGlobals->maxClients; i++)
 				{
-					pPlayer = INDEXENT(i);
+					edict_t* pPlayer = INDEXENT(i);
 
 					if (!pPlayer || FNullEnt(pPlayer))
 						continue;
@@ -2114,7 +2073,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 					if (pPlayer == pBot->m_pEdict)
 						continue;
 
-					dist = pBot->DistanceFromEdict(pPlayer);
+					float dist = pBot->DistanceFromEdict(pPlayer);
 
 					if (dist < nearest)
 					{
@@ -2166,12 +2125,10 @@ void BotClient_Generic_Damage::execute(void* p, const int iIndex)
 	static int damage_bits;  // type of damage being done
 	static Vector damage_origin;
 
-	short int* state;
-
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	state = &gBotGlobals.m_iCurrentMessageState;
+	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{
@@ -2195,8 +2152,6 @@ void BotClient_Generic_Damage::execute(void* p, const int iIndex)
 
 		if (damage_armor > 0 || damage_taken > 0)
 		{
-			CBot* pBot;
-
 			// ignore certain types of damage...
 			if (damage_bits & IGNORE_DAMAGE)
 				return;
@@ -2208,7 +2163,7 @@ void BotClient_Generic_Damage::execute(void* p, const int iIndex)
 					return;
 			}
 
-			pBot = &gBotGlobals.m_Bots[iIndex];
+			CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 
 			pBot->BotEvent(BOT_EVENT_HURT, nullptr, nullptr, static_cast<float*>(damage_origin));
 

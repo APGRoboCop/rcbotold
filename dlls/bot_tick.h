@@ -43,12 +43,9 @@ public:
 	{
 		unsigned int iTicks = 300;
 
-		// round robin
-		std::list<CTickable*>::const_iterator it;
-
 		m_Tickables.sort();
 
-		for (it = m_Tickables.begin(); it != m_Tickables.end(); ++it)
+		for (std::list<CTickable*>::const_iterator it = m_Tickables.begin(); it != m_Tickables.end(); ++it)
 		{
 			CTickable* pCurrent = *it;
 

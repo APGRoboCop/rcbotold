@@ -242,8 +242,6 @@ public:
 
 	void RemoveFront(void)
 	{
-		dataNode<T>* tempNode = m_Head;
-
 		if (m_Head == nullptr)
 		{
 			// just set tail to null incase
@@ -254,7 +252,7 @@ public:
 
 		try
 		{
-			tempNode = m_Head;
+			dataNode<T>* tempNode = m_Head;
 
 			if (m_Tail == m_Head)
 			{
@@ -349,7 +347,6 @@ public:
 	BOOL Remove(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
-		dataNode<T>* deleteNode = nullptr;
 
 		if (m_Head == nullptr)
 			return FALSE;
@@ -378,7 +375,7 @@ public:
 		{
 			if (tempNode->m_Next->m_NodeData == pObj)
 			{
-				deleteNode = tempNode->m_Next;
+				dataNode<T>* deleteNode = tempNode->m_Next;
 
 				if (deleteNode == m_Tail)
 				{
@@ -405,7 +402,6 @@ public:
 	BOOL RemoveByPointer(const T* pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
-		dataNode<T>* deleteNode = nullptr;
 
 		if (m_Head == nullptr)
 			return FALSE;
@@ -432,7 +428,7 @@ public:
 		{
 			if (&tempNode->m_Next->m_NodeData == pObj)
 			{
-				deleteNode = tempNode->m_Next;
+				dataNode<T>* deleteNode = tempNode->m_Next;
 
 				if (deleteNode == m_Tail)
 				{
@@ -553,7 +549,6 @@ public:
 	BOOL RemoveByPointer(const T* pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
-		dataNode<T>* deleteNode;
 
 		if (m_Head == nullptr)
 			return FALSE;
@@ -571,7 +566,7 @@ public:
 		{
 			if (&tempNode->m_Next->m_NodeData == pObj)
 			{
-				deleteNode = tempNode->m_Next;
+				dataNode<T>* deleteNode = tempNode->m_Next;
 
 				tempNode->m_Next = tempNode->m_Next->m_Next;
 
@@ -593,7 +588,6 @@ public:
 	BOOL Remove(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
-		dataNode<T>* deleteNode;
 
 		if (m_Head == nullptr)
 			return FALSE;
@@ -611,7 +605,7 @@ public:
 		{
 			if (tempNode->m_Next->m_NodeData == pObj)
 			{
-				deleteNode = tempNode->m_Next;
+				dataNode<T>* deleteNode = tempNode->m_Next;
 
 				tempNode->m_Next = tempNode->m_Next->m_Next;
 
@@ -631,11 +625,9 @@ public:
 
 	void Destroy(void)
 	{
-		dataNode<T>* tempNode;
-
 		while (m_Head)
 		{
-			tempNode = m_Head;
+			dataNode<T>* tempNode = m_Head;
 
 			m_Head = m_Head->m_Next;
 
@@ -771,8 +763,6 @@ public:
 
 	void SetSize(int iArrayMax)
 	{
-		int iSize;
-
 		assert(iArrayMax > 0);
 
 		if (iArrayMax <= 0)
@@ -780,7 +770,7 @@ public:
 
 		//iArrayMax ++;
 
-		iSize = sizeof(T) * iArrayMax;
+		int iSize = sizeof(T) * iArrayMax;
 
 		m_pArray = (T*)malloc(iSize);
 

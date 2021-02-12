@@ -950,8 +950,6 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 		pClient->m_fJoinServerTime = gpGlobals->time;
 
 		const int iPlayerRepId = GetPlayerRepId(STRING(pPlayer->v.netname));
-		int i;
-		CBot* pBot;
 
 		pClient->UpdatePlayerRepId(iPlayerRepId);
 
@@ -961,9 +959,9 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 				pClient->AutoWaypoint(1);
 		}
 
-		for (i = 0; i < MAX_PLAYERS; i++)
+		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			pBot = &gBotGlobals.m_Bots[i];
+			CBot* pBot = &gBotGlobals.m_Bots[i];
 
 			if (!pBot)
 				continue;
@@ -977,9 +975,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 			pBot->m_Profile.m_Rep.AddLoadRep(pBot->m_Profile.m_iProfileId, iPlayerRepId);
 		}
 
-		CAllowedPlayer* pUser;
-
-		pUser = gBotGlobals.m_BotUsers.GetPlayer(pClient);
+		CAllowedPlayer* pUser = gBotGlobals.m_BotUsers.GetPlayer(pClient);
 
 		if (pUser)
 		{
@@ -1027,12 +1023,9 @@ void CClients::ClientDisconnected(edict_t* pPlayer)
 
 CClient* CClients::GetClientByRepId(const int iRepId)
 {
-	int i;
-	CClient* pClient = nullptr;
-
-	for (i = 0; i < MAX_PLAYERS; i++)
+	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
-		pClient = &m_Clients[i];
+		CClient* pClient = &m_Clients[i];
 
 		if (pClient->IsUsed())
 		{
@@ -1047,8 +1040,6 @@ CClient* CClients::GetClientByRepId(const int iRepId)
 void CClients::ClientDisconnected(CClient* pClient)
 {
 	const int iPlayerRepId = pClient->GetPlayerRepId();
-	int i;
-	CBot* pBot;
 
 	edict_t* pPlayer = pClient->GetPlayer();
 
@@ -1078,9 +1069,9 @@ void CClients::ClientDisconnected(CClient* pClient)
 
 	if (iPlayerRepId >= 0)
 	{
-		for (i = 0; i < MAX_PLAYERS; i++)
+		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			pBot = &gBotGlobals.m_Bots[i];
+			CBot* pBot = &gBotGlobals.m_Bots[i];
 
 			if (!pBot)
 				continue;

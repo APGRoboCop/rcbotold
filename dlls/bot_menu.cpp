@@ -287,9 +287,7 @@ CBotMenu::CBotMenu(const char* szCaption)
 
 void CBotMenu::DestroyMenu(void)
 {
-	int i;
-
-	for (i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		if (m_Menus[i] != nullptr)
 			m_Menus[i]->Init();
@@ -375,8 +373,6 @@ void CBotMenuItem::Activate(CClient* pClient) const
 
 void CBotMenu::Render(CClient* pClient)
 {
-	int iSlots;
-	int i;
 	char szMenuText[512];
 	char szMenuItemText[64];
 
@@ -386,13 +382,13 @@ void CBotMenu::Render(CClient* pClient)
 	szMenuText[0] = 0;
 	szMenuItemText[0] = 0;
 
-	iSlots = 0;
+	int iSlots = 0;
 
 	pClient->m_pMenu = this;
 
 	sprintf(szMenuText, "%s\n-----\nOptions:\n", m_szCaption);
 
-	for (i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		if (m_Menus[i] != nullptr)
 		{
@@ -493,9 +489,7 @@ void BotMenu_Func_Remove_All_Paths(CClient* pClient)
 	if (iWpt == -1)
 		return;
 
-	int i;
-
-	for (i = 0; i < MAX_WAYPOINTS; i++)
+	for (int i = 0; i < MAX_WAYPOINTS; i++)
 		WaypointDeletePath(iWpt, i);
 
 	WaypointDeletePath(iWpt);
@@ -518,9 +512,7 @@ void BotMenu_Func_Remove_Paths_From(CClient* pClient)
 	if (iWpt == -1)
 		return;
 
-	int i;
-
-	for (i = 0; i < MAX_WAYPOINTS; i++)
+	for (int i = 0; i < MAX_WAYPOINTS; i++)
 		WaypointDeletePath(iWpt, i);
 }
 
@@ -541,12 +533,9 @@ void BotMenu_Func_Lift_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Squad_Spread(CClient* pClient)
 {
-	edict_t* pEntity;
-	CBotSquad* pSquad;
+	edict_t* pEntity = pClient->GetPlayer();
 
-	pEntity = pClient->GetPlayer();
-
-	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
 	if (pSquad == nullptr)
 	{
@@ -567,12 +556,9 @@ void BotMenu_Func_Squad_Spread(CClient* pClient)
 
 void BotMenu_Func_Squad_Form(CClient* pClient)
 {
-	edict_t* pEntity;
-	CBotSquad* pSquad;
+	edict_t* pEntity = pClient->GetPlayer();
 
-	pEntity = pClient->GetPlayer();
-
-	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
 	if (pSquad == nullptr)
 	{
@@ -602,12 +588,9 @@ void BotMenu_Func_Squad_Form(CClient* pClient)
 
 void BotMenu_Func_Squad_Form2(CClient* pClient)
 {
-	edict_t* pEntity;
-	CBotSquad* pSquad;
+	edict_t* pEntity = pClient->GetPlayer();
 
-	pEntity = pClient->GetPlayer();
-
-	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
 	if (pSquad == nullptr)
 	{
@@ -740,15 +723,13 @@ void BotMenu_Func_EndLevel_Waypoint(CClient* pClient)
 
 void BotMenu_Func_KickBot(CClient* pClient)
 {
-	int i;
-
 	CBot* pBot;
 
 	dataUnconstArray<CBot*> m_Bots;
 
 	m_Bots.Init();
 
-	for (i = 0; i < MAX_PLAYERS; i++)
+	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
 		pBot = &gBotGlobals.m_Bots[i];
 
@@ -901,12 +882,9 @@ void Bot_Menu_GrenThrow_Waypoint(CClient* pClient)
 
 void BotMenu_Func_SquadMode1(CClient* pClient)
 {
-	edict_t* pEntity;
-	CBotSquad* pSquad;
+	edict_t* pEntity = pClient->GetPlayer();
 
-	pEntity = pClient->GetPlayer();
-
-	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
 	if (pSquad == nullptr)
 	{
@@ -941,12 +919,9 @@ void BotMenu_Func_SquadMode1(CClient* pClient)
 
 void BotMenu_Func_Squad_Leave(CClient* pClient)
 {
-	edict_t* pEntity;
-	CBotSquad* pSquad;
+	edict_t* pEntity = pClient->GetPlayer();
 
-	pEntity = pClient->GetPlayer();
-
-	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
 	if (pSquad == nullptr)
 	{
@@ -961,12 +936,9 @@ void BotMenu_Func_Squad_Leave(CClient* pClient)
 
 void BotMenu_Func_Squad_Remove(CClient* pClient)
 {
-	edict_t* pEntity;
-	CBotSquad* pSquad;
+	edict_t* pEntity = pClient->GetPlayer();
 
-	pEntity = pClient->GetPlayer();
-
-	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
 	if (pSquad == nullptr)
 	{
@@ -981,9 +953,6 @@ void BotMenu_Func_Squad_Remove(CClient* pClient)
 
 void BotMenu_Func_Squad_RemoveAllBotSquads(CClient* pClient)
 {
-	int i;
-	CBot* pBot;
-
 	char msg[64];
 	int iCount = 0;
 
@@ -995,9 +964,9 @@ void BotMenu_Func_Squad_RemoveAllBotSquads(CClient* pClient)
 	if (!pEntity)
 		return; // cant get player
 
-	for (i = 0; i < MAX_PLAYERS; i++)
+	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
-		pBot = &gBotGlobals.m_Bots[i];
+		CBot* pBot = &gBotGlobals.m_Bots[i];
 
 		if (!pBot || !pBot->IsUsed())
 			continue;
@@ -1021,21 +990,17 @@ void BotMenu_Func_DeleteWaypoints(CClient* pClient)
 
 void BotMenu_Func_KickBotFromTeam(CClient* pClient)
 {
-	int i;
-
 	// list of possible bots to kick
 	dataUnconstArray<CBot*> theBots;
 	CBot* pBot;
 
-	int iBotTeam;
-
-	for (i = 0; i < MAX_PLAYERS; i++)
+	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
 		pBot = &gBotGlobals.m_Bots[i];
 
 		if (pBot && pBot->IsUsed())
 		{
-			iBotTeam = UTIL_GetTeam(pBot->m_pEdict);
+			int iBotTeam = UTIL_GetTeam(pBot->m_pEdict);
 
 			switch (gBotGlobals.m_iCurrentMod)
 			{

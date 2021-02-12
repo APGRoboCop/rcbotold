@@ -97,8 +97,6 @@ CClient* CBotReputations::GetRandomClient(const int iRep) const
 // 0 : a random neutral client
 // 1 : a random friendly client
 {
-	int iGotRep;
-
 	dataStack <CBotReputation> tempStack = m_RepList;
 	CBotReputation* pRep;
 	dataUnconstArray<CBotReputation*> iIdList;
@@ -109,7 +107,7 @@ CClient* CBotReputations::GetRandomClient(const int iRep) const
 	{
 		pRep = tempStack.ChoosePointerFromStack();
 
-		iGotRep = pRep->CurrentRep();
+		int iGotRep = pRep->CurrentRep();
 
 		switch (iRep)
 		{
@@ -164,11 +162,10 @@ void CBotReputations::RemoveSaveRep(const int iBotProfile, const int iPlayerRepI
 void CBotReputations::SaveAllRep(const int iBotProfile) const
 {
 	dataStack <CBotReputation> tempStack = m_RepList;
-	CBotReputation* pRep;
 
 	while (!tempStack.IsEmpty())
 	{
-		pRep = tempStack.ChoosePointerFromStack();
+		CBotReputation* pRep = tempStack.ChoosePointerFromStack();
 
 		if (pRep)
 		{
@@ -181,8 +178,6 @@ void CBotReputations::SaveAllRep(const int iBotProfile) const
 
 void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 {
-	FILE* fp;
-
 	char filename[256];
 	char repfile[16];
 
@@ -194,7 +189,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 
 	UTIL_BuildFileName(filename, "botprofiles", repfile);
 
-	fp = fopen(filename, "rb"); // open the file in ascii read/write mode
+	FILE* fp = fopen(filename, "rb"); // open the file in ascii read/write mode
 
 	if (fp == nullptr)
 	{
@@ -245,8 +240,6 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 
 void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 {
-	FILE* fp;
-
 	char filename[256];
 	char repfile[16];
 
@@ -261,7 +254,7 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 
 	UTIL_BuildFileName(filename, "botprofiles", repfile);
 
-	fp = fopen(filename, "rb+"); // open the file in ascii read/write mode
+	FILE* fp = fopen(filename, "rb+"); // open the file in ascii read/write mode
 
 	if (fp == nullptr)
 	{
@@ -333,12 +326,10 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 int GetPlayerEdictRepId(edict_t* pEdict)
 // return rep id of pEdict
 {
-	CClient* pClient;
-
 	if (pEdict == nullptr)
 		return -1;
 
-	pClient = gBotGlobals.m_Clients.GetClientByEdict(pEdict);
+	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEdict);
 
 	if (pClient)
 		return pClient->GetPlayerRepId();
@@ -351,8 +342,6 @@ int GetPlayerRepId(const char* szPlayerName)
 // held in the playersid.ini file. theire id is basically
 // the line number that their name is on in the .ini file.
 {
-	FILE* fp;
-
 	if (szPlayerName == nullptr)
 		return -1;
 	if (*szPlayerName == 0)
@@ -361,7 +350,7 @@ int GetPlayerRepId(const char* szPlayerName)
 	char filename[512];
 	UTIL_BuildFileName(filename, BOT_PLAYER_ID_FILE);
 
-	fp = fopen(filename, "r");
+	FILE* fp = fopen(filename, "r");
 
 	if (fp == nullptr)
 	{
@@ -387,17 +376,14 @@ int GetPlayerRepId(const char* szPlayerName)
 	{
 		char buffer[128];
 		char playername[64];
-		int length;
 		int iId = 0;
-		int i;
-		int iPlayerChar;
 
 		while (fgets(buffer, 127, fp))
 		{
 			if (buffer[0] == '#') // comment
 				continue;
 
-			length = strlen(buffer);
+			int length = strlen(buffer);
 
 			if (length == 0)
 				continue; // nothing on this line
@@ -408,14 +394,14 @@ int GetPlayerRepId(const char* szPlayerName)
 				buffer[length] = 0;
 			}
 
-			i = 0;
+			int i = 0;
 
 			while (i < length && buffer[i] != '"')
 				i++;
 
 			i++;
 
-			iPlayerChar = 0;
+			int iPlayerChar = 0;
 
 			while (i < length && buffer[i] != '"' && iPlayerChar < 64)
 				playername[iPlayerChar++] = buffer[i++];

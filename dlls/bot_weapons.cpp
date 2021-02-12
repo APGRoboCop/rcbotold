@@ -203,18 +203,15 @@ void CWeaponPresets::ReadPresets(void)
 {
 	weapon_preset_t sWeaponPreset;
 
-	FILE* fp;
-
 	char filename[512];
 
 	UTIL_BuildFileName(filename, BOT_WEAPON_PRESETS_FILE);
 
-	fp = fopen(filename, "r");
+	FILE* fp = fopen(filename, "r");
 
 	if (fp == nullptr)
 		return;
 
-	int iLength;
 	char buffer[256];
 
 	int iModId = 0;
@@ -232,7 +229,7 @@ void CWeaponPresets::ReadPresets(void)
 		if (buffer[0] == '#')
 			continue;
 
-		iLength = strlen(buffer);
+		int iLength = strlen(buffer);
 
 		if (iLength <= 0) // blank line...
 			continue;
@@ -412,9 +409,7 @@ void GetNoWeaponArray(short int* Array)
 
 void GetArrayOfExplosives(short int* Array)
 {
-	int i;
-
-	for (i = 0; i < MAX_WEAPONS; i++)
+	for (int i = 0; i < MAX_WEAPONS; i++)
 	{
 		switch (i)
 		{
@@ -907,10 +902,9 @@ BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWall
 
 BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname) const
 {
-	int i;
 	const char* pClassname;
 
-	for (i = 1; i < MAX_WEAPONS; i++)
+	for (int i = 1; i < MAX_WEAPONS; i++)
 	{
 		if (HasWeapon(pEdict, i))
 		{

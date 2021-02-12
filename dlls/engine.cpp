@@ -151,12 +151,10 @@ void pfnChangeLevel(char* s1, char* s2)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnChangeLevel:\n"); fclose(fp); }
 
-	CBot* pBot;
-
 	// kick any bot off of the server after time/frag limit...
 	for (int index = 0; index < MAX_PLAYERS; index++)
 	{
-		pBot = &gBotGlobals.m_Bots[index];
+		CBot* pBot = &gBotGlobals.m_Bots[index];
 
 		if (pBot->m_bIsUsed)  // is this slot used?
 		{
@@ -392,12 +390,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 {
 	if (entity != nullptr)
 	{
-		int i;
-		CBot* pBot;
-
-		Vector vOrigin;
-
-		vOrigin = EntityOrigin(entity);
+		Vector vOrigin = EntityOrigin(entity);
 
 		eSoundType iSound = SOUND_UNKNOWN;
 
@@ -504,9 +497,9 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 
 		edict_t* pEntityOwner = entity->v.owner;
 
-		for (i = 0; i < 32; i++)
+		for (int i = 0; i < 32; i++)
 		{
-			pBot = &gBotGlobals.m_Bots[i];
+			CBot* pBot = &gBotGlobals.m_Bots[i];
 
 			if (pBot == nullptr)
 				continue;
@@ -1404,18 +1397,15 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 	{
 		if (pEdict)
 		{
-			CBot* pBot;
 			CBotReputation* pRep;
-			CBotReputations* pRepList;
-			int i;
 
 			const int iOldPlayerRepId = GetPlayerEdictRepId(pEdict);
 
 			if (iOldPlayerRepId != -1) // otherwise : error...
 			{
-				for (i = 0; i < MAX_PLAYERS; i++)
+				for (int i = 0; i < MAX_PLAYERS; i++)
 				{
-					pBot = &gBotGlobals.m_Bots[i];
+					CBot* pBot = &gBotGlobals.m_Bots[i];
 
 					if (pBot && pBot->m_iRespawnState == RESPAWN_IDLE)
 					{
@@ -1424,7 +1414,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 							if (pBot->m_pEdict == pEdict)
 								continue;
 
-							pRepList = &pBot->m_Profile.m_Rep;
+							CBotReputations* pRepList = &pBot->m_Profile.m_Rep;
 
 							if ((pRep = pBot->m_Profile.m_Rep.GetRep(iOldPlayerRepId)) != nullptr)
 							{
@@ -1882,7 +1872,7 @@ const char* GetArg(const char* command, int arg_number)
 	// either to the actual engine functions (when the caller is a real client), either on
 	// our function here, which does the same thing, when the caller is a bot.
 
-	int length, i, index = 0, arg_count = 0, fieldstart, fieldstop;
+	int i, index = 0, arg_count = 0, fieldstart, fieldstop;
 
 	static char arg[1024];
 
@@ -1892,7 +1882,7 @@ const char* GetArg(const char* command, int arg_number)
 	if (!command || !*command)
 		return nullptr;
 
-	length = strlen(command); // get length of command
+	int length = strlen(command); // get length of command
 
 	// while we have not reached end of line
 	while (index < length && arg_count <= arg_number)

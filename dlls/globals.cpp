@@ -128,8 +128,6 @@ void CBotGlobals::ReadBotFolder(void)
 
 BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
 {
-	int index;
-
 	if (m_bNetMessageStarted == TRUE)
 	{
 		// message already started... engine will crash
@@ -145,8 +143,6 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 
 	if (gpGlobals->deathmatch)
 	{
-		index = -1;
-
 		if (debug_engine) { fp = fopen("bot.txt", "a");
 			fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
 			fclose(fp); }
@@ -158,7 +154,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 
 		if (ed)
 		{
-			index = UTIL_GetBotIndex(ed);
+			int index = UTIL_GetBotIndex(ed);
 
 			// get the message to see if we can do anything right now
 			m_CurrentMessage = m_NetEntityMessages.GetMessage(msg_type, nullptr);
@@ -317,9 +313,6 @@ void CBotGlobals::StartFrame(void)
 
 			if (!IsCombatMap() && IsConfigSettingOn(BOT_CONFIG_MARINE_AUTO_BUILD) && (!m_bAutoBuilt && (m_fAutoBuildTime && m_fAutoBuildTime < gpGlobals->time)))
 			{
-				int iWpt;
-				Vector vOrigin;
-
 				edict_t* pEntity = nullptr;
 
 				// Find the marine command console
@@ -332,10 +325,10 @@ void CBotGlobals::StartFrame(void)
 				if (pEntity)
 				{
 					// Found a comm console
-					vOrigin = pEntity->v.origin;
+					Vector vOrigin = pEntity->v.origin;
 
 					// find a nearby waypoint
-					iWpt = WaypointLocations.NearestWaypoint(vOrigin, REACHABLE_RANGE, -1, FALSE);
+					int iWpt = WaypointLocations.NearestWaypoint(vOrigin, REACHABLE_RANGE, -1, FALSE);
 
 					if (iWpt == -1)
 						BotMessage(nullptr, 0, "No waypoints for auto-build!!!");
@@ -444,59 +437,9 @@ void CBotGlobals::StartFrame(void)
 				else
 					m_CommConsole.Update();
 			}
-			/*int mTechnology;
-			int mStatus;
-
-			m_bHasDefTech = TRUE;
-			m_bHasMovTech = TRUE;
-			m_bHasSensTech = TRUE;
-
-			BOOL m_bNoTechnology = TRUE;
-
-			hive_info_t *pHiveInfo;
-
-			int i;
-
-			for ( iIndex = 0; iIndex < BOT_MAX_HIVES; iIndex ++ )
-			{
-				pHiveInfo = &m_Hives[iIndex];
-
-				mTechnology = pHiveInfo->mTechnology;
-
-				if ( pHiveInfo->pHive && (pHiveInfo->pHive->v.fuser1 > 0) )
-				{
-					m_bNoTechnology = ( mTechnology == 0 );
-
-					if ( m_bNoTechnology )
-						break;
-
-					switch ( mTechnology )
-					{
-					case ALIEN_BUILD_DEFENSE_CHAMBER:
-						m_bHasDefTech = TRUE;
-						break;
-					case ALIEN_BUILD_MOVEMENT_CHAMBER:
-						m_bHasMovTech = TRUE;
-						break;
-					case ALIEN_BUILD_SENSORY_CHAMBER:
-						m_bHasSensTech = TRUE;
-						break;
-					}
-				}
-			}
-
-			if ( m_bNoTechnology == TRUE )
-			{
-				// If no def chambers built or whatever they can build anything first.
-				m_bHasDefTech = TRUE;
-				m_bHasMovTech = TRUE;
-				m_bHasSensTech = TRUE;
-			}*/
-			int i;
 			int iBuildingPriority = 0;
-			edict_t* pBuildingUnderAttack;
 
-			pBuildingUnderAttack = m_HiveMind.Tick(&iBuildingPriority);
+			edict_t* pBuildingUnderAttack = m_HiveMind.Tick(&iBuildingPriority);
 
 			if (pBuildingUnderAttack)
 			{
@@ -504,7 +447,7 @@ void CBotGlobals::StartFrame(void)
 											 CBotTask(BOT_TASK_SEARCH_FOR_ENEMY),
 											 CBotTask(BOT_TASK_SENSE_ENEMY) };
 
-				for (i = 0; i < MAX_PLAYERS; i++)
+				for (int i = 0; i < MAX_PLAYERS; i++)
 				{
 					pBot = &m_Bots[i];
 
@@ -591,8 +534,6 @@ void CBotGlobals::StartFrame(void)
 			bBotJoin = val < 0.75;
 		}
 
-		BOOL bAddBot = FALSE;
-
 		const BOOL bServerFull = iNumClients >= gpGlobals->maxClients;
 
 		for (iIndex = 0; iIndex < MAX_PLAYERS; iIndex++)
@@ -616,7 +557,7 @@ void CBotGlobals::StartFrame(void)
 				// ---------------------------------------
 				if (!bServerFull && m_bBotCanRejoin)
 				{
-					bAddBot = FALSE;
+					BOOL bAddBot = FALSE;
 
 					// Bot was in last game so is re-connecting
 					if (m_iMaxBots == -1 &&
@@ -729,8 +670,6 @@ void CBotGlobals::StartFrame(void)
 
 								if (IsNS() && !IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL))
 								{
-									BOOL bHasWeapon;
-
 									//pBot->m_iBotWeapons = pBot->pev->weapons;
 
 									//pBot->m_Weapons.RemoveWeapons();
@@ -739,7 +678,7 @@ void CBotGlobals::StartFrame(void)
 
 									for (j = 1; j < MAX_WEAPONS; j++)
 									{
-										bHasWeapon = pBot->HasWeapon(j);
+										BOOL bHasWeapon = pBot->HasWeapon(j);
 
 										if (pBot->pev->weapons & 1 << j && !bHasWeapon)
 										{
@@ -992,7 +931,6 @@ void CBotGlobals::MapInit(void)
 const char* CBotGlobals::GetModInfo(void)
 {
 	char game_dir[256];
-	CModInfo* pModInfo;
 
 	GET_GAME_DIR(game_dir);
 
@@ -1018,7 +956,7 @@ const char* CBotGlobals::GetModInfo(void)
 
 	m_szModFolder = m_Strings.GetString(&game_dir[pos]);
 
-	pModInfo = m_Mods.GetModInfo(m_szModFolder);
+	CModInfo* pModInfo = m_Mods.GetModInfo(m_szModFolder);
 
 	if (pModInfo != nullptr)
 	{
@@ -1113,11 +1051,9 @@ void CBotGlobals::ReadConfig(void)
 {
 	char filename[256];
 
-	FILE* fp;
-
 	UTIL_BuildFileName(filename, "bot_config.ini", nullptr);
 
-	fp = fopen(filename, "r");
+	FILE* fp = fopen(filename, "r");
 
 	if (fp)
 	{
@@ -1128,15 +1064,11 @@ void CBotGlobals::ReadConfig(void)
 		char arg4[64];
 		char buffer[256];
 
-		int i;
-		int j;
-		int length;
-
 		while (fgets(buffer, 127, fp) != nullptr)
 		{
-			i = 0;
+			int i = 0;
 
-			length = strlen(buffer);
+			int length = strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;
@@ -1153,7 +1085,7 @@ void CBotGlobals::ReadConfig(void)
 			while (i < length && buffer[i] == ' ')
 				i++;
 
-			j = 0;
+			int j = 0;
 
 			while (i < length && buffer[i] != ' ')
 				cmd_line[j++] = buffer[i++];
@@ -1426,24 +1358,16 @@ void CBotGlobals::FreeLocalMemory(void)
 
 void CBotGlobals::ReadThingsToBuild(void) const
 {
-	FILE* fp;
-
 	char filename[512];
 	char szbuffer[256];
 	char szline[256];
-	int i;
-	int j;
-
-	int ilen;
 
 	int iBuilding = 0;
-
-	CThingToBuild* theThingsToBuild = nullptr;
 
 	UTIL_BuildFileName(filename, "things_to_build.ini", nullptr);
 	//	sprintf(szbuffer,"%sthings_to_build.ini",RCBOT_FOLDER);
 
-	fp = fopen(filename, "r");
+	FILE* fp = fopen(filename, "r");
 
 	int iNum;
 	int iPriority;
@@ -1459,7 +1383,7 @@ void CBotGlobals::ReadThingsToBuild(void) const
 			if (szbuffer[0] == '#')
 				continue; // comment
 
-			ilen = strlen(szbuffer);
+			int ilen = strlen(szbuffer);
 
 			if (ilen == 0)
 				continue;
@@ -1472,8 +1396,8 @@ void CBotGlobals::ReadThingsToBuild(void) const
 
 			if (szbuffer[0] == '[')
 			{
-				i = 1;
-				j = 0;
+				int i = 1;
+				int j = 0;
 
 				while (i < ilen && szbuffer[i] != ']')
 					szline[j++] = szbuffer[i++];
@@ -1496,7 +1420,7 @@ void CBotGlobals::ReadThingsToBuild(void) const
 			}
 			else if (iBuilding)
 			{
-				theThingsToBuild = nullptr;
+				CThingToBuild* theThingsToBuild = nullptr;
 
 				switch (iBuilding)
 				{
@@ -1619,12 +1543,11 @@ void CBotGlobals::FreeGlobalMemory(void)
 
 void CBotGlobals::SetupBotChat(void)
 {
-	FILE* fp;
 	char filename[512];
 
 	UTIL_BuildFileName(filename, BOT_CHAT_FILE, nullptr);
 
-	fp = fopen(filename, "r");
+	FILE* fp = fopen(filename, "r");
 
 	if (fp == nullptr)
 	{
@@ -1633,7 +1556,6 @@ void CBotGlobals::SetupBotChat(void)
 	}
 
 	char buffer[256];
-	int iLength;
 
 	dataUnconstArray<char*>* chatStack = nullptr;
 
@@ -1670,7 +1592,7 @@ void CBotGlobals::SetupBotChat(void)
 		if (buffer[0] == '#')
 			continue;
 
-		iLength = strlen(buffer);
+		int iLength = strlen(buffer);
 
 		if (buffer[iLength - 1] == '\n')
 		{

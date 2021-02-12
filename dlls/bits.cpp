@@ -136,14 +136,10 @@ void CBits::randomize() const
 
 void CBits::setup(const int iNumBits)
 {
-	int iSize;
-
 	m_iNumBits = iNumBits;
-
-	iSize = size();
+	int iSize = size();
 
 	m_cBits = new unsigned char[iSize];
-
 	memset(m_cBits, 0, iSize);
 }
 
@@ -160,7 +156,6 @@ void CBits::save(FILE* bfp) const
 	checkHeader.write(bfp);
 
 	fwrite(&m_iNumBits, sizeof(unsigned int), 1, bfp);
-
 	fwrite(&m_cBits, size(), 1, bfp);
 }
 
