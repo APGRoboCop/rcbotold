@@ -6,7 +6,7 @@ RCBot versions
 
 V 1.5-beta
 
-* added: Few waypoints for The Specialists S v3.0 and Natural Selection v3.x
+* added: Few waypoints for The Specialists v3.0 and Natural Selection v3.x
 * added: The Specialists v3.0 support, big thanks to Cheeseh and some admins from tsmod.net
 * added: Performance optimisations
 * changed: Did a Code Cleanup to allow the builds to be more streamlined
