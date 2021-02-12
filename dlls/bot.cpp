@@ -3575,7 +3575,6 @@ void CBot::LookForNewTasks(void)
 
 	BOOL bNeedHealth = pev->health < pev->max_health * 0.75;
 	BOOL bNeedArmor = pev->armorvalue < VALVE_MAX_NORMAL_BATTERY / 2;
-
 	BOOL bCanUseScientist = !m_Tasks.HasSchedule(BOT_SCHED_USING_SCIENTIST);
 	BOOL bCanUseBarney = !m_Tasks.HasSchedule(BOT_SCHED_USING_BARNEY);
 
@@ -3604,9 +3603,7 @@ void CBot::LookForNewTasks(void)
 			continue;
 
 		bCanBuildNearby = FALSE;
-
 		pEntitypev = &pEntity->v;
-
 		vOrigin = EntityOrigin(pEntity);
 
 		fDistance = DistanceFrom(vOrigin);
@@ -3895,7 +3892,6 @@ void CBot::LookForNewTasks(void)
 							}
 						}
 					}
-
 					// Let the bot wait for his next order
 					//AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_ORDERS,0));
 					StopMoving();
@@ -4131,7 +4127,6 @@ void CBot::LookForNewTasks(void)
 					actions.add(BOT_CAN_BUILD_RESOURCE, !gBotGlobals.IsCombatMap(), fResTowerResources);//fResTowerUtility);
 
 					action = actions.getBestAction();
-
 					int iRand = 0;
 
 					if (action == BOT_CAN_NONE)
@@ -4598,7 +4593,6 @@ void CBot::LookForNewTasks(void)
 						}
 
 						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWpt, -1));
-
 						m_bLookingForEnemy = TRUE;
 					}
 				}
@@ -4748,10 +4742,8 @@ BOOL CBot::UpdateVisibles(void)
 
 		pNearestBuildable = nullptr;
 		fNearestBuildableDist = 0;
-
 		pNearestResourceFountain = nullptr;
 		fNearestResourceFountainDist = 0;
-
 		pNearestBuildEdict = nullptr;
 		fNearestBuildPositionDist = 0;
 
