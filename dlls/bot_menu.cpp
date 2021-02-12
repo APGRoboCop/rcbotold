@@ -354,7 +354,7 @@ CBotMenuItem::CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CCli
 	m_pMenuFunction = pMenuFunction;
 }
 
-void CBotMenuItem::Activate(CClient* pClient)
+void CBotMenuItem::Activate(CClient* pClient) const
 {
 	if (m_pNextMenu != NULL)
 	{
@@ -423,7 +423,7 @@ void CBotMenu::Render(CClient* pClient)
 
 void BotMenu_Func_Jump_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -436,7 +436,7 @@ void BotMenu_Func_Jump_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Defend_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -449,7 +449,7 @@ void BotMenu_Func_Defend_Waypoint(CClient* pClient)
 
 void BotMenu_Func_CrouchJump_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -462,7 +462,7 @@ void BotMenu_Func_CrouchJump_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Crouch_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -475,7 +475,7 @@ void BotMenu_Func_Crouch_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Wall_Stick_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -488,7 +488,7 @@ void BotMenu_Func_Wall_Stick_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Remove_All_Paths(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -503,7 +503,7 @@ void BotMenu_Func_Remove_All_Paths(CClient* pClient)
 
 void BotMenu_Func_Remove_Paths_To(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -513,7 +513,7 @@ void BotMenu_Func_Remove_Paths_To(CClient* pClient)
 
 void BotMenu_Func_Remove_Paths_From(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -526,7 +526,7 @@ void BotMenu_Func_Remove_Paths_From(CClient* pClient)
 
 void BotMenu_Func_Lift_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -637,7 +637,7 @@ void BotMenu_Func_Squad_Form2(CClient* pClient)
 
 void BotMenu_Func_Team_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -665,7 +665,7 @@ void BotMenu_Func_Team_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Fly_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -680,7 +680,7 @@ void BotMenu_Func_Fly_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Teleport_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -695,7 +695,7 @@ void BotMenu_Func_Teleport_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Tank_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -710,7 +710,7 @@ void BotMenu_Func_Tank_Waypoint(CClient* pClient)
 
 void BotMenu_Func_WaitLift_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -725,7 +725,7 @@ void BotMenu_Func_WaitLift_Waypoint(CClient* pClient)
 
 void BotMenu_Func_EndLevel_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -794,7 +794,7 @@ void BotMenu_Func_AddBotToTeam(CClient* pClient)
 
 void BotMenu_Func_StayClose_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -809,7 +809,7 @@ void BotMenu_Func_StayClose_Waypoint(CClient* pClient)
 
 void BotMenu_Func_OpensLater_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -824,7 +824,7 @@ void BotMenu_Func_OpensLater_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Unreachable_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -841,7 +841,7 @@ void BotMenu_Func_Unreachable_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Ladder_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -856,7 +856,7 @@ void BotMenu_Func_Ladder_Waypoint(CClient* pClient)
 
 void BotMenu_Func_HumanTower_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -871,7 +871,7 @@ void BotMenu_Func_HumanTower_Waypoint(CClient* pClient)
 
 void Bot_Menu_Important_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -886,7 +886,7 @@ void Bot_Menu_Important_Waypoint(CClient* pClient)
 
 void Bot_Menu_GrenThrow_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -1081,7 +1081,7 @@ void BotMenu_Func_KickBotFromTeam(CClient* pClient)
 
 void BotMenu_Func_Pushable_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -1096,7 +1096,7 @@ void BotMenu_Func_Pushable_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Sci_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -1111,7 +1111,7 @@ void BotMenu_Func_Sci_Waypoint(CClient* pClient)
 
 void BotMenu_CheckForLift_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -1137,7 +1137,7 @@ void BotMenu_CheckForLift_Waypoint ( CClient *pClient )
 */
 void BotMenu_Func_Barney_Waypoint(CClient* pClient)
 {
-	int iWpt = pClient->m_iCurrentWaypoint;
+	const int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;

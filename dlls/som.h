@@ -46,12 +46,12 @@ public:
 
 	CSomNeuron(int iInp, int iX, int iY);
 
-	ga_value getX()
+	ga_value getX() const
 	{
 		return m_iX;
 	}
 
-	ga_value getY()
+	ga_value getY() const
 	{
 		return m_iY;
 	}
@@ -93,7 +93,7 @@ public:
 
 	void display();
 
-	unsigned int epochs()
+	unsigned int epochs() const
 	{
 		return m_iEpochs;
 	}

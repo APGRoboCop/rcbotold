@@ -128,7 +128,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		szNamePos = strstr(szMsg, szName);
 		bNameInMsg = szNamePos != NULL;
 
-		int iSenderNameLength = strlen(STRING(pSender->v.netname));
+		const int iSenderNameLength = strlen(STRING(pSender->v.netname));
 		char* szSenderName = new char[sizeof(char) * (iSenderNameLength + 1)];
 		RemoveNameTags(STRING(pSender->v.netname), szSenderName);
 		szSenderName[iSenderNameLength] = 0;
@@ -645,7 +645,7 @@ unsigned short HAL_FindWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	// the word with index zero is equal to a NULL word, indicating an error condition.
 
 	BOOL found;
-	int position = HAL_SearchDictionary(dictionary, word, &found);
+	const int position = HAL_SearchDictionary(dictionary, word, &found);
 
 	if (found == TRUE)
 		return dictionary->index[position];
@@ -685,8 +685,8 @@ void HAL_InitializeDictionary(HAL_DICTIONARY* dictionary)
 {
 	// this function adds dummy words to the dictionary
 
-	HAL_STRING word = { 7, "<ERROR>" };
-	HAL_STRING end = { 5, "<FIN>" };
+	const HAL_STRING word = { 7, "<ERROR>" };
+	const HAL_STRING end = { 5, "<FIN>" };
 
 	(void)HAL_AddWord(dictionary, word);
 	(void)HAL_AddWord(dictionary, end);
@@ -1304,7 +1304,7 @@ int strpos(char* pos, char* start)
 
 void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int start, int end)
 {
-	int size = sizeof(char) * (maxstring + 1);
+	const int size = sizeof(char) * (maxstring + 1);
 
 	char* before = static_cast<char*>(malloc(size));
 	char* after = static_cast<char*>(malloc(size));

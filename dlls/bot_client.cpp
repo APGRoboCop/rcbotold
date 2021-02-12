@@ -387,7 +387,7 @@ void BotClient_TS_DelObj::execute(void* p, int iIndex)
 	{
 		CBot* pBot;
 
-		int id = *static_cast<int*>(p);
+		const int id = *static_cast<int*>(p);
 
 		for (int i = 0; i < 32; i++)
 		{
@@ -1382,11 +1382,11 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 		iRadius = POINTER_TO_INT(p);
 		break;
 	case 6:
-		CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, TRUE, iRadius, iSlot);
+		const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, TRUE, iRadius, iSlot);
 
 		if (pBot)
 		{
-			int team = pBot->GetTeam();
+			const int team = pBot->GetTeam();
 
 			if (team >= 0 && team < MAX_TEAMS)
 				gBotGlobals.m_TeamTechs[team].addTech(tech);
@@ -1493,7 +1493,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 
 		CBotTask OrderTaskToAdd = CBotTask(OrderTask, 1, pEntity, iEntityUser3, 0, vOrigin);
 
-		BOOL bHasOrder = !iOrderStatus;
+		const BOOL bHasOrder = !iOrderStatus;
 
 		while (!tempStack.IsEmpty())
 		{
@@ -1838,7 +1838,7 @@ void BotClient_Generic_WeaponList::execute(void* p, const int iIndex)
 		break;
 	case 8:
 	{
-		int iHackedId = iId;
+		const int iHackedId = iId;
 
 		//BotMessage(NULL,0,"Weapon ID: %d Classname: \"%s\"",iId,szClassname);
 
@@ -1951,7 +1951,7 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 
 		if (gBotGlobals.IsNS() && !gBotGlobals.IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL))
 		{
-			int enabled = POINTER_TO_INT(p);
+			const int enabled = POINTER_TO_INT(p);
 			pBot->m_Weapons.setHasWeapon(iId, enabled == 1);
 		}
 	default:
@@ -2085,7 +2085,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 		return;
 
 	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
-	int iHealth = POINTER_TO_INT(p);
+	const int iHealth = POINTER_TO_INT(p);
 
 	if (iHealth > pBot->m_fPrevHealth) // more health
 	{
@@ -2095,7 +2095,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 			{
 				edict_t* pSupplier = NULL;
 				edict_t* pPlayer;
-				float nearest = 96.0;
+				const float nearest = 96.0;
 				float dist;
 				int i;
 

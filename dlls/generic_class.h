@@ -942,7 +942,7 @@ public:
 		this->Clear();
 	}
 
-	int Size(void)
+	int Size(void) const
 	{
 		return size;
 	}
@@ -1010,7 +1010,7 @@ public:
 		buffer = 0;
 	}
 
-	bool IsEmpty(void)
+	bool IsEmpty(void) const
 	{
 		return size == 0;
 	}

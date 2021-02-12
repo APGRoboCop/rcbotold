@@ -181,7 +181,7 @@ void NNLayer::save(FILE* bfp)
 
 	fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_NN_LAYER, (int)iTemp);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_NN_LAYER, (int)iTemp);
 
 	header.write(bfp);
 
@@ -197,7 +197,7 @@ void NNLayer::load(FILE* bfp)
 
 	fread(&iTemp, sizeof(unsigned int), 1, bfp);
 
-	CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN_LAYER, iTemp);
+	const CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN_LAYER, iTemp);
 	CGenericHeader header2;
 
 	if (header2.read(bfp, header1))
@@ -218,7 +218,7 @@ void NN::load(FILE* bfp)
 
 	fread(&iTemp, sizeof(unsigned int), 1, bfp);
 
-	CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN, iTemp);
+	const CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN, iTemp);
 	CGenericHeader header2;
 
 	if (header2.read(bfp, header1))
@@ -239,7 +239,7 @@ void NN::save(FILE* bfp)
 
 	fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_NN, iTemp);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_NN, iTemp);
 
 	header.write(bfp);
 
@@ -349,7 +349,7 @@ void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
 
 		for (unsigned int j = 0; j < outputs.size(); j++)
 		{
-			ga_value fError = outputs[j] - trainingsets[i].outputs[j];
+			const ga_value fError = outputs[j] - trainingsets[i].outputs[j];
 
 			fTotalError += fError * fError;
 			iNum++;

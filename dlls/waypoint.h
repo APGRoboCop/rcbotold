@@ -47,6 +47,10 @@
 #ifndef WAYPOINT_H
 #define WAYPOINT_H
 
+#ifndef __linux__
+#define strdup _strdup
+#endif
+
 #include <climits>
 
 #include "generic_class.h"
@@ -90,7 +94,7 @@ public:
 		}
 	}
 
-	void getMaxMins(Vector vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk);
+	void getMaxMins(Vector vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk) const;
 
 	int GetCoverWaypoint(Vector vPlayerOrigin, Vector vCoverFrom, dataStack<int>* iIgnoreWpts);
 
@@ -305,22 +309,22 @@ public:
 		memset(m_iConvertTo, 0, sizeof(int) * MAX_BITS);
 	}
 
-	char* getName()
+	char* getName() const
 	{
 		return m_szName;
 	}
 
-	char* getFolder()
+	char* getFolder() const
 	{
 		return m_szFolder;
 	}
 
-	char* getExtension()
+	char* getExtension() const
 	{
 		return m_szExtension;
 	}
 
-	char* getHeader()
+	char* getHeader() const
 	{
 		return m_szHeader;
 	}
@@ -344,7 +348,7 @@ public:
 		return convertedWpt;
 	}
 
-	int getVersion()
+	int getVersion() const
 	{
 		return m_iVersion;
 	}
@@ -498,24 +502,24 @@ class CWaypointVisibilityTable
 public:
 	CWaypointVisibilityTable()
 	{
-		int iSize = g_iMaxVisibilityByte;
+		const int iSize = g_iMaxVisibilityByte;
 		//create a heap...
 		m_VisTable = static_cast<unsigned char*>(malloc(iSize));
 
 		memset(m_VisTable, 0, iSize);
 	}
 
-	BOOL SaveToFile(void);
+	BOOL SaveToFile(void) const;
 
-	BOOL ReadFromFile(void);
+	BOOL ReadFromFile(void) const;
 
-	BOOL GetVisibilityFromTo(int iFrom, int iTo)
+	BOOL GetVisibilityFromTo(int iFrom, int iTo) const
 	{
 		// work out the position
-		int iPosition = iFrom * MAX_WAYPOINTS + iTo;
+		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
 
-		int iByte = (int)(iPosition / 8);
-		int iBit = iPosition % 8;
+		const int iByte = (int)(iPosition / 8);
+		const int iBit = iPosition % 8;
 
 		if (iByte < g_iMaxVisibilityByte)
 		{
@@ -527,7 +531,7 @@ public:
 		return FALSE;
 	}
 
-	void ClearVisibilityTable(void)
+	void ClearVisibilityTable(void) const
 	{
 		if (m_VisTable)
 			memset(m_VisTable, 0, g_iMaxVisibilityByte);
@@ -542,12 +546,12 @@ public:
 		}
 	}
 
-	void SetVisibilityFromTo(int iFrom, int iTo, BOOL bVisible)
+	void SetVisibilityFromTo(int iFrom, int iTo, BOOL bVisible) const
 	{
-		int iPosition = iFrom * MAX_WAYPOINTS + iTo;
+		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
 
-		int iByte = (int)(iPosition / 8);
-		int iBit = iPosition % 8;
+		const int iByte = (int)(iPosition / 8);
+		const int iBit = iPosition % 8;
 
 		if (iByte < g_iMaxVisibilityByte)
 		{

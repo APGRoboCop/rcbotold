@@ -91,7 +91,7 @@ CBotReputation::CBotReputation(const int iPlayerRepId, const int iRep)
 	m_iRep = iRep;
 }
 
-CClient* CBotReputations::GetRandomClient(const int iRep)
+CClient* CBotReputations::GetRandomClient(const int iRep) const
 // return a random client that conforms to the iRep (reputation)
 // -1 will return a random bad client
 // 0 : a random neutral client
@@ -206,7 +206,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 	}
 
 	fseek(fp, 0, SEEK_END); // move pos to end of file
-	long   fPos = ftell(fp);  // get length of file
+	const long   fPos = ftell(fp);  // get length of file
 
 	// do some error checking - verify the file is not corrupt
 	if (fPos % sizeof(CBotReputation) != 0) return;
@@ -451,7 +451,7 @@ int GetPlayerRepId(const char* szPlayerName)
 	return -1;
 }
 
-int CBotReputations::GetClientRep(CClient* pClient)
+int CBotReputations::GetClientRep(CClient* pClient) const
 {
 	if (pClient == NULL)
 	{
@@ -459,7 +459,7 @@ int CBotReputations::GetClientRep(CClient* pClient)
 		return BOT_MID_REP;
 	}
 
-	int iRepId = pClient->GetPlayerRepId();
+	const int iRepId = pClient->GetPlayerRepId();
 
 	if (iRepId == -1)
 		return BOT_MID_REP;

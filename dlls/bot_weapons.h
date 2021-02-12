@@ -361,7 +361,7 @@ class CWeaponPresets
 public:
 	void ReadPresets(void);
 
-	weapon_preset_t* GetPreset(short int iModId, int iWeaponId)
+	weapon_preset_t* GetPreset(short int iModId, int iWeaponId) const
 	{
 		dataStack<weapon_preset_t> tempStack = m_Presets;
 		weapon_preset_t* pPreset;
@@ -429,7 +429,7 @@ public:
 		return TRUE;
 	}
 
-	int MaxPrimaryAmmo(void)
+	int MaxPrimaryAmmo(void) const
 	{
 		return m_iPrimAmmoMax;
 	}
@@ -445,7 +445,7 @@ public:
 		return TRUE;
 	}
 
-	BOOL IsRegistered(void)
+	BOOL IsRegistered(void) const
 	{
 		return m_bRegistered;
 	}
@@ -455,7 +455,7 @@ public:
 		return 0;
 	}
 
-	char* GetClassname(void)
+	char* GetClassname(void) const
 	{
 		return m_szClassname;
 	}
@@ -480,12 +480,12 @@ public:
 		return TRUE;
 	}
 
-	int HudSlot(void)
+	int HudSlot(void) const
 	{
 		return m_iHudSlot;
 	}
 
-	int HudPosition(void)
+	int HudPosition(void) const
 	{
 		return m_iHudPosition;
 	}
@@ -677,7 +677,7 @@ public:
 		return m_iId;
 	}
 
-	int HudSlot(void)
+	int HudSlot(void) const
 	{
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->HudSlot();
@@ -694,13 +694,13 @@ public:
 
 	void setHasWeapon(BOOL bVal);
 
-	BOOL LowOnAmmo(void)
+	BOOL LowOnAmmo(void) const
 	{
 		// less in reserve than current clip
 		return !IsMelee() && m_iAmmo1 && *m_iAmmo1 < m_iClip;
 	}
 
-	BOOL OutOfAmmo(void)
+	BOOL OutOfAmmo(void) const
 	{
 		if (m_iAmmo1)
 		{
@@ -710,7 +710,7 @@ public:
 		return FALSE;
 	}
 
-	int PrimaryInRange(float fRange)
+	int PrimaryInRange(float fRange) const
 	{
 		if (m_pWeaponInfo->PrimaryInRange(fRange))
 			return 0;
@@ -724,21 +724,21 @@ public:
 		return 0;
 	}
 
-	float PrimMinRange(void)
+	float PrimMinRange(void) const
 	{
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->PrimMinRange();
 		return 0;
 	}
 
-	BOOL SecondaryInRange(float fRange)
+	BOOL SecondaryInRange(float fRange) const
 	{
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->SecondaryInRange(fRange);
 		return 1;
 	}
 
-	BOOL CanGetMorePrimaryAmmo(void)
+	BOOL CanGetMorePrimaryAmmo(void) const
 	{
 		switch (m_iId)
 		{
@@ -754,34 +754,34 @@ public:
 		return !IsMelee() && PrimaryAmmo() < m_pWeaponInfo->MaxPrimaryAmmo();
 	}
 
-	BOOL IsPrimary(void)
+	BOOL IsPrimary(void) const
 	{
 		assert(m_pWeaponInfo != NULL);
 
 		return m_pWeaponInfo->IsPrimary();
 	}
 
-	BOOL IsSecondary(void)
+	BOOL IsSecondary(void) const
 	{
 		assert(m_pWeaponInfo != NULL);
 
 		return m_pWeaponInfo->IsSecondary();
 	}
 
-	BOOL NeedToReload(void);
+	BOOL NeedToReload(void) const;
 
 	BOOL CanReload(void);
 
 	BOOL CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist);
 
-	BOOL CanShootSecondary(void)
+	BOOL CanShootSecondary(void) const
 	{
-		int iSecAmmo = SecondaryAmmo();
+		const int iSecAmmo = SecondaryAmmo();
 
 		return iSecAmmo == -1 || iSecAmmo > 0;
 	}
 
-	int PrimaryAmmo(void)
+	int PrimaryAmmo(void) const
 	{
 		if (m_iAmmo1)
 			return *m_iAmmo1;
@@ -789,7 +789,7 @@ public:
 		return -1;
 	}
 
-	int SecondaryAmmo(void)
+	int SecondaryAmmo(void) const
 	{
 		if (m_iAmmo2)
 			return *m_iAmmo2;
@@ -809,7 +809,7 @@ public:
 		m_iClip = iClip;
 	}
 
-	char* GetClassname(void)
+	char* GetClassname(void) const
 	{
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->GetClassname();
@@ -817,14 +817,14 @@ public:
 			return NULL;
 	}
 
-	BOOL IsMelee(void)
+	BOOL IsMelee(void) const
 	{
 		if (m_pWeaponInfo == NULL)
 			return TRUE;
 		return m_pWeaponInfo->IsMelee();
 	}
 
-	BOOL CanBeUsedUnderWater(void)
+	BOOL CanBeUsedUnderWater(void) const
 	{
 		if (m_pWeaponInfo == NULL)
 			return TRUE;
@@ -832,7 +832,7 @@ public:
 		return m_pWeaponInfo->CanBeUsedUnderWater();
 	}
 
-	int GetPriority(void)
+	int GetPriority(void) const
 	{
 		if (m_pWeaponInfo == NULL)
 		{
@@ -858,12 +858,12 @@ public:
 		m_iReserve = iRes;
 	}
 
-	int getReserve()
+	int getReserve() const
 	{
 		return m_iReserve;
 	}
 
-	int getMaxClip()
+	int getMaxClip() const
 	{
 		return m_iMaxClip;
 	}
@@ -994,7 +994,7 @@ private:
 class CompareBotWeapon
 {
 public:
-	bool operator()(CBotWeapon* a, CBotWeapon* b)
+	bool operator()(CBotWeapon* a, CBotWeapon* b) const
 	{
 		return a->GetPriority() < b->GetPriority();
 	}

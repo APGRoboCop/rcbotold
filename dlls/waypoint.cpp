@@ -92,7 +92,8 @@ static unsigned char g_iFailedWaypoints[MAX_WAYPOINTS];
 
 extern CBotGlobals gBotGlobals;
 
-void CWaypointLocations::getMaxMins(Vector const vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk)
+void CWaypointLocations::getMaxMins(Vector const vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj,
+                                    int& maxk) const
 {
 	const int iLoc = abs((int)((int)(vOrigin.x + 4096.0) / 256));
 	const int jLoc = abs((int)((int)(vOrigin.y + 4096.0) / 256));
@@ -2488,7 +2489,7 @@ void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints)
 	}
 }
 
-BOOL CWaypointVisibilityTable::SaveToFile(void)
+BOOL CWaypointVisibilityTable::SaveToFile(void) const
 {
 	char filename[512];
 	char file[256];
@@ -2518,7 +2519,7 @@ BOOL CWaypointVisibilityTable::SaveToFile(void)
 	return TRUE;
 }
 
-BOOL CWaypointVisibilityTable::ReadFromFile(void)
+BOOL CWaypointVisibilityTable::ReadFromFile(void) const
 {
 	char filename[512];
 	char file[256];

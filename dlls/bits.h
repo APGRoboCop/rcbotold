@@ -54,29 +54,29 @@ public:
 	CBits(int iNumBits);
 	CBits(CBits* copyBits);
 
-	void setBit(int iBit, BOOL bSet);
+	void setBit(int iBit, BOOL bSet) const;
 
-	BOOL getBit(int iBit);
+	BOOL getBit(int iBit) const;
 
 	void freeMemory();
 
 	void load(FILE* bfp);
 
-	void save(FILE* bfp);
+	void save(FILE* bfp) const;
 
 	void setup(int iNumBits);
 
-	unsigned int numBits() { return m_iNumBits; }
+	unsigned int numBits() const { return m_iNumBits; }
 
 	void copy(CBits* otherBits);
 
-	unsigned char* getBits() { return m_cBits; }
+	unsigned char* getBits() const { return m_cBits; }
 
-	void randomize();
+	void randomize() const;
 
-	void clear();
+	void clear() const;
 
-	int size();
+	int size() const;
 
 private:
 	int m_iNumBits;

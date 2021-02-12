@@ -92,7 +92,7 @@ public:
 
 	void setWeights(CBotGAValues* vals, int iFrom, int iNum);
 
-	int numWeights() { return m_weights.size(); }
+	int numWeights() const { return m_weights.size(); }
 
 	void setWeight(int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
 
@@ -102,9 +102,9 @@ public:
 
 	ga_value execute();
 
-	BOOL fired();
+	BOOL fired() const;
 
-	ga_value getOutput();
+	ga_value getOutput() const;
 
 	void train(ga_value expectedOutput);
 
@@ -117,7 +117,7 @@ public:
 		m_transferFunction = NULL;
 	}
 
-	BOOL trained() { return m_bTrained; }
+	BOOL trained() const { return m_bTrained; }
 
 	void setTrained() { m_bTrained = TRUE; }
 

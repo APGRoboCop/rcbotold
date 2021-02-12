@@ -124,7 +124,7 @@ void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency,
 		else
 		{
 			Vector delta = center - pPlayer->v.origin;
-			float distance = delta.Length();
+			const float distance = delta.Length();
 
 			// Had to get rid of this falloff - it didn't work well
 			if (distance < radius)
@@ -133,7 +133,7 @@ void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency,
 
 		if (localAmplitude)
 		{
-			int iMsg = GetMessageID("ScreenShake");
+			const int iMsg = GetMessageID("ScreenShake");
 
 			if (iMsg)
 			{
@@ -180,7 +180,7 @@ BOOL UTIL_FriendlyHatesPlayer ( edict_t *pEntity, edict_t *pPlayer )
 
 Vector UTIL_GetGroundVector(edict_t* pEdict)
 {
-	Vector vOrigin = EntityOrigin(pEdict);
+	const Vector vOrigin = EntityOrigin(pEdict);
 	TraceResult tr;
 
 	UTIL_TraceLine(vOrigin, vOrigin - Vector(0, 0, 4096.0), ignore_monsters, dont_ignore_glass, pEdict, &tr);
@@ -327,7 +327,7 @@ int NS_GetPlayerLevel(int exp)
 
 int RoundToNearestInteger(float fVal)
 {
-	int loVal = (int)fVal;
+	const int loVal = (int)fVal;
 
 	fVal -= (float)loVal;
 
@@ -339,7 +339,7 @@ int RoundToNearestInteger(float fVal)
 
 int Ceiling(float fVal)
 {
-	int loVal = (int)fVal;
+	const int loVal = (int)fVal;
 
 	fVal -= (float)loVal;
 
@@ -375,7 +375,7 @@ void UTIL_MakeVectors(const Vector& vecAngles)
 void strlow(char* str)
 // lower a string to make it lower case.
 {
-	int len = strlen(str);
+	const int len = strlen(str);
 
 	int i;
 
@@ -388,7 +388,7 @@ void strlow(char* str)
 void strhigh(char* str)
 // higher a string to make it upper case.
 {
-	int len = strlen(str);
+	const int len = strlen(str);
 
 	int i;
 
@@ -559,7 +559,7 @@ void UTIL_SayText(const char* pText, edict_t* pEdict)
 {
 	const char* szMsg = { "SayText" };
 
-	int msg_id = GetMessageID(szMsg);
+	const int msg_id = GetMessageID(szMsg);
 
 	if (msg_id > 0)
 	{
@@ -590,8 +590,8 @@ int GetMessageID(const char* szMsg)
 
 float UTIL_AnglesBetweenEdictOrigin(edict_t* pEdict, Vector const origin)
 {
-	Vector v_enemy = origin - pEdict->v.origin + pEdict->v.view_ofs;
-	Vector angles = v_enemy;
+	const Vector v_enemy = origin - pEdict->v.origin + pEdict->v.view_ofs;
+	const Vector angles = v_enemy;
 	//angles = UTIL_VecToAngles(angles);
 	Vector v_viewpoint = pEdict->v.v_angle;
 
@@ -613,7 +613,7 @@ edict_t* UTIL_getEntityInFront(edict_t* pEntity)
 
 	UTIL_MakeVectors(v_viewpoint);
 	v_viewpoint = gpGlobals->v_forward * 8192.0f;
-	Vector v_src = pEntity->v.origin + pEntity->v.view_ofs;
+	const Vector v_src = pEntity->v.origin + pEntity->v.view_ofs;
 
 	TraceResult tr;
 
@@ -627,8 +627,8 @@ float UTIL_AngleBetweenVectors(Vector const vec1, Vector const vec2)
 	//vec1 = UTIL_FixAngles(vec1);
 	//vec2 = UTIL_FixAngles(vec2);
 
-	double vec1Dotvec2 = vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
-	double veclengths = vec1.Length() * vec2.Length();
+	const double vec1Dotvec2 = vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
+	const double veclengths = vec1.Length() * vec2.Length();
 
 	return acos(vec1Dotvec2 / veclengths) * (180 / M_PI);
 }
@@ -636,7 +636,7 @@ float UTIL_AngleBetweenVectors(Vector const vec1, Vector const vec2)
 float UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector const vOrigin)
 {
 	float fAngle;
-	Vector vBotAngles = pev->v_angle;
+	const Vector vBotAngles = pev->v_angle;
 	Vector vAngles;
 
 	UTIL_MakeVectors(vBotAngles);
@@ -654,7 +654,7 @@ float UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector const vOrigin)
 Vector UTIL_AngleBetweenOrigin(entvars_t* pev, Vector const vOrigin)
 {
 	Vector vAngle;
-	Vector vBotAngles = pev->v_angle;
+	const Vector vBotAngles = pev->v_angle;
 	Vector vAngles;
 
 	UTIL_MakeVectors(vBotAngles);
@@ -675,11 +675,11 @@ BOOL UTIL_IsFacingEntity(entvars_t* pev, entvars_t* pevEntity)
 
 	UTIL_MakeVectors(pev->v_angle);
 
-	Vector vSrc = GetGunPosition(ENT(pev));
+	const Vector vSrc = GetGunPosition(ENT(pev));
 
 	fDistance = (EntityOrigin(ENT(pevEntity)) - vSrc).Length();
 
-	Vector vDst = vSrc + gpGlobals->v_forward * fDistance;
+	const Vector vDst = vSrc + gpGlobals->v_forward * fDistance;
 
 	return vDst <= pevEntity->absmax && vDst >= pevEntity->absmin;
 }
@@ -803,7 +803,7 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 
 	const char* szMsg = { "SayText" };
 
-	int msg_id = GetMessageID(szMsg);
+	const int msg_id = GetMessageID(szMsg);
 
 	if (msg_id == -1)
 		return;
@@ -1533,8 +1533,8 @@ BOOL BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict)
 	// look through caller's eyes
 	vecLookerOrigin = pEdict->v.origin + pEdict->v.view_ofs;
 
-	int bInWater = UTIL_PointContents(vecOrigin) == CONTENTS_WATER;
-	int bLookerInWater = UTIL_PointContents(vecLookerOrigin) == CONTENTS_WATER;
+	const int bInWater = UTIL_PointContents(vecOrigin) == CONTENTS_WATER;
+	const int bLookerInWater = UTIL_PointContents(vecLookerOrigin) == CONTENTS_WATER;
 
 	// don't look through water
 	if (bInWater != bLookerInWater)
@@ -1653,7 +1653,7 @@ void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker
 	else
 		falloff = 1.0;
 
-	int bInWater = UTIL_PointContents(vecSrc) == CONTENTS_WATER;
+	const int bInWater = UTIL_PointContents(vecSrc) == CONTENTS_WATER;
 
 	vecSrc.z += 1;// in case grenade is lying on the ground
 
@@ -1771,7 +1771,7 @@ void UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, BOOL needmore, c
 {
 	const char* szMsg = { "ShowMenu" };
 
-	int msg_id = GetMessageID(szMsg);
+	const int msg_id = GetMessageID(szMsg);
 
 	if (msg_id > 0)
 	{
@@ -1790,7 +1790,7 @@ BOOL UTIL_CanStand(Vector const origin, Vector* v_floor)
 {
 	TraceResult tr;
 
-	Vector v_src = origin;
+	const Vector v_src = origin;
 
 	UTIL_TraceLine(v_src, v_src - Vector(0, 0, 144), ignore_monsters, ignore_glass, NULL, &tr);
 
@@ -2034,7 +2034,7 @@ float UTIL_GetBestPushableDistance(edict_t* pPushable)
 
 Vector UTIL_GetDesiredPushableVector(Vector vOrigin, edict_t* pPushable)
 {
-	Vector vPushable = EntityOrigin(pPushable);
+	const Vector vPushable = EntityOrigin(pPushable);
 
 	return vPushable - (vOrigin - vPushable).Normalize() * UTIL_GetBestPushableDistance(pPushable);
 }
@@ -2251,7 +2251,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 		if (strstr(final_message, "%n") != NULL)
 		{
 			char* szName = const_cast<char*>(STRING(pEntity->v.netname));
-			int iLen = strlen(szName);
+			const int iLen = strlen(szName);
 			char* szNewName = static_cast<char*>(malloc(sizeof(char) * (iLen + 1)));
 
 			RemoveNameTags(szName, szNewName);
@@ -2290,13 +2290,13 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 
 	BOOL bAdd;
 
-	int iMyTeam = UTIL_GetTeam(pEdict);
+	const int iMyTeam = UTIL_GetTeam(pEdict);
 
 	// listen to footsteps if:
 	// i. footsteps are on AND..
 	// ii. mod isnt svencoop (dont listen to teammates... (except when shooting)
 	// iii. OR mod is bumpercars (hear engine always)
-	BOOL bListenToFootSteps = CVAR_GET_FLOAT("mp_footsteps") > 0 && (gBotGlobals.m_iCurrentMod != MOD_SVENCOOP || gBotGlobals.m_iCurrentMod == MOD_BUMPERCARS);
+	const BOOL bListenToFootSteps = CVAR_GET_FLOAT("mp_footsteps") > 0 && (gBotGlobals.m_iCurrentMod != MOD_SVENCOOP || gBotGlobals.m_iCurrentMod == MOD_BUMPERCARS);
 
 	for (i = 1; i <= gpGlobals->maxClients; i++)
 	{
@@ -2462,15 +2462,15 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot)
 	float fStartAngle = pev->v_angle.y - fFov;
 	float fAngle;
 
-	int iMinStep = -180;
-	int iMaxStep = 180;
+	const int iMinStep = -180;
+	const int iMaxStep = 180;
 
 	float fMaxDistance = BOT_WAYPOINT_TOUCH_DIST * 2;
 	float fDistance;
 
 	dataUnconstArray<Vector> vPositions;
 
-	Vector vStart = pBot->GetGunPosition();
+	const Vector vStart = pBot->GetGunPosition();
 	Vector vEnd;
 	Vector vAngles;
 

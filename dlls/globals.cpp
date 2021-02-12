@@ -523,7 +523,7 @@ void CBotGlobals::StartFrame(void)
 
 					if (pBot->IsUsed())
 					{
-						int iGotoChance = (int)((float)iBuildingPriority / 6 * 100);
+						const int iGotoChance = (int)((float)iBuildingPriority / 6 * 100);
 
 						if (pBuildingUnderAttack->v.iuser3 == AVH_USER3_HIVE)
 						{
@@ -598,15 +598,15 @@ void CBotGlobals::StartFrame(void)
 
 		if (IsConfigSettingOn(BOT_CONFIG_BOTS_LEAVE_AND_JOIN))
 		{
-			int iClientsInGame = iNumClients; // argh, can't debug static variables
-			float val = (float)iClientsInGame / gpGlobals->maxClients * RANDOM_FLOAT(0.9, 1.3);
+			const int iClientsInGame = iNumClients; // argh, can't debug static variables
+			const float val = (float)iClientsInGame / gpGlobals->maxClients * RANDOM_FLOAT(0.9, 1.3);
 
 			bBotJoin = val < 0.75;
 		}
 
 		BOOL bAddBot = FALSE;
 
-		BOOL bServerFull = iNumClients >= gpGlobals->maxClients;
+		const BOOL bServerFull = iNumClients >= gpGlobals->maxClients;
 
 		for (iIndex = 0; iIndex < MAX_PLAYERS; iIndex++)
 		{
@@ -1651,7 +1651,7 @@ void CBotGlobals::loadLearnedData()
 	for (int i = 0; i < MAX_TEAMS; i++)
 	{
 		CLearnedHeader header = CLearnedHeader(i);
-		CLearnedHeader checkheader = CLearnedHeader(i);
+		const CLearnedHeader checkheader = CLearnedHeader(i);
 
 		sprintf(tmpFilename, "team%d.rld", i);
 		UTIL_BuildFileName(szFilename, tmpFilename);
@@ -1806,7 +1806,7 @@ void CBotGlobals::FreeLocalMemory(void)
 		this->m_TeamTechs[i].freeMemory();
 }
 
-void CBotGlobals::ReadThingsToBuild(void)
+void CBotGlobals::ReadThingsToBuild(void) const
 {
 	FILE* fp;
 

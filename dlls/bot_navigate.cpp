@@ -76,7 +76,7 @@ AStarNode::AStarNode()
 	m_iWaypoint = -1;
 }
 
-BOOL AStarNode::heuristicSet()
+BOOL AStarNode::heuristicSet() const
 {
 	return (flags & FL_ASTAR_HEURISTIC) == FL_ASTAR_HEURISTIC;
 }
@@ -91,17 +91,17 @@ void AStarNode::setHeuristic(const float botDist, const float goalDist, const BO
 	flags |= FL_ASTAR_HEURISTIC;
 }
 
-BOOL AStarNode::hasParent()
+BOOL AStarNode::hasParent() const
 {
 	return (flags & FL_ASTAR_PARENT) == FL_ASTAR_PARENT;
 }
 
-BOOL AStarNode::isOpen()
+BOOL AStarNode::isOpen() const
 {
 	return (flags & FL_ASTAR_OPEN) == FL_ASTAR_OPEN;
 }
 
-BOOL AStarNode::isClosed()
+BOOL AStarNode::isClosed() const
 {
 	return (flags & FL_ASTAR_CLOSED) == FL_ASTAR_CLOSED;
 }
@@ -126,12 +126,12 @@ void AStarNode::open()
 	flags |= FL_ASTAR_OPEN;
 }
 
-float AStarNode::getHeuristic()
+float AStarNode::getHeuristic() const
 {
 	return m_fHeuristic;
 }
 
-short int AStarNode::getParent()
+short int AStarNode::getParent() const
 {
 	return m_iParent;
 }
@@ -142,18 +142,18 @@ void AStarNode::setParent(const int iWpt)
 	flags |= FL_ASTAR_PARENT;
 }
 
-bool AStarNode::precedes(AStarNode* b)
+bool AStarNode::precedes(AStarNode* b) const
 {
 	// lowest cost first
 	return m_fCost + getHeuristic() < b->m_fCost + b->getHeuristic();
 }
 
-bool AStarNode::operator()(AStarNode* a, AStarNode* b)
+bool AStarNode::operator()(AStarNode* a, AStarNode* b) const
 {
 	return a < b;
 }
 
-bool AStarNode::operator<(AStarNode* b)
+bool AStarNode::operator<(AStarNode* b) const
 {
 	return precedes(b);
 }
@@ -1822,15 +1822,15 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 	float fStartAngle = pev->angles.y - fFov;
 	float fAngle;
 
-	int iMinStep = -60;
-	int iMaxStep = 60;
+	const int iMinStep = -60;
+	const int iMaxStep = 60;
 
 	float fMaxDistance = BOT_WAYPOINT_TOUCH_DIST * 2;
 	float fDistance;
 
 	dataUnconstArray<Vector> vPositions;
 
-	Vector vStart = pBot->GetGunPosition();
+	const Vector vStart = pBot->GetGunPosition();
 	Vector vEnd;
 	Vector vAngles;
 
@@ -1963,7 +1963,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 	//if ( gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL) )
 	//	WaypointDrawBeam(gBotGlobals.m_Clients.GetClientByIndex(0)->GetPlayer(),vBotOrigin,vCheckOrigin,16,8,200,200,200,200,10);
 
-	Vector vComp = (vCheckToOrigin - vCheckOrigin).Normalize();
+	const Vector vComp = (vCheckToOrigin - vCheckOrigin).Normalize();
 
 	(*g_engfuncs.pfnTraceHull)(vCheckOrigin, vCheckOrigin + vComp * 4096.0, ignore_monsters, point_hull, pBot->m_pEdict, &tr);
 
@@ -1982,7 +1982,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 				char* szTargetname = const_cast<char*>(STRING(pHit->v.targetname));
 
 				// a way to find out if this is a lift (big enough for the bot to walk on)
-				BOOL bIsLift = pHit->v.movedir.z &&
+				const BOOL bIsLift = pHit->v.movedir.z &&
 				(pHit->v.size.x > pBot->pev->size.z &&
 					pHit->v.size.y > pBot->pev->size.z);
 
@@ -2000,7 +2000,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 
 					pButton = BotFunc_FindNearestButton(pBot->pev->origin + pBot->pev->view_ofs, &pHit->v, &vButtonOrigin);
 
-					int iNewScheduleId = pBot->m_Tasks.GetNewScheduleId();
+					const int iNewScheduleId = pBot->m_Tasks.GetNewScheduleId();
 
 					if (pButton)
 					{
@@ -2087,10 +2087,10 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 						if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_LIFT))
 							// Not already using a lift?
 						{
-							float fRange = pHit->v.size.Length2D();
+							const float fRange = pHit->v.size.Length2D();
 
 							// get the lift button waypoint
-							int iWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, fRange, -1, W_FL_LIFT, &pBot->m_FailedGoals);
+							const int iWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, fRange, -1, W_FL_LIFT, &pBot->m_FailedGoals);
 
 							if (iWpt != -1)
 							{
@@ -2104,7 +2104,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 								{
 									// if a button if found use this one
 
-									int iScheduleId = pBot->m_Tasks.GetNewScheduleId();
+									const int iScheduleId = pBot->m_Tasks.GetNewScheduleId();
 
 									// Bot was below the lift so wait for the lift to descend
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_ENTITY, iScheduleId, pHit));

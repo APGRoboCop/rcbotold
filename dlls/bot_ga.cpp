@@ -67,7 +67,7 @@ void CBotGAValues::clear()
 // crossover with other individual
 void CBotGAValues::crossOver(IIndividual* other)
 {
-	unsigned int iPoint = RANDOM_LONG(0, m_theValues.size());
+	const unsigned int iPoint = RANDOM_LONG(0, m_theValues.size());
 	float fTemp;
 
 	CBotGAValues* vother = static_cast<CBotGAValues*>(other);
@@ -96,7 +96,7 @@ void CBotGAValues::mutate()
 	{
 		if (RANDOM_FLOAT(0, 1) < CGA::g_fMutateRate)
 		{
-			float fCurrentVal = get(i);
+			const float fCurrentVal = get(i);
 
 			set(i, fCurrentVal + fCurrentVal * (-1 + RANDOM_FLOAT(0, 2)) * CGA::g_fMaxPerturbation);
 		}
@@ -176,7 +176,7 @@ void CBotGAValues::save(FILE* bfp)
 {
 	unsigned int iSize = m_theValues.size();
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, m_theValues.size());
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, m_theValues.size());
 
 	header.write(bfp);
 
@@ -226,12 +226,12 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 // bits
 //----------------------
 
-unsigned int CBitsGAValues::size()
+unsigned int CBitsGAValues::size() const
 {
 	return m_theBits->size();
 }
 
-void CBitsGAValues::convert(int* iBits)
+void CBitsGAValues::convert(int* iBits) const
 {
 	for (unsigned int i = 0; i < size(); i++)
 	{
@@ -262,7 +262,7 @@ void CBitsGAValues::save(FILE* bfp)
 
 //~CBotGAValues();
 
-CBitsGAValues::CBitsGAValues(CBits* bits)
+CBitsGAValues::CBitsGAValues(CBits* bits): m_theBits(nullptr)
 {
 	delete m_theBits;
 	m_theBits = bits;
@@ -271,8 +271,8 @@ CBitsGAValues::CBitsGAValues(CBits* bits)
 // crossover with other individual
 void CBitsGAValues::crossOver(IIndividual* other)
 {
-	unsigned int iNumBits = m_theBits->numBits();
-	unsigned int iCrossoverPoint = static_cast<unsigned int>(RANDOM_LONG(0, iNumBits));
+	const unsigned int iNumBits = m_theBits->numBits();
+	const unsigned int iCrossoverPoint = static_cast<unsigned int>(RANDOM_LONG(0, iNumBits));
 	CBits* tempBits = new CBits(iNumBits);
 
 	CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
@@ -318,12 +318,12 @@ IIndividual* CBitsGAValues::copy()
 //void setBits ( CBits values );
 //void getBits ( CBits *values );
 
-BOOL CBitsGAValues::get(const int iIndex)
+BOOL CBitsGAValues::get(const int iIndex) const
 {
 	return m_theBits->getBit(iIndex);
 }
 
-void CBitsGAValues::set(const int iIndex, const BOOL bSet)
+void CBitsGAValues::set(const int iIndex, const BOOL bSet) const
 {
 	m_theBits->setBit(iIndex, bSet);
 }
@@ -333,7 +333,7 @@ void CBitsGAValues::clear()
 	m_theBits->clear();
 }
 
-inline void CBitsGAValues::random()
+inline void CBitsGAValues::random() const
 {
 	m_theBits->randomize();
 }

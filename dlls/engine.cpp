@@ -108,7 +108,7 @@ int pfnPrecacheSound(char* s)
 void pfnSetModel(edict_t* e, const char* m)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetModel: edict=%x %s\n", unsigned(e), m);
+		fprintf(fp, "pfnSetModel: edict=%x %s\n", reinterpret_cast<unsigned>(e), m);
 		fclose(fp); }
 
 #ifdef RCBOT_META_BUILD
@@ -139,7 +139,7 @@ int pfnModelFrames(int modelIndex)
 void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetSize: %x\n", unsigned(e));
+		fprintf(fp, "pfnSetSize: %x\n", reinterpret_cast<unsigned>(e));
 		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -318,7 +318,7 @@ void pfnRemoveEntity(edict_t* e)
 	if (debug_engine)
 	{
 		fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnRemoveEntity: %x\n", unsigned(e));
+		fprintf(fp, "pfnRemoveEntity: %x\n", reinterpret_cast<unsigned>(e));
 		if (e->v.model != 0)
 			fprintf(fp, " model=%s\n", STRING(e->v.model));
 		fclose(fp);
@@ -1080,7 +1080,7 @@ void* pfnGetModelPtr(edict_t* pEdict)
 
 int pfnRegUserMsg(const char* pszName, int iSize)
 {
-	int msg = 0;
+	const int msg = 0;
 
 #ifdef RCBOT_META_BUILD
 
@@ -1333,7 +1333,7 @@ void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 	}
 
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", unsigned(pEdict), fNewMaxspeed);
+		fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", reinterpret_cast<unsigned>(pEdict), fNewMaxspeed);
 		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1409,7 +1409,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 			CBotReputations* pRepList;
 			int i;
 
-			int iOldPlayerRepId = GetPlayerEdictRepId(pEdict);
+			const int iOldPlayerRepId = GetPlayerEdictRepId(pEdict);
 
 			if (iOldPlayerRepId != -1) // otherwise : error...
 			{
@@ -1430,7 +1430,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 							{
 								// New name = value
 
-								int iNewPlayerRepId = GetPlayerRepId(value);
+								const int iNewPlayerRepId = GetPlayerRepId(value);
 
 								if (pBot->m_Profile.m_Rep.GetRep(iNewPlayerRepId) == NULL)
 									pRepList->AddRep(iNewPlayerRepId, pRep->CurrentRep());
@@ -1444,7 +1444,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 				}
 			}
 
-			int iFlags = pEdict->v.flags;
+			const int iFlags = pEdict->v.flags;
 
 			if (iFlags & FL_CLIENT && !(iFlags & FL_FAKECLIENT))
 			{
@@ -1497,7 +1497,7 @@ int pfnGetPlayerUserId(edict_t* e)
 	if (gpGlobals->deathmatch)
 	{
 		if (debug_engine) { fp = fopen("bot.txt", "a");
-			fprintf(fp, "pfnGetPlayerUserId: %x\n", unsigned(e));
+			fprintf(fp, "pfnGetPlayerUserId: %x\n", reinterpret_cast<unsigned>(e));
 			fclose(fp); }
 	}
 
@@ -1511,7 +1511,7 @@ int pfnGetPlayerUserId(edict_t* e)
 const char* pfnGetPlayerAuthId(edict_t* e)
 {
 	static const char* BOT_STEAM_ID = "BOT";
-	BOOL bIsBot = UTIL_GetBotPointer(e) != NULL;
+	const BOOL bIsBot = UTIL_GetBotPointer(e) != NULL;
 #ifdef RCBOT_META_BUILD
 
 	if (bIsBot)
@@ -1569,7 +1569,7 @@ unsigned int pfnGetPlayerWONId(edict_t* e)
 	}
 
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnGetPlayerWONId: %x\n", unsigned(e));
+		fprintf(fp, "pfnGetPlayerWONId: %x\n", reinterpret_cast<unsigned>(e));
 		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);

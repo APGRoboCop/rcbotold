@@ -80,7 +80,7 @@ CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, floa
 
 void CPerceptron::setWeights(CBotGAValues* vals, int iFrom, int iNum)
 {
-	float bias = m_weights[0];
+	const float bias = m_weights[0];
 
 	m_weights.clear();
 
@@ -139,12 +139,12 @@ ga_value CPerceptron::execute()
 	return m_output;
 }
 
-BOOL CPerceptron::fired()
+BOOL CPerceptron::fired() const
 {
 	return m_output >= 0.5f;
 }
 
-ga_value CPerceptron::getOutput()
+ga_value CPerceptron::getOutput() const
 {
 	return m_output;
 }
@@ -167,7 +167,7 @@ void CPerceptron::save(FILE* bfp)
 	unsigned int iTemp;
 	unsigned int i;
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
 
 	header.write(bfp);
 

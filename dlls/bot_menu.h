@@ -105,14 +105,14 @@ public:
 
 	CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CClient*));
 
-	BOOL HasNextMenu(void)
+	BOOL HasNextMenu(void) const
 	{
 		return m_pNextMenu != NULL;
 	}
 
-	void Activate(CClient* pClient);
+	void Activate(CClient* pClient) const;
 
-	const char* GetCaption(void)
+	const char* GetCaption(void) const
 	{
 		return m_szMenuCaption;
 	}
