@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*
  *    This file is part of RCBot.
  *
@@ -105,11 +107,9 @@ int pfnPrecacheSound(char* s)
 }
 void pfnSetModel(edict_t* e, const char* m)
 {
-	if (debug_engine) {
-		fp = fopen("bot.txt", "a");
+	if (debug_engine) { fp = fopen("bot.txt", "a");
 		fprintf(fp, "pfnSetModel: edict=%x %s\n", unsigned(e), m);
-		fclose(fp);
-	}
+		fclose(fp); }
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -138,11 +138,9 @@ int pfnModelFrames(int modelIndex)
 }
 void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 {
-	if (debug_engine) {
-		fp = fopen("bot.txt", "a");
+	if (debug_engine) { fp = fopen("bot.txt", "a");
 		fprintf(fp, "pfnSetSize: %x\n", unsigned(e));
-		fclose(fp);
-	}
+		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1334,11 +1332,9 @@ void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 		pBot->m_fMaxSpeed = fNewMaxspeed;
 	}
 
-	if (debug_engine) {
-		fp = fopen("bot.txt", "a");
+	if (debug_engine) { fp = fopen("bot.txt", "a");
 		fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", unsigned(pEdict), fNewMaxspeed);
-		fclose(fp);
-	}
+		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1500,11 +1496,9 @@ int pfnGetPlayerUserId(edict_t* e)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) {
-			fp = fopen("bot.txt", "a");
+		if (debug_engine) { fp = fopen("bot.txt", "a");
 			fprintf(fp, "pfnGetPlayerUserId: %x\n", unsigned(e));
-			fclose(fp);
-		}
+			fclose(fp); }
 	}
 
 #ifdef RCBOT_META_BUILD
@@ -1574,11 +1568,9 @@ unsigned int pfnGetPlayerWONId(edict_t* e)
 		}
 	}
 
-	if (debug_engine) {
-		fp = fopen("bot.txt", "a");
+	if (debug_engine) { fp = fopen("bot.txt", "a");
 		fprintf(fp, "pfnGetPlayerWONId: %x\n", unsigned(e));
-		fclose(fp);
-	}
+		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else

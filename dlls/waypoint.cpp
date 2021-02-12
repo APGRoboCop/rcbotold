@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*
  *    This file is part of RCBot.
  *
@@ -1544,7 +1546,7 @@ void WaypointDrawBeam(edict_t* pEntity, Vector start, Vector end, int width,
 	MESSAGE_END();
 }
 
-int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
+int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity, 
 	const BOOL bDraw, const BOOL bSound, const BOOL bAutoSetFlagsForPlayer)
 {
 	int index;

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*
  *    This file is part of RCBot.
  *
@@ -157,11 +159,9 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 	{
 		index = -1;
 
-		if (debug_engine) {
-			fp = fopen("bot.txt", "a");
+		if (debug_engine) { fp = fopen("bot.txt", "a");
 			fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
-			fclose(fp);
-		}
+			fclose(fp); }
 
 		m_CurrentMessage = NULL;
 		m_iCurrentMessageState = 0;
@@ -1900,6 +1900,7 @@ void CBotGlobals::ReadThingsToBuild(void)
 				case AVH_USER3_SENSORY_CHAMBER:
 					theThingsToBuild = &m_ThingsToBuild->m_forSensoryChamber;
 					break;
+				default: ;
 				}
 
 				if (theThingsToBuild)

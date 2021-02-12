@@ -297,7 +297,7 @@ public:
 		return FALSE;
 	}*/
 
-	BOOL IsMember(const T& pObj)
+	BOOL IsMember(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 
@@ -346,7 +346,7 @@ public:
 		}
 	}*/
 
-	BOOL Remove(const T& pObj)
+	BOOL Remove(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 		dataNode<T>* deleteNode = NULL;
@@ -531,7 +531,7 @@ public:
 		this->Destroy();
 	}
 
-	BOOL IsMember(const T& pObj)
+	BOOL IsMember(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 
@@ -590,7 +590,7 @@ public:
 		return FALSE;
 	}
 
-	BOOL Remove(const T& pObj)
+	BOOL Remove(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 		dataNode<T>* deleteNode;
@@ -653,7 +653,7 @@ public:
 		return (m_Head == NULL);
 	}
 
-	void Push(const T& pObj)
+	void Push(const T &pObj)
 	{
 		dataNode<T>* newNode = new dataNode<T>;
 
@@ -1026,7 +1026,7 @@ public:
 		return buffer[RANDOM_LONG(0, size - 1)];
 	}
 
-	void Add(const T& pObj)
+	void Add(const T &pObj)
 	{
 		size++;
 
@@ -1044,7 +1044,7 @@ public:
 				new_buffer[i] = buffer[i];
 			}
 
-			if (buffer != NULL)
+			if ( buffer != NULL )
 				delete[] buffer;
 
 			buffer = new_buffer;
@@ -1072,7 +1072,7 @@ public:
 
 		return (buffer[iIndex]);
 	}
-
+	
 	int getExistingIndex(T obj)
 	{
 		for (unsigned int i = 0; i < size; i++)

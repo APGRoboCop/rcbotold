@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*
  *    This file is part of RCBot.
  *
@@ -74,7 +76,7 @@
 #include "bot.h"
 
 #include "waypoint.h"
-#include <math.h>
+#include <cmath>
 
 extern CBotGlobals gBotGlobals;
 extern enginefuncs_t g_engfuncs;

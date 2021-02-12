@@ -66,7 +66,7 @@
 
 #include "usercmd.h"
 
-#include <math.h>
+#include <cmath>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -2132,6 +2132,7 @@ const char* BotFunc_GetRandomPlayerName(CBot* pBot, const int iState)
 			if (pBot->IsEnemy(pPlayer))
 				arrayNames.Add(STRING(pPlayer->v.netname));
 			break;
+		default: ;
 		}
 	}
 
@@ -2333,10 +2334,10 @@ BOOL CBot::NotStartedGame(void)
 
 	switch (gBotGlobals.m_iCurrentMod)
 	{
-		/*case MOD_TFC:
-			return FBitSet(pev->flags, FL_SPECTATOR) || !m_bChoseClass;
-			//return !m_bChoseClass || (pev->max_health == 1.0);
-			break;*/
+	/*case MOD_TFC:
+		return FBitSet(pev->flags, FL_SPECTATOR) || !m_bChoseClass;
+		//return !m_bChoseClass || (pev->max_health == 1.0);
+		break;*/
 	case MOD_HL_RALLY:
 		return !m_bSelectedCar;
 	case MOD_NS:
@@ -2597,7 +2598,7 @@ void CBot::StartGame(void)
 			int iTeam = m_Profile.m_iFavTeam;
 
 			// if team isn't valid then make iTeam 5. (keep it 1, 2 or 5 )
-			if (iTeam < 1 || iTeam > 5 || iTeam == 3 || iTeam == 4)
+			if ( iTeam < 1 || iTeam > 5 || iTeam == 3 || iTeam == 4 )
 				iTeam = 5;
 
 			FakeClientCommand(m_pEdict, "jointeam %d", iTeam);
@@ -3044,181 +3045,181 @@ void CBot::Think(void)
 	//
 	switch (gBotGlobals.m_iCurrentMod)
 	{
-		/*case MOD_TFC:
+	/*case MOD_TFC:
 
-			if (pev->playerclass == TFC_CLASS_SPY && m_bIsDisguised)
+		if (pev->playerclass == TFC_CLASS_SPY && m_bIsDisguised)
+		{
+			if (ThrowingGrenade())
+				StopMoving();
+		}
+		else if (!m_bHasFlag && pev->playerclass == TFC_CLASS_ENGINEER)
+		{
+			if (m_fNextCheckTeleporterExitTime < gpGlobals->time)
 			{
-				if (ThrowingGrenade())
-					StopMoving();
-			}
-			else if (!m_bHasFlag && pev->playerclass == TFC_CLASS_ENGINEER)
-			{
-				if (m_fNextCheckTeleporterExitTime < gpGlobals->time)
+				if (builtTeleporterExit() && !m_Tasks.HasSchedule(BOT_SCHED_MAKE_NEW_TELE_EXIT))
 				{
-					if (builtTeleporterExit() && !m_Tasks.HasSchedule(BOT_SCHED_MAKE_NEW_TELE_EXIT))
+					CRememberPosition* pos = m_vRememberedPositions.positionNearest(gBotGlobals.TFCGoals[m_iTeam].GetVector(), GetGunPosition());
+
+					if (pos)
 					{
-						CRememberPosition* pos = m_vRememberedPositions.positionNearest(gBotGlobals.TFCGoals[m_iTeam].GetVector(), GetGunPosition());
+						Vector v_dest = pos->getVector();
+						float h = (v_dest - gBotGlobals.TFCGoals[m_iTeam].GetVector()).Length() + (v_dest - GetGunPosition()).Length();
+						float g = (m_vTeleporter - gBotGlobals.TFCGoals[m_iTeam].GetVector()).Length() + (m_vTeleporter - GetGunPosition()).Length();
 
-						if (pos)
+						if (h + 256.0f < g)
 						{
-							Vector v_dest = pos->getVector();
-							float h = (v_dest - gBotGlobals.TFCGoals[m_iTeam].GetVector()).Length() + (v_dest - GetGunPosition()).Length();
-							float g = (m_vTeleporter - gBotGlobals.TFCGoals[m_iTeam].GetVector()).Length() + (m_vTeleporter - GetGunPosition()).Length();
+							int iWpt = WaypointLocations.GetCoverWaypoint(v_dest, v_dest, &m_FailedGoals);
 
-							if (h + 256.0f < g)
+							if (iWpt != -1)
 							{
-								int iWpt = WaypointLocations.GetCoverWaypoint(v_dest, v_dest, &m_FailedGoals);
+								int iNewScheduleId = m_Tasks.GetNewScheduleId();
 
-								if (iWpt != -1)
-								{
-									int iNewScheduleId = m_Tasks.GetNewScheduleId();
+								//eBotTask iTask, int iScheduleId = 0, edict_t *pInfo = NULL, int iInfo = 0, float fInfo = 0, Vector vInfo = Vector(0,0,0), float fTimeToComplete = -1.0
+								AddPriorityTask(CBotTask(BOT_TASK_TFC_BUILD_TELEPORT_EXIT, iNewScheduleId, NULL, 0, 0, Vector(0, 0, 0), 120.0));
+								AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, NULL, iWpt, -1));
+								AddPriorityTask(CBotTask(BOT_TASK_TFC_DETONATE_EXIT_TELEPORT, iNewScheduleId));
 
-									//eBotTask iTask, int iScheduleId = 0, edict_t *pInfo = NULL, int iInfo = 0, float fInfo = 0, Vector vInfo = Vector(0,0,0), float fTimeToComplete = -1.0
-									AddPriorityTask(CBotTask(BOT_TASK_TFC_BUILD_TELEPORT_EXIT, iNewScheduleId, NULL, 0, 0, Vector(0, 0, 0), 120.0));
-									AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, NULL, iWpt, -1));
-									AddPriorityTask(CBotTask(BOT_TASK_TFC_DETONATE_EXIT_TELEPORT, iNewScheduleId));
-
-									m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_MAKE_NEW_TELE_EXIT);
-								}
+								m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_MAKE_NEW_TELE_EXIT);
 							}
 						}
 					}
-
-					m_fNextCheckTeleporterExitTime = gpGlobals->time + 10.0;
 				}
-			}
 
-			if (
-				DistanceFrom(pev->origin + pev->velocity.Normalize() * DistanceFrom(m_vMoveToVector, TRUE), TRUE) < 32.0f
-				&& pev->velocity.Length2D() > 300
-				&& (m_bHasFlag || (pev->playerclass == TFC_CLASS_SCOUT || pev->playerclass == TFC_CLASS_MEDIC)))
+				m_fNextCheckTeleporterExitTime = gpGlobals->time + 10.0;
+			}
+		}
+
+		if (
+			DistanceFrom(pev->origin + pev->velocity.Normalize() * DistanceFrom(m_vMoveToVector, TRUE), TRUE) < 32.0f
+			&& pev->velocity.Length2D() > 300
+			&& (m_bHasFlag || (pev->playerclass == TFC_CLASS_SCOUT || pev->playerclass == TFC_CLASS_MEDIC)))
+		{
+			if (pev->movetype == MOVETYPE_WALK && !pev->waterlevel && pev->flags & FL_ONGROUND)
 			{
-				if (pev->movetype == MOVETYPE_WALK && !pev->waterlevel && pev->flags & FL_ONGROUND)
-				{
-					if (RANDOM_LONG(0, 5) == 0)
-						Jump(); // bunny hop
-				}
+				if (RANDOM_LONG(0, 5) == 0)
+					Jump(); // bunny hop
 			}
+		}
 
-			if ( (pev->playerclass == TFC_CLASS_SPY) && (m_fNextCheckFeignTime < gpGlobals->time) )
+		if ( (pev->playerclass == TFC_CLASS_SPY) && (m_fNextCheckFeignTime < gpGlobals->time) )
+		{
+			m_fNextCheckFeignTime = gpGlobals->time+1.0;
+
+			vector<ga_value> weights;
+
+			weights.push_back(m_GASurvival->get(16));
+			weights.push_back(m_GASurvival->get(17));
+			weights.push_back(m_GASurvival->get(18));
+			weights.push_back(m_GASurvival->get(19));
+
+			dec_feign->setWeights(weights);
+			vector<ga_value> inputs;
+			inputs.push_back(pev->health/pev->max_health);
+			inputs.push_back((float)m_bIsDisguised);
+			inputs.push_back((float)pev->iuser3);
+			dec_feign->input(inputs);
+			dec_feign->execute();
+
+			if ( gBotGlobals.m_enemyCostGAsForTeam[team].canPick() )
 			{
-				m_fNextCheckFeignTime = gpGlobals->time+1.0;
+				IIndividual *costs = gBotGlobals.m_enemyCostGAsForTeam[team].pick();
 
-				vector<ga_value> weights;
+				m_GASurvival->freeMemory();
+				delete m_GASurvival;
 
-				weights.push_back(m_GASurvival->get(16));
-				weights.push_back(m_GASurvival->get(17));
-				weights.push_back(m_GASurvival->get(18));
-				weights.push_back(m_GASurvival->get(19));
-
-				dec_feign->setWeights(weights);
-				vector<ga_value> inputs;
-				inputs.push_back(pev->health/pev->max_health);
-				inputs.push_back((float)m_bIsDisguised);
-				inputs.push_back((float)pev->iuser3);
-				dec_feign->input(inputs);
-				dec_feign->execute();
-
-				if ( gBotGlobals.m_enemyCostGAsForTeam[team].canPick() )
-				{
-					IIndividual *costs = gBotGlobals.m_enemyCostGAsForTeam[team].pick();
-
-					m_GASurvival->freeMemory();
-					delete m_GASurvival;
-
-					m_GASurvival = (CBotGAValues*)costs;
-					m_GASurvival->setFitness(0);
-				}
-
-				if ( dec_feign->fired() )
-					AddPriorityTask(BOT_TASK_TFC_FEIGN_DEATH);
+				m_GASurvival = (CBotGAValues*)costs;
+				m_GASurvival->setFitness(0);
 			}
-			TFC_UpdateFlagInfo();
+
+			if ( dec_feign->fired() )
+				AddPriorityTask(BOT_TASK_TFC_FEIGN_DEATH);
+		}
+		TFC_UpdateFlagInfo();
+
+		if (m_fNextUseSayMessage < gpGlobals->time)
+		{
+			// Shout for medic if less than 50% health
+			if (pev->health < pev->max_health * 0.5)
+			{
+				FakeClientCommand(m_pEdict, "saveme");
+				m_bAcceptHealth = TRUE;
+				m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(11.0, 13.0);
+			}
+		}
+		break;*/
+		//Sven Co-op 5.xx no longer supports Metamod [APG]RoboCop[CL]
+		/*case MOD_SVENCOOP:
+		{
+			// check if im using the minigun
+			// if its out of ammo then drop it as it will just slow me down
+			if (m_pCurrentWeapon)
+			{
+				if (m_pCurrentWeapon->HasWeapon(m_pEdict))
+				{
+					if (m_pCurrentWeapon->GetID() == SVEN_WEAPON_MINIGUN)
+					{
+						// need to drop mini gun if out of ammo or trying to jump...
+						if (m_pCurrentWeapon->OutOfAmmo() || pev->button & IN_JUMP || m_iCurrentWaypointFlags & W_FL_JUMP || m_iCurrentWaypointFlags & W_FL_CROUCHJUMP)
+						{
+							FakeClientCommand(m_pEdict, "drop");
+						}
+					}
+				}
+			}
+
+			// keep checking for cover and shout for grenades
+			if (m_pAvoidEntity && m_fNextCheckCover < gpGlobals->time)
+			{
+				char* szClassname = const_cast<char*>(STRING(m_pAvoidEntity->v.classname));
+				BOOL is_grenade = UTIL_IsGrenadeRocket(m_pAvoidEntity);
+
+				// run for cover from grenades and exploding robo grunts
+				if (is_grenade || m_pAvoidEntity->v.deadflag != DEAD_NO && strcmp(szClassname, "monster_robogrunt") == 0)
+				{
+					// say "take cover" message
+					FakeClientCommand(m_pEdict, "grenade");
+					m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(8.0, 12.0);
+
+					is_grenade = m_pAvoidEntity->v.owner == NULL ||
+						m_pAvoidEntity->v.owner == m_pEdict ||
+						!(m_pAvoidEntity->v.owner->v.flags & FL_CLIENT);
+					// guess final position of grenade
+
+					Vector v_src = EntityOrigin(m_pAvoidEntity);
+
+					if (is_grenade)
+					{
+						//UTIL_TraceLine(v_src,v_src+m_pAvoidEntity->v.velocity*5.0,ignore_monsters,dont_ignore_glass,m_pAvoidEntity,&tr);
+						//UTIL_TraceLine(tr.vecEndPos,tr.vecEndPos-Vector(0,0,800),ignore_monsters,dont_ignore_glass,m_pAvoidEntity,&tr);
+						BotFunc_TraceToss(m_pAvoidEntity, NULL, &tr);
+
+						RunForCover(tr.vecEndPos, TRUE);
+					}
+					else
+						RunForCover(v_src, TRUE);
+
+					int iCoverWpt = WaypointLocations.GetCoverWaypoint(pev->origin,tr.vecEndPos,&m_FailedGoals);
+
+					if ( iCoverWpt != -1 )
+					{
+						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH,0,NULL,iCoverWpt,-2));
+						m_fNextCheckCover = gpGlobals->time + 1.0;
+					}
+				}
+			}
 
 			if (m_fNextUseSayMessage < gpGlobals->time)
 			{
 				// Shout for medic if less than 50% health
 				if (pev->health < pev->max_health * 0.5)
 				{
-					FakeClientCommand(m_pEdict, "saveme");
+					FakeClientCommand(m_pEdict, "medic");
 					m_bAcceptHealth = TRUE;
 					m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(11.0, 13.0);
 				}
 			}
-			break;*/
-			//Sven Co-op 5.xx no longer supports Metamod [APG]RoboCop[CL]
-			/*case MOD_SVENCOOP:
-			{
-				// check if im using the minigun
-				// if its out of ammo then drop it as it will just slow me down
-				if (m_pCurrentWeapon)
-				{
-					if (m_pCurrentWeapon->HasWeapon(m_pEdict))
-					{
-						if (m_pCurrentWeapon->GetID() == SVEN_WEAPON_MINIGUN)
-						{
-							// need to drop mini gun if out of ammo or trying to jump...
-							if (m_pCurrentWeapon->OutOfAmmo() || pev->button & IN_JUMP || m_iCurrentWaypointFlags & W_FL_JUMP || m_iCurrentWaypointFlags & W_FL_CROUCHJUMP)
-							{
-								FakeClientCommand(m_pEdict, "drop");
-							}
-						}
-					}
-				}
-
-				// keep checking for cover and shout for grenades
-				if (m_pAvoidEntity && m_fNextCheckCover < gpGlobals->time)
-				{
-					char* szClassname = const_cast<char*>(STRING(m_pAvoidEntity->v.classname));
-					BOOL is_grenade = UTIL_IsGrenadeRocket(m_pAvoidEntity);
-
-					// run for cover from grenades and exploding robo grunts
-					if (is_grenade || m_pAvoidEntity->v.deadflag != DEAD_NO && strcmp(szClassname, "monster_robogrunt") == 0)
-					{
-						// say "take cover" message
-						FakeClientCommand(m_pEdict, "grenade");
-						m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(8.0, 12.0);
-
-						is_grenade = m_pAvoidEntity->v.owner == NULL ||
-							m_pAvoidEntity->v.owner == m_pEdict ||
-							!(m_pAvoidEntity->v.owner->v.flags & FL_CLIENT);
-						// guess final position of grenade
-
-						Vector v_src = EntityOrigin(m_pAvoidEntity);
-
-						if (is_grenade)
-						{
-							//UTIL_TraceLine(v_src,v_src+m_pAvoidEntity->v.velocity*5.0,ignore_monsters,dont_ignore_glass,m_pAvoidEntity,&tr);
-							//UTIL_TraceLine(tr.vecEndPos,tr.vecEndPos-Vector(0,0,800),ignore_monsters,dont_ignore_glass,m_pAvoidEntity,&tr);
-							BotFunc_TraceToss(m_pAvoidEntity, NULL, &tr);
-
-							RunForCover(tr.vecEndPos, TRUE);
-						}
-						else
-							RunForCover(v_src, TRUE);
-
-						int iCoverWpt = WaypointLocations.GetCoverWaypoint(pev->origin,tr.vecEndPos,&m_FailedGoals);
-
-						if ( iCoverWpt != -1 )
-						{
-							AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH,0,NULL,iCoverWpt,-2));
-							m_fNextCheckCover = gpGlobals->time + 1.0;
-						}
-					}
-				}
-
-				if (m_fNextUseSayMessage < gpGlobals->time)
-				{
-					// Shout for medic if less than 50% health
-					if (pev->health < pev->max_health * 0.5)
-					{
-						FakeClientCommand(m_pEdict, "medic");
-						m_bAcceptHealth = TRUE;
-						m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(11.0, 13.0);
-					}
-				}
-			}
-			break;*/
+		}
+		break;*/
 	case MOD_NS:
 	{
 		int iSpecies = pev->iuser3;
@@ -4191,6 +4192,7 @@ void CBot::LookForNewTasks(void)
 			}
 
 			break;
+	default: ;
 		}
 	}
 
@@ -4524,6 +4526,7 @@ void CBot::LookForNewTasks(void)
 								break;
 							case ALIEN_BUILD_MOVEMENT_CHAMBER:
 								AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_RESOURCES, iNewScheduleId, NULL, NS_MOVEMENT_CHAMBER_RESOURCES));
+							default: ;
 							}
 
 							m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_BUILD);
@@ -4717,98 +4720,230 @@ void CBot::LookForNewTasks(void)
 			bRoam = m_Tasks.NoTasksLeft();
 		}
 		break;
-		/*case MOD_TFC:
+	/*case MOD_TFC:
 
-			if (m_bHasFlag)
+		if (m_bHasFlag)
+		{
+			bRoam = TRUE;
+			break;
+		}
+
+		switch (pev->playerclass)
+		{
+		case TFC_CLASS_DEMOMAN:
+
+			if (m_bPlacedPipes)
 			{
-				bRoam = TRUE;
-				break;
+			}
+			else if (pEnemyFlag)
+			{
+				AddTask(CBotTask(BOT_TASK_TFC_PLACE_PIPES, iNewScheduleId, pEnemyFlag, 0, 0, EntityOrigin(pEnemyFlag)));
 			}
 
-			switch (pev->playerclass)
+			if (m_fLastPlaceDetpack + 60.0f < gpGlobals->time && !iDetPackWaypoints.IsEmpty())
 			{
-			case TFC_CLASS_DEMOMAN:
+				int wpt = iDetPackWaypoints.Random();
+				AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, NULL, wpt, -1));
+				AddTask(CBotTask(BOT_TASK_TFC_PLACE_DETPACK, iNewScheduleId));
+			}
 
-				if (m_bPlacedPipes)
-				{
-				}
-				else if (pEnemyFlag)
-				{
-					AddTask(CBotTask(BOT_TASK_TFC_PLACE_PIPES, iNewScheduleId, pEnemyFlag, 0, 0, EntityOrigin(pEnemyFlag)));
-				}
+			break;
+		case TFC_CLASS_ENGINEER:
 
-				if (m_fLastPlaceDetpack + 60.0f < gpGlobals->time && !iDetPackWaypoints.IsEmpty())
-				{
-					int wpt = iDetPackWaypoints.Random();
-					AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, NULL, wpt, -1));
-					AddTask(CBotTask(BOT_TASK_TFC_PLACE_DETPACK, iNewScheduleId));
-				}
+			if (getSentry() && SentryNeedsRepaired())
+			{
+				RepairSentry(iNewScheduleId);
+			}
+			else if (pNearestBuildable)
+			{
+				AddTask(CBotTask(BOT_TASK_TFC_REPAIR_BUILDABLE, iNewScheduleId, pNearestBuildable));
+			}
 
-				break;
-			case TFC_CLASS_ENGINEER:
+			break;
+			case TFC_CLASS_MEDIC:
+			{
+				if (pNearestHealablePlayer && pNearestHealablePlayer != m_pEdict)
+				{
+					CBotWeapon* pWeapon = m_Weapons.GetWeapon(TF_WEAPON_MEDIKIT);
 
-				if (getSentry() && SentryNeedsRepaired())
-				{
-					RepairSentry(iNewScheduleId);
-				}
-				else if (pNearestBuildable)
-				{
-					AddTask(CBotTask(BOT_TASK_TFC_REPAIR_BUILDABLE, iNewScheduleId, pNearestBuildable));
-				}
-
-				break;
-				case TFC_CLASS_MEDIC:
-				{
-					if (pNearestHealablePlayer && pNearestHealablePlayer != m_pEdict)
+					// check if I've got the medkit
+					if (pWeapon)
 					{
-						CBotWeapon* pWeapon = m_Weapons.GetWeapon(TF_WEAPON_MEDIKIT);
+						AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHealablePlayer));
+						AddTask(CBotTask(BOT_TASK_HEAL_PLAYER, iNewScheduleId, pNearestHealablePlayer));
+						break;
+					}
+				}
+			}
+			break;
+			case TFC_CLASS_SNIPER:
 
-						// check if I've got the medkit
-						if (pWeapon)
+				break;
+			case TFC_CLASS_SPY:
+
+				if (!m_bIsDisguised)
+				{
+					if (m_pLastEnemy && pev->iuser3 != 1 && pev->waterlevel == 0)
+						AddTask(CBotTask(BOT_TASK_TFC_FEIGN_DEATH, iNewScheduleId));
+
+					// disguise
+					AddTask(CBotTask(BOT_TASK_TFC_DISGUISE, iNewScheduleId));
+				}
+				else if (m_bIsDisguised && pev->iuser3 == 1)
+					AddTask(CBotTask(BOT_TASK_TFC_FEIGN_DEATH, iNewScheduleId));
+				else
+				{
+					CRememberPosition* position = m_vRememberedPositions.getSentryPosition();
+
+					if (position && position->getEntity())
+					{
+						Vector vPos = position->getEntity()->v.origin;
+						int iCoverWpt = WaypointLocations.GetCoverWaypoint(vPos, vPos, &m_FailedGoals);
+
+						if (iCoverWpt != -1)
 						{
-							AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHealablePlayer));
-							AddTask(CBotTask(BOT_TASK_HEAL_PLAYER, iNewScheduleId, pNearestHealablePlayer));
-							break;
+							AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, NULL, iCoverWpt, -1));
+							AddTask(CBotTask(BOT_TASK_THROW_GRENADE, iNewScheduleId, NULL, 0, 0, vPos));
+
+							if (position->getEntity())
+								AddTask(CBotTask(BOT_TASK_NORMAL_ATTACK, iNewScheduleId, position->getEntity()));
 						}
 					}
 				}
 				break;
-				case TFC_CLASS_SNIPER:
+		default:
+			break;
+		}
 
-					break;
-				case TFC_CLASS_SPY:
+		// A button nearby?
+		if (pNearestButton)
+		{
+			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestButton));
+			AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestButton));
 
-					if (!m_bIsDisguised)
+			m_fUseButtonTime = gpGlobals->time + 5.0;
+
+			break;
+		}
+
+		// need health and a health waypoint nearby ?
+		if (bNeedHealth)
+		{
+			int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 2000.0, -1, W_FL_HEALTH, &m_FailedGoals);
+
+			if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
+			{
+				AddTask(CBotTask(BOT_TASK_FIND_PATH, 0, NULL, iWpt, -1));
+				break;
+			}
+		}
+
+		if (pNearestPickupEntity)
+		{
+			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestPickupEntity));
+			AddTask(CBotTask(BOT_TASK_PICKUP_ITEM, iNewScheduleId, pNearestPickupEntity));
+			break;
+		}
+
+		bRoam = m_Tasks.NoTasksLeft();
+		break;
+		case MOD_SVENCOOP:
+			// If bot NEEDS some weapons to kill something
+			if (HasCondition(BOT_CONDITION_NEED_WEAPONS))
+			{
+				// look for weapons
+
+				int i;
+				char* szWeapon;
+				CWeapon* pWeapon;
+				edict_t* pSearchWeapon;
+				edict_t* pFoundWeapon = NULL;
+				float fWeaponDist;
+				float fNearestWeaponDist = 4096;
+
+				// find a weapon in my list of weapons I need
+				for (i = 1; i < MAX_WEAPONS; i++)
+				{
+					if (m_iWeaponsNeeded[i] == 1)
 					{
-						if (m_pLastEnemy && pev->iuser3 != 1 && pev->waterlevel == 0)
-							AddTask(CBotTask(BOT_TASK_TFC_FEIGN_DEATH, iNewScheduleId));
+						pWeapon = gBotGlobals.m_Weapons.GetWeapon(i);
 
-						// disguise
-						AddTask(CBotTask(BOT_TASK_TFC_DISGUISE, iNewScheduleId));
-					}
-					else if (m_bIsDisguised && pev->iuser3 == 1)
-						AddTask(CBotTask(BOT_TASK_TFC_FEIGN_DEATH, iNewScheduleId));
-					else
-					{
-						CRememberPosition* position = m_vRememberedPositions.getSentryPosition();
+						if (!pWeapon)
+							continue;
 
-						if (position && position->getEntity())
+						szWeapon = pWeapon->GetClassname();
+
+						if (!szWeapon)
+							continue;
+
+						pSearchWeapon = NULL;
+
+						// find a weapon I need
+						while ((pSearchWeapon = UTIL_FindEntityByClassname(pSearchWeapon, szWeapon)) != NULL)
 						{
-							Vector vPos = position->getEntity()->v.origin;
-							int iCoverWpt = WaypointLocations.GetCoverWaypoint(vPos, vPos, &m_FailedGoals);
+							if (!CanPickup(pSearchWeapon))
+								continue;
 
-							if (iCoverWpt != -1)
+							if ((fWeaponDist = DistanceFromEdict(pSearchWeapon)) < fNearestWeaponDist)
 							{
-								AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, NULL, iCoverWpt, -1));
-								AddTask(CBotTask(BOT_TASK_THROW_GRENADE, iNewScheduleId, NULL, 0, 0, vPos));
-
-								if (position->getEntity())
-									AddTask(CBotTask(BOT_TASK_NORMAL_ATTACK, iNewScheduleId, position->getEntity()));
+								fNearestWeaponDist = fWeaponDist;
+								pFoundWeapon = pSearchWeapon;
 							}
 						}
 					}
+				}
+
+				// found?
+				if (pFoundWeapon)
+				{
+					int iNewScheduleId = m_Tasks.GetNewScheduleId();
+					int iWpt = WaypointLocations.NearestWaypoint(EntityOrigin(pFoundWeapon), REACHABLE_RANGE, m_iLastFailedWaypoint, TRUE, FALSE, TRUE, &m_FailedGoals);
+
+					if (iWpt != -1)
+					{
+						// get it
+						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pFoundWeapon));
+						RemoveCondition(BOT_CONDITION_NEED_WEAPONS);
+						break; // done got a task...
+					}
+				}
+			}
+
+			// Found a guy to heal?
+			if (pNearestHealablePlayer && pNearestHealablePlayer != m_pEdict)
+			{
+				CBotWeapon* pWeapon = m_Weapons.GetWeapon(SVEN_WEAPON_MEDKIT);
+
+				// check if I've got the medkit
+				if (pWeapon && !pWeapon->OutOfAmmo())
+				{
+					AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHealablePlayer));
+					AddTask(CBotTask(BOT_TASK_HEAL_PLAYER, iNewScheduleId, pNearestHealablePlayer));
 					break;
-			default:
+				}
+			}
+
+			// something I can pick up?
+			if (pNearestPickupEntity)
+			{
+				AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestPickupEntity));
+				AddTask(CBotTask(BOT_TASK_PICKUP_ITEM, iNewScheduleId, pNearestPickupEntity));
+				break;
+			}
+
+			// Hev charger nearby and I need armour...?
+			if (pNearestHEVcharger)
+			{
+				AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHEVcharger));
+				AddTask(CBotTask(BOT_TASK_USE_HEV_CHARGER, iNewScheduleId, pNearestHEVcharger));
+				break;
+			}
+
+			// Health charger nearby and need armour?
+			if (pNearestHealthcharger)
+			{
+				AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHealthcharger));
+				AddTask(CBotTask(BOT_TASK_USE_HEALTH_CHARGER, iNewScheduleId, pNearestHealthcharger));
 				break;
 			}
 
@@ -4816,11 +4951,91 @@ void CBot::LookForNewTasks(void)
 			if (pNearestButton)
 			{
 				AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestButton));
-				AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestButton));
+
+				if (strncmp(STRING(pNearestButton->v.classname), "momentary", 9))
+					AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestButton));
+				else
+					AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestButton, 0, RANDOM_FLOAT(10.0, 15.0)));
 
 				m_fUseButtonTime = gpGlobals->time + 5.0;
 
 				break;
+			}
+
+			// Haven't got a weapon???
+			if (!HasCondition(BOT_CONDITION_HAS_WEAPON))
+			{
+				// find one
+				int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0, -1, W_FL_WEAPON, &m_FailedGoals);
+
+				// waypoint valid?
+				if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
+				{
+					AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, NULL, iWpt, -1));
+					break;
+				}
+			}
+
+			if (pNearestScientist)
+			{
+				int iWpt;
+
+				//get nearest Scientist point waypoint
+
+				iWpt = WaypointFindNearestGoal(GetGunPosition(), m_pEdict, 3000.0, -1, W_FL_SCIENTIST_POINT, &m_FailedGoals);
+
+				if (iWpt != -1)
+				{
+					char* szClassnames[1] = { "monster_scientist" };
+
+					edict_t* pSci = UTIL_FindNearestEntity(szClassnames, 1, WaypointOrigin(iWpt), 64.0, TRUE);
+
+					m_fNextUseScientist = gpGlobals->time + RANDOM_FLOAT(10.0, 20.0);
+
+					if (pSci == NULL)
+					{
+						AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestScientist));
+						AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestScientist));
+						AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestScientist));
+
+						m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_USING_SCIENTIST);
+
+						break;
+					}
+				}
+				else
+					m_fNextUseScientist = gpGlobals->time + RANDOM_FLOAT(5.0, 10.0);
+			}
+
+			if (pNearestBarney)
+			{
+				int iWpt;
+
+				//get nearest Scientist point waypoint
+
+				iWpt = WaypointFindNearestGoal(GetGunPosition(), m_pEdict, 3000.0, -1, W_FL_BARNEY_POINT, &m_FailedGoals);
+
+				if (iWpt != -1)
+				{
+					char* szClassnames[2] = { "monster_barney","monster_otis" };
+
+					edict_t* pBarney = UTIL_FindNearestEntity(szClassnames, 2, WaypointOrigin(iWpt), 64.0, TRUE);
+
+					m_fNextUseBarney = gpGlobals->time + RANDOM_FLOAT(10.0, 20.0);
+
+					if (pBarney == NULL)
+					{
+						AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestBarney));
+						AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestBarney));
+						AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestBarney));
+
+						m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_USING_BARNEY);
+
+						break;
+					}
+				}
+				else
+					m_fNextUseBarney = gpGlobals->time + RANDOM_FLOAT(5.0, 10.0);
 			}
 
 			// need health and a health waypoint nearby ?
@@ -4835,249 +5050,37 @@ void CBot::LookForNewTasks(void)
 				}
 			}
 
-			if (pNearestPickupEntity)
+			if (pNearestScientist)
 			{
-				AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestPickupEntity));
-				AddTask(CBotTask(BOT_TASK_PICKUP_ITEM, iNewScheduleId, pNearestPickupEntity));
-				break;
+				//if ( UTIL_EntityHasClassname(pEntity,"monster_scientist") )
+				//{
+				m_fNextUseScientist = gpGlobals->time + RANDOM_FLOAT(10.0, 20.0);
+				//}
 			}
 
-			bRoam = m_Tasks.NoTasksLeft();
-			break;
-			case MOD_SVENCOOP:
-				// If bot NEEDS some weapons to kill something
-				if (HasCondition(BOT_CONDITION_NEED_WEAPONS))
+			if (pNearestBarney)
+			{
+				//if ( UTIL_EntityHasClassname(pEntity,"monster_barney") || UTIL_EntityHasClassname(pEntity,"monster_otis") )
+				//{
+				m_fNextUseScientist = gpGlobals->time + RANDOM_FLOAT(10.0, 20.0);
+				//}
+			}
+
+			// need armor and batteries/hev charger (armor waypoint) near?
+			if (bNeedArmor)
+			{
+				int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 2000.0, -1, W_FL_ARMOR, &m_FailedGoals);
+
+				if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
 				{
-					// look for weapons
-
-					int i;
-					char* szWeapon;
-					CWeapon* pWeapon;
-					edict_t* pSearchWeapon;
-					edict_t* pFoundWeapon = NULL;
-					float fWeaponDist;
-					float fNearestWeaponDist = 4096;
-
-					// find a weapon in my list of weapons I need
-					for (i = 1; i < MAX_WEAPONS; i++)
-					{
-						if (m_iWeaponsNeeded[i] == 1)
-						{
-							pWeapon = gBotGlobals.m_Weapons.GetWeapon(i);
-
-							if (!pWeapon)
-								continue;
-
-							szWeapon = pWeapon->GetClassname();
-
-							if (!szWeapon)
-								continue;
-
-							pSearchWeapon = NULL;
-
-							// find a weapon I need
-							while ((pSearchWeapon = UTIL_FindEntityByClassname(pSearchWeapon, szWeapon)) != NULL)
-							{
-								if (!CanPickup(pSearchWeapon))
-									continue;
-
-								if ((fWeaponDist = DistanceFromEdict(pSearchWeapon)) < fNearestWeaponDist)
-								{
-									fNearestWeaponDist = fWeaponDist;
-									pFoundWeapon = pSearchWeapon;
-								}
-							}
-						}
-					}
-
-					// found?
-					if (pFoundWeapon)
-					{
-						int iNewScheduleId = m_Tasks.GetNewScheduleId();
-						int iWpt = WaypointLocations.NearestWaypoint(EntityOrigin(pFoundWeapon), REACHABLE_RANGE, m_iLastFailedWaypoint, TRUE, FALSE, TRUE, &m_FailedGoals);
-
-						if (iWpt != -1)
-						{
-							// get it
-							AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pFoundWeapon));
-							RemoveCondition(BOT_CONDITION_NEED_WEAPONS);
-							break; // done got a task...
-						}
-					}
-				}
-
-				// Found a guy to heal?
-				if (pNearestHealablePlayer && pNearestHealablePlayer != m_pEdict)
-				{
-					CBotWeapon* pWeapon = m_Weapons.GetWeapon(SVEN_WEAPON_MEDKIT);
-
-					// check if I've got the medkit
-					if (pWeapon && !pWeapon->OutOfAmmo())
-					{
-						AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHealablePlayer));
-						AddTask(CBotTask(BOT_TASK_HEAL_PLAYER, iNewScheduleId, pNearestHealablePlayer));
-						break;
-					}
-				}
-
-				// something I can pick up?
-				if (pNearestPickupEntity)
-				{
-					AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestPickupEntity));
-					AddTask(CBotTask(BOT_TASK_PICKUP_ITEM, iNewScheduleId, pNearestPickupEntity));
+					AddTask(CBotTask(BOT_TASK_FIND_PATH, 0, NULL, iWpt, -1));
 					break;
 				}
+			}
 
-				// Hev charger nearby and I need armour...?
-				if (pNearestHEVcharger)
-				{
-					AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHEVcharger));
-					AddTask(CBotTask(BOT_TASK_USE_HEV_CHARGER, iNewScheduleId, pNearestHEVcharger));
-					break;
-				}
+			bRoam = TRUE;
 
-				// Health charger nearby and need armour?
-				if (pNearestHealthcharger)
-				{
-					AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHealthcharger));
-					AddTask(CBotTask(BOT_TASK_USE_HEALTH_CHARGER, iNewScheduleId, pNearestHealthcharger));
-					break;
-				}
-
-				// A button nearby?
-				if (pNearestButton)
-				{
-					AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestButton));
-
-					if (strncmp(STRING(pNearestButton->v.classname), "momentary", 9))
-						AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestButton));
-					else
-						AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestButton, 0, RANDOM_FLOAT(10.0, 15.0)));
-
-					m_fUseButtonTime = gpGlobals->time + 5.0;
-
-					break;
-				}
-
-				// Haven't got a weapon???
-				if (!HasCondition(BOT_CONDITION_HAS_WEAPON))
-				{
-					// find one
-					int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0, -1, W_FL_WEAPON, &m_FailedGoals);
-
-					// waypoint valid?
-					if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
-					{
-						AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, NULL, iWpt, -1));
-						break;
-					}
-				}
-
-				if (pNearestScientist)
-				{
-					int iWpt;
-
-					//get nearest Scientist point waypoint
-
-					iWpt = WaypointFindNearestGoal(GetGunPosition(), m_pEdict, 3000.0, -1, W_FL_SCIENTIST_POINT, &m_FailedGoals);
-
-					if (iWpt != -1)
-					{
-						char* szClassnames[1] = { "monster_scientist" };
-
-						edict_t* pSci = UTIL_FindNearestEntity(szClassnames, 1, WaypointOrigin(iWpt), 64.0, TRUE);
-
-						m_fNextUseScientist = gpGlobals->time + RANDOM_FLOAT(10.0, 20.0);
-
-						if (pSci == NULL)
-						{
-							AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestScientist));
-							AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestScientist));
-							AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestScientist));
-
-							m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_USING_SCIENTIST);
-
-							break;
-						}
-					}
-					else
-						m_fNextUseScientist = gpGlobals->time + RANDOM_FLOAT(5.0, 10.0);
-				}
-
-				if (pNearestBarney)
-				{
-					int iWpt;
-
-					//get nearest Scientist point waypoint
-
-					iWpt = WaypointFindNearestGoal(GetGunPosition(), m_pEdict, 3000.0, -1, W_FL_BARNEY_POINT, &m_FailedGoals);
-
-					if (iWpt != -1)
-					{
-						char* szClassnames[2] = { "monster_barney","monster_otis" };
-
-						edict_t* pBarney = UTIL_FindNearestEntity(szClassnames, 2, WaypointOrigin(iWpt), 64.0, TRUE);
-
-						m_fNextUseBarney = gpGlobals->time + RANDOM_FLOAT(10.0, 20.0);
-
-						if (pBarney == NULL)
-						{
-							AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestBarney));
-							AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestBarney));
-							AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestBarney));
-
-							m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_USING_BARNEY);
-
-							break;
-						}
-					}
-					else
-						m_fNextUseBarney = gpGlobals->time + RANDOM_FLOAT(5.0, 10.0);
-				}
-
-				// need health and a health waypoint nearby ?
-				if (bNeedHealth)
-				{
-					int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 2000.0, -1, W_FL_HEALTH, &m_FailedGoals);
-
-					if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
-					{
-						AddTask(CBotTask(BOT_TASK_FIND_PATH, 0, NULL, iWpt, -1));
-						break;
-					}
-				}
-
-				if (pNearestScientist)
-				{
-					//if ( UTIL_EntityHasClassname(pEntity,"monster_scientist") )
-					//{
-					m_fNextUseScientist = gpGlobals->time + RANDOM_FLOAT(10.0, 20.0);
-					//}
-				}
-
-				if (pNearestBarney)
-				{
-					//if ( UTIL_EntityHasClassname(pEntity,"monster_barney") || UTIL_EntityHasClassname(pEntity,"monster_otis") )
-					//{
-					m_fNextUseScientist = gpGlobals->time + RANDOM_FLOAT(10.0, 20.0);
-					//}
-				}
-
-				// need armor and batteries/hev charger (armor waypoint) near?
-				if (bNeedArmor)
-				{
-					int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 2000.0, -1, W_FL_ARMOR, &m_FailedGoals);
-
-					if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
-					{
-						AddTask(CBotTask(BOT_TASK_FIND_PATH, 0, NULL, iWpt, -1));
-						break;
-					}
-				}
-
-				bRoam = TRUE;
-
-				break;*/
+			break;*/
 	case MOD_HL_RALLY:
 	{
 		int iWpt;
@@ -5821,16 +5824,16 @@ void CBot::LookForNewTasks(void)
 						gBotGlobals.m_iCurrentMod != MOD_RC2 &&
 						gBotGlobals.m_iCurrentMod != MOD_BUMPERCARS &&
 						gBotGlobals.m_iCurrentMod != MOD_DMC);
-					//( gBotGlobals.m_iCurrentMod != MOD_GEARBOX ) && // Support for OP4CTF [APG]RoboCop[CL]
-					//gBotGlobals.m_iCurrentMod != MOD_TFC
+						//( gBotGlobals.m_iCurrentMod != MOD_GEARBOX ) && // Support for OP4CTF [APG]RoboCop[CL]
+						//gBotGlobals.m_iCurrentMod != MOD_TFC
 
-				/*if ( gBotGlobals.IsMod(MOD_TFC) )
-				{
-				// assemble squad on civilian on hunted maps
-				if ( gBotGlobals.IsMapType(
-		}*/
+					/*if ( gBotGlobals.IsMod(MOD_TFC) )
+					{
+					// assemble squad on civilian on hunted maps
+					if ( gBotGlobals.IsMapType(
+			}*/
 
-		// if Natural Selction is the MOD..
+			// if Natural Selction is the MOD..
 					if (bCanMakeSquad && gBotGlobals.IsNS())
 					{
 						if (IsFade())
@@ -6536,6 +6539,7 @@ BOOL CBot::UpdateVisibles(void)
 					break;
 				case ALIEN_BUILD_MOVEMENT_CHAMBER:
 					AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_RESOURCES, iNewScheduleId, NULL, NS_MOVEMENT_CHAMBER_RESOURCES));
+				default: ;
 				}
 
 				m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_BUILD);
@@ -7543,7 +7547,7 @@ void BotFunc_ChangeAngles(float* fSpeed, const float* fIdeal, float* fCurrent, f
 
 	if (*fCurrent >= 0 && *fIdeal >= 0)  // both positive
 	{
-		if (*fCurrent > *fIdeal)
+		if (*fCurrent > * fIdeal)
 			*fCurrent -= *fSpeed;
 		else
 			*fCurrent += *fSpeed;
@@ -7552,7 +7556,7 @@ void BotFunc_ChangeAngles(float* fSpeed, const float* fIdeal, float* fCurrent, f
 	{
 		fCurrent180 = *fCurrent - 180;
 
-		if (fCurrent180 > *fIdeal)
+		if (fCurrent180 > * fIdeal)
 			*fCurrent += *fSpeed;
 		else
 			*fCurrent -= *fSpeed;
@@ -7560,14 +7564,14 @@ void BotFunc_ChangeAngles(float* fSpeed, const float* fIdeal, float* fCurrent, f
 	else if (*fCurrent < 0 && *fIdeal >= 0)
 	{
 		fCurrent180 = *fCurrent + 180;
-		if (fCurrent180 > *fIdeal)
+		if (fCurrent180 > * fIdeal)
 			*fCurrent += *fSpeed;
 		else
 			*fCurrent -= *fSpeed;
 	}
 	else  // (current < 0) && (ideal < 0)  both negative
 	{
-		if (*fCurrent > *fIdeal)
+		if (*fCurrent > * fIdeal)
 			*fCurrent -= *fSpeed;
 		else
 			*fCurrent += *fSpeed;
@@ -8514,53 +8518,53 @@ BOOL CBot::CanPickup(edict_t* pPickup)
 		if (strcmp("item_powerup", STRING(pPickup->v.netname)) == 0)
 			return TRUE;
 		break;
-		/*case MOD_TFC:
-		{
-			char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
+	/*case MOD_TFC:
+	{
+		char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
 
-			if (pev->playerclass == TFC_CLASS_ENGINEER)
-			{
-				if (FStrEq(szClassname, "weaponbox"))
-					return TRUE;
-			}
-			if (strncmp(szClassname, "item_armor", 10) == 0)
-			{
-				if (pev->armorvalue < UTIL_TFC_getMaxArmor(m_pEdict))
-					return TRUE;
-			}
-			else if (FStrEq(szClassname, "item_healthkit"))
-				return pev->health < pev->max_health;
-			else if (gBotGlobals.TFC_IsAvailableFlag(pPickup, pev->team))
+		if (pev->playerclass == TFC_CLASS_ENGINEER)
+		{
+			if (FStrEq(szClassname, "weaponbox"))
 				return TRUE;
-		}*/
-		break;
+		}
+		if (strncmp(szClassname, "item_armor", 10) == 0)
+		{
+			if (pev->armorvalue < UTIL_TFC_getMaxArmor(m_pEdict))
+				return TRUE;
+		}
+		else if (FStrEq(szClassname, "item_healthkit"))
+			return pev->health < pev->max_health;
+		else if (gBotGlobals.TFC_IsAvailableFlag(pPickup, pev->team))
+			return TRUE;
+	}*/
+	break;
 	case MOD_RC:
 	case MOD_RC2:
-		/*case MOD_SVENCOOP:
+	/*case MOD_SVENCOOP:
+	{
+		char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
+
+		// i can pick up weapons...
+		if (strncmp(szClassname, "weapon_", 7) == 0)
 		{
-			char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
-
-			// i can pick up weapons...
-			if (strncmp(szClassname, "weapon_", 7) == 0)
-			{
-				if (!m_Weapons.HasWeapon(m_pEdict, szClassname))
-					return TRUE;
-			}
-			else if (strncmp(szClassname, "item_", 5) == 0)
-			{
-				if (FStrEq(&szClassname[5], "healthkit"))
-					return pev->health < pev->max_health;
-				else if (FStrEq(&szClassname[5], "longjump"))
-				{
-					// if bot doesnt have the longjump then pick it up.
-					// otherwise, ignore it
-					return !m_bHasLongJump;
-				}
-			}
-
-			// ammo....?
+			if (!m_Weapons.HasWeapon(m_pEdict, szClassname))
+				return TRUE;
 		}
-		break;*/
+		else if (strncmp(szClassname, "item_", 5) == 0)
+		{
+			if (FStrEq(&szClassname[5], "healthkit"))
+				return pev->health < pev->max_health;
+			else if (FStrEq(&szClassname[5], "longjump"))
+			{
+				// if bot doesnt have the longjump then pick it up.
+				// otherwise, ignore it
+				return !m_bHasLongJump;
+			}
+		}
+
+		// ammo....?
+	}
+	break;*/
 	case MOD_DMC:
 	{
 		char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
@@ -9412,56 +9416,56 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			return TRUE;
 		}
 		break;
-		/*case MOD_TFC:
+	/*case MOD_TFC:
+	{
+		if (!EntityIsAlive(pEntity))
+			return FALSE;
+
+		if (pEntity->v.playerclass == TFC_CLASS_SPY)
 		{
-			if (!EntityIsAlive(pEntity))
+			if (ThinkSpyOnTeam(pEntity))
 				return FALSE;
+			else
+				return TRUE;
+		}
 
-			if (pEntity->v.playerclass == TFC_CLASS_SPY)
+		int pentTeam = pEntity->v.team;
+
+		if (!pentTeam)
+		{
+			if (pEntity->v.flags & FL_MONSTER) // could be a sentry/teleport/dispenser
 			{
-				if (ThinkSpyOnTeam(pEntity))
-					return FALSE;
-				else
-					return TRUE;
-			}
+				char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-			int pentTeam = pEntity->v.team;
-
-			if (!pentTeam)
-			{
-				if (pEntity->v.flags & FL_MONSTER) // could be a sentry/teleport/dispenser
+				if (FStrEq(szClassname, "building_sentrygun") ||
+					FStrEq(szClassname,"building_dispenser") ||
+					FStrEq(szClassname, "building_teleporter")
+					)
 				{
-					char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
-
-					if (FStrEq(szClassname, "building_sentrygun") ||
-						FStrEq(szClassname,"building_dispenser") ||
-						FStrEq(szClassname, "building_teleporter")
-						)
-					{
-						pentTeam = gBotGlobals.TFC_getTeamViaColorMap(pEntity);
-					}
-					else if (FStrEq(szClassname, "building_dispenser"))
-						return FALSE;
+					pentTeam = gBotGlobals.TFC_getTeamViaColorMap(pEntity);
 				}
-			}
-
-			if (pentTeam)
-			{
-				if (gBotGlobals.TFC_teamsAreAllies(m_iTeam, pentTeam))
+				else if (FStrEq(szClassname, "building_dispenser"))
 					return FALSE;
-
-				if (m_bHasFlag)
-				{
-					if (m_vGoalOrigin.IsVectorSet())
-					{
-						return pev->team != pentTeam && (pEntity->v.flags & FL_MONSTER || (m_vGoalOrigin.GetVector() - pEntity->v.origin).Length() < DistanceFrom(m_vGoalOrigin.GetVector()));
-					}
-				}
-
-				return pev->team != pentTeam;
 			}
 		}
-		break;*/
+
+		if (pentTeam)
+		{
+			if (gBotGlobals.TFC_teamsAreAllies(m_iTeam, pentTeam))
+				return FALSE;
+
+			if (m_bHasFlag)
+			{
+				if (m_vGoalOrigin.IsVectorSet())
+				{
+					return pev->team != pentTeam && (pEntity->v.flags & FL_MONSTER || (m_vGoalOrigin.GetVector() - pEntity->v.origin).Length() < DistanceFrom(m_vGoalOrigin.GetVector()));
+				}
+			}
+
+			return pev->team != pentTeam;
+		}
+	}
+	break;*/
 	case MOD_HL_DM:
 	{
 		char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
@@ -9556,7 +9560,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			case CLASS_ALIEN_PREY:
 			case CLASS_ALIEN_PREDATOR:
 			case CLASS_HUMAN_MILITARY:
-				return TRUE;
+				return TRUE;		
 			default:
 				break;
 			}
@@ -9571,7 +9575,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 		else if (strcmp(szClassname, "func_breakable") == 0)
 		{
 			return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
-
+			
 			// i. explosives required to blow breakable
 			// ii. OR is not a world brush (non breakable) and can be broken by shooting
 			if ( !(pEnemypev->flags & FL_WORLDBRUSH) && !(pEntity->v.spawnflags & SF_BREAK_TRIGGER_ONLY) )
@@ -9792,6 +9796,7 @@ void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, char* fmt, 
 		// Bot touches/finds waypoints
 		sprintf(szDebugMsg, "%s:SEE]=>", BOT_DEBUG_TAG);
 		break;
+	default: ;
 	}
 
 	BotMessage(pEntity, errorlevel, "%s%s", szDebugMsg, string);
@@ -12875,6 +12880,7 @@ void CBot::DoTasks()
 			case BOT_UPGRADE_SEN:
 				Impulse(RANDOM_LONG((int)ALIEN_EVOLUTION_SEVEN, (int)ALIEN_EVOLUTION_NINE));
 				break;
+			default: ;
 			}
 
 			bDone = TRUE;

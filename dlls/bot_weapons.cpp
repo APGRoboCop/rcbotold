@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*
  *    This file is part of RCBot.
  *
@@ -421,6 +423,7 @@ void GetArrayOfExplosives(short int* Array)
 		case VALVE_WEAPON_TRIPMINE:
 		case VALVE_WEAPON_SATCHEL:
 			Array[i] = 1;
+		default: ;
 		}
 	}
 }
@@ -513,18 +516,18 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 			iAllowedWeapons[NS_WEAPON_MINE] = 0;
 
 		break;
-		/*case MOD_TFC:
-			if (pEnemy && pEnemy->v.flags & FL_MONSTER)
-			{
-				iAllowedWeapons[TF_WEAPON_MEDIKIT] = 0;
-			}
-			if (pBot->hasFlag())
-			{
-				iAllowedWeapons[TF_WEAPON_KNIFE] = 0;
-				iAllowedWeapons[TF_WEAPON_AXE] = 0;
-				iAllowedWeapons[TF_WEAPON_SPANNER] = 0;
-			}
-			break;*/
+	/*case MOD_TFC:
+		if (pEnemy && pEnemy->v.flags & FL_MONSTER)
+		{
+			iAllowedWeapons[TF_WEAPON_MEDIKIT] = 0;
+		}
+		if (pBot->hasFlag())
+		{
+			iAllowedWeapons[TF_WEAPON_KNIFE] = 0;
+			iAllowedWeapons[TF_WEAPON_AXE] = 0;
+			iAllowedWeapons[TF_WEAPON_SPANNER] = 0;
+		}
+		break;*/
 	case MOD_BG:
 		if (pBot->m_pCurrentWeapon != NULL)
 		{
