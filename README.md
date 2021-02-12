@@ -4,17 +4,18 @@ RCbot created by Cheeseh
 RCBot versions
 --------------
 
-V 1.5
+V 1.5-beta
 
+* added: Few waypoints for The Specialists S v3.0 and Natural Selection v3.x
 * added: The Specialists v3.0 support, big thanks to Cheeseh and some admins from tsmod.net
 * added: Performance optimisations
+* changed: Did a Code Cleanup to allow the builds to be more streamlined
 * changed: Replaced most of the C style casts with C++ casts
 * changed: Sven Co-op v5 or later aren't supported anymore use RCBot AngelScript instead
 * changed: dropped support for TFC in favour for FoxBot
 * fixed: Some potential errors and bugs have been wiped
-* TODO: To prevent bots in TS v3.0 on firing empty rounds
-* TODO: BOT_CHAT_FILE need to be declared for bot_chat.ini to work
-* TODO: bot_profile_s need to be initialised for Bot Profile to work
+* TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
+* TODO: Enhance their combat tactics by having better enemy detection
 
 V 1.443
 =---------=
