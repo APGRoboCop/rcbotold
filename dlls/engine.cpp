@@ -390,7 +390,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin)
 }
 void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float volume, float attenuation, int fFlags, int pitch)
 {
-	if (entity != NULL)
+	if (entity != nullptr)
 	{
 		int i;
 		CBot* pBot;
@@ -508,9 +508,9 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 		{
 			pBot = &gBotGlobals.m_Bots[i];
 
-			if (pBot == NULL)
+			if (pBot == nullptr)
 				continue;
-			if (pBot->m_pEdict == NULL)
+			if (pBot->m_pEdict == nullptr)
 				continue;
 			if (pBot->m_pEdict == pEntityOwner)
 				continue;
@@ -518,7 +518,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 				continue;
 			if (pBot->m_pEdict == entity)
 				continue;
-			if (pBot->m_pEnemy != NULL)
+			if (pBot->m_pEnemy != nullptr)
 				continue;
 
 			if (pBot->DistanceFrom(vOrigin) < BOT_HEAR_DISTANCE)
@@ -706,13 +706,13 @@ void pfnMessageEnd(void)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->messageEnd();
 			else
-				gBotGlobals.m_CurrentMessage->execute(NULL, gBotGlobals.m_iBotMsgIndex);  // NULL indicated msg end
+				gBotGlobals.m_CurrentMessage->execute(nullptr, gBotGlobals.m_iBotMsgIndex);  // NULL indicated msg end
 		}
 	}
 
 	// clear out the bot message function pointers...
 
-	gBotGlobals.m_CurrentMessage = NULL;
+	gBotGlobals.m_CurrentMessage = nullptr;
 	gBotGlobals.m_iCurrentMessageState = 0;
 	gBotGlobals.m_iCurrentMessageState2 = 0;
 
@@ -987,7 +987,7 @@ void* pfnPvEntPrivateData(edict_t* pEdict)
 }
 void pfnFreeEntPrivateData(edict_t* pEdict)
 {
-	BotMessage(NULL, 0, "Free ent provate data:");
+	BotMessage(nullptr, 0, "Free ent provate data:");
 
 	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnFreeEntPrivateData:\n"); fclose(fp); }
 #ifdef RCBOT_META_BUILD
@@ -1263,7 +1263,7 @@ byte* pfnLoadFileForMe(char* filename, int* pLength)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnLoadFileForMe: filename=%s\n", filename); fclose(fp); }
 #ifdef RCBOT_META_BUILD
-	RETURN_META_VALUE(MRES_IGNORED, 0);
+	RETURN_META_VALUE(MRES_IGNORED, nullptr);
 #else
 	return (*g_engfuncs.pfnLoadFileForMe)(filename, pLength);
 #endif
@@ -1426,13 +1426,13 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 
 							pRepList = &pBot->m_Profile.m_Rep;
 
-							if ((pRep = pBot->m_Profile.m_Rep.GetRep(iOldPlayerRepId)) != NULL)
+							if ((pRep = pBot->m_Profile.m_Rep.GetRep(iOldPlayerRepId)) != nullptr)
 							{
 								// New name = value
 
 								const int iNewPlayerRepId = GetPlayerRepId(value);
 
-								if (pBot->m_Profile.m_Rep.GetRep(iNewPlayerRepId) == NULL)
+								if (pBot->m_Profile.m_Rep.GetRep(iNewPlayerRepId) == nullptr)
 									pRepList->AddRep(iNewPlayerRepId, pRep->CurrentRep());
 							}
 							else
@@ -1511,7 +1511,7 @@ int pfnGetPlayerUserId(edict_t* e)
 const char* pfnGetPlayerAuthId(edict_t* e)
 {
 	static const char* BOT_STEAM_ID = "BOT";
-	const BOOL bIsBot = UTIL_GetBotPointer(e) != NULL;
+	const BOOL bIsBot = UTIL_GetBotPointer(e) != nullptr;
 #ifdef RCBOT_META_BUILD
 
 	if (bIsBot)
@@ -1890,7 +1890,7 @@ const char* GetArg(const char* command, int arg_number)
 	arg[0] = 0; // reset arg
 
 	if (!command || !*command)
-		return NULL;
+		return nullptr;
 
 	length = strlen(command); // get length of command
 

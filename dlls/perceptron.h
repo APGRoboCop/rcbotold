@@ -79,7 +79,7 @@ public:
 	virtual IIndividual *copy () = 0;
 */
 
-	CPerceptron(unsigned int iInputs, ITransfer* transferFunction = NULL, float fLearnRate = 0.0f);
+	CPerceptron(unsigned int iInputs, ITransfer* transferFunction = nullptr, float fLearnRate = 0.0f);
 
 	CPerceptron(FILE* bfp)
 	{
@@ -114,7 +114,7 @@ public:
 	{
 //		if (m_transferFunction)
 			delete m_transferFunction;
-		m_transferFunction = NULL;
+		m_transferFunction = nullptr;
 	}
 
 	BOOL trained() const { return m_bTrained; }

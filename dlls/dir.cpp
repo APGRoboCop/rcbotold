@@ -63,14 +63,14 @@ HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec)
 
 	dirname[0] = 0;
 
-	if (hFile == NULL)
+	if (hFile == nullptr)
 	{
 		hFile = FindFirstFile(dirspec, &pFindFileData);
 
 		if (hFile == INVALID_HANDLE_VALUE)
 		{
 			// PM : bugfix
-			return NULL;
+			return nullptr;
 		}
 
 		while ((pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY)
@@ -78,7 +78,7 @@ HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec)
 			if (FindNextFile(hFile, &pFindFileData) == 0)
 			{
 				FindClose(hFile);
-				hFile = NULL;
+				hFile = nullptr;
 				return hFile;
 			}
 		}
@@ -92,7 +92,7 @@ HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec)
 		if (FindNextFile(hFile, &pFindFileData) == 0)
 		{
 			FindClose(hFile);
-			hFile = NULL;
+			hFile = nullptr;
 			return hFile;
 		}
 
@@ -104,7 +104,7 @@ HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec)
 			if (FindNextFile(hFile, &pFindFileData) == 0)
 			{
 				FindClose(hFile);
-				hFile = NULL;
+				hFile = nullptr;
 				return hFile;
 			}
 		}

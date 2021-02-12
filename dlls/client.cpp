@@ -119,7 +119,7 @@ void InitMessage ( const char *message );
 				char message[512];
 				CBotTask* pTask;
 
-				if ((pTask = pBot->currentTask()) == NULL)
+				if ((pTask = pBot->currentTask()) == nullptr)
 					sprintf(message, "Debugging Bot: \"%s\"\nNo Tasks\nWaypoint: %d, Goal: %d", pBot->m_szBotName, pBot->m_iCurrentWaypointIndex, pBot->m_iWaypointGoalIndex);
 				else
 				{
@@ -342,14 +342,14 @@ void InitMessage ( const char *message );
 
 	if (hasCmd(CLIENT_CMD_PROJ_REPEL))
 	{
-		edict_t* pEntity = NULL;
+		edict_t* pEntity = nullptr;
 
 		Vector v_other;
 		Vector v_comp;
 		Vector v_origin = m_pPlayer->v.origin - Vector(0, 0, m_pPlayer->v.size.z * 0.5);
 		Vector v_original_vel;
 
-		while ((pEntity = UTIL_FindEntityInSphere(pEntity, m_pPlayer->v.origin, m_pPlayer->v.size.Length() * 1.1)) != NULL)
+		while ((pEntity = UTIL_FindEntityInSphere(pEntity, m_pPlayer->v.origin, m_pPlayer->v.size.Length() * 1.1)) != nullptr)
 		{
 			if (pEntity == m_pPlayer)
 				continue;
@@ -413,7 +413,7 @@ void InitMessage ( const char *message );
 
 				p = paths[iCurrentWaypoint];
 
-				while (p != NULL)
+				while (p != nullptr)
 				{
 					n = 0;
 
@@ -485,7 +485,7 @@ void InitMessage ( const char *message );
 
 				if (m_fCanPlaceJump != -1 && (bStunt || m_iLastButtons & IN_JUMP) && !(pev->flags & FL_ONGROUND))
 				{
-					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, NULL);
+					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, nullptr);
 
 					m_iLastJumpWaypointIndex = -1;
 
@@ -523,7 +523,7 @@ void InitMessage ( const char *message );
 				{
 					if (m_iLastJumpWaypointIndex != -1)
 					{
-						int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, NULL);
+						int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, nullptr);
 
 						if (iNearestWpt == -1)
 						{
@@ -531,7 +531,7 @@ void InitMessage ( const char *message );
 
 							if (iNewWpt != -1)
 							{
-								if (BotNavigate_FindPathFromTo(m_iLastJumpWaypointIndex, iNewWpt, -1) == NULL)
+								if (BotNavigate_FindPathFromTo(m_iLastJumpWaypointIndex, iNewWpt, -1) == nullptr)
 								{
 									WaypointAddPath(m_iLastJumpWaypointIndex, iNewWpt);
 								}
@@ -550,7 +550,7 @@ void InitMessage ( const char *message );
 						}
 						else if (iNearestWpt != m_iLastJumpWaypointIndex)
 						{
-							if (BotNavigate_FindPathFromTo(m_iLastJumpWaypointIndex, iNearestWpt, -1) == NULL)
+							if (BotNavigate_FindPathFromTo(m_iLastJumpWaypointIndex, iNearestWpt, -1) == nullptr)
 							{
 								WaypointAddPath(m_iLastJumpWaypointIndex, iNearestWpt);
 
@@ -579,7 +579,7 @@ void InitMessage ( const char *message );
 			{
 				// went ON to a ladder
 
-				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, NULL);
+				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, nullptr);
 
 				m_iLastLadderWaypointIndex = -1;
 
@@ -619,7 +619,7 @@ void InitMessage ( const char *message );
 				if (m_iLastLadderWaypointIndex != -1)
 					// place a ladder waypoint before jumping off
 				{
-					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, NULL);
+					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, nullptr);
 
 					if (iNearestWpt == -1)
 					{
@@ -629,7 +629,7 @@ void InitMessage ( const char *message );
 						{
 							m_iJoinLadderWaypointIndex = iNewWpt;
 
-							if (BotNavigate_FindPathFromTo(m_iLastLadderWaypointIndex, iNewWpt, -1) == NULL)
+							if (BotNavigate_FindPathFromTo(m_iLastLadderWaypointIndex, iNewWpt, -1) == nullptr)
 								WaypointAddPath(m_iLastLadderWaypointIndex, iNewWpt);
 						}
 					}
@@ -637,7 +637,7 @@ void InitMessage ( const char *message );
 					{
 						m_iJoinLadderWaypointIndex = iNearestWpt;
 
-						if (BotNavigate_FindPathFromTo(m_iLastLadderWaypointIndex, iNearestWpt, -1) == NULL)
+						if (BotNavigate_FindPathFromTo(m_iLastLadderWaypointIndex, iNearestWpt, -1) == nullptr)
 							WaypointAddPath(m_iLastLadderWaypointIndex, iNearestWpt);
 					}
 				}
@@ -654,7 +654,7 @@ void InitMessage ( const char *message );
 			// ****************************************************
 			if (m_iJoinLadderWaypointIndex != -1 && pev->flags & FL_ONGROUND && pev->movetype == MOVETYPE_WALK)
 			{
-				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 40.0, m_iJoinLadderWaypointIndex, TRUE, FALSE, FALSE, NULL);
+				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 40.0, m_iJoinLadderWaypointIndex, TRUE, FALSE, FALSE, nullptr);
 
 				if (iNearestWpt == -1)
 				{
@@ -662,13 +662,13 @@ void InitMessage ( const char *message );
 
 					if (iNewWpt != -1)
 					{
-						if (BotNavigate_FindPathFromTo(m_iJoinLadderWaypointIndex, iNewWpt, -1) == NULL)
+						if (BotNavigate_FindPathFromTo(m_iJoinLadderWaypointIndex, iNewWpt, -1) == nullptr)
 							WaypointAddPath(m_iJoinLadderWaypointIndex, iNewWpt);
 					}
 				}
 				else if (iNearestWpt != m_iJoinLadderWaypointIndex)
 				{
-					if (BotNavigate_FindPathFromTo(m_iJoinLadderWaypointIndex, iNearestWpt, -1) == NULL)
+					if (BotNavigate_FindPathFromTo(m_iJoinLadderWaypointIndex, iNearestWpt, -1) == nullptr)
 						WaypointAddPath(m_iJoinLadderWaypointIndex, iNearestWpt);
 				}
 
@@ -740,7 +740,7 @@ void InitMessage ( const char *message );
 
 				if (m_iLastJumpWaypointIndex == -1 && bCheckDistance && (vPlayerOrigin - m_vLastAutoWaypointPlacePos).Length() > 200)
 				{
-					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 150.0, -1, TRUE, FALSE, FALSE, NULL);
+					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 150.0, -1, TRUE, FALSE, FALSE, nullptr);
 
 					if (iNearestWpt == -1)
 						WaypointAddOrigin(vPlayerOrigin, 0, m_pPlayer, m_bWaypointOn, m_bWaypointOn);
@@ -792,7 +792,7 @@ void InitMessage ( const char *message );
 
 							if (tr.flFraction >= 1.0)
 							{
-								int iNearestWpt = WaypointLocations.NearestWaypoint(vCheckOrigin, 100.0, -1, TRUE, FALSE, FALSE, NULL);
+								int iNearestWpt = WaypointLocations.NearestWaypoint(vCheckOrigin, 100.0, -1, TRUE, FALSE, FALSE, nullptr);
 
 								if (iNearestWpt == -1)
 								{
@@ -852,7 +852,7 @@ void CClient::FreeGlobalMemory(void)
 //	if (m_vTeleportVector)
 		free(m_vTeleportVector);
 
-	m_vTeleportVector = NULL;
+	m_vTeleportVector = nullptr;
 	m_Tooltips.Clear();
 
 	memset(this, 0, sizeof(CClient));
@@ -990,7 +990,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 		{
 			if (!IS_DEDICATED_SERVER())
 			{
-				if (gBotGlobals.m_pListenServerEdict == NULL)
+				if (gBotGlobals.m_pListenServerEdict == nullptr)
 				{
 					gBotGlobals.m_pListenServerEdict = pPlayer;
 					pClient->SetAccessLevel(10);
@@ -1003,7 +1003,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 	else
 		BugMessage(pPlayer, "Could not allocate client space for %s", STRING(pPlayer->v.netname));
 
-	return NULL;
+	return nullptr;
 }
 
 void CClients::ClientDisconnected(edict_t* pPlayer)
@@ -1028,7 +1028,7 @@ void CClients::ClientDisconnected(edict_t* pPlayer)
 CClient* CClients::GetClientByRepId(const int iRepId)
 {
 	int i;
-	CClient* pClient = NULL;
+	CClient* pClient = nullptr;
 
 	for (i = 0; i < MAX_PLAYERS; i++)
 	{
@@ -1041,7 +1041,7 @@ CClient* CClients::GetClientByRepId(const int iRepId)
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void CClients::ClientDisconnected(CClient* pClient)
@@ -1065,11 +1065,11 @@ void CClients::ClientDisconnected(CClient* pClient)
 	}
 	////////////////////
 
-	if (pPlayer != NULL)
+	if (pPlayer != nullptr)
 		iPlayerIndex = ENTINDEX(pPlayer) - 1;
 
 	if (pPlayer == gBotGlobals.m_pListenServerEdict)
-		gBotGlobals.m_pListenServerEdict = NULL;
+		gBotGlobals.m_pListenServerEdict = nullptr;
 
 	// give a few seconds before adding more bots.
 	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 2.0;

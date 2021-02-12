@@ -72,6 +72,7 @@
 // stuff for Win32 vs. Linux builds
 
 #ifndef linux
+#define strcmpi _strcmpi
 typedef int (FAR* GETENTITYAPI)(DLL_FUNCTIONS*, int);
 typedef int (FAR* GETNEWDLLFUNCTIONS)(NEW_DLL_FUNCTIONS*, int*);
 typedef void (DLLEXPORT* GIVEFNPTRSTODLL)(enginefuncs_t*, globalvars_t*);
@@ -145,7 +146,7 @@ void BotFunc_TraceToss(edict_t* ent, edict_t* ignore, TraceResult* tr);
 
 CBaseEntity* CreateEnt(char* szName, const Vector& vecOrigin, const Vector& vecAngles, edict_t* pentOwner);
 
-BOOL UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore = NULL);
+BOOL UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore = nullptr);
 
 BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, int max_len);
 
@@ -159,7 +160,7 @@ BOOL    EntityIsSelectable(edict_t* pEdict);
 BOOL	EntityIsMarineStruct(edict_t* pEdict);
 BOOL	EntityIsAlienStruct(edict_t* pEdict);
 
-edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser = NULL, BOOL bBuilt = FALSE);
+edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser = nullptr, BOOL bBuilt = FALSE);
 edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, Vector vOrigin);
 BOOL UTIL_IsResourceFountainUsed(edict_t* pFountain);
 //////////////////////////////
@@ -221,7 +222,7 @@ int	    UTIL_GetClass(edict_t* pEntity);
 int		UTIL_GetBotIndex(const edict_t* pEdict);
 int		UTIL_MasterTriggered(string_t sMaster, CBaseEntity* pActivator);
 void		UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, BOOL needmore, char* pText);
-void		UTIL_BuildFileName(char* filename, char* arg1, char* arg2 = NULL);
+void		UTIL_BuildFileName(char* filename, char* arg1, char* arg2 = nullptr);
 
 edict_t* UTIL_FacingEnt(edict_t* pPlayer, BOOL any = FALSE);
 
@@ -231,7 +232,7 @@ BOOL		UTIL_CanBuildHive(entvars_t* pev);
 
 float UTIL_EntityAnglesToVector2D(entvars_t* pev, const Vector* pOrigin); // For 2d Movement
 float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin);
-edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, Vector vOrigin, float fRange, BOOL bVisible, edict_t* pIgnore = NULL);
+edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, Vector vOrigin, float fRange, BOOL bVisible, edict_t* pIgnore = nullptr);
 
 Vector UTIL_LengthFromVector(Vector relation, float length);
 
@@ -367,11 +368,11 @@ public:
 
 	CClient* GetRandomClient(int iRep) const;
 
-	void WriteToFile(int iBotProfile, CBotReputation* pRep);
+	static void WriteToFile(int iBotProfile, CBotReputation* pRep);
 
 	void RemoveSaveRep(int iBotProfile, int iPlayerRepId);
 
-	void SaveAllRep(int iBotProfile);
+	void SaveAllRep(int iBotProfile) const;
 
 	void AddLoadRep(int iBotProfile, int iPlayerRepId);
 
@@ -412,7 +413,7 @@ public:
 
 		l_Rep = GetRep(iPlayerRepId);
 
-		if (l_Rep == NULL) // Don't want to add a duplicate
+		if (l_Rep == nullptr) // Don't want to add a duplicate
 			m_RepList.Push(CBotReputation(iPlayerRepId, iRep));
 	}
 
@@ -457,7 +458,7 @@ public:
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	int GetClientRep(CClient* pClient) const;
@@ -482,7 +483,7 @@ public:
 		{
 			// oh crap wth?
 
-			BugMessage(NULL, "bad rep data... (try deleting all botprofiles/*.rcr files :-( )");
+			BugMessage(nullptr, "bad rep data... (try deleting all botprofiles/*.rcr files :-( )");
 		}
 	}
 
@@ -506,7 +507,7 @@ public:
 		{
 			// oh crap wth?
 
-			BugMessage(NULL, "bad rep data... (try deleting all botprofiles/*.rcr files :-( )");
+			BugMessage(nullptr, "bad rep data... (try deleting all botprofiles/*.rcr files :-( )");
 		}
 	}
 
@@ -669,8 +670,8 @@ private:
 class MyEHandle
 {
 private:
-	int m_iSerialNumber;
-	edict_t* m_pEdict;
+	int m_iSerialNumber = 0;
+	edict_t* m_pEdict = nullptr;
 public:
 	edict_t* Get() const
 	{
@@ -685,10 +686,10 @@ public:
 
 		catch (...)
 		{
-			return NULL;
+			return nullptr;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void Set(edict_t* pEdict)
@@ -707,7 +708,7 @@ public:
 
 		catch (...)
 		{
-			m_pEdict = NULL;
+			m_pEdict = nullptr;
 			m_iSerialNumber = 0;
 		}
 	}
@@ -721,7 +722,7 @@ public:
 		memset(this, 0, sizeof(CBotTask));
 	}
 
-	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = NULL, int iInfo = 0, float fInfo = 0, 
+	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = nullptr, int iInfo = 0, float fInfo = 0, 
 		Vector vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0/*, CBotTask *GoalTask = NULL */)
 	{
 		// cheap way of adding schedules.. ;)
@@ -1018,6 +1019,7 @@ public:
 			return "BOT_TASK_WAIT_FOR_FLAG";
 		case BOT_TASK_USE_TELEPORTER:
 			return "BOT_TASK_USE_TELEPORTER";
+		default: ;
 		}
 
 		return "Unknown";
@@ -1058,6 +1060,7 @@ public:
 			return "BOT_SCHED_USING_BARNEY";
 		case BOT_SCHED_PICKUP_FLAG:
 			return "BOT_SCHED_PICKUP_FLAG";
+		default: ;
 		}
 
 		return "Unknown";
@@ -1145,7 +1148,7 @@ public:
 		dataQueue<CBotTask> tempStack;
 		CBotTask* tempTask;
 
-		if (pCurrentTask == NULL)
+		if (pCurrentTask == nullptr)
 			return;
 
 		iSchedIgnore = pCurrentTask->GetScheduleId();
@@ -1474,7 +1477,7 @@ public:
 	{
 		CBotTask* pTask = CurrentTask();
 
-		if (pTask == NULL)
+		if (pTask == nullptr)
 			return;
 
 		const eBotTask iTask = pTask->Task();
@@ -1609,7 +1612,7 @@ public:
 	CBotFailedPath()
 	{
 		// nothing added
-		m_pPath = NULL;
+		m_pPath = nullptr;
 		// in case this is added remove it later
 		// by showing that its violated
 		m_bViolated = TRUE;
@@ -1834,7 +1837,7 @@ public:
 
 	BOOL isEntity(edict_t* pEntity) const
 	{
-		if (pEntity == NULL)
+		if (pEntity == nullptr)
 			return FALSE;
 
 		return pEntity == getEntity();
@@ -1855,7 +1858,7 @@ public:
 		return m_vVisibleOrigin;
 	}
 
-	BOOL operator == (CRememberPosition other) const
+	BOOL operator == (const CRememberPosition other) const
 	{
 		return other.getEntity() == getEntity();
 	}
@@ -1962,7 +1965,7 @@ public:
 			}
 		}*/
 
-	void addPosition(Vector const vOrigin, edict_t* pEntity, int flags, Vector vVisibleOrigin)
+	void addPosition(Vector const vOrigin, edict_t* pEntity, int flags, const Vector vVisibleOrigin)
 	{
 		CRememberPosition newPosition = CRememberPosition(vOrigin, pEntity);
 		newPosition.setFlags(flags);
@@ -2042,7 +2045,7 @@ public:
 				return &m_Positions[i];
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void removePosition(edict_t* pEntity)
@@ -2084,7 +2087,7 @@ public:
 				return &m_Positions[i];
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	BOOL gotPosition()
@@ -2099,7 +2102,7 @@ public:
 
 	CRememberPosition* positionNearest(Vector vOrigin, Vector vFrom)
 	{
-		CRememberPosition* nearest = NULL;
+		CRememberPosition* nearest = nullptr;
 		float fNearest = 0;
 		float fDistance = 0;
 
@@ -2234,7 +2237,7 @@ public:
 
 		bCanFire = TRUE;
 
-		if ((pLeader = GetLeader()) != NULL)
+		if ((pLeader = GetLeader()) != nullptr)
 			m_vLeaderAngle = pLeader->v.angles;
 	}
 
@@ -2317,14 +2320,14 @@ public:
 	{
 		if (m_theSquad.IsEmpty())
 		{
-			SetLeader(NULL);
+			SetLeader(nullptr);
 		}
 		else
 		{
 			m_pLeader = m_theSquad.Pop();
 
 			if (m_theSquad.IsEmpty())
-				SetLeader(NULL);
+				SetLeader(nullptr);
 			else
 			{
 				Init(); // new squad init
@@ -2595,7 +2598,7 @@ public:
 
 		dataStack<CTFCBackpack> tempStack = m_Backpacks;
 
-		pNearest = NULL;
+		pNearest = nullptr;
 		fNearestDist = 4096.0;
 
 		while (!tempStack.IsEmpty())
@@ -2665,7 +2668,7 @@ public:
 
 //			if (pSquad)
 				delete pSquad;
-			pSquad = NULL;
+			pSquad = nullptr;
 		}
 
 		m_theSquads.Destroy();
@@ -2706,7 +2709,7 @@ public:
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void RemoveSquad(CBotSquad* pSquad);
@@ -2716,7 +2719,7 @@ public:
 		CBotSquad* pSquad;
 		dataStack<CBotSquad*> tempStack = m_theSquads;
 
-		pSquad = NULL;
+		pSquad = nullptr;
 
 		while (!tempStack.IsEmpty())
 		{
@@ -2758,7 +2761,7 @@ public:
 	{
 		m_iId = 0;
 		m_vOrigin = Vector(0, 0, 0);
-		m_szName = NULL;
+		m_szName = nullptr;
 	}
 	TSObjective(int id, Vector origin, char* name)
 	{
@@ -3118,7 +3121,7 @@ public:
 
 	edict_t* getSentry() const;
 
-	static BOOL CanBuild(edict_t* pEdict, int* metal = NULL);
+	static BOOL CanBuild(edict_t* pEdict, int* metal = nullptr);
 
 	const char* getLookTaskDescription() const
 	{
@@ -3148,6 +3151,7 @@ public:
 			return "BOT_LOOK_TASK_LOOK_AROUND";
 		case BOT_LOOK_TASK_FACE_GROUND:
 			return "BOT_LOOK_TASK_FACE_GROUND";
+		default: ;
 		}
 
 		return "Unknown";
@@ -3194,12 +3198,12 @@ public:
 
 	BOOL WantToLeaveGame(void) const;
 
-	BOOL WantToFindEnemy(void);
+	BOOL WantToFindEnemy(void) const;
 
 	void PlayerDead(edict_t* pPlayer)
 	{
 		if (pPlayer == m_pSpySpotted)
-			m_pSpySpotted = NULL;
+			m_pSpySpotted = nullptr;
 	}
 
 	void LookForNewTasks(void);
@@ -3321,7 +3325,7 @@ public:
 		if (m_pTank)
 			return m_pTank;
 
-		return NULL;
+		return nullptr;
 	}
 
 	BOOL CanUseTank(edict_t* pTank) const
@@ -3392,8 +3396,8 @@ public:
 	// remove squad from bot
 	void ClearSquad(void)
 	{
-		m_stSquad = NULL;
-		m_pSquadLeader = NULL;
+		m_stSquad = nullptr;
+		m_pSquadLeader = nullptr;
 	}
 
 	void SetSquad(CBotSquad* theSquad)
@@ -3857,7 +3861,7 @@ public:
 
 		m_OrderTask = CBotTask(BOT_TASK_NONE);
 
-		m_CurrentTask = NULL;
+		m_CurrentTask = nullptr;
 
 		m_Tasks.FlushTasks();
 
@@ -3902,7 +3906,7 @@ public:
 
 	BOOL     IsCurrentWeapon(int iId) const
 	{
-		if (m_pCurrentWeapon == NULL)
+		if (m_pCurrentWeapon == nullptr)
 			return FALSE;
 		return m_pCurrentWeapon->GetID() == iId;
 	}
@@ -4042,7 +4046,7 @@ public:
 	int      GetTeam(void) const;
 
 	// a special event
-	void     BotEvent(eBotEvent iEvent, edict_t* pInfo = NULL, edict_t* pExtInfo = NULL, float* pFloatInfo = NULL);
+	void     BotEvent(eBotEvent iEvent, edict_t* pInfo = nullptr, edict_t* pExtInfo = nullptr, float* pFloatInfo = nullptr);
 
 	// initialize after dying
 	void     SpawnInit(BOOL bInit);
@@ -4082,7 +4086,7 @@ public:
 	short int SpeciesOnTeam(int species);
 	short int EvolvedSpeciesOnTeam(int species);
 
-	void	 BotChat(eBotChatType iChatType, edict_t* pInfo = NULL, BOOL bSayNow = FALSE);
+	void	 BotChat(eBotChatType iChatType, edict_t* pInfo = nullptr, BOOL bSayNow = FALSE);
 
 	BOOL     BotCanUseBuiltStructure(edict_t* structure);
 	edict_t* BotCheckForWeldables(void);
@@ -4130,8 +4134,8 @@ public:
 	// returns true when a bot is skulk and is sticking to a wall in NS mod.
 	BOOL     IsWallSticking(void) const { return (pev->iuser4 & MASK_WALLSTICKING) == MASK_WALLSTICKING && (pev->flags & FL_ONGROUND) == 0 && pev->waterlevel < 2; };
 
-	BOOL hasWeb();
-	BOOL hasBlink();
+	BOOL hasWeb() const;
+	BOOL hasBlink() const;
 
 	// returns TRUE when bot thinks it is low on ammunition on its current weapon.
 	BOOL     LowOnAmmo(void);
@@ -4289,7 +4293,7 @@ public:
 				if (pFree)
 				{
 					free(pFree);
-					pFree = NULL;
+					pFree = nullptr;
 				}
 			}
 
@@ -4306,13 +4310,13 @@ public:
 
 		const int iHashValue = iHashNum % STRING_HASHES;
 		char* l_RetString;
-		char* szNewString = NULL;
+		char* szNewString = nullptr;
 
 		assert(iHashValue >= 0);
 		assert(iHashValue < STRING_HASHES);
 
 		if (iHashValue < 0 || iHashValue >= STRING_HASHES)
-			return NULL; // problem...
+			return nullptr; // problem...
 
 		dataStack<char*> s_tempStack = szStringsHead[iHashValue];
 
@@ -4426,7 +4430,7 @@ public:
 
 	BOOL IsUsed(void) const
 	{
-		return m_pPlayer != NULL;
+		return m_pPlayer != nullptr;
 	}
 
 	void SetAccessLevel(int iAccessLevel)
@@ -4483,7 +4487,7 @@ public:
 		if (m_vTeleportVector)
 		{
 			delete m_vTeleportVector;
-			m_vTeleportVector = NULL;
+			m_vTeleportVector = nullptr;
 		}
 	}
 
@@ -4581,9 +4585,9 @@ public:
 	void TFCTeleExitDestroyed()
 	{
 		if (m_pTFCTeleEntrance.Get())
-			m_pTFCTeleEntrance.Get()->v.euser1 = NULL;
+			m_pTFCTeleEntrance.Get()->v.euser1 = nullptr;
 
-		m_pTFCTeleExit.Set(NULL);
+		m_pTFCTeleExit.Set(nullptr);
 	}
 
 	void setTFCTeleExit(edict_t* pEntity)
@@ -4598,7 +4602,7 @@ public:
 
 	void TFCTeleEntranceDestroyed()
 	{
-		m_pTFCTeleEntrance.Set(NULL);
+		m_pTFCTeleEntrance.Set(nullptr);
 	}
 
 	void setTFCTeleEntrance(edict_t* pEntity)
@@ -4613,7 +4617,7 @@ public:
 
 	void TFCSentryDestroyed()
 	{
-		m_pSentry.Set(NULL);
+		m_pSentry.Set(nullptr);
 	}
 
 	void setTFCSentry(edict_t* pEntity)
@@ -4714,7 +4718,7 @@ public:
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	CClient* GetClientByRepId(int iRepId);
@@ -4723,20 +4727,20 @@ public:
 
 	void ClientDisconnected(edict_t* pPlayer);
 
-	void ClientDisconnected(CClient* pClient);
+	static void ClientDisconnected(CClient* pClient);
 
 	CClient* GetClientByIndex(int iIndex)
 	{
 		if (iIndex >= 0 && iIndex < MAX_PLAYERS)
 			return &m_Clients[iIndex];
 
-		return NULL;
+		return nullptr;
 	}
 
 	CClient* GetClientByEdict(edict_t* pPlayer)
 	{
-		if (pPlayer == NULL)
-			return NULL;
+		if (pPlayer == nullptr)
+			return nullptr;
 
 		int iIndex = ENTINDEX(pPlayer);
 
@@ -4746,14 +4750,14 @@ public:
 
 			if (iIndex >= 0)
 			{
-				if (m_Clients[iIndex].GetPlayer() == NULL)
-					return NULL;
+				if (m_Clients[iIndex].GetPlayer() == nullptr)
+					return nullptr;
 
 				return &m_Clients[iIndex];
 			}
 		}
 
-		return NULL;
+		return nullptr;
 
 		/*
 		int i = 0;
@@ -4925,7 +4929,7 @@ public:
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void Destroy(void)
@@ -4948,7 +4952,7 @@ public:
 
 	CBotCvar()
 	{
-		m_szCvarName = NULL;
+		m_szCvarName = nullptr;
 	}
 
 	const char* GetCommandName(void) const
@@ -5032,8 +5036,8 @@ public:
 
 	CBotCvar* GetCvar(const char* szCvarName) const
 	{
-		if (szCvarName == NULL)
-			return NULL;
+		if (szCvarName == nullptr)
+			return nullptr;
 
 		dataStack<CBotCvar*> l_tempCvars = m_Cvars;
 
@@ -5051,7 +5055,7 @@ public:
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void PrintCommands(edict_t* pEdict) const
@@ -5161,7 +5165,7 @@ public:
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	// at the end, free memory
@@ -5214,8 +5218,8 @@ public:
 	~CMasterEntity()
 	{
 		delete m_szMasterName;
-		m_szMasterName = NULL;
-		m_pEntity = NULL;
+		m_szMasterName = nullptr;
+		m_pEntity = nullptr;
 	}
 
 	BOOL IsForEntity(edict_t* pEntity) const
@@ -5247,7 +5251,7 @@ public:
 			CMasterEntity* m = temp.ChooseFromStack();
 
 			delete m;
-			m = NULL;
+			m = nullptr;
 		}
 
 		m_Masters.Destroy();
@@ -5279,7 +5283,7 @@ public:
 		if (pMaster)
 			return pMaster->FindButton(vOrigin);
 
-		return NULL;
+		return nullptr;
 	}
 
 private:
@@ -5303,7 +5307,7 @@ private:
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	dataStack<CMasterEntity*> m_Masters;
@@ -5322,7 +5326,7 @@ public:
 
 	CStructure()
 	{
-		m_pEntity = NULL;
+		m_pEntity = nullptr;
 		m_fEndAttack = 0;
 		m_fPrevHealth = 0;
 	}
@@ -5375,7 +5379,7 @@ public:
 		return m_pEntity;
 	}
 
-	BOOL operator == (CStructure pStruct) const
+	BOOL operator == (const CStructure pStruct) const
 	{
 		return m_pEntity == pStruct.GetEntity();
 	}
@@ -5427,7 +5431,7 @@ public:
 
 		int i;
 
-		edict_t* pUnderAttackStruct = NULL;
+		edict_t* pUnderAttackStruct = nullptr;
 
 		for (i = 0; i < ALIEN_STRUCT_HASH_MAX; i++)
 		{
@@ -5632,7 +5636,7 @@ public:
 		if (!m_pCurrentBot)
 			return FALSE;
 
-		return m_pCurrentBot->m_pEnemy != NULL;
+		return m_pCurrentBot->m_pEnemy != nullptr;
 	}
 
 	void SetCurrentBot(CBot* pBot)
@@ -5835,7 +5839,7 @@ public:
 
 	edict_t* getFlag(int team, int active_goal)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	BOOL isFlag(edict_t* pFlag, int team, BOOL bEnemyFlag = FALSE) const
@@ -5912,7 +5916,7 @@ public:
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	BOOL playerHasFlag(edict_t* pPlayer) const
@@ -6174,7 +6178,7 @@ public:
 				return pOtherBot;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void saveLearnedData();
@@ -6345,8 +6349,8 @@ public:
 	void setDefaults()
 	{
 		//m_bGotTsObjectives = FALSE;
-		m_pMessageEntity = NULL;
-		m_pDebugMessage = NULL;
+		m_pMessageEntity = nullptr;
+		m_pDebugMessage = nullptr;
 		m_fWallStickTol = BOT_WAYPOINT_TOUCH_DIST;
 
 		m_iLanguage = BOT_LANG_ENGLISH;
@@ -6356,7 +6360,7 @@ public:
 		//m_pTFCDetect = NULL;
 		//m_pTFCGoal = NULL;
 		m_bCombatMap = FALSE;
-		m_pMarineStart = NULL;
+		m_pMarineStart = nullptr;
 		//m_iJoiningClients = 0;
 		m_fBotStuckSpeed = 7.0;
 		m_iMaxVisUpdateRevs = 200;
@@ -6374,16 +6378,16 @@ public:
 		m_bIsFakeClientCommand = FALSE;
 		m_fTurnSpeed = 15;
 
-		m_CurrentMessage = NULL;
+		m_CurrentMessage = nullptr;
 
 		m_fAutoBuildTime = 0;
 		m_bAutoBuilt = FALSE;
 
 		m_bNetMessageStarted = FALSE;
 
-		m_CurrentHandledCvar = NULL;
+		m_CurrentHandledCvar = nullptr;
 
-		m_pListenServerEdict = NULL;
+		m_pListenServerEdict = nullptr;
 
 		m_iBotChatPercent = DEFAULT_BOT_CHAT_PERCENT;
 		m_iBotChatReplyPercent = 33;
@@ -6398,7 +6402,7 @@ public:
 
 		m_fUpdateLadderTime = -1;
 
-		m_szModFolder = NULL;
+		m_szModFolder = nullptr;
 
 		m_iConfigSettings = BOT_CONFIG_TOOLTIPS | BOT_CONFIG_BLINKING;
 
@@ -6412,7 +6416,7 @@ public:
 
 		//		m_EntityMasters.Init();
 
-		m_pCommander.Set(NULL);
+		m_pCommander.Set(nullptr);
 
 		//	m_fBotAimUpdate = 1;
 		//	m_fBotAimFactor = 1;
@@ -6441,10 +6445,10 @@ public:
 
 		m_bTeamPlay = FALSE;
 
-		m_ThingsToBuild = NULL;
+		m_ThingsToBuild = nullptr;
 
-		m_currCapPoint = NULL;
-		m_currFlag = NULL;
+		m_currCapPoint = nullptr;
+		m_currFlag = nullptr;
 
 		prevBackPackInvalid = FALSE;
 		prevCapturePointInvalid = FALSE;
@@ -6887,7 +6891,7 @@ void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile);
 CBot* UTIL_GetBotPointer(const edict_t* pEdict);
 
 BOOL BotFunc_EntityIsMoving(entvars_t* pev);
-edict_t* BotFunc_FindNearestButton(Vector vOrigin, entvars_t* pDoor, Vector* vFoundOrigin = NULL);
+edict_t* BotFunc_FindNearestButton(Vector vOrigin, entvars_t* pDoor, Vector* vFoundOrigin = nullptr);
 
 ////////////////////////////////////////////////////
 // NAVIGATION
@@ -6960,7 +6964,7 @@ float UTIL_GetAvoidAngle(edict_t* pEdict, Vector origin);
 void ReadBotUsersConfig(void);
 void BotFunc_MakeSquad(CClient* pClient);
 void AssertMessage(BOOL bAssert, char* fmt, ...);
-int UTIL_GetBuildWaypoint(Vector vSpawn, dataStack<int>* iFailedGoals = NULL);
+int UTIL_GetBuildWaypoint(Vector vSpawn, dataStack<int>* iFailedGoals = nullptr);
 int BotFunc_GetStructureForGorgeBuild(entvars_t* pGorge, entvars_t* pEntitypev);
 void BotFunc_KickBotFromTeam(int iTeam);
 BOOL BotFunc_BreakableIsEnemy(edict_t* pBreakable, edict_t* pEdict);

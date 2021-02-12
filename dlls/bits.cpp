@@ -72,7 +72,7 @@ CBits::CBits(CBits* copyBits)
 void CBits::freeMemory()
 {
 	delete m_cBits;
-	m_cBits = NULL;
+	m_cBits = nullptr;
 	m_iNumBits = 0;
 }
 
@@ -105,7 +105,7 @@ void CBits::load(FILE* bfp)
 
 	if (!header.read(bfp, header))
 	{
-		BotMessage(NULL, 0, "Learn data version mismatch - wiping");
+		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;
 	}
 
@@ -115,10 +115,10 @@ void CBits::load(FILE* bfp)
 
 	m_iNumBits = iNumBits;
 
-	if (m_cBits != NULL)
+	if (m_cBits != nullptr)
 	{
 		delete m_cBits;
-		m_cBits = NULL;
+		m_cBits = nullptr;
 	}
 
 	setup(m_iNumBits);

@@ -120,7 +120,7 @@ public:
 
 	void Destroy(void)
 	{
-		dataNode<T>* tempNode = NULL;
+		dataNode<T>* tempNode = nullptr;
 
 		while (m_Head)
 		{
@@ -140,7 +140,7 @@ public:
 
 	BOOL IsEmpty(void)
 	{
-		return ((m_Head == NULL) || (m_Tail == NULL));
+		return ((m_Head == nullptr) || (m_Tail == nullptr));
 	}
 
 	void AddFront(const T& pObj)
@@ -149,7 +149,7 @@ public:
 
 		newNode->m_NodeData = pObj;
 
-		if (m_Head == NULL)
+		if (m_Head == nullptr)
 		{
 			m_Tail = newNode;
 			m_Head = newNode;
@@ -204,7 +204,7 @@ public:
 		catch (...)
 		{
 			// problem
-			BugMessage(NULL, "Bad pointer in queue, (Resetting queue) Memory may have been lost");
+			BugMessage(nullptr, "Bad pointer in queue, (Resetting queue) Memory may have been lost");
 
 			m_Head = NULL;
 			m_Tail = NULL;
@@ -229,12 +229,12 @@ public:
 		catch (...)
 		{
 			// problem
-			BugMessage(NULL, "Bad pointer in queue, (Resetting tasks) Memory may have been lost");
+			BugMessage(nullptr, "Bad pointer in queue, (Resetting tasks) Memory may have been lost");
 
 			m_Head = NULL;
 			m_Tail = NULL;
 			// return default
-			return NULL;
+			return nullptr;
 		}
 
 		return l_pTemp;
@@ -244,7 +244,7 @@ public:
 	{
 		dataNode<T>* tempNode = m_Head;
 
-		if (m_Head == NULL)
+		if (m_Head == nullptr)
 		{
 			// just set tail to null incase
 			m_Tail = NULL;
@@ -273,7 +273,7 @@ public:
 			m_Head = NULL;
 			m_Tail = NULL;
 
-			BugMessage(NULL, "Bad pointer in queue, (Resetting queue) Memory may have been lost");
+			BugMessage(nullptr, "Bad pointer in queue, (Resetting queue) Memory may have been lost");
 		}
 	}
 
@@ -349,9 +349,9 @@ public:
 	BOOL Remove(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
-		dataNode<T>* deleteNode = NULL;
+		dataNode<T>* deleteNode = nullptr;
 
-		if (m_Head == NULL)
+		if (m_Head == nullptr)
 			return FALSE;
 
 		if (m_Head->m_NodeData == pObj)
@@ -405,9 +405,9 @@ public:
 	BOOL RemoveByPointer(const T* pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
-		dataNode<T>* deleteNode = NULL;
+		dataNode<T>* deleteNode = nullptr;
 
-		if (m_Head == NULL)
+		if (m_Head == nullptr)
 			return FALSE;
 
 		if (&m_Head->m_NodeData == pObj)
@@ -555,7 +555,7 @@ public:
 		dataNode<T>* tempNode = m_Head;
 		dataNode<T>* deleteNode;
 
-		if (m_Head == NULL)
+		if (m_Head == nullptr)
 			return FALSE;
 
 		if (&m_Head->m_NodeData == pObj)
@@ -595,7 +595,7 @@ public:
 		dataNode<T>* tempNode = m_Head;
 		dataNode<T>* deleteNode;
 
-		if (m_Head == NULL)
+		if (m_Head == nullptr)
 			return FALSE;
 
 		if (m_Head->m_NodeData == pObj)
@@ -650,7 +650,7 @@ public:
 
 	BOOL IsEmpty(void)
 	{
-		return (m_Head == NULL);
+		return (m_Head == nullptr);
 	}
 
 	void Push(const T &pObj)
@@ -689,7 +689,7 @@ public:
 		catch (...)
 		{
 			// problem
-			BugMessage(NULL, "Bad pointer in stack, (Resetting tasks) Memory may have been lost");
+			BugMessage(nullptr, "Bad pointer in stack, (Resetting tasks) Memory may have been lost");
 
 			m_Head = NULL;
 			// return default
@@ -713,11 +713,11 @@ public:
 		catch (...)
 		{
 			// problem
-			BugMessage(NULL, "Bad pointer in stack, (Resetting tasks) Memory may have been lost");
+			BugMessage(nullptr, "Bad pointer in stack, (Resetting tasks) Memory may have been lost");
 
 			m_Head = NULL;
 			// return default
-			return NULL;
+			return nullptr;
 		}
 
 		return l_pTemp;
@@ -732,7 +732,7 @@ public:
 			return &m_Head->m_NodeData;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 private:
@@ -805,7 +805,7 @@ public:
 		assert(iIndex >= 0);
 		assert(iIndex < m_iArrayMax);
 
-		if ((m_pArray != NULL) && (iIndex >= 0 && iIndex < m_iArrayMax))
+		if ((m_pArray != nullptr) && (iIndex >= 0 && iIndex < m_iArrayMax))
 			return m_pArray[iIndex];
 		else
 		{
@@ -997,7 +997,7 @@ public:
 
 	void Destroy(void)
 	{
-		if (buffer != 0)
+		if (buffer != nullptr)
 			delete[] buffer;
 
 		Init();
@@ -1044,7 +1044,7 @@ public:
 				new_buffer[i] = buffer[i];
 			}
 
-			if ( buffer != NULL )
+			if ( buffer != nullptr )
 				delete[] buffer;
 
 			buffer = new_buffer;
@@ -1092,7 +1092,7 @@ public:
 				return &(buffer[i]);
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	BOOL IsMember(T Obj)

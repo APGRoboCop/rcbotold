@@ -49,7 +49,7 @@ float NN::g_learnRate = 0.9f;
 NNLayer::NNLayer(int iNumNeurons, int iNumInputs)
 {
 	for (int i = 0; i < iNumNeurons; i++)
-		m_Neurons.push_back(new CPerceptron(iNumInputs, NULL, NN::g_learnRate));
+		m_Neurons.push_back(new CPerceptron(iNumInputs, nullptr, NN::g_learnRate));
 }
 
 NN::NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs)
@@ -274,7 +274,7 @@ void NN::freeMemory()
 		}
 
 		delete l;
-		m_Layers[i] = NULL;
+		m_Layers[i] = nullptr;
 	}
 
 	m_Layers.clear();
@@ -285,7 +285,7 @@ void NNLayer::freeMemory()
 	for (unsigned short int i = 0; i < m_Neurons.size(); i++)
 	{
 		delete m_Neurons[i];
-		m_Neurons[i] = NULL;
+		m_Neurons[i] = nullptr;
 	}
 
 	m_Neurons.clear();
@@ -305,13 +305,13 @@ NNGATrained::~NNGATrained()
 	{
 		m_pGA->freeGlobalMemory();
 		delete m_pGA;
-		m_pGA = NULL;
+		m_pGA = nullptr;
 	}
 
 	if (m_pInd)
 	{
 		delete m_pInd;
-		m_pInd = NULL;
+		m_pInd = nullptr;
 	}
 }
 

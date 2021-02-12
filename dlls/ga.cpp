@@ -59,7 +59,7 @@ IIndividual* CPopulation::get(int iIndex)
 
 IIndividual* CPopulation::getBestIndividual()
 {
-	IIndividual* best = NULL;
+	IIndividual* best = nullptr;
 	IIndividual* curr;
 
 	for (unsigned int i = 0; i < m_theIndividuals.size(); i++)
@@ -84,7 +84,7 @@ void CPopulation::freeMemory()
 	{
 		m_theIndividuals[i]->clear();
 		delete m_theIndividuals[i];
-		m_theIndividuals[i] = NULL;
+		m_theIndividuals[i] = nullptr;
 	}
 
 	m_theIndividuals.clear();
@@ -132,7 +132,7 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 
 	if (!header.read(bfp, header))
 	{
-		BotMessage(NULL, 0, "Learn data version mismatch - wiping");
+		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;
 	}
 
@@ -222,7 +222,7 @@ void CGA::addToPopulation(IIndividual* individual)
 			if (m_bestIndividual && m_bestIndividual != best)
 			{
 				delete m_bestIndividual;
-				m_bestIndividual = NULL;
+				m_bestIndividual = nullptr;
 			}
 			else if (m_bestIndividual == best)
 				set = FALSE;
@@ -340,7 +340,7 @@ void CGA::freeLocalMemory()
 	m_iNumGenerations = 0;
 //	if (m_bestIndividual)
 		delete m_bestIndividual;
-	m_bestIndividual = NULL;
+	m_bestIndividual = nullptr;
 }
 
 void CGA::freeGlobalMemory()
@@ -348,10 +348,10 @@ void CGA::freeGlobalMemory()
 	freeLocalMemory();
 //	if (m_theSelectFunction)
 		delete m_theSelectFunction;
-	m_theSelectFunction = NULL;
+	m_theSelectFunction = nullptr;
 }
 
-bool CGA::canPick()
+bool CGA::canPick() const
 {
 	return m_theNewPopulation.size() > 0;
 }

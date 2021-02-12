@@ -64,7 +64,7 @@ public:
 		return m_szHeader;
 	}
 
-	BOOL operator == (CGenericHeader other) const
+	BOOL operator == (const CGenericHeader other) const
 	{
 		return strcmp(m_szHeader, other.getHeader()) == 0;
 	}
@@ -74,7 +74,7 @@ public:
 		fwrite(this, sizeof(CGenericHeader), 1, bfp);
 	}
 
-	BOOL read(FILE* bfp, CGenericHeader const compare)
+	static BOOL read(FILE* bfp, CGenericHeader const compare)
 	{
 		CGenericHeader read;
 

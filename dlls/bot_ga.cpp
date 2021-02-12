@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*
  *    This file is part of RCBot.
  *
@@ -202,7 +204,7 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 
 	if (!header.read(bfp, header))
 	{
-		BotMessage(NULL, 0, "Learn data version mismatch - wiping");
+		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;
 	}
 
@@ -341,5 +343,5 @@ inline void CBitsGAValues::random() const
 void CBitsGAValues::freeMemory()
 {
 	delete m_theBits;
-	m_theBits = NULL;
+	m_theBits = nullptr;
 }

@@ -168,8 +168,8 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	//std::priority_queue<AStarNode*, std::vector<AStarNode*>, CompareAStarNode>* sOpenList;
 
 	AStarNode* aPathsFound;
-	AStarNode* sCurrNodeInfo = NULL; // Info of the current node
-	AStarNode* sSuccNodeInfo = NULL; // Info of the succesor to the current node
+	AStarNode* sCurrNodeInfo = nullptr; // Info of the current node
+	AStarNode* sSuccNodeInfo = nullptr; // Info of the succesor to the current node
 
 	float fMinCost;
 	float fOldCost;
@@ -200,7 +200,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		// Can't find a path from/to invalid waypoints
 	{
 		if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
-			DebugMessage(BOT_DEBUG_NAV_LEVEL, NULL, 0, "AStarAlgo() %s has no goal/current waypoint.", pBot->m_szBotName);
+			DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "AStarAlgo() %s has no goal/current waypoint.", pBot->m_szBotName);
 
 		return -1;
 	}
@@ -230,7 +230,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 		if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
 		{
-			DebugMessage(BOT_DEBUG_NAV_LEVEL, NULL, 0, "AStarAlgo() %s finding path from %d to %d", pBot->m_szBotName, iFrom, iTo);
+			DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "AStarAlgo() %s finding path from %d to %d", pBot->m_szBotName, iFrom, iTo);
 		}
 
 		// The first node must be open
@@ -251,7 +251,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	{
 		if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
 		{
-			DebugMessage(BOT_DEBUG_NAV_LEVEL, NULL, 0, "AStarAlgo() %s continuing to find path from %d to %d", pBot->m_szBotName, iFrom, iTo);
+			DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "AStarAlgo() %s continuing to find path from %d to %d", pBot->m_szBotName, iFrom, iTo);
 		}
 	}
 
@@ -316,7 +316,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		pCurWpt = &waypoints[iCurrentNode];
 		vOrigin = WaypointOrigin(iCurrentNode);
 
-		pPath = NULL;
+		pPath = nullptr;
 		iPathIndex = 0;
 
 		bDetpackWpt = pCurWpt->flags & W_FL_TFC_DETPACK;
@@ -368,7 +368,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 					if (gBotGlobals.IsMod(MOD_TFC) && pBot->pev->playerclass == TFC_CLASS_DEMOMAN)
 					{
 						// first do a traceline
-						UTIL_TraceLine(vOrigin, WaypointOrigin(iSuccNode), ignore_monsters, dont_ignore_glass, NULL, &tr);
+						UTIL_TraceLine(vOrigin, WaypointOrigin(iSuccNode), ignore_monsters, dont_ignore_glass, nullptr, &tr);
 
 						// closed
 						if (tr.flFraction < 1.0)
@@ -393,12 +393,12 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 				if (iSuccNodeFlags & W_FL_PAIN)
 				{
-					edict_t* pent = NULL;
+					edict_t* pent = nullptr;
 					BOOL bFound = FALSE;
-					edict_t* pNearest = NULL;
+					edict_t* pNearest = nullptr;
 					float fNearestDist = 0;
 
-					while ((pent = UTIL_FindEntityInSphere(pent, WaypointOrigin(iSuccNode), 64)) != NULL)
+					while ((pent = UTIL_FindEntityInSphere(pent, WaypointOrigin(iSuccNode), 64)) != nullptr)
 					{
 						if (!strcmp("trigger_hurt", STRING(pent->v.classname)))
 						{
@@ -445,7 +445,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 				// Svencoop open later waypoint
 				// check if the bot can go through to the next area
 				// if not then skip this waypoint from being read
-				UTIL_TraceLine(vOrigin, WaypointOrigin(iSuccNode), ignore_monsters, dont_ignore_glass, NULL, &tr);
+				UTIL_TraceLine(vOrigin, WaypointOrigin(iSuccNode), ignore_monsters, dont_ignore_glass, nullptr, &tr);
 
 				// first do a traceline
 
@@ -484,7 +484,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 							if (szTargetname && *szTargetname)
 							{
-								edict_t* pTarget = UTIL_FindEntityByTarget(NULL, szTargetname);
+								edict_t* pTarget = UTIL_FindEntityByTarget(nullptr, szTargetname);
 
 								if (pTarget)
 								{
@@ -580,7 +580,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	if (!bFoundGoal)
 	{
 		if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
-			DebugMessage(BOT_DEBUG_NAV_LEVEL, NULL, 0, "AStarAlgo() %s could not find path from wpt: %d to wpt: %d", pBot->m_szBotName, iFrom, iTo);
+			DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "AStarAlgo() %s could not find path from wpt: %d to wpt: %d", pBot->m_szBotName, iFrom, iTo);
 
 		if (!pBot->m_stFailedPaths.ClearViolatedPaths())
 		{
@@ -625,7 +625,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		if (iLoops == MAX_WAYPOINTS)
 		{
 			if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
-				DebugMessage(BOT_DEBUG_NAV_LEVEL, NULL, 0, "AStarAlgo() %s Too many waypoints to go to", pBot->m_szBotName);
+				DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "AStarAlgo() %s Too many waypoints to go to", pBot->m_szBotName);
 
 			pBot->m_stBotPaths.Destroy();
 
@@ -1048,7 +1048,7 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 			{
 				// Bot missed a waypoint
 				if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
-					DebugMessage(BOT_DEBUG_NAV_LEVEL, NULL, 0, "%s missed out a waypoint in path", pBot->m_szBotName);
+					DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "%s missed out a waypoint in path", pBot->m_szBotName);
 				// rework path
 
 				// See if current waypoint index is somewhere else in the stack...
@@ -1093,7 +1093,7 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 				// pBot->m_iWaypointGoalIndex = -1;
 
 				if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
-					DebugMessage(BOT_DEBUG_NAV_LEVEL, NULL, 0, "%s reached goal waypoint", pBot->m_szBotName);
+					DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "%s reached goal waypoint", pBot->m_szBotName);
 			}
 		}
 	}
@@ -1114,7 +1114,7 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 	if (pBot->m_iCurrentWaypointIndex == -1)
 	{
 		if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
-			DebugMessage(BOT_DEBUG_NAV_LEVEL, NULL, 0, "BotFindNextWaypoint() %s has no current waypoint", pBot->m_szBotName);
+			DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "BotFindNextWaypoint() %s has no current waypoint", pBot->m_szBotName);
 
 		return FALSE;
 	}
@@ -1226,7 +1226,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		if (pBot->m_iCurrentWaypointIndex == -1)
 		{
 			if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
-				DebugMessage(BOT_DEBUG_NAV_LEVEL, NULL, 0, "UpdateWaypoint() %s can't find a current waypoint", pBot->m_szBotName);
+				DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "UpdateWaypoint() %s can't find a current waypoint", pBot->m_szBotName);
 
 			return FALSE;
 		}
@@ -1369,9 +1369,9 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	else if (iWptFlags & W_FL_HUMAN_TOWER)
 	{
 		// bot needs to check if a bot/player is already crouching here
-		edict_t* pPlayer = NULL;
+		edict_t* pPlayer = nullptr;
 
-		while ((pPlayer = UTIL_FindEntityInSphere(pPlayer, vWptOrigin, 24.0)) != NULL)
+		while ((pPlayer = UTIL_FindEntityInSphere(pPlayer, vWptOrigin, 24.0)) != nullptr)
 		{
 			if (pPlayer->v.flags & FL_CLIENT)
 			{
@@ -1440,7 +1440,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			bTouchedWpt = TRUE;
 		else if (fDistance <= 64.0)
 		{
-			bTouchedWpt = PlayerNearVector(vWptOrigin, 24.0) != NULL;
+			bTouchedWpt = PlayerNearVector(vWptOrigin, 24.0) != nullptr;
 		}
 	}
 	else if (gBotGlobals.IsMod(MOD_TS) && iWptFlags & W_FL_STUNT || (iWptFlags & W_FL_JUMP || iWptFlags &
@@ -1458,7 +1458,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		bTouchedWpt = fDistance < BOT_WAYPOINT_TOUCH_DIST * 2;
 	}
 	// normal waypoint walking
-	else if (pBot->m_pEnemy == NULL)
+	else if (pBot->m_pEnemy == nullptr)
 	{
 		bTouchedWpt = fDistance - 1 > pBot->m_fPrevWaypointDist;
 	}
@@ -1533,7 +1533,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 						pBot->AddPriorityTask(CBotTask(BOT_TASK_PUSH_PUSHABLE, iSchedId, pPushable, 0, 0, vWptOrigin));
 						Vector vPush = UTIL_GetDesiredPushableVector(vWptOrigin, pPushable);
-						pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iSchedId, NULL, 0, 0, vPush));
+						pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iSchedId, nullptr, 0, 0, vPush));
 						//WaypointDrawBeam(gBotGlobals.m_pListenServerEdict,vWptOrigin,vPush,20,10,200,200,200,100,10);
 					}
 				}
@@ -1579,7 +1579,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		{
 			CBot* pOtherBot;
 
-			if ((pOtherBot = gBotGlobals.otherBotAtWaypoint(pBot, pBot->m_iCurrentWaypointIndex)) != NULL)
+			if ((pOtherBot = gBotGlobals.otherBotAtWaypoint(pBot, pBot->m_iCurrentWaypointIndex)) != nullptr)
 				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_BOT_AT_WPT, 0, pOtherBot->m_pEdict, pBot->m_iCurrentWaypointIndex));
 		}
 
@@ -1589,7 +1589,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			pBot->m_iCurrentWaypointFlags = 0;
 
 			if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
-				DebugMessage(BOT_DEBUG_NAV_LEVEL, NULL, 0, "UpdateWaypoint() %s has no current waypoint", pBot->m_szBotName);
+				DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "UpdateWaypoint() %s has no current waypoint", pBot->m_szBotName);
 
 			return FALSE;
 		}
@@ -1600,11 +1600,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 			if (!gBotGlobals.IsMod(MOD_TFC) && (pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE) && pBot->m_iCurrentWaypointFlags & W_FL_GREN_THROW))
 			{
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_THROW_GRENADE, 0, NULL, 0, 0, vWptOrigin));
+				pBot->AddPriorityTask(CBotTask(BOT_TASK_THROW_GRENADE, 0, nullptr, 0, 0, vWptOrigin));
 			}
 			else if (pBot->pev->flags & FL_ONGROUND && pBot->pev->waterlevel < 3 && (pBot->m_iCurrentWaypointFlags & W_FL_JUMP && iPrevFlags & W_FL_CROUCH || pBot->m_iCurrentWaypointFlags & W_FL_JUMP && pBot->m_iCurrentWaypointFlags & W_FL_STAY_NEAR))
 			{
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_AND_FACE_VECTOR, 0, NULL, 0, 0.75, vWptOrigin));
+				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_AND_FACE_VECTOR, 0, nullptr, 0, 0.75, vWptOrigin));
 			}
 
 			/*if ( pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) )
@@ -1616,9 +1616,9 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			int iNextwpt = pBot->GetNextWaypoint();
 
 			if (pBot->m_iCurrentWaypointFlags & W_FL_WAIT_FOR_LIFT)
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, NULL, 0, 0, vWptOrigin));
+				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, nullptr, 0, 0, vWptOrigin));
 			else if (pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) && (iNextwpt != -1 && WaypointFlags(iNextwpt) & W_FL_WAIT_FOR_LIFT))
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, NULL, 0, 0, WaypointOrigin(iNextwpt)));
+				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, nullptr, 0, 0, WaypointOrigin(iNextwpt)));
 			else if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_LIFT))
 			{
 				BOOL bCheckNext = iNextwpt != -1 && pBot->m_iCurrentWaypointFlags & W_FL_CHECK_LIFT;
@@ -1656,7 +1656,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		}
 		else if (pBot->m_iCurrentWaypointFlags & W_FL_HUMAN_TOWER)
 		{
-			pBot->AddPriorityTask(CBotTask(BOT_TASK_HUMAN_TOWER, 0, NULL, 0, 0, vWptOrigin));
+			pBot->AddPriorityTask(CBotTask(BOT_TASK_HUMAN_TOWER, 0, nullptr, 0, 0, vWptOrigin));
 		}
 		/*else if ( pBot->m_iCurrentWaypointFlags & W_FL_TANK )//pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_TANK))
 		{
@@ -1687,7 +1687,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		pBot->m_iCurrentWaypointFlags = 0;
 
 		if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
-			DebugMessage(BOT_DEBUG_NAV_LEVEL, NULL, 0, "UpdateWaypoint() %s has no current waypoint", pBot->m_szBotName);
+			DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "UpdateWaypoint() %s has no current waypoint", pBot->m_szBotName);
 
 		return FALSE;
 	}
@@ -1717,7 +1717,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam)
 {
-	PATH* pPath = NULL;
+	PATH* pPath = nullptr;
 	int iPathIndex = 0;
 	int iIndex;
 
@@ -1729,7 +1729,7 @@ PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /*CLocation :: CLocation (const char *szLocationName,edict_t *pEntity)
@@ -1958,7 +1958,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 {
 	TraceResult tr;
 
-	edict_t* pHit = NULL;
+	edict_t* pHit = nullptr;
 
 	//if ( gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL) )
 	//	WaypointDrawBeam(gBotGlobals.m_Clients.GetClientByIndex(0)->GetPlayer(),vBotOrigin,vCheckOrigin,16,8,200,200,200,200,10);
@@ -2036,11 +2036,11 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 								}
 								else
 								{
-									pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, NULL, 0, 0.0, vButtonOrigin));
+									pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, 0, 0.0, vButtonOrigin));
 									pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pButton, 0, 1.0));
 								}
 
-								pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, NULL, iWaitForLiftWpt, -1.0));
+								pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWaitForLiftWpt, -1.0));
 								pBot->AddTask(CBotTask(BOT_TASK_WAIT_FOR_ENTITY, iNewScheduleId, pHit));
 
 								pBot->m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(10, 20));
@@ -2066,7 +2066,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 							{
 								//int iWpt = WaypointLocations.NearestWaypoint(vButtonOrigin,100,-1,TRUE,FALSE,FALSE,&pBot->m_FailedGoals);
 
-								pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, NULL, 0, 0.0, vButtonOrigin));
+								pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, 0, 0.0, vButtonOrigin));
 								pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pButton, 0, 1.0));
 							}
 
@@ -2076,7 +2076,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 							//  pBot->m_stFailedPaths.AddFailedPath(pIgnore);
 						}
 
-						pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, 0, NULL, 0, 0, pBot->m_vGoalOrigin.GetVector()));
+						pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, 0, nullptr, 0, 0, pBot->m_vGoalOrigin.GetVector()));
 					}
 					else
 					{
@@ -2108,7 +2108,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 
 									// Bot was below the lift so wait for the lift to descend
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_ENTITY, iScheduleId, pHit));
-									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, NULL, iWpt, -1));
+									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, nullptr, iWpt, -1));
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_USE, iScheduleId, pButton));
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, pButton));
 

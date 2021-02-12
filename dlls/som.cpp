@@ -69,7 +69,7 @@ CSom :: ~CSom()
 
 CSomNeuron* CSom::getBMU(std::vector <ga_value>* inputs)
 {
-	CSomNeuron* winner = NULL;
+	CSomNeuron* winner = nullptr;
 	ga_value bestdistance = 0;
 	ga_value dist;
 
@@ -194,7 +194,7 @@ void CSomNeuron::displayWeights()
 	}
 }
 
-ga_value CSomNeuron::neighbourDistance(CSomNeuron* other, ga_value fDistance)
+ga_value CSomNeuron::neighbourDistance(CSomNeuron* other, ga_value fDistance) const
 {
 	const ga_value distx = getX() - other->getX();
 	const ga_value disty = getY() - other->getY();

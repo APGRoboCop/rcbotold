@@ -94,7 +94,7 @@ void CBotVisibles::freeMemory()
 	m_iVisibleList.Clear();
 	m_iVisibles->freeMemory();
 	delete m_iVisibles;
-	m_iVisibles = NULL;
+	m_iVisibles = nullptr;
 }
 
 edict_t* CBotVisibles::nextVisible()
@@ -116,5 +116,5 @@ edict_t* CBotVisibles::nextVisible()
 
 	resetIter();
 
-	return NULL;
+	return nullptr;
 }

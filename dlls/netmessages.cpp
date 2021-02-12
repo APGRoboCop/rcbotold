@@ -85,9 +85,9 @@ BOOL CBotNetMessage::IsMessage(const int iMessage)
 	return m_iMessage == iMessage;
 }
 
-void CBotNetMessages::execute(int iMessage, void* p, int i)
+void CBotNetMessages::execute(int iMessage, void* p, int i) const
 {
-	CBotNetMessage* pMsg = GetMessage(iMessage, NULL);
+	CBotNetMessage* pMsg = GetMessage(iMessage, nullptr);
 
 	if (pMsg)
 		pMsg->execute(p, i);
@@ -111,7 +111,7 @@ CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName) co
 			}
 		}
 
-		if (szName == NULL)
+		if (szName == nullptr)
 		{
 			if (!l_currMsg->IsMessage(iMessage))
 			{
@@ -131,7 +131,7 @@ CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName) co
 		return l_currMsg;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 CBotNetMessage::CBotNetMessage(const char* szMessageName, int iModId, BOOL bAllowHumans)

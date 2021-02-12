@@ -133,7 +133,7 @@ public:
 		m_fPrevAvgFitness = 0;
 
 		m_iMaxPopSize = iMaxPopSize;
-		m_bestIndividual = NULL;
+		m_bestIndividual = nullptr;
 		m_iPopType = 0;
 
 		if (m_iMaxPopSize == 0)
@@ -154,7 +154,7 @@ public:
 	void addToPopulation(IIndividual* individual);
 
 	// can get an individual off new population
-	bool canPick();
+	bool canPick() const;
 
 	IIndividual* pick();
 

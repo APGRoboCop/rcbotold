@@ -379,7 +379,7 @@ public:
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void Destroy(void)
@@ -404,7 +404,7 @@ public:
 		m_iAmmoIndex1 = -1;
 		m_iAmmoIndex2 = -1;
 
-		m_szClassname = NULL;
+		m_szClassname = nullptr;
 
 		m_bRegistered = FALSE; // Registered by the mod.
 
@@ -495,9 +495,9 @@ public:
 		return m_iAmmoIndex1 == -1;
 	}
 
-	BOOL IsPrimary(void);
+	BOOL IsPrimary(void) const;
 
-	BOOL IsSecondary(void);
+	BOOL IsSecondary(void) const;
 
 	int m_iAmmoIndex1;
 	int m_iAmmoIndex2;
@@ -633,10 +633,10 @@ public:
 
 		for (i = 0; i < MAX_WEAPONS; i++)
 		{
-			if (m_Weapons[i] != NULL)
+			if (m_Weapons[i] != nullptr)
 			{
 				delete m_Weapons[i];
-				m_Weapons[i] = NULL;
+				m_Weapons[i] = nullptr;
 			}
 		}
 	}
@@ -649,7 +649,7 @@ public:
 
 		for (i = 0; i < MAX_WEAPONS; i++)
 		{
-			m_Weapons[i] = NULL;
+			m_Weapons[i] = nullptr;
 		}
 		//memset(m_Weapons,0,sizeof(CWeapon)*MAX_WEAPONS);
 	}
@@ -661,7 +661,7 @@ public:
 			//if ( m_Weapons[iId].IsRegistered() )
 			return m_Weapons[iId];
 		}
-		return NULL;
+		return nullptr;
 	}
 
 private:
@@ -770,9 +770,9 @@ public:
 
 	BOOL NeedToReload(void) const;
 
-	BOOL CanReload(void);
+	BOOL CanReload(void) const;
 
-	BOOL CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist);
+	BOOL CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const;
 
 	BOOL CanShootSecondary(void) const
 	{
@@ -797,7 +797,7 @@ public:
 		return -1;
 	}
 
-	BOOL HasWeapon(edict_t* pEdict);
+	BOOL HasWeapon(edict_t* pEdict) const;
 
 	void RemoveWeapon(void)
 	{
@@ -814,19 +814,19 @@ public:
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->GetClassname();
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	BOOL IsMelee(void) const
 	{
-		if (m_pWeaponInfo == NULL)
+		if (m_pWeaponInfo == nullptr)
 			return TRUE;
 		return m_pWeaponInfo->IsMelee();
 	}
 
 	BOOL CanBeUsedUnderWater(void) const
 	{
-		if (m_pWeaponInfo == NULL)
+		if (m_pWeaponInfo == nullptr)
 			return TRUE;
 
 		return m_pWeaponInfo->CanBeUsedUnderWater();
@@ -834,7 +834,7 @@ public:
 
 	int GetPriority(void) const
 	{
-		if (m_pWeaponInfo == NULL)
+		if (m_pWeaponInfo == nullptr)
 		{
 			return 0;
 		}
@@ -842,7 +842,7 @@ public:
 		return m_pWeaponInfo->GetPriority();
 	}
 
-	void setAmmoArray(int* pAmmo1, int* pAmmo2 = NULL)
+	void setAmmoArray(int* pAmmo1, int* pAmmo2 = nullptr)
 	{
 		if (pAmmo1)
 		{
@@ -912,9 +912,9 @@ public:
 			this->RemoveWeapon(i);
 	}
 
-	BOOL HasWeapon(edict_t* pEdict, char* szClassname);
+	BOOL HasWeapon(edict_t* pEdict, char* szClassname) const;
 
-	BOOL HasWeapon(edict_t* pEdict, int iId)
+	BOOL HasWeapon(edict_t* pEdict, int iId) const
 	{
 		if (iId > 0 && iId < MAX_WEAPONS)
 			return m_Weapons[iId].HasWeapon(pEdict);
@@ -946,16 +946,16 @@ public:
 		if (iId >= 0 && iId < MAX_WEAPONS)
 			return &m_Weapons[iId];
 
-		return NULL;
+		return nullptr;
 	}
 
-	int GetPrimaryWeaponId(void)
+	int GetPrimaryWeaponId(void) const
 	{
 		int i;
 
 		for (i = 0; i < MAX_WEAPONS; i++)
 		{
-			if (!m_Weapons[i].HasWeapon(NULL))
+			if (!m_Weapons[i].HasWeapon(nullptr))
 				continue;
 			if (m_Weapons[i].IsPrimary())
 				return i;
@@ -964,13 +964,13 @@ public:
 		return 0;
 	}
 
-	int GetSecondaryWeaponId(void)
+	int GetSecondaryWeaponId(void) const
 	{
 		int i;
 
 		for (i = 0; i < MAX_WEAPONS; i++)
 		{
-			if (!m_Weapons[i].HasWeapon(NULL))
+			if (!m_Weapons[i].HasWeapon(nullptr))
 				continue;
 			if (m_Weapons[i].IsSecondary())
 				return i;

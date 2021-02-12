@@ -63,7 +63,6 @@
 #endif
 
 #include "engine.h"
-
 #include "entity_state.h"
 
 #include "bot_client.h"
@@ -96,7 +95,7 @@ extern CWaypointLocations WaypointLocations;
 
 cvar_t bot_ver_cvar = { BOT_VER_CVAR,BOT_VER,FCVAR_SERVER };
 
-FILE* fpMapConfig = NULL;
+FILE* fpMapConfig = nullptr;
 
 void UpdateClientData(const struct edict_s* ent, int sendweapons, struct clientdata_s* cd);
 
@@ -119,7 +118,7 @@ BOOL CAllowedPlayer::IsForClient(CClient* pClient)
 
 	edict_t* pEdict = pClient->GetPlayer();
 
-	if (pEdict == NULL)
+	if (pEdict == nullptr)
 		return FALSE;
 
 	bSamePass = IsForPass(pClient->GetPass());
@@ -155,7 +154,7 @@ edict_t* UTIL_GetCommander(void)
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 //////////////////////////////////////////////////////////////////////
 void GameDLLInit(void)
@@ -206,7 +205,7 @@ int DispatchSpawn(edict_t* pent)
 
 			// clear waypoints
 			WaypointInit();
-			WaypointLoad(NULL);
+			WaypointLoad(nullptr);
 		}
 
 		if (gBotGlobals.IsNS())
@@ -314,12 +313,12 @@ void DispatchTouch(edict_t* pentTouched, edict_t* pentOther)
 ///////////////////////////////////////////////////////////////////////////
 void DispatchBlocked(edict_t* pentBlocked, edict_t* pentOther)
 {
-	static CBot* pBot = NULL;
+	static CBot* pBot = nullptr;
 
 	// Save some time since we use a static variable
 	BOOL bFindNewBot = TRUE;
 
-	if (pBot != NULL)
+	if (pBot != nullptr)
 	{
 		if (pBot->m_pEdict == pentOther)
 			bFindNewBot = FALSE;
@@ -440,7 +439,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 
 		if (!IS_DEDICATED_SERVER())
 		{
-			if (gBotGlobals.m_pListenServerEdict == NULL)
+			if (gBotGlobals.m_pListenServerEdict == nullptr)
 			{
 				// check if this client is the listen server client
 				if (strcmp(pszAddress, "loopback") == 0)
@@ -470,7 +469,6 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 				{
 					int i;
 					CBot* pBot;
-
 					char cmd[80];
 
 					for (i = 0; i < MAX_PLAYERS; i++)
@@ -485,7 +483,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 
 								//iUserId = (*g_engfuncs.pfnGetPlayerUserId)(pBot->m_pEdict);
 
-								BotMessage(NULL, 0, "Kicking a bot from server to free a slot...");
+								BotMessage(nullptr, 0, "Kicking a bot from server to free a slot...");
 
 								//sprintf(cmd, "kick #%d\n", iUserId);
 								// kick [# userid] doesnt work on linux ??
@@ -510,17 +508,17 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 					// dont allow player to connect as the number of bots
 					// have not been reached yet.
 
-					BotMessage(NULL, 0, "Player joining, min_bots not reached, Checking to disallow player...");
-					BotMessage(NULL, 0, "numplayers to be = %d\nmin_bots = %d\nbots still to join = %d\nmax clients = %d\nnew slots = %d\nnum bots = %d", iNumPlayers,
-						gBotGlobals.m_iMinBots,
-						iBotsStillToJoin,
-						gpGlobals->maxClients,
-						iNewSlotsFree,
-						gBotGlobals.m_iNumBots);
+					BotMessage(nullptr, 0, "Player joining, min_bots not reached, Checking to disallow player...");
+					BotMessage(nullptr, 0, "numplayers to be = %d\nmin_bots = %d\nbots still to join = %d\nmax clients = %d\nnew slots = %d\nnum bots = %d", iNumPlayers,
+					           gBotGlobals.m_iMinBots,
+					           iBotsStillToJoin,
+					           gpGlobals->maxClients,
+					           iNewSlotsFree,
+					           gBotGlobals.m_iNumBots);
 
 					if (iNewSlotsFree < iBotsStillToJoin)
 					{
-						BotMessage(NULL, 0, "Rejecting real player from joining as min_bots has not been reached yet...");
+						BotMessage(nullptr, 0, "Rejecting real player from joining as min_bots has not been reached yet...");
 
 						strcpy(szRejectReason, "\nMaximum public slots reached (some slots are reserved)");
 
@@ -533,7 +531,6 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 				}
 			}
 		}
-
 		gBotGlobals.m_iJoiningClients[iIndex] = 1;
 	}
 
@@ -552,7 +549,7 @@ void ClientDisconnect(edict_t* pEntity)
 	const int iIndex = ENTINDEX(pEntity) - 1;
 
 	if (EntityIsCommander(pEntity))
-		gBotGlobals.SetCommander(NULL);
+		gBotGlobals.SetCommander(nullptr);
 
 	if (iIndex < MAX_PLAYERS)
 		gBotGlobals.m_iJoiningClients[iIndex] = 0;
@@ -645,7 +642,7 @@ void ClientDisconnect(edict_t* pEntity)
 		pBot->m_iRespawnState = RESPAWN_NONE;
 
 		pBot->Init();
-		pBot->SetEdict(NULL);
+		pBot->SetEdict(nullptr);
 		pBot->m_bIsUsed = FALSE;
 		pBot->m_fKickTime = gpGlobals->time;
 		pBot->m_bIsUsed = FALSE;
@@ -829,14 +826,14 @@ void ClientCommand(edict_t* pEntity)
 		{
 			///////
 			// see if bot can learn its HAL brain from this person speaking
-			const BOOL bSenderIsBot = UTIL_GetBotPointer(pEntity) != NULL;
+			const BOOL bSenderIsBot = UTIL_GetBotPointer(pEntity) != nullptr;
 
 			if (!bSenderIsBot || gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHAT_REPLY_TO_BOTS))
 			{
 				// team only message?
 				const int iTeamOnly = (int)bSayTeamMsg;
 
-				char* szMessage = NULL;
+				char* szMessage = nullptr;
 				//				char *szTempArgument;
 
 				if (arg2 && *arg2)
@@ -846,7 +843,7 @@ void ClientCommand(edict_t* pEntity)
 					int iLenSoFar = 0;
 					const char* szArgument;
 					// for concatenating string dynamically
-					char* szTemp = NULL;
+					char* szTemp = nullptr;
 					BOOL bIsQuote;
 					BOOL bWasQuote = FALSE;
 
@@ -881,7 +878,7 @@ void ClientCommand(edict_t* pEntity)
 						{
 							szTemp = strdup(szMessage);
 							free(szMessage);
-							szMessage = NULL;
+							szMessage = nullptr;
 						}
 
 						// 2 extra chars, 1 for terminator and 1 for space
@@ -912,7 +909,7 @@ void ClientCommand(edict_t* pEntity)
 							}
 
 							free(szTemp);
-							szTemp = NULL;
+							szTemp = nullptr;
 						}
 						else
 						{
@@ -947,8 +944,7 @@ void ClientCommand(edict_t* pEntity)
 
 					// finished with message
 					free(szMessage);
-
-					szMessage = NULL;
+					szMessage = nullptr;
 				}
 			}
 		}
@@ -963,7 +959,7 @@ void ClientCommand(edict_t* pEntity)
 
 		if (gBotGlobals.m_CurrentHandledCvar)
 		{
-			if (pClient == NULL)
+			if (pClient == nullptr)
 			{
 				BugMessage(pEntity, "Your client was not found in list of clients");
 
@@ -1005,8 +1001,7 @@ void ClientCommand(edict_t* pEntity)
 				DROP_TO_FLOOR(pClient->m_pForceGripEntity);
 			}
 
-			pClient->m_pForceGripEntity = NULL;
-
+			pClient->m_pForceGripEntity = nullptr;
 			iState = BOT_CVAR_ACCESSED;
 		}
 	}
@@ -1018,7 +1013,7 @@ void ClientCommand(edict_t* pEntity)
 
 		if (gBotGlobals.m_CurrentHandledCvar)
 		{
-			if (pClient == NULL)
+			if (pClient == nullptr)
 			{
 				BugMessage(pEntity, "Your client was not found in list of clients");
 
@@ -1072,7 +1067,7 @@ void ClientCommand(edict_t* pEntity)
 #endif
 	}
 
-	if (pcmd[0] != 0 && strstr(pcmd, "addbot") != NULL)
+	if (pcmd[0] != 0 && strstr(pcmd, "addbot") != nullptr)
 	{
 		BotMessage(pEntity, 0, "Tip: If you want to add an RCBOT use the command \"rcbot addbot\"\n");
 	}
@@ -1233,11 +1228,11 @@ const char* GetGameDescription(void)
 
 	catch (...)
 	{
-		BotMessage(NULL, 2, "Error: bot detected you are running the wrong Rcbot DLL file (e.g. metamod instead of standalone)");
+		BotMessage(nullptr, 2, "Error: bot detected you are running the wrong Rcbot DLL file (e.g. metamod instead of standalone)");
 		//exit(0);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void PlayerCustomization(edict_t* pEntity, customization_t* pCust)
@@ -1572,11 +1567,11 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 
 	if (!pFakeClient)
 	{
-		BugMessage(NULL, "FakeClientCommand : No fakeclient!");
+		BugMessage(nullptr, "FakeClientCommand : No fakeclient!");
 		return; // reliability check
 	}
 
-	if (fmt == NULL)
+	if (fmt == nullptr)
 		return;
 
 	// concatenate all the arguments in one string
@@ -1584,9 +1579,9 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	vsprintf(command, fmt, argptr);
 	va_end(argptr);
 
-	if (command == NULL || *command == 0 || *command == '\n')
+	if (command == nullptr || *command == 0 || *command == '\n')
 	{
-		BugMessage(NULL, "FakeClientCommand : No command!");
+		BugMessage(nullptr, "FakeClientCommand : No command!");
 		return; // if nothing in the command buffer, return
 	}
 
@@ -1646,7 +1641,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 void BotFunc_InitProfile(bot_profile_t* bpBotProfile)
 // Initalizes a bot profile structure/type
 {
-	bpBotProfile->m_szModel = NULL;
+	bpBotProfile->m_szModel = nullptr;
 	bpBotProfile->m_iClass = -1;
 	bpBotProfile->m_FadePercent = 0;
 	bpBotProfile->m_GorgePercent = 0;
@@ -1659,15 +1654,15 @@ void BotFunc_InitProfile(bot_profile_t* bpBotProfile)
 	bpBotProfile->m_OnosPercent = 50;
 
 	bpBotProfile->m_szBotName = gBotGlobals.m_Strings.GetString(BOT_DEFAULT_NAME);
-	bpBotProfile->m_szFavMap = NULL;
-	bpBotProfile->m_szSpray = NULL;
+	bpBotProfile->m_szFavMap = nullptr;
+	bpBotProfile->m_szSpray = nullptr;
 	bpBotProfile->m_iNumGames = 0;
 
-	bpBotProfile->m_HAL = NULL;
-	bpBotProfile->m_szHAL_AuxFile = NULL;
-	bpBotProfile->m_szHAL_BanFile = NULL;
-	bpBotProfile->m_szHAL_PreTrainFile = NULL;
-	bpBotProfile->m_szHAL_SwapFile = NULL;
+	bpBotProfile->m_HAL = nullptr;
+	bpBotProfile->m_szHAL_AuxFile = nullptr;
+	bpBotProfile->m_szHAL_BanFile = nullptr;
+	bpBotProfile->m_szHAL_PreTrainFile = nullptr;
+	bpBotProfile->m_szHAL_SwapFile = nullptr;
 
 	bpBotProfile->m_fAimSpeed = 0.2;
 	bpBotProfile->m_fAimSkill = 0.0;
@@ -1694,9 +1689,9 @@ void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 	while (i <= 10)
 	{
-		szTag = NULL;
-		szToWrite = NULL;
-		iToWrite = NULL;
+		szTag = nullptr;
+		szToWrite = nullptr;
+		iToWrite = nullptr;
 
 		switch (i)
 		{
@@ -1751,7 +1746,7 @@ void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 		if (!szTag)
 		{
-			BugMessage(NULL, "Error writing bot profile, tag missing");
+			BugMessage(nullptr, "Error writing bot profile, tag missing");
 			continue;
 		}
 
@@ -1775,10 +1770,8 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 	CClient* pClient;
 
 	char szBuffer[128];
-
 	int iLength;
 	int i;
-
 	char szTemp[64];
 	int j;
 
@@ -1990,11 +1983,11 @@ void ReadBotUsersConfig(void)
 	char filename[256];
 	FILE* fp;
 
-	UTIL_BuildFileName(filename, BOT_USERS_FILE, NULL);
+	UTIL_BuildFileName(filename, BOT_USERS_FILE, nullptr);
 
 	fp = fopen(filename, "r");
 
-	if (fp != NULL)
+	if (fp != nullptr)
 	{
 		char buffer[256];
 		int length;
@@ -2008,7 +2001,7 @@ void ReadBotUsersConfig(void)
 		int line = 0;
 		int users = 0;
 
-		while (fgets(buffer, 255, fp) != NULL)
+		while (fgets(buffer, 255, fp) != nullptr)
 		{
 			line++;
 
@@ -2068,7 +2061,7 @@ void ReadBotUsersConfig(void)
 
 			if (*szName && *szPass && *szAccessLevel || *szSteamId && *szAccessLevel)
 			{
-				BotMessage(NULL, 0, "Added: name=\"%s\", pass=%s, accesslev=%s, steamid=%s", szName, szPass, szAccessLevel, szSteamId);
+				BotMessage(nullptr, 0, "Added: name=\"%s\", pass=%s, accesslev=%s, steamid=%s", szName, szPass, szAccessLevel, szSteamId);
 
 				// Add to allowed users
 				gBotGlobals.m_BotUsers.AddPlayer(szName, szPass, atoi(szAccessLevel), szSteamId);
@@ -2076,16 +2069,16 @@ void ReadBotUsersConfig(void)
 			}
 			else
 			{
-				BotMessage(NULL, 0, "Error in bot_users.ini, error on line %d (bad format?)", line);
+				BotMessage(nullptr, 0, "Error in bot_users.ini, error on line %d (bad format?)", line);
 			}
 		}
 
-		BotMessage(NULL, 0, "%d users added to list of RCBot users", users);
+		BotMessage(nullptr, 0, "%d users added to list of RCBot users", users);
 
 		fclose(fp);
 	}
 	else
-		BotMessage(NULL, 0, "!!! Cannot find bot_users.ini !!!! (trying to look in %s - not found) permissions are bad or rcbot is not installed properly", filename);
+		BotMessage(nullptr, 0, "!!! Cannot find bot_users.ini !!!! (trying to look in %s - not found) permissions are bad or rcbot is not installed properly", filename);
 }
 
 void ReadMapConfig(void)
@@ -2099,7 +2092,7 @@ void ReadMapConfig(void)
 
 /*
 
-  TO DO:
+  TODO:
 
   Make config read whole file and enter commands in a queue for execution (faster??)
 
@@ -2109,7 +2102,7 @@ void ReadMapConfig(void)
 
 	int iLen;
 
-	if (fgets(szTemp, 255, fpMapConfig) != NULL)
+	if (fgets(szTemp, 255, fpMapConfig) != nullptr)
 	{
 		if (*szTemp == '#')
 			return;
@@ -2143,22 +2136,21 @@ void ReadMapConfig(void)
 	else
 	{
 		fclose(fpMapConfig);
-		fpMapConfig = NULL;
+		fpMapConfig = nullptr;
 	}
 }
 
 edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, Vector vOrigin)
 {
-	return NULL;
+	return nullptr;
 }
 
-//
 // Hack building
 edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser, BOOL bBuilt)
 {
-	edict_t* build = NULL;//pfnCreateNamedEntity(MAKE_STRING(pCommBuildent));
+	edict_t* build = nullptr;//pfnCreateNamedEntity(MAKE_STRING(pCommBuildent));
 
-	edict_t* pSetgroundentity = NULL;
+	edict_t* pSetgroundentity = nullptr;
 
 	if (iUser3 == AVH_USER3_RESTOWER)
 	{
@@ -2172,7 +2164,7 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 			if (UTIL_IsResourceFountainUsed(pResource))
 			{
 				BotMessage(pEntityUser, 0, "Error: Nearest resource fountain is used");
-				return NULL;
+				return nullptr;
 			}
 
 			pSetgroundentity = pResource;
@@ -2181,7 +2173,7 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 		else
 		{
 			BotMessage(pEntityUser, 0, "Error: Can't find a resource fountain for tower");
-			return NULL;
+			return nullptr;
 		}
 	}
 
@@ -2234,17 +2226,16 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 		return build;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-/////////////////////////////////////////
 // Make new BOTCAM.CPP soon!!!
 CBotCam::CBotCam()
 {
 	m_iPositionSet = 0;
-	m_pCurrentBot = NULL;
+	m_pCurrentBot = nullptr;
 	m_iState = BOTCAM_NONE;
-	m_pCameraEdict = NULL;
+	m_pCameraEdict = nullptr;
 	m_fNextChangeBotTime = 0;
 	m_fNextChangeState = 0;
 	m_bTriedToSpawn = FALSE;
@@ -2252,7 +2243,7 @@ CBotCam::CBotCam()
 
 BOOL CBotCam::IsWorking() const
 {
-	return m_pCameraEdict != NULL && gBotGlobals.IsConfigSettingOn(BOT_CONFIG_ENABLE_BOTCAM);
+	return m_pCameraEdict != nullptr && gBotGlobals.IsConfigSettingOn(BOT_CONFIG_ENABLE_BOTCAM);
 }
 
 void CBotCam::Spawn()
@@ -2293,7 +2284,7 @@ void CBotCam::Think()
 
 	bNotAlive = m_pCurrentBot && !m_pCurrentBot->IsAlive();
 
-	if (m_pCurrentBot == NULL || m_fNextChangeBotTime < gpGlobals->time || !m_pCurrentBot->IsUsed() || bNotAlive)
+	if (m_pCurrentBot == nullptr || m_fNextChangeBotTime < gpGlobals->time || !m_pCurrentBot->IsUsed() || bNotAlive)
 	{
 		int i;
 		CBot* pOldBot = m_pCurrentBot;
@@ -2306,7 +2297,7 @@ void CBotCam::Think()
 
 			// think about next bot to view etc
 			m_fNextChangeBotTime = gpGlobals->time + RANDOM_FLOAT(7.5, 10.0);
-			m_pCurrentBot = NULL;
+			m_pCurrentBot = nullptr;
 
 			for (i = 0; i < MAX_PLAYERS; i++)
 			{
@@ -2324,12 +2315,12 @@ void CBotCam::Think()
 				//else
 				fDistance = pBot->DistanceFrom(m_pCameraEdict->v.origin);
 
-				if (m_pCurrentBot == NULL || fDistance < fNearest)
+				if (m_pCurrentBot == nullptr || fDistance < fNearest)
 				{
 					m_pCurrentBot = pBot;
 					fNearest = fDistance;
 
-					if (pBot->m_pEnemy != NULL)
+					if (pBot->m_pEnemy != nullptr)
 						m_iState = BOTCAM_ENEMY;
 					else
 						m_iState = BOTCAM_BOT;
@@ -2339,13 +2330,13 @@ void CBotCam::Think()
 		else
 		{
 			if (m_pCurrentBot && !m_pCurrentBot->IsUsed())
-				m_pCurrentBot = NULL;
+				m_pCurrentBot = nullptr;
 
 			dataUnconstArray<int> iPossibleBots;
 
 			// think about next bot to view etc
 			m_fNextChangeBotTime = gpGlobals->time + RANDOM_FLOAT(7.5, 10.0);
-			m_pCurrentBot = NULL;
+			m_pCurrentBot = nullptr;
 
 			for (i = 0; i < MAX_PLAYERS; i++)
 			{
@@ -2455,7 +2446,6 @@ void CBotCam::Think()
 			const float fLength = vComp.Length();
 
 			vComp = vComp.Normalize();
-
 			vComp = vComp * (fLength + 128.0);
 
 			m_pCameraEdict->v.origin = vBotOrigin + vComp;
@@ -2500,7 +2490,7 @@ void CBotCam::Think()
 		break;
 	}
 
-	if (bSetAngle)
+	if (true)
 	{
 		Vector ideal = UTIL_VecToAngles(vBotOrigin - m_pCameraEdict->v.origin);
 		UTIL_FixAngles(&ideal);
@@ -2537,7 +2527,7 @@ BOOL CBotCam::TuneIn(edict_t* pPlayer) const
 		BotMessage(pPlayer, 0, "No Bots are running for bot cam");
 		return FALSE;
 	}
-	else if (m_pCameraEdict == NULL)
+	else if (m_pCameraEdict == nullptr)
 	{
 		BotMessage(pPlayer, 0, "Oops, looks like camera never worked...");
 		return FALSE;
@@ -2556,67 +2546,14 @@ void CBotCam::TuneOff(edict_t* pPlayer)
 
 void CBotCam::Clear()
 {
-	m_pCurrentBot = NULL;
+	m_pCurrentBot = nullptr;
 	m_iState = BOTCAM_NONE;
-	m_pCameraEdict = NULL;
+	m_pCameraEdict = nullptr;
 	m_fNextChangeBotTime = 0;
 	m_fNextChangeState = 0;
 	m_bTriedToSpawn = FALSE;
 }
 
-/////////////////////////////////////////////
-// TFC Specific
-
-// when noInfo  is TRUE we want to find ...
-// any valid capture point for team...
-// and haven't given goal or group info
-/*edict_t* CTFCCapturePoints::getCapturePoint(int group, int goal, int team, BOOL noInfo)
-{
-	dataStack<CTFCGoal> tempStack = m_CapPoints;
-	CTFCGoal* pGotCap;
-
-	dataUnconstArray<edict_t*> goals;
-
-	while (!tempStack.IsEmpty())
-	{
-		pGotCap = tempStack.ChoosePointerFromStack();
-
-		// looking for capture point without flag
-		if (noInfo)
-		{
-			if (gBotGlobals.TFC_isValidGoal(pGotCap->getGoal(), team))
-				goals.Add(pGotCap->edict());
-		}
-		else
-		{
-			if (group && pGotCap->isForGroup(group) || goal && pGotCap->isForGoal(goal) && pGotCap->isForTeam(team))
-			{
-				if (gBotGlobals.isMapType(TFC_MAP_CAPTURE_FLAG_MULTIPLE))
-				{
-					goals.Add(pGotCap->edict());
-				}
-				else
-				{
-					tempStack.Init();
-
-					return pGotCap->edict();
-				}
-			}
-		}
-	}
-
-	if (!goals.IsEmpty())
-	{
-		edict_t* pGoal = goals.Random();
-
-		goals.Clear();
-
-		return pGoal;
-	}
-
-	return NULL;
-}*/
-//////////////////////////////////////////////////////////////////////////////
 // METAMOD REQUIRED...
 
 #ifdef RCBOT_META_BUILD

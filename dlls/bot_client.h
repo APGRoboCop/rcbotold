@@ -79,7 +79,7 @@ public:
 	CBotNetMessage()
 	{
 		m_iMessage = 0;
-		m_szMessageName = NULL;
+		m_szMessageName = nullptr;
 		//m_fpMsgFunction = NULL;
 		m_bAllowHumans = FALSE;
 	}
@@ -178,7 +178,7 @@ public:
 		m_NetMessages.Push(pMessage);
 	}
 
-	void execute(int iMessage, void* p, int i);
+	void execute(int iMessage, void* p, int i) const;
 
 	//void *GetFunction ( int iMessage );
 
@@ -644,7 +644,7 @@ class CBotStatedNetMessage : public CBotNetMessage
 public:
 	CBotStatedNetMessage();
 
-	void init(int index) { iState = 0; m_pEdict = NULL; if (index) { m_pEdict = INDEXENT(index); } msg_init(); }
+	void init(int index) { iState = 0; m_pEdict = nullptr; if (index) { m_pEdict = INDEXENT(index); } msg_init(); }
 
 	virtual void writeChar(char c) { write_char(c); iState++; };
 	virtual void writeByte(int b) { write_byte(b); iState++; };

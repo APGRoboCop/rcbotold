@@ -84,7 +84,7 @@ extern CBotGlobals gBotGlobals;
 
 void CWeapon::SetWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int iSecAmmoMax, int iHudSlot, int iHudPosition, int iFlags, int iAmmoIndex1, int iAmmoIndex2)
 {
-	if (m_szClassname == NULL)
+	if (m_szClassname == nullptr)
 		m_szClassname = gBotGlobals.m_Strings.GetString(szClassname);
 
 	m_iId = iId;
@@ -99,7 +99,7 @@ void CWeapon::SetWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int 
 	m_bRegistered = TRUE;
 }
 
-BOOL CBotWeapon::CanReload(void)
+BOOL CBotWeapon::CanReload(void) const
 {
 	if (IsMelee())
 		return FALSE;
@@ -112,7 +112,7 @@ BOOL CBotWeapon::CanReload(void)
 	return FALSE;
 }
 
-BOOL CWeapon::IsPrimary(void)
+BOOL CWeapon::IsPrimary(void) const
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -124,7 +124,7 @@ BOOL CWeapon::IsPrimary(void)
 	}
 }
 
-BOOL CWeapon::IsSecondary(void)
+BOOL CWeapon::IsSecondary(void) const
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -143,15 +143,15 @@ void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
 	m_iId = iId;
 	m_pWeaponInfo = gBotGlobals.m_Weapons.GetWeapon(iId);
 
-	if (m_pWeaponInfo != NULL)
+	if (m_pWeaponInfo != nullptr)
 	{
 		// this really should not be NULL!!!
 		//assert(m_pWeaponInfo != NULL);
 
 		m_bHasWeapon = TRUE;
 
-		m_iAmmo1 = NULL;
-		m_iAmmo2 = NULL;
+		m_iAmmo1 = nullptr;
+		m_iAmmo2 = nullptr;
 
 		if (m_pWeaponInfo)
 		{
@@ -181,11 +181,11 @@ void CWeapons::AddWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int
 {
 	if (iId >= 0 && iId < MAX_WEAPONS)
 	{
-		if (m_Weapons[iId] == NULL)
+		if (m_Weapons[iId] == nullptr)
 		{
 			weapon_preset_t* pPreset = gBotGlobals.m_WeaponPresets.GetPreset(gBotGlobals.m_iCurrentMod, iId);
 
-			if (pPreset == NULL)
+			if (pPreset == nullptr)
 			{
 				m_Weapons[iId] = new CWeapon();
 			}
@@ -211,7 +211,7 @@ void CWeaponPresets::ReadPresets(void)
 
 	fp = fopen(filename, "r");
 
-	if (fp == NULL)
+	if (fp == nullptr)
 		return;
 
 	int iLength;
@@ -227,7 +227,7 @@ void CWeaponPresets::ReadPresets(void)
 
 	memset(&sWeaponPreset, 0, sizeof(weapon_preset_t));
 
-	while (fgets(buffer, 255, fp) != NULL)
+	while (fgets(buffer, 255, fp) != nullptr)
 	{
 		if (buffer[0] == '#')
 			continue;
@@ -342,7 +342,7 @@ void CWeaponPresets::ReadPresets(void)
 	fclose(fp);
 }
 
-BOOL CBotWeapon::HasWeapon(edict_t* pEdict)
+BOOL CBotWeapon::HasWeapon(edict_t* pEdict) const
 {
 	if (pEdict)
 	{
@@ -357,14 +357,14 @@ BOOL CBotWeapon::HasWeapon(edict_t* pEdict)
 			{
 				if (m_bHasWeapon)
 				{
-					edict_t* pWeapon = NULL;
+					edict_t* pWeapon = nullptr;
 
 					char* szClassname = this->GetClassname();
 
-					if (szClassname == NULL)
+					if (szClassname == nullptr)
 						return FALSE; // error
 
-					while ((pWeapon = UTIL_FindEntityByClassname(pWeapon, szClassname)) != NULL)
+					while ((pWeapon = UTIL_FindEntityByClassname(pWeapon, szClassname)) != nullptr)
 					{
 						if (!(pWeapon->v.effects & EF_NODRAW))
 							continue;
@@ -529,7 +529,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		}
 		break;*/
 	case MOD_BG:
-		if (pBot->m_pCurrentWeapon != NULL)
+		if (pBot->m_pCurrentWeapon != nullptr)
 		{
 			// want to melee true if needing to reload OR enemy within melee range
 			// AND random factor due to skill
@@ -540,7 +540,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 				m_Profile.m_iSkill || bMeleeRangeCheck) && bMaxRangeCheck;
 		}
 
-		if (pEnemy != NULL)
+		if (pEnemy != nullptr)
 		{
 			// melee breakables.
 			if (FStrEq(STRING(pEnemy->v.classname), "func_breakable"))
@@ -874,9 +874,9 @@ BOOL CBotWeapon::NeedToReload(void) const
 	return FALSE;
 }
 
-BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist)
+BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const
 {
-	if (m_pWeaponInfo == NULL)
+	if (m_pWeaponInfo == nullptr)
 		return TRUE;
 
 	if (gBotGlobals.m_iCurrentMod == MOD_DMC)
@@ -905,7 +905,7 @@ BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWall
 	return TRUE;
 }
 
-BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname)
+BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname) const
 {
 	int i;
 	const char* pClassname;
@@ -914,7 +914,7 @@ BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname)
 	{
 		if (HasWeapon(pEdict, i))
 		{
-			if ((pClassname = m_Weapons[i].GetClassname()) != NULL)
+			if ((pClassname = m_Weapons[i].GetClassname()) != nullptr)
 			{
 				if (FStrEq(pClassname, szClassname))
 					return TRUE;
