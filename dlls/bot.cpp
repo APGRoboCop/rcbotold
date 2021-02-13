@@ -1548,7 +1548,7 @@ void CBot::SpawnInit(const BOOL bInit)
 			delete m_pPersonalGAVals;
 
 			m_pPersonalGAVals = static_cast<CBotGAValues*>(ind);
-			m_pPersonalGAVals->setFitness(0);
+			m_pPersonalGAVals->set_fitness(0);
 		}
 		else
 		{
@@ -1596,7 +1596,7 @@ void CBot::SpawnInit(const BOOL bInit)
 			delete m_GASurvival;
 
 			m_GASurvival = static_cast<CBotGAValues*>(costs);
-			m_GASurvival->setFitness(0);
+			m_GASurvival->set_fitness(0);
 		}
 		else
 		{
@@ -1746,18 +1746,8 @@ void CBot::SpawnInit(const BOOL bInit)
 	else
 		m_ibBotConditions = 0;
 
-	m_iPrevWaypointIndex = -1;
-
 	//m_Tasks.FlushTasks();
 	m_fFindPathTime = 0;
-
-	m_pEnemyRep = nullptr;
-
-	m_pAvoidEntity = nullptr;
-	m_iWaypointGoalIndex = -1;
-	m_iCurrentWaypointIndex = -1;
-	m_iCurrentWaypointFlags = 0;
-	m_fPrevWaypointDist = 4096;
 
 	m_bNeedToInit = FALSE;
 
@@ -2350,7 +2340,7 @@ void CBot::StartGame(void)
 		{
 			if (m_fCombatFitness > 0.0f)
 			{
-				m_pCombatBits->setFitness(m_fCombatFitness);
+				m_pCombatBits->set_fitness(m_fCombatFitness);
 				gBotGlobals.m_pCombatGA[m_iCombatTeam].addToPopulation(m_pCombatBits->copy());
 				m_fCombatFitness = 0;
 
@@ -2693,11 +2683,11 @@ void CBot::Think(void)
 
 				const float fFitness = m_fSurvivalTime * 0.001 + (float)fragsSinceDeath * 0.2 + (float)teamScoreSinceDeath * 0.2;
 
-				m_GASurvival->setFitness(fFitness);
+				m_GASurvival->set_fitness(fFitness);
 
 				if (gBotGlobals.IsMod(MOD_TS))
 				{
-					m_pTSWeaponSelect->setFitness(fFitness);
+					m_pTSWeaponSelect->set_fitness(fFitness);
 
 					gBotGlobals.m_TSWeaponChoices.addToPopulation(m_pTSWeaponSelect->copy());
 				}
@@ -2712,7 +2702,7 @@ void CBot::Think(void)
 				{
 					ga = m_personalGA;
 
-					m_pPersonalGAVals->setFitness(fFitness);
+					m_pPersonalGAVals->set_fitness(fFitness);
 
 					newCopy = m_pPersonalGAVals->copy();
 
@@ -2824,7 +2814,7 @@ void CBot::Think(void)
 				delete m_pTSWeaponSelect;
 
 				m_pTSWeaponSelect = static_cast<CBotGAValues*>(costs);
-				m_pTSWeaponSelect->setFitness(0);
+				m_pTSWeaponSelect->set_fitness(0);
 
 				if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_DISABLE_WEAPON_LEARN))
 				{
@@ -4507,7 +4497,6 @@ void CBot::LookForNewTasks(void)
 				{
 					// Can I make a squad..?
 					BOOL bCanMakeSquad = !gBotGlobals.IsConfigSettingOn(BOT_CONFIG_DISABLE_BOT_SQUADS) && (m_fLookForSquadTime < gpGlobals->time&&
-						//gBotGlobals.m_iCurrentMod != MOD_SVENCOOP &&
 						gBotGlobals.m_iCurrentMod != MOD_RC &&
 						gBotGlobals.m_iCurrentMod != MOD_RC2 &&
 						gBotGlobals.m_iCurrentMod != MOD_BUMPERCARS &&
@@ -6529,7 +6518,7 @@ void CBot::touchedWpt()
 		{
 			//BotMessage(NULL,0,"%s touched ma wpt",m_szBotName);
 
-			m_pFlyGAVals->setFitness(1000.0f);
+			m_pFlyGAVals->set_fitness(1000.0f);
 
 			m_pFlyGA->addToPopulation(m_pFlyGAVals->copy());
 
@@ -6543,7 +6532,7 @@ void CBot::touchedWpt()
 				delete m_pFlyGAVals;
 
 				m_pFlyGAVals = static_cast<CBotGAValues*>(ind);
-				m_pFlyGAVals->setFitness(0);
+				m_pFlyGAVals->set_fitness(0);
 
 				float x1 = m_pFlyGAVals->get(0);
 				float x2 = m_pFlyGAVals->get(1);
@@ -6650,7 +6639,7 @@ void CBot::WorkMoveDirection(void)
 
 						if (m_bFlappedWings)
 						{
-							m_pFlyGAVals->setFitness(m_fPrevFlyHeight);
+							m_pFlyGAVals->set_fitness(m_fPrevFlyHeight);
 
 							IIndividual* newCopy = m_pFlyGAVals->copy();
 
@@ -6666,7 +6655,7 @@ void CBot::WorkMoveDirection(void)
 								delete m_pFlyGAVals;
 
 								m_pFlyGAVals = static_cast<CBotGAValues*>(ind);
-								m_pFlyGAVals->setFitness(0);
+								m_pFlyGAVals->set_fitness(0);
 
 								float x1 = m_pFlyGAVals->get(0);
 								float x2 = m_pFlyGAVals->get(1);

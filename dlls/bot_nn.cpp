@@ -321,7 +321,7 @@ void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
 	{
 		m_pInd = m_pGA->pick();
 
-		m_pInd->setFitness(0);
+		m_pInd->set_fitness(0);
 		setWeights(static_cast<CBotGAValues*>(m_pInd)->returnVector());
 	}
 	else
@@ -329,7 +329,7 @@ void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
 		std::vector<ga_value> weights;
 
 		m_pInd->clear();
-		m_pInd->setFitness(0);
+		m_pInd->set_fitness(0);
 
 		randomize();
 
@@ -358,7 +358,7 @@ void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
 
 	fTotalError = fTotalError / iNum;
 
-	m_pInd->setFitness(1 / fTotalError);
+	m_pInd->set_fitness(1 / fTotalError);
 
 	m_pGA->addToPopulation(m_pInd->copy());
 }

@@ -67,7 +67,7 @@ public:
 
 	float get(int iIndex);
 
-	void set(int iIndex, ga_value fVal);
+	void set(int iIndex, ga_value f_val);
 
 	void clear();
 
@@ -158,7 +158,7 @@ public:
 	IIndividual* copy()
 	{
 		IIndividual* p = new CIntGAValues(m_Value);
-		p->setFitness(getFitness());
+		p->set_fitness(getFitness());
 		return p;
 	}
 

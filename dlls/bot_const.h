@@ -1096,7 +1096,7 @@ typedef enum
 #ifdef _DEBUG
 #define BOT_VER "1.5_mm_debug"
 #else
-#define BOT_VER "1.5_mm_beta"
+#define BOT_VER "1.5_mm"
 #endif
 
 #else
@@ -1104,7 +1104,7 @@ typedef enum
 #ifdef _DEBUG
 #define BOT_VER "1.5_debug"
 #else
-#define BOT_VER "1.5_beta"
+#define BOT_VER "1.5"
 #endif
 
 #endif

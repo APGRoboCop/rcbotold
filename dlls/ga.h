@@ -44,9 +44,10 @@ typedef enum
 class IIndividual
 {
 public:
+	virtual ~IIndividual() = default;
 	// get fitness for this individual
 	ga_value getFitness() const { return m_fFitness; }
-	void setFitness(float fVal) { m_fFitness = fVal; }
+	void set_fitness(const float f_val) { m_fFitness = f_val; }
 
 	virtual void load(FILE* bfp, int req_size) = 0;
 	virtual void save(FILE* bfp) = 0;
@@ -56,14 +57,13 @@ public:
 
 	// mutate some values
 	virtual void mutate() = 0;
-
 	virtual void clear() = 0;
 
 	// get new copy of this
 	// sub classes return their class with own values
 	virtual IIndividual* copy() = 0;
 protected:
-	ga_value m_fFitness;
+	ga_value m_fFitness = 0;
 };
 
 class CGA;
@@ -103,7 +103,7 @@ public:
 
 private:
 	std::vector<IIndividual*> m_theIndividuals;
-	CGA* m_ga;
+	CGA* m_ga = nullptr;
 };
 
 // selection function interface
