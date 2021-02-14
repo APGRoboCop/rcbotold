@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*
  *    This file is part of RCBot.
  *
@@ -2272,7 +2270,7 @@ BOOL CBot::NotStartedGame(void)
 	return FBitSet(pev->flags, FL_SPECTATOR);
 }
 
-void CBot::StartGame(void)
+void CBot::StartGame()
 // do the neccesary stuff to start the game or join a team
 // e.g, select vgui menus etc
 {
@@ -2379,6 +2377,7 @@ void CBot::StartGame(void)
 					m_Profile.m_iFavTeam = TEAM_ALIEN;
 
 				break;
+			default: ;
 			}
 		}
 
@@ -2395,7 +2394,6 @@ void CBot::StartGame(void)
 				delete m_pCombatBits;
 
 				m_pCombatBits = static_cast<CIntGAValues*>(gBotGlobals.m_pCombatGA[m_iCombatTeam].pick());
-
 				m_iCombatInfo = m_pCombatBits->get();
 			}
 			else
@@ -2664,7 +2662,7 @@ void CBot::Think(void)
 	// Not alive anymore
 	if (!IsAlive())
 	{
-		BOOL feigned = FALSE;
+		const BOOL feigned = FALSE;
 
 		if (!feigned)
 		{
