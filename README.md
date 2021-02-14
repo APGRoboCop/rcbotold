@@ -16,6 +16,7 @@ V 1.5-beta
 * fixed: Some potential errors and bugs have been wiped
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
 * TODO: Enhance their combat tactics by having better enemy detection
+* TODO: To fix that NS Squad Joining Bug or enhance it
 
 V 1.443
 =---------=
