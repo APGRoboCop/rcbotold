@@ -1266,7 +1266,7 @@ void BotClient_NS_HudText::execute(void* p, int iIndex)
 
 		if (msg)
 		{
-			int length = strlen(msg);
+			const int length = strlen(msg);
 
 			// If a team has won (used to say "one" duhhh), round is over
 			if (!strcmpi(&msg[length - 3], "Won"))
@@ -1314,7 +1314,7 @@ void BotClient_NS_Commndr::execute(void* p, int iIndex)
 	if (!p)
 		return;
 
-	int index = *static_cast<int*>(p);
+	const int index = *static_cast<int*>(p);
 
 	if (index > 0 && index <= gpGlobals->maxClients)
 	{
@@ -1475,7 +1475,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 
 		while (!tempStack.IsEmpty())
 		{
-			int iReceiverIndex = tempStack.ChooseFromStack();
+			const int iReceiverIndex = tempStack.ChooseFromStack();
 
 			CBot* pBot = UTIL_GetBotPointer(INDEXENT(iReceiverIndex));
 
@@ -1992,7 +1992,7 @@ void BotClient_Generic_WeaponPickup::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	int iWeaponIndex = POINTER_TO_INT(p);
+	const int iWeaponIndex = POINTER_TO_INT(p);
 
 	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 
@@ -2071,7 +2071,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 					if (pPlayer == pBot->m_pEdict)
 						continue;
 
-					float dist = pBot->DistanceFromEdict(pPlayer);
+					const float dist = pBot->DistanceFromEdict(pPlayer);
 
 					if (dist < nearest)
 					{

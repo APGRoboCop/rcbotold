@@ -1135,7 +1135,7 @@ public:
 		if (pCurrentTask == nullptr)
 			return;
 
-		int iSchedIgnore = pCurrentTask->GetScheduleId();
+		const int iSchedIgnore = pCurrentTask->GetScheduleId();
 
 		dataQueue<CBotTask> tempStack = m_Tasks;
 
@@ -1143,7 +1143,7 @@ public:
 		{
 			CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
-			int iFailSchedule = tempTask->GetScheduleId();
+			const int iFailSchedule = tempTask->GetScheduleId();
 
 			if (tempTask->TimedOut())
 			{
@@ -1244,7 +1244,7 @@ public:
 				{
 					tempStack.Init();
 
-					int iScheduleId = pTask->GetScheduleId();
+					const int iScheduleId = pTask->GetScheduleId();
 
 					m_Tasks.RemoveByPointer(pTask);
 
@@ -1276,7 +1276,7 @@ public:
 			{
 				tempStack.Init();
 
-				int iScheduleId = pTask->GetScheduleId();
+				const int iScheduleId = pTask->GetScheduleId();
 
 				m_Tasks.RemoveByPointer(pTask);
 
@@ -2064,7 +2064,7 @@ public:
 
 		for (int i = 0; i < m_Positions.Size(); i++)
 		{
-			float fDistance = (m_Positions[i].getVector() - vOrigin).Length() + (m_Positions[i].getVector() - vFrom).Length();
+			const float fDistance = (m_Positions[i].getVector() - vOrigin).Length() + (m_Positions[i].getVector() - vFrom).Length();
 
 			if (!nearest || fDistance < fNearest)
 			{
@@ -4425,7 +4425,7 @@ public:
 	void SetTeleportVector(Vector const vOrigin)
 	{
 		RemoveTeleportVector();
-		m_vTeleportVector = new Vector(vOrigin);
+		m_vTeleportVector = new Vector(vOrigin); //Possible Memory Leak? [APG]RoboCop[CL]
 	}
 
 	const Vector* GetTeleportVector(void) const
@@ -5343,7 +5343,7 @@ public:
 
 					if (pStructure->IsUnderAttack())
 					{
-						int iStructure = pStructure->GetStructureType();
+						const int iStructure = pStructure->GetStructureType();
 
 						switch (iStructure)
 						{

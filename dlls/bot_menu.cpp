@@ -998,7 +998,7 @@ void BotMenu_Func_KickBotFromTeam(CClient* pClient)
 
 		if (pBot && pBot->IsUsed())
 		{
-			int iBotTeam = UTIL_GetTeam(pBot->m_pEdict);
+			const int iBotTeam = UTIL_GetTeam(pBot->m_pEdict);
 
 			switch (gBotGlobals.m_iCurrentMod)
 			{

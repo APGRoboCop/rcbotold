@@ -118,7 +118,7 @@ BOOL CAllowedPlayer::IsForClient(CClient* pClient)
 	if (pEdict == nullptr)
 		return FALSE;
 
-	BOOL bSamePass = IsForPass(pClient->GetPass());
+	const BOOL bSamePass = IsForPass(pClient->GetPass());
 
 	return bSameName && bSamePass;
 }
@@ -823,7 +823,7 @@ void ClientCommand(edict_t* pEntity)
 				// team only message?
 				const int iTeamOnly = (int)bSayTeamMsg;
 
-				char* szMessage = nullptr;
+				char* szMessage = nullptr; //Possible Memory Leak? [APG]RoboCop[CL]
 				//				char *szTempArgument;
 
 				if (arg2 && *arg2)
@@ -1571,12 +1571,12 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	}
 
 	gBotGlobals.m_bIsFakeClientCommand = TRUE; // set the "fakeclient command" flag
-	int length = strlen(command); // get the total length of the command string
+	const int length = strlen(command); // get the total length of the command string
 
 	// process all individual commands (separated by a semicolon) one each a time
 	while (stringindex < length)
 	{
-		int fieldstart = stringindex; // save field start position (first character)
+		const int fieldstart = stringindex; // save field start position (first character)
 		while (stringindex < length && command[stringindex] != ';')
 			stringindex++; // reach end of field
 		if (command[stringindex - 1] == '\n')
@@ -1936,7 +1936,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 		}
 	}
 
-	BOOL bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
+	const BOOL bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
 	LoadHALBrainForPersonality(bpBotProfile, bPreTrain); // wake the bot's HAL brain up
 
 	// Also read bots rep with other players on the server
@@ -2279,7 +2279,7 @@ void CBotCam::Think()
 				//if ( pOldBot )
 				//	fDistance = pBot->DistanceFrom(pOldBot->GetGunPosition());
 				//else
-				float fDistance = pBot->DistanceFrom(m_pCameraEdict->v.origin);
+				const float fDistance = pBot->DistanceFrom(m_pCameraEdict->v.origin);
 
 				if (m_pCurrentBot == nullptr || fDistance < fNearest)
 				{
@@ -2356,7 +2356,7 @@ void CBotCam::Think()
 
 	vBotOrigin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 
-	Vector oldOrigin = m_pCameraEdict->v.origin;//
+	const Vector oldOrigin = m_pCameraEdict->v.origin;//
 
 	//Vector vLookAt = vBotOrigin;
 

@@ -163,7 +163,7 @@ ga_value CPopulation::bestFitness()
 
 	for (unsigned int i = 0; i < size(); i++)
 	{
-		float fFitness = m_theIndividuals[i]->getFitness();
+		const float fFitness = m_theIndividuals[i]->getFitness();
 
 		if (!gotBestFitness || fFitness > fBestFitness)
 		{

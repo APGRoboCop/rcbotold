@@ -525,7 +525,7 @@ void ClientPrint(edict_t* pEntity, int msg_dest, const char* msg_name)
 		return;
 	}
 
-	int msg_id = GetMessageID(szMsg);
+	const int msg_id = GetMessageID(szMsg);
 
 	if (msg_id > 0)
 	{
@@ -655,7 +655,7 @@ BOOL UTIL_IsFacingEntity(entvars_t* pev, entvars_t* pevEntity)
 
 	const Vector vSrc = GetGunPosition(ENT(pev));
 
-	float fDistance = (EntityOrigin(ENT(pevEntity)) - vSrc).Length();
+	const float fDistance = (EntityOrigin(ENT(pevEntity)) - vSrc).Length();
 
 	const Vector vDst = vSrc + gpGlobals->v_forward * fDistance;
 
@@ -759,7 +759,7 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 	else
 		sprintf(text, "%c%s: ", 2, STRING(pEntity->v.netname));
 
-	int j = sizeof text - 2 - strlen(text);  // -2 for /n and null terminator
+	const int j = sizeof text - 2 - strlen(text);  // -2 for /n and null terminator
 	if ((int)strlen(message) > j)
 		message[j] = 0;
 
@@ -778,7 +778,7 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 	if (msg_id == -1)
 		return;
 
-	int sender_team = UTIL_GetTeam(pEntity);
+	const int sender_team = UTIL_GetTeam(pEntity);
 
 	edict_t* client = nullptr;
 	while ((client = UTIL_FindEntityByClassname(client, "player")) != nullptr &&
@@ -787,7 +787,7 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 		if (client == pEntity)  // skip sender of message
 			continue;
 
-		int player_team = UTIL_GetTeam(client);
+		const int player_team = UTIL_GetTeam(client);
 
 		if (teamonly && sender_team != player_team)
 			continue;
@@ -1039,7 +1039,7 @@ float UTIL_EntityAnglesToVector2D(entvars_t* pev, const Vector* pOrigin) // For 
 	Vector2D vec2LOS = (*pOrigin - pev->origin).Make2D();
 	vec2LOS = vec2LOS.Normalize();
 
-	float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
+	const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
 	return (float)(acos(flDot) / 3.141592654 * 180);
 }
@@ -1051,7 +1051,7 @@ float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin) // For 
 	Vector vecLOS = *pOrigin - pev->origin;
 	vecLOS = vecLOS.Normalize();
 
-	float flDot = DotProduct(vecLOS, gpGlobals->v_forward);
+	const float flDot = DotProduct(vecLOS, gpGlobals->v_forward);
 
 	return (float)(acos(flDot) / M_PI) * 180.0f;
 }
@@ -1455,7 +1455,7 @@ BOOL BotFunc_FInViewCone(Vector* pOrigin, edict_t* pEdict)
 	Vector2D vec2LOS = (*pOrigin - pEdict->v.origin).Make2D();
 	vec2LOS = vec2LOS.Normalize();
 
-	float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
+	const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
 	return flDot > 0.50;  // 60 degree field of view
 }
@@ -1465,7 +1465,7 @@ BOOL BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict)
 	TraceResult tr;
 
 	// look through caller's eyes
-	Vector vecLookerOrigin = pEdict->v.origin + pEdict->v.view_ofs;
+	const Vector vecLookerOrigin = pEdict->v.origin + pEdict->v.view_ofs;
 
 	const int bInWater = UTIL_PointContents(vecOrigin) == CONTENTS_WATER;
 	const int bLookerInWater = UTIL_PointContents(vecLookerOrigin) == CONTENTS_WATER;
@@ -1849,8 +1849,8 @@ edict_t* UTIL_FacingEnt(edict_t* pPlayer, BOOL any)
 
 	UTIL_MakeVectors(pev->v_angle);
 
-	Vector vSrc = pev->origin + pev->view_ofs;
-	Vector vEnd = vSrc + gpGlobals->v_forward * 4096.0;
+	const Vector vSrc = pev->origin + pev->view_ofs;
+	const Vector vEnd = vSrc + gpGlobals->v_forward * 4096.0;
 
 	UTIL_TraceLine(vSrc, vEnd, dont_ignore_monsters, dont_ignore_glass, pPlayer, &tr);
 
@@ -1990,7 +1990,7 @@ void HudText::InitMessage(const char* message)
 
 	m_sMessage[HUD_TEXT_LENGTH - 1] = 0;
 
-	short int length = strlen(m_sMessage);
+	const int length = strlen(m_sMessage);
 
 	short int i = 0;
 
@@ -2221,7 +2221,7 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 		if (!*STRING(pPlayerpev->netname))
 			continue;
 
-		BOOL bSameTeam = UTIL_GetTeam(pPlayer) == iMyTeam;
+		const BOOL bSameTeam = UTIL_GetTeam(pPlayer) == iMyTeam;
 
 		BOOL bAdd = FALSE;
 
@@ -2244,7 +2244,7 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 
 		if (bAdd)
 		{
-			float fDistance = (pev->origin - pPlayerpev->origin).Length();
+			const float fDistance = (pev->origin - pPlayerpev->origin).Length();
 
 			bAdd = FALSE;
 
@@ -2295,7 +2295,7 @@ edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, Vector vOrigin,
 				continue;
 
 			Vector vEntOrigin = EntityOrigin(pEntity);
-			float fDistance = (vEntOrigin - vOrigin).Length();
+			const float fDistance = (vEntOrigin - vOrigin).Length();
 
 			if (fDistance < fRange)
 			{
@@ -2363,7 +2363,7 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot)
 
 	for (int iStep = iMinStep; iStep <= iMaxStep; iStep += 20)
 	{
-		float fAngle = (float)iStep;
+		const float fAngle = (float)iStep;
 
 		Vector vAngles = pBot->m_pEdict->v.v_angle;
 
@@ -2380,7 +2380,7 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot)
 
 		vEnd = tr.vecEndPos;
 
-		float fDistance = pBot->DistanceFrom(vEnd);
+		const float fDistance = pBot->DistanceFrom(vEnd);
 
 		if (fDistance > fMaxDistance)
 		{

@@ -898,7 +898,7 @@ void CBot::loadLearnedData() const
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmp_filename);
 
-	FILE* bfp = fopen(filename, "rb");
+	FILE* bfp = fopen(filename, "rb"); //Possible Memory Leak? [APG]RoboCop[CL]
 
 	if (bfp == nullptr)
 		return;
@@ -2298,7 +2298,7 @@ void CBot::StartGame()
 			m_bStartedGame = TRUE;
 			break;
 			*/
-			// team fortress
+			
 	case MOD_BUMPERCARS:
 	{
 		FakeClientCommand(m_pEdict, "changeclass %d", RANDOM_LONG(1, 20));
@@ -2340,7 +2340,7 @@ void CBot::StartGame()
 			{
 				m_pCombatBits->set_fitness(m_fCombatFitness);
 				gBotGlobals.m_pCombatGA[m_iCombatTeam].addToPopulation(m_pCombatBits->copy());
-				m_fCombatFitness = 0;
+				//m_fCombatFitness = 0; //That line triggers crash [APG]RoboCop[CL]
 
 				if (m_pCombatBits)
 				{
@@ -2755,8 +2755,7 @@ void CBot::Think(void)
 	//	{
 	//		BugMessage(NULL,"GOTCHA!!!! (respawn)");
 	//	}
-
-		//m_iLastCurrentWaypoint = m_iCurrentWaypointIndex;
+	//	m_iLastCurrentWaypoint = m_iCurrentWaypointIndex;
 
 	m_bNeedToInit = TRUE;
 
@@ -3083,7 +3082,6 @@ void CBot::Think(void)
 	m_CurrentTask = m_Tasks.CurrentTask();
 
 	BOOL bFollowLeader = TRUE;
-
 	BOOL bCanUpgrade = TRUE;
 
 	if (m_CurrentTask)
@@ -3112,7 +3110,6 @@ void CBot::Think(void)
 		}
 	}
 
-	//
 	///////////////////////////////////////////////////
 
 	// keep checking upgrades

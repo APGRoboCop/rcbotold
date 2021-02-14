@@ -152,7 +152,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 
 		if (ed)
 		{
-			int index = UTIL_GetBotIndex(ed);
+			const int index = UTIL_GetBotIndex(ed);
 
 			// get the message to see if we can do anything right now
 			m_CurrentMessage = m_NetEntityMessages.GetMessage(msg_type, nullptr);
@@ -676,7 +676,7 @@ void CBotGlobals::StartFrame(void)
 
 									for (j = 1; j < MAX_WEAPONS; j++)
 									{
-										BOOL bHasWeapon = pBot->HasWeapon(j);
+										const BOOL bHasWeapon = pBot->HasWeapon(j);
 
 										if (pBot->pev->weapons & 1 << j && !bHasWeapon)
 										{

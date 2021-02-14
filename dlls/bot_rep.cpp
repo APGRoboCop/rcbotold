@@ -105,7 +105,7 @@ CClient* CBotReputations::GetRandomClient(const int iRep) const
 	{
 		pRep = tempStack.ChoosePointerFromStack();
 
-		int iGotRep = pRep->CurrentRep();
+		const int iGotRep = pRep->CurrentRep();
 
 		switch (iRep)
 		{

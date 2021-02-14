@@ -135,7 +135,7 @@ void CBits::randomize() const
 void CBits::setup(const int iNumBits)
 {
 	m_iNumBits = iNumBits;
-	int iSize = size();
+	const int iSize = size();
 
 	m_cBits = new unsigned char[iSize];
 	memset(m_cBits, 0, iSize);

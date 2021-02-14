@@ -254,13 +254,13 @@ public:
 
 	void FreeMemory()
 	{
-		if (getName())
+//		if (getName())
 			free(getName());
-		if (getFolder())
+//		if (getFolder())
 			free(getFolder());
-		if (getExtension())
+//		if (getExtension())
 			free(getExtension());
-		if (getHeader())
+//		if (getHeader())
 			free(getHeader());
 
 		init();

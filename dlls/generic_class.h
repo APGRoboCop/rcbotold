@@ -770,7 +770,7 @@ public:
 
 		//iArrayMax ++;
 
-		int iSize = sizeof(T) * iArrayMax;
+		const int iSize = sizeof(T) * iArrayMax;
 
 		m_pArray = (T*)malloc(iSize);
 
@@ -987,7 +987,7 @@ public:
 
 	void Destroy(void)
 	{
-		if (buffer != nullptr)
+//		if (buffer != nullptr)
 			delete[] buffer;
 
 		Init();
@@ -1034,7 +1034,7 @@ public:
 				new_buffer[i] = buffer[i];
 			}
 
-			if ( buffer != nullptr )
+//			if ( buffer != nullptr )
 				delete[] buffer;
 
 			buffer = new_buffer;

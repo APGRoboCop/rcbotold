@@ -106,7 +106,7 @@ eBotCvarState CMenuSelectCommand::action(CClient* pClient, const char* arg1, con
 	if (!*arg1)
 		return BOT_CVAR_ERROR;
 
-	int iMenu = atoi(arg1);
+	const int iMenu = atoi(arg1);
 
 	if (iMenu < 10)
 	{

@@ -976,8 +976,8 @@ BOOL BotCheckWallOnLeft(CBot* pBot)
 
 	// do a trace to the left...
 
-	Vector v_src = pEdict->v.origin;
-	Vector v_left = v_src + gpGlobals->v_right * -40;  // 40 units to the left
+	const Vector v_src = pEdict->v.origin;
+	const Vector v_left = v_src + gpGlobals->v_right * -40;  // 40 units to the left
 
 	UTIL_TraceLine(v_src, v_left, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
@@ -1003,8 +1003,8 @@ BOOL BotCheckWallOnRight(CBot* pBot)
 
 	// do a trace to the right...
 
-	Vector v_src = pEdict->v.origin;
-	Vector v_right = v_src + gpGlobals->v_right * 40;  // 40 units to the right
+	const Vector v_src = pEdict->v.origin;
+	const Vector v_right = v_src + gpGlobals->v_right * 40;  // 40 units to the right
 
 	UTIL_TraceLine(v_src, v_right, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
@@ -1915,7 +1915,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 	vEnd = tr.vecEndPos;
 
-	float fLowDistance = pBot->DistanceFrom(vEnd);
+	const float fLowDistance = pBot->DistanceFrom(vEnd);
 
 	if (fLowDistance < 64 && fLowDistance < fHighDistance)
 		pBot->Jump();

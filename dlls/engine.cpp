@@ -388,7 +388,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 {
 	if (entity != nullptr)
 	{
-		Vector vOrigin = EntityOrigin(entity);
+		const Vector vOrigin = EntityOrigin(entity);
 
 		eSoundType iSound = SOUND_UNKNOWN;
 
@@ -1880,7 +1880,7 @@ const char* GetArg(const char* command, int arg_number)
 	if (!command || !*command)
 		return nullptr;
 
-	int length = strlen(command); // get length of command
+	const int length = strlen(command); // get length of command
 
 	// while we have not reached end of line
 	while (index < length && arg_count <= arg_number)
