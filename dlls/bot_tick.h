@@ -21,10 +21,10 @@ public:
 	virtual void _reset();
 
 	virtual void tick();
-	bool isDone() const { return m_bDone; }
+	bool isDone() { return m_bDone; }
 	// more priorty with those with more ticks required to complete
-	bool operator < (CTickable* other) const { return m_iTicksLeft > other->ticksLeft(); }
-	unsigned int ticksLeft() const { return m_iTicksLeft; }
+	bool operator < (CTickable* other) { return m_iTicksLeft > other->ticksLeft(); }
+	unsigned int ticksLeft() { return m_iTicksLeft; }
 
 private:
 	bool m_bDone;
@@ -43,9 +43,12 @@ public:
 	{
 		unsigned int iTicks = 300;
 
+		// round robin
+		list<CTickable*>::const_iterator it;
+
 		m_Tickables.sort();
 
-		for (std::list<CTickable*>::const_iterator it = m_Tickables.begin(); it != m_Tickables.end(); ++it)
+		for (it = m_Tickables.begin(); it != m_Tickables.end(); ++it)
 		{
 			CTickable* pCurrent = *it;
 
@@ -59,7 +62,7 @@ public:
 		}
 	}
 private:
-	std::list<CTickable*> m_Tickables;
+	list<CTickable*> m_Tickables;
 };
 
 #endif

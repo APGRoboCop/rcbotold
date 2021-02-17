@@ -70,14 +70,14 @@ CBits::CBits(CBits* copyBits)
 void CBits::freeMemory()
 {
 	delete m_cBits;
-	m_cBits = nullptr;
+	m_cBits = NULL;
 	m_iNumBits = 0;
 }
 
-void CBits::setBit(const int iBit, const BOOL bSet) const
+void CBits::setBit(const int iBit, const BOOL bSet)
 {
-	const int iBitStart = iBit / 8;
-	const int iBitOffset = iBit % 8;
+	int iBitStart = iBit / 8;
+	int iBitOffset = iBit % 8;
 
 	unsigned char* c = &m_cBits[iBitStart];
 
@@ -87,10 +87,10 @@ void CBits::setBit(const int iBit, const BOOL bSet) const
 		*c &= ~(1 << iBitOffset);
 }
 
-BOOL CBits::getBit(const int iBit) const
+BOOL CBits::getBit(const int iBit)
 {
-	const int iBitStart = iBit / 8;
-	const int iBitOffset = iBit % 8;
+	int iBitStart = iBit / 8;
+	int iBitOffset = iBit % 8;
 
 	unsigned char* c = &m_cBits[iBitStart];
 
@@ -103,7 +103,7 @@ void CBits::load(FILE* bfp)
 
 	if (!header.read(bfp, header))
 	{
-		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
+		BotMessage(NULL, 0, "Learn data version mismatch - wiping");
 		return;
 	}
 
@@ -113,10 +113,10 @@ void CBits::load(FILE* bfp)
 
 	m_iNumBits = iNumBits;
 
-	if (m_cBits != nullptr)
+	if (m_cBits != NULL)
 	{
 		delete m_cBits;
-		m_cBits = nullptr;
+		m_cBits = NULL;
 	}
 
 	setup(m_iNumBits);
@@ -124,7 +124,7 @@ void CBits::load(FILE* bfp)
 	fread(&m_cBits, size(), 1, bfp);
 }
 
-void CBits::randomize() const
+void CBits::randomize()
 {
 	for (int i = 0; i < m_iNumBits; i++)
 	{
@@ -134,26 +134,31 @@ void CBits::randomize() const
 
 void CBits::setup(const int iNumBits)
 {
+	int iSize;
+
 	m_iNumBits = iNumBits;
-	const int iSize = size();
+
+	iSize = size();
 
 	m_cBits = new unsigned char[iSize];
+
 	memset(m_cBits, 0, iSize);
 }
 
 // memory size
-int CBits::size() const
+int CBits::size()
 {
 	return Ceiling((float)m_iNumBits / 8);
 }
 
-void CBits::save(FILE* bfp) const
+void CBits::save(FILE* bfp)
 {
-	const CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS, (int)m_iNumBits);
+	CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS, (int)m_iNumBits);
 
 	checkHeader.write(bfp);
 
 	fwrite(&m_iNumBits, sizeof(unsigned int), 1, bfp);
+
 	fwrite(&m_cBits, size(), 1, bfp);
 }
 
@@ -163,7 +168,7 @@ void CBits::copy(CBits* otherBits)
 	memcpy(m_cBits, otherBits->getBits(), size());
 }
 
-void CBits::clear() const
+void CBits::clear()
 {
 	memset(m_cBits, 0, size());
 }

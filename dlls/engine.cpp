@@ -106,7 +106,7 @@ int pfnPrecacheSound(char* s)
 void pfnSetModel(edict_t* e, const char* m)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetModel: edict=%x %s\n", reinterpret_cast<unsigned>(e), m);
+		fprintf(fp, "pfnSetModel: edict=%x %s\n", unsigned(e), m);
 		fclose(fp); }
 
 #ifdef RCBOT_META_BUILD
@@ -137,7 +137,7 @@ int pfnModelFrames(int modelIndex)
 void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetSize: %x\n", reinterpret_cast<unsigned>(e));
+		fprintf(fp, "pfnSetSize: %x\n", unsigned(e));
 		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -149,10 +149,12 @@ void pfnChangeLevel(char* s1, char* s2)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnChangeLevel:\n"); fclose(fp); }
 
+	CBot* pBot;
+
 	// kick any bot off of the server after time/frag limit...
 	for (int index = 0; index < MAX_PLAYERS; index++)
 	{
-		CBot* pBot = &gBotGlobals.m_Bots[index];
+		pBot = &gBotGlobals.m_Bots[index];
 
 		if (pBot->m_bIsUsed)  // is this slot used?
 		{
@@ -314,7 +316,7 @@ void pfnRemoveEntity(edict_t* e)
 	if (debug_engine)
 	{
 		fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnRemoveEntity: %x\n", reinterpret_cast<unsigned>(e));
+		fprintf(fp, "pfnRemoveEntity: %x\n", unsigned(e));
 		if (e->v.model != 0)
 			fprintf(fp, " model=%s\n", STRING(e->v.model));
 		fclose(fp);
@@ -386,9 +388,14 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin)
 }
 void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float volume, float attenuation, int fFlags, int pitch)
 {
-	if (entity != nullptr)
+	if (entity != NULL)
 	{
-		const Vector vOrigin = EntityOrigin(entity);
+		int i;
+		CBot* pBot;
+
+		Vector vOrigin;
+
+		vOrigin = EntityOrigin(entity);
 
 		eSoundType iSound = SOUND_UNKNOWN;
 
@@ -495,13 +502,13 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 
 		edict_t* pEntityOwner = entity->v.owner;
 
-		for (int i = 0; i < 32; i++)
+		for (i = 0; i < 32; i++)
 		{
-			CBot* pBot = &gBotGlobals.m_Bots[i];
+			pBot = &gBotGlobals.m_Bots[i];
 
-			if (pBot == nullptr)
+			if (pBot == NULL)
 				continue;
-			if (pBot->m_pEdict == nullptr)
+			if (pBot->m_pEdict == NULL)
 				continue;
 			if (pBot->m_pEdict == pEntityOwner)
 				continue;
@@ -509,7 +516,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 				continue;
 			if (pBot->m_pEdict == entity)
 				continue;
-			if (pBot->m_pEnemy != nullptr)
+			if (pBot->m_pEnemy != NULL)
 				continue;
 
 			if (pBot->DistanceFrom(vOrigin) < BOT_HEAR_DISTANCE)
@@ -697,13 +704,13 @@ void pfnMessageEnd(void)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->messageEnd();
 			else
-				gBotGlobals.m_CurrentMessage->execute(nullptr, gBotGlobals.m_iBotMsgIndex);  // NULL indicated msg end
+				gBotGlobals.m_CurrentMessage->execute(NULL, gBotGlobals.m_iBotMsgIndex);  // NULL indicated msg end
 		}
 	}
 
 	// clear out the bot message function pointers...
 
-	gBotGlobals.m_CurrentMessage = nullptr;
+	gBotGlobals.m_CurrentMessage = NULL;
 	gBotGlobals.m_iCurrentMessageState = 0;
 	gBotGlobals.m_iCurrentMessageState2 = 0;
 
@@ -978,7 +985,7 @@ void* pfnPvEntPrivateData(edict_t* pEdict)
 }
 void pfnFreeEntPrivateData(edict_t* pEdict)
 {
-	BotMessage(nullptr, 0, "Free ent provate data:");
+	BotMessage(NULL, 0, "Free ent provate data:");
 
 	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnFreeEntPrivateData:\n"); fclose(fp); }
 #ifdef RCBOT_META_BUILD
@@ -1071,7 +1078,7 @@ void* pfnGetModelPtr(edict_t* pEdict)
 
 int pfnRegUserMsg(const char* pszName, int iSize)
 {
-	const int msg = 0;
+	int msg = 0;
 
 #ifdef RCBOT_META_BUILD
 
@@ -1254,7 +1261,7 @@ byte* pfnLoadFileForMe(char* filename, int* pLength)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnLoadFileForMe: filename=%s\n", filename); fclose(fp); }
 #ifdef RCBOT_META_BUILD
-	RETURN_META_VALUE(MRES_IGNORED, nullptr);
+	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
 	return (*g_engfuncs.pfnLoadFileForMe)(filename, pLength);
 #endif
@@ -1324,7 +1331,7 @@ void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 	}
 
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", reinterpret_cast<unsigned>(pEdict), fNewMaxspeed);
+		fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", unsigned(pEdict), fNewMaxspeed);
 		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1395,15 +1402,18 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 	{
 		if (pEdict)
 		{
+			CBot* pBot;
 			CBotReputation* pRep;
+			CBotReputations* pRepList;
+			int i;
 
-			const int iOldPlayerRepId = GetPlayerEdictRepId(pEdict);
+			int iOldPlayerRepId = GetPlayerEdictRepId(pEdict);
 
 			if (iOldPlayerRepId != -1) // otherwise : error...
 			{
-				for (int i = 0; i < MAX_PLAYERS; i++)
+				for (i = 0; i < MAX_PLAYERS; i++)
 				{
-					CBot* pBot = &gBotGlobals.m_Bots[i];
+					pBot = &gBotGlobals.m_Bots[i];
 
 					if (pBot && pBot->m_iRespawnState == RESPAWN_IDLE)
 					{
@@ -1412,15 +1422,15 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 							if (pBot->m_pEdict == pEdict)
 								continue;
 
-							CBotReputations* pRepList = &pBot->m_Profile.m_Rep;
+							pRepList = &pBot->m_Profile.m_Rep;
 
-							if ((pRep = pBot->m_Profile.m_Rep.GetRep(iOldPlayerRepId)) != nullptr)
+							if ((pRep = pBot->m_Profile.m_Rep.GetRep(iOldPlayerRepId)) != NULL)
 							{
 								// New name = value
 
-								const int iNewPlayerRepId = GetPlayerRepId(value);
+								int iNewPlayerRepId = GetPlayerRepId(value);
 
-								if (pBot->m_Profile.m_Rep.GetRep(iNewPlayerRepId) == nullptr)
+								if (pBot->m_Profile.m_Rep.GetRep(iNewPlayerRepId) == NULL)
 									pRepList->AddRep(iNewPlayerRepId, pRep->CurrentRep());
 							}
 							else
@@ -1432,7 +1442,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 				}
 			}
 
-			const int iFlags = pEdict->v.flags;
+			int iFlags = pEdict->v.flags;
 
 			if (iFlags & FL_CLIENT && !(iFlags & FL_FAKECLIENT))
 			{
@@ -1485,7 +1495,7 @@ int pfnGetPlayerUserId(edict_t* e)
 	if (gpGlobals->deathmatch)
 	{
 		if (debug_engine) { fp = fopen("bot.txt", "a");
-			fprintf(fp, "pfnGetPlayerUserId: %x\n", reinterpret_cast<unsigned>(e));
+			fprintf(fp, "pfnGetPlayerUserId: %x\n", unsigned(e));
 			fclose(fp); }
 	}
 
@@ -1499,7 +1509,7 @@ int pfnGetPlayerUserId(edict_t* e)
 const char* pfnGetPlayerAuthId(edict_t* e)
 {
 	static const char* BOT_STEAM_ID = "BOT";
-	const BOOL bIsBot = UTIL_GetBotPointer(e) != nullptr;
+	BOOL bIsBot = UTIL_GetBotPointer(e) != NULL;
 #ifdef RCBOT_META_BUILD
 
 	if (bIsBot)
@@ -1557,7 +1567,7 @@ unsigned int pfnGetPlayerWONId(edict_t* e)
 	}
 
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnGetPlayerWONId: %x\n", reinterpret_cast<unsigned>(e));
+		fprintf(fp, "pfnGetPlayerWONId: %x\n", unsigned(e));
 		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
@@ -1870,7 +1880,7 @@ const char* GetArg(const char* command, int arg_number)
 	// either to the actual engine functions (when the caller is a real client), either on
 	// our function here, which does the same thing, when the caller is a bot.
 
-	int i, index = 0, arg_count = 0, fieldstart, fieldstop;
+	int length, i, index = 0, arg_count = 0, fieldstart, fieldstop;
 
 	static char arg[1024];
 
@@ -1878,9 +1888,9 @@ const char* GetArg(const char* command, int arg_number)
 	arg[0] = 0; // reset arg
 
 	if (!command || !*command)
-		return nullptr;
+		return NULL;
 
-	const int length = strlen(command); // get length of command
+	length = strlen(command); // get length of command
 
 	// while we have not reached end of line
 	while (index < length && arg_count <= arg_number)

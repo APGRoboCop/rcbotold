@@ -62,7 +62,7 @@ CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, floa
 
 	m_transferFunction = transferFunction;
 
-	if (m_transferFunction == nullptr)
+	if (m_transferFunction == NULL)
 		m_transferFunction = new CSigmoidTransfer();
 
 	m_Bias = m_fDefaultBias;
@@ -78,7 +78,7 @@ CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, floa
 
 void CPerceptron::setWeights(CBotGAValues* vals, int iFrom, int iNum)
 {
-	const float bias = m_weights[0];
+	float bias = m_weights[0];
 
 	m_weights.clear();
 
@@ -137,12 +137,12 @@ ga_value CPerceptron::execute()
 	return m_output;
 }
 
-BOOL CPerceptron::fired() const
+BOOL CPerceptron::fired()
 {
 	return m_output >= 0.5f;
 }
 
-ga_value CPerceptron::getOutput() const
+ga_value CPerceptron::getOutput()
 {
 	return m_output;
 }
@@ -165,7 +165,7 @@ void CPerceptron::save(FILE* bfp)
 	unsigned int iTemp;
 	unsigned int i;
 
-	const CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
+	CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
 
 	header.write(bfp);
 
@@ -201,7 +201,7 @@ void CPerceptron::load(FILE* bfp)
 
 	if (!header.read(bfp, header))
 	{
-		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
+		BotMessage(NULL, 0, "Learn data version mismatch - wiping");
 		return;
 	}
 

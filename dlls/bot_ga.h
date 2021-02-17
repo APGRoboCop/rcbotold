@@ -67,7 +67,7 @@ public:
 
 	float get(int iIndex);
 
-	void set(int iIndex, ga_value f_val);
+	void set(int iIndex, ga_value fVal);
 
 	void clear();
 
@@ -158,11 +158,11 @@ public:
 	IIndividual* copy()
 	{
 		IIndividual* p = new CIntGAValues(m_Value);
-		p->set_fitness(getFitness());
+		p->setFitness(getFitness());
 		return p;
 	}
 
-	int get() const { return m_Value; }
+	int get() { return m_Value; }
 	void set(int value) { m_Value = value; }
 private:
 	int m_Value;
@@ -180,7 +180,7 @@ public:
 	//void saveForBot ( char *file, int iProfile );
 
 	//~CBotGAValues();
-	void convert(int* iBits) const;
+	void convert(int* iBits);
 	CBitsGAValues(CBits* bits);
 
 	// crossover with other individual
@@ -193,20 +193,20 @@ public:
 	// sub classes return their class with own values
 	IIndividual* copy();
 
-	unsigned int size() const;
+	unsigned int size();
 
 	//void setBits ( CBits values );
 	//void getBits ( CBits *values );
 
-	BOOL get(int iIndex) const;
+	BOOL get(int iIndex);
 
-	void set(int iIndex, BOOL bSet) const;
+	void set(int iIndex, BOOL bSet);
 
 	void clear();
 
-	inline void random() const;
+	inline void random();
 
-	CBits* returnBits() const { return m_theBits; }
+	CBits* returnBits() { return m_theBits; }
 
 	void freeMemory();
 

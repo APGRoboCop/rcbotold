@@ -67,15 +67,15 @@ class AStarNode
 {
 public:
 	AStarNode();
-	BOOL heuristicSet() const;
+	BOOL heuristicSet();
 
 	void setHeuristic(float botDist, float goalDist, BOOL bIsTeleport = FALSE);
 
-	BOOL hasParent() const;
+	BOOL hasParent();
 
-	BOOL isOpen() const;
+	BOOL isOpen();
 
-	BOOL isClosed() const;
+	BOOL isClosed();
 
 	void unClose();
 
@@ -84,16 +84,16 @@ public:
 	void unOpen();
 
 	void open();
-	float getHeuristic() const;
+	float getHeuristic();
 
-	short int getParent() const;
+	short int getParent();
 	void setParent(int iWpt);
 
-	bool operator()(AStarNode* a, AStarNode* b) const;
+	bool operator()(AStarNode* a, AStarNode* b);
 
-	bool operator<(AStarNode* b) const;
+	bool operator<(AStarNode* b);
 
-	bool precedes(AStarNode* b) const;
+	bool precedes(AStarNode* b);
 
 	short int m_iWaypoint;
 
@@ -136,19 +136,19 @@ typedef enum
 
 #ifdef __linux__
 #define NS_PLAYER_EXPERIENCE_OFFSET 1554
-#define NS_PLAYER_POINTS_OFFSET (NS_PLAYER_EXPERIENCE_OFFSET+2)
+#define NS_PLAYER_POINTS_OFFSET NS_PLAYER_EXPERIENCE_OFFSET+2
 #else
 #define NS_PLAYER_EXPERIENCE_OFFSET 1579
-#define NS_PLAYER_POINTS_OFFSET (NS_PLAYER_EXPERIENCE_OFFSET+2)
+#define NS_PLAYER_POINTS_OFFSET NS_PLAYER_EXPERIENCE_OFFSET+2
 #endif
 
 //#define NS_GET_PLAYER_POINTS(player) (int)((char*)(player)+NS_PLAYER_POINTS_OFFSET)
-#define NS_GET_PLAYER_POINTS(player) *(int*)(((int)(player)->pvPrivateData)+NS_PLAYER_POINTS_OFFSET)
+#define NS_GET_PLAYER_POINTS(player) *(int*)(((int)player->pvPrivateData)+NS_PLAYER_POINTS_OFFSET)
 
 /////////////
 // SVENCOOP MONSTERS
-#define R_AL	(-2) // (ALLY) pals. Good alternative to R_NO when applicable.
-#define R_FR	(-1)// (FEAR)will run
+#define R_AL	-2 // (ALLY) pals. Good alternative to R_NO when applicable.
+#define R_FR	-1// (FEAR)will run
 #define	R_NO	0// (NO RELATIONSHIP) disregard
 #define R_DL	1// (DISLIKE) will attack
 #define R_HT	2// (HATE)will attack this character instead of any visible DISLIKEd characters
@@ -672,9 +672,9 @@ typedef enum {
 #define BOT_LADDER_UP      1
 #define BOT_LADDER_DOWN    2
 
-#define BOT_TASKSTATUS_RANDOM_WAYPOINT (-1)
-#define BOT_TASKSTATUS_JUMP_OUT (-2)
-#define BOT_TASKSTATUS_STILL_PENDING (-3)
+#define BOT_TASKSTATUS_RANDOM_WAYPOINT -1
+#define BOT_TASKSTATUS_JUMP_OUT -2
+#define BOT_TASKSTATUS_STILL_PENDING -3
 
 //////////////////////
 // ENUMERTOR TYPES
@@ -1253,8 +1253,8 @@ enum eBattleGroundsMessage
 #define POINTER_TO_FLOAT(x)		*(float*)x
 #define POINTER_TO_STRING(x)	(char*)x
 
-#define POINTER_INCREMENT_VALUE(x) (*(x) = *(x) + 1)
-#define POINTER_VALUE(x) (*(x))
+#define POINTER_INCREMENT_VALUE(x) (*x = *x + 1)
+#define POINTER_VALUE(x) (*x)
 //////////////////////////////
 // PATH INDEXES FOR A WAYPOINT
 #define MAX_PATH_INDEX 4
@@ -1263,10 +1263,10 @@ enum eBattleGroundsMessage
         int i; \
         for ( i = 1; i <= gpGlobals->maxClients; i ++ ) \
 { \
-			(Variable) = INDEXENT(i);\
-			if ( (Variable) == NULL )\
+			Variable = INDEXENT(i);\
+			if ( Variable == NULL )\
 				continue;\
-			if ( (Variable)->free )\
+			if ( Variable->free )\
 				continue;\
 
 #define END_SEARCH_THROUGH_PLAYERS }

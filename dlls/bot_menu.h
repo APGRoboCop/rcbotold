@@ -89,9 +89,9 @@ public:
 
 	void Init(void)
 	{
-		m_szMenuCaption = nullptr;
-		m_pNextMenu = nullptr;
-		m_pMenuFunction = nullptr;
+		m_szMenuCaption = NULL;
+		m_pNextMenu = NULL;
+		m_pMenuFunction = NULL;
 	}
 
 	CBotMenuItem()
@@ -105,14 +105,14 @@ public:
 
 	CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CClient*));
 
-	BOOL HasNextMenu(void) const
+	BOOL HasNextMenu(void)
 	{
-		return m_pNextMenu != nullptr;
+		return m_pNextMenu != NULL;
 	}
 
-	void Activate(CClient* pClient) const;
+	void Activate(CClient* pClient);
 
-	const char* GetCaption(void) const
+	const char* GetCaption(void)
 	{
 		return m_szMenuCaption;
 	}

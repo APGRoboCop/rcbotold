@@ -79,7 +79,7 @@ public:
 	virtual IIndividual *copy () = 0;
 */
 
-	CPerceptron(unsigned int iInputs, ITransfer* transferFunction = nullptr, float fLearnRate = 0.0f);
+	CPerceptron(unsigned int iInputs, ITransfer* transferFunction = NULL, float fLearnRate = 0.0f);
 
 	CPerceptron(FILE* bfp)
 	{
@@ -92,7 +92,7 @@ public:
 
 	void setWeights(CBotGAValues* vals, int iFrom, int iNum);
 
-	int numWeights() const { return m_weights.size(); }
+	int numWeights() { return m_weights.size(); }
 
 	void setWeight(int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
 
@@ -102,9 +102,9 @@ public:
 
 	ga_value execute();
 
-	BOOL fired() const;
+	BOOL fired();
 
-	ga_value getOutput() const;
+	ga_value getOutput();
 
 	void train(ga_value expectedOutput);
 
@@ -114,10 +114,10 @@ public:
 	{
 //		if (m_transferFunction)
 			delete m_transferFunction;
-		m_transferFunction = nullptr;
+		m_transferFunction = NULL;
 	}
 
-	BOOL trained() const { return m_bTrained; }
+	BOOL trained() { return m_bTrained; }
 
 	void setTrained() { m_bTrained = TRUE; }
 

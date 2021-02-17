@@ -120,7 +120,7 @@ public:
 
 	void Destroy(void)
 	{
-		dataNode<T>* tempNode = nullptr;
+		dataNode<T>* tempNode = NULL;
 
 		while (m_Head)
 		{
@@ -140,7 +140,7 @@ public:
 
 	BOOL IsEmpty(void)
 	{
-		return ((m_Head == nullptr) || (m_Tail == nullptr));
+		return ((m_Head == NULL) || (m_Tail == NULL));
 	}
 
 	void AddFront(const T& pObj)
@@ -149,7 +149,7 @@ public:
 
 		newNode->m_NodeData = pObj;
 
-		if (m_Head == nullptr)
+		if (m_Head == NULL)
 		{
 			m_Tail = newNode;
 			m_Head = newNode;
@@ -204,7 +204,7 @@ public:
 		catch (...)
 		{
 			// problem
-			BugMessage(nullptr, "Bad pointer in queue, (Resetting queue) Memory may have been lost");
+			BugMessage(NULL, "Bad pointer in queue, (Resetting queue) Memory may have been lost");
 
 			m_Head = NULL;
 			m_Tail = NULL;
@@ -229,12 +229,12 @@ public:
 		catch (...)
 		{
 			// problem
-			BugMessage(nullptr, "Bad pointer in queue, (Resetting tasks) Memory may have been lost");
+			BugMessage(NULL, "Bad pointer in queue, (Resetting tasks) Memory may have been lost");
 
 			m_Head = NULL;
 			m_Tail = NULL;
 			// return default
-			return nullptr;
+			return NULL;
 		}
 
 		return l_pTemp;
@@ -242,7 +242,9 @@ public:
 
 	void RemoveFront(void)
 	{
-		if (m_Head == nullptr)
+		dataNode<T>* tempNode = m_Head;
+
+		if (m_Head == NULL)
 		{
 			// just set tail to null incase
 			m_Tail = NULL;
@@ -252,7 +254,7 @@ public:
 
 		try
 		{
-			dataNode<T>* tempNode = m_Head;
+			tempNode = m_Head;
 
 			if (m_Tail == m_Head)
 			{
@@ -271,7 +273,7 @@ public:
 			m_Head = NULL;
 			m_Tail = NULL;
 
-			BugMessage(nullptr, "Bad pointer in queue, (Resetting queue) Memory may have been lost");
+			BugMessage(NULL, "Bad pointer in queue, (Resetting queue) Memory may have been lost");
 		}
 	}
 
@@ -347,8 +349,9 @@ public:
 	BOOL Remove(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
+		dataNode<T>* deleteNode = NULL;
 
-		if (m_Head == nullptr)
+		if (m_Head == NULL)
 			return FALSE;
 
 		if (m_Head->m_NodeData == pObj)
@@ -375,7 +378,7 @@ public:
 		{
 			if (tempNode->m_Next->m_NodeData == pObj)
 			{
-				dataNode<T>* deleteNode = tempNode->m_Next;
+				deleteNode = tempNode->m_Next;
 
 				if (deleteNode == m_Tail)
 				{
@@ -402,8 +405,9 @@ public:
 	BOOL RemoveByPointer(const T* pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
+		dataNode<T>* deleteNode = NULL;
 
-		if (m_Head == nullptr)
+		if (m_Head == NULL)
 			return FALSE;
 
 		if (&m_Head->m_NodeData == pObj)
@@ -428,7 +432,7 @@ public:
 		{
 			if (&tempNode->m_Next->m_NodeData == pObj)
 			{
-				dataNode<T>* deleteNode = tempNode->m_Next;
+				deleteNode = tempNode->m_Next;
 
 				if (deleteNode == m_Tail)
 				{
@@ -549,8 +553,9 @@ public:
 	BOOL RemoveByPointer(const T* pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
+		dataNode<T>* deleteNode;
 
-		if (m_Head == nullptr)
+		if (m_Head == NULL)
 			return FALSE;
 
 		if (&m_Head->m_NodeData == pObj)
@@ -566,7 +571,7 @@ public:
 		{
 			if (&tempNode->m_Next->m_NodeData == pObj)
 			{
-				dataNode<T>* deleteNode = tempNode->m_Next;
+				deleteNode = tempNode->m_Next;
 
 				tempNode->m_Next = tempNode->m_Next->m_Next;
 
@@ -588,8 +593,9 @@ public:
 	BOOL Remove(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
+		dataNode<T>* deleteNode;
 
-		if (m_Head == nullptr)
+		if (m_Head == NULL)
 			return FALSE;
 
 		if (m_Head->m_NodeData == pObj)
@@ -605,7 +611,7 @@ public:
 		{
 			if (tempNode->m_Next->m_NodeData == pObj)
 			{
-				dataNode<T>* deleteNode = tempNode->m_Next;
+				deleteNode = tempNode->m_Next;
 
 				tempNode->m_Next = tempNode->m_Next->m_Next;
 
@@ -625,9 +631,11 @@ public:
 
 	void Destroy(void)
 	{
+		dataNode<T>* tempNode;
+
 		while (m_Head)
 		{
-			dataNode<T>* tempNode = m_Head;
+			tempNode = m_Head;
 
 			m_Head = m_Head->m_Next;
 
@@ -642,7 +650,7 @@ public:
 
 	BOOL IsEmpty(void)
 	{
-		return (m_Head == nullptr);
+		return (m_Head == NULL);
 	}
 
 	void Push(const T &pObj)
@@ -681,7 +689,7 @@ public:
 		catch (...)
 		{
 			// problem
-			BugMessage(nullptr, "Bad pointer in stack, (Resetting tasks) Memory may have been lost");
+			BugMessage(NULL, "Bad pointer in stack, (Resetting tasks) Memory may have been lost");
 
 			m_Head = NULL;
 			// return default
@@ -705,11 +713,11 @@ public:
 		catch (...)
 		{
 			// problem
-			BugMessage(nullptr, "Bad pointer in stack, (Resetting tasks) Memory may have been lost");
+			BugMessage(NULL, "Bad pointer in stack, (Resetting tasks) Memory may have been lost");
 
 			m_Head = NULL;
 			// return default
-			return nullptr;
+			return NULL;
 		}
 
 		return l_pTemp;
@@ -724,7 +732,7 @@ public:
 			return &m_Head->m_NodeData;
 		}
 
-		return nullptr;
+		return NULL;
 	}
 
 private:
@@ -763,6 +771,8 @@ public:
 
 	void SetSize(int iArrayMax)
 	{
+		int iSize;
+
 		assert(iArrayMax > 0);
 
 		if (iArrayMax <= 0)
@@ -770,7 +780,7 @@ public:
 
 		//iArrayMax ++;
 
-		const int iSize = sizeof(T) * iArrayMax;
+		iSize = sizeof(T) * iArrayMax;
 
 		m_pArray = (T*)malloc(iSize);
 
@@ -795,7 +805,7 @@ public:
 		assert(iIndex >= 0);
 		assert(iIndex < m_iArrayMax);
 
-		if ((m_pArray != nullptr) && (iIndex >= 0 && iIndex < m_iArrayMax))
+		if ((m_pArray != NULL) && (iIndex >= 0 && iIndex < m_iArrayMax))
 			return m_pArray[iIndex];
 		else
 		{
@@ -932,7 +942,7 @@ public:
 		this->Clear();
 	}
 
-	int Size(void) const
+	int Size(void)
 	{
 		return size;
 	}
@@ -987,7 +997,7 @@ public:
 
 	void Destroy(void)
 	{
-//		if (buffer != nullptr)
+		if (buffer != 0)
 			delete[] buffer;
 
 		Init();
@@ -1000,7 +1010,7 @@ public:
 		buffer = 0;
 	}
 
-	bool IsEmpty(void) const
+	bool IsEmpty(void)
 	{
 		return size == 0;
 	}
@@ -1034,7 +1044,7 @@ public:
 				new_buffer[i] = buffer[i];
 			}
 
-//			if ( buffer != nullptr )
+			if ( buffer != NULL )
 				delete[] buffer;
 
 			buffer = new_buffer;
@@ -1082,7 +1092,7 @@ public:
 				return &(buffer[i]);
 		}
 
-		return nullptr;
+		return NULL;
 	}
 
 	BOOL IsMember(T Obj)

@@ -79,21 +79,21 @@ public:
 	CBotNetMessage()
 	{
 		m_iMessage = 0;
-		m_szMessageName = nullptr;
+		m_szMessageName = NULL;
 		//m_fpMsgFunction = NULL;
 		m_bAllowHumans = FALSE;
 	}
 
 	virtual BOOL isStateMsg() { return FALSE; }
 
-	BOOL humansAllowed() const
+	BOOL humansAllowed()
 	{
 		return m_bAllowHumans;
 	}
 
 	CBotNetMessage(/*void (*fpBotFunction)(void *, int),*/const char* szMessageName, int iModId, BOOL bAllowHumans = FALSE);
 
-	BOOL MessageForMod(int iModId) const
+	BOOL MessageForMod(int iModId)
 	{
 		return m_iModId == MOD_ANY || iModId == m_iModId;
 	}
@@ -117,19 +117,19 @@ public:
 			(*m_fpMsgFunction)(p,i);
 	}*/
 
-	const char* getMessageName() const
+	const char* getMessageName()
 	{
 		return m_szMessageName;
 	}
 
-	int MessageNum(void) const
+	int MessageNum(void)
 	{
 		return m_iMessage;
 	}
 
 	BOOL IsMessage(int iMessage);
 
-	BOOL IsMessageName(const char* szMessage) const
+	BOOL IsMessageName(const char* szMessage)
 	{
 		return strcmp(m_szMessageName, szMessage) == 0;
 	}
@@ -178,13 +178,13 @@ public:
 		m_NetMessages.Push(pMessage);
 	}
 
-	void execute(int iMessage, void* p, int i) const;
+	void execute(int iMessage, void* p, int i);
 
 	//void *GetFunction ( int iMessage );
 
-	CBotNetMessage* GetMessage(int iMessage, const char* szName) const;
+	CBotNetMessage* GetMessage(int iMessage, const char* szName);
 
-	void UpdateMessage(const char* szMessageName, int iMessage, int iSize) const
+	void UpdateMessage(const char* szMessageName, int iMessage, int iSize)
 	{
 		CBotNetMessage* l_Msg = GetMessage(iMessage, szMessageName);
 
@@ -644,7 +644,7 @@ class CBotStatedNetMessage : public CBotNetMessage
 public:
 	CBotStatedNetMessage();
 
-	void init(int index) { iState = 0; m_pEdict = nullptr; if (index) { m_pEdict = INDEXENT(index); } msg_init(); }
+	void init(int index) { iState = 0; m_pEdict = NULL; if (index) { m_pEdict = INDEXENT(index); } msg_init(); }
 
 	virtual void writeChar(char c) { write_char(c); iState++; };
 	virtual void writeByte(int b) { write_byte(b); iState++; };

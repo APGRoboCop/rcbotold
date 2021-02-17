@@ -83,22 +83,23 @@ BOOL CBotNetMessage::IsMessage(const int iMessage)
 	return m_iMessage == iMessage;
 }
 
-void CBotNetMessages::execute(int iMessage, void* p, int i) const
+void CBotNetMessages::execute(int iMessage, void* p, int i)
 {
-	CBotNetMessage* pMsg = GetMessage(iMessage, nullptr);
+	CBotNetMessage* pMsg = GetMessage(iMessage, NULL);
 
 	if (pMsg)
 		pMsg->execute(p, i);
 }
 
-CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName) const
+CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName)
 {
+	CBotNetMessage* l_currMsg;
 	dataStack<CBotNetMessage*> l_tempStack = m_NetMessages;
 
 	while (!l_tempStack.IsEmpty())
 	{
 		// Cheat here, use the stack
-		CBotNetMessage* l_currMsg = l_tempStack.ChooseFromStack();
+		l_currMsg = l_tempStack.ChooseFromStack();
 
 		if (!l_currMsg->MessageForMod(MOD_ANY))
 		{
@@ -108,7 +109,7 @@ CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName) co
 			}
 		}
 
-		if (szName == nullptr)
+		if (szName == NULL)
 		{
 			if (!l_currMsg->IsMessage(iMessage))
 			{
@@ -128,7 +129,7 @@ CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName) co
 		return l_currMsg;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 CBotNetMessage::CBotNetMessage(const char* szMessageName, int iModId, BOOL bAllowHumans)

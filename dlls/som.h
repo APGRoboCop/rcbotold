@@ -46,12 +46,12 @@ public:
 
 	CSomNeuron(int iInp, int iX, int iY);
 
-	ga_value getX() const
+	ga_value getX()
 	{
 		return m_iX;
 	}
 
-	ga_value getY() const
+	ga_value getY()
 	{
 		return m_iY;
 	}
@@ -64,7 +64,7 @@ public:
 
 	void displayWeights();
 
-	ga_value neighbourDistance(CSomNeuron* other, ga_value fDistance) const;
+	ga_value neighbourDistance(CSomNeuron* other, ga_value fDistance);
 
 private:
 	std::vector<ga_value> fWeights;
@@ -93,7 +93,7 @@ public:
 
 	void display();
 
-	unsigned int epochs() const
+	unsigned int epochs()
 	{
 		return m_iEpochs;
 	}

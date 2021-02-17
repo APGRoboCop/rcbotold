@@ -91,12 +91,14 @@ void player(entvars_t* pev)
 
 eBotCvarState CMenuSelectCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	if (pClient == nullptr)
+	int iMenu;
+
+	if (pClient == NULL)
 	{
 		return BOT_CVAR_CONTINUE; // engine command, so continue anyway.
 	}
 
-	if (pClient->m_pMenu == nullptr)
+	if (pClient->m_pMenu == NULL)
 	{
 		return BOT_CVAR_CONTINUE; // no menu, continue
 	}
@@ -106,7 +108,7 @@ eBotCvarState CMenuSelectCommand::action(CClient* pClient, const char* arg1, con
 	if (!*arg1)
 		return BOT_CVAR_ERROR;
 
-	const int iMenu = atoi(arg1);
+	iMenu = atoi(arg1);
 
 	if (iMenu < 10)
 	{
@@ -127,7 +129,7 @@ eBotCvarState CSetPassCommand::action(CClient* pClient, const char* arg1, const 
 		return BOT_CVAR_ERROR;
 	if (!pClient)
 		return BOT_CVAR_ERROR;
-	if ((pEdict = pClient->GetPlayer()) != nullptr)
+	if ((pEdict = pClient->GetPlayer()) != NULL)
 	{
 		pClient->SetPass(arg1);
 		BotMessage(pEdict, 0, "Password Set");
@@ -140,9 +142,9 @@ eBotCvarState CWaypointMenuCommand::action(CClient* pClient, const char* arg1, c
 {
 	//edict_t *pEntity;
 
-	if (pClient == nullptr)
+	if (pClient == NULL)
 	{
-		BotMessage(nullptr, 0, "This command can only be used on the client");
+		BotMessage(NULL, 0, "This command can only be used on the client");
 		return BOT_CVAR_ERROR;
 	}
 
@@ -164,9 +166,9 @@ eBotCvarState CBotMenuCommand::action(CClient* pClient, const char* arg1, const 
 {
 	//edict_t *pEntity;
 
-	if (pClient == nullptr)
+	if (pClient == NULL)
 	{
-		BotMessage(nullptr, 0, "This command can only be used on the client");
+		BotMessage(NULL, 0, "This command can only be used on the client");
 		return BOT_CVAR_ERROR;
 	}
 
@@ -181,7 +183,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 {
 	edict_t* pEntity;
 
-	pEntity = nullptr;
+	pEntity = NULL;
 
 	if (pClient)
 		pEntity = pClient->GetPlayer();
@@ -206,7 +208,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		{
 			edict_t* pPlayer = UTIL_FindPlayerByTruncName(arg2);
 
-			if (pPlayer != nullptr)
+			if (pPlayer != NULL)
 			{
 				if (pPlayer->v.flags & FL_FAKECLIENT)
 				{
@@ -228,7 +230,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 
 			pBot = UTIL_GetBotPointer(UTIL_FindPlayerByTruncName(arg2));
 
-			if (pBot != nullptr)
+			if (pBot != NULL)
 			{
 				int iWpt = -1;
 
@@ -239,7 +241,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 
 				pBot->ClearTasks();
 
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, 0, nullptr, iWpt, -2));
+				pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, 0, NULL, iWpt, -2));
 			}
 		}
 	}
@@ -300,23 +302,23 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 			hudmessage.SetPosition(-1, -1);
 			hudmessage.SetColour1(colour, 200);
 			hudmessage.SetColour2(colour, 200);
-			hudmessage.SayMessage(msg, nullptr); // all
+			hudmessage.SayMessage(msg, NULL); // all
 		}
 	}
 	else if (FStrEq("explo", arg1))
 	{
-		if (pEntity == nullptr)
+		if (pEntity == NULL)
 		{
-			BotMessage(nullptr, 0, "can't use on dedicated server");
+			BotMessage(NULL, 0, "can't use on dedicated server");
 			return BOT_CVAR_ERROR;
 		}
 
 		int magnitude = 400;
 		bool dodamage = TRUE;
 
-		if (arg2 != nullptr && *arg2 != 0)
+		if (arg2 != NULL && *arg2 != 0)
 			magnitude = atoi(arg2);
-		if (arg3 != nullptr && *arg3 != 0)
+		if (arg3 != NULL && *arg3 != 0)
 		{
 			int temp = atoi(arg3);
 
@@ -348,7 +350,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		{
 			edict_t* pPlayer = UTIL_FindPlayerByTruncName(arg2);
 
-			if (pPlayer != nullptr)
+			if (pPlayer != NULL)
 			{
 				if (pPlayer->v.flags & FL_FAKECLIENT)
 				{
@@ -368,7 +370,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		{
 			edict_t* pPlayer = UTIL_FindPlayerByTruncName(arg2);
 
-			if (pPlayer != nullptr)
+			if (pPlayer != NULL)
 			{
 				if (pPlayer->v.flags & FL_FAKECLIENT)
 				{
@@ -440,7 +442,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 				}
 			}
 			else
-				BotMessage(nullptr, 0, "no teleport vector set yet");
+				BotMessage(NULL, 0, "no teleport vector set yet");
 		}
 	}
 	else if (gBotGlobals.IsNS() && FStrEq("buildres", arg1))
@@ -461,7 +463,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 			{
 				edict_t* pPlayer = UTIL_FindPlayerByTruncName(arg2);
 
-				if (pPlayer != nullptr)
+				if (pPlayer != NULL)
 				{
 					UTIL_SetOrigin(&pPlayer->v, *p_vTeleport);
 
@@ -494,7 +496,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		{
 			edict_t* pPlayer = UTIL_FindPlayerByTruncName(arg2);
 
-			if (pPlayer != nullptr)
+			if (pPlayer != NULL)
 			{
 				if (pPlayer->v.flags & FL_NOTARGET)
 					pPlayer->v.flags &= ~FL_NOTARGET;
@@ -527,7 +529,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		{
 			edict_t* pPlayer = UTIL_FindPlayerByTruncName(arg2);
 
-			if (pPlayer != nullptr)
+			if (pPlayer != NULL)
 			{
 				if (pPlayer->v.movetype != MOVETYPE_NOCLIP)
 					pPlayer->v.movetype = MOVETYPE_NOCLIP;
@@ -553,7 +555,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		{
 			edict_t* pPlayer = UTIL_FindPlayerByTruncName(arg2);
 
-			if (pPlayer != nullptr)
+			if (pPlayer != NULL)
 			{
 				if (pPlayer->v.takedamage != DAMAGE_NO)
 					pPlayer->v.takedamage = DAMAGE_NO;
@@ -575,7 +577,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	}
 	else if (pEntity && FStrEq("search", arg1))
 	{
-		edict_t* pEnt = nullptr;
+		edict_t* pEnt = NULL;
 		edict_t* pEntity = pClient->GetPlayer();
 
 		float range = 100;
@@ -587,7 +589,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 
 		//fp = fopen("botlog.txt","a");
 
-		while ((pEnt = UTIL_FindEntityInSphere(pEnt, pEntity->v.origin, range)) != nullptr)
+		while ((pEnt = UTIL_FindEntityInSphere(pEnt, pEntity->v.origin, range)) != NULL)
 		{
 			BotMessage(pEntity, 0, "Found: id: %d, classname:%s distance:%0.2f iuser3:%d pclass:%d\niuser1 %d, iuser2 %d, iuser4 %d, euser1 0x%x, euser2 0x%x", ENTINDEX(pEnt), STRING(pEnt->v.classname), (EntityOrigin(pEnt) - pEntity->v.origin).Length(), pEnt->v.iuser3, pEnt->v.playerclass, pEnt->v.iuser1, pEnt->v.iuser2, pEnt->v.iuser4, pEnt->v.euser1, pEnt->v.euser2);
 		}
@@ -600,21 +602,24 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 
 eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	edict_t* pEntity = nullptr;
+	edict_t* pEntity = NULL;
 
 	if (pClient)
 		pEntity = pClient->GetPlayer();
 
 	if (FStrEq(arg1, "readusers"))
 	{
+		int i;
+		CClient* pPlayerClient;
+
 		gBotGlobals.m_BotUsers.Destroy();
 
 		BotMessage(pEntity, 0, "re-reading bot users...");
 		ReadBotUsersConfig();
 
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (i = 0; i < MAX_PLAYERS; i++)
 		{
-			CClient* pPlayerClient = gBotGlobals.m_Clients.GetClientByIndex(i);
+			pPlayerClient = gBotGlobals.m_Clients.GetClientByIndex(i);
 
 			if (pPlayerClient->IsUsed())
 			{
@@ -643,7 +648,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 			{
 				CClient* pPlayerClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer);
 
-				const int iLev = atoi(arg3);
+				int iLev = atoi(arg3);
 
 				gBotGlobals.m_BotUsers.AddPlayer(STRING(pPlayer->v.netname), "***", iLev, pPlayerClient->steamID());
 
@@ -667,7 +672,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 	{
 		if (arg2 && *arg2)
 		{
-			edict_t* pPlayer = nullptr;
+			edict_t* pPlayer = NULL;
 
 			if (*arg2 != '#')
 				pPlayer = UTIL_FindPlayerByTruncName(arg2);
@@ -684,7 +689,9 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 					return BOT_CVAR_ERROR;
 				}
 
-				CClient* pPlayerClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer);
+				CClient* pPlayerClient;
+
+				pPlayerClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer);
 
 				gBotGlobals.m_BotUsers.RemovePlayer(STRING(pPlayer->v.netname), pPlayerClient->GetPass(), pPlayerClient->steamID());
 
@@ -717,9 +724,9 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 
 eBotCvarState CSquadMenuCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	if (pClient == nullptr)
+	if (pClient == NULL)
 	{
-		BotMessage(nullptr, 0, "This command can only be used on the client");
+		BotMessage(NULL, 0, "This command can only be used on the client");
 		return BOT_CVAR_ERROR;
 	}
 
@@ -732,7 +739,7 @@ eBotCvarState CDebugEntCommand::action(CClient* pClient, const char* arg1, const
 {
 	if (FStrEq(arg1, "off"))
 	{
-		pClient->m_pDebugEnt = nullptr;
+		pClient->m_pDebugEnt = NULL;
 	}
 	else
 	{
@@ -819,14 +826,14 @@ eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const ch
 
 	if (IS_DEDICATED_SERVER())
 	{
-		bError = pClient != nullptr;
+		bError = pClient != NULL;
 	}
 	else
 		bError = pClient->GetPlayer() != gBotGlobals.m_pListenServerEdict;
 
 	if (bError)
 	{
-		BotMessage(nullptr, 0, "You can only use this command on the SERVER");
+		BotMessage(NULL, 0, "You can only use this command on the SERVER");
 		return BOT_CVAR_ERROR;
 	}
 
@@ -834,7 +841,7 @@ eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const ch
 
 	if (!arg1 || !*arg1 || (!arg2 || !*arg2))
 	{
-		BotMessage(nullptr, 0, "Usage: rcbot_debug <level> <1 : on, 0 : off>");
+		BotMessage(NULL, 0, "Usage: rcbot_debug <level> <1 : on, 0 : off>");
 		return BOT_CVAR_ERROR;
 	}
 
@@ -864,21 +871,21 @@ eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const ch
 	{
 		if (atoi(arg2) > 0)
 		{
-			BotMessage(nullptr, 0, "debugging \"%s\" is now ON", arg1);
+			BotMessage(NULL, 0, "debugging \"%s\" is now ON", arg1);
 			gBotGlobals.m_iDebugLevels |= iDebugLevel;
 		}
 		else
 		{
-			BotMessage(nullptr, 0, "debugging \"%s\" is now OFF", arg1);
+			BotMessage(NULL, 0, "debugging \"%s\" is now OFF", arg1);
 			gBotGlobals.m_iDebugLevels &= ~iDebugLevel;
 
 			if (bMsg)
-				gBotGlobals.m_pDebugMessage = nullptr;
+				gBotGlobals.m_pDebugMessage = NULL;
 		}
 	}
 	else
 	{
-		BotMessage(nullptr, 0, "Debug level not found");
+		BotMessage(NULL, 0, "Debug level not found");
 	}
 
 	return BOT_CVAR_ACCESSED;
@@ -886,7 +893,7 @@ eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const ch
 
 eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	edict_t* pEntity = nullptr;
+	edict_t* pEntity = NULL;
 
 	if (pClient)
 		pEntity = pClient->GetPlayer();
@@ -898,10 +905,10 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 		return BOT_CVAR_ERROR;
 	}
 
-	const BOOL bSetting = arg2 && *arg2; // is player setting the value or wanting details?
+	BOOL bSetting = arg2 && *arg2; // is player setting the value or wanting details?
 	float fSetVal = 0;
 
-	const int iState = atoi(arg2);
+	int iState = atoi(arg2);
 	int iConfig = 0;
 
 	BOOL bSuccess = TRUE;
@@ -962,7 +969,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 		if (arg2 && *arg2)
 		{
-			const float fspeed = atof(arg2);
+			float fspeed = atof(arg2);
 
 			if (fspeed > 0)
 			{
@@ -1107,16 +1114,18 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (bSetting)
 		{
-			const int iRevs = atoi(arg2);
+			int iRevs = atoi(arg2);
 
 			bSuccess = iRevs > 0;
 
 			if (bSuccess)
 			{
+				int i;
+
 				gBotGlobals.m_iMaxPathRevs = iRevs;
 
 				// update each bot currently being used
-				for (int i = 0; i < MAX_PLAYERS; i++)
+				for (i = 0; i < MAX_PLAYERS; i++)
 				{
 					CBot* pBot = &gBotGlobals.m_Bots[i];
 
@@ -1134,16 +1143,18 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (bSetting)
 		{
-			const int iRevs = atoi(arg2);
+			int iRevs = atoi(arg2);
 
 			bSuccess = iRevs > 0;
 
 			if (bSuccess)
 			{
+				int i;
+
 				gBotGlobals.m_iMaxVisUpdateRevs = iRevs;
 
 				// update each bot currently being used
-				for (int i = 0; i < MAX_PLAYERS; i++)
+				for (i = 0; i < MAX_PLAYERS; i++)
 				{
 					CBot* pBot = &gBotGlobals.m_Bots[i];
 
@@ -1161,16 +1172,18 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (bSetting)
 		{
-			const float fTime = atof(arg2);
+			float fTime = atof(arg2);
 
 			bSuccess = fTime >= 0;
 
 			if (bSuccess)
 			{
+				int i;
+
 				gBotGlobals.m_fUpdateVisTime = fTime;
 
 				// update each bot currently being used
-				for (int i = 0; i < MAX_PLAYERS; i++)
+				for (i = 0; i < MAX_PLAYERS; i++)
 				{
 					CBot* pBot = &gBotGlobals.m_Bots[i];
 
@@ -1222,6 +1235,9 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
+	edict_t* pEntity;
+	CBotSquad* theSquad;
+
 	if (!pClient)
 		return BOT_CVAR_ERROR;
 	if (!arg1 || !*arg1)
@@ -1229,11 +1245,11 @@ eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const
 	if (!arg2 || !*arg2)
 		return BOT_CVAR_ERROR;
 
-	edict_t* pEntity = pClient->GetPlayer();
+	pEntity = pClient->GetPlayer();
 
-	CBotSquad* theSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	theSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
-	if (theSquad == nullptr)
+	if (theSquad == NULL)
 	{
 		ClientPrint(pEntity, HUD_PRINTTALK, "You are not leader of a squad\n");
 		return BOT_CVAR_ERROR;
@@ -1274,7 +1290,7 @@ eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const
 	}
 	else if (FStrEq(arg1, "spread"))
 	{
-		const float fNewSpread = atof(arg2);
+		float fNewSpread = atof(arg2);
 
 		if (fNewSpread)
 		{
@@ -1289,9 +1305,9 @@ eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const
 
 eBotCvarState CPathWaypointCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	if (pClient == nullptr)
+	if (pClient == NULL)
 	{
-		BotMessage(nullptr, 0, "You can only use this command on the client");
+		BotMessage(NULL, 0, "You can only use this command on the client");
 		return BOT_CVAR_ERROR;
 	}
 
@@ -1357,15 +1373,15 @@ eBotCvarState CPathWaypointCommand::action(CClient* pClient, const char* arg1, c
 
 eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	edict_t* pEntity = nullptr;
-	edict_t* pPlayer = nullptr;
+	edict_t* pEntity = NULL;
+	edict_t* pPlayer = NULL;
 
 	if (pClient)
 		pEntity = pClient->GetPlayer();
 
-	if (pEntity == nullptr && (!arg1 || !*arg1))
+	if (pEntity == NULL && (!arg1 || !*arg1))
 	{
-		BotMessage(nullptr, 0, "You must issue a player name");
+		BotMessage(NULL, 0, "You must issue a player name");
 		return BOT_CVAR_ERROR;
 	}
 
@@ -1380,7 +1396,7 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 
 		if (pWantedClient)
 		{
-			const int state = atoi(arg2);
+			int state = atoi(arg2);
 
 			if (arg2 && *arg2)
 				pWantedClient->AutoWaypoint(state);
@@ -1402,7 +1418,7 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 				}
 			}
 			else
-				BotMessage(nullptr, 0, "autowaypoint set to %d on %s", pWantedClient->IsAutoWaypointOn(), STRING(pPlayer->v.netname));
+				BotMessage(NULL, 0, "autowaypoint set to %d on %s", pWantedClient->IsAutoWaypointOn(), STRING(pPlayer->v.netname));
 		}
 	}
 	else
@@ -1416,7 +1432,7 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 
 eBotCvarState CBotCamCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	edict_t* pEntity = nullptr;
+	edict_t* pEntity = NULL;
 
 	if (pClient)
 		pEntity = pClient->GetPlayer();
@@ -1443,7 +1459,7 @@ eBotCvarState CBotCamCommand::action(CClient* pClient, const char* arg1, const c
 		return BOT_CVAR_ACCESSED;
 	}
 	else
-		BotMessage(nullptr, 0, "Can't use botcam on dedicated server");
+		BotMessage(NULL, 0, "Can't use botcam on dedicated server");
 
 	return BOT_CVAR_ERROR;
 }
@@ -1463,13 +1479,15 @@ void CWaypointCommand::showHelp(edict_t* pEntity)
 
 eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	if (pClient == nullptr)
+	edict_t* pEntity;
+
+	if (pClient == NULL)
 	{
-		BotMessage(nullptr, 0, "This command can only be used on the client");
+		BotMessage(NULL, 0, "This command can only be used on the client");
 		return BOT_CVAR_ERROR;
 	}
 
-	edict_t* pEntity = pClient->GetPlayer();
+	pEntity = pClient->GetPlayer();
 
 	if (FStrEq(arg1, "on"))
 	{
@@ -1483,12 +1501,12 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 	}
 	else if (FStrEq(arg1, "load"))
 	{
-		WaypointLoad(nullptr);
+		WaypointLoad(NULL);
 		BotMessage(pEntity, 0, "Waypoints have been loaded");
 	}
 	else if (FStrEq(arg1, "save"))
 	{
-		CWaypointConversion* theConverter = nullptr;
+		CWaypointConversion* theConverter = NULL;
 
 		if (arg2 && *arg2)
 		{
@@ -1500,7 +1518,7 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 		{
 			BotMessage(pEntity, 0, "Waypoints have been saved");
 
-			if (theConverter != nullptr)
+			if (theConverter != NULL)
 				BotMessage(pEntity, 0, "(Saved waypoints as %s format)", theConverter->getName());
 		}
 		else
@@ -1530,7 +1548,7 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 	{
 		if (arg2 && *arg2)
 		{
-			const int iWpt = atoi(arg2);
+			int iWpt = atoi(arg2);
 
 			SET_ORIGIN(pClient->GetPlayer(), WaypointOrigin(iWpt));
 		}
@@ -1550,7 +1568,10 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 {
 	// If numbots > maxbots dont create more
 
-	edict_t* pEntity = nullptr;
+	edict_t* pEdict;
+	edict_t* pEntity = NULL;
+	int iBotIndex;
+	CBot* pBot;
 
 	if (!gpGlobals->deathmatch)
 	{
@@ -1564,11 +1585,11 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	int iTeam = -1;
 	int iClass = -1;
 
-	char* szName = nullptr;
+	char* szName = NULL;
 
 	int iSkill = DEF_BOT_SKILL;
 
-	int iBotIndex = 0;
+	iBotIndex = 0;
 
 	while (iBotIndex < MAX_PLAYERS && gBotGlobals.m_Bots[iBotIndex].IsUsed())
 		iBotIndex++;
@@ -1579,7 +1600,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		return BOT_CVAR_ERROR;
 	}
 
-	CBot* pBot = &gBotGlobals.m_Bots[iBotIndex];
+	pBot = &gBotGlobals.m_Bots[iBotIndex];
 
 	if (gBotGlobals.m_iMaxBots != -1 && gBotGlobals.m_iNumBots >= gBotGlobals.m_iMaxBots)
 	{
@@ -1595,13 +1616,13 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		return BOT_CVAR_ERROR;
 	}
 
-	FILE* pProfileToOpen = nullptr;
+	FILE* pProfileToOpen = NULL;
 	char szBotProfile[10]; // Store integer value of bot profile in string as filename
 	int iBotProfile = -1; // Store integer value of bot profile
 
-	const BOOL arg1valid = arg1 && *arg1;
-	const BOOL arg2valid = arg2 && *arg2;
-	const BOOL arg3valid = arg3 && *arg3;
+	BOOL arg1valid = arg1 && *arg1;
+	BOOL arg2valid = arg2 && *arg2;
+	BOOL arg3valid = arg3 && *arg3;
 
 	///////////////////////////////////
 	// get bots previous team / class
@@ -1670,10 +1691,12 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		dataStack<int> l_IdsInUse;
 		dataUnconstArray<int> CanUseIds;
+		CBot* tempBot;
+		int i;
 
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (i = 0; i < MAX_PLAYERS; i++)
 		{
-			CBot* tempBot = &gBotGlobals.m_Bots[i];
+			tempBot = &gBotGlobals.m_Bots[i];
 
 			if (tempBot && tempBot->m_bIsUsed && tempBot->m_pEdict)
 				l_IdsInUse.Push(tempBot->m_Profile.m_iProfileId);
@@ -1685,9 +1708,12 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		//{
 		char szBotProfilePath[128];
 
+		FILE* fp1 = NULL;
+		FILE* fp2 = NULL;
+
 		char filename[512];
 		UTIL_BuildFileName(filename, BOT_PROFILES_FILE);
-		FILE* fp1 = fopen(filename, "r");
+		fp1 = fopen(filename, "r");
 		/*
 		if ( fp1 )
 		{
@@ -1767,7 +1793,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 				UTIL_BuildFileName(szBotProfilePath, "botprofiles", szBotProfile);
 
-				FILE* fp2 = fopen(szBotProfilePath, "r");
+				fp2 = fopen(szBotProfilePath, "r");
 
 				if (fp2)
 				{
@@ -1797,7 +1823,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		l_IdsInUse.Destroy();
 
-		if (pProfileToOpen == nullptr)
+		if (pProfileToOpen == NULL)
 		{
 			BotMessage(pEntity, 0, "Error: No Bot Profiles have been found that are free...");
 			return BOT_CVAR_ERROR;
@@ -1839,11 +1865,11 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	}
 	else
 	{
-		BotMessage(nullptr, 0, "Error: Can't read bot's profile!!!");
+		BotMessage(NULL, 0, "Error: Can't read bot's profile!!!");
 		return BOT_CVAR_ERROR;
 	}
 
-	edict_t* pEdict = (*g_engfuncs.pfnCreateFakeClient)(gBotGlobals.m_Bots[iBotIndex].m_Profile.m_szBotName);
+	pEdict = (*g_engfuncs.pfnCreateFakeClient)(gBotGlobals.m_Bots[iBotIndex].m_Profile.m_szBotName);
 
 	if (FNullEnt(pEdict))
 	{
@@ -1877,7 +1903,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	// pointer to new bot
 	pBot = &gBotGlobals.m_Bots[iBotIndex];
 
-	char* c_skin = nullptr;
+	char* c_skin = NULL;
 
 	char newteam[64];
 
@@ -1892,7 +1918,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		int i = 0;
 		int j = 0;
 
-		const int len = strlen(teamlist);
+		int len = strlen(teamlist);
 
 		while (i < len)
 		{
@@ -2017,7 +2043,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHATTING))
 	{
-		if ((greetClient = pBot->m_Profile.m_Rep.GetRandomClient(1)) != nullptr)
+		if ((greetClient = pBot->m_Profile.m_Rep.GetRandomClient(1)) != NULL)
 		{
 			pBot->BotChat(BOT_CHAT_GREETINGS, greetClient->GetPlayer());
 		}
@@ -2061,7 +2087,7 @@ void CAddBotCommand::showHelp(edict_t* pEntity)
 
 eBotCvarState CHelpCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	edict_t* pEntity = nullptr;
+	edict_t* pEntity = NULL;
 
 	if (pClient)
 		pEntity = pClient->GetPlayer();
@@ -2078,7 +2104,7 @@ eBotCvarState CHelpCommand::action(CClient* pClient, const char* arg1, const cha
 	{
 		CBotCvar* theCommand = gBotGlobals.m_BotCvars.GetCvar(arg1);
 
-		if (theCommand == nullptr)
+		if (theCommand == NULL)
 		{
 			BotMessage(pEntity, 0, "command specified does not exist!\nAvailable commands are");
 
@@ -2158,13 +2184,13 @@ void RCBot_ServerCommand(void)
 		{
 			if (gBotGlobals.m_CurrentHandledCvar->error())
 			{
-				BotMessage(nullptr, 0, "Error: Can't use this command on the dedicated server\n");
+				BotMessage(NULL, 0, "Error: Can't use this command on the dedicated server\n");
 				return;
 			}
 
-			BotMessage(nullptr, 0, "Accessing debug commands : detected dedicated server");
+			BotMessage(NULL, 0, "Accessing debug commands : detected dedicated server");
 
-			iState = gBotGlobals.m_CurrentHandledCvar->action(nullptr, arg1, arg2, arg3, arg4);
+			iState = gBotGlobals.m_CurrentHandledCvar->action(NULL, arg1, arg2, arg3, arg4);
 		}
 		else
 		{
@@ -2174,7 +2200,7 @@ void RCBot_ServerCommand(void)
 				iState = gBotGlobals.m_CurrentHandledCvar->action(pListenServerClient, arg1, arg2, arg3, arg4);
 			else
 			{
-				BotMessage(nullptr, 0, "Access to debug commands failed : Detected listen server with no listenserver client");
+				BotMessage(NULL, 0, "Access to debug commands failed : Detected listen server with no listenserver client");
 			}
 		}
 	}

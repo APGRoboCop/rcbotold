@@ -8,18 +8,18 @@
 class CActionUtility
 {
 public:
-	CActionUtility(const eCanDoStuff action, const bool utility)
+	CActionUtility(eCanDoStuff action, bool utility)
 	{
 		m_Action = action;
 		m_fUtility = utility;
 	}
 
-	float getUtility() const
+	float getUtility()
 	{
 		return m_fUtility;
 	}
 
-	eCanDoStuff getAction() const
+	eCanDoStuff getAction()
 	{
 		return m_Action;
 	}
@@ -32,7 +32,7 @@ private:
 class CActionUtilities
 {
 public:
-	void add(eCanDoStuff action, const BOOL CanDo, const float utility)
+	void add(eCanDoStuff action, BOOL CanDo, float utility)
 	{
 		//m_Utilities.push_back(CActionUtility(action, (float)CanDo * utility));
 		m_Utilities.emplace_back(action, (float)CanDo * utility);
@@ -40,7 +40,7 @@ public:
 
 	eCanDoStuff getBestAction()
 	{
-		const float rand = RANDOM_FLOAT(0, getTotalUtility());
+		float rand = RANDOM_FLOAT(0, getTotalUtility());
 
 		float total = 0;
 

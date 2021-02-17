@@ -44,10 +44,9 @@ typedef enum
 class IIndividual
 {
 public:
-	virtual ~IIndividual() = default;
 	// get fitness for this individual
-	ga_value getFitness() const { return m_fFitness; }
-	void set_fitness(const float f_val) { m_fFitness = f_val; }
+	ga_value getFitness() { return m_fFitness; }
+	void setFitness(float fVal) { m_fFitness = fVal; }
 
 	virtual void load(FILE* bfp, int req_size) = 0;
 	virtual void save(FILE* bfp) = 0;
@@ -57,13 +56,14 @@ public:
 
 	// mutate some values
 	virtual void mutate() = 0;
+
 	virtual void clear() = 0;
 
 	// get new copy of this
 	// sub classes return their class with own values
 	virtual IIndividual* copy() = 0;
 protected:
-	ga_value m_fFitness = 0;
+	ga_value m_fFitness;
 };
 
 class CGA;
@@ -76,7 +76,7 @@ public:
 
 	void setGA(CGA* ga) { m_ga = ga; }
 	// size of population
-	unsigned int size() const { return m_theIndividuals.size(); };
+	unsigned int size() { return m_theIndividuals.size(); };
 
 	// get from population index
 	IIndividual* get(int iIndex);
@@ -103,7 +103,7 @@ public:
 
 private:
 	std::vector<IIndividual*> m_theIndividuals;
-	CGA* m_ga = nullptr;
+	CGA* m_ga;
 };
 
 // selection function interface
@@ -133,7 +133,7 @@ public:
 		m_fPrevAvgFitness = 0;
 
 		m_iMaxPopSize = iMaxPopSize;
-		m_bestIndividual = nullptr;
+		m_bestIndividual = NULL;
 		m_iPopType = 0;
 
 		if (m_iMaxPopSize == 0)
@@ -154,7 +154,7 @@ public:
 	void addToPopulation(IIndividual* individual);
 
 	// can get an individual off new population
-	bool canPick() const;
+	bool canPick();
 
 	IIndividual* pick();
 

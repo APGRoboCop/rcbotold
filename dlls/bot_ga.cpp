@@ -47,14 +47,14 @@
 
 CBotGAValues::CBotGAValues()
 {
-	CBotGAValues::clear();
-	set_fitness(0);
+	clear();
+	setFitness(0);
 }
 
 CBotGAValues::CBotGAValues(const std::vector<ga_value> values)
 {
-	CBotGAValues::clear();
-	set_fitness(0);
+	clear();
+	setFitness(0);
 
 	setVector(values);
 }
@@ -67,7 +67,7 @@ void CBotGAValues::clear()
 // crossover with other individual
 void CBotGAValues::crossOver(IIndividual* other)
 {
-	const unsigned int iPoint = RANDOM_LONG(0, m_theValues.size());
+	unsigned int iPoint = RANDOM_LONG(0, m_theValues.size());
 	float fTemp;
 
 	CBotGAValues* vother = static_cast<CBotGAValues*>(other);
@@ -96,7 +96,7 @@ void CBotGAValues::mutate()
 	{
 		if (RANDOM_FLOAT(0, 1) < CGA::g_fMutateRate)
 		{
-			const float fCurrentVal = get(i);
+			float fCurrentVal = get(i);
 
 			set(i, fCurrentVal + fCurrentVal * (-1 + RANDOM_FLOAT(0, 2)) * CGA::g_fMaxPerturbation);
 		}
@@ -108,9 +108,9 @@ float CBotGAValues::get(const int iIndex)
 	return m_theValues[iIndex];
 }
 
-void CBotGAValues::set(const int iIndex, const ga_value f_val)
+void CBotGAValues::set(const int iIndex, const ga_value fVal)
 {
-	m_theValues[iIndex] = f_val;
+	m_theValues[iIndex] = fVal;
 }
 
 //CBotGAValues :: ~CBotGAValues ()
@@ -124,7 +124,7 @@ IIndividual* CBotGAValues::copy()
 {
 	IIndividual* individual = new CBotGAValues(m_theValues);
 
-	individual->set_fitness(getFitness());
+	individual->setFitness(getFitness());
 
 	return individual;
 }
@@ -176,7 +176,7 @@ void CBotGAValues::save(FILE* bfp)
 {
 	unsigned int iSize = m_theValues.size();
 
-	const CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, m_theValues.size());
+	CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, m_theValues.size());
 
 	header.write(bfp);
 
@@ -202,7 +202,7 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 
 	if (!header.read(bfp, header))
 	{
-		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
+		BotMessage(NULL, 0, "Learn data version mismatch - wiping");
 		return;
 	}
 
@@ -226,12 +226,12 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 // bits
 //----------------------
 
-unsigned int CBitsGAValues::size() const
+unsigned int CBitsGAValues::size()
 {
 	return m_theBits->size();
 }
 
-void CBitsGAValues::convert(int* iBits) const
+void CBitsGAValues::convert(int* iBits)
 {
 	for (unsigned int i = 0; i < size(); i++)
 	{
@@ -262,7 +262,7 @@ void CBitsGAValues::save(FILE* bfp)
 
 //~CBotGAValues();
 
-CBitsGAValues::CBitsGAValues(CBits* bits): m_theBits(nullptr)
+CBitsGAValues::CBitsGAValues(CBits* bits)
 {
 	delete m_theBits;
 	m_theBits = bits;
@@ -271,9 +271,9 @@ CBitsGAValues::CBitsGAValues(CBits* bits): m_theBits(nullptr)
 // crossover with other individual
 void CBitsGAValues::crossOver(IIndividual* other)
 {
-	const unsigned int iNumBits = m_theBits->numBits();
-	const unsigned int iCrossoverPoint = static_cast<unsigned int>(RANDOM_LONG(0, iNumBits));
-	CBits* tempBits = new CBits(iNumBits); //Possible Memory Leak? [APG]RoboCop[CL]
+	unsigned int iNumBits = m_theBits->numBits();
+	unsigned int iCrossoverPoint = static_cast<unsigned int>(RANDOM_LONG(0, iNumBits));
+	CBits* tempBits = new CBits(iNumBits);
 
 	CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
 
@@ -318,12 +318,12 @@ IIndividual* CBitsGAValues::copy()
 //void setBits ( CBits values );
 //void getBits ( CBits *values );
 
-BOOL CBitsGAValues::get(const int iIndex) const
+BOOL CBitsGAValues::get(const int iIndex)
 {
 	return m_theBits->getBit(iIndex);
 }
 
-void CBitsGAValues::set(const int iIndex, const BOOL bSet) const
+void CBitsGAValues::set(const int iIndex, const BOOL bSet)
 {
 	m_theBits->setBit(iIndex, bSet);
 }
@@ -333,7 +333,7 @@ void CBitsGAValues::clear()
 	m_theBits->clear();
 }
 
-inline void CBitsGAValues::random() const
+inline void CBitsGAValues::random()
 {
 	m_theBits->randomize();
 }
@@ -341,5 +341,5 @@ inline void CBitsGAValues::random() const
 void CBitsGAValues::freeMemory()
 {
 	delete m_theBits;
-	m_theBits = nullptr;
+	m_theBits = NULL;
 }

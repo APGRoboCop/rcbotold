@@ -59,22 +59,22 @@ public:
 		sprintf(m_szHeader, "t-%d-s-%d", iType, iSize);
 	}
 
-	const char* getHeader() const
+	const char* getHeader()
 	{
 		return m_szHeader;
 	}
 
-	BOOL operator == (const CGenericHeader other) const
+	BOOL operator == (CGenericHeader other)
 	{
 		return strcmp(m_szHeader, other.getHeader()) == 0;
 	}
 
-	void write(FILE* bfp) const
+	void write(FILE* bfp)
 	{
 		fwrite(this, sizeof(CGenericHeader), 1, bfp);
 	}
 
-	static BOOL read(FILE* bfp, CGenericHeader const compare)
+	BOOL read(FILE* bfp, CGenericHeader const compare)
 	{
 		CGenericHeader read;
 

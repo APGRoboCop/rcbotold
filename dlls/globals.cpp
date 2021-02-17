@@ -96,7 +96,7 @@ void CBotGlobals::ReadBotFolder(void)
 {
 	char filename[256];
 
-	BotMessage(nullptr, 0, "Reading Bot Folder");
+	BotMessage(NULL, 0, "Reading Bot Folder");
 
 	sprintf(filename, "%s/rcbot_folder.ini", m_szModFolder);
 
@@ -114,18 +114,32 @@ void CBotGlobals::ReadBotFolder(void)
 			m_szBotFolder[255] = 0;
 		}
 
-		BotMessage(nullptr, 0, "Found Bot Folder file : %s", m_szBotFolder);
+		BotMessage(NULL, 0, "Found Bot Folder file : %s", m_szBotFolder);
 		fclose(fp);
 	}
 	else
 	{
 		strcpy(m_szBotFolder, "rcbot");
-		BotMessage(nullptr, 0, "Bot Folder File not found! using default (half-life/rcbot)");
+		BotMessage(NULL, 0, "Bot Folder File not found! using default (half-life/rcbot)");
 	}
 }
 
+/*char* CBotGlobals::TFC_getClassName(int iClass)
+{
+	static char* szClasses[] =
+	{
+		"civilian", "scout", "sniper",
+		"soldier", "demoman", "medic",
+		"hwguy", "pyro", "spy", "engineer"
+	};
+
+	return szClasses[iClass];
+}*/
+
 BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
 {
+	int index;
+
 	if (m_bNetMessageStarted == TRUE)
 	{
 		// message already started... engine will crash
@@ -135,34 +149,36 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 		//	MESSAGE_END();
 	}
 
-	m_CurrentMessage = nullptr;
+	m_CurrentMessage = NULL;
 
 	m_bNetMessageStarted = TRUE;
 
 	if (gpGlobals->deathmatch)
 	{
+		index = -1;
+
 		if (debug_engine) { fp = fopen("bot.txt", "a");
 			fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
 			fclose(fp); }
 
-		m_CurrentMessage = nullptr;
+		m_CurrentMessage = NULL;
 		m_iCurrentMessageState = 0;
 		m_iCurrentMessageState2 = 0;
 		m_iBotMsgIndex = -1;
 
 		if (ed)
 		{
-			const int index = UTIL_GetBotIndex(ed);
+			index = UTIL_GetBotIndex(ed);
 
 			// get the message to see if we can do anything right now
-			m_CurrentMessage = m_NetEntityMessages.GetMessage(msg_type, nullptr);
+			m_CurrentMessage = m_NetEntityMessages.GetMessage(msg_type, NULL);
 
 			if (m_CurrentMessage && /*m_CurrentMessage->IsMessageName("WeaponList") &&*/ IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL))
 			{
 				m_pDebugMessage = m_CurrentMessage;
 
-				ALERT(at_console, "------ MESSAGE_BEGIN(\"%s\") : \"%s\" -------\n", m_CurrentMessage->getMessageName(),
-				      STRING(ed->v.netname));
+				ALERT(at_console, "------ MESSAGE_BEGIN(\"%s\") : \"%s\" -------\n", m_CurrentMessage->getMessageName(), STRING(ed->v.netname));
+				//ALERT(at_console,"------ MESSAGE_BEGIN(\"%s\") : (MSG_ALL message) -------\n",m_CurrentMessage->getMessageName());
 			}
 
 			if (IsNS())
@@ -200,7 +216,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 				}
 			}*/
 
-			if (m_CurrentMessage != nullptr)
+			if (m_CurrentMessage != NULL)
 			{
 				m_pMessageEntity = ed;
 
@@ -216,18 +232,19 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 				else // dont call a function
 				{
 					if (!IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL))
-						m_CurrentMessage = nullptr;
+						m_CurrentMessage = NULL;
 				}
 			}
 		}
 		else if (msg_dest == MSG_ALL)
 		{
-			m_CurrentMessage = m_NetAllMessages.GetMessage(msg_type, nullptr);
+			m_CurrentMessage = m_NetAllMessages.GetMessage(msg_type, NULL);
 
 			if (m_CurrentMessage && /*m_CurrentMessage->IsMessageName("WeaponList") &&*/ IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL))
 			{
 				m_pDebugMessage = m_CurrentMessage;
 
+				//ALERT(at_console,"------ MESSAGE_BEGIN(\"%s\") : \"%s\" -------\n",m_CurrentMessage->getMessageName(),STRING(ed->v.netname));
 				ALERT(at_console, "------ MESSAGE_BEGIN(\"%s\") : (MSG_ALL message) -------\n", m_CurrentMessage->getMessageName());
 			}
 		}
@@ -239,7 +256,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 void CBotGlobals::StartFrame(void)
 {
 	static int iIndex = 0;
-	static CBot* pBot = nullptr;
+	static CBot* pBot = NULL;
 	static float fPreviousTime = -1.0;
 	static int iNumClients = 0;
 	static BOOL bUpdateClientData;
@@ -267,7 +284,7 @@ void CBotGlobals::StartFrame(void)
 			m_iMaxPathRevs = 150;
 		///////////////////////////
 
-		if (fpMapConfig != nullptr && m_fMapInitTime + 10.0 < gpGlobals->time && m_fReadConfigTime < gpGlobals->time)
+		if (fpMapConfig != NULL && m_fMapInitTime + 10.0 < gpGlobals->time && m_fReadConfigTime < gpGlobals->time)
 			ReadMapConfig();
 
 		bUpdateClientData = !IsMod(MOD_DMC) && !IsMod(MOD_TS) && m_fClientUpdateTime <= gpGlobals->time;
@@ -311,11 +328,14 @@ void CBotGlobals::StartFrame(void)
 
 			if (!IsCombatMap() && IsConfigSettingOn(BOT_CONFIG_MARINE_AUTO_BUILD) && (!m_bAutoBuilt && (m_fAutoBuildTime && m_fAutoBuildTime < gpGlobals->time)))
 			{
-				edict_t* pEntity = nullptr;
+				int iWpt;
+				Vector vOrigin;
+
+				edict_t* pEntity = NULL;
 
 				// Find the marine command console
 
-				while ((pEntity = UTIL_FindEntityByClassname(pEntity, "team_command")) != nullptr)
+				while ((pEntity = UTIL_FindEntityByClassname(pEntity, "team_command")) != NULL)
 				{
 					break;
 				}
@@ -323,20 +343,20 @@ void CBotGlobals::StartFrame(void)
 				if (pEntity)
 				{
 					// Found a comm console
-					Vector vOrigin = pEntity->v.origin;
+					vOrigin = pEntity->v.origin;
 
 					// find a nearby waypoint
-					int iWpt = WaypointLocations.NearestWaypoint(vOrigin, REACHABLE_RANGE, -1, FALSE);
+					iWpt = WaypointLocations.NearestWaypoint(vOrigin, REACHABLE_RANGE, -1, FALSE);
 
 					if (iWpt == -1)
-						BotMessage(nullptr, 0, "No waypoints for auto-build!!!");
+						BotMessage(NULL, 0, "No waypoints for auto-build!!!");
 					else
 					{
 						// find another waypoint but ignire the nearest one to comm console
 						iWpt = WaypointLocations.NearestWaypoint(WaypointOrigin(iWpt), REACHABLE_RANGE, iWpt, FALSE);
 
 						if (iWpt == -1)
-							BotMessage(nullptr, 0, "No waypoints for auto-build!!!");
+							BotMessage(NULL, 0, "No waypoints for auto-build!!!");
 						else
 						{
 							TraceResult tr;
@@ -355,7 +375,7 @@ void CBotGlobals::StartFrame(void)
 					}
 				}
 				else
-					BotMessage(nullptr, 0, "No marine spawn found for auto-build!!!");
+					BotMessage(NULL, 0, "No marine spawn found for auto-build!!!");
 
 				m_bAutoBuilt = TRUE;
 			}
@@ -410,7 +430,7 @@ void CBotGlobals::StartFrame(void)
 			{
 				if (m_CommConsole.IsUnderAttack())
 				{
-					CBotTask m_NewSchedule[3] = { CBotTask(BOT_TASK_FIND_PATH,0, nullptr,-1,0,m_pMarineStart->v.origin),
+					CBotTask m_NewSchedule[3] = { CBotTask(BOT_TASK_FIND_PATH,0,NULL,-1,0,m_pMarineStart->v.origin),
 						CBotTask(BOT_TASK_SEARCH_FOR_ENEMY),
 						CBotTask(BOT_TASK_SENSE_ENEMY) };
 
@@ -435,23 +455,73 @@ void CBotGlobals::StartFrame(void)
 				else
 					m_CommConsole.Update();
 			}
-			int iBuildingPriority = 0;
+			/*int mTechnology;
+//			int mStatus;
 
-			edict_t* pBuildingUnderAttack = m_HiveMind.Tick(&iBuildingPriority);
+			m_bHasDefTech = TRUE;
+			m_bHasMovTech = TRUE;
+			m_bHasSensTech = TRUE;
+
+			BOOL m_bNoTechnology = TRUE;
+
+			hive_info_t *pHiveInfo;
+
+			int i;
+
+			for ( iIndex = 0; iIndex < BOT_MAX_HIVES; iIndex ++ )
+			{
+				pHiveInfo = &m_Hives[iIndex];
+
+				mTechnology = pHiveInfo->mTechnology;
+
+				if ( pHiveInfo->pHive && (pHiveInfo->pHive->v.fuser1 > 0) )
+				{
+					m_bNoTechnology = ( mTechnology == 0 );
+
+					if ( m_bNoTechnology )
+						break;
+
+					switch ( mTechnology )
+					{
+					case ALIEN_BUILD_DEFENSE_CHAMBER:
+						m_bHasDefTech = TRUE;
+						break;
+					case ALIEN_BUILD_MOVEMENT_CHAMBER:
+						m_bHasMovTech = TRUE;
+						break;
+					case ALIEN_BUILD_SENSORY_CHAMBER:
+						m_bHasSensTech = TRUE;
+						break;
+					}
+				}
+			}
+
+			if ( m_bNoTechnology == TRUE )
+			{
+				// If no def chambers built or whatever they can build anything first.
+				m_bHasDefTech = TRUE;
+				m_bHasMovTech = TRUE;
+				m_bHasSensTech = TRUE;
+			}*/
+			int i;
+			int iBuildingPriority = 0;
+			edict_t* pBuildingUnderAttack;
+
+			pBuildingUnderAttack = m_HiveMind.Tick(&iBuildingPriority);
 
 			if (pBuildingUnderAttack)
 			{
-				CBotTask m_NewSchedule[3] = { CBotTask(BOT_TASK_FIND_PATH,0, nullptr,-1,0,pBuildingUnderAttack->v.origin),
+				CBotTask m_NewSchedule[3] = { CBotTask(BOT_TASK_FIND_PATH,0,NULL,-1,0,pBuildingUnderAttack->v.origin),
 											 CBotTask(BOT_TASK_SEARCH_FOR_ENEMY),
 											 CBotTask(BOT_TASK_SENSE_ENEMY) };
 
-				for (int i = 0; i < MAX_PLAYERS; i++)
+				for (i = 0; i < MAX_PLAYERS; i++)
 				{
 					pBot = &m_Bots[i];
 
 					if (pBot->IsUsed())
 					{
-						const int iGotoChance = (int)((float)iBuildingPriority / 6 * 100);
+						int iGotoChance = (int)((float)iBuildingPriority / 6 * 100);
 
 						if (pBuildingUnderAttack->v.iuser3 == AVH_USER3_HIVE)
 						{
@@ -505,13 +575,13 @@ void CBotGlobals::StartFrame(void)
 			}
 
 			// check for unused clients
-			if ((pClient = m_Clients.GetClientByIndex(iIndex)) == nullptr)
+			if ((pClient = m_Clients.GetClientByIndex(iIndex)) == NULL)
 				continue;
 
 			if (!pClient->IsUsed())
 				continue;
 
-			if ((pPlayer = pClient->GetPlayer()) == nullptr)
+			if ((pPlayer = pClient->GetPlayer()) == NULL)
 				continue;
 
 			if (!*STRING(pPlayer->v.netname))
@@ -526,13 +596,15 @@ void CBotGlobals::StartFrame(void)
 
 		if (IsConfigSettingOn(BOT_CONFIG_BOTS_LEAVE_AND_JOIN))
 		{
-			const int iClientsInGame = iNumClients; // argh, can't debug static variables
-			const float val = (float)iClientsInGame / gpGlobals->maxClients * RANDOM_FLOAT(0.9, 1.3);
+			int iClientsInGame = iNumClients; // argh, can't debug static variables
+			float val = (float)iClientsInGame / gpGlobals->maxClients * RANDOM_FLOAT(0.9, 1.3);
 
 			bBotJoin = val < 0.75;
 		}
 
-		const BOOL bServerFull = iNumClients >= gpGlobals->maxClients;
+		BOOL bAddBot = FALSE;
+
+		BOOL bServerFull = iNumClients >= gpGlobals->maxClients;
 
 		for (iIndex = 0; iIndex < MAX_PLAYERS; iIndex++)
 		{
@@ -555,7 +627,7 @@ void CBotGlobals::StartFrame(void)
 				// ---------------------------------------
 				if (!bServerFull && m_bBotCanRejoin)
 				{
-					BOOL bAddBot = FALSE;
+					bAddBot = FALSE;
 
 					// Bot was in last game so is re-connecting
 					if (m_iMaxBots == -1 &&
@@ -587,7 +659,7 @@ void CBotGlobals::StartFrame(void)
 					if (bAddBot)
 					{
 						// Call addbot function with no parameters to add a bot
-						BotFunc_AddBot(nullptr, nullptr, nullptr, nullptr, nullptr);
+						BotFunc_AddBot(NULL, NULL, NULL, NULL, NULL);
 
 						m_bBotCanRejoin = FALSE;
 						m_fBotRejoinTime = gpGlobals->time + 2.0;
@@ -668,6 +740,8 @@ void CBotGlobals::StartFrame(void)
 
 								if (IsNS() && !IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL))
 								{
+									BOOL bHasWeapon;
+
 									//pBot->m_iBotWeapons = pBot->pev->weapons;
 
 									//pBot->m_Weapons.RemoveWeapons();
@@ -676,7 +750,7 @@ void CBotGlobals::StartFrame(void)
 
 									for (j = 1; j < MAX_WEAPONS; j++)
 									{
-										const BOOL bHasWeapon = pBot->HasWeapon(j);
+										bHasWeapon = pBot->HasWeapon(j);
 
 										if (pBot->pev->weapons & 1 << j && !bHasWeapon)
 										{
@@ -730,6 +804,7 @@ void CBotGlobals::StartFrame(void)
 									pBot->m_iBotWeapons = pBot->pev->weapons;
 								}
 							}
+							//}
 						}
 
 						//try
@@ -753,7 +828,7 @@ void CBotGlobals::StartFrame(void)
 		m_Squads.UpdateAngles();
 
 		// Show waypoints to clients with Waypoint Mode On
-		// WaypointThink();
+//		WaypointThink();
 
 		if (m_BotCam.IsWorking())
 			m_BotCam.Think();
@@ -766,6 +841,175 @@ void CBotGlobals::StartFrame(void)
 	fPreviousTime = gpGlobals->time;
 }
 
+/*int CBotGlobals::TFC_getBestClass(int prefclass, int iTeam)
+{
+	// Input preffered class, if we can't do that then get the next best class
+
+	if (team_class_limits[iTeam - 1] == -1) // civilian only
+		return 0;
+	else if (prefclass > 0)
+	{
+		if (TFC_canGoClass(prefclass, iTeam))
+		{
+			return prefclass;
+		}
+	}
+
+	int i;
+	dataUnconstArray<int> diAllowed;
+
+	for (i = 1; i < TFC_MAX_CLASSES; i++)
+	{
+		if (TFC_canGoClass(i, iTeam))
+			diAllowed.Add(i);
+	}
+
+	if (!diAllowed.IsEmpty())
+	{
+		int iAllowed = diAllowed.Random();
+
+		diAllowed.Clear();
+
+		return iAllowed;
+	}
+
+	return RANDOM_LONG(0, 9);
+}
+
+int CBotGlobals::TFC_getTeamViaColorMap(edict_t* pEdict)
+{
+	if (pEdict->v.colormap == 0xA096)
+		return 1;  // blue team's sentry
+	else if (pEdict->v.colormap == 0x04FA)
+		return 2;  // red team's sentry
+	else if (pEdict->v.colormap == 0x372D)
+		return 3;  // yellow team's sentry
+	else if (pEdict->v.colormap == 0x6E64)
+		return 4;
+
+	return -1;
+}
+
+BOOL CBotGlobals::TFC_playerHasFlag(edict_t* pPlayer)
+{
+	return m_Flags.playerHasFlag(pPlayer);
+}
+
+BOOL CBotGlobals::TFC_canGoClass(int iClass, int iTeam)
+{
+	int iLimit = -1;
+
+	// can't go this class
+	if (team_class_limits[iTeam - 1] & 1 << iClass - 1)
+		return FALSE;
+
+	switch (iClass)
+	{
+	case TFC_CLASS_CIVILIAN:
+		iLimit = TFC_CLASS_CIVILIAN_LIMIT;
+		break;
+	case TFC_CLASS_SCOUT:
+		iLimit = TFC_CLASS_SCOUT_LIMIT;
+		break;
+	case TFC_CLASS_SNIPER:
+		iLimit = TFC_CLASS_SNIPER_LIMIT;
+		break;
+	case TFC_CLASS_SOLDIER:
+		iLimit = TFC_CLASS_SOLDIER_LIMIT;
+		break;
+	case TFC_CLASS_DEMOMAN:
+		iLimit = TFC_CLASS_DEMOMAN_LIMIT;
+		break;
+	case TFC_CLASS_MEDIC:
+		iLimit = TFC_CLASS_MEDIC_LIMIT;
+		break;
+	case TFC_CLASS_HWGUY:
+		iLimit = TFC_CLASS_HWGUY_LIMIT;
+		break;
+	case TFC_CLASS_PYRO:
+		iLimit = TFC_CLASS_PYRO_LIMIT;
+		break;
+	case TFC_CLASS_SPY:
+		iLimit = TFC_CLASS_SPY_LIMIT;
+		break;
+	case TFC_CLASS_ENGINEER:
+		iLimit = TFC_CLASS_ENGINEER_LIMIT;
+		break;
+	}
+
+	return !iLimit || UTIL_ClassOnTeam(iClass, iTeam) < iLimit;
+}
+
+int CBotGlobals::TFC_getBestTeam(int team)
+{
+	// Input the preffered team, if we can't do that get the best team
+
+	if (team >= 5 || team < 1) // auto-assign or invalid
+		return 5; // auto-assign OK
+
+	int players = UTIL_PlayersOnTeam(team);
+	int max_team_players[MAX_TEAMS];
+	int team_class_limits[MAX_TEAMS];
+	int team_allies[MAX_TEAMS];
+	if (max_team_players[team - 1] && players > max_team_players[team - 1])
+	{
+		// find new team
+
+		int newteam;
+
+		for (newteam = 0; newteam < MAX_TEAMS; newteam++)
+		{
+			// already checked
+			if (newteam == team)
+				continue;
+
+			if (max_team_players[newteam - 1] && UTIL_PlayersOnTeam(newteam) < max_team_players[newteam - 1])
+				return newteam;
+		}
+	}
+
+	return team;
+}
+
+BOOL CBotGlobals::TFC_IsAvailableFlag(edict_t* pFlag, int team, BOOL bEnemyFlag)
+{
+	if (m_Flags.isFlag(pFlag, team, bEnemyFlag))
+	{
+		return pFlag->v.owner == NULL;
+	}
+
+	return FALSE;
+}
+
+edict_t* CBotGlobals::randomHeldFlagOnTeam(int team)
+{
+	return m_Flags.getRandomHeldFlagByTeam(team);
+}
+
+BOOL CBotGlobals::TFC_getCaptureLocationForFlag(Vector* vec, edict_t* pFlag)
+{
+	int team, group, goal;
+
+	if (m_Flags.getFlagInfo(pFlag, &group, &goal, &team))
+	{
+		edict_t* pCapture = m_CapPoints.getCapturePoint(group, goal, team);
+
+		if (pCapture)
+		{
+			Vector mins = pCapture->v.mins;
+			Vector maxs = pCapture->v.maxs;
+
+			vec->x = mins.x - (mins.x - maxs.x) / 2;
+			vec->y = mins.y - (mins.y - maxs.y) / 2;
+			vec->z = mins.z - (mins.z - maxs.z) / 2;
+
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+*/
 void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 {
 	// If there has been an entity needing a master add it to the
@@ -787,6 +1031,154 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 				ALERT(at_console,"test");
 			}
 		}*/
+
+	if (IsMod(MOD_TFC))
+	{
+		if (m_currCapPoint && m_currCapPoint->isEdict(pentKeyvalue))
+		{
+			if (FStrEq(pkvd->szKeyName, "team_no"))  // team number allowed for cap point
+			{
+				m_currCapPoint->setTeam(atoi(pkvd->szValue));
+			}
+			else if (FStrEq(pkvd->szKeyName, "axhitme")) // make sure cap point IS a cap point i.e. removes an item from player*/
+			{
+				m_currCapPoint->setGoal(atoi(pkvd->szValue));
+
+				prevCapturePointInvalid = FALSE;
+
+				ALERT(at_console, "Cap point validated\n");
+			}
+			else if (FStrEq(pkvd->szKeyName, "r_i_g")) // make sure cap point IS a cap point i.e. removes an item from player*/
+			{
+				m_currCapPoint->setGroup(atoi(pkvd->szValue));
+
+				prevCapturePointInvalid = FALSE;
+
+				ALERT(at_console, "Cap point validated\n");
+			}
+		}
+		else if (FStrEq(pkvd->szKeyName, "classname"))
+		{
+			if (FStrEq("i_t_g", pkvd->szValue) || FStrEq("info_tfgoal", pkvd->szValue))
+			{
+				if (m_currCapPoint && prevCapturePointInvalid)
+				{
+					m_CapPoints.removePrevCapPoint();
+				}
+
+				m_currCapPoint = m_CapPoints.addCapturePoint(pentKeyvalue);
+				ALERT(at_console, "Capture point found\n");
+				prevCapturePointInvalid = TRUE;
+			}
+		}
+
+		if (pentKeyvalue == m_pTFCDetect)
+		{
+			if (strcmp(pkvd->szKeyName, "ammo_medikit") == 0)  // max BLUE players
+				max_team_players[0] = atoi(pkvd->szValue);
+			else if (strcmp(pkvd->szKeyName, "ammo_detpack") == 0)  // max RED players
+				max_team_players[1] = atoi(pkvd->szValue);
+			else if (strcmp(pkvd->szKeyName, "maxammo_medikit") == 0)  // max YELLOW players
+				max_team_players[2] = atoi(pkvd->szValue);
+			else if (strcmp(pkvd->szKeyName, "maxammo_detpack") == 0)  // max GREEN players
+				max_team_players[3] = atoi(pkvd->szValue);
+
+			else if (strcmp(pkvd->szKeyName, "maxammo_shells") == 0)  // BLUE class limits
+				team_class_limits[0] = atoi(pkvd->szValue);
+			else if (strcmp(pkvd->szKeyName, "maxammo_nails") == 0)  // RED class limits
+				team_class_limits[1] = atoi(pkvd->szValue);
+			else if (strcmp(pkvd->szKeyName, "maxammo_rockets") == 0)  // YELLOW class limits
+				team_class_limits[2] = atoi(pkvd->szValue);
+			else if (strcmp(pkvd->szKeyName, "maxammo_cells") == 0)  // GREEN class limits
+				team_class_limits[3] = atoi(pkvd->szValue);
+
+			else if (strcmp(pkvd->szKeyName, "team1_allies") == 0)  // BLUE allies
+				team_allies[0] = atoi(pkvd->szValue);
+			else if (strcmp(pkvd->szKeyName, "team2_allies") == 0)  // RED allies
+				team_allies[1] = atoi(pkvd->szValue);
+			else if (strcmp(pkvd->szKeyName, "team3_allies") == 0)  // YELLOW allies
+				team_allies[2] = atoi(pkvd->szValue);
+			else if (strcmp(pkvd->szKeyName, "team4_allies") == 0)  // GREEN allies
+				team_allies[3] = atoi(pkvd->szValue);
+		}
+		else if (m_pTFCDetect == NULL)
+		{
+			// only 1 tfc detect we want
+			if (FStrEq(pkvd->szKeyName, "classname") &&
+				FStrEq(pkvd->szValue, "info_tfdetect"))
+			{
+				m_pTFCDetect = pentKeyvalue;
+			}
+		}
+
+		if (m_currFlag && m_currFlag->isEdict(pentKeyvalue))
+		{
+			if (strcmp(pkvd->szKeyName, "team_no") == 0)
+				m_currFlag->setTeam(atoi(pkvd->szValue));
+			else if (strcmpi(pkvd->szKeyName, "mdl") == 0)
+			{
+				prevFlagInvalid = FALSE;
+			}
+			else if (strcmp(pkvd->szKeyName, "goal_no") == 0)
+				m_currFlag->setGoal(atoi(pkvd->szValue)); // Goal number of flag for cap point
+			else if (strcmp(pkvd->szKeyName, "group_no") == 0)
+				m_currFlag->setGroup(atoi(pkvd->szValue)); // Goal number of flag for cap point
+		}
+		else if (!strcmp(pkvd->szKeyName, "classname"))
+		{
+			if (!strcmp("item_tfgoal", pkvd->szValue) ||
+				!strcmp("info_tfgoal_timer", pkvd->szValue)/* ||
+				(!strcmp("i_t_g", pkvd->szValue))*/)
+			{
+				if (m_currFlag && prevFlagInvalid)
+				{
+					m_Flags.removePrevFlag();
+				}
+
+				prevFlagInvalid = TRUE;
+				m_currFlag = m_Flags.addFlag(pentKeyvalue);
+			}
+		}
+
+		if (strcmp(pkvd->szKeyName, "classname") == 0 &&
+			strcmp(pkvd->szValue, "info_tfgoal") == 0 ||
+			strcmp(pkvd->szKeyName, "classname") == 0 &&
+			strcmp(pkvd->szValue, "i_t_g") == 0)
+		{
+			if (m_currBackPack && prevBackPackInvalid)
+			{
+				m_Backpacks.removePrevBackpack();
+			}
+
+			m_currBackPack = m_Backpacks.addBackpack(pentKeyvalue);
+
+			prevBackPackInvalid = TRUE;
+		}
+		else if (m_currBackPack && m_currBackPack->isEdict(pentKeyvalue))
+		{
+			if (strcmp(pkvd->szKeyName, "team_no") == 0)
+				m_currBackPack->setTeam(atoi(pkvd->szValue));
+			else if (strcmp(pkvd->szKeyName, "armorvalue") == 0)
+				m_currBackPack->setArmor(atoi(pkvd->szValue));
+			else if (strcmp(pkvd->szKeyName, "health") == 0)
+				m_currBackPack->setHealth(atoi(pkvd->szValue));
+			else if (strcmp(pkvd->szKeyName, "ammo_nails") == 0 ||
+				strcmp(pkvd->szKeyName, "ammo_rockets") == 0 ||
+				strcmp(pkvd->szKeyName, "ammo_shells") == 0)
+			{
+				m_currBackPack->setAmmo(atoi(pkvd->szValue));
+			}
+			else if (strcmp(pkvd->szKeyName, "ammo_cells") == 0)
+				m_currBackPack->setCells(atoi(pkvd->szValue));
+
+			// Has a model in the game (visible)
+			if (strcmp(pkvd->szKeyName, "mdl") == 0) /*&&
+				(strcmp(pkvd->szValue, "models/backpack.mdl") == 0))*/
+			{
+				prevBackPackInvalid = FALSE;
+			}
+		}
+	}
 }
 
 void CBotGlobals::MapInit(void)
@@ -802,26 +1194,24 @@ void CBotGlobals::MapInit(void)
 	memset(&m_Squads, 0, sizeof(CBotSquads));
 	memset(m_iJoiningClients, 0, sizeof(int) * MAX_PLAYERS);
 	memset(m_iTeamScores, 0, sizeof(int) * MAX_TEAMS);
-	m_pDebugMessage = nullptr;
-	m_pTFCDetect = nullptr;
-	m_pTFCGoal = nullptr;
-	m_pMarineStart = nullptr;
-	
+	m_pDebugMessage = NULL;
+	m_pTFCDetect = NULL;
+	m_pTFCGoal = NULL;
+	m_pMarineStart = NULL;
 	m_bAutoPathWaypoint = TRUE;
 	m_bWaypointsHavePaths = FALSE;
 	m_iBotMsgIndex = -1;
 	m_iCurrentMessageState = 0;
 	m_iCurrentMessageState2 = 0;
 	m_bIsFakeClientCommand = FALSE;
-	
-	m_CurrentMessage = nullptr;
+	m_CurrentMessage = NULL;
 	m_fAutoBuildTime = 0;
 	m_bAutoBuilt = FALSE;
 	m_bNetMessageStarted = FALSE;
-	m_CurrentHandledCvar = nullptr;
+	m_CurrentHandledCvar = NULL;
 	m_fMapInitTime = 0;
 	m_fBotRejoinTime = 0;
-	m_pCommander.Set(nullptr);
+	m_pCommander.Set(NULL);
 
 	m_bHasDefTech = FALSE;
 	m_bHasSensTech = FALSE;
@@ -842,8 +1232,8 @@ void CBotGlobals::MapInit(void)
 
 	m_bTeamPlay = FALSE;
 
-	m_currCapPoint = nullptr;
-	m_currFlag = nullptr;
+	m_currCapPoint = NULL;
+	m_currFlag = NULL;
 
 	prevBackPackInvalid = FALSE;
 	prevCapturePointInvalid = FALSE;
@@ -851,7 +1241,49 @@ void CBotGlobals::MapInit(void)
 
 	const char* mapname = static_cast<const char*>(STRING(gpGlobals->mapname));
 
-	if (IsMod(MOD_TS))
+	if (IsMod(MOD_TFC))
+	{
+		/*
+
+		  TFC_MAP_UNKNOWN,		// unknown map type
+		  TFC_MAP_CTF,			// normal capture the flag (flag in enemy base) e.g. 2fort
+		  TFC_MAP_CAPTURE,		// capture without flag e.g. warpath
+		  TFC_MAP_ATTACK_DEFEND,  // team attacks other defends e.g. dustbowl/avanti
+		  TFC_MAP_CTF_BASE		// capture the flag (flag in your base) e.g. epicenter
+		  TFC_MAP_FLAG_MULTIPLE,  // take many flags capture all of them, e.g. flagrun
+		  TFC_MAP_CAPTURE_FLAG_MULTIPLE,  // capture many points e.g. cz2
+		  TFC_MAP_VIP // hunted type map
+			*/
+
+			// default
+		setMapType(TFC_MAP_CTF);
+
+		if (FStrEq(mapname, "dustbowl") || FStrEq(mapname, "avanti"))
+		{
+			setMapType(TFC_MAP_ATTACK_DEFEND);
+		}
+		else if (FStrEq(mapname, "hunted"))
+		{
+			setMapType(TFC_MAP_VIP);
+		}
+		else if (FStrEq(mapname, "warpath"))
+		{
+			setMapType(TFC_MAP_CAPTURE);
+		}
+		else if (FStrEq(mapname, "epicenter") || FStrEq(mapname, "ravelin"))
+		{
+			setMapType(TFC_MAP_CTF_BASE);
+		}
+		else if (FStrEq(mapname, "flagrun"))
+		{
+			setMapType(TFC_MAP_FLAG_MULTIPLE);
+		}
+		else if (FStrEq(mapname, "cz2"))
+		{
+			setMapType(TFC_MAP_CAPTURE_FLAG_MULTIPLE);
+		}
+	}
+	else if (IsMod(MOD_TS))
 	{
 		if (strncmp(mapname, "tm_", 3) == 0)
 		{
@@ -865,18 +1297,18 @@ void CBotGlobals::MapInit(void)
 	m_sModelIndexFireball = PRECACHE_MODEL("sprites/zerogxplode.spr");
 
 	// so alines and marines know where default start is for marines on the map
-	m_pMarineStart = nullptr;
+	m_pMarineStart = NULL;
 
 	// key value stuff
 	prevFlagInvalid = FALSE;
 	prevBackPackInvalid = FALSE;
 	prevCapturePointInvalid = FALSE;
-	m_currCapPoint = nullptr;
-	m_currFlag = nullptr;
+	m_currCapPoint = NULL;
+	m_currFlag = NULL;
 	//m_pTFCGroup = NULL;
-	m_pTFCDetect = nullptr;
-	m_pTFCGoal = nullptr;
-	m_currBackPack = nullptr;
+	m_pTFCDetect = NULL;
+	m_pTFCGoal = NULL;
+	m_currBackPack = NULL;
 
 	m_fAutoBuildTime = 0;
 	m_bAutoBuilt = FALSE;
@@ -890,7 +1322,7 @@ void CBotGlobals::MapInit(void)
 	m_fMapInitTime = gpGlobals->time;
 	m_fBotRejoinTime = gpGlobals->time;
 
-	SetCommander(nullptr);
+	SetCommander(NULL);
 
 	m_bCanUpgradeDef = FALSE;
 	m_bCanUpgradeSens = FALSE;
@@ -909,11 +1341,11 @@ void CBotGlobals::MapInit(void)
 
 	fpMapConfig = fopen(filename, "r");
 
-	if (fpMapConfig == nullptr)
-		BotMessage(nullptr, 0, "No map specific config file found (%s)", filename);
+	if (fpMapConfig == NULL)
+		BotMessage(NULL, 0, "No map specific config file found (%s)", filename);
 	else
 	{
-		BotMessage(nullptr, 0, "map specific config file found...");
+		BotMessage(NULL, 0, "map specific config file found...");
 
 		// Remove all rejoining bots since theres a specific config.
 
@@ -929,12 +1361,13 @@ void CBotGlobals::MapInit(void)
 const char* CBotGlobals::GetModInfo(void)
 {
 	char game_dir[256];
+	CModInfo* pModInfo;
 
 	GET_GAME_DIR(game_dir);
 
 	int pos = 0;
 
-	if (strchr(game_dir, '/') != nullptr)
+	if (strchr(game_dir, '/') != NULL)
 	{
 		pos = strlen(game_dir) - 1;
 
@@ -946,7 +1379,7 @@ const char* CBotGlobals::GetModInfo(void)
 		{
 			// Error getting directory name!
 
-			BotMessage(nullptr, 1, "Error determining MOD directory name!");
+			BotMessage(NULL, 1, "Error determining MOD directory name!");
 		}
 
 		pos++;
@@ -954,9 +1387,9 @@ const char* CBotGlobals::GetModInfo(void)
 
 	m_szModFolder = m_Strings.GetString(&game_dir[pos]);
 
-	CModInfo* pModInfo = m_Mods.GetModInfo(m_szModFolder);
+	pModInfo = m_Mods.GetModInfo(m_szModFolder);
 
-	if (pModInfo != nullptr)
+	if (pModInfo != NULL)
 	{
 		m_iCurrentMod = pModInfo->GetModId();
 
@@ -971,7 +1404,7 @@ const char* CBotGlobals::GetModInfo(void)
 	/// no mod info
 	GameInit();
 
-	return nullptr;
+	return NULL;
 }
 
 void CBotGlobals::LoadBotModels(void)
@@ -985,7 +1418,7 @@ void CBotGlobals::LoadBotModels(void)
 	//   int index;
 	struct stat stat_str;
 #ifndef __linux__
-	HANDLE directory = nullptr;
+	HANDLE directory = NULL;
 #else
 	DIR* directory = NULL;
 #endif
@@ -1021,7 +1454,7 @@ void CBotGlobals::LoadBotModels(void)
 	// search_path = <search folder>/* (in windows)
 	// or search_path = <search folder>
 
-	while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr)
+	while ((directory = FindDirectory(directory, dirname, search_path)) != NULL)
 	{
 		// don't want to get stuck looking in the same directory again and again (".")
 		// don't wan't to search parent directories ("..")
@@ -1049,9 +1482,11 @@ void CBotGlobals::ReadConfig(void)
 {
 	char filename[256];
 
-	UTIL_BuildFileName(filename, "bot_config.ini", nullptr);
+	FILE* fp;
 
-	FILE* fp = fopen(filename, "r");
+	UTIL_BuildFileName(filename, "bot_config.ini", NULL);
+
+	fp = fopen(filename, "r");
 
 	if (fp)
 	{
@@ -1062,11 +1497,15 @@ void CBotGlobals::ReadConfig(void)
 		char arg4[64];
 		char buffer[256];
 
-		while (fgets(buffer, 127, fp) != nullptr)
-		{
-			int i = 0;
+		int i;
+		int j;
+		int length;
 
-			int length = strlen(buffer);
+		while (fgets(buffer, 127, fp) != NULL)
+		{
+			i = 0;
+
+			length = strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;
@@ -1083,7 +1522,7 @@ void CBotGlobals::ReadConfig(void)
 			while (i < length && buffer[i] == ' ')
 				i++;
 
-			int j = 0;
+			j = 0;
 
 			while (i < length && buffer[i] != ' ')
 				cmd_line[j++] = buffer[i++];
@@ -1124,15 +1563,15 @@ void CBotGlobals::ReadConfig(void)
 			m_CurrentHandledCvar = m_BotCvars.GetCvar(cmd_line);
 
 			if (m_CurrentHandledCvar)
-				m_CurrentHandledCvar->action(nullptr, arg1, arg2, arg3, arg4);
+				m_CurrentHandledCvar->action(NULL, arg1, arg2, arg3, arg4);
 			else
-				BotMessage(nullptr, 0, "Error with config, unknown command : %s", cmd_line);
+				BotMessage(NULL, 0, "Error with config, unknown command : %s", cmd_line);
 		}
 
 		fclose(fp);
 	}
 	else
-		BotMessage(nullptr, 0, "Error: could not find bot config file (%s)", filename);
+		BotMessage(NULL, 0, "Error: could not find bot config file (%s)", filename);
 }
 
 void CBotGlobals::saveLearnedData()
@@ -1157,6 +1596,7 @@ void CBotGlobals::saveLearnedData()
 		}
 
 		//this->m_enemyCostGAsForTeam[i].freeLocalMemory();
+//		this->m_TFCspiesForTeam[i].freeLocalMemory();
 	}
 
 	sprintf(tmpFilename, "tsweaps.rld");
@@ -1209,7 +1649,7 @@ void CBotGlobals::loadLearnedData()
 	for (int i = 0; i < MAX_TEAMS; i++)
 	{
 		CLearnedHeader header = CLearnedHeader(i);
-		const CLearnedHeader checkheader = CLearnedHeader(i);
+		CLearnedHeader checkheader = CLearnedHeader(i);
 
 		sprintf(tmpFilename, "team%d.rld", i);
 		UTIL_BuildFileName(szFilename, tmpFilename);
@@ -1223,7 +1663,7 @@ void CBotGlobals::loadLearnedData()
 			if (header == checkheader)
 				this->m_enemyCostGAsForTeam[i].load(bfp, 16);
 			else
-				BotMessage(nullptr, 0, "Team's learned data for %s header mismatch", tmpFilename);
+				BotMessage(NULL, 0, "Team's learned data for %s header mismatch", tmpFilename);
 
 			fclose(bfp);
 		}
@@ -1309,7 +1749,7 @@ void CBotGlobals::GameInit(void)
 
 	loadLearnedData();
 
-	BotMessage(nullptr, 0, "RCBOT BUILD %s-%s", __DATE__, __TIME__);
+	BotMessage(NULL, 0, "RCBOT BUILD %s-%s", __DATE__, __TIME__);
 }
 
 void CBotGlobals::FreeLocalMemory(void)
@@ -1318,15 +1758,15 @@ void CBotGlobals::FreeLocalMemory(void)
 
 	WaypointInit();
 
-	m_pDebugMessage = nullptr;
+	m_pDebugMessage = NULL;
 
 	this->m_BotCam.Clear();
 
 	this->m_HiveMind.FreeLocalMemory();
 	this->m_Masters.FreeLocalMemory();
 	this->m_Squads.FreeMemory();
-	this->m_CurrentHandledCvar = nullptr;
-	this->m_CurrentMessage = nullptr;
+	this->m_CurrentHandledCvar = NULL;
+	this->m_CurrentMessage = NULL;
 	this->m_iBotMsgIndex = -1;
 	this->m_iCurrentMessageState = 0;
 	this->m_iCurrentMessageState2 = 0;
@@ -1350,22 +1790,40 @@ void CBotGlobals::FreeLocalMemory(void)
 		this->m_Bots[i].m_Weapons.RemoveWeapons();
 	}
 
+	if (IsMod(MOD_TFC))
+	{
+		this->m_Backpacks.FreeMemory();
+		this->m_Flags.FreeMemory();
+		this->m_CapPoints.FreeMemory();
+
+		for (i = 0; i < MAX_TEAMS; i++)
+			this->m_iValidGoals[i].Clear();
+	}
+
 	for (i = 0; i < MAX_TEAMS; i++)
 		this->m_TeamTechs[i].freeMemory();
 }
 
-void CBotGlobals::ReadThingsToBuild(void) const
+void CBotGlobals::ReadThingsToBuild(void)
 {
+	FILE* fp;
+
 	char filename[512];
 	char szbuffer[256];
 	char szline[256];
+	int i;
+	int j;
+
+	int ilen;
 
 	int iBuilding = 0;
 
-	UTIL_BuildFileName(filename, "things_to_build.ini", nullptr);
+	CThingToBuild* theThingsToBuild = NULL;
+
+	UTIL_BuildFileName(filename, "things_to_build.ini", NULL);
 	//	sprintf(szbuffer,"%sthings_to_build.ini",RCBOT_FOLDER);
 
-	FILE* fp = fopen(filename, "r");
+	fp = fopen(filename, "r");
 
 	int iNum;
 	int iPriority;
@@ -1374,14 +1832,14 @@ void CBotGlobals::ReadThingsToBuild(void) const
 	{
 		m_ThingsToBuild->Clear();
 
-		while (fgets(szbuffer, 255, fp) != nullptr)
+		while (fgets(szbuffer, 255, fp) != NULL)
 		{
 			szbuffer[255] = 0;
 
 			if (szbuffer[0] == '#')
 				continue; // comment
 
-			int ilen = strlen(szbuffer);
+			ilen = strlen(szbuffer);
 
 			if (ilen == 0)
 				continue;
@@ -1394,8 +1852,8 @@ void CBotGlobals::ReadThingsToBuild(void) const
 
 			if (szbuffer[0] == '[')
 			{
-				int i = 1;
-				int j = 0;
+				i = 1;
+				j = 0;
 
 				while (i < ilen && szbuffer[i] != ']')
 					szline[j++] = szbuffer[i++];
@@ -1418,7 +1876,7 @@ void CBotGlobals::ReadThingsToBuild(void) const
 			}
 			else if (iBuilding)
 			{
-				CThingToBuild* theThingsToBuild = nullptr;
+				theThingsToBuild = NULL;
 
 				switch (iBuilding)
 				{
@@ -1440,7 +1898,6 @@ void CBotGlobals::ReadThingsToBuild(void) const
 				case AVH_USER3_SENSORY_CHAMBER:
 					theThingsToBuild = &m_ThingsToBuild->m_forSensoryChamber;
 					break;
-				default: ;
 				}
 
 				if (theThingsToBuild)
@@ -1460,7 +1917,7 @@ void CBotGlobals::ReadThingsToBuild(void) const
 		fclose(fp);
 	}
 	else
-		BotMessage(nullptr, 0, "Error: could not find NS aliens build file (%s)", filename);
+		BotMessage(NULL, 0, "Error: could not find NS aliens build file (%s)", filename);
 }
 
 void CBotGlobals::FreeGlobalMemory(void)
@@ -1477,7 +1934,7 @@ void CBotGlobals::FreeGlobalMemory(void)
 	if (this->m_ThingsToBuild)
 	{
 		delete this->m_ThingsToBuild;
-		this->m_ThingsToBuild = nullptr;
+		this->m_ThingsToBuild = NULL;
 	}
 
 	WaypointVisibility.FreeVisibilityTable();
@@ -1541,21 +1998,23 @@ void CBotGlobals::FreeGlobalMemory(void)
 
 void CBotGlobals::SetupBotChat(void)
 {
+	FILE* fp;
 	char filename[512];
 
-	UTIL_BuildFileName(filename, BOT_CHAT_FILE, nullptr);
+	UTIL_BuildFileName(filename, BOT_CHAT_FILE, NULL);
 
-	FILE* fp = fopen(filename, "r");
+	fp = fopen(filename, "r");
 
-	if (fp == nullptr)
+	if (fp == NULL)
 	{
-		BotMessage(nullptr, 0, "Warning : Could not find bot chat file! (%s)", filename);
+		BotMessage(NULL, 0, "Warning : Could not find bot chat file! (%s)", filename);
 		return;
 	}
 
 	char buffer[256];
+	int iLength;
 
-	dataUnconstArray<char*>* chatStack = nullptr;
+	dataUnconstArray<char*>* chatStack = NULL;
 
 	m_BotChat.m_Thanks[2].Init();
 	m_BotChat.m_Thanks[1].Init();
@@ -1585,12 +2044,12 @@ void CBotGlobals::SetupBotChat(void)
 
 	m_BotChat.m_Help.Init();
 
-	while (fgets(buffer, 255, fp) != nullptr)
+	while (fgets(buffer, 255, fp) != NULL)
 	{
 		if (buffer[0] == '#')
 			continue;
 
-		int iLength = strlen(buffer);
+		iLength = strlen(buffer);
 
 		if (buffer[iLength - 1] == '\n')
 		{
@@ -1643,7 +2102,7 @@ void CBotGlobals::SetupBotChat(void)
 			else if (FStrEq(buffer, "[help]"))
 				chatStack = &m_BotChat.m_Help;
 		}
-		else if (chatStack != nullptr)
+		else if (chatStack != NULL)
 		{
 			chatStack->Add(m_Strings.GetString(buffer));
 		}

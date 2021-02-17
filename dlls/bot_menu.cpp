@@ -285,9 +285,11 @@ CBotMenu::CBotMenu(const char* szCaption)
 
 void CBotMenu::DestroyMenu(void)
 {
-	for (int i = 0; i < 10; i++)
+	int i;
+
+	for (i = 0; i < 10; i++)
 	{
-		if (m_Menus[i] != nullptr)
+		if (m_Menus[i] != NULL)
 			m_Menus[i]->Init();
 	}
 }
@@ -308,9 +310,9 @@ CBotMenuItem :: ~CBotMenuItem()
 
 CBotMenuItem::CBotMenuItem(const char* szMenuCaption, CBotMenu* pNextMenu)
 {
-	m_pMenuFunction = nullptr;
-	m_szMenuCaption = nullptr;
-	m_pNextMenu = nullptr;
+	m_pMenuFunction = NULL;
+	m_szMenuCaption = NULL;
+	m_pNextMenu = NULL;
 
 	if (!szMenuCaption)
 		return;
@@ -334,8 +336,8 @@ CBotMenuItem::CBotMenuItem(const char* szMenuCaption)
 
 CBotMenuItem::CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CClient*))
 {
-	m_szMenuCaption = nullptr;
-	m_pNextMenu = nullptr;
+	m_szMenuCaption = NULL;
+	m_pNextMenu = NULL;
 
 	if (!szMenuCaption)
 		return;
@@ -350,9 +352,9 @@ CBotMenuItem::CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CCli
 	m_pMenuFunction = pMenuFunction;
 }
 
-void CBotMenuItem::Activate(CClient* pClient) const
+void CBotMenuItem::Activate(CClient* pClient)
 {
-	if (m_pNextMenu != nullptr)
+	if (m_pNextMenu != NULL)
 	{
 		pClient->m_pMenu = m_pNextMenu;
 		m_pNextMenu->Render(pClient);
@@ -360,40 +362,42 @@ void CBotMenuItem::Activate(CClient* pClient) const
 	else if (m_pMenuFunction)
 	{
 		// bug fix : Nullify current menu
-		pClient->m_pMenu = nullptr;
+		pClient->m_pMenu = NULL;
 		(*m_pMenuFunction)(pClient);
 	}
 	else
 	{
-		pClient->m_pMenu = nullptr;
+		pClient->m_pMenu = NULL;
 	}
 }
 
 void CBotMenu::Render(CClient* pClient)
 {
+	int iSlots;
+	int i;
 	char szMenuText[512];
 	char szMenuItemText[64];
 
-	if (pClient == nullptr)
+	if (pClient == NULL)
 		return;
 
 	szMenuText[0] = 0;
 	szMenuItemText[0] = 0;
 
-	int iSlots = 0;
+	iSlots = 0;
 
 	pClient->m_pMenu = this;
 
 	sprintf(szMenuText, "%s\n-----\nOptions:\n", m_szCaption);
 
-	for (int i = 0; i < 10; i++)
+	for (i = 0; i < 10; i++)
 	{
-		if (m_Menus[i] != nullptr)
+		if (m_Menus[i] != NULL)
 		{
 			if (i == 0)
 				iSlots |= 1 << 9;
 			else
-				iSlots |= 1 << (i - 1);
+				iSlots |= 1 << i - 1;
 
 			if (m_Menus[i]->HasNextMenu())
 				sprintf(szMenuItemText, "%d. %s...\n", i, m_Menus[i]->GetCaption());
@@ -417,7 +421,7 @@ void CBotMenu::Render(CClient* pClient)
 
 void BotMenu_Func_Jump_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -430,7 +434,7 @@ void BotMenu_Func_Jump_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Defend_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -443,7 +447,7 @@ void BotMenu_Func_Defend_Waypoint(CClient* pClient)
 
 void BotMenu_Func_CrouchJump_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -456,7 +460,7 @@ void BotMenu_Func_CrouchJump_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Crouch_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -469,7 +473,7 @@ void BotMenu_Func_Crouch_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Wall_Stick_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -482,12 +486,14 @@ void BotMenu_Func_Wall_Stick_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Remove_All_Paths(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
 
-	for (int i = 0; i < MAX_WAYPOINTS; i++)
+	int i;
+
+	for (i = 0; i < MAX_WAYPOINTS; i++)
 		WaypointDeletePath(iWpt, i);
 
 	WaypointDeletePath(iWpt);
@@ -495,7 +501,7 @@ void BotMenu_Func_Remove_All_Paths(CClient* pClient)
 
 void BotMenu_Func_Remove_Paths_To(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -505,18 +511,20 @@ void BotMenu_Func_Remove_Paths_To(CClient* pClient)
 
 void BotMenu_Func_Remove_Paths_From(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
 
-	for (int i = 0; i < MAX_WAYPOINTS; i++)
+	int i;
+
+	for (i = 0; i < MAX_WAYPOINTS; i++)
 		WaypointDeletePath(iWpt, i);
 }
 
 void BotMenu_Func_Lift_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -531,11 +539,14 @@ void BotMenu_Func_Lift_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Squad_Spread(CClient* pClient)
 {
-	edict_t* pEntity = pClient->GetPlayer();
+	edict_t* pEntity;
+	CBotSquad* pSquad;
 
-	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	pEntity = pClient->GetPlayer();
 
-	if (pSquad == nullptr)
+	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+
+	if (pSquad == NULL)
 	{
 		ClientPrint(pEntity, HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -554,11 +565,14 @@ void BotMenu_Func_Squad_Spread(CClient* pClient)
 
 void BotMenu_Func_Squad_Form(CClient* pClient)
 {
-	edict_t* pEntity = pClient->GetPlayer();
+	edict_t* pEntity;
+	CBotSquad* pSquad;
 
-	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	pEntity = pClient->GetPlayer();
 
-	if (pSquad == nullptr)
+	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+
+	if (pSquad == NULL)
 	{
 		ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -586,11 +600,14 @@ void BotMenu_Func_Squad_Form(CClient* pClient)
 
 void BotMenu_Func_Squad_Form2(CClient* pClient)
 {
-	edict_t* pEntity = pClient->GetPlayer();
+	edict_t* pEntity;
+	CBotSquad* pSquad;
 
-	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	pEntity = pClient->GetPlayer();
 
-	if (pSquad == nullptr)
+	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+
+	if (pSquad == NULL)
 	{
 		ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -618,7 +635,7 @@ void BotMenu_Func_Squad_Form2(CClient* pClient)
 
 void BotMenu_Func_Team_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -646,7 +663,7 @@ void BotMenu_Func_Team_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Fly_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -661,7 +678,7 @@ void BotMenu_Func_Fly_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Teleport_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -676,7 +693,7 @@ void BotMenu_Func_Teleport_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Tank_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -691,7 +708,7 @@ void BotMenu_Func_Tank_Waypoint(CClient* pClient)
 
 void BotMenu_Func_WaitLift_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -706,7 +723,7 @@ void BotMenu_Func_WaitLift_Waypoint(CClient* pClient)
 
 void BotMenu_Func_EndLevel_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -721,13 +738,15 @@ void BotMenu_Func_EndLevel_Waypoint(CClient* pClient)
 
 void BotMenu_Func_KickBot(CClient* pClient)
 {
+	int i;
+
 	CBot* pBot;
 
 	dataUnconstArray<CBot*> m_Bots;
 
 	m_Bots.Init();
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	for (i = 0; i < MAX_PLAYERS; i++)
 	{
 		pBot = &gBotGlobals.m_Bots[i];
 
@@ -752,7 +771,7 @@ void BotMenu_Func_KickBot(CClient* pClient)
 
 void BotMenu_Func_AddBot(CClient* pClient)
 {
-	BotFunc_AddBot(pClient, nullptr, nullptr, nullptr, nullptr);
+	BotFunc_AddBot(pClient, NULL, NULL, NULL, NULL);
 }
 
 void BotMenu_Func_AddBotToTeam(CClient* pClient)
@@ -760,20 +779,20 @@ void BotMenu_Func_AddBotToTeam(CClient* pClient)
 	switch (pClient->m_iLastMenuItemSelected)
 	{
 	case 1:
-		BotFunc_AddBot(pClient, "1", nullptr, nullptr, nullptr);
+		BotFunc_AddBot(pClient, "1", NULL, NULL, NULL);
 		break;
 	case 2:
-		BotFunc_AddBot(pClient, "2", nullptr, nullptr, nullptr);
+		BotFunc_AddBot(pClient, "2", NULL, NULL, NULL);
 		break;
 	case 3:
-		BotFunc_AddBot(pClient, "5", nullptr, nullptr, nullptr);
+		BotFunc_AddBot(pClient, "5", NULL, NULL, NULL);
 		break;
 	}
 }
 
 void BotMenu_Func_StayClose_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -788,7 +807,7 @@ void BotMenu_Func_StayClose_Waypoint(CClient* pClient)
 
 void BotMenu_Func_OpensLater_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -803,7 +822,7 @@ void BotMenu_Func_OpensLater_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Unreachable_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -820,7 +839,7 @@ void BotMenu_Func_Unreachable_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Ladder_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -835,7 +854,7 @@ void BotMenu_Func_Ladder_Waypoint(CClient* pClient)
 
 void BotMenu_Func_HumanTower_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -850,7 +869,7 @@ void BotMenu_Func_HumanTower_Waypoint(CClient* pClient)
 
 void Bot_Menu_Important_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -865,7 +884,7 @@ void Bot_Menu_Important_Waypoint(CClient* pClient)
 
 void Bot_Menu_GrenThrow_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -880,11 +899,14 @@ void Bot_Menu_GrenThrow_Waypoint(CClient* pClient)
 
 void BotMenu_Func_SquadMode1(CClient* pClient)
 {
-	edict_t* pEntity = pClient->GetPlayer();
+	edict_t* pEntity;
+	CBotSquad* pSquad;
 
-	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	pEntity = pClient->GetPlayer();
 
-	if (pSquad == nullptr)
+	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+
+	if (pSquad == NULL)
 	{
 		ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -917,11 +939,14 @@ void BotMenu_Func_SquadMode1(CClient* pClient)
 
 void BotMenu_Func_Squad_Leave(CClient* pClient)
 {
-	edict_t* pEntity = pClient->GetPlayer();
+	edict_t* pEntity;
+	CBotSquad* pSquad;
 
-	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	pEntity = pClient->GetPlayer();
 
-	if (pSquad == nullptr)
+	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+
+	if (pSquad == NULL)
 	{
 		ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -934,11 +959,14 @@ void BotMenu_Func_Squad_Leave(CClient* pClient)
 
 void BotMenu_Func_Squad_Remove(CClient* pClient)
 {
-	edict_t* pEntity = pClient->GetPlayer();
+	edict_t* pEntity;
+	CBotSquad* pSquad;
 
-	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	pEntity = pClient->GetPlayer();
 
-	if (pSquad == nullptr)
+	pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+
+	if (pSquad == NULL)
 	{
 		ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -951,10 +979,13 @@ void BotMenu_Func_Squad_Remove(CClient* pClient)
 
 void BotMenu_Func_Squad_RemoveAllBotSquads(CClient* pClient)
 {
+	int i;
+	CBot* pBot;
+
 	char msg[64];
 	int iCount = 0;
 
-	if (pClient == nullptr)
+	if (pClient == NULL)
 		return; // cant get player
 
 	edict_t* pEntity = pClient->GetPlayer();
@@ -962,9 +993,9 @@ void BotMenu_Func_Squad_RemoveAllBotSquads(CClient* pClient)
 	if (!pEntity)
 		return; // cant get player
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	for (i = 0; i < MAX_PLAYERS; i++)
 	{
-		CBot* pBot = &gBotGlobals.m_Bots[i];
+		pBot = &gBotGlobals.m_Bots[i];
 
 		if (!pBot || !pBot->IsUsed())
 			continue;
@@ -988,17 +1019,21 @@ void BotMenu_Func_DeleteWaypoints(CClient* pClient)
 
 void BotMenu_Func_KickBotFromTeam(CClient* pClient)
 {
+	int i;
+
 	// list of possible bots to kick
 	dataUnconstArray<CBot*> theBots;
 	CBot* pBot;
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	int iBotTeam;
+
+	for (i = 0; i < MAX_PLAYERS; i++)
 	{
 		pBot = &gBotGlobals.m_Bots[i];
 
 		if (pBot && pBot->IsUsed())
 		{
-			const int iBotTeam = UTIL_GetTeam(pBot->m_pEdict);
+			iBotTeam = UTIL_GetTeam(pBot->m_pEdict);
 
 			switch (gBotGlobals.m_iCurrentMod)
 			{
@@ -1044,7 +1079,7 @@ void BotMenu_Func_KickBotFromTeam(CClient* pClient)
 
 void BotMenu_Func_Pushable_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -1059,7 +1094,7 @@ void BotMenu_Func_Pushable_Waypoint(CClient* pClient)
 
 void BotMenu_Func_Sci_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -1074,7 +1109,7 @@ void BotMenu_Func_Sci_Waypoint(CClient* pClient)
 
 void BotMenu_CheckForLift_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
@@ -1100,7 +1135,7 @@ void BotMenu_CheckForLift_Waypoint ( CClient *pClient )
 */
 void BotMenu_Func_Barney_Waypoint(CClient* pClient)
 {
-	const int iWpt = pClient->m_iCurrentWaypoint;
+	int iWpt = pClient->m_iCurrentWaypoint;
 
 	if (iWpt == -1)
 		return;
