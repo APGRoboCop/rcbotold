@@ -4,7 +4,7 @@ RCbot created by Cheeseh
 RCBot versions
 --------------
 
-V 1.5-beta
+V 1.5-final
 
 * added: Few waypoints for The Specialists v3.0 and Natural Selection v3.x
 * added: The Specialists v3.0 support, big thanks to Cheeseh and some admins from tsmod.net
