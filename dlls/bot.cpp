@@ -66,7 +66,6 @@
 
 #include "usercmd.h"
 
-#include <cmath>
 #include <sys/types.h>
 #include <sys/stat.h>
 
