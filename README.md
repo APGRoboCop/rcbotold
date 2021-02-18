@@ -18,7 +18,6 @@ V 1.5-final
 * TODO: Enhance their combat tactics by having better enemy detection
 * TODO: To learn properly on avoiding taking too much falling damage and die in lava pits - despite using proper waypoints
 * TODO: To fix that NS Squad Joining Bug or enhance it
-* TODO: To prevent RCBot "nagging" at the DMC server to addbot too often - even at the max_bots limit
 
 V 1.443
 =---------=
