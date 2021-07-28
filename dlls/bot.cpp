@@ -2389,13 +2389,13 @@ void CBot::StartGame(void)
 		}*/
 
 		break;
-		/*case MOD_GEARBOX: // Support for OP4CTF [APG]RoboCop[CL]
+		case MOD_GEARBOX: // Support for OP4CTF [APG]RoboCop[CL]
 
 			FakeClientCommand(m_pEdict, "jointeam 3");
 			FakeClientCommand(m_pEdict, "selectchar 7");
 			m_bStartedGame = TRUE;
 			break;
-			*/
+			
 			// team fortress
 	/*case MOD_TFC:
 	{
@@ -5817,8 +5817,8 @@ void CBot::LookForNewTasks(void)
 						gBotGlobals.m_iCurrentMod != MOD_RC &&
 						gBotGlobals.m_iCurrentMod != MOD_RC2 &&
 						gBotGlobals.m_iCurrentMod != MOD_BUMPERCARS &&
-						gBotGlobals.m_iCurrentMod != MOD_DMC);
-						//( gBotGlobals.m_iCurrentMod != MOD_GEARBOX ) && // Support for OP4CTF [APG]RoboCop[CL]
+						gBotGlobals.m_iCurrentMod != MOD_DMC &&
+						gBotGlobals.m_iCurrentMod != MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 						//gBotGlobals.m_iCurrentMod != MOD_TFC
 
 					/*if ( gBotGlobals.IsMod(MOD_TFC) )

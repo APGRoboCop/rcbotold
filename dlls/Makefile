@@ -11,7 +11,7 @@ CPP = g++ -m32
 
 BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -DRCBOT_META_BUILD -D__linux__# -D_DEBUG
 
-#CPPFLAGS = ${BASEFLAGS} -g -ggdb -Og -march=i686 -I. -I../engine -I../common -I../pm_shared
+#CPPFLAGS = ${BASEFLAGS} -g -ggdb -Og -march=i686 -I. -I../engine -I../common -I../pm_shared -Wno-write-strings
 
 CPPFLAGS = ${BASEFLAGS} -mtune=generic -march=i686 -mmmx -msse -msse2 -mfpmath=sse -pipe -O2 \
 			-Wno-write-strings -Wno-unused-local-typedefs -funsafe-math-optimizations \
