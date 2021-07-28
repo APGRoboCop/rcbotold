@@ -4,7 +4,7 @@ RCbot created by Cheeseh
 RCBot versions
 --------------
 
-V 1.5-beta
+V 1.5-final
 
 * added: Few waypoints for The Specialists v3.0 and Natural Selection v3.x
 * added: The Specialists v3.0 support, big thanks to Cheeseh and some admins from tsmod.net
@@ -18,7 +18,6 @@ V 1.5-beta
 * TODO: Enhance their combat tactics by having better enemy detection
 * TODO: To learn properly on avoiding taking too much falling damage and die in lava pits - despite using proper waypoints
 * TODO: To fix that NS Squad Joining Bug or enhance it
-* TODO: To prevent RCBot "nagging" at the DMC server to addbot too often - even at the max_bots limit
 
 V 1.443
 =---------=
