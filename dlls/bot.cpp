@@ -9377,6 +9377,30 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 		}
 	}
 	break;*/
+		case MOD_GEARBOX:
+	{
+		char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
+
+		if (strcmp(szClassname, "func_breakable") == 0)
+		{
+			return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
+		}
+		if (!EntityIsAlive(pEntity))
+			return FALSE;
+		if (!gBotGlobals.m_bTeamPlay)
+			return pEntity->v.flags & FL_CLIENT;
+		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		{
+			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
+			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+
+			const char* model1 = g_engfuncs.pfnInfoKeyValue(infobuffer1, "model");
+			const char* model2 = g_engfuncs.pfnInfoKeyValue(infobuffer2, "model");
+
+			return !FStrEq(model1, model2);
+		}
+	}
+	break;
 	case MOD_HL_DM:
 	{
 		char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));

@@ -1170,7 +1170,7 @@ void CBotGlobals::MapInit()
 	m_fNextJoinTeam = 0;
 	m_iNumBots = 0;
 
-	m_bTeamPlay = FALSE;
+	m_bTeamPlay = TRUE;
 
 	m_currCapPoint = NULL;
 	m_currFlag = NULL;
