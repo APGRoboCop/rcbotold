@@ -99,7 +99,7 @@ public:
 		this->Destroy();
 	}
 
-	void Init(void)
+	void Init()
 	{
 		m_Head = NULL;
 		m_Tail = NULL;
@@ -118,7 +118,7 @@ public:
 		return tempNode;
 	}*/
 
-	void Destroy(void)
+	void Destroy()
 	{
 		dataNode<T>* tempNode = NULL;
 
@@ -138,7 +138,7 @@ public:
 		m_Tail = NULL;
 	}
 
-	BOOL IsEmpty(void)
+	BOOL IsEmpty()
 	{
 		return ((m_Head == NULL) || (m_Tail == NULL));
 	}
@@ -180,17 +180,17 @@ public:
 		}
 	}
 
-	T GetFrontInfo(void)
+	T GetFrontInfo()
 	{
 		return m_Head->m_NodeData;
 	}
 
-	T* GetFrontPointer(void)
+	T* GetFrontPointer()
 	{
 		return &m_Head->m_NodeData;
 	}
 
-	T ChooseFrom(void)
+	T ChooseFrom()
 	{
 		T* l_pTemp;
 
@@ -215,7 +215,7 @@ public:
 		return *l_pTemp;
 	}
 
-	T* ChoosePointerFrom(void)
+	T* ChoosePointerFrom()
 	{
 		T* l_pTemp;
 
@@ -240,10 +240,8 @@ public:
 		return l_pTemp;
 	}
 
-	void RemoveFront(void)
+	void RemoveFront()
 	{
-		dataNode<T>* tempNode = m_Head;
-
 		if (m_Head == NULL)
 		{
 			// just set tail to null incase
@@ -254,7 +252,7 @@ public:
 
 		try
 		{
-			tempNode = m_Head;
+			dataNode<T>* tempNode = m_Head;
 
 			if (m_Tail == m_Head)
 			{
@@ -349,7 +347,6 @@ public:
 	BOOL Remove(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
-		dataNode<T>* deleteNode = NULL;
 
 		if (m_Head == NULL)
 			return FALSE;
@@ -378,7 +375,7 @@ public:
 		{
 			if (tempNode->m_Next->m_NodeData == pObj)
 			{
-				deleteNode = tempNode->m_Next;
+				dataNode<T>* deleteNode = tempNode->m_Next;
 
 				if (deleteNode == m_Tail)
 				{
@@ -405,7 +402,6 @@ public:
 	BOOL RemoveByPointer(const T* pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
-		dataNode<T>* deleteNode = NULL;
 
 		if (m_Head == NULL)
 			return FALSE;
@@ -432,7 +428,7 @@ public:
 		{
 			if (&tempNode->m_Next->m_NodeData == pObj)
 			{
-				deleteNode = tempNode->m_Next;
+				dataNode<T>* deleteNode = tempNode->m_Next;
 
 				if (deleteNode == m_Tail)
 				{
@@ -509,7 +505,7 @@ class dataStack
 {
 public:
 
-	void Init(void)
+	void Init()
 	{
 		m_Head = NULL;
 	}
@@ -553,7 +549,6 @@ public:
 	BOOL RemoveByPointer(const T* pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
-		dataNode<T>* deleteNode;
 
 		if (m_Head == NULL)
 			return FALSE;
@@ -571,7 +566,7 @@ public:
 		{
 			if (&tempNode->m_Next->m_NodeData == pObj)
 			{
-				deleteNode = tempNode->m_Next;
+				dataNode<T>* deleteNode = tempNode->m_Next;
 
 				tempNode->m_Next = tempNode->m_Next->m_Next;
 
@@ -593,7 +588,6 @@ public:
 	BOOL Remove(const T &pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
-		dataNode<T>* deleteNode;
 
 		if (m_Head == NULL)
 			return FALSE;
@@ -611,7 +605,7 @@ public:
 		{
 			if (tempNode->m_Next->m_NodeData == pObj)
 			{
-				deleteNode = tempNode->m_Next;
+				dataNode<T>* deleteNode = tempNode->m_Next;
 
 				tempNode->m_Next = tempNode->m_Next->m_Next;
 
@@ -629,13 +623,11 @@ public:
 		return FALSE;
 	}
 
-	void Destroy(void)
+	void Destroy()
 	{
-		dataNode<T>* tempNode;
-
 		while (m_Head)
 		{
-			tempNode = m_Head;
+			dataNode<T>* tempNode = m_Head;
 
 			m_Head = m_Head->m_Next;
 
@@ -648,7 +640,7 @@ public:
 		m_Head = NULL;
 	}
 
-	BOOL IsEmpty(void)
+	BOOL IsEmpty()
 	{
 		return (m_Head == NULL);
 	}
@@ -663,7 +655,7 @@ public:
 		m_Head = newNode;
 	}
 
-	T Pop(void)
+	T Pop()
 	{
 		dataNode<T>* tempNode = m_Head;
 
@@ -675,7 +667,7 @@ public:
 		return returnData;
 	}
 
-	T ChooseFromStack(void)
+	T ChooseFromStack()
 	{
 		T* l_pTemp;
 
@@ -699,7 +691,7 @@ public:
 		return *l_pTemp;
 	}
 
-	T* ChoosePointerFromStack(void)
+	T* ChoosePointerFromStack()
 	{
 		T* l_pTemp;
 
@@ -725,7 +717,7 @@ public:
 
 	// Returns a pointer to the DETAILS (m_NodeData)
 	// in the HEAD.
-	T* GetHeadInfoPointer(void)
+	T* GetHeadInfoPointer()
 	{
 		if (m_Head)
 		{
@@ -757,13 +749,13 @@ public:
 		this->Clear();
 	}
 
-	void Clear(void)
+	void Clear()
 	{
 		free(m_pArray);
 		this->Init();
 	}
 
-	void Init(void)
+	void Init()
 	{
 		m_pArray = NULL;
 		m_iArrayMax = 0;
@@ -771,8 +763,6 @@ public:
 
 	void SetSize(int iArrayMax)
 	{
-		int iSize;
-
 		assert(iArrayMax > 0);
 
 		if (iArrayMax <= 0)
@@ -780,7 +770,7 @@ public:
 
 		//iArrayMax ++;
 
-		iSize = sizeof(T) * iArrayMax;
+		int iSize = sizeof(T) * iArrayMax;
 
 		m_pArray = (T*)malloc(iSize);
 
@@ -835,12 +825,12 @@ class dataUnconstArray
 			this->Clear();
 		}
 
-		inline Size (void)
+		inline Size ()
 		{
 			return m_iArrayMax;
 		}
 
-		inline void Destroy (void)
+		inline void Destroy ()
 		{
 			delete m_pArray;
 		}
@@ -942,7 +932,7 @@ public:
 		this->Clear();
 	}
 
-	int Size(void)
+	int Size()
 	{
 		return size;
 	}
@@ -995,7 +985,7 @@ public:
 		}
 	}
 
-	void Destroy(void)
+	void Destroy()
 	{
 		if (buffer != 0)
 			delete[] buffer;
@@ -1003,25 +993,25 @@ public:
 		Init();
 	}
 
-	void Init(void)
+	void Init()
 	{
 		size = 0;
 		capacity = 0;
 		buffer = 0;
 	}
 
-	bool IsEmpty(void)
+	bool IsEmpty()
 	{
 		return size == 0;
 	}
 
-	void Clear(void)
+	void Clear()
 	{
 		this->Destroy();
 		this->Init();
 	}
 
-	T Random(void)
+	T Random()
 	{
 		return buffer[RANDOM_LONG(0, size - 1)];
 	}

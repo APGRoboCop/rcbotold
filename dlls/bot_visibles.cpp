@@ -99,9 +99,7 @@ edict_t* CBotVisibles::nextVisible()
 {
 	if (m_iIter < m_iVisibleList.Size())
 	{
-		int iEntityIndex = 0;
-
-		iEntityIndex = m_iVisibleList.ReturnValueFromIndex(m_iIter);
+		int iEntityIndex = m_iVisibleList.ReturnValueFromIndex(m_iIter);
 
 		m_iIter++;
 

@@ -87,7 +87,7 @@ public:
 
 	~CBotMenuItem();
 
-	void Init(void)
+	void Init()
 	{
 		m_szMenuCaption = NULL;
 		m_pNextMenu = NULL;
@@ -105,14 +105,14 @@ public:
 
 	CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CClient*));
 
-	BOOL HasNextMenu(void)
+	BOOL HasNextMenu()
 	{
 		return m_pNextMenu != NULL;
 	}
 
 	void Activate(CClient* pClient);
 
-	const char* GetCaption(void)
+	const char* GetCaption()
 	{
 		return m_szMenuCaption;
 	}
@@ -137,9 +137,9 @@ public:
 		//memset(m_Menus,0,sizeof(CBotMenuItem)*10);
 	}
 
-	void DestroyMenu(void);
+	void DestroyMenu();
 
-	void InitMenu(void);
+	void InitMenu();
 
 	CBotMenu(const char* szCaption);
 
@@ -187,7 +187,7 @@ private:
 	char* m_szCaption;
 };
 
-void SetupMenus(void);
+void SetupMenus();
 void BotMenu_Func_DeleteWaypoints(CClient* pClient);
 void BotMenu_Func_Ladder_Waypoint(CClient* pClient);
 void BotMenu_Func_Squad_Form(CClient* pClient);

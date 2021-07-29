@@ -91,8 +91,6 @@ void player(entvars_t* pev)
 
 eBotCvarState CMenuSelectCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	int iMenu;
-
 	if (pClient == NULL)
 	{
 		return BOT_CVAR_CONTINUE; // engine command, so continue anyway.
@@ -108,7 +106,7 @@ eBotCvarState CMenuSelectCommand::action(CClient* pClient, const char* arg1, con
 	if (!*arg1)
 		return BOT_CVAR_ERROR;
 
-	iMenu = atoi(arg1);
+	int iMenu = atoi(arg1);
 
 	if (iMenu < 10)
 	{
@@ -266,10 +264,9 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	{
 		Vector colour = Vector(255, 255, 255);
 
-		char msg[256];
-
 		if (arg2 && *arg2)
 		{
+			char msg[256];
 			strncpy(msg, arg2, 255);
 			msg[255] = 0;
 
@@ -609,17 +606,14 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 
 	if (FStrEq(arg1, "readusers"))
 	{
-		int i;
-		CClient* pPlayerClient;
-
 		gBotGlobals.m_BotUsers.Destroy();
 
 		BotMessage(pEntity, 0, "re-reading bot users...");
 		ReadBotUsersConfig();
 
-		for (i = 0; i < MAX_PLAYERS; i++)
+		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			pPlayerClient = gBotGlobals.m_Clients.GetClientByIndex(i);
+			CClient* pPlayerClient = gBotGlobals.m_Clients.GetClientByIndex(i);
 
 			if (pPlayerClient->IsUsed())
 			{
@@ -689,9 +683,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 					return BOT_CVAR_ERROR;
 				}
 
-				CClient* pPlayerClient;
-
-				pPlayerClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer);
+				CClient* pPlayerClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer);
 
 				gBotGlobals.m_BotUsers.RemovePlayer(STRING(pPlayer->v.netname), pPlayerClient->GetPass(), pPlayerClient->steamID());
 
@@ -1120,12 +1112,10 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 			if (bSuccess)
 			{
-				int i;
-
 				gBotGlobals.m_iMaxPathRevs = iRevs;
 
 				// update each bot currently being used
-				for (i = 0; i < MAX_PLAYERS; i++)
+				for (int i = 0; i < MAX_PLAYERS; i++)
 				{
 					CBot* pBot = &gBotGlobals.m_Bots[i];
 
@@ -1149,12 +1139,10 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 			if (bSuccess)
 			{
-				int i;
-
 				gBotGlobals.m_iMaxVisUpdateRevs = iRevs;
 
 				// update each bot currently being used
-				for (i = 0; i < MAX_PLAYERS; i++)
+				for (int i = 0; i < MAX_PLAYERS; i++)
 				{
 					CBot* pBot = &gBotGlobals.m_Bots[i];
 
@@ -1178,12 +1166,10 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 			if (bSuccess)
 			{
-				int i;
-
 				gBotGlobals.m_fUpdateVisTime = fTime;
 
 				// update each bot currently being used
-				for (i = 0; i < MAX_PLAYERS; i++)
+				for (int i = 0; i < MAX_PLAYERS; i++)
 				{
 					CBot* pBot = &gBotGlobals.m_Bots[i];
 
@@ -1218,7 +1204,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 				BotMessage(pEntity, 0, "%s is now %d", arg1, iState);
 		}
 		else
-			BotMessage(pEntity, 0, "\"%s\" is currently \"%d\"", arg1, (int)gBotGlobals.IsConfigSettingOn(iConfig));
+			BotMessage(pEntity, 0, "\"%s\" is currently \"%d\"", arg1, gBotGlobals.IsConfigSettingOn(iConfig));
 	}
 	else if (!bSetting)
 	{
@@ -1235,9 +1221,6 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	edict_t* pEntity;
-	CBotSquad* theSquad;
-
 	if (!pClient)
 		return BOT_CVAR_ERROR;
 	if (!arg1 || !*arg1)
@@ -1245,9 +1228,9 @@ eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const
 	if (!arg2 || !*arg2)
 		return BOT_CVAR_ERROR;
 
-	pEntity = pClient->GetPlayer();
+	edict_t* pEntity = pClient->GetPlayer();
 
-	theSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
+	CBotSquad* theSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
 	if (theSquad == NULL)
 	{
@@ -1479,15 +1462,13 @@ void CWaypointCommand::showHelp(edict_t* pEntity)
 
 eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	edict_t* pEntity;
-
 	if (pClient == NULL)
 	{
 		BotMessage(NULL, 0, "This command can only be used on the client");
 		return BOT_CVAR_ERROR;
 	}
 
-	pEntity = pClient->GetPlayer();
+	edict_t* pEntity = pClient->GetPlayer();
 
 	if (FStrEq(arg1, "on"))
 	{
@@ -1568,10 +1549,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 {
 	// If numbots > maxbots dont create more
 
-	edict_t* pEdict;
 	edict_t* pEntity = NULL;
-	int iBotIndex;
-	CBot* pBot;
 
 	if (!gpGlobals->deathmatch)
 	{
@@ -1589,7 +1567,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 	int iSkill = DEF_BOT_SKILL;
 
-	iBotIndex = 0;
+	int iBotIndex = 0;
 
 	while (iBotIndex < MAX_PLAYERS && gBotGlobals.m_Bots[iBotIndex].IsUsed())
 		iBotIndex++;
@@ -1600,7 +1578,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		return BOT_CVAR_ERROR;
 	}
 
-	pBot = &gBotGlobals.m_Bots[iBotIndex];
+	CBot* pBot = &gBotGlobals.m_Bots[iBotIndex];
 
 	if (gBotGlobals.m_iMaxBots != -1 && gBotGlobals.m_iNumBots >= gBotGlobals.m_iMaxBots)
 	{
@@ -1690,13 +1668,10 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		// Gather a list of id's in use...
 
 		dataStack<int> l_IdsInUse;
-		dataUnconstArray<int> CanUseIds;
-		CBot* tempBot;
-		int i;
 
-		for (i = 0; i < MAX_PLAYERS; i++)
+		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			tempBot = &gBotGlobals.m_Bots[i];
+			CBot* tempBot = &gBotGlobals.m_Bots[i];
 
 			if (tempBot && tempBot->m_bIsUsed && tempBot->m_pEdict)
 				l_IdsInUse.Push(tempBot->m_Profile.m_iProfileId);
@@ -1704,16 +1679,9 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		//bot_profile_t *bpBotProfile = &gBotGlobals.m_Bots[iBotIndex].m_Profile;
 
-		//if ( !arg1valid && !arg2valid && !arg3valid )
-		//{
-		char szBotProfilePath[128];
-
-		FILE* fp1 = NULL;
-		FILE* fp2 = NULL;
-
 		char filename[512];
 		UTIL_BuildFileName(filename, BOT_PROFILES_FILE);
-		fp1 = fopen(filename, "r");
+		FILE* fp1 = fopen(filename, "r");
 		/*
 		if ( fp1 )
 		{
@@ -1763,6 +1731,8 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		*/
 		if (fp1)
 		{
+			char szBotProfilePath[128];
+			dataUnconstArray<int> CanUseIds;
 			while (!feof(fp1) && !pProfileToOpen)
 			{
 				// pickup a string first (safer)
@@ -1793,7 +1763,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 				UTIL_BuildFileName(szBotProfilePath, "botprofiles", szBotProfile);
 
-				fp2 = fopen(szBotProfilePath, "r");
+				FILE* fp2 = fopen(szBotProfilePath, "r");
 
 				if (fp2)
 				{
@@ -1869,7 +1839,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		return BOT_CVAR_ERROR;
 	}
 
-	pEdict = (*g_engfuncs.pfnCreateFakeClient)(gBotGlobals.m_Bots[iBotIndex].m_Profile.m_szBotName);
+	edict_t* pEdict = (*g_engfuncs.pfnCreateFakeClient)(gBotGlobals.m_Bots[iBotIndex].m_Profile.m_szBotName);
 
 	if (FNullEnt(pEdict))
 	{
@@ -2039,10 +2009,9 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 	// Try and greet someone or everyone
 
-	CClient* greetClient;
-
 	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHATTING))
 	{
+		CClient * greetClient;
 		if ((greetClient = pBot->m_Profile.m_Rep.GetRandomClient(1)) != NULL)
 		{
 			pBot->BotChat(BOT_CHAT_GREETINGS, greetClient->GetPlayer());
@@ -2137,7 +2106,7 @@ void CBotCvarList::AddCvar(CBotCvar* theCommand)
 	m_Cvars.Push(theCommand);
 }
 
-void SetupCommands(void)
+void SetupCommands()
 {
 	/////////////////////
 	// CVARS & COMMANDS
@@ -2165,7 +2134,7 @@ void SetupCommands(void)
 	gBotGlobals.m_BotCvars.AddCvar(new CRemoveBotCommand());
 }
 
-void RCBot_ServerCommand(void)
+void RCBot_ServerCommand()
 {
 	const char* pcmd = CMD_ARGV(1);
 	const char* arg1 = CMD_ARGV(2);

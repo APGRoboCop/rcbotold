@@ -58,7 +58,7 @@
 // test function
 void GiveTSWeapon(edict_t* pEdict, int id);
 
-void SetupCommands(void);
+void SetupCommands();
 
 eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
 

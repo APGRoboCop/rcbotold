@@ -7,9 +7,9 @@
 # the following specifies the path to your MOD...
 #MOD_DIR = /home/paul/hlds_l/rcbot
 
-CPP = g++ -m32
+CPP = g++-4.8 -m32
 
-BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -DRCBOT_META_BUILD -D__linux__# -D_DEBUG
+BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -DRCBOT_META_BUILD -D__linux__ -std=gnu++11# -D_DEBUG
 
 #CPPFLAGS = ${BASEFLAGS} -g -ggdb -Og -march=i686 -I. -I../engine -I../common -I../pm_shared -Wno-write-strings
 

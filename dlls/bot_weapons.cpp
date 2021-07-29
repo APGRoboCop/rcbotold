@@ -97,7 +97,7 @@ void CWeapon::SetWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int 
 	m_bRegistered = TRUE;
 }
 
-BOOL CBotWeapon::CanReload(void)
+BOOL CBotWeapon::CanReload()
 {
 	if (IsMelee())
 		return FALSE;
@@ -110,7 +110,7 @@ BOOL CBotWeapon::CanReload(void)
 	return FALSE;
 }
 
-BOOL CWeapon::IsPrimary(void)
+BOOL CWeapon::IsPrimary()
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -122,7 +122,7 @@ BOOL CWeapon::IsPrimary(void)
 	}
 }
 
-BOOL CWeapon::IsSecondary(void)
+BOOL CWeapon::IsSecondary()
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -197,22 +197,19 @@ void CWeapons::AddWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int
 	}
 }
 
-void CWeaponPresets::ReadPresets(void)
+void CWeaponPresets::ReadPresets()
 {
 	weapon_preset_t sWeaponPreset;
-
-	FILE* fp;
 
 	char filename[512];
 
 	UTIL_BuildFileName(filename, BOT_WEAPON_PRESETS_FILE);
 
-	fp = fopen(filename, "r");
+	FILE* fp = fopen(filename, "r");
 
 	if (fp == NULL)
 		return;
 
-	int iLength;
 	char buffer[256];
 
 	int iModId = 0;
@@ -230,7 +227,7 @@ void CWeaponPresets::ReadPresets(void)
 		if (buffer[0] == '#')
 			continue;
 
-		iLength = strlen(buffer);
+		int iLength = strlen(buffer);
 
 		if (iLength <= 0) // blank line...
 			continue;
@@ -410,9 +407,7 @@ void GetNoWeaponArray(short int* Array)
 
 void GetArrayOfExplosives(short int* Array)
 {
-	int i;
-
-	for (i = 0; i < MAX_WEAPONS; i++)
+	for (int i = 0; i < MAX_WEAPONS; i++)
 	{
 		switch (i)
 		{
@@ -850,7 +845,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	return iBestMeleeWeaponId;*/
 }
 
-BOOL CBotWeapon::NeedToReload(void)
+BOOL CBotWeapon::NeedToReload()
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -904,10 +899,9 @@ BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWall
 
 BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname)
 {
-	int i;
 	const char* pClassname;
 
-	for (i = 1; i < MAX_WEAPONS; i++)
+	for (int i = 1; i < MAX_WEAPONS; i++)
 	{
 		if (HasWeapon(pEdict, i))
 		{

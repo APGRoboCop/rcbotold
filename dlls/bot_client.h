@@ -122,7 +122,7 @@ public:
 		return m_szMessageName;
 	}
 
-	int MessageNum(void)
+	int MessageNum()
 	{
 		return m_iMessage;
 	}
@@ -195,7 +195,7 @@ public:
 		}
 	}
 
-	void Destroy(void)
+	void Destroy()
 	{
 		m_NetMessages.Destroy();
 	}
@@ -637,7 +637,7 @@ public:
 	}
 	void execute(void* p, int iIndex); // override base function
 };
-void SetupNetMessages(void);
+void SetupNetMessages();
 
 class CBotStatedNetMessage : public CBotNetMessage
 {

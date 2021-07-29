@@ -108,7 +108,7 @@
 
 extern CBotGlobals gBotGlobals;
 
-void SetupNetMessages(void)
+void SetupNetMessages()
 {
 #ifdef _DEBUG
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_TS_RoundTime());

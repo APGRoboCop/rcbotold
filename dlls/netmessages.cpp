@@ -93,13 +93,12 @@ void CBotNetMessages::execute(int iMessage, void* p, int i)
 
 CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName)
 {
-	CBotNetMessage* l_currMsg;
 	dataStack<CBotNetMessage*> l_tempStack = m_NetMessages;
 
 	while (!l_tempStack.IsEmpty())
 	{
 		// Cheat here, use the stack
-		l_currMsg = l_tempStack.ChooseFromStack();
+		CBotNetMessage* l_currMsg = l_tempStack.ChooseFromStack();
 
 		if (!l_currMsg->MessageForMod(MOD_ANY))
 		{

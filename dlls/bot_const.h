@@ -1095,17 +1095,17 @@ typedef enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.5_mm_debug"
+#define BOT_VER "1.51_mm_debug"
 #else
-#define BOT_VER "1.5_mm"
+#define BOT_VER "1.51_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.5_debug"
+#define BOT_VER "1.51_debug"
 #else
-#define BOT_VER "1.5"
+#define BOT_VER "1.51"
 #endif
 
 #endif

@@ -76,8 +76,8 @@ void CBits::freeMemory()
 
 void CBits::setBit(const int iBit, const BOOL bSet)
 {
-	int iBitStart = iBit / 8;
-	int iBitOffset = iBit % 8;
+	const int iBitStart = iBit / 8;
+	const int iBitOffset = iBit % 8;
 
 	unsigned char* c = &m_cBits[iBitStart];
 
@@ -89,8 +89,8 @@ void CBits::setBit(const int iBit, const BOOL bSet)
 
 BOOL CBits::getBit(const int iBit)
 {
-	int iBitStart = iBit / 8;
-	int iBitOffset = iBit % 8;
+	const int iBitStart = iBit / 8;
+	const int iBitOffset = iBit % 8;
 
 	unsigned char* c = &m_cBits[iBitStart];
 
@@ -99,7 +99,7 @@ BOOL CBits::getBit(const int iBit)
 
 void CBits::load(FILE* bfp)
 {
-	CGenericHeader header = CGenericHeader(LEARNTYPE_BITS, (int)m_iNumBits);
+	CGenericHeader header = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
 	if (!header.read(bfp, header))
 	{
@@ -134,11 +134,9 @@ void CBits::randomize()
 
 void CBits::setup(const int iNumBits)
 {
-	int iSize;
-
 	m_iNumBits = iNumBits;
 
-	iSize = size();
+	const int iSize = size();
 
 	m_cBits = new unsigned char[iSize];
 
@@ -153,7 +151,7 @@ int CBits::size()
 
 void CBits::save(FILE* bfp)
 {
-	CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS, (int)m_iNumBits);
+	CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
 	checkHeader.write(bfp);
 
