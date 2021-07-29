@@ -4,7 +4,21 @@ RCbot created by Cheeseh
 RCBot versions
 --------------
 
+V 1.51
+=---------=
+
+* added: Opposing Force CTF Support
+* changed: Reduced redundant coding
+* fixed: Some potential errors and bugs have been wiped
+* TODO: To prevent bots in Op4CTF from team shooting each other
+* TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
+* TODO: Enhance their combat tactics by having better enemy detection
+* TODO: To learn properly on avoiding taking too much falling damage and die in lava pits - despite using proper waypoints
+* TODO: To fix that NS Squad Joining Bug or enhance it
+
+
 V 1.5-final
+=---------=
 
 * added: Few waypoints for The Specialists v3.0 and Natural Selection v3.x
 * added: The Specialists v3.0 support, big thanks to Cheeseh and some admins from tsmod.net
