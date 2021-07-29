@@ -2371,6 +2371,10 @@ void CBot::StartGame()
 			m_bStartedGame = TRUE;
 			gBotGlobals.m_bTeamPlay = TRUE;
 		
+			FakeClientCommand(m_pEdict, "slot3");
+			FakeClientCommand(m_pEdict, "+attack");
+			FakeClientCommand(m_pEdict, "-attack");
+		
 		break;
 			
 			// team fortress

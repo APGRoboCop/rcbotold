@@ -160,8 +160,8 @@ void SetupMenus()
 	}
 	else if (gBotGlobals.IsMod(MOD_GEARBOX))
 	{
-		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(1, "Flag Point", BotMenu_Func_Sci_Waypoint);
-		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(2, "Capture Point", BotMenu_Func_EndLevel_Waypoint);
+		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(1, "Flag Point Op4", BotMenu_Func_Sci_Waypoint);
+		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(2, "Capture Point Op4", BotMenu_Func_Barney_Waypoint);
 	}	
 	else
 	{
