@@ -492,9 +492,9 @@ BOOL WaypointLoad(edict_t* pEntity)
 
 		BOOL bWorkOutVisibility = (header.waypoint_file_flags & W_FILE_FL_READ_VISIBILITY) == W_FILE_FL_READ_VISIBILITY;
 
-		if (strcmp(header.filetype, "RCBot") == 0 || strcmp(header.filetype, "HPB_bot") == 0)
+		if (strcmp(header.filetype, "Sandbot") == 0 || (strcmp(header.filetype, "RCBot") == 0) || (strcmp(header.filetype, "HPB_bot") == 0))
 		{
-			if (header.waypoint_file_version != WAYPOINT_VERSION)
+			if (header.waypoint_file_version > WAYPOINT_VERSION)
 			{
 				if (pEntity)
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible RCBot waypoint file version!\nWaypoints not loaded!\n");

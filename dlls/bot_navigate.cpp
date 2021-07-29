@@ -67,6 +67,7 @@ static FILE* fp;
 extern WAYPOINTS waypoints;//[MAX_WAYPOINTS];
 extern CWaypointLocations WaypointLocations;
 extern CBotGlobals gBotGlobals;
+//extern edict_t *pent_info_ctfdetect; // Op4CTF Support [APG]RoboCop[CL]
 
 AStarNode::AStarNode()
 {
@@ -384,7 +385,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 					continue;
 			}
 
-			if (gBotGlobals.IsMod(MOD_SVENCOOP) || gBotGlobals.IsMod(MOD_TFC))
+			if (gBotGlobals.IsMod(MOD_SVENCOOP) || gBotGlobals.IsMod(MOD_GEARBOX))
 			{
 				if (!gBotGlobals.IsMod(MOD_TFC) && (iSuccNodeFlags & W_FL_GREN_THROW && !bCanThrowGren))
 					continue; // can't throw a grenade at a "throw gren waypoint"
