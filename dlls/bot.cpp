@@ -2371,10 +2371,13 @@ void CBot::StartGame()
 			m_bStartedGame = TRUE;
 			gBotGlobals.m_bTeamPlay = TRUE;
 		
-			FakeClientCommand(m_pEdict, "slot3");
+			FakeClientCommand(m_pEdict, "slot2"); //Draw Deagle
 			FakeClientCommand(m_pEdict, "+attack");
 			FakeClientCommand(m_pEdict, "-attack");
-		
+			
+			FakeClientCommand(m_pEdict, "+attack2"); //Toggle Laser Sight
+			FakeClientCommand(m_pEdict, "-attack2");
+			
 		break;
 			
 			// team fortress
