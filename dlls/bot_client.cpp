@@ -217,7 +217,7 @@ void BotClient_TS_State::execute(void* p, int iIndex)
 	switch (POINTER_VALUE(state))
 	{
 	case 0:
-		gBotGlobals.m_Bots[iIndex].m_iTS_State = (eTS_State)*static_cast<int*>(p);
+		gBotGlobals.m_Bots[iIndex].m_iTS_State = (eTS_State) * static_cast<int*>(p);
 		break;
 	case 1:
 		break;

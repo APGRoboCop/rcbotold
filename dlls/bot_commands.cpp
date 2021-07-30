@@ -2011,7 +2011,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHATTING))
 	{
-		CClient * greetClient;
+		CClient* greetClient;
 		if ((greetClient = pBot->m_Profile.m_Rep.GetRandomClient(1)) != NULL)
 		{
 			pBot->BotChat(BOT_CHAT_GREETINGS, greetClient->GetPlayer());

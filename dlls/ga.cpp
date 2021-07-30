@@ -334,16 +334,16 @@ void CGA::freeLocalMemory()
 	m_thePopulation.freeMemory();
 	m_theNewPopulation.freeMemory();
 	m_iNumGenerations = 0;
-//	if (m_bestIndividual)
-		delete m_bestIndividual;
+	//	if (m_bestIndividual)
+	delete m_bestIndividual;
 	m_bestIndividual = NULL;
 }
 
 void CGA::freeGlobalMemory()
 {
 	freeLocalMemory();
-//	if (m_theSelectFunction)
-		delete m_theSelectFunction;
+	//	if (m_theSelectFunction)
+	delete m_theSelectFunction;
 	m_theSelectFunction = NULL;
 }
 

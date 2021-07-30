@@ -508,18 +508,18 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 			iAllowedWeapons[NS_WEAPON_MINE] = 0;
 
 		break;
-	/*case MOD_TFC:
-		if (pEnemy && pEnemy->v.flags & FL_MONSTER)
-		{
-			iAllowedWeapons[TF_WEAPON_MEDIKIT] = 0;
-		}
-		if (pBot->hasFlag())
-		{
-			iAllowedWeapons[TF_WEAPON_KNIFE] = 0;
-			iAllowedWeapons[TF_WEAPON_AXE] = 0;
-			iAllowedWeapons[TF_WEAPON_SPANNER] = 0;
-		}
-		break;*/
+		/*case MOD_TFC:
+			if (pEnemy && pEnemy->v.flags & FL_MONSTER)
+			{
+				iAllowedWeapons[TF_WEAPON_MEDIKIT] = 0;
+			}
+			if (pBot->hasFlag())
+			{
+				iAllowedWeapons[TF_WEAPON_KNIFE] = 0;
+				iAllowedWeapons[TF_WEAPON_AXE] = 0;
+				iAllowedWeapons[TF_WEAPON_SPANNER] = 0;
+			}
+			break;*/
 	case MOD_BG:
 		if (pBot->m_pCurrentWeapon != NULL)
 		{

@@ -674,7 +674,8 @@ void ClientKill(edict_t* pEntity)
 	if (debug_engine) {
 		FILE* fp = fopen("bot.txt", "a");
 		fprintf(fp, "ClientKill: %x\n", unsigned(pEntity));
-		fclose(fp); }
+		fclose(fp);
+	}
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -688,7 +689,8 @@ void ClientPutInServer(edict_t* pEntity)
 	if (debug_engine) {
 		FILE* fp = fopen("bot.txt", "a");
 		fprintf(fp, "ClientPutInServer: %x\n", unsigned(pEntity));
-		fclose(fp); }
+		fclose(fp);
+	}
 
 	gBotGlobals.m_Clients.ClientConnected(pEntity);
 
@@ -1072,7 +1074,8 @@ void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
 	if (debug_engine) {
 		FILE* fp = fopen("bot.txt", "a");
 		fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", unsigned(pEntity), infobuffer);
-		fclose(fp); }
+		fclose(fp);
+	}
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1226,7 +1229,8 @@ void PlayerCustomization(edict_t* pEntity, customization_t* pCust)
 	if (debug_engine) {
 		FILE* fp = fopen("bot.txt", "a");
 		fprintf(fp, "PlayerCustomization: %x\n", unsigned(pEntity));
-		fclose(fp); }
+		fclose(fp);
+	}
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1409,7 +1413,8 @@ int InconsistentFile(const edict_t* player, const char* filename, char* disconne
 	if (debug_engine) {
 		FILE* fp = fopen("bot.txt", "a");
 		fprintf(fp, "InconsistentFile: %x filename=%s\n", unsigned(player), filename);
-		fclose(fp); }
+		fclose(fp);
+	}
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);

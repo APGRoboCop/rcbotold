@@ -69,7 +69,7 @@
 
 #ifndef RCBOT_META_BUILD
 
-// stuff for Win32 vs. Linux builds
+ // stuff for Win32 vs. Linux builds
 
 #ifndef linux
 #define strcmpi _strcmpi
@@ -716,7 +716,7 @@ public:
 		memset(this, 0, sizeof(CBotTask));
 	}
 
-	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = NULL, int iInfo = 0, float fInfo = 0, 
+	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = NULL, int iInfo = 0, float fInfo = 0,
 		Vector vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0/*, CBotTask *GoalTask = NULL */)
 	{
 		// cheap way of adding schedules.. ;)
@@ -1513,7 +1513,7 @@ typedef struct path {
 ////////////////////////////
 // Bot Profile Info
 // TODO: those need to be initialised for Bot Profile to work [APG]RoboCop[CL]
-typedef struct bot_profile_s 
+typedef struct bot_profile_s
 {
 	int m_iProfileId;
 
@@ -2607,8 +2607,8 @@ public:
 		{
 			CBotSquad* pSquad = tempStack.ChooseFromStack();
 
-//			if (pSquad)
-				delete pSquad;
+			//			if (pSquad)
+			delete pSquad;
 			pSquad = NULL;
 		}
 
@@ -5378,7 +5378,7 @@ public:
 							break;
 						}
 
-						if (iPriority > * iBestPriority)
+						if (iPriority > *iBestPriority)
 						{
 							pUnderAttackStruct = pStructure->GetEntity();
 							*iBestPriority = iPriority;
@@ -6189,7 +6189,7 @@ public:
 		m_Mods.AddMod("cstrike", "mp", MOD_COUNTERSTRIKE);
 		//m_Mods.AddMod("tfc", "tfc", MOD_TFC);
 		m_Mods.AddMod("rspecies", "hl", MOD_RS); // rival species meh..
-		m_Mods.AddMod("gearbox","opfor",MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
+		m_Mods.AddMod("gearbox", "opfor", MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 #else
 		// LINUX
 		// Add mod folders and their name before the _i386 postfix of the so files.
@@ -6211,7 +6211,7 @@ public:
 		m_Mods.AddMod("cstrike", "mp", MOD_COUNTERSTRIKE);
 		//m_Mods.AddMod("tfc", "tfc", MOD_TFC);
 		m_Mods.AddMod("rspecies", "hl", MOD_RS);
-		m_Mods.AddMod("gearbox","opfor",MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
+		m_Mods.AddMod("gearbox", "opfor", MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 
 #endif
 		// same for linux & windows
@@ -6438,7 +6438,7 @@ public:
 	{
 		return team_allies[team1] & 1 << team2 - 1;
 	}
-	
+
 	BOOL TFC_playerHasFlag(edict_t* pPlayer);
 	BOOL TFC_getCaptureLocationForFlag(Vector* vec, edict_t* pFlag);
 

@@ -105,9 +105,11 @@ int pfnPrecacheSound(char* s)
 }
 void pfnSetModel(edict_t* e, const char* m)
 {
-	if (debug_engine) { fp = fopen("bot.txt", "a");
+	if (debug_engine) {
+		fp = fopen("bot.txt", "a");
 		fprintf(fp, "pfnSetModel: edict=%x %s\n", unsigned(e), m);
-		fclose(fp); }
+		fclose(fp);
+	}
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -136,9 +138,11 @@ int pfnModelFrames(int modelIndex)
 }
 void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 {
-	if (debug_engine) { fp = fopen("bot.txt", "a");
+	if (debug_engine) {
+		fp = fopen("bot.txt", "a");
 		fprintf(fp, "pfnSetSize: %x\n", unsigned(e));
-		fclose(fp); }
+		fclose(fp);
+	}
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1321,9 +1325,11 @@ void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 		pBot->m_fMaxSpeed = fNewMaxspeed;
 	}
 
-	if (debug_engine) { fp = fopen("bot.txt", "a");
+	if (debug_engine) {
+		fp = fopen("bot.txt", "a");
 		fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", unsigned(pEdict), fNewMaxspeed);
-		fclose(fp); }
+		fclose(fp);
+	}
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1397,7 +1403,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 
 			if (iOldPlayerRepId != -1) // otherwise : error...
 			{
-				CBotReputation * pRep;
+				CBotReputation* pRep;
 				for (int i = 0; i < MAX_PLAYERS; i++)
 				{
 					CBot* pBot = &gBotGlobals.m_Bots[i];
@@ -1481,9 +1487,11 @@ int pfnGetPlayerUserId(edict_t* e)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) { fp = fopen("bot.txt", "a");
+		if (debug_engine) {
+			fp = fopen("bot.txt", "a");
 			fprintf(fp, "pfnGetPlayerUserId: %x\n", unsigned(e));
-			fclose(fp); }
+			fclose(fp);
+		}
 	}
 
 #ifdef RCBOT_META_BUILD
@@ -1553,9 +1561,11 @@ unsigned int pfnGetPlayerWONId(edict_t* e)
 		}
 	}
 
-	if (debug_engine) { fp = fopen("bot.txt", "a");
+	if (debug_engine) {
+		fp = fopen("bot.txt", "a");
 		fprintf(fp, "pfnGetPlayerWONId: %x\n", unsigned(e));
-		fclose(fp); }
+		fclose(fp);
+	}
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1800,7 +1810,7 @@ const char* pfnCmd_Args()
 	// is this a bot issuing that client command ?
 	if (gBotGlobals.m_bIsFakeClientCommand)
 	{
-		extern char * g_argv;
+		extern char* g_argv;
 #ifdef RCBOT_META_BUILD
 		// is it a "say" or "say_team" client command ?
 		if (strncmp("say ", g_argv, 4) == 0)
@@ -1839,7 +1849,7 @@ const char* pfnCmd_Argv(int argc)
 #ifdef RCBOT_META_BUILD
 	if (gBotGlobals.m_bIsFakeClientCommand)
 	{
-		extern char * g_argv;
+		extern char* g_argv;
 		RETURN_META_VALUE(MRES_SUPERCEDE, GetArg(g_argv, argc));
 	}
 	else

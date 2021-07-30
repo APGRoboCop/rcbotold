@@ -163,7 +163,7 @@ bool CompareAStarNode(AStarNode* a, AStarNode* b)
 int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 {
 	dataStack<int> sTempList;
-	dataUnconstArray<AStarNode*> *sOpenList;
+	dataUnconstArray<AStarNode*>* sOpenList;
 	//std::priority_queue<AStarNode*, std::vector<AStarNode*>, CompareAStarNode>* sOpenList;
 
 	AStarNode* aPathsFound;
@@ -1968,8 +1968,8 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 
 				// a way to find out if this is a lift (big enough for the bot to walk on)
 				BOOL bIsLift = pHit->v.movedir.z &&
-				(pHit->v.size.x > pBot->pev->size.z &&
-					pHit->v.size.y > pBot->pev->size.z);
+					(pHit->v.size.x > pBot->pev->size.z &&
+						pHit->v.size.y > pBot->pev->size.z);
 
 				if (BotFunc_EntityIsMoving(&pHit->v))
 				{
@@ -2003,7 +2003,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 						if (bIsLift)
 						{
 							int iWaitForLiftWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, REACHABLE_RANGE,
-							                                              pBot->m_iTeam, W_FL_LIFT, &pBot->m_FailedGoals);
+								pBot->m_iTeam, W_FL_LIFT, &pBot->m_FailedGoals);
 
 							if (iWaitForLiftWpt == -1)
 								iWaitForLiftWpt = pBot->m_iPrevWaypointIndex;

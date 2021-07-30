@@ -1495,7 +1495,7 @@ void WaypointDrawBeam(edict_t* pEntity, Vector start, Vector end, int width,
 	MESSAGE_END();
 }
 
-int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity, 
+int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
 	const BOOL bDraw, const BOOL bSound, const BOOL bAutoSetFlagsForPlayer)
 {
 	TraceResult tr;

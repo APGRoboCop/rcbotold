@@ -154,9 +154,11 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 	{
 		int index = -1;
 
-		if (debug_engine) { fp = fopen("bot.txt", "a");
+		if (debug_engine) {
+			fp = fopen("bot.txt", "a");
 			fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
-			fclose(fp); }
+			fclose(fp);
+		}
 
 		m_CurrentMessage = NULL;
 		m_iCurrentMessageState = 0;
@@ -272,7 +274,7 @@ void CBotGlobals::StartFrame()
 	{
 		static BOOL bUpdateClientData;
 		static int iNumClients = 0;
-		static CBot * pBot = NULL;
+		static CBot* pBot = NULL;
 		///////////////////////////
 		// ???
 		// braindead check
