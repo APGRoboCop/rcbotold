@@ -78,7 +78,7 @@ CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, floa
 
 void CPerceptron::setWeights(CBotGAValues* vals, int iFrom, int iNum)
 {
-	float bias = m_weights[0];
+	const float bias = m_weights[0];
 
 	m_weights.clear();
 

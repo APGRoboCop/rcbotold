@@ -138,7 +138,7 @@ private:
 #define W_FL_TFC_CAPTURE_POINT (1<<12)
 #define W_FL_MARINE_BUILDING (1<<12) // Ns: marine building put here
 #define W_FL_SCIENTIST_POINT (1<<11)
-#define W_FL_TFC_FLAG_POINT (1<<11)
+//#define W_FL_TFC_FLAG_POINT (1<<11)
 #define W_FL_BARNEY_POINT   (1<<12)
 #define W_FL_DEFEND_ZONE    (1<<13)
 //#define W_FL_CROUCHJUMP		(1<<13) /* weapon(s) here */
@@ -156,14 +156,14 @@ private:
 #define W_FL_FLY			(1<<23)
 #define W_FL_STAY_NEAR		(1<<24)
 #define W_FL_ENDLEVEL       (1<<25) // end of level, in svencoop etc
-#define W_FL_TFC_DETPACK    (1<<25)
+//#define W_FL_TFC_DETPACK    (1<<25)
 #define W_FL_OPENS_LATER    (1<<26)
 #define W_FL_HUMAN_TOWER    (1<<27) // bot will crouch & wait for a player to jump on them
 #define W_FL_UNREACHABLE    (1<<28) // not reachable by bot, used as a reference point for visibility only
 #define W_FL_PUSHABLE       (1<<29)
-#define W_FL_TFC_SENTRY     (1<<29)
+//#define W_FL_TFC_SENTRY     (1<<29)
 #define W_FL_GREN_THROW     (1<<30)
-#define W_FL_TFC_SNIPER     (1<<30)
+//#define W_FL_TFC_SNIPER     (1<<30)
 #define W_FL_DELETED		(1<<31) /* used by waypoint allocation code */
 
 #define WAYPOINT_VERSION 4
@@ -502,7 +502,7 @@ class CWaypointVisibilityTable
 public:
 	CWaypointVisibilityTable()
 	{
-		int iSize = g_iMaxVisibilityByte;
+		const int iSize = g_iMaxVisibilityByte;
 		//create a heap...
 		m_VisTable = static_cast<unsigned char*>(malloc(iSize));
 
@@ -516,10 +516,10 @@ public:
 	BOOL GetVisibilityFromTo(int iFrom, int iTo)
 	{
 		// work out the position
-		int iPosition = iFrom * MAX_WAYPOINTS + iTo;
+		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
 
-		int iByte = iPosition / 8;
-		int iBit = iPosition % 8;
+		const int iByte = iPosition / 8;
+		const int iBit = iPosition % 8;
 
 		if (iByte < g_iMaxVisibilityByte)
 		{
@@ -548,10 +548,10 @@ public:
 
 	void SetVisibilityFromTo(int iFrom, int iTo, BOOL bVisible)
 	{
-		int iPosition = iFrom * MAX_WAYPOINTS + iTo;
+		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
 
-		int iByte = iPosition / 8;
-		int iBit = iPosition % 8;
+		const int iByte = iPosition / 8;
+		const int iBit = iPosition % 8;
 
 		if (iByte < g_iMaxVisibilityByte)
 		{

@@ -163,7 +163,7 @@ ga_value CPopulation::bestFitness()
 
 	for (unsigned int i = 0; i < size(); i++)
 	{
-		float fFitness = m_theIndividuals[i]->getFitness();
+		const float fFitness = m_theIndividuals[i]->getFitness();
 
 		if (!gotBestFitness || fFitness > fBestFitness)
 		{
@@ -363,7 +363,7 @@ IIndividual* CGA::pick()
 
 IIndividual* CRouletteSelection::select(CPopulation* population)
 {
-	ga_value fFitnessSlice = RANDOM_FLOAT(0, population->totalFitness());
+	const ga_value fFitnessSlice = RANDOM_FLOAT(0, population->totalFitness());
 	ga_value fFitnessSoFar = 0.0f;
 
 	for (unsigned int i = 0; i < population->size(); i++)

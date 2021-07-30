@@ -318,7 +318,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		pPath = NULL;
 		iPathIndex = 0;
 
-		bDetpackWpt = pCurWpt->flags & W_FL_TFC_DETPACK;
+		//bDetpackWpt = pCurWpt->flags & W_FL_TFC_DETPACK;
 
 		bDeleteLoopPath = FALSE;
 
@@ -364,7 +364,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 			{
 				if (iSuccNodeFlags & W_FL_OPENS_LATER)
 				{
-					if (gBotGlobals.IsMod(MOD_TFC) && pBot->pev->playerclass == TFC_CLASS_DEMOMAN)
+					/*if (gBotGlobals.IsMod(MOD_TFC) && pBot->pev->playerclass == TFC_CLASS_DEMOMAN)
 					{
 						// first do a traceline
 						UTIL_TraceLine(vOrigin, WaypointOrigin(iSuccNode), ignore_monsters, dont_ignore_glass, NULL, &tr);
@@ -375,7 +375,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 							if (!pBot->iDetPackWaypoints.IsMember(iCurrentNode))
 								pBot->iDetPackWaypoints.Add(iCurrentNode);
 						}
-					}
+					}*/
 				}
 			}
 
@@ -385,10 +385,10 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 					continue;
 			}
 
-			if (gBotGlobals.IsMod(MOD_SVENCOOP) || gBotGlobals.IsMod(MOD_GEARBOX))
+			if (gBotGlobals.IsMod(MOD_GEARBOX))
 			{
-				if (!gBotGlobals.IsMod(MOD_TFC) && (iSuccNodeFlags & W_FL_GREN_THROW && !bCanThrowGren))
-					continue; // can't throw a grenade at a "throw gren waypoint"
+				//if (!gBotGlobals.IsMod(MOD_TFC) && (iSuccNodeFlags & W_FL_GREN_THROW && !bCanThrowGren))
+				//	continue; // can't throw a grenade at a "throw gren waypoint"
 
 				if (iSuccNodeFlags & W_FL_PAIN)
 				{
@@ -977,8 +977,8 @@ BOOL BotCheckWallOnLeft(CBot* pBot)
 
 	// do a trace to the left...
 
-	Vector v_src = pEdict->v.origin;
-	Vector v_left = v_src + gpGlobals->v_right * -40;  // 40 units to the left
+	const Vector v_src = pEdict->v.origin;
+	const Vector v_left = v_src + gpGlobals->v_right * -40;  // 40 units to the left
 
 	UTIL_TraceLine(v_src, v_left, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
@@ -1004,8 +1004,8 @@ BOOL BotCheckWallOnRight(CBot* pBot)
 
 	// do a trace to the right...
 
-	Vector v_src = pEdict->v.origin;
-	Vector v_right = v_src + gpGlobals->v_right * 40;  // 40 units to the right
+	const Vector v_src = pEdict->v.origin;
+	const Vector v_right = v_src + gpGlobals->v_right * 40;  // 40 units to the right
 
 	UTIL_TraceLine(v_src, v_right, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
@@ -1808,15 +1808,15 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 	float fStartAngle = pev->angles.y - fFov;
 
-	int iMinStep = -60;
-	int iMaxStep = 60;
+	const int iMinStep = -60;
+	const int iMaxStep = 60;
 
 	float fMaxDistance = BOT_WAYPOINT_TOUCH_DIST * 2;
 	float fDistance;
 
 	dataUnconstArray<Vector> vPositions;
 
-	Vector vStart = pBot->GetGunPosition();
+	const Vector vStart = pBot->GetGunPosition();
 	Vector vEnd;
 	Vector vAngles;
 
@@ -1913,7 +1913,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 	vEnd = tr.vecEndPos;
 
-	float fLowDistance = pBot->DistanceFrom(vEnd);
+	const float fLowDistance = pBot->DistanceFrom(vEnd);
 
 	if (fLowDistance < 64 && fLowDistance < fHighDistance)
 		pBot->Jump();
@@ -1948,7 +1948,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 	//if ( gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL) )
 	//	WaypointDrawBeam(gBotGlobals.m_Clients.GetClientByIndex(0)->GetPlayer(),vBotOrigin,vCheckOrigin,16,8,200,200,200,200,10);
 
-	Vector vComp = (vCheckToOrigin - vCheckOrigin).Normalize();
+	const Vector vComp = (vCheckToOrigin - vCheckOrigin).Normalize();
 
 	(*g_engfuncs.pfnTraceHull)(vCheckOrigin, vCheckOrigin + vComp * 4096.0, ignore_monsters, point_hull, pBot->m_pEdict, &tr);
 
@@ -1967,7 +1967,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 				char* szTargetname = const_cast<char*>(STRING(pHit->v.targetname));
 
 				// a way to find out if this is a lift (big enough for the bot to walk on)
-				BOOL bIsLift = pHit->v.movedir.z &&
+				const BOOL bIsLift = pHit->v.movedir.z &&
 					(pHit->v.size.x > pBot->pev->size.z &&
 						pHit->v.size.y > pBot->pev->size.z);
 
@@ -1982,7 +1982,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 
 					edict_t* pButton = BotFunc_FindNearestButton(pBot->pev->origin + pBot->pev->view_ofs, &pHit->v, &vButtonOrigin);
 
-					int iNewScheduleId = pBot->m_Tasks.GetNewScheduleId();
+					const int iNewScheduleId = pBot->m_Tasks.GetNewScheduleId();
 
 					if (pButton)
 					{
@@ -2068,10 +2068,10 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 						if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_LIFT))
 							// Not already using a lift?
 						{
-							float fRange = pHit->v.size.Length2D();
+							const float fRange = pHit->v.size.Length2D();
 
 							// get the lift button waypoint
-							int iWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, fRange, -1, W_FL_LIFT, &pBot->m_FailedGoals);
+							const int iWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, fRange, -1, W_FL_LIFT, &pBot->m_FailedGoals);
 
 							if (iWpt != -1)
 							{
@@ -2085,7 +2085,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 								{
 									// if a button if found use this one
 
-									int iScheduleId = pBot->m_Tasks.GetNewScheduleId();
+									const int iScheduleId = pBot->m_Tasks.GetNewScheduleId();
 
 									// Bot was below the lift so wait for the lift to descend
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_ENTITY, iScheduleId, pHit));

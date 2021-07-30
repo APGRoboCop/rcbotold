@@ -71,7 +71,7 @@ BOOL CBotVisibles::isVisible(int iIndex)
 
 void CBotVisibles::setVisible(int iIndex, BOOL bVisible)
 {
-	BOOL bCurrentlyVisible = isVisible(iIndex);
+	const BOOL bCurrentlyVisible = isVisible(iIndex);
 
 	if (bCurrentlyVisible && !bVisible)
 		m_iVisibleList.Remove(iIndex);
@@ -99,7 +99,7 @@ edict_t* CBotVisibles::nextVisible()
 {
 	if (m_iIter < m_iVisibleList.Size())
 	{
-		int iEntityIndex = m_iVisibleList.ReturnValueFromIndex(m_iIter);
+		const int iEntityIndex = m_iVisibleList.ReturnValueFromIndex(m_iIter);
 
 		m_iIter++;
 

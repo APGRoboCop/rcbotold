@@ -367,7 +367,7 @@ public:
 
 	CClient* GetRandomClient(int iRep);
 
-	void WriteToFile(int iBotProfile, CBotReputation* pRep);
+	static void WriteToFile(int iBotProfile, CBotReputation* pRep);
 
 	void RemoveSaveRep(int iBotProfile, int iPlayerRepId);
 
@@ -466,7 +466,7 @@ public:
 
 		if (l_Rep)
 		{
-			int iNewRep = l_Rep->CurrentRep() + 1;
+			const int iNewRep = l_Rep->CurrentRep() + 1;
 
 			if (iNewRep > BOT_MAX_REP)
 				return;
@@ -490,7 +490,7 @@ public:
 
 		if (l_Rep)
 		{
-			int iNewRep = l_Rep->CurrentRep() - 1;
+			const int iNewRep = l_Rep->CurrentRep() - 1;
 
 			if (iNewRep < BOT_MIN_REP)
 				return;
@@ -1115,7 +1115,7 @@ public:
 	// this was added quite recently so ins't used a lot, even though it's quite neat.
 	void AddNewSchedule(eScheduleDesc iScheduleDescription, CBotTask* pTasks, int iNumTasks)
 	{
-		int iNewScheduleId = GetNewScheduleId();
+		const int iNewScheduleId = GetNewScheduleId();
 
 		for (int i = iNumTasks - 1; i >= 0; i--)
 		{
@@ -1133,7 +1133,7 @@ public:
 		if (pCurrentTask == NULL)
 			return;
 
-		int iSchedIgnore = pCurrentTask->GetScheduleId();
+		const int iSchedIgnore = pCurrentTask->GetScheduleId();
 
 		dataQueue<CBotTask> tempStack = m_Tasks;
 
@@ -1141,7 +1141,7 @@ public:
 		{
 			CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
-			int iFailSchedule = tempTask->GetScheduleId();
+			const int iFailSchedule = tempTask->GetScheduleId();
 
 			if (tempTask->TimedOut())
 			{
@@ -1242,7 +1242,7 @@ public:
 				{
 					tempStack.Init();
 
-					int iScheduleId = pTask->GetScheduleId();
+					const int iScheduleId = pTask->GetScheduleId();
 
 					m_Tasks.RemoveByPointer(pTask);
 
@@ -1274,7 +1274,7 @@ public:
 			{
 				tempStack.Init();
 
-				int iScheduleId = pTask->GetScheduleId();
+				const int iScheduleId = pTask->GetScheduleId();
 
 				m_Tasks.RemoveByPointer(pTask);
 
@@ -1439,9 +1439,9 @@ public:
 		if (pTask == NULL)
 			return;
 
-		eBotTask iTask = pTask->Task();
-		BOOL bPathInfo = pTask->HasPath();
-		int iScheduleId = pTask->GetScheduleId();
+		const eBotTask iTask = pTask->Task();
+		const BOOL bPathInfo = pTask->HasPath();
+		const int iScheduleId = pTask->GetScheduleId();
 
 		// Current task will be at the top of
 		// the queue, so remove the first node.
@@ -1928,7 +1928,7 @@ public:
 
 		CRememberPosition* e = m_Positions.getExisting(newPosition);
 
-		int index = m_Positions.getExistingIndex(newPosition);
+		const int index = m_Positions.getExistingIndex(newPosition);
 
 		if (index != -1)
 			m_Positions.RemoveByIndex(index);
@@ -2061,7 +2061,7 @@ public:
 
 		for (int i = 0; i < m_Positions.Size(); i++)
 		{
-			float fDistance = (m_Positions[i].getVector() - vOrigin).Length() + (m_Positions[i].getVector() - vFrom).Length();
+			const float fDistance = (m_Positions[i].getVector() - vOrigin).Length() + (m_Positions[i].getVector() - vFrom).Length();
 
 			if (!nearest || fDistance < fNearest)
 			{
@@ -3050,7 +3050,7 @@ public:
 
 	void saveLearnedData();
 	void touchedWpt();
-	void gotStuck();
+	static void gotStuck();
 
 	BOOL hasFlag()
 	{
@@ -3059,7 +3059,7 @@ public:
 
 	edict_t* getSentry();
 
-	BOOL CanBuild(edict_t* pEdict, int* metal = NULL);
+	static BOOL CanBuild(edict_t* pEdict, int* metal = NULL);
 
 	const char* getLookTaskDescription()
 	{
@@ -3101,7 +3101,7 @@ public:
 	CPerceptron* dec_stunt;
 	edict_t* m_pElectricEnemy;
 
-	BOOL isInAnimate(edict_t* pEntity);
+	static BOOL isInAnimate(edict_t* pEntity);
 
 	BOOL isFriendly(edict_t* pEntity);
 
@@ -3873,7 +3873,7 @@ public:
 	// that the bot doesn't want to avoid.
 	BOOL CanAvoid(edict_t* pEntity, float fDistanceToEntity, float fAvoidDistance);
 
-	void ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
+	static void ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
 
 	BOOL IsOnLadder()
 	{
@@ -4214,7 +4214,7 @@ public:
 
 			while (!s_tempStack.IsEmpty())
 			{
-				void* pFree = static_cast<void*>(s_tempStack.ChooseFromStack());
+				void* pFree = s_tempStack.ChooseFromStack();
 
 				if (pFree)
 				{
@@ -4234,7 +4234,7 @@ public:
 		if (iHashNum < 0)
 			iHashNum = -iHashNum;
 
-		int iHashValue = iHashNum % STRING_HASHES;
+		const int iHashValue = iHashNum % STRING_HASHES;
 
 		assert(iHashValue >= 0);
 		assert(iHashValue < STRING_HASHES);
@@ -4649,7 +4649,7 @@ public:
 
 	void ClientDisconnected(edict_t* pPlayer);
 
-	void ClientDisconnected(CClient* pClient);
+	static void ClientDisconnected(CClient* pClient);
 
 	CClient* GetClientByIndex(int iIndex)
 	{
@@ -4817,7 +4817,7 @@ public:
 
 	void AddPlayer(const char* szName, char* szPass, int iAccessLevel, char* szSteamId)
 	{
-		CAllowedPlayer PlayerToAdd = CAllowedPlayer(szName, szPass, iAccessLevel, szSteamId);
+		const CAllowedPlayer PlayerToAdd = CAllowedPlayer(szName, szPass, iAccessLevel, szSteamId);
 
 		// remove old one if it exists
 		m_AllowedPlayers.Remove(PlayerToAdd);
@@ -5305,7 +5305,7 @@ public:
 
 	void AddStructure(edict_t* pStructure, int iHashVal)
 	{
-		int iIndex = iHashVal % ALIEN_STRUCT_HASH_MAX;
+		const int iIndex = iHashVal % ALIEN_STRUCT_HASH_MAX;
 
 		if (!m_Structures[iIndex].IsMember(pStructure))
 			m_Structures[iIndex].Push(CStructure(pStructure));
@@ -5338,7 +5338,7 @@ public:
 
 					if (pStructure->IsUnderAttack())
 					{
-						int iStructure = pStructure->GetStructureType();
+						const int iStructure = pStructure->GetStructureType();
 
 						switch (iStructure)
 						{
@@ -5518,7 +5518,7 @@ public:
 
 	BOOL TuneIn(edict_t* pPlayer);
 
-	void TuneOff(edict_t* pPlayer);
+	static void TuneOff(edict_t* pPlayer);
 
 	BOOL IsWorking();
 
@@ -5728,7 +5728,7 @@ public:
 		m_Flags.Pop();
 	}
 
-	edict_t* getFlag(int team, int active_goal)
+	static edict_t* getFlag(int team, int active_goal)
 	{
 		return NULL;
 	}

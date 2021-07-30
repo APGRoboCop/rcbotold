@@ -770,7 +770,7 @@ public:
 
 		//iArrayMax ++;
 
-		int iSize = sizeof(T) * iArrayMax;
+		const int iSize = sizeof(T) * iArrayMax;
 
 		m_pArray = (T*)malloc(iSize);
 

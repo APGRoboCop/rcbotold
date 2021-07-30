@@ -153,8 +153,8 @@ void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
 
 		if (m_pWeaponInfo)
 		{
-			int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
-			int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
+			const int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
+			const int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
 
 			if (iAmmoList && iAmmoIndex1 != -1)
 				m_iAmmo1 = &iAmmoList[iAmmoIndex1];
@@ -442,10 +442,10 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 
 	BOOL bEnemyIsElectrified = FALSE;
 	BOOL bEnemyTooHigh = FALSE;
-	BOOL bUnderwater = pEdict->v.waterlevel == 3;
-	BOOL bIsDMC = gBotGlobals.m_iCurrentMod == MOD_DMC;
+	const BOOL bUnderwater = pEdict->v.waterlevel == 3;
+	const BOOL bIsDMC = gBotGlobals.m_iCurrentMod == MOD_DMC;
 
-	BOOL bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
+	const BOOL bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
 	BOOL bWantToMelee = FALSE;
 
 	short int iAllowedWeapons[MAX_WEAPONS];
@@ -525,8 +525,8 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		{
 			// want to melee true if needing to reload OR enemy within melee range
 			// AND random factor due to skill
-			BOOL bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0;
-			BOOL bMaxRangeCheck = pEnemy && fEnemyDist < 512.0;
+			const BOOL bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0;
+			const BOOL bMaxRangeCheck = pEnemy && fEnemyDist < 512.0;
 
 			bWantToMelee = (pBot->m_pCurrentWeapon->NeedToReload() && RANDOM_LONG(MIN_BOT_SKILL, MAX_BOT_SKILL) < pBot->
 				m_Profile.m_iSkill || bMeleeRangeCheck) && bMaxRangeCheck;
@@ -545,7 +545,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	{
 		switch (gBotGlobals.m_iCurrentMod)
 		{
-		case MOD_SVENCOOP:
+		/*case MOD_SVENCOOP:
 			if (FStrEq("func_breakable", STRING(pEnemy->v.classname)))
 			{
 				if (pEnemy->v.spawnflags & 512)
@@ -577,7 +577,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 						iAllowedWeapons[VALVE_WEAPON_MP5] = 1;
 				}
 			}
-			break;
+			break;*/
 		case MOD_NS:
 			if (pBot->IsMarine())
 			{
@@ -882,7 +882,7 @@ BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWall
 	if (!m_pWeaponInfo->CanUsePrimary())
 		return FALSE;
 
-	if (gBotGlobals.IsMod(MOD_SVENCOOP) || gBotGlobals.IsMod(MOD_HL_DM))
+	if (gBotGlobals.IsMod(MOD_HL_DM))
 	{
 		if (GetID() == VALVE_WEAPON_RPG)
 		{

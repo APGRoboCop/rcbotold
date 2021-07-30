@@ -142,7 +142,7 @@ void CWaypointLocations::getMaxMins(Vector const vOrigin, int& mini, int& minj, 
 // return nearest waypoint that can be used to cover from vCoverFrom vector
 int CWaypointLocations::GetCoverWaypoint(Vector const vPlayerOrigin, Vector vCoverFrom, dataStack<int>* iIgnoreWpts)
 {
-	int iWaypoint = this->NearestWaypoint(vCoverFrom, REACHABLE_RANGE, -1, FALSE, TRUE);
+	const int iWaypoint = this->NearestWaypoint(vCoverFrom, REACHABLE_RANGE, -1, FALSE, TRUE);
 
 	if (iWaypoint == -1)
 		return -1;
@@ -233,7 +233,7 @@ void CWaypointLocations::FindNearestCoverWaypointInBucket(const int i, const int
 
 	while (!tempStack.IsEmpty())
 	{
-		int iSelectedIndex = tempStack.ChooseFromStack();
+		const int iSelectedIndex = tempStack.ChooseFromStack();
 
 		if (iCoverFromWpt == iSelectedIndex)
 			continue;
@@ -290,7 +290,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 
 	while (!tempStack.IsEmpty())
 	{
-		int iSelectedIndex = tempStack.ChooseFromStack();
+		const int iSelectedIndex = tempStack.ChooseFromStack();
 
 		if (iSelectedIndex == iIgnoreWpt)
 			continue;
@@ -299,7 +299,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 
 		WAYPOINT* curr_wpt = &waypoints[iSelectedIndex];
 
-		int iWptFlags = curr_wpt->flags;
+		const int iWptFlags = curr_wpt->flags;
 
 		if (!bGetUnReachable && iWptFlags & W_FL_UNREACHABLE)
 			continue;
@@ -417,7 +417,7 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float 
 	{
 		// Draw each waypoint in distance
 
-		int iIndex = tempStack.ChooseFromStack();
+		const int iIndex = tempStack.ChooseFromStack();
 
 		vWpt = WaypointOrigin(iIndex);
 
@@ -1051,7 +1051,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 			if ((*pPath)->index[*path_index] != -1)  // found a path?
 			{
 				// save the return value
-				int index = (*pPath)->index[*path_index];
+				const int index = (*pPath)->index[*path_index];
 
 				// skip this path if next waypoint is team specific and NOT this team
 				if (team != -1 && waypoints[index].flags & W_FL_TEAM_SPECIFIC &&
@@ -1110,7 +1110,7 @@ int WaypointFindNearest(edict_t* pEntity, const float range, const int team)
 			(waypoints[i].flags & W_FL_TEAM) != team)
 			continue;
 
-		float distance = (waypoints[i].origin - pEntity->v.origin).Length();
+		const float distance = (waypoints[i].origin - pEntity->v.origin).Length();
 
 		if (distance < min_distance && distance < range)
 		{
@@ -1156,7 +1156,7 @@ int WaypointFindNearest(Vector v_src, edict_t* pEntity, const float range, const
 			(waypoints[index].flags & W_FL_TEAM) != team)
 			continue;
 
-		float distance = (waypoints[index].origin - v_src).Length();
+		const float distance = (waypoints[index].origin - v_src).Length();
 
 		if (distance < min_distance && distance < range)
 		{
@@ -1212,7 +1212,7 @@ int WaypointFindNearestGoal(Vector v_src, edict_t* pEntity, const float range, c
 
 		WAYPOINT* waypoint = &waypoints[index];
 
-		int wpt_flags = waypoint->flags;
+		const int wpt_flags = waypoint->flags;
 
 		if (wpt_flags & W_FL_DELETED)
 			continue;  // skip any deleted waypoints
@@ -1228,7 +1228,7 @@ int WaypointFindNearestGoal(Vector v_src, edict_t* pEntity, const float range, c
 		if ((wpt_flags & flags) != flags)
 			continue;  // skip this waypoint if the flags don't match
 
-		int distance = (waypoint->origin - v_src).Length();
+		const int distance = (waypoint->origin - v_src).Length();
 
 		if (distance < range && distance < min_distance)
 		{
@@ -1418,7 +1418,7 @@ int WaypointFindRandomGoal(Vector v_src, edict_t* pEntity, const float range, co
 		if ((waypoint->flags & flags) != flags)
 			continue;  // skip this waypoint if the flags don't match
 
-		float distance = (waypoint->origin - v_src).Length();
+		const float distance = (waypoint->origin - v_src).Length();
 
 		if (distance < range && count < 50)
 		{
@@ -1454,7 +1454,7 @@ int WaypointFindNearestAiming(Vector v_origin)
 		if ((waypoints[index].flags & W_FL_AIMING) == 0)
 			continue;  // skip any NON aiming waypoints
 
-		float distance = (v_origin - waypoints[index].origin).Length();
+		const float distance = (v_origin - waypoints[index].origin).Length();
 
 		if (distance < min_distance && distance < 40)
 		{
@@ -1690,7 +1690,7 @@ void WaypointDelete(CClient* pClient)
 
 	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0, -1, FALSE, TRUE);
 
-	int index = pClient->m_iCurrentWaypoint;
+	const int index = pClient->m_iCurrentWaypoint;
 
 	if (index == -1)
 	{
@@ -1950,7 +1950,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 				UTIL_TraceLine(v_check, v_down, ignore_monsters,
 					NULL, &tr);
 
-				float curr_height = tr.flFraction * 1000.0;  // height from ground
+				const float curr_height = tr.flFraction * 1000.0;  // height from ground
 
 				// is the difference in the last height and the current height
 				// higher that the jump height?
@@ -1995,7 +1995,7 @@ int WaypointFindReachable(edict_t* pEntity, const float range, const int team)
 			(waypoints[i].flags & W_FL_TEAM) != team)
 			continue;
 
-		float distance = (waypoints[i].origin - pEntity->v.origin).Length();
+		const float distance = (waypoints[i].origin - pEntity->v.origin).Length();
 
 		if (distance < min_distance)
 		{
@@ -2026,7 +2026,7 @@ void WaypointPrintInfo(edict_t* pEntity)
 	char msg[80];
 
 	// find the nearest waypoint...
-	int index = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0, -1, FALSE, TRUE, FALSE, NULL);
+	const int index = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0, -1, FALSE, TRUE, FALSE, NULL);
 
 	//BOOL visible = WaypointVisibility.GetVisibilityFromTo(1,4);
 
@@ -2036,7 +2036,7 @@ void WaypointPrintInfo(edict_t* pEntity)
 	sprintf(msg, "Waypoint %d of %d total\n", index, num_waypoints);
 	ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 
-	int flags = waypoints[index].flags;
+	const int flags = waypoints[index].flags;
 
 	if (flags & W_FL_TEAM_SPECIFIC)
 	{
@@ -2074,26 +2074,26 @@ void WaypointPrintInfo(edict_t* pEntity)
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This waypoint is at a DEFEND point\n");
 	if (flags & W_FL_SCIENTIST_POINT)
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This waypoint is at a SCIENTIST goto point\n");
-	if (flags & W_FL_TFC_FLAG_POINT)
-		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This waypoint is at a FLAG point\n");
-	if (flags & W_FL_TFC_CAPTURE_POINT)
-		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This waypoint is at a CAPTURE point\n");
+	//if (flags & W_FL_TFC_FLAG_POINT)
+	//	ClientPrint(pEntity, HUD_PRINTNOTIFY, "This waypoint is at a FLAG point\n");
+	//if (flags & W_FL_TFC_CAPTURE_POINT)
+	//	ClientPrint(pEntity, HUD_PRINTNOTIFY, "This waypoint is at a CAPTURE point\n");
 	if (flags & W_FL_BARNEY_POINT)
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This waypoint is at a BARNEY goto point\n");
 	if (flags & W_FL_RESCUE)
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This waypoint is near the RESCUE area\n");
 	if (flags & W_FL_PUSHABLE)
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Bot will put a PUSHABLE object here\n");
-	if (flags & W_FL_TFC_SENTRY)
-		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Bot will build a SENTRY here\n");
+	//if (flags & W_FL_TFC_SENTRY)
+	//	ClientPrint(pEntity, HUD_PRINTNOTIFY, "Bot will build a SENTRY here\n");
 
-	if (gBotGlobals.IsMod(MOD_TFC))
+	/*if (gBotGlobals.IsMod(MOD_TFC))
 	{
-		/*
+		
 			#define W_FL_GREN_THROW     (1<<30)
- #define W_FL_TFC_SNIPER     (1<<30)
- #define W_FL_TFC_DETPACK    (1<<30)
-			*/
+			#define W_FL_TFC_SNIPER     (1<<30)
+			#define W_FL_TFC_DETPACK    (1<<30)
+			
 		if (flags & W_FL_GREN_THROW)
 		{
 			ClientPrint(pEntity, HUD_PRINTNOTIFY, "Bot will snipe here\n");
@@ -2107,7 +2107,7 @@ void WaypointPrintInfo(edict_t* pEntity)
 	{
 		if (flags & W_FL_GREN_THROW)
 			ClientPrint(pEntity, HUD_PRINTNOTIFY, "Bot will throw a grenade here\n");
-	}
+	}*/
 
 	if (flags & W_FL_CROUCHJUMP)
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Bot will do a LONG JUMP/CROUCH JUMP here\n");
@@ -2513,7 +2513,7 @@ edict_t* PlayerNearVector(Vector vOrigin, float fRange)
 		if (!EntityIsAlive(pPlayer))
 			continue;
 
-		float fDist = (EntityOrigin(pPlayer) - vOrigin).Length();
+		const float fDist = (EntityOrigin(pPlayer) - vOrigin).Length();
 
 		if (fDist <= fRange)
 		{

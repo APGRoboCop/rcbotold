@@ -105,7 +105,7 @@ CClient* CBotReputations::GetRandomClient(const int iRep)
 	{
 		pRep = tempStack.ChoosePointerFromStack();
 
-		int iGotRep = pRep->CurrentRep();
+		const int iGotRep = pRep->CurrentRep();
 
 		switch (iRep)
 		{
@@ -198,7 +198,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 	}
 
 	fseek(fp, 0, SEEK_END); // move pos to end of file
-	long   fPos = ftell(fp);  // get length of file
+	const long   fPos = ftell(fp);  // get length of file
 
 	// do some error checking - verify the file is not corrupt
 	if (fPos % sizeof(CBotReputation) != 0) return;
@@ -442,7 +442,7 @@ int CBotReputations::GetClientRep(CClient* pClient)
 		return BOT_MID_REP;
 	}
 
-	int iRepId = pClient->GetPlayerRepId();
+	const int iRepId = pClient->GetPlayerRepId();
 
 	if (iRepId == -1)
 		return BOT_MID_REP;

@@ -881,7 +881,7 @@ void CPendingToolTips::Think(edict_t* pPlayer)
 	{
 		if (m_fNextTime < gpGlobals->time)
 		{
-			eToolTip theTip = m_Tooltips.GetFrontInfo();
+			const eToolTip theTip = m_Tooltips.GetFrontInfo();
 
 			gBotGlobals.SayToolTip(pPlayer, theTip);
 
@@ -929,7 +929,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 
 	while ( (i < MAX_PLAYERS) && m_Clients[i].IsUsed() )
 		i++;*/
-	int i = ENTINDEX(pPlayer) - 1;
+	const int i = ENTINDEX(pPlayer) - 1;
 
 	//	gBotGlobals.m_iNumClients ++;
 
@@ -946,7 +946,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 
 		pClient->m_fJoinServerTime = gpGlobals->time;
 
-		int iPlayerRepId = GetPlayerRepId(STRING(pPlayer->v.netname));
+		const int iPlayerRepId = GetPlayerRepId(STRING(pPlayer->v.netname));
 
 		pClient->UpdatePlayerRepId(iPlayerRepId);
 
@@ -1036,7 +1036,7 @@ CClient* CClients::GetClientByRepId(const int iRepId)
 
 void CClients::ClientDisconnected(CClient* pClient)
 {
-	int iPlayerRepId = pClient->GetPlayerRepId();
+	const int iPlayerRepId = pClient->GetPlayerRepId();
 
 	edict_t* pPlayer = pClient->GetPlayer();
 
@@ -1062,7 +1062,7 @@ void CClients::ClientDisconnected(CClient* pClient)
 	// give a few seconds before adding more bots.
 	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 2.0;
 
-	BOOL RemoveGreeting = iPlayerIndex != -1;
+	const BOOL RemoveGreeting = iPlayerIndex != -1;
 
 	if (iPlayerRepId >= 0)
 	{

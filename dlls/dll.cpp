@@ -119,7 +119,7 @@ BOOL CAllowedPlayer::IsForClient(CClient* pClient)
 	if (pEdict == NULL)
 		return FALSE;
 
-	BOOL bSamePass = IsForPass(pClient->GetPass());
+	const BOOL bSamePass = IsForPass(pClient->GetPass());
 
 	return bSameName && bSamePass;
 }
@@ -417,7 +417,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 {
 	if (gpGlobals->deathmatch)
 	{
-		int iIndex = ENTINDEX(pEntity) - 1;
+		const int iIndex = ENTINDEX(pEntity) - 1;
 
 		CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(iIndex);
 
@@ -455,7 +455,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 		{
 			if (gBotGlobals.m_iMinBots != -1)
 			{
-				int iNumPlayerCheck = UTIL_GetNumClients(TRUE) + 1 + gBotGlobals.GetNumJoiningClients();
+				const int iNumPlayerCheck = UTIL_GetNumClients(TRUE) + 1 + gBotGlobals.GetNumJoiningClients();
 
 				if (gBotGlobals.m_iNumBots > gBotGlobals.m_iMinBots && iNumPlayerCheck > gBotGlobals.m_iMaxBots)
 					// Can it kick a bot to free a slot?
@@ -492,9 +492,9 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 				}
 				else if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_RESERVE_BOT_SLOTS) && gBotGlobals.m_iNumBots < gBotGlobals.m_iMinBots)
 				{
-					int iNumPlayers = UTIL_GetNumClients(TRUE) + 1;
-					int iBotsStillToJoin = gBotGlobals.m_iMinBots - gBotGlobals.m_iNumBots;
-					int iNewSlotsFree = gpGlobals->maxClients - iNumPlayers;
+					const int iNumPlayers = UTIL_GetNumClients(TRUE) + 1;
+					const int iBotsStillToJoin = gBotGlobals.m_iMinBots - gBotGlobals.m_iNumBots;
+					const int iNewSlotsFree = gpGlobals->maxClients - iNumPlayers;
 					// dont allow player to connect as the number of bots
 					// have not been reached yet.
 
@@ -537,7 +537,7 @@ void ClientDisconnect(edict_t* pEntity)
 	// Is the player that is disconnecting an RCbot?
 	CBot* pBot = UTIL_GetBotPointer(pEntity);
 
-	int iIndex = ENTINDEX(pEntity) - 1;
+	const int iIndex = ENTINDEX(pEntity) - 1;
 
 	if (EntityIsCommander(pEntity))
 		gBotGlobals.SetCommander(NULL);
@@ -621,8 +621,8 @@ void ClientDisconnect(edict_t* pEntity)
 				else
 					BotMessage(NULL,0,"Error: Couldn't Create Bot Profile!");*/
 
-		int iProfileId = pBot->m_Profile.m_iProfileId;
-		int iTeam = pBot->m_Profile.m_iFavTeam;
+		const int iProfileId = pBot->m_Profile.m_iProfileId;
+		const int iTeam = pBot->m_Profile.m_iFavTeam;
 
 		SaveHALBrainForPersonality(&pBot->m_Profile); // save this personality's HAL brain
 
@@ -673,7 +673,7 @@ void ClientKill(edict_t* pEntity)
 {
 	if (debug_engine) {
 		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientKill: %x\n", unsigned(pEntity));
+		fprintf(fp, "ClientKill: %x\n", reinterpret_cast<unsigned>(pEntity));
 		fclose(fp);
 	}
 
@@ -688,7 +688,7 @@ void ClientPutInServer(edict_t* pEntity)
 {
 	if (debug_engine) {
 		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientPutInServer: %x\n", unsigned(pEntity));
+		fprintf(fp, "ClientPutInServer: %x\n", reinterpret_cast<unsigned>(pEntity));
 		fclose(fp);
 	}
 
@@ -819,12 +819,12 @@ void ClientCommand(edict_t* pEntity)
 		{
 			///////
 			// see if bot can learn its HAL brain from this person speaking
-			BOOL bSenderIsBot = UTIL_GetBotPointer(pEntity) != NULL;
+			const BOOL bSenderIsBot = UTIL_GetBotPointer(pEntity) != NULL;
 
 			if (!bSenderIsBot || gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHAT_REPLY_TO_BOTS))
 			{
 				// team only message?
-				int iTeamOnly = bSayTeamMsg;
+				const int iTeamOnly = bSayTeamMsg;
 
 				char* szMessage = NULL;
 				//				char *szTempArgument;
@@ -1073,7 +1073,7 @@ void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
 {
 	if (debug_engine) {
 		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", unsigned(pEntity), infobuffer);
+		fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", reinterpret_cast<unsigned>(pEntity), infobuffer);
 		fclose(fp);
 	}
 
@@ -1228,7 +1228,7 @@ void PlayerCustomization(edict_t* pEntity, customization_t* pCust)
 {
 	if (debug_engine) {
 		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "PlayerCustomization: %x\n", unsigned(pEntity));
+		fprintf(fp, "PlayerCustomization: %x\n", reinterpret_cast<unsigned>(pEntity));
 		fclose(fp);
 	}
 
@@ -1412,7 +1412,7 @@ int InconsistentFile(const edict_t* player, const char* filename, char* disconne
 {
 	if (debug_engine) {
 		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "InconsistentFile: %x filename=%s\n", unsigned(player), filename);
+		fprintf(fp, "InconsistentFile: %x filename=%s\n", reinterpret_cast<unsigned>(player), filename);
 		fclose(fp);
 	}
 
@@ -1579,12 +1579,12 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	}
 
 	gBotGlobals.m_bIsFakeClientCommand = TRUE; // set the "fakeclient command" flag
-	int length = strlen(command); // get the total length of the command string
+	const int length = strlen(command); // get the total length of the command string
 
 	// process all individual commands (separated by a semicolon) one each a time
 	while (stringindex < length)
 	{
-		int fieldstart = stringindex; // save field start position (first character)
+		const int fieldstart = stringindex; // save field start position (first character)
 		while (stringindex < length && command[stringindex] != ';')
 			stringindex++; // reach end of field
 		if (command[stringindex - 1] == '\n')
@@ -1946,7 +1946,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 		}
 	}
 
-	BOOL bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
+	const BOOL bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
 	LoadHALBrainForPersonality(bpBotProfile, bPreTrain); // wake the bot's HAL brain up
 
 	// Also read bots rep with other players on the server
@@ -2291,7 +2291,7 @@ void CBotCam::Think()
 				//if ( pOldBot )
 				//	fDistance = pBot->DistanceFrom(pOldBot->GetGunPosition());
 				//else
-				float fDistance = pBot->DistanceFrom(m_pCameraEdict->v.origin);
+				const float fDistance = pBot->DistanceFrom(m_pCameraEdict->v.origin);
 
 				if (m_pCurrentBot == NULL || fDistance < fNearest)
 				{
@@ -2364,11 +2364,11 @@ void CBotCam::Think()
 	if (!m_pCurrentBot || !m_iState)
 		return;
 
-	BOOL bSetAngle = TRUE;
+	const BOOL bSetAngle = TRUE;
 
 	vBotOrigin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 
-	Vector oldOrigin = m_pCameraEdict->v.origin;//
+	const Vector oldOrigin = m_pCameraEdict->v.origin;//
 
 	//Vector vLookAt = vBotOrigin;
 
@@ -2421,7 +2421,7 @@ void CBotCam::Think()
 		{
 			Vector vComp = m_pCurrentBot->m_pEnemy->v.origin + m_pCurrentBot->m_pEnemy->v.view_ofs - vBotOrigin;
 
-			float fLength = vComp.Length();
+			const float fLength = vComp.Length();
 
 			vComp = vComp.Normalize();
 

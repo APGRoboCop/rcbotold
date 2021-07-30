@@ -152,8 +152,6 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 
 	if (gpGlobals->deathmatch)
 	{
-		int index = -1;
-
 		if (debug_engine) {
 			fp = fopen("bot.txt", "a");
 			fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
@@ -167,7 +165,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 
 		if (ed)
 		{
-			index = UTIL_GetBotIndex(ed);
+			const int index = UTIL_GetBotIndex(ed);
 
 			// get the message to see if we can do anything right now
 			m_CurrentMessage = m_NetEntityMessages.GetMessage(msg_type, NULL);
@@ -467,7 +465,7 @@ void CBotGlobals::StartFrame()
 
 					if (pBot->IsUsed())
 					{
-						int iGotoChance = (int)((float)iBuildingPriority / 6 * 100);
+						const int iGotoChance = (int)((float)iBuildingPriority / 6 * 100);
 
 						if (pBuildingUnderAttack->v.iuser3 == AVH_USER3_HIVE)
 						{
@@ -542,13 +540,13 @@ void CBotGlobals::StartFrame()
 
 		if (IsConfigSettingOn(BOT_CONFIG_BOTS_LEAVE_AND_JOIN))
 		{
-			int iClientsInGame = iNumClients; // argh, can't debug static variables
-			float val = (float)iClientsInGame / gpGlobals->maxClients * RANDOM_FLOAT(0.9, 1.3);
+			const int iClientsInGame = iNumClients; // argh, can't debug static variables
+			const float val = (float)iClientsInGame / gpGlobals->maxClients * RANDOM_FLOAT(0.9, 1.3);
 
 			bBotJoin = val < 0.75;
 		}
 
-		BOOL bServerFull = iNumClients >= gpGlobals->maxClients;
+		const BOOL bServerFull = iNumClients >= gpGlobals->maxClients;
 
 		for (iIndex = 0; iIndex < MAX_PLAYERS; iIndex++)
 		{
@@ -692,7 +690,7 @@ void CBotGlobals::StartFrame()
 
 									for (j = 1; j < MAX_WEAPONS; j++)
 									{
-										BOOL bHasWeapon = pBot->HasWeapon(j);
+										const BOOL bHasWeapon = pBot->HasWeapon(j);
 
 										if (pBot->pev->weapons & 1 << j && !bHasWeapon)
 										{
@@ -1233,6 +1231,10 @@ void CBotGlobals::MapInit()
 			m_bTeamPlay = TRUE;
 		}
 	}
+	else if (IsMod(MOD_GEARBOX))
+	{
+			m_bTeamPlay = TRUE;
+	}
 
 	PRECACHE_MODEL("models/mechgibs.mdl");
 
@@ -1584,7 +1586,7 @@ void CBotGlobals::loadLearnedData()
 	for (int i = 0; i < MAX_TEAMS; i++)
 	{
 		CLearnedHeader header = CLearnedHeader(i);
-		CLearnedHeader checkheader = CLearnedHeader(i);
+		const CLearnedHeader checkheader = CLearnedHeader(i);
 
 		sprintf(tmpFilename, "team%d.rld", i);
 		UTIL_BuildFileName(szFilename, tmpFilename);

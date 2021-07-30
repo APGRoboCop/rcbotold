@@ -9,6 +9,7 @@ V 1.51
 
 * added: Opposing Force CTF Support
 * changed: Reduced redundant coding
+* changed: Reduced further Sven Co-op and TFC support
 * fixed: Some potential errors and bugs have been wiped
 * TODO: To prevent bots in Op4CTF from team shooting each other
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors

@@ -184,12 +184,13 @@ public:
 	virtual void Duck();
 	virtual void PreThink();
 	virtual void PostThink();
-	virtual Vector GetGunPosition();
+	Vector GetGunPosition() override;
 	virtual int TakeHealth(float flHealth, int bitsDamageType);
 	virtual void TraceAttack(entvars_t* pevAttacker, float flDamage, Vector vecDir, TraceResult* ptr, int bitsDamageType);
-	virtual int TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType);
-	virtual void Killed(entvars_t* pevAttacker, int iGib);
-	virtual Vector BodyTarget(const Vector& posSrc)
+	int TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType) override;
+	void Killed(entvars_t* pevAttacker, int iGib) override;
+
+	Vector BodyTarget(const Vector& posSrc) override
 
 	{
 		int pev;
@@ -199,22 +200,23 @@ public:
 	virtual void StartSneaking() { m_tSneaking = gpGlobals->time - 1; }
 	virtual void StopSneaking() { m_tSneaking = gpGlobals->time + 30; }
 	virtual BOOL IsSneaking() { return m_tSneaking <= gpGlobals->time; }
-	virtual BOOL IsAlive()
+
+	BOOL IsAlive() override
 
 	{
 		BOOL pev;
 		return pev->deadflag == DEAD_NO && pev->health > 0;
 	}
 
-	virtual BOOL ShouldFadeOnDeath() { return FALSE; }
+	BOOL ShouldFadeOnDeath() override { return FALSE; }
 	virtual	BOOL IsPlayer() { return TRUE; }			// Spectators should return FALSE for this, they aren't "players" as far as game logic is concerned
 
 	virtual BOOL IsNetClient() { return TRUE; }		// Bots should return FALSE for this, they can't receive NET messages
 															// Spectators should return TRUE for this
 	virtual const char* TeamID();
 
-	virtual int		Save(CSave& save);
-	virtual int		Restore(CRestore& restore);
+	int		Save(CSave& save) override;
+	int		Restore(CRestore& restore) override;
 	void RenewItems();
 	void PackDeadPlayerItems();
 	void RemoveAllItems(BOOL removeSuit);
@@ -234,7 +236,7 @@ public:
 	void			FlashlightTurnOff();
 
 	void UpdatePlayerSound();
-	void DeathSound();
+	void DeathSound() override;
 
 	int Classify();
 	void SetAnimation(PLAYER_ANIM playerAnim);
@@ -278,8 +280,8 @@ public:
 	void CheckTimeBasedDamage();
 
 	BOOL FBecomeProne();
-	void BarnacleVictimBitten(entvars_t* pevBarnacle);
-	void BarnacleVictimReleased();
+	void BarnacleVictimBitten(entvars_t* pevBarnacle) override;
+	void BarnacleVictimReleased() override;
 	static int GetAmmoIndex(const char* psz);
 	int AmmoInventory(int iAmmoIndex);
 	int Illumination();

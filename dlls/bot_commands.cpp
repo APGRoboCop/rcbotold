@@ -106,7 +106,7 @@ eBotCvarState CMenuSelectCommand::action(CClient* pClient, const char* arg1, con
 	if (!*arg1)
 		return BOT_CVAR_ERROR;
 
-	int iMenu = atoi(arg1);
+	const int iMenu = atoi(arg1);
 
 	if (iMenu < 10)
 	{
@@ -642,7 +642,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 			{
 				CClient* pPlayerClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer);
 
-				int iLev = atoi(arg3);
+				const int iLev = atoi(arg3);
 
 				gBotGlobals.m_BotUsers.AddPlayer(STRING(pPlayer->v.netname), "***", iLev, pPlayerClient->steamID());
 
@@ -897,10 +897,10 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 		return BOT_CVAR_ERROR;
 	}
 
-	BOOL bSetting = arg2 && *arg2; // is player setting the value or wanting details?
+	const BOOL bSetting = arg2 && *arg2; // is player setting the value or wanting details?
 	float fSetVal = 0;
 
-	int iState = atoi(arg2);
+	const int iState = atoi(arg2);
 	int iConfig = 0;
 
 	BOOL bSuccess = TRUE;
@@ -961,7 +961,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 		if (arg2 && *arg2)
 		{
-			float fspeed = atof(arg2);
+			const float fspeed = atof(arg2);
 
 			if (fspeed > 0)
 			{
@@ -1106,7 +1106,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (bSetting)
 		{
-			int iRevs = atoi(arg2);
+			const int iRevs = atoi(arg2);
 
 			bSuccess = iRevs > 0;
 
@@ -1133,7 +1133,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (bSetting)
 		{
-			int iRevs = atoi(arg2);
+			const int iRevs = atoi(arg2);
 
 			bSuccess = iRevs > 0;
 
@@ -1160,7 +1160,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (bSetting)
 		{
-			float fTime = atof(arg2);
+			const float fTime = atof(arg2);
 
 			bSuccess = fTime >= 0;
 
@@ -1273,7 +1273,7 @@ eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const
 	}
 	else if (FStrEq(arg1, "spread"))
 	{
-		float fNewSpread = atof(arg2);
+		const float fNewSpread = atof(arg2);
 
 		if (fNewSpread)
 		{
@@ -1379,7 +1379,7 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 
 		if (pWantedClient)
 		{
-			int state = atoi(arg2);
+			const int state = atoi(arg2);
 
 			if (arg2 && *arg2)
 				pWantedClient->AutoWaypoint(state);
@@ -1529,7 +1529,7 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 	{
 		if (arg2 && *arg2)
 		{
-			int iWpt = atoi(arg2);
+			const int iWpt = atoi(arg2);
 
 			SET_ORIGIN(pClient->GetPlayer(), WaypointOrigin(iWpt));
 		}
@@ -1598,9 +1598,9 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	char szBotProfile[10]; // Store integer value of bot profile in string as filename
 	int iBotProfile = -1; // Store integer value of bot profile
 
-	BOOL arg1valid = arg1 && *arg1;
-	BOOL arg2valid = arg2 && *arg2;
-	BOOL arg3valid = arg3 && *arg3;
+	const BOOL arg1valid = arg1 && *arg1;
+	const BOOL arg2valid = arg2 && *arg2;
+	const BOOL arg3valid = arg3 && *arg3;
 
 	///////////////////////////////////
 	// get bots previous team / class
@@ -1888,7 +1888,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		int i = 0;
 		int j = 0;
 
-		int len = strlen(teamlist);
+		const int len = strlen(teamlist);
 
 		while (i < len)
 		{

@@ -67,7 +67,7 @@ void CBotGAValues::clear()
 // crossover with other individual
 void CBotGAValues::crossOver(IIndividual* other)
 {
-	unsigned int iPoint = RANDOM_LONG(0, m_theValues.size());
+	const unsigned int iPoint = RANDOM_LONG(0, m_theValues.size());
 	float fTemp;
 
 	CBotGAValues* vother = static_cast<CBotGAValues*>(other);
@@ -96,7 +96,7 @@ void CBotGAValues::mutate()
 	{
 		if (RANDOM_FLOAT(0, 1) < CGA::g_fMutateRate)
 		{
-			float fCurrentVal = get(i);
+			const float fCurrentVal = get(i);
 
 			set(i, fCurrentVal + fCurrentVal * (-1 + RANDOM_FLOAT(0, 2)) * CGA::g_fMaxPerturbation);
 		}
@@ -271,8 +271,8 @@ CBitsGAValues::CBitsGAValues(CBits* bits)
 // crossover with other individual
 void CBitsGAValues::crossOver(IIndividual* other)
 {
-	unsigned int iNumBits = m_theBits->numBits();
-	unsigned int iCrossoverPoint = static_cast<unsigned int>(RANDOM_LONG(0, iNumBits));
+	const unsigned int iNumBits = m_theBits->numBits();
+	const unsigned int iCrossoverPoint = static_cast<unsigned int>(RANDOM_LONG(0, iNumBits));
 	CBits* tempBits = new CBits(iNumBits);
 
 	CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
