@@ -1920,7 +1920,7 @@ public:
 			}
 		}*/
 
-	void addPosition(Vector const vOrigin, edict_t* pEntity, int flags, Vector vVisibleOrigin)
+	void addPosition(Vector const vOrigin, edict_t* pEntity, int flags, const Vector vVisibleOrigin)
 	{
 		CRememberPosition newPosition = CRememberPosition(vOrigin, pEntity);
 		newPosition.setFlags(flags);

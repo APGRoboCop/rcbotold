@@ -140,7 +140,7 @@ void CWaypointLocations::getMaxMins(Vector const vOrigin, int& mini, int& minj, 
 
 ///////////////
 // return nearest waypoint that can be used to cover from vCoverFrom vector
-int CWaypointLocations::GetCoverWaypoint(Vector const vPlayerOrigin, Vector vCoverFrom, dataStack<int>* iIgnoreWpts)
+int CWaypointLocations::GetCoverWaypoint(Vector const vPlayerOrigin, const Vector vCoverFrom, dataStack<int>* iIgnoreWpts)
 {
 	const int iWaypoint = this->NearestWaypoint(vCoverFrom, REACHABLE_RANGE, -1, FALSE, TRUE);
 
@@ -1466,7 +1466,7 @@ int WaypointFindNearestAiming(Vector v_origin)
 	return min_index;
 }
 
-void WaypointDrawBeam(edict_t* pEntity, Vector start, Vector end, int width,
+void WaypointDrawBeam(edict_t* pEntity, const Vector start, Vector end, int width,
 	int noise, int red, int green, int blue, int brightness, int speed)
 {
 	// PM - Use MSG_ONE_UNRELIABLE

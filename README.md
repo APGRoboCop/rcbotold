@@ -8,13 +8,14 @@ V 1.51
 =---------=
 
 * added: Opposing Force CTF Support
+* added: Strafing combat to evade being easy target bots
+* added: Added an learning code for bots to reduce chances of being suicidal bots
 * changed: Reduced redundant coding
+* changed: Increasing bot's viewing angle to detect enemies better
 * changed: Reduced further Sven Co-op and TFC support
 * fixed: Some potential errors and bugs have been wiped
 * TODO: To prevent bots in Op4CTF from team shooting each other
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
-* TODO: Enhance their combat tactics by having better enemy detection
-* TODO: To learn properly on avoiding taking too much falling damage and die in lava pits - despite using proper waypoints
 * TODO: To fix that NS Squad Joining Bug or enhance it
 
 

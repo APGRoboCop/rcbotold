@@ -429,6 +429,11 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 	break;
 	case BOT_EVENT_KILL_SELF:
 	{
+		RememberPosition(EntityOrigin(pExtInfo), pExtInfo, BOT_TASK_AVOID_OBJECT);
+
+		edict_t* pEntity; 
+		m_pAvoidEntity = pEntity;
+			
 		if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
 		{
 			// I like a lot of people on the server so lets laugh
@@ -793,6 +798,9 @@ void CBot::EnemyFound(edict_t* pEnemy)
 {
 	UpdateCondition(BOT_CONDITION_SEE_ENEMY);
 
+	m_fStrafeSpeed = 1;
+	m_fStrafeTime = RANDOM_FLOAT(2.0, 6.0);
+	
 	m_pEnemy = pEnemy;
 
 	if (pEnemy == NULL)
@@ -1479,8 +1487,8 @@ void CBot::SpawnInit(const BOOL bInit)
 	m_bUsedMelee = FALSE;
 
 	m_bPlacedPipes = FALSE;
-	m_pSpySpotted = NULL;
-	m_bIsDisguised = FALSE;
+	//m_pSpySpotted = NULL;
+	//m_bIsDisguised = FALSE;
 	m_fGrenadePrimeTime = 0;
 	m_iGrenadeHolding = 0;
 
@@ -7467,14 +7475,14 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 	// change angles smoothly
 
 	//temp = 1/1+exp(-fabs((pev->ideal_yaw+180.0f)-(pev->v_angle.y+180.0f))/180);
-	float temp = fabs(pev->ideal_yaw + 180.0f - (pev->v_angle.y + 180.0f));
+	float temp = std::fabs(pev->ideal_yaw + 180.0f - (pev->v_angle.y + 180.0f));
 
 	fTurnSpeed = temp / m_fTurnSpeed;//fabs((pev->ideal_yaw+180.0f)-(pev->v_angle.y+180.0f))/20;//m_fTurnSpeed;
 	// change yaw
 	ChangeAngles(&fTurnSpeed, &pev->ideal_yaw, &pev->v_angle.y, &pev->angles.y); // 5 degrees
 
 	//temp = 1/1+exp(-fabs((pev->idealpitch+180.0f)-(pev->v_angle.x+180.0f))/180);
-	temp = fabs(pev->idealpitch + 180.0f - (pev->v_angle.x + 180.0f));
+	temp = std::fabs(pev->idealpitch + 180.0f - (pev->v_angle.x + 180.0f));
 
 	// set by ChangeAngles... remove this functionality soon...
 	fTurnSpeed = temp / m_fTurnSpeed;
@@ -16221,7 +16229,7 @@ void CBot::workEnemyCosts(edict_t* pEntity, Vector vOrigin, const float fDistanc
 	}
 }
 
-void CBot::decideJumpDuckStrafe(const float fEnemyDist, Vector vEnemyOrigin)
+void CBot::decideJumpDuckStrafe(const float fEnemyDist, const Vector vEnemyOrigin)
 {
 	std::vector<ga_value> inputs;
 

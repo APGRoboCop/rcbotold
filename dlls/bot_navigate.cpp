@@ -1801,15 +1801,15 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 // Thanks PM's racc bot source for some info pointers. (racc.bots-united.com)
 {
-	const float fFov = 60.0;
+	const float fFov = 100.0;
 	int iStep = 0;
 
 	entvars_t* pev = &pBot->m_pEdict->v;
 
 	float fStartAngle = pev->angles.y - fFov;
 
-	const int iMinStep = -60;
-	const int iMaxStep = 60;
+	const int iMinStep = -100;
+	const int iMaxStep = 100;
 
 	float fMaxDistance = BOT_WAYPOINT_TOUCH_DIST * 2;
 	float fDistance;
