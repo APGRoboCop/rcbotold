@@ -12,7 +12,6 @@ V 1.51
 * changed: Reduced redundant coding
 * changed: Increasing bot's viewing angle to detect enemies better
 * changed: Reduced further Sven Co-op and TFC support
-* fixed: Some potential errors and bugs have been wiped
 * TODO: To prevent bots in Op4CTF from team shooting each other
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
 * TODO: To learn properly on avoiding taking too much falling damage and die in lava pits - add AvoidEntity for "func_lava" in bot_navigate.cpp ?

@@ -284,7 +284,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		// Limit iLoops just incase we run into an infinite loop, or very long loop
 		// which can sometimes happen
 	int iPrevWpt = -1;
-	BOOL bDetpackWpt;
+	//BOOL bDetpackWpt;
 
 	while (bFoundGoal == FALSE && !sOpenList->IsEmpty()/*IsEmpty()*/ && iLoops < iMaxLoops)
 	{
@@ -360,11 +360,11 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 			if (iSuccNodeFlags & W_FL_UNREACHABLE)
 				continue;
 
-			if (bDetpackWpt)
+			/*if (bDetpackWpt)
 			{
 				if (iSuccNodeFlags & W_FL_OPENS_LATER)
 				{
-					/*if (gBotGlobals.IsMod(MOD_TFC) && pBot->pev->playerclass == TFC_CLASS_DEMOMAN)
+					if (gBotGlobals.IsMod(MOD_TFC) && pBot->pev->playerclass == TFC_CLASS_DEMOMAN)
 					{
 						// first do a traceline
 						UTIL_TraceLine(vOrigin, WaypointOrigin(iSuccNode), ignore_monsters, dont_ignore_glass, NULL, &tr);
@@ -375,9 +375,9 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 							if (!pBot->iDetPackWaypoints.IsMember(iCurrentNode))
 								pBot->iDetPackWaypoints.Add(iCurrentNode);
 						}
-					}*/
+					}
 				}
-			}
+			}*/
 
 			if (iSuccNodeFlags & W_FL_CROUCH)
 			{

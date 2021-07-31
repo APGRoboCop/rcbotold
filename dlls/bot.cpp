@@ -1218,7 +1218,7 @@ BOOL CBot::WantToLeaveGame()
 
 		*/
 	const float fTimelimit = CVAR_GET_FLOAT("mp_timelimit");
-	const float fBoredompercent = (float)(255 - (int)m_iBoredom) / 255;
+	const float fBoredompercent = static_cast<float>(255 - static_cast<int>(m_iBoredom)) / 255;
 	const float fLongGameTime = 1.0 - (fTimelimit * 60 - (gpGlobals->time - m_fJoinServerTime)) / (fTimelimit * 60);
 
 	//long game time = 0 to 1 number, 0 meaning 0% of time spent on server,
@@ -5088,6 +5088,28 @@ void CBot::LookForNewTasks()
 		}
 	}
 	break;
+	case MOD_GEARBOX:
+	{
+		gBotGlobals.m_bTeamPlay = TRUE; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
+
+		int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0, -1, W_FL_ENDLEVEL, &m_FailedGoals);
+
+		if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
+		{
+			AddTask(CBotTask(BOT_TASK_FIND_PATH, 0, NULL, iWpt, -1));
+			break;
+		}
+
+		if (pNearestPickupEntity)
+		{
+			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestPickupEntity));
+			AddTask(CBotTask(BOT_TASK_PICKUP_ITEM, iNewScheduleId, pNearestPickupEntity));
+			break;
+		}
+
+		bRoam = TRUE;
+		break;
+	}
 	case MOD_DMC:
 		// need health and a health waypoint nearby ?
 		if (bNeedHealth)
@@ -8975,27 +8997,54 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 	case MOD_GEARBOX:
 	{
 		char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
+		gBotGlobals.m_bTeamPlay = TRUE; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
+
+		if (!EntityIsAlive(pEntity))
+			return FALSE;
+
+		if (pEntity->v.flags & FL_CLIENT)
+		{
+			const float team = gBotGlobals.m_bTeamPlay;
+
+			if (team)
+			{
+				char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+				char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
+				char model1[64];
+				char model2[64];
+
+				strcpy(model1, g_engfuncs.pfnInfoKeyValue(infobuffer1, "model"));
+				strcpy(model2, g_engfuncs.pfnInfoKeyValue(infobuffer2, "model"));
+
+				return strcmp(model1, model2) != 0;
+			}
+
+			return TRUE;
+		}
 
 		if (strcmp(szClassname, "func_breakable") == 0)
 		{
-			return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
-		}
-		if (!EntityIsAlive(pEntity))
-			return FALSE;
-		if (!gBotGlobals.m_bTeamPlay)
-			return pEntity->v.flags & FL_CLIENT;
-		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
-		{
-			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
-			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+			edict_t* pPlayer = NULL;
+			const Vector origin = EntityOrigin(pEntity);
 
-			const char* model1 = g_engfuncs.pfnInfoKeyValue(infobuffer1, "model");
-			const char* model2 = g_engfuncs.pfnInfoKeyValue(infobuffer2, "model");
+			while ((pPlayer = UTIL_FindEntityInSphere(pPlayer, origin, 200)) != NULL)
+			{
+				if (pPlayer->v.flags & FL_CLIENT)
+				{
+					if (pPlayer == m_pEdict)
+					{
+						if (DistanceFrom(origin) < 80)
+							break;
+					}
+					else
+						break;
+				}
+			}
 
-			return !FStrEq(model1, model2);
+			return (pPlayer == m_pEdict || pPlayer != m_pEdict && pPlayer != NULL && IsInVisibleList(pPlayer) && IsEnemy(pPlayer)) && BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
 		}
 	}
-	break;
+		break;
 	case MOD_HL_DM:
 	{
 		char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));

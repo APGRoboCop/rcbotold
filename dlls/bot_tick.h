@@ -44,7 +44,7 @@ public:
 		unsigned int iTicks = 300;
 
 		// round robin
-		list<CTickable*>::const_iterator it;
+		std::list<CTickable*>::const_iterator it;
 
 		m_Tickables.sort();
 
@@ -62,7 +62,7 @@ public:
 		}
 	}
 private:
-	list<CTickable*> m_Tickables;
+	std::list<CTickable*> m_Tickables;
 };
 
 #endif

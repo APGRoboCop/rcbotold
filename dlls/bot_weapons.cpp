@@ -854,6 +854,8 @@ BOOL CBotWeapon::NeedToReload()
 	case MOD_BUMPERCARS:
 	case MOD_DMC:
 		return FALSE;
+	case MOD_GEARBOX:
+		return !m_iClip && m_iReserve > 0;
 	default:
 		break;
 	}
