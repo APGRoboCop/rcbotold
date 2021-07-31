@@ -429,10 +429,10 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 	break;
 	case BOT_EVENT_KILL_SELF:
 	{
-		RememberPosition(EntityOrigin(pExtInfo), pExtInfo, BOT_TASK_AVOID_OBJECT);
+		//RememberPosition(EntityOrigin(pExtInfo), pExtInfo, BOT_REMEMBER_POSITION);
 
-		edict_t* pEntity; 
-		m_pAvoidEntity = pEntity;
+		//edict_t* pEntity = nullptr;
+		//m_pAvoidEntity = pEntity;
 			
 		if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
 		{
