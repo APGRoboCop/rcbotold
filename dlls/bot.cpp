@@ -431,7 +431,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 	{
 		//RememberPosition(EntityOrigin(pExtInfo), pExtInfo, BOT_REMEMBER_POSITION);
 
-		//edict_t* pEntity = nullptr;
+		//edict_t* pEntity = NULL;
 		//m_pAvoidEntity = pEntity;
 			
 		if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)

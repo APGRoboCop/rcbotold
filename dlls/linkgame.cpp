@@ -724,6 +724,7 @@ LINK_ENTITY_TO_GAME(func_ladder);
 LINK_ENTITY_TO_GAME(func_laddertype);
 LINK_ENTITY_TO_GAME(func_land_transport);
 LINK_ENTITY_TO_GAME(func_landtransport);
+LINK_ENTITY_TO_FUNC(func_lava);
 LINK_ENTITY_TO_GAME(func_modeltank);
 LINK_ENTITY_TO_GAME(func_modelvehicle);
 LINK_ENTITY_TO_GAME(func_modelvehiclemodel);

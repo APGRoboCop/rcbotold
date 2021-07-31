@@ -817,6 +817,7 @@ LINK_ENTITY_TO_FUNC(func_pushable);
 LINK_ENTITY_TO_FUNC(func_platrot);
 LINK_ENTITY_TO_FUNC(func_plat);
 LINK_ENTITY_TO_FUNC(func_pendulum);
+LINK_ENTITY_TO_FUNC(func_lava);
 LINK_ENTITY_TO_FUNC(func_nogrenades);
 LINK_ENTITY_TO_FUNC(func_nobuild);
 LINK_ENTITY_TO_FUNC(func_mortar_field);
