@@ -256,7 +256,7 @@ void CBotGlobals::StartFrame()
 	static float fPreviousTime = -1.0;
 	static BOOL bCheckedTeamplay = FALSE;
 
-	if (!bCheckedTeamplay)
+	if (!bCheckedTeamplay && m_iCurrentMod != MOD_GEARBOX)
 	{
 		m_bTeamPlay = CVAR_GET_FLOAT("mp_teamplay") > 0 || CVAR_GET_FLOAT("mp_theonemode") > 0;
 		bCheckedTeamplay = TRUE;
