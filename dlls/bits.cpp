@@ -146,7 +146,7 @@ void CBits::setup(const int iNumBits)
 // memory size
 int CBits::size()
 {
-	return Ceiling((float)m_iNumBits / 8);
+	return Ceiling(static_cast<float>(m_iNumBits) / 8);
 }
 
 void CBits::save(FILE* bfp)

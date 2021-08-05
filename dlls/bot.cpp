@@ -2790,7 +2790,7 @@ void CBot::Think()
 	// Not alive anymore
 	if (!IsAlive())
 	{
-		BOOL feigned = FALSE;
+		const BOOL feigned = FALSE;
 
 		/*if (gBotGlobals.IsMod(MOD_TFC))
 		{
