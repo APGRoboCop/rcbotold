@@ -134,7 +134,7 @@ void CBotGAValues::setVector(std::vector<ga_value> const values)
 	m_theValues.clear();
 
 	for (unsigned int i = 0; i < values.size(); i++)
-		m_theValues.push_back(values[i]);
+		m_theValues.emplace_back(values[i]);
 }
 
 void CBotGAValues::getVector(std::vector<ga_value>* values)
@@ -142,7 +142,7 @@ void CBotGAValues::getVector(std::vector<ga_value>* values)
 	values->clear();
 
 	for (unsigned int i = 0; i < m_theValues.size(); i++)
-		values->push_back(m_theValues[i]);
+		values->emplace_back(m_theValues[i]);
 }
 
 void CBotGAValues::freeMemory()
@@ -217,7 +217,7 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 			return;
 
 		fread(&fRead, sizeof(ga_value), 1, bfp);
-		m_theValues.push_back(fRead);
+		m_theValues.emplace_back(fRead);
 	}
 
 	fread(&m_fFitness, sizeof(ga_value), 1, bfp);

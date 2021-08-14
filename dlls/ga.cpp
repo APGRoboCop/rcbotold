@@ -72,7 +72,7 @@ IIndividual* CPopulation::getBestIndividual()
 
 void CPopulation::add(IIndividual* individual)
 {
-	m_theIndividuals.push_back(individual);
+	m_theIndividuals.emplace_back(individual);
 }
 
 void CPopulation::freeMemory()
@@ -152,7 +152,7 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 
 		pVals->load(bfp, chromosize);
 
-		m_theIndividuals.push_back(pVals);
+		m_theIndividuals.emplace_back(pVals);
 	}
 }
 

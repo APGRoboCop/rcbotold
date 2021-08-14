@@ -71,7 +71,7 @@ public:
 
 	void clear() override;
 
-	void add(ga_value val) { m_theValues.push_back(val); }
+	void add(ga_value val) { m_theValues.emplace_back(val); }
 
 	std::vector<ga_value>* returnVector() { return &m_theValues; }
 

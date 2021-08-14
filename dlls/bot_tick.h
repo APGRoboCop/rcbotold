@@ -36,7 +36,7 @@ class CTickManager
 public:
 	void add(CTickable* pTickable)
 	{
-		m_Tickables.push_back(pTickable);
+		m_Tickables.emplace_back(pTickable);
 	}
 
 	void run()

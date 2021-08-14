@@ -677,13 +677,13 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 				if (pBot->m_pCurrentWeapon)
 					iweap = pBot->m_pCurrentWeapon->GetID();
 
-				inputs.push_back(pBot->pev->health / pBot->pev->max_health);
-				inputs.push_back(pEnemy->v.health / pEnemy->v.max_health);
-				inputs.push_back(pBot->pev->size.Length() / pEnemy->v.size.Length());
-				inputs.push_back(pBot->NS_AmountOfEnergy() / 100);
-				inputs.push_back(iweap / MAX_WEAPONS);
-				inputs.push_back(pBot->onGround());
-				inputs.push_back(pBot->pev->velocity.Length() / pBot->pev->maxspeed);
+				inputs.emplace_back(pBot->pev->health / pBot->pev->max_health);
+				inputs.emplace_back(pEnemy->v.health / pEnemy->v.max_health);
+				inputs.emplace_back(pBot->pev->size.Length() / pEnemy->v.size.Length());
+				inputs.emplace_back(pBot->NS_AmountOfEnergy() / 100);
+				inputs.emplace_back(iweap / MAX_WEAPONS);
+				inputs.emplace_back(pBot->onGround());
+				inputs.emplace_back(pBot->pev->velocity.Length() / pBot->pev->maxspeed);
 
 				pBot->dec_attackElectrified->input(&inputs);
 				pBot->dec_attackElectrified->execute();

@@ -643,17 +643,17 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			std::vector<ga_value> inputs;
 
 			// percentage of health now
-			inputs.push_back(pev->health / pev->max_health);
+			inputs.emplace_back(pev->health / pev->max_health);
 			// percentage of health lost
-			inputs.push_back(fHealthLost / pev->max_health);
+			inputs.emplace_back(fHealthLost / pev->max_health);
 
 			if (pFloatInfo)
 			{
 				// distance from
-				inputs.push_back(DistanceFrom(Vector(pFloatInfo)));
+				inputs.emplace_back(DistanceFrom(Vector(pFloatInfo)));
 			}
 			else
-				inputs.push_back(1);
+				inputs.emplace_back(1);
 
 			dec_runForCover->input(&inputs);
 			dec_faceHurtOrigin->input(&inputs);
@@ -665,25 +665,25 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			// (improved in rcbot 2 source!)
 
 			// bias weight
-			weights.push_back(m_GASurvival->get(4));
+			weights.emplace_back(m_GASurvival->get(4));
 			// health weight
-			weights.push_back(m_GASurvival->get(5));
+			weights.emplace_back(m_GASurvival->get(5));
 			// health lost weight
-			weights.push_back(m_GASurvival->get(6));
+			weights.emplace_back(m_GASurvival->get(6));
 			// distance weight
-			weights.push_back(m_GASurvival->get(7));
+			weights.emplace_back(m_GASurvival->get(7));
 
 			dec_runForCover->setWeights(weights);
 
 			weights.clear();
 			// bias weight
-			weights.push_back(m_GASurvival->get(8));
+			weights.emplace_back(m_GASurvival->get(8));
 			// health weight
-			weights.push_back(m_GASurvival->get(9));
+			weights.emplace_back(m_GASurvival->get(9));
 			// health lost weight
-			weights.push_back(m_GASurvival->get(10));
+			weights.emplace_back(m_GASurvival->get(10));
 			// distance
-			weights.push_back(m_GASurvival->get(11));
+			weights.emplace_back(m_GASurvival->get(11));
 
 			dec_faceHurtOrigin->setWeights(weights);
 
@@ -3094,16 +3094,16 @@ void CBot::Think()
 
 				vector<ga_value> weights;
 
-				weights.push_back(m_GASurvival->get(16));
-				weights.push_back(m_GASurvival->get(17));
-				weights.push_back(m_GASurvival->get(18));
-				weights.push_back(m_GASurvival->get(19));
+				weights.emplace_back(m_GASurvival->get(16));
+				weights.emplace_back(m_GASurvival->get(17));
+				weights.emplace_back(m_GASurvival->get(18));
+				weights.emplace_back(m_GASurvival->get(19));
 
 				dec_feign->setWeights(weights);
 				vector<ga_value> inputs;
-				inputs.push_back(pev->health/pev->max_health);
-				inputs.push_back((float)m_bIsDisguised);
-				inputs.push_back((float)pev->iuser3);
+				inputs.emplace_back(pev->health/pev->max_health);
+				inputs.emplace_back((float)m_bIsDisguised);
+				inputs.emplace_back((float)pev->iuser3);
 				dec_feign->input(inputs);
 				dec_feign->execute();
 
@@ -3789,13 +3789,13 @@ class CAlienActions
 public:
 	void setup ()
 	{
-		m_Actions.push_back(CAlienAction(ACTION_BUILD_DEF,ACTION_RES_MORE_DEFENCES|ACTION_RES_MORE_TRAITS|ACTION_RES_MORE_HEALTH));
-		m_Actions.push_back(CAlienAction(ACTION_BUILD_OFF,ACTION_RES_MORE_DEFENCES));
-		m_Actions.push_back(CAlienAction(ACTION_BUILD_SENS,ACTION_RES_CLOACKED|ACTION_RES_MORE_TRAITS));
-		m_Actions.push_back(CAlienAction(ACTION_BUILD_MOV,ACTION_RES_MORE_TRAITS));
-		m_Actions.push_back(CAlienAction(ACTION_BUILD_RESTOWER,ACTION_RES_FASTER_RESOURCES));
-		m_Actions.push_back(CAlienAction(ACTION_BUILD_HIVE,(ACTION_RES_MORE_SPAWNPOINTS + ACTION_RES_MORE_ABILITIES)));
-		m_Actions.push_back(CAlienAction(ACTION_HEAL_PLAYER,ACTION_RES_MORE_HEALTH));
+		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_DEF,ACTION_RES_MORE_DEFENCES|ACTION_RES_MORE_TRAITS|ACTION_RES_MORE_HEALTH));
+		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_OFF,ACTION_RES_MORE_DEFENCES));
+		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_SENS,ACTION_RES_CLOACKED|ACTION_RES_MORE_TRAITS));
+		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_MOV,ACTION_RES_MORE_TRAITS));
+		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_RESTOWER,ACTION_RES_FASTER_RESOURCES));
+		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_HIVE,(ACTION_RES_MORE_SPAWNPOINTS + ACTION_RES_MORE_ABILITIES)));
+		m_Actions.emplace_back(CAlienAction(ACTION_HEAL_PLAYER,ACTION_RES_MORE_HEALTH));
 	}
 
 	CAlienAction *getBestAction ( eAlienMaskEvidence evd )
@@ -7283,9 +7283,9 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 
 	Vector v_comp = ((pOrigin-GetGunPosition()).Normalize() - gpGlobals->v_forward).Normalize();
 
-	inputs.push_back(v_comp.x);
-	inputs.push_back(v_comp.y);
-	inputs.push_back(v_comp.z);
+	inputs.emplace_back(v_comp.x);
+	inputs.emplace_back(v_comp.y);
+	inputs.emplace_back(v_comp.z);
 
 	vector <ga_value> weights;
 
@@ -7713,10 +7713,10 @@ void CBot::WorkMoveDirection()
 
 					const float fEnergy = NS_AmountOfEnergy();
 
-					inputs.push_back(fEnergy * 0.01f);
-					inputs.push_back(m_vMoveToVector.z - pev->absmin.z);///(pev->size.z/2));
-					inputs.push_back(pev->velocity.z);///(pev->maxspeed*0.33));
-					inputs.push_back(m_pFlyGAVals->get(1));
+					inputs.emplace_back(fEnergy * 0.01f);
+					inputs.emplace_back(m_vMoveToVector.z - pev->absmin.z);///(pev->size.z/2));
+					inputs.emplace_back(pev->velocity.z);///(pev->maxspeed*0.33));
+					inputs.emplace_back(m_pFlyGAVals->get(1));
 
 					dec_flapWings->setWeights(m_pFlyGAVals, 2, 4);
 
@@ -10382,18 +10382,18 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 			return FALSE;
 	}*/
 
-	weights.push_back(m_GASurvival->get(12));
-	weights.push_back(m_GASurvival->get(13));
-	weights.push_back(m_GASurvival->get(14));
-	weights.push_back(m_GASurvival->get(15));
+	weights.emplace_back(m_GASurvival->get(12));
+	weights.emplace_back(m_GASurvival->get(13));
+	weights.emplace_back(m_GASurvival->get(14));
+	weights.emplace_back(m_GASurvival->get(15));
 
 	std::vector<ga_value> inputs;
 
 	dec_followEnemy->setWeights(weights);
 
-	inputs.push_back(pev->health / pev->max_health);
-	inputs.push_back(DistanceFromEdict(pEnemy) * 0.001);
-	inputs.push_back(pev->size.Length() / pEnemy->v.size.Length());
+	inputs.emplace_back(pev->health / pev->max_health);
+	inputs.emplace_back(DistanceFromEdict(pEnemy) * 0.001);
+	inputs.emplace_back(pev->size.Length() / pEnemy->v.size.Length());
 
 	dec_followEnemy->input(&inputs);
 
@@ -14548,11 +14548,11 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 						std::vector<ga_value> inputs;
 
-						inputs.push_back((float)m_iTS_State / 2);
-						inputs.push_back(pev->velocity.Length() / m_fMaxSpeed);
-						inputs.push_back(m_pEnemy->v.velocity.Length() / m_pEnemy->v.maxspeed);
-						inputs.push_back(UTIL_YawAngleBetweenOrigin(pev, vEnemyOrigin) / 180);
-						inputs.push_back(weap_id);
+						inputs.emplace_back((float)m_iTS_State / 2);
+						inputs.emplace_back(pev->velocity.Length() / m_fMaxSpeed);
+						inputs.emplace_back(m_pEnemy->v.velocity.Length() / m_pEnemy->v.maxspeed);
+						inputs.emplace_back(UTIL_YawAngleBetweenOrigin(pev, vEnemyOrigin) / 180);
+						inputs.emplace_back(weap_id);
 
 						dec_stunt->input(&inputs);
 						dec_stunt->execute();
@@ -14571,7 +14571,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						//inputs.clear();
 
 						//for ( int j = 0; j < MAX_WEAPONS; j ++ )
-						//	inputs.push_back((float)(iweapid==j));
+						//	inputs.emplace_back((float)(iweapid==j));
 
 						//dec_firepercent->execute();
 
@@ -14806,13 +14806,13 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						{
 							vector<ga_value> inp;
 
-							inp.push_back(pev->health / pev->max_health);
-							inp.push_back(HasCondition(BOT_CONDITION_SEE_ENEMY_HEAD));
-							inp.push_back(HasCondition(BOT_CONDITION_SEE_ENEMY_BODY));
-							inp.push_back(fEnemyDist / 4096);
-							inp.push_back(pev->velocity.Length() / 320);
-							inp.push_back(m_pEnemy->v.velocity.Length() / 320);
-							inp.push_back(m_fFirstSeeEnemyTime + m_fReactionTime * 2 > gpGlobals->time);
+							inp.emplace_back(pev->health / pev->max_health);
+							inp.emplace_back(HasCondition(BOT_CONDITION_SEE_ENEMY_HEAD));
+							inp.emplace_back(HasCondition(BOT_CONDITION_SEE_ENEMY_BODY));
+							inp.emplace_back(fEnemyDist / 4096);
+							inp.emplace_back(pev->velocity.Length() / 320);
+							inp.emplace_back(m_pEnemy->v.velocity.Length() / 320);
+							inp.emplace_back(m_fFirstSeeEnemyTime + m_fReactionTime * 2 > gpGlobals->time);
 
 							dec_attackElectrified->input(&inp);
 							dec_attackElectrified->execute();
@@ -16286,16 +16286,16 @@ void CBot::decideJumpDuckStrafe(const float fEnemyDist, const Vector vEnemyOrigi
 	dec_duck->setWeights(m_pPersonalGAVals, 5, 5);
 	dec_strafe->setWeights(m_pPersonalGAVals, 10, 5);
 
-	inputs.push_back(pev->velocity.Length() / pev->size.Length());
-	inputs.push_back(fEnemyDist * 0.01);
-	inputs.push_back((vEnemyOrigin.z - pev->origin.z) * 0.1);
-	//inputs.push_back(pev->size.Length());
+	inputs.emplace_back(pev->velocity.Length() / pev->size.Length());
+	inputs.emplace_back(fEnemyDist * 0.01);
+	inputs.emplace_back((vEnemyOrigin.z - pev->origin.z) * 0.1);
+	//inputs.emplace_back(pev->size.Length());
 	if (m_pEnemy)
-		inputs.push_back(pev->size.Length() / m_pEnemy->v.size.Length());
+		inputs.emplace_back(pev->size.Length() / m_pEnemy->v.size.Length());
 	else
-		inputs.push_back(1);
+		inputs.emplace_back(1);
 
-	inputs.push_back(pev->flags & FL_ONGROUND && pev->movetype == MOVETYPE_WALK);
+	inputs.emplace_back(pev->flags & FL_ONGROUND && pev->movetype == MOVETYPE_WALK);
 
 	dec_jump->input(&inputs);
 	dec_duck->input(&inputs);

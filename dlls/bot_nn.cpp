@@ -47,7 +47,7 @@ float NN::g_learnRate = 0.9f;
 NNLayer::NNLayer(int iNumNeurons, int iNumInputs)
 {
 	for (int i = 0; i < iNumNeurons; i++)
-		m_Neurons.push_back(new CPerceptron(iNumInputs, NULL, NN::g_learnRate));
+		m_Neurons.emplace_back(new CPerceptron(iNumInputs, NULL, NN::g_learnRate));
 }
 
 NN::NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs)
@@ -55,12 +55,12 @@ NN::NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int 
 	//m_Layers.add(new NNLayer(iNumInputs));
 
 	m_iNumInputs = iNumInputs;
-	m_Layers.push_back(new NNLayer(iNumNeuronsPerHiddenLayer, iNumInputs));
+	m_Layers.emplace_back(new NNLayer(iNumNeuronsPerHiddenLayer, iNumInputs));
 
 	for (int i = 0; i < iNumHiddenLayers; i++)
-		m_Layers.push_back(new NNLayer(iNumNeuronsPerHiddenLayer, iNumNeuronsPerHiddenLayer));
+		m_Layers.emplace_back(new NNLayer(iNumNeuronsPerHiddenLayer, iNumNeuronsPerHiddenLayer));
 	//output layer
-	m_Layers.push_back(new NNLayer(iNumOutputs, iNumNeuronsPerHiddenLayer));
+	m_Layers.emplace_back(new NNLayer(iNumOutputs, iNumNeuronsPerHiddenLayer));
 }
 
 void NN::setWeights(std::vector<ga_value>* weights)
@@ -95,7 +95,7 @@ void NN::getWeights(std::vector<ga_value>* weights)
 
 			for (unsigned short int k = 0; k < n->numWeights(); k++)
 			{
-				weights->push_back(n->getWeight(k));
+				weights->emplace_back(n->getWeight(k));
 			}
 		}
 	}
@@ -132,7 +132,7 @@ void NN::getOutputs(std::vector<ga_value>* outputs)
 		{
 			CPerceptron* n = l->getNeuron(j);
 
-			outputs->push_back(n->getOutput());
+			outputs->emplace_back(n->getOutput());
 		}
 	}
 }
@@ -146,7 +146,7 @@ void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs
 	outputs->clear();
 
 	for (i = 0; i < inputs->size(); i++)
-		outputs->push_back((*inputs)[i]);
+		outputs->emplace_back((*inputs)[i]);
 
 	for (i = 0; i < m_Layers.size(); i++)
 	{
@@ -161,13 +161,13 @@ void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs
 			n->input(outputs);
 			n->execute();
 
-			newoutputs.push_back(n->getOutput());
+			newoutputs.emplace_back(n->getOutput());
 		}
 
 		outputs->clear();
 
 		for (unsigned int k = 0; k < newoutputs.size(); k++)
-			outputs->push_back(newoutputs[k]);
+			outputs->emplace_back(newoutputs[k]);
 	}
 }
 
@@ -202,7 +202,7 @@ void NNLayer::load(FILE* bfp)
 	{
 		for (unsigned int i = 0; i < m_Neurons.size(); i++)
 		{
-			m_Neurons.push_back(new CPerceptron(bfp));
+			m_Neurons.emplace_back(new CPerceptron(bfp));
 		}
 	}
 }
@@ -223,7 +223,7 @@ void NN::load(FILE* bfp)
 	{
 		for (unsigned int i = 0; i < iTemp; i++)
 		{
-			m_Layers.push_back(new NNLayer(bfp));
+			m_Layers.emplace_back(new NNLayer(bfp));
 		}
 	}
 }

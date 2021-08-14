@@ -55,10 +55,10 @@ CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, floa
 	m_iInputs = iInputs;
 
 	// bias weight
-	m_weights.push_back(RANDOM_FLOAT(0, 0.6) - 0.3);
+	m_weights.emplace_back(RANDOM_FLOAT(0, 0.6) - 0.3);
 
 	for (unsigned int i = 0; i < m_iInputs; i++)
-		m_weights.push_back(RANDOM_FLOAT(0, 0.6) - 0.3);
+		m_weights.emplace_back(RANDOM_FLOAT(0, 0.6) - 0.3);
 
 	m_transferFunction = transferFunction;
 
@@ -82,11 +82,11 @@ void CPerceptron::setWeights(CBotGAValues* vals, int iFrom, int iNum)
 
 	m_weights.clear();
 
-	m_weights.push_back(bias);
+	m_weights.emplace_back(bias);
 
 	for (int i = iFrom; i < iFrom + iNum; i++)
 	{
-		m_weights.push_back(vals->get(i));
+		m_weights.emplace_back(vals->get(i));
 	}
 }
 
@@ -96,7 +96,7 @@ void CPerceptron::setWeights(std::vector <ga_value> const weights, int iFrom, in
 
 	for (int i = iFrom; i < iFrom + iNum; i++)
 	{
-		m_weights.push_back(weights[i]);
+		m_weights.emplace_back(weights[i]);
 	}
 }
 
@@ -111,7 +111,7 @@ void CPerceptron::setWeights(std::vector <ga_value> const weights)
 	m_weights.clear();
 
 	for (unsigned int i = 0; i < weights.size(); i++)
-		m_weights.push_back(weights[i]);
+		m_weights.emplace_back(weights[i]);
 }
 
 void CPerceptron::input(std::vector <ga_value>* inputs)
@@ -119,7 +119,7 @@ void CPerceptron::input(std::vector <ga_value>* inputs)
 	m_inputs.clear();
 
 	for (unsigned int i = 0; i < inputs->size(); i++)
-		m_inputs.push_back((*inputs)[i]);
+		m_inputs.emplace_back((*inputs)[i]);
 }
 
 ga_value CPerceptron::execute()
@@ -221,7 +221,7 @@ void CPerceptron::load(FILE* bfp)
 			return;
 
 		fread(&fVal, sizeof(ga_value), 1, bfp);
-		m_inputs.push_back(fVal);
+		m_inputs.emplace_back(fVal);
 	}
 
 	m_weights.clear();
@@ -235,7 +235,7 @@ void CPerceptron::load(FILE* bfp)
 			return;
 
 		fread(&fVal, sizeof(ga_value), 1, bfp);
-		m_weights.push_back(fVal);
+		m_weights.emplace_back(fVal);
 	}
 
 	fread(&m_output, sizeof(ga_value), 1, bfp);

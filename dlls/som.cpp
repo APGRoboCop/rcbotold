@@ -54,7 +54,7 @@ CSom::CSom(int iW, int iH, int iIn)
 	for (int i = 0; i < iH; i++)
 	{
 		for (int j = 0; j < iW; j++)
-			m_Neurons.push_back(new CSomNeuron(iIn, j, i));
+			m_Neurons.emplace_back(new CSomNeuron(iIn, j, i));
 	}
 
 	m_iEpochs = 0;
@@ -156,7 +156,7 @@ CSomNeuron::CSomNeuron(int iInp, int iX, int iY)
 	m_iY = iY;
 
 	for (int i = 0; i < iInp; i++)
-		fWeights.push_back(RANDOM_FLOAT(0, 1));
+		fWeights.emplace_back(RANDOM_FLOAT(0, 1));
 }
 
 //void CSomNeuron :: update ( std::vector<ga_value> *inputs, ga_value inf );
