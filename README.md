@@ -8,6 +8,7 @@ V 1.51
 =---------=
 
 * added: Opposing Force CTF Support
+* added: gnu++14 Support for Linux Servers
 * added: Strafing combat to evade being easy target bots
 * changed: Reduced redundant coding
 * changed: Increasing bot's viewing angle to detect enemies better
