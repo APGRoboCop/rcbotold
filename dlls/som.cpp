@@ -49,7 +49,7 @@ CSom::CSom(int iW, int iH, int iIn)
 	m_iH = iH;
 
 	// neighbourhood size
-	m_fNSize = (int)((ga_value)iW / 2);
+	m_fNSize = static_cast<int>(static_cast<ga_value>(iW) / 2);
 
 	for (int i = 0; i < iH; i++)
 	{
@@ -67,7 +67,7 @@ CSom :: ~CSom()
 
 CSomNeuron* CSom::getBMU(std::vector <ga_value>* inputs)
 {
-	CSomNeuron* winner = NULL;
+	CSomNeuron* winner = nullptr;
 	ga_value bestdistance = 0;
 
 	for (unsigned int i = 0; i < m_Neurons.size(); i++)
@@ -115,7 +115,7 @@ CSomNeuron* CSom::inputOne(std::vector <ga_value>* inputs)
 
 CSomNeuron* CSom::input(std::vector < std::vector <ga_value> >* inputs)
 {
-	return inputOne(&(*inputs)[RANDOM_LONG(0, (int)inputs->size() - 1)]);
+	return inputOne(&(*inputs)[RANDOM_LONG(0, static_cast<int>(inputs->size()) - 1)]);
 }
 
 void CSom::display()

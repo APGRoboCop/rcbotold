@@ -378,7 +378,7 @@ public:
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void Destroy()
@@ -403,7 +403,7 @@ public:
 		m_iAmmoIndex1 = -1;
 		m_iAmmoIndex2 = -1;
 
-		m_szClassname = NULL;
+		m_szClassname = nullptr;
 
 		m_bRegistered = FALSE; // Registered by the mod.
 
@@ -630,10 +630,10 @@ public:
 	{
 		for (int i = 0; i < MAX_WEAPONS; i++)
 		{
-			if (m_Weapons[i] != NULL)
+			if (m_Weapons[i] != nullptr)
 			{
 				delete m_Weapons[i];
-				m_Weapons[i] = NULL;
+				m_Weapons[i] = nullptr;
 			}
 		}
 	}
@@ -644,7 +644,7 @@ public:
 	{
 		for (int i = 0; i < MAX_WEAPONS; i++)
 		{
-			m_Weapons[i] = NULL;
+			m_Weapons[i] = nullptr;
 		}
 		//memset(m_Weapons,0,sizeof(CWeapon)*MAX_WEAPONS);
 	}
@@ -656,7 +656,7 @@ public:
 			//if ( m_Weapons[iId].IsRegistered() )
 			return m_Weapons[iId];
 		}
-		return NULL;
+		return nullptr;
 	}
 
 private:
@@ -809,19 +809,19 @@ public:
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->GetClassname();
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	BOOL IsMelee()
 	{
-		if (m_pWeaponInfo == NULL)
+		if (m_pWeaponInfo == nullptr)
 			return TRUE;
 		return m_pWeaponInfo->IsMelee();
 	}
 
 	BOOL CanBeUsedUnderWater()
 	{
-		if (m_pWeaponInfo == NULL)
+		if (m_pWeaponInfo == nullptr)
 			return TRUE;
 
 		return m_pWeaponInfo->CanBeUsedUnderWater();
@@ -829,7 +829,7 @@ public:
 
 	int GetPriority()
 	{
-		if (m_pWeaponInfo == NULL)
+		if (m_pWeaponInfo == nullptr)
 		{
 			return 0;
 		}
@@ -837,7 +837,7 @@ public:
 		return m_pWeaponInfo->GetPriority();
 	}
 
-	void setAmmoArray(int* pAmmo1, int* pAmmo2 = NULL)
+	void setAmmoArray(int* pAmmo1, int* pAmmo2 = nullptr)
 	{
 		if (pAmmo1)
 		{
@@ -939,14 +939,14 @@ public:
 		if (iId >= 0 && iId < MAX_WEAPONS)
 			return &m_Weapons[iId];
 
-		return NULL;
+		return nullptr;
 	}
 
 	int GetPrimaryWeaponId()
 	{
 		for (int i = 0; i < MAX_WEAPONS; i++)
 		{
-			if (!m_Weapons[i].HasWeapon(NULL))
+			if (!m_Weapons[i].HasWeapon(nullptr))
 				continue;
 			if (m_Weapons[i].IsPrimary())
 				return i;
@@ -959,7 +959,7 @@ public:
 	{
 		for (int i = 0; i < MAX_WEAPONS; i++)
 		{
-			if (!m_Weapons[i].HasWeapon(NULL))
+			if (!m_Weapons[i].HasWeapon(nullptr))
 				continue;
 			if (m_Weapons[i].IsSecondary())
 				return i;

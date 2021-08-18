@@ -68,7 +68,7 @@ extern enginefuncs_t g_engfuncs;
 #define RANDOM_LONG		(*g_engfuncs.pfnRandomLong)
 #define RANDOM_FLOAT	(*g_engfuncs.pfnRandomFloat)
 
-inline void MESSAGE_BEGIN(int msg_dest, int msg_type, const float* pOrigin = NULL, edict_t* ed = NULL) {
+inline void MESSAGE_BEGIN(int msg_dest, int msg_type, const float* pOrigin = nullptr, edict_t* ed = nullptr) {
 	(*g_engfuncs.pfnMessageBegin)(msg_dest, msg_type, pOrigin, ed);
 }
 #define MESSAGE_END		(*g_engfuncs.pfnMessageEnd)
@@ -92,7 +92,7 @@ inline void* GET_PRIVATE(edict_t* pent)
 {
 	if (pent)
 		return pent->pvPrivateData;
-	return NULL;
+	return nullptr;
 }
 
 #define FREE_PRIVATE	(*g_engfuncs.pfnFreeEntPrivateData)

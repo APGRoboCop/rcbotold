@@ -41,10 +41,10 @@
 
 #include "ga.h"
 
-const int CGA::g_iDefaultMaxPopSize = 16;
-const float CGA::g_fCrossOverRate = 0.7f;
-const float CGA::g_fMutateRate = 0.1f;
-const float CGA::g_fMaxPerturbation = 0.3f;
+constexpr int CGA::g_iDefaultMaxPopSize = 16;
+constexpr float CGA::g_fCrossOverRate = 0.7f;
+constexpr float CGA::g_fMutateRate = 0.1f;
+constexpr float CGA::g_fMaxPerturbation = 0.3f;
 
 ////////////////////
 // POPULATION
@@ -57,7 +57,7 @@ IIndividual* CPopulation::get(int iIndex)
 
 IIndividual* CPopulation::getBestIndividual()
 {
-	IIndividual* best = NULL;
+	IIndividual* best = nullptr;
 
 	for (unsigned int i = 0; i < m_theIndividuals.size(); i++)
 	{
@@ -81,7 +81,7 @@ void CPopulation::freeMemory()
 	{
 		m_theIndividuals[i]->clear();
 		delete m_theIndividuals[i];
-		m_theIndividuals[i] = NULL;
+		m_theIndividuals[i] = nullptr;
 	}
 
 	m_theIndividuals.clear();
@@ -106,7 +106,7 @@ ga_value CPopulation::totalFitness()
 
 void CPopulation::save(FILE* bfp)
 {
-	unsigned int iSize = m_theIndividuals.size();
+	const unsigned int iSize = m_theIndividuals.size();
 
 	CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
 
@@ -125,11 +125,11 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 	if (feof(bfp))
 		return;
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
 
 	if (!header.read(bfp, header))
 	{
-		BotMessage(NULL, 0, "Learn data version mismatch - wiping");
+		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;
 	}
 
@@ -218,7 +218,7 @@ void CGA::addToPopulation(IIndividual* individual)
 			if (m_bestIndividual && m_bestIndividual != best)
 			{
 				delete m_bestIndividual;
-				m_bestIndividual = NULL;
+				m_bestIndividual = nullptr;
 			}
 			else if (m_bestIndividual == best)
 				set = FALSE;
@@ -336,7 +336,7 @@ void CGA::freeLocalMemory()
 	m_iNumGenerations = 0;
 	//	if (m_bestIndividual)
 	delete m_bestIndividual;
-	m_bestIndividual = NULL;
+	m_bestIndividual = nullptr;
 }
 
 void CGA::freeGlobalMemory()
@@ -344,7 +344,7 @@ void CGA::freeGlobalMemory()
 	freeLocalMemory();
 	//	if (m_theSelectFunction)
 	delete m_theSelectFunction;
-	m_theSelectFunction = NULL;
+	m_theSelectFunction = nullptr;
 }
 
 bool CGA::canPick()

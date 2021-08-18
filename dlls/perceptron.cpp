@@ -62,7 +62,7 @@ CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, floa
 
 	m_transferFunction = transferFunction;
 
-	if (m_transferFunction == NULL)
+	if (m_transferFunction == nullptr)
 		m_transferFunction = new CSigmoidTransfer();
 
 	m_Bias = m_fDefaultBias;
@@ -197,11 +197,11 @@ void CPerceptron::load(FILE* bfp)
 	if (feof(bfp))
 		return;
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
 
 	if (!header.read(bfp, header))
 	{
-		BotMessage(NULL, 0, "Learn data version mismatch - wiping");
+		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;
 	}
 

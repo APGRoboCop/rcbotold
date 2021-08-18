@@ -92,9 +92,9 @@ extern CBotGlobals gBotGlobals;
 
 void CWaypointLocations::getMaxMins(Vector const vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk)
 {
-	const int iLoc = abs((int)(vOrigin.x + 4096.0) / 256);
-	const int jLoc = abs((int)(vOrigin.y + 4096.0) / 256);
-	const int kLoc = abs((int)(vOrigin.z + 4096.0) / 256);
+	const int iLoc = std::abs(static_cast<int>(vOrigin.x + 4096.0) / 256);
+	const int jLoc = std::abs(static_cast<int>(vOrigin.y + 4096.0) / 256);
+	const int kLoc = std::abs(static_cast<int>(vOrigin.z + 4096.0) / 256);
 
 	// get current area
 	mini = iLoc - 1;
@@ -106,7 +106,7 @@ void CWaypointLocations::getMaxMins(Vector const vOrigin, int& mini, int& minj, 
 	mink = kLoc - 1;
 	maxk = kLoc + 1;
 
-	const int iMaxLoc = MAX_WPT_LOCATIONS - 1;
+	constexpr int iMaxLoc = MAX_WPT_LOCATIONS - 1;
 
 	if (mini < 0)
 		mini = 0;
@@ -188,9 +188,9 @@ void CWaypointLocations::AddWptLocation(const int iIndex, const float* fOrigin)
 {
 	// Add a waypoint with index and at origin (for quick insertion in the list)
 	//
-	const int i = abs((int)(fOrigin[0] + 4096.0) / 256);
-	const int j = abs((int)(fOrigin[1] + 4096.0) / 256);
-	const int k = abs((int)(fOrigin[2] + 4096.0) / 256);
+	const int i = std::abs(static_cast<int>(fOrigin[0] + 4096.0) / 256);
+	const int j = std::abs(static_cast<int>(fOrigin[1] + 4096.0) / 256);
+	const int k = std::abs(static_cast<int>(fOrigin[2] + 4096.0) / 256);
 
 	m_iLocations[i][j][k].Push(iIndex);
 }
@@ -199,9 +199,9 @@ void CWaypointLocations::DeleteWptLocation(const int iIndex, const float* fOrigi
 // Delete the waypoint index at the origin (for finding it quickly in the list)
 //
 {
-	const int i = abs((int)(fOrigin[0] + 4096.0) / 256);
-	const int j = abs((int)(fOrigin[1] + 4096.0) / 256);
-	const int k = abs((int)(fOrigin[2] + 4096.0) / 256);
+	const int i = std::abs(static_cast<int>(fOrigin[0] + 4096.0) / 256);
+	const int j = std::abs(static_cast<int>(fOrigin[1] + 4096.0) / 256);
+	const int k = std::abs(static_cast<int>(fOrigin[2] + 4096.0) / 256);
 
 	m_iLocations[i][j][k].Remove(iIndex);
 }
@@ -297,7 +297,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 		if (g_iFailedWaypoints[iSelectedIndex] == 1)
 			continue;
 
-		WAYPOINT* curr_wpt = &waypoints[iSelectedIndex];
+		const WAYPOINT* curr_wpt = &waypoints[iSelectedIndex];
 
 		const int iWptFlags = curr_wpt->flags;
 
@@ -337,7 +337,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 				bAdd = TRUE;
 			else
 			{
-				UTIL_TraceLine(vOrigin, curr_wpt->origin, ignore_monsters, dont_ignore_glass, NULL, &tr);
+				UTIL_TraceLine(vOrigin, curr_wpt->origin, ignore_monsters, dont_ignore_glass, nullptr, &tr);
 				bAdd = tr.flFraction >= 1.0;
 			}
 
@@ -403,11 +403,11 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float 
 
 	Vector vWpt;
 
-	pvs = NULL;
-	pas = NULL;
+	pvs = nullptr;
+	pas = nullptr;
 
 	// Setup visibility, for quick vis checking
-	(*gFunctionTable.pfnSetupVisibility)(NULL, pEntity, &pvs, &pas);
+	(*gFunctionTable.pfnSetupVisibility)(nullptr, pEntity, &pvs, &pas);
 
 	FOR_EACH_WPT_LOC_BUCKET(vOrigin);
 
@@ -421,7 +421,7 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float 
 
 		vWpt = WaypointOrigin(iIndex);
 
-		if (fabs(vWpt.z - vOrigin.z) <= 256.0)
+		if (std::fabs(vWpt.z - vOrigin.z) <= 256.0)
 		{
 			pvs = ENGINE_SET_PVS(reinterpret_cast<float*>(&vWpt));
 
@@ -465,7 +465,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 	FILE* bfp = fopen(filename, "rb");
 
 	// If .rcw file doesnt exist
-	if (bfp == NULL)
+	if (bfp == nullptr)
 	{
 		// try loading a .wpt file
 		const int iLen = strlen(filename);
@@ -483,16 +483,16 @@ BOOL WaypointLoad(edict_t* pEntity)
 	}
 
 	// if file exists, read the waypoint structure from it
-	if (bfp != NULL)
+	if (bfp != nullptr)
 	{
 		char msg[80];
-		fread(&header, sizeof header, 1, bfp);
+		fread(&header, sizeof(header), 1, bfp);
 
 		header.filetype[7] = 0;
 
-		BOOL bWorkOutVisibility = (header.waypoint_file_flags & W_FILE_FL_READ_VISIBILITY) == W_FILE_FL_READ_VISIBILITY;
+		BOOL bWorkOutVisibility = ((header.waypoint_file_flags & W_FILE_FL_READ_VISIBILITY) == W_FILE_FL_READ_VISIBILITY);
 
-		if (strcmp(header.filetype, "RCBot") == 0 || strcmp(header.filetype, "HPB_bot") == 0)
+		if ((strcmp(header.filetype, "RCBot") == 0) || (strcmp(header.filetype, "HPB_bot") == 0))
 		{
 			if (header.waypoint_file_version > WAYPOINT_VERSION)
 			{
@@ -512,9 +512,10 @@ BOOL WaypointLoad(edict_t* pEntity)
 
 				for (i = 0; i < header.number_of_waypoints; i++)
 				{
-					fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
+					fread(&waypoints[i], sizeof(waypoints[0]), 1, bfp);
 
-					if (waypoints[i].origin.x > 4096.0f || waypoints[i].origin.y > 4096.0f || waypoints[i].origin.z > 4096.0f)
+					if ((waypoints[i].origin.x > 4096.0f) || (waypoints[i].origin.y > 4096.0f) || (waypoints[i].origin.z > 4096.0f) ||
+						(waypoints[i].origin.x < -4096.0f) || (waypoints[i].origin.y < -4096.0f) || (waypoints[i].origin.z < -4096.0f))
 					{
 						BotMessage(pEntity, 0, "ERROR!!! Invalid waypoint (id: %d) origin outside map !!!", i);
 						waypoints[i].flags |= W_FL_DELETED;
@@ -535,11 +536,11 @@ BOOL WaypointLoad(edict_t* pEntity)
 				for (int index = 0; index < num_waypoints; index++)
 				{
 					// read the number of paths from this node...
-					fread(&num, sizeof num, 1, bfp);
+					fread(&num, sizeof(num), 1, bfp);
 
 					for (i = 0; i < num; i++)
 					{
-						fread(&path_index, sizeof path_index, 1, bfp);
+						fread(&path_index, sizeof(path_index), 1, bfp);
 
 						WaypointAddPath(index, path_index);
 					}
@@ -578,20 +579,20 @@ BOOL WaypointLoad(edict_t* pEntity)
 			bWorkOutVisibility = !WaypointVisibility.ReadFromFile();
 
 			if (!bWorkOutVisibility) // read file okay
-				BotMessage(NULL, 0, "Read Waypoint Visibility File Successfully");
+				BotMessage(nullptr, 0, "Read Waypoint Visibility File Successfully");
 			else
-				BotMessage(NULL, 0, "No Waypoint Visibility File found");
+				BotMessage(nullptr, 0, "No Waypoint Visibility File found");
 		}
 
 		if (bWorkOutVisibility)
 		{
-			BotMessage(NULL, 0, "Waypoint Visibility File out of date");
+			BotMessage(nullptr, 0, "Waypoint Visibility File out of date");
 
-			BotMessage(NULL, 0, "Working Out Waypoint Visibility Table, this may take a while... Please wait");
+			BotMessage(nullptr, 0, "Working Out Waypoint Visibility Table, this may take a while... Please wait");
 
 			WaypointVisibility.WorkOutVisibilityTable(num_waypoints);
 
-			BotMessage(NULL, 0, "Done! Saving To File...");
+			BotMessage(nullptr, 0, "Done! Saving To File...");
 
 			if (WaypointVisibility.SaveToFile())
 				WaypointSave(TRUE);
@@ -681,7 +682,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	int index, i;
 	short int num;
 
-	if (theConverter != NULL)
+	if (theConverter != nullptr)
 	{
 		strcpy(header.filetype, theConverter->getHeader());
 		header.waypoint_file_version = theConverter->getVersion();
@@ -700,13 +701,13 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 
 	header.number_of_waypoints = num_waypoints;
 
-	memset(header.mapname, 0, sizeof header.mapname);
+	memset(header.mapname, 0, sizeof(header.mapname));
 	strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
 	header.mapname[31] = 0;
 
-	FILE* bfp = NULL;
+	FILE* bfp = nullptr;
 
-	if (theConverter != NULL)
+	if (theConverter != nullptr)
 	{
 		bfp = theConverter->openWaypoint();
 	}
@@ -724,7 +725,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 		bfp = fopen(filename, "wb"); // wb = write binary
 	}
 
-	if (bfp == NULL)
+	if (bfp == nullptr)
 	{
 		/*	   char folder[512];
 
@@ -762,9 +763,9 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	}*/
 
 	// write the waypoint header to the file...
-	fwrite(&header, sizeof header, 1, bfp);
+	fwrite(&header, sizeof(header), 1, bfp);
 
-	if (theConverter != NULL) // write converted waypoints
+	if (theConverter != nullptr) // write converted waypoints
 	{
 		WAYPOINT convertedWpt;
 
@@ -772,7 +773,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 		{
 			convertedWpt = theConverter->convert(&waypoints[index]);
 
-			fwrite(&convertedWpt, sizeof waypoints[0], 1, bfp);
+			fwrite(&convertedWpt, sizeof(waypoints[0]), 1, bfp);
 		}
 	}
 	else
@@ -780,7 +781,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 		// write the waypoint data to the file...
 		for (index = 0; index < num_waypoints; index++)
 		{
-			fwrite(&waypoints[index], sizeof waypoints[0], 1, bfp);
+			fwrite(&waypoints[index], sizeof(waypoints[0]), 1, bfp);
 		}
 	}
 
@@ -792,7 +793,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 		PATH* p = paths[index];
 		num = 0;
 
-		while (p != NULL)
+		while (p != nullptr)
 		{
 			i = 0;
 
@@ -807,20 +808,20 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 			p = p->next;  // go to next node in linked list
 		}
 
-		fwrite(&num, sizeof num, 1, bfp);  // write the count
+		fwrite(&num, sizeof(num), 1, bfp);  // write the count
 
 		// now write out each path index...
 
 		p = paths[index];
 
-		while (p != NULL)
+		while (p != nullptr)
 		{
 			i = 0;
 
 			while (i < MAX_PATH_INDEX)
 			{
 				if (p->index[i] != -1)  // save path node if it's used
-					fwrite(&p->index[i], sizeof p->index[0], 1, bfp);
+					fwrite(&p->index[i], sizeof(p->index[0]), 1, bfp);
 
 				i++;
 			}
@@ -831,7 +832,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 
 	fclose(bfp);
 
-	if (theConverter == NULL)
+	if (theConverter == nullptr)
 		WaypointVisibility.SaveToFile();
 
 	return TRUE;
@@ -876,7 +877,7 @@ void WaypointFree()
 #endif
 			}
 
-			paths[i] = NULL;
+			paths[i] = nullptr;
 		}
 	}
 }
@@ -893,7 +894,7 @@ void WaypointInit()
 		waypoints[i].flags = 0;
 		waypoints[i].origin = Vector(0, 0, 0);
 
-		paths[i] = NULL;  // no paths allocated yet
+		paths[i] = nullptr;  // no paths allocated yet
 	}
 
 	num_waypoints = 0;
@@ -910,10 +911,10 @@ void WaypointAddPath(const short int add_index, const short int path_index)
 	int count = 0;
 
 	PATH* p = paths[add_index];
-	PATH* prev = NULL;
+	PATH* prev = nullptr;
 
 	// find an empty slot for new path_index...
-	while (p != NULL)
+	while (p != nullptr)
 	{
 		int i = 0;
 
@@ -940,7 +941,7 @@ void WaypointAddPath(const short int add_index, const short int path_index)
 
 	p = static_cast<PATH*>(malloc(sizeof(PATH)));
 
-	if (p == NULL)
+	if (p == nullptr)
 	{
 		ALERT(at_error, "HPB_bot - Error allocating memory for path!");
 	}
@@ -949,12 +950,12 @@ void WaypointAddPath(const short int add_index, const short int path_index)
 	p->index[1] = -1;
 	p->index[2] = -1;
 	p->index[3] = -1;
-	p->next = NULL;
+	p->next = nullptr;
 
-	if (prev != NULL)
+	if (prev != nullptr)
 		prev->next = p;  // link new node into existing list
 
-	if (paths[add_index] == NULL)
+	if (paths[add_index] == nullptr)
 		paths[add_index] = p;  // save head point if necessary
 }
 
@@ -969,7 +970,7 @@ void WaypointDeletePath(const short int del_index)
 		int count = 0;
 
 		// search linked list for del_index...
-		while (p != NULL)
+		while (p != nullptr)
 		{
 			int i = 0;
 
@@ -1002,7 +1003,7 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 	PATH* p = paths[path_index];
 
 	// search linked list for del_index...
-	while (p != NULL)
+	while (p != nullptr)
 	{
 		int i = 0;
 
@@ -1031,7 +1032,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 {
 	int count = 0;
 
-	if (*pPath == NULL)
+	if (*pPath == nullptr)
 	{
 		*pPath = paths[waypoint_index];
 		*path_index = 0;
@@ -1044,7 +1045,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 		*pPath = (*pPath)->next;  // go to next node in linked list
 	}
 
-	while (*pPath != NULL)
+	while (*pPath != nullptr)
 	{
 		while (*path_index < MAX_PATH_INDEX)
 		{
@@ -1210,7 +1211,7 @@ int WaypointFindNearestGoal(Vector v_src, edict_t* pEntity, const float range, c
 		if (g_iFailedWaypoints[index])
 			continue;
 
-		WAYPOINT* waypoint = &waypoints[index];
+		const WAYPOINT* waypoint = &waypoints[index];
 
 		const int wpt_flags = waypoint->flags;
 
@@ -1471,7 +1472,7 @@ void WaypointDrawBeam(edict_t* pEntity, const Vector start, Vector end, int widt
 {
 	// PM - Use MSG_ONE_UNRELIABLE
 	//    - no overflows!
-	MESSAGE_BEGIN(MSG_ONE_UNRELIABLE, SVC_TEMPENTITY, NULL, pEntity);
+	MESSAGE_BEGIN(MSG_ONE_UNRELIABLE, SVC_TEMPENTITY, nullptr, pEntity);
 	WRITE_BYTE(TE_BEAMPOINTS);
 	WRITE_COORD(start.x);
 	WRITE_COORD(start.y);
@@ -1543,11 +1544,11 @@ int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
 	// look for lift, ammo, flag, health, armor, etc.
 	//********************************************************
 
-	edict_t* pEnt = NULL;
+	edict_t* pEnt = nullptr;
 
-	while ((pEnt = UTIL_FindEntityInSphere(pEnt, vOrigin, 72.0)) != NULL)
+	while ((pEnt = UTIL_FindEntityInSphere(pEnt, vOrigin, 72.0)) != nullptr)
 	{
-		if (pEnt->v.owner != NULL)
+		if (pEnt->v.owner != nullptr)
 			continue;
 
 		Vector vEntOrigin = EntityOrigin(pEnt);
@@ -1556,7 +1557,7 @@ int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
 
 		if (tr.flFraction >= 1.0 || tr.pHit == pEnt)
 		{
-			char* szClassname = const_cast<char*>(STRING(pEnt->v.classname));
+			const char* szClassname = const_cast<char*>(STRING(pEnt->v.classname));
 
 			if (strncmp("ammo_", szClassname, 5) == 0)
 				new_waypoint->flags |= W_FL_AMMO;
@@ -1597,7 +1598,7 @@ int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
 			if (temp_waypoint->flags & W_FL_AIMING)
 				continue;  // skip any aiming waypoints
 
-			UTIL_TraceLine(vOrigin, temp_waypoint->origin, ignore_monsters, ignore_glass, NULL, &tr);
+			UTIL_TraceLine(vOrigin, temp_waypoint->origin, ignore_monsters, ignore_glass, nullptr, &tr);
 
 			WaypointVisibility.SetVisibilityFromTo(index, i, tr.flFraction >= 1.0);
 			WaypointVisibility.SetVisibilityFromTo(i, index, tr.flFraction >= 1.0);
@@ -1628,7 +1629,7 @@ int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
 
 void WaypointAdd(CClient* pClient)
 {
-	edict_t* pEntity = NULL;
+	edict_t* pEntity = nullptr;
 
 	if (pClient)
 		pEntity = pClient->GetPlayer();
@@ -1736,7 +1737,7 @@ void WaypointDelete(CClient* pClient)
 
 	// free the path for this index...
 
-	if (paths[index] != NULL)
+	if (paths[index] != nullptr)
 	{
 		PATH* p = paths[index];
 
@@ -1752,7 +1753,7 @@ void WaypointDelete(CClient* pClient)
 #endif
 		}
 
-		paths[index] = NULL;
+		paths[index] = nullptr;
 	}
 
 	waypoints[index].flags = W_FL_DELETED;  // not being used
@@ -1766,12 +1767,12 @@ void WaypointDelete(CClient* pClient)
 // allow player to manually create a path from one waypoint to another
 void WaypointCreatePath(CClient* pClient, const int cmd)
 {
-	if (pClient == NULL)
+	if (pClient == nullptr)
 		return;
 
 	edict_t* pEdict = pClient->GetPlayer();
 
-	if (pEdict == NULL)
+	if (pEdict == nullptr)
 		return;
 
 	if (cmd == 1)  // assign source of path
@@ -1810,7 +1811,7 @@ void WaypointCreatePath(CClient* pClient, const int cmd)
 			BotMessage(pEdict, 0, "Error: Waypoint invalid");
 			bError = TRUE;
 		}
-		else if (BotNavigate_FindPathFromTo(waypoint1, waypoint2, -1) != NULL)
+		else if (BotNavigate_FindPathFromTo(waypoint1, waypoint2, -1) != nullptr)
 		{
 			BotMessage(pEdict, 0, "Error: Waypoint already has a path to this waypoint");
 			bError = TRUE;
@@ -1834,12 +1835,12 @@ void WaypointCreatePath(CClient* pClient, const int cmd)
 // allow player to manually remove a path from one waypoint to another
 void WaypointRemovePath(CClient* pClient, const int cmd)
 {
-	if (pClient == NULL)
+	if (pClient == nullptr)
 		return;
 
 	edict_t* pEdict = pClient->GetPlayer();
 
-	if (pEdict == NULL)
+	if (pEdict == nullptr)
 		return;
 
 	if (cmd == 1)  // assign source of path
@@ -1891,7 +1892,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 		// check if this waypoint is "visible"...
 
 		UTIL_TraceLine(v_src, v_dest, ignore_monsters,
-			NULL, &tr);
+			nullptr, &tr);
 
 		// if waypoint is visible from current position (even behind head)...
 		if (tr.flFraction >= 1.0)
@@ -1914,7 +1915,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 				v_new_dest.z = v_new_dest.z - 50;  // straight down 50 units
 
 				UTIL_TraceLine(v_new_src, v_new_dest, dont_ignore_monsters,
-					NULL, &tr);
+					nullptr, &tr);
 
 				// check if we didn't hit anything, if not then it's in mid-air
 				if (tr.flFraction >= 1.0)
@@ -1933,7 +1934,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 			v_down.z = v_down.z - 1000.0;  // straight down 1000 units
 
 			UTIL_TraceLine(v_check, v_down, ignore_monsters,
-				NULL, &tr);
+				nullptr, &tr);
 
 			float last_height = tr.flFraction * 1000.0;  // height from ground
 
@@ -1948,7 +1949,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 				v_down.z = v_down.z - 1000.0;  // straight down 1000 units
 
 				UTIL_TraceLine(v_check, v_down, ignore_monsters,
-					NULL, &tr);
+					nullptr, &tr);
 
 				const float curr_height = tr.flFraction * 1000.0;  // height from ground
 
@@ -2026,7 +2027,7 @@ void WaypointPrintInfo(edict_t* pEntity)
 	char msg[80];
 
 	// find the nearest waypoint...
-	const int index = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0, -1, FALSE, TRUE, FALSE, NULL);
+	const int index = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0, -1, FALSE, TRUE, FALSE, nullptr);
 
 	//BOOL visible = WaypointVisibility.GetVisibilityFromTo(1,4);
 
@@ -2089,11 +2090,10 @@ void WaypointPrintInfo(edict_t* pEntity)
 
 	/*if (gBotGlobals.IsMod(MOD_TFC))
 	{
-		
 			#define W_FL_GREN_THROW     (1<<30)
 			#define W_FL_TFC_SNIPER     (1<<30)
 			#define W_FL_TFC_DETPACK    (1<<30)
-			
+
 		if (flags & W_FL_GREN_THROW)
 		{
 			ClientPrint(pEntity, HUD_PRINTNOTIFY, "Bot will snipe here\n");
@@ -2169,7 +2169,7 @@ void WaypointDrawIndex(edict_t* pEntity, int index)
 	{
 		// find next ladder waypoint
 
-		PATH* pPath = NULL;
+		PATH* pPath = nullptr;
 		int pathindex = 0;
 
 		int inextwpt;
@@ -2236,7 +2236,7 @@ void WaypointDrawIndex(edict_t* pEntity, int index)
 	else if (waypoint_flags & W_FL_CHECK_LIFT)
 		colour = Vector(213, 234, 129); // blah
 
-	WaypointDrawBeam(pEntity, start, end, 16, 2, (int)colour.x, (int)colour.y, (int)colour.z, 200, 10);
+	WaypointDrawBeam(pEntity, start, end, 16, 2, static_cast<int>(colour.x), static_cast<int>(colour.y), static_cast<int>(colour.z), 200, 10);
 }
 
 // Now done in CClient :: Think ()
@@ -2320,7 +2320,7 @@ float WaypointDistance(const Vector& vOrigin, const int iWaypointIndex)
 
 	if (iWaypointIndex < 0)
 	{
-		BotMessage(NULL, 0, "Caution: WaypointDistance() received invalid waypoint index!");
+		BotMessage(nullptr, 0, "Caution: WaypointDistance() received invalid waypoint index!");
 		return 0;
 	}
 
@@ -2333,7 +2333,7 @@ Vector WaypointOrigin(const int iWaypointIndex)
 
 	if (iWaypointIndex < 0)
 	{
-		BotMessage(NULL, 0, "Caution: WaypointOrigin() received invalid waypoint index!");
+		BotMessage(nullptr, 0, "Caution: WaypointOrigin() received invalid waypoint index!");
 		return Vector(0, 0, 0);
 	}
 
@@ -2369,7 +2369,7 @@ WAYPOINT& WAYPOINTS :: operator [] (const int index)
 		return m_Waypoints[index];  // Return index
 	else
 	{
-		BugMessage(NULL, "Waypoint Error : Index Value Doesn't Exist");
+		BugMessage(nullptr, "Waypoint Error : Index Value Doesn't Exist");
 		return m_Waypoints[0]; // Return the last waypoint?
 	}
 }
@@ -2401,7 +2401,7 @@ void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints)
 			if (Waypoint2->flags & W_FL_DELETED)
 				continue;
 
-			UTIL_TraceLine(Waypoint1->origin, Waypoint2->origin + Vector(0, 0, 16.0), ignore_monsters, ignore_glass, NULL, &tr);
+			UTIL_TraceLine(Waypoint1->origin, Waypoint2->origin + Vector(0, 0, 16.0), ignore_monsters, ignore_glass, nullptr, &tr);
 
 			SetVisibilityFromTo(i, j, tr.flFraction >= 1.0);
 		}
@@ -2425,13 +2425,13 @@ BOOL CWaypointVisibilityTable::SaveToFile()
 
 	FILE* bfp = fopen(filename, "wb"); // binary file write
 
-	if (bfp == NULL)
+	if (bfp == nullptr)
 	{
-		BotMessage(NULL, 0, "Can't open Waypoint Visibility table for writing!");
+		BotMessage(nullptr, 0, "Can't open Waypoint Visibility table for writing!");
 		return FALSE;
 	}
 
-	fwrite(m_VisTable, sizeof(unsigned char), Ceiling((float)(num_waypoints * num_waypoints) / 8), bfp);
+	fwrite(m_VisTable, sizeof(unsigned char), Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8), bfp);
 
 	fclose(bfp);
 
@@ -2458,16 +2458,16 @@ BOOL CWaypointVisibilityTable::ReadFromFile()
 
 	FILE* bfp = fopen(filename, "rb"); // binary file write
 
-	if (bfp == NULL)
+	if (bfp == nullptr)
 	{
-		BotMessage(NULL, 0, "Can't open Waypoint Visibility table for reading!");
+		BotMessage(nullptr, 0, "Can't open Waypoint Visibility table for reading!");
 		return FALSE;
 	}
 
 	fseek(bfp, 0, SEEK_END); // seek at end
 
 	iSize = ftell(bfp); // get file size
-	iDesiredSize = Ceiling((float)(num_waypoints * num_waypoints) / 8);
+	iDesiredSize = Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8);
 
 	// size not right, return false to re workout table
 	if (iSize != iDesiredSize)
@@ -2498,13 +2498,13 @@ BOOL WaypointFlagsOnLadderOrFly(const int iWaypointFlags)
 // return player edict pointer nearby origin within range.
 edict_t* PlayerNearVector(Vector vOrigin, float fRange)
 {
-	edict_t* pNearest = NULL;
+	edict_t* pNearest = nullptr;
 
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
 		edict_t* pPlayer = INDEXENT(i);
 
-		if (pPlayer == NULL)
+		if (pPlayer == nullptr)
 			continue;
 
 		if (!*STRING(pPlayer->v.netname))

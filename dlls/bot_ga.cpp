@@ -174,7 +174,7 @@ void CBotGAValues :: saveForBot ( char *file, int iProfile )
 
 void CBotGAValues::save(FILE* bfp)
 {
-	unsigned int iSize = m_theValues.size();
+	const unsigned int iSize = m_theValues.size();
 
 	CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, m_theValues.size());
 
@@ -198,11 +198,11 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 	if (feof(bfp))
 		return;
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, req_size);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, req_size);
 
 	if (!header.read(bfp, header))
 	{
-		BotMessage(NULL, 0, "Learn data version mismatch - wiping");
+		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;
 	}
 
@@ -341,5 +341,5 @@ inline void CBitsGAValues::random()
 void CBitsGAValues::freeMemory()
 {
 	delete m_theBits;
-	m_theBits = NULL;
+	m_theBits = nullptr;
 }

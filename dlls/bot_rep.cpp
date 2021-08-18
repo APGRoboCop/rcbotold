@@ -70,7 +70,7 @@ int BotFunc_GetRepArrayNum(const int iRep)
 {
 	if (iRep == -1)
 	{
-		BugMessage(NULL, "GetRepArrayNum: Bad rep recieved (%d)", iRep);
+		BugMessage(nullptr, "GetRepArrayNum: Bad rep recieved (%d)", iRep);
 		return 1;
 	}
 
@@ -127,7 +127,7 @@ CClient* CBotReputations::GetRandomClient(const int iRep)
 	tempStack.Init();
 
 	if (iIdList.IsEmpty())
-		return NULL;
+		return nullptr;
 
 	assert(iIdList.Size() > 0);
 
@@ -135,8 +135,8 @@ CClient* CBotReputations::GetRandomClient(const int iRep)
 
 	iIdList.Clear();
 
-	if (pRep == NULL)
-		return NULL;
+	if (pRep == nullptr)
+		return nullptr;
 
 	return gBotGlobals.m_Clients.GetClientByRepId(pRep->GetRepId());
 }
@@ -188,7 +188,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 
 	FILE* fp = fopen(filename, "rb"); // open the file in ascii read/write mode
 
-	if (fp == NULL)
+	if (fp == nullptr)
 	{
 		m_RepList.Push(CBotReputation(iPlayerRepId, BOT_MID_REP));
 
@@ -244,7 +244,7 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 
 	BOOL bChanged = FALSE;
 
-	if (pRep == NULL) // error
+	if (pRep == nullptr) // error
 		return;
 
 	sprintf(repfile, "%d.rcr", iBotProfile);
@@ -253,13 +253,13 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 
 	FILE* fp = fopen(filename, "rb+"); // open the file in ascii read/write mode
 
-	if (fp == NULL)
+	if (fp == nullptr)
 	{
 		fp = fopen(filename, "wb");
 
-		if (fp == NULL)
+		if (fp == nullptr)
 		{
-			BotMessage(NULL, 0, "could not save Bot id %d's rep file", iBotProfile);
+			BotMessage(nullptr, 0, "could not save Bot id %d's rep file", iBotProfile);
 			return;
 		}
 
@@ -306,9 +306,9 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 	{
 		fp = fopen(filename, "ab"); // append binary
 
-		if (fp == NULL)
+		if (fp == nullptr)
 		{
-			BotMessage(NULL, 0, "Can't open reputation file \"%s\" for appending", filename);
+			BotMessage(nullptr, 0, "Can't open reputation file \"%s\" for appending", filename);
 			return; // error
 		}
 		else
@@ -323,7 +323,7 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 int GetPlayerEdictRepId(edict_t* pEdict)
 // return rep id of pEdict
 {
-	if (pEdict == NULL)
+	if (pEdict == nullptr)
 		return -1;
 
 	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEdict);
@@ -339,7 +339,7 @@ int GetPlayerRepId(const char* szPlayerName)
 // held in the playersid.ini file. theire id is basically
 // the line number that their name is on in the .ini file.
 {
-	if (szPlayerName == NULL)
+	if (szPlayerName == nullptr)
 		return -1;
 	if (*szPlayerName == 0)
 		return -1;
@@ -349,11 +349,11 @@ int GetPlayerRepId(const char* szPlayerName)
 
 	FILE* fp = fopen(filename, "r");
 
-	if (fp == NULL)
+	if (fp == nullptr)
 	{
 		fp = fopen(filename, "w");
 
-		if (fp != NULL)
+		if (fp != nullptr)
 		{
 			fprintf(fp, "%s", BOT_PLAYER_ID_FILE_HEADER);
 			fprintf(fp, "\"%s\"\n", szPlayerName);
@@ -364,7 +364,7 @@ int GetPlayerRepId(const char* szPlayerName)
 		}
 		else
 		{
-			BugMessage(NULL, "Cannot open/write to bot player id file");
+			BugMessage(nullptr, "Cannot open/write to bot player id file");
 
 			return -1;
 		}
@@ -421,7 +421,7 @@ int GetPlayerRepId(const char* szPlayerName)
 
 		fp = fopen(filename, "a");
 
-		if (fp != NULL)
+		if (fp != nullptr)
 		{
 			fprintf(fp, "\"%s\"\n", szPlayerName);
 			fclose(fp);
@@ -436,9 +436,9 @@ int GetPlayerRepId(const char* szPlayerName)
 
 int CBotReputations::GetClientRep(CClient* pClient)
 {
-	if (pClient == NULL)
+	if (pClient == nullptr)
 	{
-		BotMessage(NULL, 0, "warning: GetClientRep(): Bad pClient recieved (NULL) (returning default)");
+		BotMessage(nullptr, 0, "warning: GetClientRep(): Bad pClient recieved (NULL) (returning default)");
 		return BOT_MID_REP;
 	}
 
@@ -449,9 +449,9 @@ int CBotReputations::GetClientRep(CClient* pClient)
 
 	CBotReputation* pRep = this->GetRep(iRepId);
 
-	if (pRep == NULL)
+	if (pRep == nullptr)
 	{
-		BotMessage(NULL, 0, "warning: GetClientRep(): No Rep for pClient (id: %d) (returning default)", pClient->GetPlayerRepId());
+		BotMessage(nullptr, 0, "warning: GetClientRep(): No Rep for pClient (id: %d) (returning default)", pClient->GetPlayerRepId());
 		return BOT_MID_REP;
 	}
 

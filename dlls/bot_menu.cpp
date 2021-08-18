@@ -292,7 +292,7 @@ void CBotMenu::DestroyMenu()
 {
 	for (int i = 0; i < 10; i++)
 	{
-		if (m_Menus[i] != NULL)
+		if (m_Menus[i] != nullptr)
 			m_Menus[i]->Init();
 	}
 }
@@ -313,9 +313,9 @@ CBotMenuItem :: ~CBotMenuItem()
 
 CBotMenuItem::CBotMenuItem(const char* szMenuCaption, CBotMenu* pNextMenu)
 {
-	m_pMenuFunction = NULL;
-	m_szMenuCaption = NULL;
-	m_pNextMenu = NULL;
+	m_pMenuFunction = nullptr;
+	m_szMenuCaption = nullptr;
+	m_pNextMenu = nullptr;
 
 	if (!szMenuCaption)
 		return;
@@ -339,8 +339,8 @@ CBotMenuItem::CBotMenuItem(const char* szMenuCaption)
 
 CBotMenuItem::CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CClient*))
 {
-	m_szMenuCaption = NULL;
-	m_pNextMenu = NULL;
+	m_szMenuCaption = nullptr;
+	m_pNextMenu = nullptr;
 
 	if (!szMenuCaption)
 		return;
@@ -357,7 +357,7 @@ CBotMenuItem::CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CCli
 
 void CBotMenuItem::Activate(CClient* pClient)
 {
-	if (m_pNextMenu != NULL)
+	if (m_pNextMenu != nullptr)
 	{
 		pClient->m_pMenu = m_pNextMenu;
 		m_pNextMenu->Render(pClient);
@@ -365,12 +365,12 @@ void CBotMenuItem::Activate(CClient* pClient)
 	else if (m_pMenuFunction)
 	{
 		// bug fix : Nullify current menu
-		pClient->m_pMenu = NULL;
+		pClient->m_pMenu = nullptr;
 		(*m_pMenuFunction)(pClient);
 	}
 	else
 	{
-		pClient->m_pMenu = NULL;
+		pClient->m_pMenu = nullptr;
 	}
 }
 
@@ -379,7 +379,7 @@ void CBotMenu::Render(CClient* pClient)
 	char szMenuText[512];
 	char szMenuItemText[64];
 
-	if (pClient == NULL)
+	if (pClient == nullptr)
 		return;
 
 	szMenuText[0] = 0;
@@ -393,7 +393,7 @@ void CBotMenu::Render(CClient* pClient)
 
 	for (int i = 0; i < 10; i++)
 	{
-		if (m_Menus[i] != NULL)
+		if (m_Menus[i] != nullptr)
 		{
 			if (i == 0)
 				iSlots |= 1 << 9;
@@ -540,7 +540,7 @@ void BotMenu_Func_Squad_Spread(CClient* pClient)
 
 	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
-	if (pSquad == NULL)
+	if (pSquad == nullptr)
 	{
 		ClientPrint(pEntity, HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -563,7 +563,7 @@ void BotMenu_Func_Squad_Form(CClient* pClient)
 
 	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
-	if (pSquad == NULL)
+	if (pSquad == nullptr)
 	{
 		ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -595,7 +595,7 @@ void BotMenu_Func_Squad_Form2(CClient* pClient)
 
 	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
-	if (pSquad == NULL)
+	if (pSquad == nullptr)
 	{
 		ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -757,7 +757,7 @@ void BotMenu_Func_KickBot(CClient* pClient)
 
 void BotMenu_Func_AddBot(CClient* pClient)
 {
-	BotFunc_AddBot(pClient, NULL, NULL, NULL, NULL);
+	BotFunc_AddBot(pClient, nullptr, nullptr, nullptr, nullptr);
 }
 
 void BotMenu_Func_AddBotToTeam(CClient* pClient)
@@ -765,13 +765,13 @@ void BotMenu_Func_AddBotToTeam(CClient* pClient)
 	switch (pClient->m_iLastMenuItemSelected)
 	{
 	case 1:
-		BotFunc_AddBot(pClient, "1", NULL, NULL, NULL);
+		BotFunc_AddBot(pClient, "1", nullptr, nullptr, nullptr);
 		break;
 	case 2:
-		BotFunc_AddBot(pClient, "2", NULL, NULL, NULL);
+		BotFunc_AddBot(pClient, "2", nullptr, nullptr, nullptr);
 		break;
 	case 3:
-		BotFunc_AddBot(pClient, "5", NULL, NULL, NULL);
+		BotFunc_AddBot(pClient, "5", nullptr, nullptr, nullptr);
 		break;
 	}
 }
@@ -889,7 +889,7 @@ void BotMenu_Func_SquadMode1(CClient* pClient)
 
 	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
-	if (pSquad == NULL)
+	if (pSquad == nullptr)
 	{
 		ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -926,7 +926,7 @@ void BotMenu_Func_Squad_Leave(CClient* pClient)
 
 	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
-	if (pSquad == NULL)
+	if (pSquad == nullptr)
 	{
 		ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -943,7 +943,7 @@ void BotMenu_Func_Squad_Remove(CClient* pClient)
 
 	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pEntity);
 
-	if (pSquad == NULL)
+	if (pSquad == nullptr)
 	{
 		ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, "You are not leader of a squad\n");
 		return;
@@ -959,7 +959,7 @@ void BotMenu_Func_Squad_RemoveAllBotSquads(CClient* pClient)
 	char msg[64];
 	int iCount = 0;
 
-	if (pClient == NULL)
+	if (pClient == nullptr)
 		return; // cant get player
 
 	edict_t* pEntity = pClient->GetPlayer();

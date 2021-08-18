@@ -89,9 +89,9 @@ public:
 
 	void Init()
 	{
-		m_szMenuCaption = NULL;
-		m_pNextMenu = NULL;
-		m_pMenuFunction = NULL;
+		m_szMenuCaption = nullptr;
+		m_pNextMenu = nullptr;
+		m_pMenuFunction = nullptr;
 	}
 
 	CBotMenuItem()
@@ -107,7 +107,7 @@ public:
 
 	BOOL HasNextMenu()
 	{
-		return m_pNextMenu != NULL;
+		return m_pNextMenu != nullptr;
 	}
 
 	void Activate(CClient* pClient);

@@ -102,17 +102,17 @@ public:
 
 	void AddWptLocation(int iIndex, const float* fOrigin);
 
-	void FindNearestInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, int iIgnoreWpt, BOOL bGetVisible = TRUE, BOOL bGetUnreachable = FALSE, BOOL bIsBot = FALSE, dataStack<int>* iFailedWpts = NULL, BOOL bNearestAimingOnly = FALSE);
+	void FindNearestInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, int iIgnoreWpt, BOOL bGetVisible = TRUE, BOOL bGetUnreachable = FALSE, BOOL bIsBot = FALSE, dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = FALSE);
 
 	void DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float fDist);
 
 	void DeleteWptLocation(int iIndex, const float* fOrigin);
 
-	int NearestWaypoint(const Vector& vOrigin, float fDist, int iIgnoreWpt, BOOL bGetVisible = TRUE, BOOL bGetUnreachable = FALSE, BOOL bIsBot = FALSE, dataStack<int>* iFailedWpts = NULL, BOOL bNearestAimingOnly = FALSE);
+	int NearestWaypoint(const Vector& vOrigin, float fDist, int iIgnoreWpt, BOOL bGetVisible = TRUE, BOOL bGetUnreachable = FALSE, BOOL bIsBot = FALSE, dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = FALSE);
 
-	void FillWaypointsInBucket(int i, int j, int k, const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = NULL);
+	void FillWaypointsInBucket(int i, int j, int k, const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = nullptr);
 
-	void FillNearbyWaypoints(const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = NULL);
+	void FillNearbyWaypoints(const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = nullptr);
 
 private:
 
@@ -300,10 +300,10 @@ public:
 
 	void init()
 	{
-		m_szName = NULL;
-		m_szFolder = NULL;
-		m_szExtension = NULL;
-		m_szHeader = NULL;
+		m_szName = nullptr;
+		m_szFolder = nullptr;
+		m_szExtension = nullptr;
+		m_szHeader = nullptr;
 		m_iVersion = 0;
 
 		memset(m_iConvertTo, 0, sizeof(int) * MAX_BITS);
@@ -495,14 +495,14 @@ public:
 };*/
 ///////////////////////
 
-const int g_iMaxVisibilityByte = MAX_WAYPOINTS * MAX_WAYPOINTS / 8;
+constexpr int g_iMaxVisibilityByte = MAX_WAYPOINTS * MAX_WAYPOINTS / 8;
 
 class CWaypointVisibilityTable
 {
 public:
 	CWaypointVisibilityTable()
 	{
-		const int iSize = g_iMaxVisibilityByte;
+		constexpr int iSize = g_iMaxVisibilityByte;
 		//create a heap...
 		m_VisTable = static_cast<unsigned char*>(malloc(iSize));
 
@@ -539,10 +539,10 @@ public:
 
 	void FreeVisibilityTable()
 	{
-		if (m_VisTable != NULL)
+		if (m_VisTable != nullptr)
 		{
 			free(m_VisTable);
-			m_VisTable = NULL;
+			m_VisTable = nullptr;
 		}
 	}
 
@@ -600,7 +600,7 @@ void WaypointDeletePath(short int path_index, short int del_index);
 void WaypointCreatePath(CClient* pClient, int cmd);
 void WaypointRemovePath(CClient* pClient, int cmd);
 BOOL WaypointLoad(edict_t* pEntity);
-BOOL WaypointSave(BOOL bVisibilityMade, CWaypointConversion* theConverter = NULL);
+BOOL WaypointSave(BOOL bVisibilityMade, CWaypointConversion* theConverter = nullptr);
 BOOL WaypointReachable(Vector v_src, Vector v_dest, BOOL bDistCheck = TRUE);
 int  WaypointFindReachable(edict_t* pEntity, float range, int team);
 void WaypointPrintInfo(edict_t* pEntity);
@@ -609,7 +609,7 @@ void WaypointDrawIndex(edict_t* pEntity, int index);
 float WaypointDistance(const Vector& vOrigin, int iWaypointIndex);
 Vector WaypointOrigin(int iWaypointIndex);
 int NearestWaypointToEdict(edict_t* pEdict, int iIgnoreWpt, dataStack<int>* iFailedWpts);
-int NearestWaypointToOrigin(const Vector& vOrigin, int iIgnoreWpt, dataStack<int>* iFailedWpts = NULL);
+int NearestWaypointToOrigin(const Vector& vOrigin, int iIgnoreWpt, dataStack<int>* iFailedWpts = nullptr);
 int WaypointFlags(int iWaypointIndex);
 int WaypointAddOrigin(Vector vOrigin, int iFlags, edict_t* pEntity, BOOL bDraw = TRUE, BOOL bSound = TRUE, BOOL bAutoSetFlagsForPlayer = TRUE);
 void AutoWaypoint();

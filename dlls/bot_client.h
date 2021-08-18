@@ -81,7 +81,7 @@ public:
 		//m_iModId = 0;
 		//m_iSize = 0;
 		m_iMessage = 0;
-		m_szMessageName = NULL;
+		m_szMessageName = nullptr;
 		//m_fpMsgFunction = NULL;
 		m_bAllowHumans = FALSE;
 	}
@@ -646,7 +646,7 @@ class CBotStatedNetMessage : public CBotNetMessage
 public:
 	CBotStatedNetMessage();
 
-	void init(int index) { iState = 0; m_pEdict = NULL; if (index) { m_pEdict = INDEXENT(index); } msg_init(); }
+	void init(int index) { iState = 0; m_pEdict = nullptr; if (index) { m_pEdict = INDEXENT(index); } msg_init(); }
 
 	virtual void writeChar(char c) { write_char(c); iState++; };
 	virtual void writeByte(int b) { write_byte(b); iState++; };
@@ -687,8 +687,8 @@ public:
 	void msg_init() override
 	{
 		m_ReceivedPlayers.clear();
-		m_iOrderType = (AvHOrderType)0;
-		m_iOrderTargetType = (AvHOrderTargetType)0;
+		m_iOrderType = static_cast<AvHOrderType>(0);
+		m_iOrderTargetType = static_cast<AvHOrderTargetType>(0);
 		iOrderStatus = 0;
 		iReceivers = 0;
 		iEntityUser3 = 0;
@@ -699,7 +699,7 @@ public:
 		if (!m_ReceivedPlayers.size())
 			m_ReceivedPlayers.emplace_back(INDEXENT(s));
 		else if (!m_iOrderType)
-			m_iOrderType = (AvHOrderType)s;
+			m_iOrderType = static_cast<AvHOrderType>(s);
 		//else if ( m_iOrderType == )
 	}
 
