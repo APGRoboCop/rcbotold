@@ -604,7 +604,7 @@ void CBotGlobals::StartFrame()
 						BotFunc_AddBot(nullptr, nullptr, nullptr, nullptr, nullptr);
 
 						m_bBotCanRejoin = FALSE;
-						m_fBotRejoinTime = gpGlobals->time + 2.0;
+						m_fBotRejoinTime = gpGlobals->time + 5.0;
 
 						bAddBot = FALSE;
 					}
@@ -970,7 +970,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 				// test
 				ALERT(at_console,"test");
 			}
-		}*/
+		}
 
 	if (IsMod(MOD_TFC))
 	{
@@ -980,7 +980,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 			{
 				m_currCapPoint->setTeam(atoi(pkvd->szValue));
 			}
-			else if (FStrEq(pkvd->szKeyName, "axhitme")) // make sure cap point IS a cap point i.e. removes an item from player*/
+			else if (FStrEq(pkvd->szKeyName, "axhitme")) // make sure cap point IS a cap point i.e. removes an item from player
 			{
 				m_currCapPoint->setGoal(atoi(pkvd->szValue));
 
@@ -988,7 +988,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 
 				ALERT(at_console, "Cap point validated\n");
 			}
-			else if (FStrEq(pkvd->szKeyName, "r_i_g")) // make sure cap point IS a cap point i.e. removes an item from player*/
+			else if (FStrEq(pkvd->szKeyName, "r_i_g")) // make sure cap point IS a cap point i.e. removes an item from player
 			{
 				m_currCapPoint->setGroup(atoi(pkvd->szValue));
 
@@ -1067,8 +1067,8 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 		else if (!strcmp(pkvd->szKeyName, "classname"))
 		{
 			if (!strcmp("item_tfgoal", pkvd->szValue) ||
-				!strcmp("info_tfgoal_timer", pkvd->szValue)/* ||
-				(!strcmp("i_t_g", pkvd->szValue))*/)
+				!strcmp("info_tfgoal_timer", pkvd->szValue) ||
+				(!strcmp("i_t_g", pkvd->szValue)))
 			{
 				if (m_currFlag && prevFlagInvalid)
 				{
@@ -1112,13 +1112,13 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 				m_currBackPack->setCells(atoi(pkvd->szValue));
 
 			// Has a model in the game (visible)
-			if (strcmp(pkvd->szKeyName, "mdl") == 0) /*&&
-				(strcmp(pkvd->szValue, "models/backpack.mdl") == 0))*/
+			if (strcmp(pkvd->szKeyName, "mdl") == 0) &&
+				(strcmp(pkvd->szValue, "models/backpack.mdl") == 0))
 			{
 				prevBackPackInvalid = FALSE;
 			}
 		}
-	}
+	}*/
 }
 
 void CBotGlobals::MapInit()
@@ -1135,8 +1135,8 @@ void CBotGlobals::MapInit()
 	memset(m_iJoiningClients, 0, sizeof(int) * MAX_PLAYERS);
 	memset(m_iTeamScores, 0, sizeof(int) * MAX_TEAMS);
 	m_pDebugMessage = nullptr;
-	m_pTFCDetect = nullptr;
-	m_pTFCGoal = nullptr;
+	//m_pTFCDetect = nullptr;
+	//m_pTFCGoal = nullptr;
 	m_pMarineStart = nullptr;
 	m_bAutoPathWaypoint = TRUE;
 	m_bWaypointsHavePaths = FALSE;
@@ -1181,9 +1181,9 @@ void CBotGlobals::MapInit()
 
 	const char* mapname = STRING(gpGlobals->mapname);
 
-	if (IsMod(MOD_TFC))
+	/*if (IsMod(MOD_TFC))
 	{
-		/*
+		
 
 		  TFC_MAP_UNKNOWN,		// unknown map type
 		  TFC_MAP_CTF,			// normal capture the flag (flag in enemy base) e.g. 2fort
@@ -1192,8 +1192,7 @@ void CBotGlobals::MapInit()
 		  TFC_MAP_CTF_BASE		// capture the flag (flag in your base) e.g. epicenter
 		  TFC_MAP_FLAG_MULTIPLE,  // take many flags capture all of them, e.g. flagrun
 		  TFC_MAP_CAPTURE_FLAG_MULTIPLE,  // capture many points e.g. cz2
-		  TFC_MAP_VIP // hunted type map
-			*/
+		  TFC_MAP_VIP // hunted type map 
 
 			// default
 		setMapType(TFC_MAP_CTF);
@@ -1223,7 +1222,7 @@ void CBotGlobals::MapInit()
 			setMapType(TFC_MAP_CAPTURE_FLAG_MULTIPLE);
 		}
 	}
-	else if (IsMod(MOD_TS))
+	else */if (IsMod(MOD_TS))
 	{
 		if (strncmp(mapname, "tm_", 3) == 0)
 		{
@@ -1250,8 +1249,8 @@ void CBotGlobals::MapInit()
 	m_currCapPoint = nullptr;
 	m_currFlag = nullptr;
 	//m_pTFCGroup = NULL;
-	m_pTFCDetect = nullptr;
-	m_pTFCGoal = nullptr;
+	//m_pTFCDetect = nullptr;
+	//m_pTFCGoal = nullptr;
 	m_currBackPack = nullptr;
 
 	m_fAutoBuildTime = 0;
@@ -1393,7 +1392,7 @@ void CBotGlobals::LoadBotModels()
 	m_uaBotModels.Init();
 
 	// Looking for model files (.mdl) in player directory
-	// search_path = <search folder>/* (in windows)
+	// search_path = <search folder> (in windows)
 	// or search_path = <search folder>
 
 	while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr)
@@ -1727,7 +1726,7 @@ void CBotGlobals::FreeLocalMemory()
 		this->m_Bots[i].m_Weapons.RemoveWeapons();
 	}
 
-	if (IsMod(MOD_TFC))
+	/*if (IsMod(MOD_TFC))
 	{
 		this->m_Backpacks.FreeMemory();
 		this->m_Flags.FreeMemory();
@@ -1735,7 +1734,7 @@ void CBotGlobals::FreeLocalMemory()
 
 		for (i = 0; i < MAX_TEAMS; i++)
 			this->m_iValidGoals[i].Clear();
-	}
+	}*/
 
 	for (i = 0; i < MAX_TEAMS; i++)
 		this->m_TeamTechs[i].freeMemory();

@@ -783,7 +783,7 @@ typedef enum
 	  // engineer build tasks
 	  // take integer
 	  // 1 to build, 0 to destroy
-	  BOT_TASK_TFC_BUILD_SENTRY,
+	  /*BOT_TASK_TFC_BUILD_SENTRY,
 	  // take edict of sentry
 	  BOT_TASK_TFC_REPAIR_BUILDABLE,
 	  BOT_TASK_TFC_BUILD_TELEPORT_ENTRANCE,
@@ -803,7 +803,7 @@ typedef enum
 	  BOT_TASK_TFC_DETONATE_ENTRY_TELEPORT,
 	  BOT_TASK_TFC_DETONATE_EXIT_TELEPORT,
 	  BOT_TASK_TFC_ROTATE_SENTRY,
-	  BOT_TASK_TFC_DISCARD,
+	  BOT_TASK_TFC_DISCARD,*/
 	  ///////////////////////////////////////
 	  /* find cover pos, Take an integer which
 	   * will represent memory position of
@@ -957,7 +957,7 @@ enum
 #define VGUI_MENU_BG_SELECT_BRITISH_CLASS 3
 #define VGUI_MENU_BG_SELECT_AMERICAN_CLASS 4
 
-#define VGUI_MENU_TFC_TEAM_SELECT 2
+/*#define VGUI_MENU_TFC_TEAM_SELECT 2
 #define VGUI_MENU_TFC_CLASS_SELECT 3
 
 ////////////////////////////
@@ -988,7 +988,7 @@ enum
 
 #define TFC_TELEPORTER_ENTRANCE 1
 #define TFC_TELEPORTER_EXIT		2
-
+*/
 typedef enum
 {
 	TFC_MAP_UNKNOWN = 0,		// unknown map type

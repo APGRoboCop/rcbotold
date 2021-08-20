@@ -202,7 +202,7 @@ float UTIL_EntityDistance2D(entvars_t* pev, Vector vOrigin);
 float UTIL_GetBestPushableDistance(edict_t* pPushable);
 Vector UTIL_GetDesiredPushableVector(Vector vOrigin, edict_t* pPushable);
 
-edict_t* UTIL_TFC_PlayerHasFlag(edict_t* pPlayer);
+//edict_t* UTIL_TFC_PlayerHasFlag(edict_t* pPlayer);
 
 void UTIL_PlaySoundToAll(const char* szSound);
 void UTIL_PlaySound(edict_t* pPlayer, const char* szSound);
@@ -247,7 +247,7 @@ edict_t* UTIL_CheckTeleExit(Vector vOrigin, edict_t* pOwner, edict_t* pEntrance)
 
 Vector UTIL_AngleBetweenOrigin(entvars_t* pev, Vector vOrigin);
 BOOL UTIL_OnGround(entvars_t* pev);
-int     UTIL_TFC_getMaxArmor(edict_t* pEdict);
+//int     UTIL_TFC_getMaxArmor(edict_t* pEdict);
 void	ClientPrint(edict_t* pEdict, int msg_dest, const char* msg_name);
 float   UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector vOrigin);
 BOOL	UTIL_IsFacingEntity(entvars_t* pev, entvars_t* pevEntity);
@@ -961,7 +961,7 @@ public:
 			return "BOT_COMMAND_TASK_SELECT_AREA";
 		case BOT_COMMAND_TASK_ISSUE_COMMAND:
 			return "BOT_COMMAND_TASK_ISSUE_COMMAND";
-		case BOT_TASK_TFC_BUILD_SENTRY:
+		/*/case BOT_TASK_TFC_BUILD_SENTRY:
 			return "BOT_TASK_TFC_BUILD_SENTRY";
 		case BOT_TASK_TFC_REPAIR_BUILDABLE:
 			return "BOT_TASK_TFC_REPAIR_BUILDABLE";
@@ -994,7 +994,7 @@ public:
 		case BOT_TASK_TFC_DETONATE_EXIT_TELEPORT:
 			return "BOT_TASK_TFC_DETONATE_EXIT_TELEPORT";
 		case BOT_TASK_TFC_ROTATE_SENTRY:
-			return "BOT_TASK_TFC_ROTATE_SENTRY";
+			return "BOT_TASK_TFC_ROTATE_SENTRY";*/
 		case BOT_TASK_FIND_COVER_POS:
 			return "BOT_TASK_FIND_COVER_POS";
 		case BOT_TASK_USE_TELEPORT:

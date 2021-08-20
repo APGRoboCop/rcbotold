@@ -5609,7 +5609,7 @@ BOOL CBot::UpdateVisibles()
 	static edict_t* pTeleporter = nullptr;
 	float fNearestTeleporter = 0.0;
 
-	BOOL bIsTFC = gBotGlobals.IsMod(MOD_TFC);
+	//BOOL bIsTFC = gBotGlobals.IsMod(MOD_TFC);
 	const BOOL bIsNS = gBotGlobals.IsNS();
 	const BOOL bIsGorge = bIsNS && IsGorge();
 	BOOL bSeeLeader = FALSE;
@@ -5636,8 +5636,7 @@ BOOL CBot::UpdateVisibles()
 	// [update each time]
 	bLookForBuildable = !m_Tasks.HasSchedule(BOT_SCHED_BUILD) &&
 		(
-			(bIsGorge || IsMarine()) && gBotGlobals.IsNS() ||
-			gBotGlobals.IsMod(MOD_TFC) && pev->playerclass == TFC_CLASS_ENGINEER
+			(bIsGorge || IsMarine()) && gBotGlobals.IsNS()
 			&& m_fLookForBuildableTime < gpGlobals->time
 			);
 
@@ -6178,10 +6177,10 @@ BOOL CBot::UpdateVisibles()
 		m_Tasks.SetTimeToCompleteSchedule(iSched, 15.0);
 	}
 
-	if (pNearestSentry && !m_Tasks.HasTask(BOT_TASK_TFC_DISCARD))
+	/*if (pNearestSentry && !m_Tasks.HasTask(BOT_TASK_TFC_DISCARD))
 	{
 		AddPriorityTask(CBotTask(BOT_TASK_TFC_DISCARD, 0, nullptr, 0, 0, pNearestSentry->v.origin));
-	}
+	}*/
 
 	return bFinished;
 }
@@ -6314,12 +6313,12 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 	}
 	break;
 	case MOD_TS:
-	case MOD_TFC:
+	/*case MOD_TFC:
 	{
 		if (UTIL_IsGrenadeRocket(pEntity))//strstr(szClassname,"grenade") )
 			return TRUE;
 	}
-	break;
+	break;*/
 	default:
 		break;
 	}
@@ -6525,8 +6524,8 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 		Vector vEnemyFactors = pBotEnemy->v.size / 2 + pBotEnemy->v.velocity;
 
 		// snipers better aim,
-		if (gBotGlobals.IsMod(MOD_TFC) && pev->playerclass == TFC_CLASS_SNIPER)
-			vEnemyFactors = vEnemyFactors / 3;
+		//if (gBotGlobals.IsMod(MOD_TFC) && pev->playerclass == TFC_CLASS_SNIPER)
+		//	vEnemyFactors = vEnemyFactors / 3;
 
 		m_fAimFactor *= 1 - m_Profile.m_fAimSkill;
 
@@ -8664,7 +8663,7 @@ edict_t* CBot::FindEnemy()
 		}
 	}
 
-	if (m_pEnemy)
+	/*if (m_pEnemy)
 	{
 		if (gBotGlobals.IsMod(MOD_TFC) && pev->playerclass == TFC_CLASS_DEMOMAN && m_bPlacedPipes)
 		{
@@ -8675,7 +8674,7 @@ edict_t* CBot::FindEnemy()
 			}
 		}
 	}
-	/*
+	
 		// if something mucked up
 		if ( gBotGlobals.IsNS() )
 		{
@@ -11880,9 +11879,9 @@ void CBot::DoTasks()
 
 						switch (gBotGlobals.m_iCurrentMod)
 						{
-						case MOD_TFC:
+						/*case MOD_TFC:
 							break;
-						/*case MOD_SVENCOOP:
+						case MOD_SVENCOOP:
 						{
 							// dont investigate if heading to an objective waypoint
 							TraceResult tr;
@@ -11957,7 +11956,7 @@ void CBot::DoTasks()
 			}
 		}
 		break;
-		case BOT_TASK_TFC_DISCARD:
+		/*case BOT_TASK_TFC_DISCARD:
 		{
 			m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_VECTOR;
 
@@ -11972,7 +11971,7 @@ void CBot::DoTasks()
 				}
 			}
 		}
-		break;
+		break;*/
 		case BOT_TASK_USE_TELEPORTER:
 			// set float:- size of teleporter 2d
 			// set entity:- destination teleporter
@@ -12020,8 +12019,8 @@ void CBot::DoTasks()
 			{
 				if (fDistTeleporterDest < fDistTeleporterSrc)
 				{
-					if (gBotGlobals.IsMod(MOD_TFC))
-						usedTeleporter(pSourceTeleporter);
+					//if (gBotGlobals.IsMod(MOD_TFC))
+					//	usedTeleporter(pSourceTeleporter);
 
 					bDone = TRUE;
 					break;
@@ -12049,11 +12048,11 @@ void CBot::DoTasks()
 					else
 						bTaskFailed = TRUE;
 				}
-				else if (gBotGlobals.IsMod(MOD_TFC))
+				/*else if (gBotGlobals.IsMod(MOD_TFC))
 				{
 					StopMoving();
 					m_CurrentTask->SetFloat(1);
-				}
+				}*/
 			}
 
 			break;
@@ -12636,12 +12635,12 @@ void CBot::DoTasks()
 
 			m_fIdealMoveSpeed = m_fMaxSpeed;
 
-			if (gBotGlobals.IsMod(MOD_TFC) && pev->playerclass == TFC_CLASS_SPY && m_bIsDisguised && !m_bHasFlag && pev->iuser3 == 1)
+			/*if (gBotGlobals.IsMod(MOD_TFC) && pev->playerclass == TFC_CLASS_SPY && m_bIsDisguised && !m_bHasFlag && pev->iuser3 == 1)
 			{
 				TaskToAdd = CBotTask(BOT_TASK_TFC_FEIGN_DEATH, 0);
 				bTaskFailed = TRUE;
 				break;
-			}
+			}*/
 
 			if (m_CurrentTask->HasPath() == FALSE) // if we haven't found a path yet
 			{
@@ -14052,7 +14051,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 			m_pEnemy = m_CurrentTask->TaskEdict();
 
-			if (gBotGlobals.IsMod(MOD_TFC))
+			/*if (gBotGlobals.IsMod(MOD_TFC))
 			{
 				if (m_bHasFlag)
 				{
@@ -14063,7 +14062,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						break;
 					}
 				}
-			}
+			}*/
 
 			if (m_pEnemy == nullptr)
 			{

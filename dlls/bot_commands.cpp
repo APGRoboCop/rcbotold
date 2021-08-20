@@ -983,13 +983,13 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 			fSetVal = static_cast<float>(gBotGlobals.m_iForceTeam);
 		}
 	}
-	else if (FStrEq("tfc_map_type", arg1))
+	/*else if (FStrEq("tfc_map_type", arg1))
 	{
 		if (bSetting)
 			gBotGlobals.setMapType(static_cast<eTFCMapType>(atoi(arg2)));
 		else
 			fSetVal = static_cast<float>(gBotGlobals.getMapType());
-	}
+	}*/
 	else if (FStrEq("bot_stuck_speed", arg1))
 	{
 		if (bSetting)
@@ -1633,7 +1633,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	{
 		iClass = atoi(arg2);
 
-		if (iClass < 0 || iClass > TFC_MAX_CLASSES)
+		if (iClass < 0 /*|| iClass > TFC_MAX_CLASSES/*/)
 			iClass = RANDOM_LONG(0, 9);
 
 		gBotGlobals.m_Bots[iBotIndex].m_Profile.m_iClass = iClass;

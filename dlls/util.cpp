@@ -850,7 +850,7 @@ edict_t* DBG_EntOfVars(const entvars_t* pev)
 }
 #endif //DEBUG
 
-edict_t* UTIL_TFC_PlayerHasFlag(edict_t* pPlayer)
+/*/edict_t* UTIL_TFC_PlayerHasFlag(edict_t* pPlayer)
 {
 	edict_t* pent = nullptr;
 
@@ -861,7 +861,7 @@ edict_t* UTIL_TFC_PlayerHasFlag(edict_t* pPlayer)
 	}
 
 	return nullptr;
-}
+}*/
 
 // return team number 0 through 3 based what MOD uses for team numbers
 int UTIL_GetTeam(edict_t* pEntity)
@@ -1420,7 +1420,7 @@ int UTIL_SpeciesOnTeam(int iSpecies, BOOL bIgnoreEmbryos)
 	return iPlayers;
 }
 
-int UTIL_TFC_getMaxArmor(edict_t* pEdict)
+/*int UTIL_TFC_getMaxArmor(edict_t* pEdict)
 {
 	switch (pEdict->v.playerclass)
 	{
@@ -1447,7 +1447,7 @@ int UTIL_TFC_getMaxArmor(edict_t* pEdict)
 	}
 
 	return 0;
-}
+}*/
 
 BOOL BotFunc_FInViewCone(Vector* pOrigin, edict_t* pEdict)
 {

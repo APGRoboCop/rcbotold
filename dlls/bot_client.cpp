@@ -633,7 +633,7 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 		else
 			pBot = nullptr;
 
-		if (gBotGlobals.IsMod(MOD_TFC))
+		/*if (gBotGlobals.IsMod(MOD_TFC))
 		{
 			const char* szMessage = POINTER_TO_STRING(p);
 
@@ -692,11 +692,11 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 			}
 			else if (pBot)
 			{
-				/*if ( FStrEq(szMessage, "#Sentry_sbar") )
+				if ( FStrEq(szMessage, "#Sentry_sbar") )
 				{
 				ALERT(at_console,"sbar\n");
 				}
-					else */
+					else 
 				if (FStrEq(szMessage, "#Build_nometal") || FStrEq(szMessage, "#Build_notenoughmetal"))
 				{
 					pBot->NeedMetal();
@@ -775,7 +775,7 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 					pClient->checkBuiltSentry();
 				}
 			}
-		}
+		}*/
 	}
 	POINTER_INCREMENT_VALUE(iState);
 	break;

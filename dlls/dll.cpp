@@ -2072,13 +2072,6 @@ void ReadMapConfig()
 // and so the file is stored globally.
 // To be done properly:
 
-/*
-
-  TO DO:
-
-  Make config read whole file and enter commands in a queue for execution (faster??)
-
-  */
 {
 	char szTemp[256];
 
@@ -2102,8 +2095,9 @@ void ReadMapConfig()
 		if (strncmp(szTemp, "rcbot addbot", 12) == 0)
 		{
 			// dont add bots for another while...
-			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 1.1;
-			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 1.1;
+			// Added more delay to prevent possible "Tried to write to uninitialized sizebuf_t" crashes - [APG]RoboCop[CL]
+			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
+			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 5.0f;
 		}
 
 		// Does the command in the text file

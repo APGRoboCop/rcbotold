@@ -135,7 +135,7 @@ private:
 #define W_FL_IMPORTANT		(1<<11) /* flag position (or hostage or president) */
 #define W_FL_DYNAMIC_TELEPORTER ((1<<22)&(1<<21)) /* created automatically */
 #define W_FL_RESCUE			(1<<12) /* flag return position (or rescue zone) */
-#define W_FL_TFC_CAPTURE_POINT (1<<12)
+//#define W_FL_TFC_CAPTURE_POINT (1<<12)
 #define W_FL_MARINE_BUILDING (1<<12) // Ns: marine building put here
 #define W_FL_SCIENTIST_POINT (1<<11)
 //#define W_FL_TFC_FLAG_POINT (1<<11)
