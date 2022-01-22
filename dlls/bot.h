@@ -67,12 +67,15 @@
 #include <vector>
 #include <queue>
 
+#ifdef _WIN32
+#define strcmpi _strcmpi
+#endif
+
 #ifndef RCBOT_META_BUILD
 
  // stuff for Win32 vs. Linux builds
 
 #ifndef linux
-#define strcmpi _strcmpi
 typedef int (FAR* GETENTITYAPI)(DLL_FUNCTIONS*, int);
 typedef int (FAR* GETNEWDLLFUNCTIONS)(NEW_DLL_FUNCTIONS*, int*);
 typedef void (DLLEXPORT* GIVEFNPTRSTODLL)(enginefuncs_t*, globalvars_t*);
