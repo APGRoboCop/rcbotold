@@ -495,14 +495,14 @@ public:
 };*/
 ///////////////////////
 
-constexpr int g_iMaxVisibilityByte = MAX_WAYPOINTS * MAX_WAYPOINTS / 8;
+const int g_iMaxVisibilityByte = MAX_WAYPOINTS * MAX_WAYPOINTS / 8;
 
 class CWaypointVisibilityTable
 {
 public:
 	CWaypointVisibilityTable()
 	{
-		constexpr int iSize = g_iMaxVisibilityByte;
+		const int iSize = g_iMaxVisibilityByte;
 		//create a heap...
 		m_VisTable = static_cast<unsigned char*>(malloc(iSize));
 

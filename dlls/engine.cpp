@@ -1073,7 +1073,7 @@ void* pfnGetModelPtr(edict_t* pEdict)
 
 int pfnRegUserMsg(const char* pszName, int iSize)
 {
-	constexpr int msg = 0;
+	const int msg = 0;
 
 #ifdef RCBOT_META_BUILD
 

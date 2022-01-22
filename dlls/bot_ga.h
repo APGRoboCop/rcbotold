@@ -109,7 +109,7 @@ public:
 
 	void save(FILE* bfp) override
 	{
-		constexpr int iSiz = 1;
+		const int iSiz = 1;
 		fwrite(&iSiz, sizeof(int), 1, bfp);
 		fwrite(&m_Value, sizeof(int), 1, bfp);
 	}

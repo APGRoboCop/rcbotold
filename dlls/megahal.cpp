@@ -186,9 +186,9 @@ void HumanizeString(char* string)
 
 	while (i < length)
 	{
-		constexpr int lower_percent = 2;
-		constexpr int swap_percent = 1;
-		constexpr int drop_percent = 1;
+		const int lower_percent = 2;
+		const int swap_percent = 1;
+		const int drop_percent = 1;
 		if (i + 1 < length && RANDOM_LONG(0, 100) < swap_percent)
 		{
 			const char temp = string[i];
@@ -220,7 +220,7 @@ void HumanizeString(char* string)
 
 		if (!isupper(string[i]) && (i == 0 || string[i - 1] == ' '))
 		{
-			constexpr int capitalise_percent = 1;
+			const int capitalise_percent = 1;
 			if (RANDOM_LONG(0, 100) < capitalise_percent * 2)
 				string[i] = toupper(string[i]);
 		}
@@ -655,8 +655,8 @@ void HAL_InitializeDictionary(HAL_DICTIONARY* dictionary)
 {
 	// this function adds dummy words to the dictionary
 
-	constexpr HAL_STRING word = { 7, "<ERROR>" };
-	constexpr HAL_STRING end = { 5, "<FIN>" };
+	const HAL_STRING word = { 7, "<ERROR>" };
+	const HAL_STRING end = { 5, "<FIN>" };
 
 	(void)HAL_AddWord(dictionary, word);
 	(void)HAL_AddWord(dictionary, end);

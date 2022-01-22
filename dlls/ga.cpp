@@ -41,10 +41,10 @@
 
 #include "ga.h"
 
-constexpr int CGA::g_iDefaultMaxPopSize = 16;
-constexpr float CGA::g_fCrossOverRate = 0.7f;
-constexpr float CGA::g_fMutateRate = 0.1f;
-constexpr float CGA::g_fMaxPerturbation = 0.3f;
+const int CGA::g_iDefaultMaxPopSize = 16;
+const float CGA::g_fCrossOverRate = 0.7f;
+const float CGA::g_fMutateRate = 0.1f;
+const float CGA::g_fMaxPerturbation = 0.3f;
 
 ////////////////////
 // POPULATION

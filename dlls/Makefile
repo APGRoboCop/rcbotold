@@ -10,7 +10,7 @@
 CPP = g++ -m32
 
 BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -DRCBOT_META_BUILD -D__linux__ \
-            -std=gnu++14 -static-libstdc++ -shared-libgcc
+            -std=gnu++11 -static-libstdc++
 
 #CPPFLAGS = ${BASEFLAGS} -D_DEBUG -g -ggdb -Og -march=i686 -I. -I../engine -I../common -I../pm_shared -Wno-write-strings
 

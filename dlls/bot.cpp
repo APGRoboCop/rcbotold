@@ -2790,7 +2790,7 @@ void CBot::Think()
 	// Not alive anymore
 	if (!IsAlive())
 	{
-		constexpr BOOL feigned = FALSE;
+		const BOOL feigned = FALSE;
 
 		/*if (gBotGlobals.IsMod(MOD_TFC))
 		{
@@ -16231,7 +16231,7 @@ void CBot::workEnemyCosts(edict_t* pEntity, Vector vOrigin, const float fDistanc
 		return;
 
 	Vector lowest;
-	constexpr int mid = BOT_COST_BUCKETS / 2;
+	const int mid = BOT_COST_BUCKETS / 2;
 	int enemyState = 0;
 
 	if (isInAnimate(pEntity))

@@ -2342,15 +2342,15 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot)
 
 // Thanks PM's racc bot source for some info pointers. (racc.bots-united.com)
 {
-	constexpr float fFov = 180.0;
+	const float fFov = 180.0;
 
 	const entvars_t* pev = pBot->pev;
 
 	//float fStartAngle = pev->angles.y - fFov;
 	float fStartAngle = pev->v_angle.y - fFov;
 
-	constexpr int iMinStep = -180;
-	constexpr int iMaxStep = 180;
+	const int iMinStep = -180;
+	const int iMaxStep = 180;
 
 	float fMaxDistance = BOT_WAYPOINT_TOUCH_DIST * 2;
 

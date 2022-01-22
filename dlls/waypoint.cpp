@@ -106,7 +106,7 @@ void CWaypointLocations::getMaxMins(Vector const vOrigin, int& mini, int& minj, 
 	mink = kLoc - 1;
 	maxk = kLoc + 1;
 
-	constexpr int iMaxLoc = MAX_WPT_LOCATIONS - 1;
+	const int iMaxLoc = MAX_WPT_LOCATIONS - 1;
 
 	if (mini < 0)
 		mini = 0;

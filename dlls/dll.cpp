@@ -1572,7 +1572,8 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	vsprintf(command, fmt, argptr);
 	va_end(argptr);
 
-	if (command == nullptr || *command == 0 || *command == '\n')
+	//if (command == nullptr || *command == 0 || *command == '\n') //nullptr cmd redundant? [APG]RoboCop[CL]
+	if (*command == 0 || *command == '\n')
 	{
 		BugMessage(nullptr, "FakeClientCommand : No command!");
 		return; // if nothing in the command buffer, return
@@ -2358,7 +2359,7 @@ void CBotCam::Think()
 	if (!m_pCurrentBot || !m_iState)
 		return;
 
-	constexpr BOOL bSetAngle = TRUE;
+	const BOOL bSetAngle = TRUE;
 
 	vBotOrigin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 
