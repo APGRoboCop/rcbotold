@@ -1,0 +1,155 @@
+import os
+
+#
+# Detect Metamod and HLSDK
+#
+
+def detectHlsdk():
+  hlsdk_path = builder.options.hlsdk_path
+  if not len(hlsdk_path):
+    hlsdk_path = os.getenv('HLSDK', '')
+
+  if len(hlsdk_path):
+    hlsdk_path = os.path.join(builder.originalCwd, hlsdk_path)
+    if not os.path.exists(hlsdk_path):
+      raise Exception('Metamod path does not exist: {0}'.format(hlsdk_path))
+  else:
+    try_paths = [
+      os.path.join(builder.sourcePath, '..', 'hlsdk'),
+    ]
+    for try_path in try_paths:
+      if os.path.exists(try_path):
+        hlsdk_path = os.path.normpath(try_path)
+        break
+    if not hlsdk_path:
+      raise Exception('Could not find the HLSDK! Try passing --hlsdk to configure.py.')
+
+  return hlsdk_path
+
+
+hlsdk_path = detectHlsdk()
+
+#
+# Compiler settings
+#
+cxx = builder.DetectCompilers()
+
+cxx.defines += [
+    'HAVE_STDINT_H',
+	'RCBOT_META_BUILD'
+  ]
+
+if cxx.like('gcc'):
+  cxx.cflags += [
+    '-Wall',
+    #'-Werror',
+	'-Wno-write-strings',
+    '-Wno-error=unused-result',
+    '-Wno-error=unused-variable',
+    '-Wno-unused-value',
+    '-fno-strict-aliasing',
+    '-fPIC',
+	'-Dstricmp=strcasecmp',
+	'-Dstrcmpi=strcasecmp',
+	'-msse2',
+    '-m32'
+  ]
+
+  cxx.cxxflags += [
+    '-std=gnu++14',
+    #'-fno-exceptions',
+    '-fno-rtti'
+  ]
+
+  cxx.linkflags += [
+    '-m32',
+	'-static-libstdc++'
+  ]
+
+  if builder.options.opt == '1':
+    cxx.cflags += ['-O2']
+
+elif cxx.like('msvc'):
+  cxx.cflags += [
+    '/W3'
+  ]
+
+  cxx.cxxflags += [
+    '/EHsc'
+  ]
+
+  cxx.linkflags += [
+    '/MACHINE:X86',
+    '/SUBSYSTEM:WINDOWS',
+    '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
+    'kernel32.lib'
+  ]
+
+  if builder.options.opt == '1':
+    cxx.cflags += ['/Ox']
+    cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
+
+  if builder.options.debug == '1':
+    cxx.cflags += ['/MTd', '/Od', '/RTC1']
+    cxx.linkflags += ['/NODEFAULTLIB:libcmt']
+  else:
+    cxx.cflags += ['/MT']
+
+
+# Optimization
+if builder.options.opt == '1':
+  cxx.defines += ['NDEBUG']
+
+# Debugging
+if builder.options.debug == '1':
+  cxx.defines += ['DEBUG', '_DEBUG']
+
+
+cxx.includes += [
+  os.path.join(hlsdk_path, 'common'),
+  os.path.join(hlsdk_path, 'engine'),
+  os.path.join(hlsdk_path, 'dlls'),
+  os.path.join(hlsdk_path, 'pm_shared'),
+]
+
+
+name = 'rcbot_mm'
+if builder.target_platform == 'linux':
+  name += ''
+
+binary = cxx.Library(name)
+binary.sources += [
+  'dlls/bits.cpp',
+  'dlls/bot.cpp',
+  'dlls/bot_client.cpp',
+  'dlls/bot_commands.cpp',
+  'dlls/bot_ga.cpp',
+  'dlls/bot_menu.cpp',
+  'dlls/bot_navigate.cpp',
+  'dlls/bot_nn.cpp',
+  'dlls/bot_rep.cpp',
+  'dlls/bot_visibles.cpp',
+  'dlls/bot_weapons.cpp',
+  'dlls/client.cpp',
+  'dlls/dir.cpp',
+  'dlls/dll.cpp',
+  'dlls/engine.cpp',
+  'dlls/ga.cpp',
+  'dlls/globals.cpp',
+  'dlls/h_export.cpp',
+  'dlls/linkfunc.cpp',
+  'dlls/megahal.cpp',
+  'dlls/netmessages.cpp',
+  'dlls/perceptron.cpp',
+  'dlls/rcbot_meta_api.cpp',
+  'dlls/util.cpp',
+  'dlls/waypoint.cpp',
+]
+
+
+#
+# Run scripts, add binaries
+#
+
+builder.Add(binary)
+
