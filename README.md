@@ -7,6 +7,7 @@ RCBot versions
 V 1.51
 =---------=
 
+* added: AMBuild compiling support
 * added: Opposing Force CTF Support
 * added: gnu++14 Support for Linux Servers
 * added: Strafing combat to evade being easy target bots
@@ -17,6 +18,7 @@ V 1.51
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
 * TODO: To learn properly on avoiding taking too much falling damage and die in lava pits - add AvoidEntity for "func_lava" in bot_navigate.cpp ?
 * TODO: To fix that NS Squad Joining Bug or enhance it
+* TODO: To allow bots to use and climb ladders properly
 
 V 1.5-final
 =---------=
