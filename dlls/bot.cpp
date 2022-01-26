@@ -11877,9 +11877,9 @@ void CBot::DoTasks()
 
 						// investigate!
 
-						switch (gBotGlobals.m_iCurrentMod)
+						/*switch (gBotGlobals.m_iCurrentMod) //Needed for Op4CTF? [APG]RoboCop[CL]
 						{
-						/*case MOD_TFC:
+						case MOD_TFC:
 							break;
 						case MOD_SVENCOOP:
 						{
@@ -11902,10 +11902,10 @@ void CBot::DoTasks()
 								iGotoWpt = WaypointLocations.NearestWaypoint(pos, REACHABLE_RANGE, -1, FALSE, FALSE);
 							}
 						}
-						break;*/
+						break;
 						default:
 							break;
-						}
+						}*/
 
 						if (iGotoWpt != -1)
 							TaskToAdd = CBotTask(BOT_TASK_FIND_PATH, m_CurrentTask->GetScheduleId(), pSound, iGotoWpt, -2);

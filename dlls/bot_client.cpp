@@ -1875,7 +1875,7 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 			{
 				if (iState == 1)
 				{
-					pBot->m_iBotWeapons |= 1 << iId - 1;
+					pBot->m_iBotWeapons |= 1 << (iId - 1);
 
 					pBot->m_Weapons.AddWeapon(iId);
 

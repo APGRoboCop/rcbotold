@@ -182,7 +182,7 @@ void CBotGAValues::save(FILE* bfp)
 
 	fwrite(&iSize, sizeof(unsigned int), 1, bfp);
 
-	for (int i = 0; i < iSize; i++)
+	for (unsigned int i = 0; i < iSize; i++)
 	{
 		fwrite(&m_theValues[i], sizeof(ga_value), 1, bfp);
 	}
@@ -210,7 +210,7 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 
 	fread(&iSize, sizeof(unsigned int), 1, bfp);
 
-	for (int i = 0; i < iSize; i++)
+	for (unsigned int i = 0; i < iSize; i++)
 	{
 		// reliability check
 		if (feof(bfp))
@@ -262,7 +262,7 @@ void CBitsGAValues::save(FILE* bfp)
 
 //~CBotGAValues();
 
-CBitsGAValues::CBitsGAValues(CBits* bits)
+CBitsGAValues::CBitsGAValues(CBits* bits): m_theBits(nullptr)
 {
 	delete m_theBits;
 	m_theBits = bits;

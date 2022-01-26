@@ -1896,7 +1896,7 @@ void UTIL_FixFloatAngle(float* fAngle)
 	{
 		while (iLoops < 4 && *fAngle < -180)
 		{
-			*fAngle += 360.0;
+			*fAngle += 360;
 			iLoops++;
 		}
 	}
@@ -1904,7 +1904,7 @@ void UTIL_FixFloatAngle(float* fAngle)
 	{
 		while (iLoops < 4 && *fAngle > 180)
 		{
-			*fAngle -= 360.0;
+			*fAngle -= 360;
 			iLoops++;
 		}
 	}
@@ -1991,9 +1991,9 @@ void HudText::InitMessage(const char* message)
 
 	m_sMessage[HUD_TEXT_LENGTH - 1] = 0;
 
-	const short int length = strlen(m_sMessage);
+	const unsigned int length = strlen(m_sMessage);
 
-	short int i = 0;
+	unsigned int i = 0;
 
 	while (i < length)
 	{

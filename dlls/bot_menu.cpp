@@ -398,7 +398,7 @@ void CBotMenu::Render(CClient* pClient)
 			if (i == 0)
 				iSlots |= 1 << 9;
 			else
-				iSlots |= 1 << i - 1;
+				iSlots |= 1 << (i - 1);
 
 			if (m_Menus[i]->HasNextMenu())
 				sprintf(szMenuItemText, "%d. %s...\n", i, m_Menus[i]->GetCaption());

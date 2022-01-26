@@ -114,7 +114,7 @@ void CPopulation::save(FILE* bfp)
 
 	fwrite(&iSize, sizeof(int), 1, bfp);
 
-	for (int i = 0; i < iSize; i++)
+	for (unsigned int i = 0; i < iSize; i++)
 		m_theIndividuals[i]->save(bfp);
 }
 
@@ -139,7 +139,7 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 
 	m_theIndividuals.clear();
 
-	for (int i = 0; i < iSize; i++)
+	for (unsigned int i = 0; i < iSize; i++)
 	{
 		// reliability check
 		if (feof(bfp))

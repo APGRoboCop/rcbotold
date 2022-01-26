@@ -40,6 +40,11 @@ cxx.defines += [
   ]
 
 if cxx.like('gcc'):
+  cxx.defines += [
+	'-Dstricmp=strcasecmp',
+	'-Dstrcmpi=strcasecmp'
+  ]
+
   cxx.cflags += [
     '-Wall',
     #'-Werror',
@@ -49,8 +54,6 @@ if cxx.like('gcc'):
     '-Wno-unused-value',
     '-fno-strict-aliasing',
     '-fPIC',
-	'-Dstricmp=strcasecmp',
-	'-Dstrcmpi=strcasecmp',
 	'-msse2',
     '-m32'
   ]
@@ -79,6 +82,7 @@ elif cxx.like('msvc'):
   ]
 
   cxx.cxxflags += [
+	'/arch:SSE2',
     '/EHsc'
   ]
 
