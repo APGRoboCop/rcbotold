@@ -1591,8 +1591,8 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 				{
 				case 1:
 				{
-					const int iIndex = POINTER_TO_INT(p);
-					pEntity = INDEXENT(iIndex);
+					const int index = POINTER_TO_INT(p);
+					pEntity = INDEXENT(index);
 				}
 				break;
 				case 2:

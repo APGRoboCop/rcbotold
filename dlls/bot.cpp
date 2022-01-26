@@ -463,9 +463,9 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 		// dont like this player much
 		if (m_Profile.m_Rep.GetClientRep(pClient) < BOT_MID_REP)
 		{
-			const int iRep = m_Profile.m_Rep.GetClientRep(pExtClient);
+			const int rep = m_Profile.m_Rep.GetClientRep(pExtClient);
 
-			if (BotFunc_IncreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), m_Profile.m_iSkill))
+			if (BotFunc_IncreaseRep(rep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), m_Profile.m_iSkill))
 			{
 				m_Profile.m_Rep.IncreaseRep(pExtClient->GetPlayerRepId());
 				BotChat(BOT_CHAT_LAUGH, pInfo);
@@ -9225,7 +9225,7 @@ BOOL BotFunc_IsLongRangeWeapon(const int iId)
 		return FALSE;
 	}
 
-	return FALSE;
+	//return FALSE; //unreachable? [APG]RoboCop[CL]
 }
 
 // crap function, doesn't work argh!

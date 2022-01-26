@@ -265,7 +265,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 	// Find the waypoint that is closest to vOrigin from the distance pfMinDist
 	// And set the piIndex to the waypoint index if closer.
 {
-	dataStack <int> tempStack = m_iLocations[i][j][k];
+	dataStack <int> temp_stack = m_iLocations[i][j][k];
 
 	float fDist;
 
@@ -288,9 +288,9 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 		}
 	}
 
-	while (!tempStack.IsEmpty())
+	while (!temp_stack.IsEmpty())
 	{
-		const int iSelectedIndex = tempStack.ChooseFromStack();
+		const int iSelectedIndex = temp_stack.ChooseFromStack();
 
 		if (iSelectedIndex == iIgnoreWpt)
 			continue;
@@ -842,7 +842,7 @@ static FILE* fp;
 
 void WaypointDebug()
 {
-	int y = 1, x = 1;
+	//int y = 1, x = 1;
 
 	fp = fopen("bot.txt", "a");
 	fprintf(fp, "WaypointDebug: LINKED LIST ERROR!!!\n");

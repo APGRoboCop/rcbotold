@@ -821,18 +821,18 @@ void InitMessage ( const char *message );
 					//clear from i
 
 					int pos = n;
-					int n = 0;
+					int i = 0;
 
-					for (n = 0; pos < MAX_STORED_AUTOWAYPOINT; n++)
+					for (i = 0; pos < MAX_STORED_AUTOWAYPOINT; i++)
 					{
-						m_vLastAutoWaypointCheckPos[n] = m_vLastAutoWaypointCheckPos[pos];
+						m_vLastAutoWaypointCheckPos[i] = m_vLastAutoWaypointCheckPos[pos];
 
 						pos++;
 					}
 
-					for (n = n; n < MAX_STORED_AUTOWAYPOINT; n++)
+					for (i = i; i < MAX_STORED_AUTOWAYPOINT; i++)
 					{
-						m_vLastAutoWaypointCheckPos[n].UnSetPoint();
+						m_vLastAutoWaypointCheckPos[i].UnSetPoint();
 					}
 				}
 
@@ -956,9 +956,9 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 				pClient->AutoWaypoint(1);
 		}
 
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (int i1 = 0; i1 < MAX_PLAYERS; i1++)
 		{
-			CBot* pBot = &gBotGlobals.m_Bots[i];
+			CBot* pBot = &gBotGlobals.m_Bots[i1];
 
 			if (!pBot)
 				continue;

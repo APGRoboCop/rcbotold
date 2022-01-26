@@ -575,7 +575,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	else if (pEntity && FStrEq("search", arg1))
 	{
 		edict_t* pEnt = nullptr;
-		edict_t* pEntity = pClient->GetPlayer();
+		edict_t* p_entity = pClient->GetPlayer();
 
 		float range = 100;
 
@@ -586,9 +586,9 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 
 		//fp = fopen("botlog.txt","a");
 
-		while ((pEnt = UTIL_FindEntityInSphere(pEnt, pEntity->v.origin, range)) != nullptr)
+		while ((pEnt = UTIL_FindEntityInSphere(pEnt, p_entity->v.origin, range)) != nullptr)
 		{
-			BotMessage(pEntity, 0, "Found: id: %d, classname:%s distance:%0.2f iuser3:%d pclass:%d\niuser1 %d, iuser2 %d, iuser4 %d, euser1 0x%x, euser2 0x%x", ENTINDEX(pEnt), STRING(pEnt->v.classname), (EntityOrigin(pEnt) - pEntity->v.origin).Length(), pEnt->v.iuser3, pEnt->v.playerclass, pEnt->v.iuser1, pEnt->v.iuser2, pEnt->v.iuser4, pEnt->v.euser1, pEnt->v.euser2);
+			BotMessage(p_entity, 0, "Found: id: %d, classname:%s distance:%0.2f iuser3:%d pclass:%d\niuser1 %d, iuser2 %d, iuser4 %d, euser1 0x%x, euser2 0x%x", ENTINDEX(pEnt), STRING(pEnt->v.classname), (EntityOrigin(pEnt) - p_entity->v.origin).Length(), pEnt->v.iuser3, pEnt->v.playerclass, pEnt->v.iuser1, pEnt->v.iuser2, pEnt->v.iuser4, pEnt->v.euser1, pEnt->v.euser2);
 		}
 
 		//fclose(fp);

@@ -1684,14 +1684,14 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	// Wall stick waypoint
 	if (gBotGlobals.IsNS() && (pBot->IsSkulk() && pBot->m_iCurrentWaypointFlags & (W_FL_WALL_STICK | W_FL_LADDER) && pBot->m_iPrevWaypointIndex != -1))
 	{
-		Vector vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
+		Vector v_wpt_origin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
 		Vector vTemp = WaypointOrigin(pBot->m_iPrevWaypointIndex);
 
-		vTemp.z = vWptOrigin.z;
+		vTemp.z = v_wpt_origin.z;
 
-		Vector vComp = (vWptOrigin - vTemp).Normalize();
+		Vector vComp = (v_wpt_origin - vTemp).Normalize();
 
-		pBot->SetMoveVector(vWptOrigin + vComp * gBotGlobals.m_fWallStickTol);
+		pBot->SetMoveVector(v_wpt_origin + vComp * gBotGlobals.m_fWallStickTol);
 
 		pBot->m_CurrentLookTask = BOT_LOOK_TASK_NEXT_WAYPOINT;
 		//WaypointDrawBeam(gBotGlobals.m_pListenServerEdict,pBot->pev->origin,pBot->m_vMoveToVector,20,10,200,200,200,100,10);
@@ -2079,9 +2079,9 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 								char* szClassnames[3] = { "func_button","button_target","func_rot_button" };
 
 								// check nearby the lift button waypoint
-								edict_t* pButton = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, TRUE);
+								edict_t* button = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, TRUE);
 
-								if (pButton)
+								if (button)
 								{
 									// if a button if found use this one
 
@@ -2090,8 +2090,8 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 									// Bot was below the lift so wait for the lift to descend
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_ENTITY, iScheduleId, pHit));
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, nullptr, iWpt, -1));
-									pBot->AddPriorityTask(CBotTask(BOT_TASK_USE, iScheduleId, pButton));
-									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, pButton));
+									pBot->AddPriorityTask(CBotTask(BOT_TASK_USE, iScheduleId, button));
+									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, button));
 
 									// make sure we update these tasks so we know we are using a lift
 									pBot->m_Tasks.GiveSchedIdDescription(iScheduleId, BOT_SCHED_USE_LIFT);

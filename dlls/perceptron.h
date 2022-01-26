@@ -43,6 +43,7 @@ class CBotGAValues;
 class ITransfer
 {
 public:
+	virtual ~ITransfer() = default;
 	virtual ga_value transfer(ga_value netInput) = 0;
 };
 

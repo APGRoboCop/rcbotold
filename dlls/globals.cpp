@@ -75,7 +75,10 @@ extern CWaypointLocations WaypointLocations;
 extern int debug_engine;
 
 extern FILE* fpMapConfig;
-static FILE* fp;
+
+namespace global {
+	static FILE* fp;
+}
 /*
 void ReadRCBotFolder ( void )
 {
@@ -153,9 +156,9 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 	if (gpGlobals->deathmatch)
 	{
 		if (debug_engine) {
-			fp = fopen("bot.txt", "a");
-			fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
-			fclose(fp);
+			global::fp = fopen("bot.txt", "a");
+			fprintf(global::fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
+			fclose(global::fp);
 		}
 
 		m_CurrentMessage = nullptr;

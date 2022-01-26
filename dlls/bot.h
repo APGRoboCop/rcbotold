@@ -1929,7 +1929,7 @@ public:
 		newPosition.setFlags(flags);
 		newPosition.setVisibleOrigin(vVisibleOrigin);
 
-		CRememberPosition* e = m_Positions.getExisting(newPosition);
+		CRememberPosition* e = m_Positions.getExisting(newPosition); // "e" not referenced [APG]RoboCop[CL]
 
 		const int index = m_Positions.getExistingIndex(newPosition);
 
