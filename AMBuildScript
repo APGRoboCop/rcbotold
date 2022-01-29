@@ -41,9 +41,11 @@ cxx.defines += [
 
 if cxx.like('gcc'):
   cxx.defines += [
-	'-Dstricmp=strcasecmp',
-	'-Dstrcmpi=strcasecmp'
+	'stricmp=strcasecmp',
+	'strcmpi=strcasecmp'
   ]
+  
+  cxx.c_only_flags += ['-std=gnu99']
 
   cxx.cflags += [
     '-Wall',

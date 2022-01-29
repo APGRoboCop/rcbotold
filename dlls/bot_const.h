@@ -916,7 +916,7 @@ typedef enum
 #define RESPAWN_LEFT_GAME        4
 #define RESPAWN_NEED_TO_REJOIN   5
 
-#define BOT_DEFAULT_REACTION_TIME	0.225
+#define BOT_DEFAULT_REACTION_TIME	0.3
 
 #define BOT_DEFAULT_THINK_TIME		0.04
 
@@ -939,14 +939,13 @@ enum
 	MOD_COUNTERSTRIKE = 6,
 	MOD_DMC = 7,		// deathmatch classic
 	MOD_TS = 8,			// the specialists
-	MOD_SVENCOOP = 9,
+	MOD_GEARBOX = 9,	// Support for OP4CTF [APG]RoboCop[CL]
 	MOD_IOS = 10,		// international online soccer (gave up :p)
 	MOD_BG = 11,		// battlegrounds
 	MOD_TFC = 12,		// team fortress classic (not started yet..)
 	MOD_HL_DM = 13,		// half-life deathmatch
 	MOD_HL_RALLY = 14,   // half-life rally (game crashes when adding a bot!!)
 	MOD_RS = 15, // rival species meh...
-	MOD_GEARBOX = 16 // Support for OP4CTF [APG]RoboCop[CL]
 };
 
 #define VGUI_MENU_NONE 0

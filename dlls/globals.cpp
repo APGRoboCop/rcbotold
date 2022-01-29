@@ -259,9 +259,9 @@ void CBotGlobals::StartFrame()
 	static float fPreviousTime = -1.0;
 	static BOOL bCheckedTeamplay = FALSE;
 
-	if (!bCheckedTeamplay && m_iCurrentMod != MOD_GEARBOX)
+	if (bCheckedTeamplay && m_iCurrentMod == MOD_GEARBOX)
 	{
-		m_bTeamPlay = CVAR_GET_FLOAT("mp_teamplay") > 0 || CVAR_GET_FLOAT("mp_theonemode") > 0;
+		m_bTeamPlay = CVAR_GET_FLOAT("mp_teamplay") > 1;
 		bCheckedTeamplay = TRUE;
 	}
 
@@ -317,7 +317,6 @@ void CBotGlobals::StartFrame()
 		{
 			int iNumHivesUp = 0;
 			int iNumUpgrades = 0;
-			//hive_info_t *pHiveInfo;
 
 			m_bHasDefTech = FALSE;
 			m_bHasMovTech = FALSE;
@@ -377,9 +376,9 @@ void CBotGlobals::StartFrame()
 				m_bAutoBuilt = TRUE;
 			}
 
-			/*for ( iIndex = 0; iIndex < BOT_MAX_HIVES; iIndex ++ )
+			for ( iIndex = 0; iIndex < BOT_MAX_HIVES; iIndex ++ )
 			{
-				pHiveInfo = &m_Hives[iIndex];
+				const hive_info_t* pHiveInfo = &m_Hives[iIndex];
 
 				// mTechnology wont work :(
 				//mTechnology = pHiveInfo->mTechnology;
@@ -398,7 +397,7 @@ void CBotGlobals::StartFrame()
 						iNumHivesUp++;
 					}
 				}
-			}*/
+			}
 
 			// see if we have technology by checking the upgrades, if hives = amount of upgrades
 			// else then we have a choice of what to build so we can build anything until it is built

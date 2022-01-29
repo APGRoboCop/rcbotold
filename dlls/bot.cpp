@@ -3869,8 +3869,8 @@ void CBot::LookForNewTasks()
 	edict_t* pNearestResourceFountain = nullptr;
 	edict_t* pNearestButton = nullptr;
 
-	edict_t* pNearestScientist = nullptr;
-	edict_t* pNearestBarney = nullptr;
+	//edict_t* pNearestScientist = nullptr;
+	//edict_t* pNearestBarney = nullptr;
 
 	edict_t* pEnemyFlag = nullptr;
 
@@ -3884,8 +3884,8 @@ void CBot::LookForNewTasks()
 	BOOL bNeedHealth = pev->health < pev->max_health * 0.75;
 	BOOL bNeedArmor = pev->armorvalue < VALVE_MAX_NORMAL_BATTERY / 2;
 
-	BOOL bCanUseScientist = !m_Tasks.HasSchedule(BOT_SCHED_USING_SCIENTIST);
-	BOOL bCanUseBarney = !m_Tasks.HasSchedule(BOT_SCHED_USING_BARNEY);
+	//BOOL bCanUseScientist = !m_Tasks.HasSchedule(BOT_SCHED_USING_SCIENTIST);
+	//BOOL bCanUseBarney = !m_Tasks.HasSchedule(BOT_SCHED_USING_BARNEY);
 
 	int iMod = gBotGlobals.m_iCurrentMod;
 
@@ -4073,6 +4073,50 @@ void CBot::LookForNewTasks()
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
 					continue;
+				}
+			}
+			break;
+		case MOD_GEARBOX:
+			if (!pNearestPickupEntity || fDistance < fNearestPickupEntityDist)
+			{
+				if (CanPickup(pEntity))
+				{
+					fNearestPickupEntityDist = fDistance;
+					pNearestPickupEntity = pEntity;
+					continue;
+				}
+			}
+
+			if (pEntity->v.frame == 0)
+			{
+				if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
+				{
+					if (strcmp(szClassname, "func_recharge") == 0)
+					{
+						fNearestHEVchargerDist = fDistance;
+						pNearestHEVcharger = pEntity;
+						continue;
+					}
+				}
+
+				if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
+				{
+					if (strcmp(szClassname, "func_healthcharger") == 0)
+					{
+						fNearestHealthchargerDist = fDistance;
+						pNearestHealthcharger = pEntity;
+						continue;
+					}
+				}
+
+				if (m_fUseButtonTime < gpGlobals->time && (!pNearestButton || fNearestButtonDist < fDistance))
+				{
+					if (strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 || strstr(szClassname, "button") != NULL)
+					{
+						fNearestButtonDist = fDistance;
+						pNearestButton = pEntity;
+						continue;
+					}
 				}
 			}
 			break;
@@ -5607,14 +5651,14 @@ BOOL CBot::UpdateVisibles()
 	static int iToBuild = 0;
 	static int iBestStructureToBuild = 0;
 	static edict_t* pTeleporter = nullptr;
-	float fNearestTeleporter = 0.0;
+	//float fNearestTeleporter = 0;
 
 	//BOOL bIsTFC = gBotGlobals.IsMod(MOD_TFC);
 	const BOOL bIsNS = gBotGlobals.IsNS();
 	const BOOL bIsGorge = bIsNS && IsGorge();
 	BOOL bSeeLeader = FALSE;
-	edict_t* pNearestSentry = nullptr;
-	float fNearestSentry = 0;
+	//edict_t* pNearestSentry = nullptr;
+	//float fNearestSentry = 0;
 	// dont go back to leader if checking out hive / structure
 	const BOOL bNeedToFollowLeader = !m_Tasks.HasTask(BOT_TASK_FOLLOW_LEADER) && m_pSquadLeader &&
 		!m_Tasks.HasSchedule(BOT_SCHED_NS_CHECK_HIVE) &&
@@ -6219,10 +6263,10 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 
 	const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-	const BOOL bIsSvenCoop = gBotGlobals.IsMod(MOD_SVENCOOP);
+	//const BOOL bIsSvenCoop = gBotGlobals.IsMod(MOD_SVENCOOP);
 	// check for grenades.
 
-	if (bIsSvenCoop || gBotGlobals.IsMod(MOD_HL_DM))
+	if (gBotGlobals.IsMod(MOD_HL_DM))
 	{
 		//	if ( bIsSvenCoop )
 		//	{
@@ -6246,7 +6290,7 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 
 				if (DistanceFrom(tr.vecEndPos) < EXPLODE_RADIUS)
 				{
-					if (bIsSvenCoop && pEntity->v.owner)
+					if (pEntity->v.owner)
 					{
 						// Dont avoid a grenade if a player threw it (doesnt work?!)
 						return pEntity->v.owner == m_pEdict || !(pEntity->v.owner->v.flags & FL_CLIENT);
@@ -6267,7 +6311,7 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 				// rocket coming this way?
 				if (DistanceFrom(pEntity->v.origin + pEntity->v.velocity * DistanceFromEdict(pEntity)) < EXPLODE_RADIUS)
 				{
-					if (bIsSvenCoop && pEntity->v.owner)
+					if (pEntity->v.owner)
 					{
 						// Dont avoid a grenade if a player threw it (doesnt work?!)
 						return (pEntity->v.owner->v.flags & FL_CLIENT) != FL_CLIENT;
@@ -6411,7 +6455,7 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 {
 	Vector vEnemyOrigin;
 
-	if (gBotGlobals.IsMod(MOD_SVENCOOP) && pBotEnemy->v.flags & FL_MONSTER)
+	if (pBotEnemy->v.flags & FL_MONSTER)
 	{
 		// shoot cockpit of the osprey
 
@@ -6646,11 +6690,11 @@ BOOL CBot::FVisible(const Vector& vecOrigin)
 
 BOOL CBot::FInViewCone(Vector* pOrigin)
 {
-	if (gBotGlobals.IsMod(MOD_SVENCOOP))
-	{
-		// Use 2d LOS for svencoop for seeing ospreys etc easier
-		return BotFunc_FInViewCone(pOrigin, m_pEdict);
-	}
+	//if (gBotGlobals.IsMod(MOD_SVENCOOP))
+	//{
+	//	// Use 2d LOS for svencoop for seeing ospreys etc easier
+	//	return BotFunc_FInViewCone(pOrigin, m_pEdict);
+	//}
 
 	return DotProductFromOrigin(pOrigin) > 0.5; // 60 degree field of view
 }
@@ -15527,9 +15571,9 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 			if (pTank != nullptr)
 			{
-				float fDist;
+				//float fDist;
 
-				fDist = DistanceFromEdict(pTank);
+				float fDist = DistanceFromEdict(pTank);
 
 				if (!CanUseTank(pTank))
 				{

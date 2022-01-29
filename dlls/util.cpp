@@ -666,14 +666,14 @@ float UTIL_PitchAngleBetweenOrigin(entvars_t *pev,Vector vOrigin)
 {
 // UTIL_IsFacingEntity(entvars_t *pev, entvars_t *pevEntity)
 	//{
-	/*
+	
 	Vector vMaxAngles;
 	Vector vMinAngles;
 	Vector vPevOrigin;
 
 	vPevOrigin = pev->origin + pev->view_ofs;
-	vMaxAngles = UTIL_VecToAngles(pev*/
-	/*
+	vMaxAngles = UTIL_VecToAngles(pev)
+	
 	float fAngle;
 	Vector vBotAngles = pev->v_angle;
 	Vector vAngles;
@@ -1684,7 +1684,7 @@ Vector EntityOrigin(edict_t* pEdict)
 {
 	//if ( pEdict->v.flags & FL_WORLDBRUSH )
 
-	if (gBotGlobals.m_iCurrentMod == MOD_SVENCOOP && pEdict->v.flags & FL_MONSTER)
+	if (pEdict->v.flags & FL_MONSTER)
 		return pEdict->v.origin + pEdict->v.view_ofs / 2;
 
 	return pEdict->v.absmin + pEdict->v.size / 2;

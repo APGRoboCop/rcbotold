@@ -451,7 +451,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 				if (tr.flFraction < 1.0)
 					// hit something?
 				{
-					if (gBotGlobals.m_iCurrentMod == MOD_SVENCOOP)
+					/*if (gBotGlobals.m_iCurrentMod == MOD_SVENCOOP)
 					{
 						CBaseEntity* pentArea;
 						CBaseEntity* pentActivator;
@@ -504,7 +504,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 							break;
 						}
 					}
-					else
+					else*/
 					{
 						continue;
 					}

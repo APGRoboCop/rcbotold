@@ -598,24 +598,24 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 		TXTMSG_TYPE_BUILD_TELE_ENTRANCE,
 		TXTMSG_TYPE_BUILD_TELE_EXIT,
 		TXTMSG_TYPE_BUILD_SENTRY
-	}eTextMessageType;*/
+	}eTextMessageType;
 	static BOOL bCheckTeleEntrance = FALSE;
 	static BOOL bCheckTeleExit = FALSE;
-	static BOOL bBuiltSentry = FALSE;
+	static BOOL bBuiltSentry = FALSE;*/
 
 	//int iType;
 
-	if (p == nullptr)
+	/*if (p == nullptr)
 	{
 		bCheckTeleEntrance = FALSE;
 		bCheckTeleExit = FALSE;
 		bBuiltSentry = FALSE;
-		//bSentryDestroyed = FALSE;
-		//bTeleExitDestroyed = FALSE;
-		//bTeleEntranceDestroyed = FALSE;
+		bSentryDestroyed = FALSE;
+		TeleExitDestroyed = FALSE;
+		bTeleEntranceDestroyed = FALSE;
 
 		return;
-	}
+	}*/
 
 	switch (POINTER_TO_INT(iState))
 	{

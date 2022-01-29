@@ -111,8 +111,6 @@ void SetupMenus()
 
 	if (gBotGlobals.IsMod(MOD_TS))
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS2].AddMenuItem(2, "Stunt", BotMenu_Func_Wall_Stick_Waypoint);
-	else if (gBotGlobals.IsMod(MOD_SVENCOOP) || gBotGlobals.IsMod(MOD_TFC))
-		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS2].AddMenuItem(2, "Pain/Death", BotMenu_Func_Wall_Stick_Waypoint);
 	else
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS2].AddMenuItem(2, "Wall-Stick", BotMenu_Func_Wall_Stick_Waypoint);
 	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS2].AddMenuItem(3, "Fly", BotMenu_Func_Fly_Waypoint);
@@ -167,8 +165,6 @@ void SetupMenus()
 	{
 		if (gBotGlobals.IsMod(MOD_HL_RALLY))
 			gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(1, "Start of Race", Bot_Menu_Important_Waypoint);
-		else if (gBotGlobals.IsMod(MOD_SVENCOOP))
-			gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(1, "Throw Grenade", Bot_Menu_GrenThrow_Waypoint);
 		else
 			gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(1, "Important Waypoint", Bot_Menu_Important_Waypoint);
 
