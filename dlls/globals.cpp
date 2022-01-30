@@ -383,7 +383,7 @@ void CBotGlobals::StartFrame()
 				// mTechnology wont work :(
 				//mTechnology = pHiveInfo->mTechnology;
 
-				if ( IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL) )
+				if ( IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL) ) //Needed for ENSL? [APG]RoboCop[CL]
 				{
 					if ( pHiveInfo->pHive && (pHiveInfo->pHive->v.fuser1 > 0) )
 					{

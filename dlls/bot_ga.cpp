@@ -47,13 +47,13 @@
 
 CBotGAValues::CBotGAValues()
 {
-	clear();
+	CBotGAValues::clear();
 	setFitness(0);
 }
 
-CBotGAValues::CBotGAValues(const std::vector<ga_value> values)
+CBotGAValues::CBotGAValues(const std::vector<ga_value>& values)
 {
-	clear();
+	CBotGAValues::clear();
 	setFitness(0);
 
 	setVector(values);
@@ -103,7 +103,7 @@ void CBotGAValues::mutate()
 	}
 }
 
-float CBotGAValues::get(const int iIndex)
+float CBotGAValues::get(const int iIndex) //Unstable? [APG]RoboCop[CL]
 {
 	return m_theValues[iIndex];
 }
@@ -129,7 +129,7 @@ IIndividual* CBotGAValues::copy()
 	return individual;
 }
 
-void CBotGAValues::setVector(std::vector<ga_value> const values)
+void CBotGAValues::setVector(std::vector<ga_value> const& values)
 {
 	m_theValues.clear();
 
@@ -200,7 +200,7 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 
 	const CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, req_size);
 
-	if (!header.read(bfp, header))
+	if (!CGenericHeader::read(bfp, header))
 	{
 		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;

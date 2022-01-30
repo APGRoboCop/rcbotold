@@ -783,7 +783,7 @@ void ClientCommand(edict_t* pEntity)
 	eBotCvarState iState = BOT_CVAR_CONTINUE;
 	int iAccessLevel = 0;
 	BOOL bSayTeamMsg = FALSE;
-	BOOL bSayMsg = FALSE;
+	BOOL bSayMsg;
 
 	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEntity);
 
@@ -2359,11 +2359,11 @@ void CBotCam::Think()
 	if (!m_pCurrentBot || !m_iState)
 		return;
 
-	const BOOL bSetAngle = TRUE;
+	//const BOOL bSetAngle = TRUE;
 
 	vBotOrigin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 
-	const Vector oldOrigin = m_pCameraEdict->v.origin;//
+	const Vector oldOrigin = m_pCameraEdict->v.origin;
 
 	//Vector vLookAt = vBotOrigin;
 
@@ -2398,7 +2398,7 @@ void CBotCam::Think()
 		if (tr.flFraction < 1.0)
 			m_pCameraEdict->v.origin = tr.vecEndPos;
 	}
-	break;
+		break;
 	case BOTCAM_WAYPOINT:
 	{
 		if (m_pCurrentBot->m_iWaypointGoalIndex != -1)
@@ -2409,7 +2409,7 @@ void CBotCam::Think()
 		else
 			m_fNextChangeState = 0;
 	}
-	break;
+		break;
 	case BOTCAM_ENEMY:
 	{
 		if (m_pCurrentBot->m_pEnemy)
@@ -2447,7 +2447,7 @@ void CBotCam::Think()
 		else
 			m_fNextChangeState = 0;
 	}
-	break;
+		break;
 	case BOTCAM_FP:
 		if (m_pCurrentBot)
 		{
@@ -2461,6 +2461,8 @@ void CBotCam::Think()
 			m_pCameraEdict->v.v_angle = m_pCurrentBot->pev->v_angle;
 		}
 
+		break;
+	case BOTCAM_NONE:
 		break;
 	}
 

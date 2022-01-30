@@ -50,7 +50,7 @@ public:
 
 	//~CBotGAValues();
 
-	CBotGAValues(std::vector<ga_value> values);
+	CBotGAValues(const std::vector<ga_value>& values);
 
 	// crossover with other individual
 	void crossOver(IIndividual* other) override;
@@ -62,7 +62,7 @@ public:
 	// sub classes return their class with own values
 	IIndividual* copy() override;
 
-	void setVector(std::vector<ga_value> values);
+	void setVector(const std::vector<ga_value>& values);
 	void getVector(std::vector<ga_value>* values);
 
 	float get(int iIndex);

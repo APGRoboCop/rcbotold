@@ -667,8 +667,8 @@ private:
 class MyEHandle
 {
 private:
-	int m_iSerialNumber;
-	edict_t* m_pEdict;
+	int m_iSerialNumber = 0;
+	edict_t* m_pEdict = nullptr;
 public:
 	edict_t* Get() const
 	{
@@ -1016,6 +1016,16 @@ public:
 			return "BOT_TASK_WAIT_FOR_FLAG";
 		case BOT_TASK_USE_TELEPORTER:
 			return "BOT_TASK_USE_TELEPORTER";
+		case BOT_TASK_WAIT_FOR_BOT_AT_WPT:
+			return "BOT_TASK_WAIT_FOR_BOT_AT_WPT";
+		case BOT_TASK_WAIT_FOR_RESOURCE_TOWER_BUILD:
+			return "BOT_TASK_WAIT_FOR_RESOURCE_TOWER_BUILD";
+		case BOT_TASK_IMPULSE:
+			return "BOT_TASK_IMPULSE";
+		case BOT_TASK_DROP_WEAPON:
+			return "BOT_TASK_DROP_WEAPON";
+		case BOT_TASK_SENSE_ENEMY:
+			return "BOT_TASK_SENSE_ENEMY";
 		}
 
 		return "Unknown";
@@ -1056,6 +1066,10 @@ public:
 			return "BOT_SCHED_USING_BARNEY";
 		case BOT_SCHED_PICKUP_FLAG:
 			return "BOT_SCHED_PICKUP_FLAG";
+		case BOT_SCHED_USE_TELEPORTER:
+			return "BOT_SCHED_USE_TELEPORTER";
+		case BOT_SCHED_MAKE_NEW_TELE_EXIT:
+			return "BOT_SCHED_MAKE_NEW_TELE_EXIT";
 		}
 
 		return "Unknown";
@@ -3092,6 +3106,8 @@ public:
 			return "BOT_LOOK_TASK_LOOK_AROUND";
 		case BOT_LOOK_TASK_FACE_GROUND:
 			return "BOT_LOOK_TASK_FACE_GROUND";
+		case BOT_LOOK_TASK_FACE_NEAREST_REMEMBER_POS:
+			return "BOT_LOOK_TASK_FACE_NEAREST_REMEMBER_POS";
 		}
 
 		return "Unknown";
@@ -4873,6 +4889,8 @@ public:
 
 	CBotCvar()
 	{
+		m_iAccessLevel = 0;
+		m_bCanUseOnDedicatedServer = 0;
 		m_szCvarName = nullptr;
 	}
 
@@ -6073,7 +6091,7 @@ public:
 	{
 		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			CBot* pBot = &m_Bots[i];
+			const CBot* pBot = &m_Bots[i];
 
 			if (pBot->IsUsed())
 			{
@@ -6344,74 +6362,80 @@ public:
 	//TODO: Initialise those variables needed added below? [APG]RoboCop[CL]
 	CBotGlobals()
 	{
-		//Init();
-		/*m_bIsNS(0), m_sModelIndexFireball(0), m_bWaypointsHavePaths(0), m_iConfigSettings(0),
-		m_bAutoPathWaypoint(0),
-		m_bTeamPlay(0),
-		m_fNextJoinTeam(0),
-		m_fAutoWaypointCheckTime(0),
-		m_fAutoBuildTime(0),
-		m_bAutoBuilt(0),
-		m_bHasDefTech(0),
-		m_bHasSensTech(0), m_bHasMovTech(0),
-		m_fWallStickTol(0),
-		m_iJoiningClients{},
-		m_iTeamScores{},
-		m_bNetMessageStarted(0),
-		m_iMinBots(0),
-		m_iMaxBots(0),
-		m_iLanguage(),
-		m_iMaxVisUpdateRevs(0),
-		m_fHiveImportance(0),
-		m_fResTowerImportance(0),
-		m_fHealingImportance(0),
-		m_fStructureBuildingImportance(0),
-		m_fRefillStructureImportance(0),
-		m_fBotStuckSpeed(0),
-		m_fUpdateLadderTime(0), m_fUpdateVisTime(0),
-		m_szModFolder(nullptr),
-		m_iDebugLevels(0), m_Hives{},
-		m_pMarineStart(nullptr),
-		m_fReadConfigTime(0),
-		m_iBotChatPercent(0),
-		m_iBotChatReplyPercent(0),
-		m_iBotMsgIndex(0),
-		m_iCurrentMessageState(0),
-		m_iCurrentMessageState2(0),
-		m_iMaxPathRevs(0),
-		m_pMessageEntity(nullptr),
-		m_ThingsToBuild(nullptr),
-		m_CurrentMessage(nullptr),
-		m_pDebugMessage(nullptr),
-		m_CurrentHandledCvar(nullptr),
-		m_bIsFakeClientCommand(0),
-		m_iFakeArgCount(0), m_iForceTeam(0),
-		m_fGorgeAmount(0),
-		m_pListenServerEdict(nullptr),
-		m_iWaypointTexture(0),
-		m_bGameRules(0),
-		m_fClientUpdateTime(0),
-		m_bBotCanRejoin(0),
-		m_fMapInitTime(0), m_fBotRejoinTime(0),
-		m_iNumBots(0),
-		m_bCanUpgradeDef(0),
-		m_bCanUpgradeSens(0),
-		m_bCanUpgradeMov(0),
-		m_tr(),
-		m_iCurrentMod(0),
-		m_fTurnSpeed(0),
-		m_szBotFolder{},
-		m_bCombatMap(0),
-		m_pCommander(),
-		max_team_players{},
-		team_class_limits{},
-		team_allies{},
-		prevBackPackInvalid(0),
-		prevCapturePointInvalid(0),
-		prevFlagInvalid(0),
-		m_currBackPack(nullptr),
-		m_currCapPoint(nullptr),
-		m_currFlag(nullptr)*/
+		Init();
+		m_bIsNS = 0;
+		m_sModelIndexFireball = 0;
+		m_bWaypointsHavePaths = 0;
+		m_iConfigSettings = 0;
+		m_bAutoPathWaypoint = 0;
+
+		m_bTeamPlay = 0;
+		m_fNextJoinTeam = 0;
+		m_fAutoWaypointCheckTime = 0;
+		m_fAutoBuildTime = 0;
+		m_bAutoBuilt = 0;
+		m_bHasDefTech = 0;
+		m_bHasSensTech = 0;
+		m_bHasMovTech = 0;
+		m_fWallStickTol = 0;
+
+		m_bNetMessageStarted = 0;
+		m_iMinBots = 0;
+		m_iMaxBots = 0;
+
+		m_iMaxVisUpdateRevs = 0;
+		m_fHiveImportance = 0;
+		m_fResTowerImportance = 0;
+		m_fHealingImportance = 0;
+		m_fStructureBuildingImportance = 0;
+		m_fRefillStructureImportance = 0;
+		m_fBotStuckSpeed = 0;
+		m_fUpdateLadderTime = 0; m_fUpdateVisTime = 0;
+		m_szModFolder = nullptr;
+		m_iDebugLevels = 0;
+
+		m_pMarineStart = nullptr;
+		m_fReadConfigTime = 0;
+		m_iBotChatPercent = 0;
+		m_iBotChatReplyPercent = 0;
+		m_iBotMsgIndex = 0;
+		m_iCurrentMessageState = 0;
+		m_iCurrentMessageState2 = 0;
+		m_iMaxPathRevs = 0;
+
+		m_pMessageEntity = nullptr;
+		m_ThingsToBuild = nullptr;
+		m_CurrentMessage = nullptr;
+		m_pDebugMessage = nullptr;
+		m_CurrentHandledCvar = nullptr;
+
+		m_bIsFakeClientCommand = 0;
+		m_iFakeArgCount = 0; m_iForceTeam = 0;
+		m_fGorgeAmount = 0;
+		m_pListenServerEdict = nullptr;
+		m_iWaypointTexture = 0;
+
+		m_bGameRules = 0;
+		m_fClientUpdateTime = 0;
+		m_bBotCanRejoin = 0;
+		m_fMapInitTime = 0;
+		m_fBotRejoinTime = 0;
+		m_iNumBots = 0;
+
+		m_bCanUpgradeDef = 0;
+		m_bCanUpgradeSens = 0;
+		m_bCanUpgradeMov = 0;
+
+		m_iCurrentMod = 0;
+		m_fTurnSpeed = 0;
+		m_bCombatMap = 0;
+
+		prevBackPackInvalid = 0;
+		prevCapturePointInvalid = 0;
+		prevFlagInvalid = 0;
+		m_currBackPack = nullptr;
+		m_currCapPoint = nullptr;
+		m_currFlag = nullptr;
 	}
 
 	void SayToolTip(edict_t* pEntity, eToolTip tooltip)
@@ -6633,8 +6657,8 @@ public:
 	CGA m_enemyCostGAsForTeam[MAX_TEAMS];
 	//	CGA m_TFCspiesForTeam[MAX_TEAMS];
 
-	edict_t* m_pTFCDetect;
-	edict_t* m_pTFCGoal;
+	//edict_t* m_pTFCDetect;
+	//edict_t* m_pTFCGoal;
 
 	void setMapType(eTFCMapType theMapType)
 	{
@@ -6681,15 +6705,15 @@ public:
 		}
 
 		return FALSE;
-	}
+	}*/
 
-	void changeWelcomeMessage ( char *message )
+/*/	void changeWelcomeMessage(char* message)
 		{
 			if ( m_szWelcomeMessage )
 				free(m_szWelcomeMessage);
 			m_szWelcomeMessage = strdup(message);
-		}
-	*/
+		}*/
+	
 	void buildFileName(const char* in_filename, char* out_filename)
 	{
 		sprintf(out_filename, "%s%s", m_szBotFolder, in_filename);

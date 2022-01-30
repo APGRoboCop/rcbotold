@@ -553,7 +553,7 @@ void UTIL_SayText(const char* pText, edict_t* pEdict)
 
 int GetMessageID(const char* szMsg)
 {
-	int msg_id = -1;
+	int msg_id;
 
 #ifndef RCBOT_META_BUILD
 	CBotNetMessage* msg = NULL;
@@ -1176,7 +1176,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 {
 	edict_t* pResourceTower = nullptr;
 
-	Vector vOrigin;
+	//Vector vOrigin;
 
 	while ((pResourceTower = UTIL_FindEntityByClassname(pResourceTower, "alienresourcetower")) != nullptr)
 	{
@@ -2154,7 +2154,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 
 	// check it tooltips are on
 	// check if array positions are in bounds
-	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) && gBotGlobals.IsConfigSettingOn(iLang < BOT_LANG_MAX) && iTooltip < BOT_TOOL_TIP_MAX)
+	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) && gBotGlobals.IsConfigSettingOn(iLang < BOT_LANG_MAX) && (iTooltip < BOT_TOOL_TIP_MAX))
 	{
 		char final_message[1024];
 
@@ -2163,9 +2163,9 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 		// name in message
 		if (strstr(final_message, "%n") != nullptr)
 		{
-			const char* szName = const_cast<char*>(STRING(pEntity->v.netname));
-			const int iLen = strlen(szName);
-			char* szNewName = static_cast<char*>(malloc(sizeof(char) * (iLen + 1)));
+			char* szName = (char*)STRING(pEntity->v.netname);
+			int iLen = strlen(szName);
+			char* szNewName = (char*)malloc(sizeof(char) * (iLen + 1));
 
 			RemoveNameTags(szName, szNewName);
 

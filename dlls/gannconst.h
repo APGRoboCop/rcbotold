@@ -42,6 +42,7 @@ typedef float ga_value;
 class ILearnInfo
 {
 public:
+	virtual ~ILearnInfo() = default;
 	virtual void load(FILE* bfp, int req_size) = 0;
 	virtual void save(FILE* bfp) = 0;
 };

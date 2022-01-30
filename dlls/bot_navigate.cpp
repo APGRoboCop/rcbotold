@@ -1802,7 +1802,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 // Thanks PM's racc bot source for some info pointers. (racc.bots-united.com)
 {
 	const float fFov = 100.0;
-	int iStep = 0;
+	int iStep;
 
 	const entvars_t* pev = &pBot->m_pEdict->v;
 
@@ -1825,7 +1825,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 	UTIL_FixFloatAngle(&fStartAngle);
 
 	// angle
-	float fAngle = fStartAngle;
+	float fAngle;
 
 	for (iStep = iMinStep; iStep <= iMaxStep; iStep += 10)
 	{

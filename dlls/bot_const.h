@@ -906,8 +906,8 @@ typedef enum
 #define LADDER_UNKNOWN  0
 #define LADDER_DOWN     2
 
-#define BOT_PITCH_SPEED 20
-#define BOT_YAW_SPEED 20
+#define BOT_PITCH_SPEED 30
+#define BOT_YAW_SPEED 30
 
 #define RESPAWN_NONE             0
 #define RESPAWN_IDLE             1
@@ -944,8 +944,8 @@ enum
 	MOD_BG = 11,		// battlegrounds
 	MOD_TFC = 12,		// team fortress classic (not started yet..)
 	MOD_HL_DM = 13,		// half-life deathmatch
-	MOD_HL_RALLY = 14,   // half-life rally (game crashes when adding a bot!!)
-	MOD_RS = 15, // rival species meh...
+	MOD_HL_RALLY = 14,  // half-life rally (game crashes when adding a bot!!)
+	MOD_RS = 15,		// rival species meh...
 };
 
 #define VGUI_MENU_NONE 0

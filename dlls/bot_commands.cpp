@@ -666,7 +666,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 	{
 		if (arg2 && *arg2)
 		{
-			edict_t* pPlayer = nullptr;
+			edict_t* pPlayer;
 
 			if (*arg2 != '#')
 				pPlayer = UTIL_FindPlayerByTruncName(arg2);
@@ -812,7 +812,7 @@ eBotCvarState CDebugBotCommand::action(CClient* pClient, const char* arg1, const
 
 eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	BOOL bError = FALSE;
+	BOOL bError;
 
 	int iDebugLevel = 0;
 
@@ -1357,7 +1357,7 @@ eBotCvarState CPathWaypointCommand::action(CClient* pClient, const char* arg1, c
 eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
 	edict_t* pEntity = nullptr;
-	edict_t* pPlayer = nullptr;
+	edict_t* pPlayer;
 
 	if (pClient)
 		pEntity = pClient->GetPlayer();
@@ -1565,7 +1565,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 	const char* szName = nullptr;
 
-	int iSkill = DEF_BOT_SKILL;
+	int iSkill;
 
 	int iBotIndex = 0;
 

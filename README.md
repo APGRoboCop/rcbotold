@@ -7,10 +7,12 @@ RCBot versions
 V 1.51
 =---------=
 
+* added: Enhanced performance
 * added: AMBuild compiling support
 * added: Opposing Force CTF Support
 * added: gnu++14 Support for Linux Servers
 * added: Strafing combat to evade being easy target bots
+* changed: Increased the bot's flexability
 * changed: Reduced redundant coding
 * changed: Increasing bot's viewing angle to detect enemies better
 * changed: Reduced further Sven Co-op and TFC support

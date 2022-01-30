@@ -260,7 +260,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 
 	while (i < length)
 	{
-		char current_char = 0;
+		char current_char;
 
 		if (inside_tag)
 		{
@@ -829,7 +829,7 @@ HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, int symbol)
 	// this function is conceptually similar to HAL_FindSymbol, apart from the fact that if the
 	// symbol is not found, a new node is automatically allocated and added to the tree
 
-	HAL_TREE* found = nullptr;
+	HAL_TREE* found;
 	BOOL found_symbol = FALSE;
 
 	// perform a binary search for the symbol. If the symbol isn't found, attach a new sub-node
@@ -1682,8 +1682,6 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 {
 	// this function reads a dictionary from a file
 
-	HAL_STRING word;
-
 	HAL_DICTIONARY* list = HAL_NewDictionary();
 
 	if (filename == nullptr)
@@ -1706,6 +1704,7 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 
 		if (string != nullptr && strlen(string) > 0)
 		{
+			HAL_STRING word;
 			word.length = static_cast<unsigned char>(strlen(string));
 			word.word = strdup(buffer); // strdup - duplicates string
 			HAL_AddWord(list, word);

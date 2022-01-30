@@ -331,7 +331,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 
 		if ((fDist = (curr_wpt->origin - vOrigin).Length()) < *pfMinDist)
 		{
-			BOOL bAdd = FALSE;
+			BOOL bAdd;
 
 			if (bGetVisible == FALSE)
 				bAdd = TRUE;
@@ -705,7 +705,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
 	header.mapname[31] = 0;
 
-	FILE* bfp = nullptr;
+	FILE* bfp;
 
 	if (theConverter != nullptr)
 	{
@@ -859,7 +859,7 @@ void WaypointFree()
 {
 	for (int i = 0; i < MAX_WAYPOINTS; i++)
 	{
-		int count = 0;
+		//int count = 0;
 
 		if (paths[i])
 		{
@@ -908,7 +908,7 @@ void WaypointInit()
 // add a path from one waypoint (add_index) to another (path_index)...
 void WaypointAddPath(const short int add_index, const short int path_index)
 {
-	int count = 0;
+	//int count = 0;
 
 	PATH* p = paths[add_index];
 	PATH* prev = nullptr;
@@ -967,7 +967,7 @@ void WaypointDeletePath(const short int del_index)
 	{
 		PATH* p = paths[index];
 
-		int count = 0;
+		//int count = 0;
 
 		// search linked list for del_index...
 		while (p != nullptr)
@@ -998,7 +998,7 @@ void WaypointDeletePath(const short int del_index)
 // (del_index)...
 void WaypointDeletePath(const short int path_index, const short int del_index)
 {
-	int count = 0;
+	//int count = 0;
 
 	PATH* p = paths[path_index];
 
@@ -1030,7 +1030,7 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 // initial call. subsequent calls will return other paths if they exist.)
 int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, const int team)
 {
-	int count = 0;
+	//int count = 0;
 
 	if (*pPath == nullptr)
 	{
@@ -1682,7 +1682,7 @@ void WaypointAddAiming(edict_t* pEntity)
 
 void WaypointDelete(CClient* pClient)
 {
-	int count = 0;
+	//int count = 0;
 
 	if (num_waypoints < 1)
 		return;

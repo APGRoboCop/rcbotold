@@ -197,6 +197,12 @@ IIndividual* CPopulation::pick()
 
 CGA::CGA(ISelection* selectFunction) : m_theSelectFunction(selectFunction)
 {
+	m_iMaxPopSize = 0 ;
+	m_iNumGenerations = 0;
+	m_fPrevAvgFitness = 0;
+	m_iPopType = 0;
+
+	m_bestIndividual = nullptr;
 	m_thePopulation.clear();
 	m_theNewPopulation.clear();
 }

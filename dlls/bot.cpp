@@ -2797,7 +2797,7 @@ void CBot::Think()
 			feigned = pev->iuser3 == 1 && pev->playerclass == TFC_CLASS_SPY;
 		}*/
 
-		if (!feigned)
+		if (!false)
 		{
 			if (m_bNeedToInit)
 			{
@@ -4111,7 +4111,7 @@ void CBot::LookForNewTasks()
 
 				if (m_fUseButtonTime < gpGlobals->time && (!pNearestButton || fNearestButtonDist < fDistance))
 				{
-					if (strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 || strstr(szClassname, "button") != NULL)
+					if (strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 || strstr(szClassname, "button") != nullptr)
 					{
 						fNearestButtonDist = fDistance;
 						pNearestButton = pEntity;
@@ -5194,7 +5194,6 @@ void CBot::LookForNewTasks()
 		}
 		else
 		{
-			Vector vPos;
 			//int iIndex;
 			m_bLookingForEnemy = FALSE;
 
@@ -5493,6 +5492,7 @@ void CBot::LookForNewTasks()
 			// Check a remembered position
 			else //if ( m_iEnemyPositions > 0 )
 			{
+				Vector vPos;
 				CRememberPosition* position = m_vRememberedPositions.getNewest();
 				vPos = position->getVector();
 				Vector vSpottedOrigin = vPos;
@@ -7003,7 +7003,7 @@ void CBot::WorkViewAngles()
 			// only set the view direction every few seconds
 			// mainly dependant on bots skill.
 
-			Vector vBaseLookDir, vBaseLookOrigin;
+			Vector /*vBaseLookDir,*/ vBaseLookOrigin;
 
 			if (m_pLastEnemy != nullptr && EntityIsAlive(m_pLastEnemy))
 			{
@@ -7639,7 +7639,7 @@ void CBot::WorkMoveDirection()
 
 	float fAngle;
 
-	Vector vAngle;
+	//Vector vAngle;
 	BOOL bNullMove = FALSE;
 
 	// climbing/trying to climb/flying etc..?
@@ -11904,8 +11904,8 @@ void CBot::DoTasks()
 					if (IsInVisibleList(pSound))
 					{
 						//Vector vOrigin;
-						Vector vSrc;
-						TraceResult tr;
+						//Vector vSrc;
+						//TraceResult tr;
 
 						if (!IsEnemy(pSound))
 						{
@@ -16274,7 +16274,7 @@ void CBot::workEnemyCosts(edict_t* pEntity, Vector vOrigin, const float fDistanc
 	if (fDistance > 768)
 		return;
 
-	Vector lowest;
+	//Vector lowest;
 	const int mid = BOT_COST_BUCKETS / 2;
 	int enemyState = 0;
 

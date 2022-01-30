@@ -133,6 +133,7 @@ CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName)
 
 CBotNetMessage::CBotNetMessage(const char* szMessageName, int iModId, BOOL bAllowHumans)
 {
+	m_iSize = 0;
 	m_iMessage = 0;
 	//	m_fpMsgFunction = fpBotFunction;
 	m_iModId = iModId;

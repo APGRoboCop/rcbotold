@@ -275,7 +275,7 @@ void InitMessage ( const char *message );
 		if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) && !HasToolTipSent(BOT_TOOL_TIP_SERVER_WELCOME) && !HasToolTipSent(BOT_TOOL_TIP_CLIENT_WELCOME))
 		{
 			// joined 5 seconds ago
-			if (m_fJoinServerTime + 5.0 < gpGlobals->time)
+			if (m_fJoinServerTime + 5 < gpGlobals->time)
 			{
 				// send message
 
@@ -317,7 +317,7 @@ void InitMessage ( const char *message );
 			if (gBotGlobals.m_iNumBots > 1)
 			{
 				// joined at least 30 seconds ago
-				if (m_fJoinServerTime + 30.0 < gpGlobals->time)
+				if (m_fJoinServerTime + 30 < gpGlobals->time)
 				{
 					AddNewToolTip(BOT_TOOL_TIP_CREATE_SQUAD);
 
@@ -364,7 +364,7 @@ void InitMessage ( const char *message );
 				v_comp = EntityOrigin(pEntity) - v_origin;
 				pEntity->v.velocity = v_comp.Normalize() * v_original_vel.Length();
 
-				//v_other = CrossProduct(v_comp.Normalize(),Vector(0,0,1));
+				v_other = CrossProduct(v_comp.Normalize(),Vector(0,0,1));
 
 				//pEntity->v.velocity = CrossProduct(v_comp,v_other);
 			}

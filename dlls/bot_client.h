@@ -719,9 +719,9 @@ private:
 	Vector m_vOrderOrigin;
 	AvHOrderType m_iOrderType;
 	AvHOrderTargetType m_iOrderTargetType;
-	int iOrderStatus;
-	int iReceivers;
-	int	iEntityUser3;
+	int iOrderStatus = 0;
+	int iReceivers = 0;
+	int	iEntityUser3 = 0;
 };
 
 #endif

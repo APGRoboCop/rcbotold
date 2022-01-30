@@ -219,7 +219,11 @@ public:
 	//virtual Vector getOrigin () { return origin; }
 
 	WAYPOINT(int f, Vector vec) { flags = f; origin = vec; };
-	WAYPOINT() { flags = 0; Vector(0, 0, 0); };
+	WAYPOINT(): origin()
+	{
+		flags = 0;
+		Vector(0, 0, 0);
+	} ;
 };
 
 class WAYPOINT2 : public WAYPOINT
@@ -244,12 +248,12 @@ private:
 class CWaypointConversion
 {
 private:
-	int m_iConvertTo[MAX_BITS]; // e.g. jump, crouch etc
-	char* m_szName;
-	char* m_szFolder;
-	char* m_szExtension;
-	char* m_szHeader;
-	int m_iVersion;
+	int m_iConvertTo[MAX_BITS] = {}; // e.g. jump, crouch etc
+	char* m_szName = nullptr;
+	char* m_szFolder = nullptr;
+	char* m_szExtension = nullptr;
+	char* m_szHeader = nullptr;
+	int m_iVersion = 0;
 public:
 
 	void FreeMemory()

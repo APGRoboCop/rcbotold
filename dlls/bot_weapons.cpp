@@ -213,7 +213,7 @@ void CWeaponPresets::ReadPresets()
 	char buffer[256];
 
 	int iModId = 0;
-	int iWeaponId = 0;
+	int iWeaponId;
 	int iValue;
 
 	// bSkipMod will be true when the weapons are not for the current mod
