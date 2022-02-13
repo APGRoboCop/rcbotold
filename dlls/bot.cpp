@@ -1495,13 +1495,13 @@ void CBot::setupDataStructures()
 
 	m_pFlyGAVals->clear();
 	// custom : lerk hold & flap time
-	m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2)); // 0
-	m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2)); // 1
+	m_pFlyGAVals->add(RANDOM_FLOAT(0.0f, 0.2f)); // 0
+	m_pFlyGAVals->add(RANDOM_FLOAT(0.0f, 0.2f)); // 1
 
-	m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 2
-	m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 3
-	m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 4
-	m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 5
+	m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 2
+	m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 3
+	m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 4
+	m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 5
 
 	//m_pFlyGAVals->loadForBot("fgaval",m_Profile.m_iProfileId);
 
@@ -2885,7 +2885,7 @@ void CBot::Think()
 				const int teamScoreSinceDeath = gBotGlobals.m_iTeamScores[team] - m_iPrevTeamScore;
 				m_iPrevTeamScore = gBotGlobals.m_iTeamScores[team];
 
-				const float fFitness = m_fSurvivalTime * 0.001 + static_cast<float>(fragsSinceDeath) * 0.2 + static_cast<float>(teamScoreSinceDeath) * 0.2;
+				const float fFitness = m_fSurvivalTime * 0.001f + static_cast<float>(fragsSinceDeath) * 0.2f + static_cast<float>(teamScoreSinceDeath) * 0.2f;
 
 				m_GASurvival->setFitness(fFitness);
 
@@ -3319,10 +3319,10 @@ void CBot::Think()
 				if (m_fNextUseSayMessage < gpGlobals->time)
 				{
 					// Shout for medic if less than 50% health
-					if (pev->health < pev->max_health * 0.25)
+					if (pev->health < pev->max_health * 0.25f)
 					{
 						Impulse(10);
-						m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(18.0, 26.0);
+						m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(18.0f, 26.0f);
 
 						// check out commander, give him a tip
 
@@ -3527,7 +3527,7 @@ void CBot::Think()
 			if (!BotNavigate_UpdateWaypoint(this))
 			{
 				//StopMoving();
-				m_fUpdateWaypointTime = gpGlobals->time + 0.5;
+				m_fUpdateWaypointTime = gpGlobals->time + 0.5f;
 			}
 		}
 	}
@@ -3537,7 +3537,7 @@ void CBot::Think()
 		if (GetClimbType() == BOT_CLIMB_NONE && (!PlayerStandingOnMe() && !StandingOnPlayer()) && m_fListenToSoundTime < gpGlobals->time && !m_iOrderType)
 		{
 			edict_t* pPlayer = nullptr;
-			m_fListenToSoundTime = gpGlobals->time + m_fReactionTime + RANDOM_FLOAT(0.3, 0.75);
+			m_fListenToSoundTime = gpGlobals->time + m_fReactionTime + RANDOM_FLOAT(0.3f, 0.75f);
 
 			if ((pPlayer = UTIL_UpdateSounds(pev)) != nullptr)
 			{
@@ -3954,7 +3954,7 @@ void CBot::LookForNewTasks()
 	BOOL bCanCommand = bIsMarine && gBotGlobals.GetCommander() == nullptr;
 	BOOL bIsAlien = IsAlien();
 
-	BOOL bNeedHealth = pev->health < pev->max_health * 0.75;
+	BOOL bNeedHealth = pev->health < pev->max_health * 0.75f;
 	BOOL bNeedArmor = pev->armorvalue < VALVE_MAX_NORMAL_BATTERY / 2;
 
 	//BOOL bCanUseScientist = !m_Tasks.HasSchedule(BOT_SCHED_USING_SCIENTIST);
@@ -4255,7 +4255,7 @@ void CBot::LookForNewTasks()
 						}
 					}
 
-					if (EntityIsAlive(pEntity) && EntityIsAlien(pEntity) && pEntitypev->health < pEntitypev->max_health * 0.75 && (!pNearestHealablePlayer || fDistance < fNearestHealablePlayerDist))
+					if (EntityIsAlive(pEntity) && EntityIsAlien(pEntity) && pEntitypev->health < pEntitypev->max_health * 0.75f && (!pNearestHealablePlayer || fDistance < fNearestHealablePlayerDist))
 					{
 						// If not a structure, OK
 						// if is a structure, must currently be built
@@ -4505,7 +4505,7 @@ void CBot::LookForNewTasks()
 				fBuildableHealth *= gBotGlobals.m_fRefillStructureImportance;//0.5;
 
 				if (pNearestHealablePlayer)
-					fHealHealthUtility = (1.0f - pNearestHealablePlayer->v.health / pNearestHealablePlayer->v.max_health) * 0.5;
+					fHealHealthUtility = (1.0f - pNearestHealablePlayer->v.health / pNearestHealablePlayer->v.max_health) * 0.5f;
 
 				fHealHealthUtility *= gBotGlobals.m_fHealingImportance;//0.75;
 
@@ -4761,19 +4761,19 @@ void CBot::LookForNewTasks()
 						if (m_iResources >= NS_ONOS_RESOURCES && iRand <= this->m_Profile.m_OnosPercent)
 						{
 							AddPriorityTask(CBotTask(BOT_TASK_ALIEN_EVOLVE, 0, nullptr, ALIEN_LIFEFORM_FIVE));
-							m_fAttemptEvolveTime = gpGlobals->time + 1.0;
+							m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
 							break;
 						}
 						else if (m_iResources >= NS_FADE_RESOURCES && iRand <= this->m_Profile.m_FadePercent)
 						{
 							AddPriorityTask(CBotTask(BOT_TASK_ALIEN_EVOLVE, 0, nullptr, ALIEN_LIFEFORM_FOUR));
-							m_fAttemptEvolveTime = gpGlobals->time + 1.0;
+							m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
 							break;
 						}
 						else if (m_iResources >= NS_LERK_RESOURCES && iRand <= this->m_Profile.m_LerkPercent)
 						{
 							AddPriorityTask(CBotTask(BOT_TASK_ALIEN_EVOLVE, 0, nullptr, ALIEN_LIFEFORM_THREE));
-							m_fAttemptEvolveTime = gpGlobals->time + 1.0;
+							m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
 							break;
 						}
 					}
@@ -4786,7 +4786,7 @@ void CBot::LookForNewTasks()
 					if (!HasUpgraded(BOT_UPGRADE_DEF))
 					{
 						AddPriorityTask(CBotTask(BOT_TASK_ALIEN_UPGRADE, 0, nullptr, BOT_UPGRADE_DEF));
-						m_fAttemptEvolveTime = gpGlobals->time + 1.0;
+						m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
 						break;
 					}
 				}
@@ -4796,7 +4796,7 @@ void CBot::LookForNewTasks()
 					if (!HasUpgraded(BOT_UPGRADE_MOV))
 					{
 						AddPriorityTask(CBotTask(BOT_TASK_ALIEN_UPGRADE, 0, nullptr, BOT_UPGRADE_MOV));
-						m_fAttemptEvolveTime = gpGlobals->time + 1.0;
+						m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
 						break;
 					}
 				}
@@ -4806,7 +4806,7 @@ void CBot::LookForNewTasks()
 					if (!HasUpgraded(BOT_UPGRADE_SEN))
 					{
 						AddPriorityTask(CBotTask(BOT_TASK_ALIEN_UPGRADE, 0, nullptr, BOT_UPGRADE_SEN));
-						m_fAttemptEvolveTime = gpGlobals->time + 1.0;
+						m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
 						break;
 					}
 				}
@@ -5793,7 +5793,7 @@ BOOL CBot::UpdateVisibles()
 		iBestStructureToBuild = 0;
 
 		if (bLookForBuildable)
-			m_fLookForBuildableTime = gpGlobals->time + 1.0;
+			m_fLookForBuildableTime = gpGlobals->time + 1.0f;
 
 		TraceResult tr;
 
@@ -6462,7 +6462,7 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 
 		Vector vEntOrigin = EntityOrigin(pEntity);
 		// only if in front of me
-		return DotProductFromOrigin(&vEntOrigin) > 0.9;
+		return DotProductFromOrigin(&vEntOrigin) > 0.9f;
 	}
 
 	return TRUE;
@@ -6539,7 +6539,7 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 		else if (HasCondition(BOT_CONDITION_SEE_ENEMY_HEAD))
 		{
 			vEnemyOrigin = pBotEnemy->v.origin + pBotEnemy->v.view_ofs;
-			vEnemyOrigin.z -= pBotEnemy->v.size.z * 0.1;
+			vEnemyOrigin.z -= pBotEnemy->v.size.z * 0.1f;
 		}
 		else
 			vEnemyOrigin = pBotEnemy->v.origin + pBotEnemy->v.view_ofs / 2;
@@ -6660,7 +6660,7 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 			m_vOffsetVector = m_vOffsetVector * 0.5;
 
 		// Wait another while before picking up a new offset vector
-		m_fGetAimVectorTime = gpGlobals->time + RANDOM_FLOAT(m_Profile.m_fAimTime - 0.2, m_Profile.m_fAimTime + 0.2) * fSpeed;
+		m_fGetAimVectorTime = gpGlobals->time + RANDOM_FLOAT(m_Profile.m_fAimTime - 0.2f, m_Profile.m_fAimTime + 0.2f) * fSpeed;
 	}
 
 	return vEnemyOrigin + m_vOffsetVector;
@@ -6769,7 +6769,7 @@ BOOL CBot::FInViewCone(Vector* pOrigin)
 	//	return BotFunc_FInViewCone(pOrigin, m_pEdict);
 	//}
 
-	return DotProductFromOrigin(pOrigin) > 0.5; // 60 degree field of view
+	return DotProductFromOrigin(pOrigin) > 0.5f; // 60 degree field of view
 }
 
 float CBot::DotProductFromOrigin(Vector* pOrigin)
@@ -7204,7 +7204,7 @@ void BotFunc_ChangeAngles(float* fSpeed, const float* fIdeal, float* fCurrent, f
 	const float fDiff = std::fabs(*fCurrent - *fIdeal);
 
 	// check if the bot is already facing the ideal_yaw direction...
-	if (fDiff <= 0.1)
+	if (fDiff <= 0.1f)
 	{
 		*fSpeed = fDiff;
 
@@ -7671,14 +7671,14 @@ void CBot::touchedWpt()
 				float x1 = m_pFlyGAVals->get(0);
 				float x2 = m_pFlyGAVals->get(1);
 
-				if (x1 < 0.01)
-					x1 = 0.01;
-				if (x2 < 0.01)
-					x2 = 0.01;
-				if (x1 > 0.2)
-					x1 = 0.2;
-				if (x2 > 0.2)
-					x2 = 0.2;
+				if (x1 < 0.01f)
+					x1 = 0.01f;
+				if (x2 < 0.01f)
+					x2 = 0.01f;
+				if (x1 > 0.2f)
+					x1 = 0.2f;
+				if (x2 > 0.2f)
+					x2 = 0.2f;
 
 				m_pFlyGAVals->set(0, x1);
 				m_pFlyGAVals->set(1, x2);
@@ -7690,13 +7690,13 @@ void CBot::touchedWpt()
 			{
 				m_pFlyGAVals->clear();
 				// custom : lerk hold & flap time
-				m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2)); // 0
-				m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2)); // 1
+				m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2f)); // 0
+				m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2f)); // 1
 
-				m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 2
-				m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 3
-				m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 4
-				m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 5
+				m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 2
+				m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 3
+				m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 4
+				m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 5
 			}
 		}
 	}
@@ -7794,14 +7794,14 @@ void CBot::WorkMoveDirection()
 								float x1 = m_pFlyGAVals->get(0);
 								float x2 = m_pFlyGAVals->get(1);
 
-								if (x1 < 0.01)
-									x1 = 0.01;
-								if (x2 < 0.01)
-									x2 = 0.01;
-								if (x1 > 0.2)
-									x1 = 0.2;
-								if (x2 > 0.2)
-									x2 = 0.2;
+								if (x1 < 0.01f)
+									x1 = 0.01f;
+								if (x2 < 0.01f)
+									x2 = 0.01f;
+								if (x1 > 0.2f)
+									x1 = 0.2f;
+								if (x2 > 0.2f)
+									x2 = 0.2f;
 
 								m_pFlyGAVals->set(0, x1);
 								m_pFlyGAVals->set(1, x2);
@@ -7810,13 +7810,13 @@ void CBot::WorkMoveDirection()
 							{
 								m_pFlyGAVals->clear();
 								// custom : lerk hold & flap time
-								m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2)); // 0
-								m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2)); // 1
+								m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2f)); // 0
+								m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2f)); // 1
 
-								m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 2
-								m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 3
-								m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 4
-								m_pFlyGAVals->add(0.3 - RANDOM_FLOAT(0, 6)); // 5
+								m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 2
+								m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 3
+								m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 4
+								m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 5
 							}
 						}
 
@@ -7981,12 +7981,12 @@ void CBot::WorkMoveDirection()
 				if (m_pAvoidEntity->v.velocity.x || m_pAvoidEntity->v.velocity.y)
 				{
 					// leave some space to walk by (my size plus a bit)
-					m_vAvoidMoveTo = ((m_vMoveToVector - pev->origin).Normalize() + (pev->origin - EntityOrigin(m_pAvoidEntity)).Normalize()) * (pev->size.Length2D() * 1.1);
+					m_vAvoidMoveTo = ((m_vMoveToVector - pev->origin).Normalize() + (pev->origin - EntityOrigin(m_pAvoidEntity)).Normalize()) * (pev->size.Length2D() * 1.1f);
 					m_vAvoidMoveTo = pev->origin + m_vAvoidMoveTo;
 					m_vAvoidMoveTo.z = pev->origin.z;
 
 					// check again in 0.2 seconds...
-					m_fAvoidTime = gpGlobals->time + 0.2;
+					m_fAvoidTime = gpGlobals->time + 0.2f;
 				}
 			}
 		}
@@ -9919,7 +9919,7 @@ BOOL CBot::SentryNeedsRepaired()
 			return FALSE;
 		}
 
-		return pSentry->v.health < pSentry->v.max_health * 0.75;
+		return pSentry->v.health < pSentry->v.max_health * 0.75f;
 	}
 	return FALSE;
 }
@@ -9955,11 +9955,11 @@ void CBot::DuckAndJump()
 // if the bot has a long jump module
 // then it will do a long jump.
 {
-	m_fStartJumpTime = gpGlobals->time + 0.1;
-	m_fEndJumpTime = gpGlobals->time + 0.2;
+	m_fStartJumpTime = gpGlobals->time + 0.1f;
+	m_fEndJumpTime = gpGlobals->time + 0.2f;
 
 	m_fStartDuckTime = gpGlobals->time;
-	m_fEndDuckTime = gpGlobals->time + 0.2;
+	m_fEndDuckTime = gpGlobals->time + 0.2f;
 }
 
 void CBot::JumpAndDuck()
@@ -9975,12 +9975,12 @@ void CBot::JumpAndDuck()
 		}*/
 
 		m_fStartJumpTime = gpGlobals->time;
-		m_fEndJumpTime = gpGlobals->time + 0.1;
+		m_fEndJumpTime = gpGlobals->time + 0.1f;
 	}
 	if (m_fEndDuckTime < gpGlobals->time)
 	{
-		m_fStartDuckTime = gpGlobals->time + 0.1;
-		m_fEndDuckTime = gpGlobals->time + 0.7;
+		m_fStartDuckTime = gpGlobals->time + 0.1f;
+		m_fEndDuckTime = gpGlobals->time + 0.7f;
 	}
 }
 
@@ -10169,7 +10169,7 @@ Vector CBotSquad::GetFormationVector(edict_t* pEdict)
 
 	vBase = tr.vecEndPos;
 
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 	{
 		const float fDist = vBase.Length();
 		vBase = vBase.Normalize();
@@ -10487,7 +10487,7 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 	dec_followEnemy->setWeights(weights);
 
 	inputs.emplace_back(pev->health / pev->max_health);
-	inputs.emplace_back(DistanceFromEdict(pEnemy) * 0.001);
+	inputs.emplace_back(DistanceFromEdict(pEnemy) * 0.001f);
 	inputs.emplace_back(pev->size.Length() / pEnemy->v.size.Length());
 
 	dec_followEnemy->input(&inputs);
@@ -11892,7 +11892,7 @@ void CBot::DoTasks()
 				if (m_CurrentTask->TaskInt() == 0)
 				{
 					// Wait ten seconds max
-					m_CurrentTask->SetFloat(gpGlobals->time + 10.0);
+					m_CurrentTask->SetFloat(gpGlobals->time + 10.0f);
 					m_CurrentTask->SetInt(1);
 				}
 				else if (m_CurrentTask->TaskFloat() < gpGlobals->time)
@@ -11921,7 +11921,7 @@ void CBot::DoTasks()
 				if (m_pLastEnemy)
 				{
 					m_CurrentLookTask = BOT_LOOK_TASK_SEARCH_FOR_LAST_ENEMY;
-					m_fSearchEnemyTime = gpGlobals->time + 0.5;
+					m_fSearchEnemyTime = gpGlobals->time + 0.5f;
 				}
 
 				if (RANDOM_LONG(0, 100) > 0)
@@ -12093,14 +12093,14 @@ void CBot::DoTasks()
 				if (gBotGlobals.IsMod(MOD_TS))
 				{
 					if (!m_Tasks.HasTask(BOT_TASK_USE))
-						m_fListenToSoundTime = gpGlobals->time + m_fReactionTime * 4.0;
+						m_fListenToSoundTime = gpGlobals->time + m_fReactionTime * 4.0f;
 					else
-						m_fListenToSoundTime = gpGlobals->time + RANDOM_FLOAT(4.5, 10.0);
+						m_fListenToSoundTime = gpGlobals->time + RANDOM_FLOAT(4.5f, 10.0f);
 				}
 				else
 				{
 					// wait another while before listening to another sound
-					m_fListenToSoundTime = gpGlobals->time + RANDOM_FLOAT(3.0, 5.0);
+					m_fListenToSoundTime = gpGlobals->time + RANDOM_FLOAT(3.0f, 5.0f);
 				}
 
 				break;
@@ -12491,7 +12491,7 @@ void CBot::DoTasks()
 			if (bBuild)
 			{
 				// set next build time so we dont keep trying to build...
-				m_fNextBuildTime = gpGlobals->time + 1.0;
+				m_fNextBuildTime = gpGlobals->time + 1.0f;
 				Impulse(iToBuild);
 				// only try once
 				//bDone = TRUE;
@@ -12858,7 +12858,7 @@ void CBot::DoTasks()
 					BOOL bFindPath = TRUE;
 
 					// Don't want to keep doing this each frame
-					m_fFindPathTime = gpGlobals->time + 0.5;
+					m_fFindPathTime = gpGlobals->time + 0.5f;
 
 					if (m_CurrentTask->TaskFloat() == -1 && m_CurrentTask->TaskInt() == -1)
 					{
@@ -13167,7 +13167,7 @@ void CBot::DoTasks()
 						// stop ducking
 						pev->button &= ~IN_DUCK;
 
-						if (m_fEndJumpTime + 0.5 < gpGlobals->time)
+						if (m_fEndJumpTime + 0.5f < gpGlobals->time)
 							Jump();
 						else
 							m_CurrentTask->SetInt(0); // assume I jumped, back to ducking
@@ -14087,10 +14087,10 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 							}
 							else
 							{
-								float max_health = pPlayer->v.max_health * 0.95;
+								float max_health = pPlayer->v.max_health * 0.95f;
 
 								if (UTIL_EntityIsHive(pPlayer))
-									max_health = pPlayer->v.max_health * 0.8;
+									max_health = pPlayer->v.max_health * 0.8f;
 
 								if (pPlayer->v.health < max_health)
 								{
@@ -15113,7 +15113,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 			if (m_CurrentTask->TaskInt() == 0) // use as initializer
 			{
-				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(1.0, 2.0));
+				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(1.0f, 2.0f));
 				m_CurrentTask->SetInt(pev->health);
 			}
 
@@ -15121,7 +15121,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 			if (pev->health > iPrevHealth) // wait a bit longer
 			{
-				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(1.0, 2.0));
+				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(1.0f, 2.0f));
 				m_CurrentTask->SetVector(Vector(1.0, 0, 0));
 				m_CurrentTask->SetInt(pev->health);
 			}
@@ -15863,7 +15863,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 				CBotWeapon* pMines = m_Weapons.GetWeapon(NS_WEAPON_MINE);
 
 				if (m_CurrentTask->TaskFloat() == 0)
-					m_CurrentTask->SetFloat(gpGlobals->time + 0.5);
+					m_CurrentTask->SetFloat(gpGlobals->time + 0.5f);
 
 				if (!HasWeapon(NS_WEAPON_MINE))
 				{
@@ -15901,7 +15901,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 				if (m_CurrentTask->TaskFloat() < gpGlobals->time)
 				{
 					PrimaryAttack();
-					m_CurrentTask->SetFloat(gpGlobals->time + 0.75);
+					m_CurrentTask->SetFloat(gpGlobals->time + 0.75f);
 
 					if (m_CurrentTask->TaskInt() > 3) // 3 attempts
 						bDone = TRUE;
@@ -16181,7 +16181,7 @@ void CBot::CheckStuck()
 
 			UTIL_TraceLine(GetGunPosition(), GetGunPosition() + Vector(0, 0, 64.0), ignore_monsters, dont_ignore_glass, m_pEdict, &tr);
 
-			if (tr.flFraction < 1.0)
+			if (tr.flFraction < 1.0f)
 				m_fUpSpeed = -m_fMaxSpeed;
 			else
 				m_fUpSpeed = m_fMaxSpeed;
@@ -16438,8 +16438,8 @@ void CBot::decideJumpDuckStrafe(float fEnemyDist, const Vector vEnemyOrigin)
 	dec_strafe->setWeights(m_pPersonalGAVals, 10, 5);
 
 	inputs.emplace_back(pev->velocity.Length() / pev->size.Length());
-	inputs.emplace_back(fEnemyDist * 0.01);
-	inputs.emplace_back((vEnemyOrigin.z - pev->origin.z) * 0.1);
+	inputs.emplace_back(fEnemyDist * 0.01f);
+	inputs.emplace_back((vEnemyOrigin.z - pev->origin.z) * 0.1f);
 	//inputs.emplace_back(pev->size.Length());
 	if (m_pEnemy)
 		inputs.emplace_back(pev->size.Length() / m_pEnemy->v.size.Length());
@@ -16461,11 +16461,11 @@ void CBot::decideJumpDuckStrafe(float fEnemyDist, const Vector vEnemyOrigin)
 	if (dec_duck->fired())
 		JumpAndDuck(); // try this
 //		Duck();
-	if (m_fStrafeTime + 0.75 < gpGlobals->time)
+	if (m_fStrafeTime + 0.75f < gpGlobals->time)
 	{
 		float fout = dec_strafe->getOutput();
 
-		if (fout >= 0.75 || fout <= 0.25)
+		if (fout >= 0.75f || fout <= 0.25f)
 			m_fStrafeSpeed = fout * m_fMaxSpeed;
 	}
 
