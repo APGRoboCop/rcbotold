@@ -2211,8 +2211,8 @@ CBotCam::CBotCam()
 	m_pCurrentBot = nullptr;
 	m_iState = BOTCAM_NONE;
 	m_pCameraEdict = nullptr;
-	m_fNextChangeBotTime = 0;
-	m_fNextChangeState = 0;
+	m_fNextChangeBotTime = 0.0f;
+	m_fNextChangeState = 0.0f;
 	m_bTriedToSpawn = FALSE;
 }
 
@@ -2244,7 +2244,7 @@ void CBotCam::Spawn()
 		m_pCameraEdict->v.movetype = MOVETYPE_FLY; //noclip
 		m_pCameraEdict->v.classname = MAKE_STRING("entity_botcam");
 		m_pCameraEdict->v.nextthink = gpGlobals->time;
-		m_pCameraEdict->v.renderamt = 0;
+		m_pCameraEdict->v.renderamt = 0.0f;
 		// /Redfox
 	}
 }
@@ -2404,7 +2404,7 @@ void CBotCam::Think()
 		if (m_pCurrentBot->m_iWaypointGoalIndex != -1)
 		{
 			m_pCameraEdict->v.origin = WaypointOrigin(m_pCurrentBot->m_iWaypointGoalIndex);
-			m_pCameraEdict->v.origin.z += 16.0;
+			m_pCameraEdict->v.origin.z += 16.0f;
 		}
 		else
 			m_fNextChangeState = 0;
@@ -2423,7 +2423,7 @@ void CBotCam::Think()
 			vComp = vComp * (fLength + 128.0);
 
 			m_pCameraEdict->v.origin = vBotOrigin + vComp;
-			m_pCameraEdict->v.origin.z += 24.0;
+			m_pCameraEdict->v.origin.z += 24.0f;
 
 			if (m_iPositionSet == -1)
 				m_iPositionSet = RANDOM_LONG(0, 1);

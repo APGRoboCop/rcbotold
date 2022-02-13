@@ -729,7 +729,7 @@ BOOL BotCantMoveForward(CBot* pBot, TraceResult* tr)
 		pEdict->v.pContainingEntity, tr);
 
 	// check if the trace hit something...
-	if (tr->flFraction < 1.0)
+	if (tr->flFraction < 1)
 	{
 		return !BotCanDuckUnder(pBot);  // bot's head will hit something
 	}
@@ -744,7 +744,7 @@ BOOL BotCantMoveForward(CBot* pBot, TraceResult* tr)
 		pEdict->v.pContainingEntity, tr);
 
 	// check if the trace hit something...
-	if (tr->flFraction < 1.0)
+	if (tr->flFraction < 1)
 	{
 		return !BotCanJumpUp(pBot);  // bot's body will hit something
 	}
@@ -936,7 +936,7 @@ BOOL BotCanDuckUnder(CBot* pBot)
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace didn't hit something, return FALSE
-	if (tr.flFraction >= 1.0)
+	if (tr.flFraction >= 1)
 		return FALSE;
 
 	// now check same height to one side of the bot...
@@ -949,7 +949,7 @@ BOOL BotCanDuckUnder(CBot* pBot)
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace didn't hit something, return FALSE
-	if (tr.flFraction >= 1.0)
+	if (tr.flFraction >= 1)
 		return FALSE;
 
 	// now check same height on the other side of the bot...
@@ -962,7 +962,7 @@ BOOL BotCanDuckUnder(CBot* pBot)
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace didn't hit something, return FALSE
-	if (tr.flFraction >= 1.0)
+	if (tr.flFraction >= 1)
 		return FALSE;
 
 	return TRUE;
@@ -986,7 +986,7 @@ BOOL BotCheckWallOnLeft(CBot* pBot)
 	// check if the trace hit something...
 	if (tr.flFraction < 1.0)
 	{
-		if (pBot->m_fWallAtLeftTime < 1.0)
+		if (pBot->m_fWallAtLeftTime < 1)
 			pBot->m_fWallAtLeftTime = gpGlobals->time;
 
 		return TRUE;
@@ -1013,7 +1013,7 @@ BOOL BotCheckWallOnRight(CBot* pBot)
 	// check if the trace hit something...
 	if (tr.flFraction < 1.0)
 	{
-		if (pBot->m_fWallAtRightTime < 1.0)
+		if (pBot->m_fWallAtRightTime < 1.0f)
 			pBot->m_fWallAtRightTime = gpGlobals->time;
 
 		return TRUE;
@@ -1174,10 +1174,10 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		// Bot can't see this waypoint...?
 		if (!pBot->HasCondition(BOT_CONDITION_SEE_NEXT_WAYPOINT))
 		{
-			float fMaxWaypointSeeTime = 2.0;
+			float fMaxWaypointSeeTime = 2.0f;
 
 			if (gBotGlobals.IsNS() && pBot->IsSkulk() && pBot->m_iCurrentWaypointFlags & W_FL_WALL_STICK)
-				fMaxWaypointSeeTime = 10.0;
+				fMaxWaypointSeeTime = 10.0f;
 			// Bot hasn't seen this waypoint for two seconds
 			if (pBot->m_fLastSeeWaypoint && pBot->m_fLastSeeWaypoint + fMaxWaypointSeeTime <= gpGlobals->time)
 			{
@@ -1201,7 +1201,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 				if (pBot->m_iCurrentWaypointIndex != -1)
 					pBot->m_fPrevWaypointDist = WaypointDistance(pBot->pev->origin, pBot->m_iCurrentWaypointIndex);
 
-				pBot->m_fLastSeeWaypoint = 0.0;
+				pBot->m_fLastSeeWaypoint = 0.0f;
 			}
 			else if (pBot->m_fLastSeeWaypoint == 0)
 				pBot->m_fLastSeeWaypoint = gpGlobals->time;
@@ -1329,7 +1329,8 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			// and is some 2d distance away.. jump off ladder
 			if (pBot->IsOnLadder() && !(pBot->m_iCurrentWaypointFlags & W_FL_LADDER) && iNextWaypoint != -1 && pBot->m_iPrevWaypointIndex != -1)
 			{
-				if (WaypointOrigin(pBot->m_iCurrentWaypointIndex).z <= WaypointOrigin(pBot->m_iPrevWaypointIndex).z && (vBotOrigin - WaypointOrigin(iNextWaypoint)).Length2D() > 100.0)
+				if (WaypointOrigin(pBot->m_iCurrentWaypointIndex).z <= WaypointOrigin(pBot->m_iPrevWaypointIndex).z && (
+					vBotOrigin - WaypointOrigin(iNextWaypoint)).Length2D() > 100.0f)
 				{
 					if (RANDOM_LONG(0, 1))
 						pBot->Jump();
@@ -1358,7 +1359,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		// bot needs to check if a bot/player is already crouching here
 		edict_t* pPlayer = nullptr;
 
-		while ((pPlayer = UTIL_FindEntityInSphere(pPlayer, vWptOrigin, 24.0)) != nullptr)
+		while ((pPlayer = UTIL_FindEntityInSphere(pPlayer, vWptOrigin, 24.0f)) != nullptr)
 		{
 			if (pPlayer->v.flags & FL_CLIENT)
 			{
@@ -1371,15 +1372,15 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			}
 		}
 
-		if (pBot->pev->origin.z < vWptOrigin.z - 16.0) // not high enough yet
+		if (pBot->pev->origin.z < vWptOrigin.z - 16.0f) // not high enough yet
 			bTouchedWpt = FALSE;
 		// player in way so cant get much closer, start human tower here.
 		else if (pPlayer)
 		{
-			bTouchedWpt = fDistance <= 100;
+			bTouchedWpt = fDistance <= 100.0f;
 		}
 		else // get closer before crouching
-			bTouchedWpt = fDistance <= 24;
+			bTouchedWpt = fDistance <= 24.0f;
 	}
 
 	/*
@@ -1423,17 +1424,17 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	}*/
 	else if (iWptFlags & W_FL_STAY_NEAR || iWptFlags & W_FL_CROUCH)
 	{
-		if (fDistance <= 24.0)
+		if (fDistance <= 24.0f)
 			bTouchedWpt = TRUE;
-		else if (fDistance <= 64.0)
+		else if (fDistance <= 64.0f)
 		{
-			bTouchedWpt = PlayerNearVector(vWptOrigin, 24.0) != nullptr;
+			bTouchedWpt = PlayerNearVector(vWptOrigin, 24.0f) != nullptr;
 		}
 	}
 	else if (gBotGlobals.IsMod(MOD_TS) && iWptFlags & W_FL_STUNT || (iWptFlags & W_FL_JUMP || iWptFlags &
 		W_FL_CROUCHJUMP))
 	{
-		if (fDistance < 32.0)
+		if (fDistance < 32.0f)
 			bTouchedWpt = TRUE;
 	}
 	else if (pBot->DistanceFrom(vWptOrigin, TRUE) < BOT_WAYPOINT_TOUCH_DIST && std::fabs(vWptOrigin.z - vBotOrigin.z) <= pBot->pev->size.z)
@@ -1612,11 +1613,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 				if (bCheckNext && CheckLift(pBot, WaypointOrigin(pBot->m_iCurrentWaypointIndex), WaypointOrigin(iNextwpt)))
 				{
-					;
+					//
 				}
 				else if (CheckLift(pBot, WaypointOrigin(pBot->m_iPrevWaypointIndex), WaypointOrigin(pBot->m_iCurrentWaypointIndex)))
 				{
-					;
+					//
 				}
 			}
 		}
@@ -1639,7 +1640,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		else if (bOnLadder && !bWptOnLadder)
 		{
 			pBot->m_fStartDuckTime = gpGlobals->time;
-			pBot->m_fEndDuckTime = gpGlobals->time + 1.0;
+			pBot->m_fEndDuckTime = gpGlobals->time + 1.0f;
 		}
 		else if (pBot->m_iCurrentWaypointFlags & W_FL_HUMAN_TOWER)
 		{
@@ -1801,7 +1802,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 // Thanks PM's racc bot source for some info pointers. (racc.bots-united.com)
 {
-	const float fFov = 100.0;
+	const float fFov = 100.5f;
 	int iStep;
 
 	const entvars_t* pev = &pBot->m_pEdict->v;

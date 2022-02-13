@@ -187,7 +187,7 @@ typedef enum
 
 #define BOT_MIN_MSECVAL 1
 #define BOT_MAX_MSECVAL 60
-#define BOT_DEF_MSECDELTIME 0.5
+#define BOT_DEF_MSECDELTIME 0.5f
 
 #define BOT_MAX_PASSWORD_LEN 16
 
@@ -916,12 +916,12 @@ typedef enum
 #define RESPAWN_LEFT_GAME        4
 #define RESPAWN_NEED_TO_REJOIN   5
 
-#define BOT_DEFAULT_REACTION_TIME	0.3
+#define BOT_DEFAULT_REACTION_TIME	0.3f
 
-#define BOT_DEFAULT_THINK_TIME		0.04
+#define BOT_DEFAULT_THINK_TIME		0.04f
 
 //#define BOT_WAYPOINT_TOUCH_DIST(pev) max36.0pev->absmin.z
-#define BOT_WAYPOINT_TOUCH_DIST		32.0
+#define BOT_WAYPOINT_TOUCH_DIST		32.0f
 
 #define BOT_DEFAULT_NAME "RCBot"
 ///////////////////////////////////////////////////////////////////////////////////
@@ -1070,17 +1070,17 @@ typedef enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51_mm_debug"
+#define BOT_VER "1.51b1_mm_debug"
 #else
-#define BOT_VER "1.51_mm"
+#define BOT_VER "1.51b1_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51_debug"
+#define BOT_VER "1.51b1_debug"
 #else
-#define BOT_VER "1.51"
+#define BOT_VER "1.51b1"
 #endif
 
 #endif
@@ -1094,9 +1094,9 @@ typedef enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51_mm_debug"
+#define BOT_VER "1.51b1_mm_debug"
 #else
-#define BOT_VER "1.51_mm"
+#define BOT_VER "1.51b1_mm"
 #endif
 
 #else

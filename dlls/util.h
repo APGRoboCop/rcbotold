@@ -16,6 +16,8 @@
 // Misc utility code
 //
 
+#include <cmath>
+
 #ifdef _WIN32
 #include <windef.h>
 #endif

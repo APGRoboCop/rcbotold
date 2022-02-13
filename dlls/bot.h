@@ -142,8 +142,8 @@ edict_t* BotFunc_FindRandomEntity(char* szClassname);
 BOOL UTIL_IsGrenadeRocket(edict_t* pEntity);
 //void BotFunc_StringCopy(char *, const char *);
 BOOL BotFunc_IsLongRangeWeapon(int iId);
-BOOL BotFunc_IncreaseRep(int iRep, float fInfo = 0, float fSkill = 0);
-BOOL BotFunc_DecreaseRep(int iRep, float fInfo = 0, float fSkill = 0);
+BOOL BotFunc_IncreaseRep(int iRep, float fInfo = 0.0f, float fSkill = 0.0f);
+BOOL BotFunc_DecreaseRep(int iRep, float fInfo = 0.0f, float fSkill = 0.0f);
 int BotFunc_GetRepArrayNum(int iRep);
 void BotFunc_TraceToss(edict_t* ent, edict_t* ignore, TraceResult* tr);
 
@@ -736,8 +736,8 @@ public:
 
 		m_iScheduleDescription = BOT_SCHED_NONE;
 
-		if (fTimeToComplete == -1.0)
-			m_fTimeToComplete = -1.0;
+		if (fTimeToComplete == -1.0f)
+			m_fTimeToComplete = -1.0f;
 		else
 			m_fTimeToComplete = gpGlobals->time + fTimeToComplete;
 		//m_pGoalTask = GoalTask;
@@ -745,7 +745,7 @@ public:
 
 	BOOL TimedOut()
 	{
-		if (m_fTimeToComplete != -1.0)
+		if (m_fTimeToComplete != -1.0f)
 		{
 			return m_fTimeToComplete < gpGlobals->time;
 		}
@@ -1943,14 +1943,14 @@ public:
 		newPosition.setFlags(flags);
 		newPosition.setVisibleOrigin(vVisibleOrigin);
 
-		CRememberPosition* e = m_Positions.getExisting(newPosition); // "e" not referenced [APG]RoboCop[CL]
+		CRememberPosition* e = m_Positions.getExisting(newPosition);
 
 		const int index = m_Positions.getExistingIndex(newPosition);
 
-		if (index != -1)
-			m_Positions.RemoveByIndex(index);
+		if (e != nullptr)
+			m_Positions.Remove(*e);
 		else if (m_Positions.Size() > MAX_REMEMBER_POSITIONS)
-			m_Positions.RemoveByIndex(0);
+			m_Positions.Remove(m_Positions[0]);
 
 		m_Positions.Add(newPosition);
 
@@ -4053,7 +4053,7 @@ public:
 
 	float NS_AmountOfEnergy()
 	{
-		return pev->fuser3 / 10.0;
+		return pev->fuser3 / 10.0f;
 	}
 
 	BOOL     IsCommander();
@@ -4149,11 +4149,11 @@ public:
 			SetColour1(Vector(255, 255, 0), 75);
 			SetColour2(Vector(127, 127, 0), 0);
 
-			SetPosition(0.1, 0.6);
+			SetPosition(0.1f, 0.6f);
 			SetEffect(HUD_EFFECT_FADE_SCAN_OUT);
-			SetEffectTime(0.1);
-			SetHoldTime(3.0);
-			SetFadeTime(0.1, 1.0);
+			SetEffectTime(0.1f);
+			SetHoldTime(3.0f);
+			SetFadeTime(0.1f, 1.0f);
 			SetChannel(3);
 		}
 	}
@@ -5248,14 +5248,14 @@ public:
 	CStructure()
 	{
 		m_pEntity = nullptr;
-		m_fEndAttack = 0;
-		m_fPrevHealth = 0;
+		m_fEndAttack = 0.0f;
+		m_fPrevHealth = 0.0f;
 	}
 
 	CStructure(edict_t* pEdict)
 	{
 		m_pEntity = pEdict;
-		m_fEndAttack = 0;
+		m_fEndAttack = 0.0f;
 		m_fPrevHealth = m_pEntity->v.health;
 	}
 
@@ -5267,7 +5267,7 @@ public:
 	void UnderAttack()
 	{
 		// set under attack for 1 second
-		m_fEndAttack = gpGlobals->time + 1.0;
+		m_fEndAttack = gpGlobals->time + 1.0f;
 	}
 
 	void Update()
@@ -5281,7 +5281,7 @@ public:
 			m_fPrevHealth = m_pEntity->v.health;
 		}
 		else
-			m_fPrevHealth = 0;
+			m_fPrevHealth = 0.0f;
 	}
 
 	BOOL IsValid()
@@ -5554,7 +5554,7 @@ public:
 	void SetCurrentBot(CBot* pBot)
 	{
 		m_pCurrentBot = pBot;
-		m_fNextChangeBotTime = gpGlobals->time + RANDOM_FLOAT(5.0, 7.5);
+		m_fNextChangeBotTime = gpGlobals->time + RANDOM_FLOAT(5.0f, 7.5f);
 		m_fNextChangeState = gpGlobals->time;
 	}
 

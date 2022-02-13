@@ -525,8 +525,8 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		{
 			// want to melee true if needing to reload OR enemy within melee range
 			// AND random factor due to skill
-			const BOOL bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0;
-			const BOOL bMaxRangeCheck = pEnemy && fEnemyDist < 512.0;
+			const BOOL bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0f;
+			const BOOL bMaxRangeCheck = pEnemy && fEnemyDist < 512.0f;
 
 			bWantToMelee = (pBot->m_pCurrentWeapon->NeedToReload() && RANDOM_LONG(MIN_BOT_SKILL, MAX_BOT_SKILL) < pBot->
 				m_Profile.m_iSkill || bMeleeRangeCheck) && bMaxRangeCheck;

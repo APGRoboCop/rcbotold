@@ -284,14 +284,14 @@ void CBotGlobals::StartFrame()
 			m_iMaxPathRevs = 150;
 		///////////////////////////
 
-		if (fpMapConfig != nullptr && m_fMapInitTime + 10.0 < gpGlobals->time && m_fReadConfigTime < gpGlobals->time)
+		if (fpMapConfig != nullptr && m_fMapInitTime + 10 < gpGlobals->time && m_fReadConfigTime < gpGlobals->time)
 			ReadMapConfig();
 
 		bUpdateClientData = !IsMod(MOD_DMC) && !IsMod(MOD_TS) && m_fClientUpdateTime <= gpGlobals->time;
 
 		if (bUpdateClientData)
 		{
-			m_fClientUpdateTime = gpGlobals->time + 1.0;
+			m_fClientUpdateTime = gpGlobals->time + 1;
 		}
 
 		if (m_bBotCanRejoin == FALSE)
@@ -606,7 +606,7 @@ void CBotGlobals::StartFrame()
 						BotFunc_AddBot(nullptr, nullptr, nullptr, nullptr, nullptr);
 
 						m_bBotCanRejoin = FALSE;
-						m_fBotRejoinTime = gpGlobals->time + 5.0;
+						m_fBotRejoinTime = gpGlobals->time + 5;
 
 						bAddBot = FALSE;
 					}

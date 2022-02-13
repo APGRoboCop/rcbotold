@@ -1315,7 +1315,7 @@ void pfnFadeClientVolume(const edict_t* pEdict, int fadePercent, int fadeOutSeco
 	(*g_engfuncs.pfnFadeClientVolume)(pEdict, fadePercent, fadeOutSeconds, holdTime, fadeInSeconds);
 #endif
 }
-void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
+void pfnSetClientMaxspeed(const edict_t* pEdict, float fNewMaxspeed)
 {
 	// Is this player a bot?
 	CBot* pBot = UTIL_GetBotPointer(pEdict);

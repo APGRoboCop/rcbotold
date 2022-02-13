@@ -1414,7 +1414,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 
 		if (pEntity == nullptr && iEntityUser3)
 		{
-			while ((pEntity = UTIL_FindEntityInSphere(pEntity, vOrigin, 64.0)) != nullptr)
+			while ((pEntity = UTIL_FindEntityInSphere(pEntity, vOrigin, 64.0f)) != nullptr)
 			{
 				if (pEntity->v.iuser3 == iEntityUser3)
 					break;
@@ -1436,7 +1436,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 			OrderSched = BOT_SCHED_BUILD;
 			break;
 		case ORDERTYPET_GUARD:
-			if (pEntity && pEntity->v.fuser1 != -1000.0 && pEntity->v.fuser2 != 1000.0)
+			if (pEntity && pEntity->v.fuser1 != -1000.0f && pEntity->v.fuser2 != 1000.0f)
 			{
 				TryOrderTask = BOT_TASK_WELD_OBJECT;
 			}

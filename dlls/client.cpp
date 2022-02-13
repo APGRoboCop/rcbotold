@@ -138,7 +138,7 @@ void InitMessage ( const char *message );
 				hudmessage.SayMessage(message, m_pPlayer);
 			}
 
-			m_fDebugBotTime = gpGlobals->time + 1.0;
+			m_fDebugBotTime = gpGlobals->time + 1.0f;
 		}
 	}
 
@@ -239,7 +239,7 @@ void InitMessage ( const char *message );
 
 		UTIL_TraceLine(vSrc, vEnd, ignore_monsters, dont_ignore_glass, m_pPlayer, &tr);
 
-		if (tr.flFraction < 1.0)
+		if (tr.flFraction < 1.0f)
 		{
 			vComp = tr.vecEndPos - vSrc;
 			fDist = vComp.Length();
@@ -275,7 +275,7 @@ void InitMessage ( const char *message );
 		if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) && !HasToolTipSent(BOT_TOOL_TIP_SERVER_WELCOME) && !HasToolTipSent(BOT_TOOL_TIP_CLIENT_WELCOME))
 		{
 			// joined 5 seconds ago
-			if (m_fJoinServerTime + 5 < gpGlobals->time)
+			if (m_fJoinServerTime + 5.0f < gpGlobals->time)
 			{
 				// send message
 
@@ -317,7 +317,7 @@ void InitMessage ( const char *message );
 			if (gBotGlobals.m_iNumBots > 1)
 			{
 				// joined at least 30 seconds ago
-				if (m_fJoinServerTime + 30 < gpGlobals->time)
+				if (m_fJoinServerTime + 30.0f < gpGlobals->time)
 				{
 					AddNewToolTip(BOT_TOOL_TIP_CREATE_SQUAD);
 
@@ -382,7 +382,7 @@ void InitMessage ( const char *message );
 
 		/////////////////////////////////////////////////////////////////
 		// GET ALL INFO NEEDED...
-		m_fWaypointDisplayTime = gpGlobals->time + 1.0;
+		m_fWaypointDisplayTime = gpGlobals->time + 1.0f;
 
 		pPlayer = GetPlayer();
 
@@ -453,13 +453,13 @@ void InitMessage ( const char *message );
 
 			m_vLastAutoWaypointPlacePos = m_pPlayer->v.origin;
 			m_bSetUpAutoWaypoint = TRUE;
-			m_fCanPlaceJump = 0;
+			m_fCanPlaceJump = 0.0f;
 			m_iLastButtons = 0;
 
 			m_iLastJumpWaypointIndex = -1;
 			m_iLastLadderWaypointIndex = -1;
 			m_iLastMoveType = 0;
-			m_fCanPlaceLadder = 0;
+			m_fCanPlaceLadder = 0.0f;
 			m_iJoinLadderWaypointIndex = -1;
 		}
 		else
@@ -482,7 +482,7 @@ void InitMessage ( const char *message );
 
 				if (m_fCanPlaceJump != -1 && (bStunt || m_iLastButtons & IN_JUMP) && !(pev->flags & FL_ONGROUND))
 				{
-					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, nullptr);
+					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 					m_iLastJumpWaypointIndex = -1;
 
@@ -506,7 +506,7 @@ void InitMessage ( const char *message );
 
 					m_vLastAutoWaypointPlacePos = vPlayerOrigin;
 
-					m_fCanPlaceJump = -1;
+					m_fCanPlaceJump = -1.0f;
 
 					if (bStunt)
 						m_iJumpType = JUMP_TYPE_STUNT;
@@ -520,7 +520,7 @@ void InitMessage ( const char *message );
 				{
 					if (m_iLastJumpWaypointIndex != -1)
 					{
-						int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, nullptr);
+						int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 						if (iNearestWpt == -1)
 						{
@@ -562,7 +562,7 @@ void InitMessage ( const char *message );
 					m_iLastJumpWaypointIndex = -1;
 
 					// wait a sec after player lands before checking jump again
-					m_fCanPlaceJump = gpGlobals->time + 0.5;
+					m_fCanPlaceJump = gpGlobals->time + 0.5f;
 				}
 			}
 
@@ -576,7 +576,7 @@ void InitMessage ( const char *message );
 			{
 				// went ON to a ladder
 
-				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, nullptr);
+				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 				m_iLastLadderWaypointIndex = -1;
 
@@ -593,7 +593,7 @@ void InitMessage ( const char *message );
 
 				bCheckDistance = FALSE;
 
-				m_fCanPlaceLadder = 0;
+				m_fCanPlaceLadder = 0.0f;
 
 				// need to unset every check point when going on ladder first time
 				for (int i = 0; i < MAX_STORED_AUTOWAYPOINT; i++)
@@ -604,7 +604,7 @@ void InitMessage ( const char *message );
 			else if (!(pev->movetype == MOVETYPE_FLY) && m_iLastMoveType == MOVETYPE_FLY)
 			{
 				// went OFF a ladder
-				m_fCanPlaceLadder = gpGlobals->time + 0.2;
+				m_fCanPlaceLadder = gpGlobals->time + 0.2f;
 			}
 
 			// ****************************************************
@@ -616,7 +616,7 @@ void InitMessage ( const char *message );
 				if (m_iLastLadderWaypointIndex != -1)
 					// place a ladder waypoint before jumping off
 				{
-					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0, -1, TRUE, FALSE, FALSE, nullptr);
+					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 					if (iNearestWpt == -1)
 					{
@@ -643,7 +643,7 @@ void InitMessage ( const char *message );
 
 				bCheckDistance = FALSE;
 
-				m_fCanPlaceLadder = 0;
+				m_fCanPlaceLadder = 0.0f;
 			}
 
 			// ****************************************************
@@ -651,7 +651,7 @@ void InitMessage ( const char *message );
 			// ****************************************************
 			if (m_iJoinLadderWaypointIndex != -1 && pev->flags & FL_ONGROUND && pev->movetype == MOVETYPE_WALK)
 			{
-				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 40.0, m_iJoinLadderWaypointIndex, TRUE, FALSE, FALSE, nullptr);
+				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 40.0f, m_iJoinLadderWaypointIndex, TRUE, FALSE, FALSE, nullptr);
 
 				if (iNearestWpt == -1)
 				{
@@ -737,7 +737,7 @@ void InitMessage ( const char *message );
 
 				if (m_iLastJumpWaypointIndex == -1 && bCheckDistance && (vPlayerOrigin - m_vLastAutoWaypointPlacePos).Length() > 200)
 				{
-					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 150.0, -1, TRUE, FALSE, FALSE, nullptr);
+					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 150.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 					if (iNearestWpt == -1)
 						WaypointAddOrigin(vPlayerOrigin, 0, m_pPlayer, m_bWaypointOn, m_bWaypointOn);
@@ -764,12 +764,12 @@ void InitMessage ( const char *message );
 						WaypointDrawBeam(m_pPlayer, vPlayerOrigin, vCheckOrigin, 20, 1, 1, 255, 1, 150, 10);
 					}
 
-					if (tr.flFraction < 1.0)
+					if (tr.flFraction < 1.0f)
 					{
 						if (tr.pHit)
 						{
 							// on a lift/train moving "fast"
-							if (tr.pHit->v.velocity.Length() > 20.0)
+							if (tr.pHit->v.velocity.Length() > 20.0f)
 								continue;
 						}
 						// find next which is visible
@@ -787,9 +787,9 @@ void InitMessage ( const char *message );
 							if (m_bDebugAutoWaypoint)
 								WaypointDrawBeam(m_pPlayer, vPlayerOrigin, vCheckOrigin, 20, 1, 1, 1, 255, 150, 10);
 
-							if (tr.flFraction >= 1.0)
+							if (tr.flFraction >= 1.0f)
 							{
-								int iNearestWpt = WaypointLocations.NearestWaypoint(vCheckOrigin, 100.0, -1, TRUE, FALSE, FALSE, nullptr);
+								int iNearestWpt = WaypointLocations.NearestWaypoint(vCheckOrigin, 100.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 								if (iNearestWpt == -1)
 								{
@@ -887,7 +887,7 @@ void CPendingToolTips::Think(edict_t* pPlayer)
 
 			m_Tooltips.RemoveFront();
 
-			m_fNextTime = gpGlobals->time + 20.0;
+			m_fNextTime = gpGlobals->time + 20.0f;
 		}
 	}
 }
@@ -1060,7 +1060,7 @@ void CClients::ClientDisconnected(CClient* pClient)
 		gBotGlobals.m_pListenServerEdict = nullptr;
 
 	// give a few seconds before adding more bots.
-	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 2.0;
+	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 2.0f;
 
 	const BOOL RemoveGreeting = iPlayerIndex != -1;
 

@@ -79,7 +79,7 @@ extern CBotGlobals gBotGlobals;
 extern enginefuncs_t g_engfuncs;
 extern CWaypointLocations WaypointLocations;
 
-#define PI 3.141592654
+//#define PI 3.141592654
 
 BOOL UTIL_TankUsed(edict_t* pTank)
 {
@@ -291,7 +291,7 @@ typedef struct
 //mahnsawce : To get the player's energy
 float UTIL_GetPlayerEnergy(entvars_t* pev)
 {
-	return pev->fuser3 / 10.0;   // This returns the percentage (0%-100%)
+	return pev->fuser3 / 10;   // This returns the percentage (0%-100%)
 }
 
 int NS_GetPlayerLevel(int exp)
@@ -611,7 +611,7 @@ float UTIL_AngleBetweenVectors(Vector const vec1, Vector const vec2)
 	const double vec1Dotvec2 = vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
 	const double veclengths = vec1.Length() * vec2.Length();
 
-	return acos(vec1Dotvec2 / veclengths) * (180 / PI);
+	return acos(vec1Dotvec2 / veclengths) * (180 / M_PI);
 }
 
 float UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector const vOrigin)
@@ -709,11 +709,11 @@ float UTIL_GetAvoidAngle(edict_t* pEdict, Vector const origin)
 
 	float angles = v_viewpoint.y - v_enemy.y;
 
-	if (angles > 180.0)
-		angles -= 360.0;
+	if (angles > 180)
+		angles -= 360;
 
-	if (angles < -180.0)
-		angles += 360.0;
+	if (angles < -180)
+		angles += 360;
 
 	return -angles;
 }
@@ -1042,7 +1042,7 @@ float UTIL_EntityAnglesToVector2D(entvars_t* pev, const Vector* pOrigin) // For 
 
 	const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-	return static_cast<float>(acos(flDot) / 3.141592654 * 180);
+	return static_cast<float>(acos(flDot) / M_PI * 180);
 }
 
 float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin) // For 3d Movement (e.g. swimming)
@@ -1189,7 +1189,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 		{
 			if (pResourceTower->v.origin.x == pFuncResource->v.origin.x &&
 				pResourceTower->v.origin.y == pFuncResource->v.origin.y &&
-				std::fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1.0)
+				std::fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1)
 			{
 				return TRUE;
 			}
@@ -1210,7 +1210,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 		{
 			if (pResourceTower->v.origin.x == pFuncResource->v.origin.x &&
 				pResourceTower->v.origin.y == pFuncResource->v.origin.y &&
-				std::fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1.0)
+				std::fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1)
 			{
 				return TRUE;
 			}
@@ -1477,7 +1477,7 @@ BOOL BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict)
 
 	UTIL_TraceLine(vecLookerOrigin, vecOrigin, ignore_monsters, ignore_glass, pEdict, &tr);
 
-	if (tr.flFraction != 1.0)
+	if (tr.flFraction != 1)
 	{
 		return FALSE;  // Line of sight is not established
 	}
@@ -1618,13 +1618,13 @@ void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker
 
 				UTIL_TraceLine(vecSrc, vecSpot, dont_ignore_monsters, ENT(pevInflictor), &tr);
 
-				if (tr.flFraction == 1.0 || tr.pHit == pEntity->edict())
+				if (tr.flFraction == 1 || tr.pHit == pEntity->edict())
 				{// the explosion can 'see' this entity, so hurt them!
 					if (tr.fStartSolid)
 					{
 						// if we're stuck inside them, fixup the position and distance
 						tr.vecEndPos = vecSrc;
-						tr.flFraction = 0.0;
+						tr.flFraction = 0;
 					}
 
 					// decrease damage for an ent that's farther from the bomb.
@@ -1896,7 +1896,7 @@ void UTIL_FixFloatAngle(float* fAngle)
 	{
 		while (iLoops < 4 && *fAngle < -180)
 		{
-			*fAngle += 360;
+			*fAngle += 360.0f;
 			iLoops++;
 		}
 	}
@@ -1904,7 +1904,7 @@ void UTIL_FixFloatAngle(float* fAngle)
 	{
 		while (iLoops < 4 && *fAngle > 180)
 		{
-			*fAngle -= 360;
+			*fAngle -= 360.0f;
 			iLoops++;
 		}
 	}
@@ -2306,7 +2306,7 @@ edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, Vector vOrigin,
 				{
 					UTIL_TraceLine(vOrigin, vEntOrigin, ignore_monsters, ignore_glass, nullptr, &tr);
 
-					bAdd = tr.flFraction >= 1.0 || tr.pHit == pEntity;
+					bAdd = tr.flFraction >= 1 || tr.pHit == pEntity;
 				}
 
 				if (bAdd)

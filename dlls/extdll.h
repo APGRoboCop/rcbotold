@@ -38,7 +38,7 @@
 #define NOSERVICE
 #define NOMCX
 #define NOIME
-#include <windows.h>
+#include <Windows.h>
 
 // Misc C-runtime library headers
 #include <cstdio>

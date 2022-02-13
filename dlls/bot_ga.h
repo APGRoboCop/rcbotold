@@ -136,7 +136,7 @@ public:
 	// mutate some values
 	void mutate() override
 	{
-		for (unsigned i = 0; i < 32; i++)
+		for (int i = 0; i < 32; i++)
 		{
 			if (RANDOM_FLOAT(0, 1) <= 0.1f)
 			{

@@ -92,9 +92,9 @@ extern CBotGlobals gBotGlobals;
 
 void CWaypointLocations::getMaxMins(Vector const vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk)
 {
-	const int iLoc = std::abs(static_cast<int>(vOrigin.x + 4096.0) / 256);
-	const int jLoc = std::abs(static_cast<int>(vOrigin.y + 4096.0) / 256);
-	const int kLoc = std::abs(static_cast<int>(vOrigin.z + 4096.0) / 256);
+	const int iLoc = std::abs(static_cast<int>(vOrigin.x + 4096) / 256);
+	const int jLoc = std::abs(static_cast<int>(vOrigin.y + 4096) / 256);
+	const int kLoc = std::abs(static_cast<int>(vOrigin.z + 4096) / 256);
 
 	// get current area
 	mini = iLoc - 1;
@@ -147,7 +147,7 @@ int CWaypointLocations::GetCoverWaypoint(Vector const vPlayerOrigin, const Vecto
 	if (iWaypoint == -1)
 		return -1;
 
-	float fNearestDist = 4096.0;
+	float fNearestDist = 4096;
 
 	int iNearestIndex = -1;
 
@@ -188,9 +188,9 @@ void CWaypointLocations::AddWptLocation(const int iIndex, const float* fOrigin)
 {
 	// Add a waypoint with index and at origin (for quick insertion in the list)
 	//
-	const int i = std::abs(static_cast<int>(fOrigin[0] + 4096.0) / 256);
-	const int j = std::abs(static_cast<int>(fOrigin[1] + 4096.0) / 256);
-	const int k = std::abs(static_cast<int>(fOrigin[2] + 4096.0) / 256);
+	const int i = std::abs(static_cast<int>(fOrigin[0] + 4096) / 256);
+	const int j = std::abs(static_cast<int>(fOrigin[1] + 4096) / 256);
+	const int k = std::abs(static_cast<int>(fOrigin[2] + 4096) / 256);
 
 	m_iLocations[i][j][k].Push(iIndex);
 }
@@ -199,9 +199,9 @@ void CWaypointLocations::DeleteWptLocation(const int iIndex, const float* fOrigi
 // Delete the waypoint index at the origin (for finding it quickly in the list)
 //
 {
-	const int i = std::abs(static_cast<int>(fOrigin[0] + 4096.0) / 256);
-	const int j = std::abs(static_cast<int>(fOrigin[1] + 4096.0) / 256);
-	const int k = std::abs(static_cast<int>(fOrigin[2] + 4096.0) / 256);
+	const int i = std::abs(static_cast<int>(fOrigin[0] + 4096) / 256);
+	const int j = std::abs(static_cast<int>(fOrigin[1] + 4096) / 256);
+	const int k = std::abs(static_cast<int>(fOrigin[2] + 4096) / 256);
 
 	m_iLocations[i][j][k].Remove(iIndex);
 }
@@ -338,7 +338,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 			else
 			{
 				UTIL_TraceLine(vOrigin, curr_wpt->origin, ignore_monsters, dont_ignore_glass, nullptr, &tr);
-				bAdd = tr.flFraction >= 1.0;
+				bAdd = tr.flFraction >= 1.0f;
 			}
 
 			if (bAdd)
@@ -421,7 +421,7 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float 
 
 		vWpt = WaypointOrigin(iIndex);
 
-		if (std::fabs(vWpt.z - vOrigin.z) <= 256.0)
+		if (std::fabs(vWpt.z - vOrigin.z) <= 256)
 		{
 			pvs = ENGINE_SET_PVS(reinterpret_cast<float*>(&vWpt));
 
@@ -1119,7 +1119,7 @@ int WaypointFindNearest(edict_t* pEntity, const float range, const int team)
 			UTIL_TraceLine(pEntity->v.origin + pEntity->v.view_ofs, waypoints[i].origin,
 				ignore_monsters, pEntity->v.pContainingEntity, &tr);
 
-			if (tr.flFraction >= 1.0)
+			if (tr.flFraction >= 1)
 			{
 				min_index = i;
 				min_distance = distance;
@@ -1165,7 +1165,7 @@ int WaypointFindNearest(Vector v_src, edict_t* pEntity, const float range, const
 			UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters,
 				pEntity->v.pContainingEntity, &tr);
 
-			if (tr.flFraction >= 1.0)
+			if (tr.flFraction >= 1)
 			{
 				min_index = index;
 				min_distance = distance;
@@ -1229,13 +1229,13 @@ int WaypointFindNearestGoal(Vector v_src, edict_t* pEntity, const float range, c
 		if ((wpt_flags & flags) != flags)
 			continue;  // skip this waypoint if the flags don't match
 
-		const int distance = (waypoint->origin - v_src).Length();
+		int distance = (waypoint->origin - v_src).Length();
 
 		if (distance < range && distance < min_distance)
 		{
 			//UTIL_TraceLine(v_src,waypoint->origin,ignore_monsters,pEntity,&tr);
 
-			//if ( tr.flFraction >= 1.0 )
+			//if ( tr.flFraction >= 1.0f )
 			//{
 			min_index = index;
 			min_distance = distance;
@@ -1555,7 +1555,7 @@ int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
 
 		UTIL_TraceLine(vOrigin, vEntOrigin, ignore_monsters, pEntity, &tr);
 
-		if (tr.flFraction >= 1.0 || tr.pHit == pEnt)
+		if (tr.flFraction >= 1 || tr.pHit == pEnt)
 		{
 			const char* szClassname = const_cast<char*>(STRING(pEnt->v.classname));
 
@@ -1600,8 +1600,8 @@ int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
 
 			UTIL_TraceLine(vOrigin, temp_waypoint->origin, ignore_monsters, ignore_glass, nullptr, &tr);
 
-			WaypointVisibility.SetVisibilityFromTo(index, i, tr.flFraction >= 1.0);
-			WaypointVisibility.SetVisibilityFromTo(i, index, tr.flFraction >= 1.0);
+			WaypointVisibility.SetVisibilityFromTo(index, i, tr.flFraction >= 1.0f);
+			WaypointVisibility.SetVisibilityFromTo(i, index, tr.flFraction >= 1.0f);
 
 			// check if the waypoint is reachable from the new one (one-way)
 			if (WaypointReachable(vOrigin, temp_waypoint->origin))
@@ -1895,7 +1895,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 			nullptr, &tr);
 
 		// if waypoint is visible from current position (even behind head)...
-		if (tr.flFraction >= 1.0)
+		if (tr.flFraction >= 1)
 		{
 			// check for special case of both waypoints being underwater...
 			if (POINT_CONTENTS(v_src) == CONTENTS_WATER &&
@@ -1918,7 +1918,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 					nullptr, &tr);
 
 				// check if we didn't hit anything, if not then it's in mid-air
-				if (tr.flFraction >= 1.0)
+				if (tr.flFraction >= 1)
 				{
 					return FALSE;  // can't reach this one
 				}
@@ -1931,27 +1931,27 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 			Vector v_check = v_src;
 			Vector v_down = v_src;
 
-			v_down.z = v_down.z - 1000.0;  // straight down 1000 units
+			v_down.z = v_down.z - 1000;  // straight down 1000 units
 
 			UTIL_TraceLine(v_check, v_down, ignore_monsters,
 				nullptr, &tr);
 
-			float last_height = tr.flFraction * 1000.0;  // height from ground
+			float last_height = tr.flFraction * 1000;  // height from ground
 
 			distance = (v_dest - v_check).Length();  // distance from goal
 
-			while (distance > 10.0)
+			while (distance > 10)
 			{
 				// move 10 units closer to the goal...
-				v_check = v_check + v_direction * 10.0;
+				v_check = v_check + v_direction * 10;
 
 				v_down = v_check;
-				v_down.z = v_down.z - 1000.0;  // straight down 1000 units
+				v_down.z = v_down.z - 1000;  // straight down 1000 units
 
 				UTIL_TraceLine(v_check, v_down, ignore_monsters,
 					nullptr, &tr);
 
-				const float curr_height = tr.flFraction * 1000.0;  // height from ground
+				const float curr_height = tr.flFraction * 1000;  // height from ground
 
 				// is the difference in the last height and the current height
 				// higher that the jump height?
@@ -2004,7 +2004,7 @@ int WaypointFindReachable(edict_t* pEntity, const float range, const int team)
 			UTIL_TraceLine(pEntity->v.origin + pEntity->v.view_ofs, waypoints[i].origin,
 				ignore_monsters, pEntity->v.pContainingEntity, &tr);
 
-			if (tr.flFraction >= 1.0)
+			if (tr.flFraction >= 1)
 			{
 				if (WaypointReachable(pEntity->v.origin, waypoints[i].origin))
 				{
@@ -2403,7 +2403,7 @@ void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints)
 
 			UTIL_TraceLine(Waypoint1->origin, Waypoint2->origin + Vector(0, 0, 16.0), ignore_monsters, ignore_glass, nullptr, &tr);
 
-			SetVisibilityFromTo(i, j, tr.flFraction >= 1.0);
+			SetVisibilityFromTo(i, j, tr.flFraction >= 1.0f);
 		}
 	}
 }

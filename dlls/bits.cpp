@@ -101,7 +101,7 @@ void CBits::load(FILE* bfp)
 {
 	const CGenericHeader header = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
-	if (!header.read(bfp, header))
+	if (!CGenericHeader::read(bfp, header))
 	{
 		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;

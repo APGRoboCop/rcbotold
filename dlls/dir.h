@@ -35,7 +35,7 @@
 #define __RCBOT_DIR_H__
 
 #ifndef __linux__
-#include <windows.h>
+#include <Windows.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #else

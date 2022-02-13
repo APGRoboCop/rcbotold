@@ -297,7 +297,7 @@ void CBitsGAValues::crossOver(IIndividual* other)
 // mutate some values
 void CBitsGAValues::mutate()
 {
-	for (unsigned int i = 0; i < m_theBits->numBits(); i++)
+	for (int i = 0; i < m_theBits->numBits(); i++)
 	{
 		if (RANDOM_FLOAT(0.0f, 1.0f) < CGA::g_fMutateRate)
 		{
