@@ -1142,7 +1142,7 @@ int WaypointFindNearest(Vector v_src, edict_t* pEntity, const float range, const
 	// find the nearest waypoint...
 
 	int min_index = -1;
-	float min_distance = 9999.0;
+	float min_distance = 9999.0f;
 
 	for (int index = 0; index < num_waypoints; index++)
 	{
@@ -1165,7 +1165,7 @@ int WaypointFindNearest(Vector v_src, edict_t* pEntity, const float range, const
 			UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters,
 				pEntity->v.pContainingEntity, &tr);
 
-			if (tr.flFraction >= 1)
+			if (tr.flFraction >= 1.0f)
 			{
 				min_index = index;
 				min_distance = distance;
@@ -1189,7 +1189,7 @@ int WaypointFindNearestGoal(Vector v_src, edict_t* pEntity, const float range, c
 	// find the nearest waypoint with the matching flags...
 
 	int min_index = -1;
-	int min_distance = 99999;
+	float min_distance = 99999.0f;
 
 	// use bytes 0 or 1
 	memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
@@ -1229,7 +1229,7 @@ int WaypointFindNearestGoal(Vector v_src, edict_t* pEntity, const float range, c
 		if ((wpt_flags & flags) != flags)
 			continue;  // skip this waypoint if the flags don't match
 
-		int distance = (waypoint->origin - v_src).Length();
+		const float distance = (waypoint->origin - v_src).Length();
 
 		if (distance < range && distance < min_distance)
 		{

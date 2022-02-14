@@ -6354,7 +6354,7 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 			// oh crap, a grenade!
 			if (UTIL_IsGrenadeRocket(pEntity))//strstr(szClassname,"grenade") != NULL )
 			{
-				if (fDistanceToEntity > 512)
+				if (fDistanceToEntity > 512.0f)
 					return FALSE;
 
 				TraceResult tr;
@@ -16238,13 +16238,13 @@ void CBot::CheckStuck()
 				// wall on the left of me so we'll strafe right for approx 2 seconds
 				if (BotCheckWallOnLeft(this))
 				{
-					m_fStrafeTime = gpGlobals->time + RANDOM_FLOAT(1.5, 2.5);
+					m_fStrafeTime = gpGlobals->time + RANDOM_FLOAT(1.5f, 2.5f);
 					m_fStrafeSpeed = m_fMaxSpeed; // going right (positive speed)
 				}
 				// wall on the right so we'll strafe left for approx 2 seconds
 				else if (BotCheckWallOnRight(this))
 				{
-					m_fStrafeTime = gpGlobals->time + RANDOM_FLOAT(1.5, 2.5);
+					m_fStrafeTime = gpGlobals->time + RANDOM_FLOAT(1.5f, 2.5f);
 					m_fStrafeSpeed = -m_fMaxSpeed; // going left (negative speed)
 				}
 			}
@@ -16487,6 +16487,6 @@ BOOL CBot::isInAnimate(edict_t* pEntity)
 void CBot::clearEnemyCosts()
 {
 	memset(fRangeCosts, 0, sizeof(float) * (BOT_COST_BUCKETS * BOT_COST_BUCKETS));
-	m_fLowestEnemyCost = 99999;
+	m_fLowestEnemyCost = 99999.0f;
 	m_vLowestEnemyCostVec = pev->origin;
 }
