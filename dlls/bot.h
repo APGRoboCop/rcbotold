@@ -6724,7 +6724,7 @@ public:
 		return m_szBotFolder;
 	}
 
-	edict_t* randomHeldFlagOnTeam(int team);
+	//edict_t* randomHeldFlagOnTeam(int team);
 	float m_fTurnSpeed;
 private:
 
