@@ -11,11 +11,11 @@ CPP = g++ -m32
 
 BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -DRCBOT_META_BUILD -D__linux__ \
 
-#CPPFLAGS = ${BASEFLAGS} -D_DEBUG -g -ggdb -Og -march=i686 -I. -I../engine -I../common -I../pm_shared -Wno-write-strings
+#CPPFLAGS = ${BASEFLAGS} -D_DEBUG -g3 -ggdb3 -Og -march=i686 -I. -I../engine -I../common -I../pm_shared -Wno-write-strings
 
 CPPFLAGS = ${BASEFLAGS} -mtune=generic -march=i686 -mmmx -msse -msse2 -mfpmath=sse -pipe -O2 \
-			-Wno-write-strings -Wno-unused-local-typedefs -funsafe-math-optimizations \
-			-I. -I../engine -I../common -I../pm_shared -std=gnu++14 -static-libstdc++ -static-libgcc
+			-Wno-write-strings -Wno-unused-local-typedefs -funsafe-math-optimizations -g0 -I. \
+			-I../engine -I../common -I../pm_shared -std=gnu++14 -static-libstdc++ -static-libgcc
 		
 OBJ = bits.o bot.o bot_client.o bot_commands.o bot_ga.o bot_menu.o bot_navigate.o bot_nn.o \
 	bot_rep.o bot_visibles.o bot_weapons.o client.o dir.o dll.o engine.o ga.o globals.o \
