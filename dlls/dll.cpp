@@ -798,7 +798,7 @@ void ClientCommand(edict_t* pEntity)
 		iState = BOT_CVAR_ACCESSED;
 	}
 	// someone said something
-	else if ((bSayMsg = FStrEq(pcmd, "say")) == true || (bSayTeamMsg = FStrEq(pcmd, "say_team")) == true)
+	else if ((bSayMsg = FStrEq(pcmd, "say")) == 1 || (bSayTeamMsg = FStrEq(pcmd, "say_team")) == 1)
 	{
 		BOOL bMadeSquad = false;
 

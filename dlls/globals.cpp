@@ -140,7 +140,7 @@ void CBotGlobals::ReadBotFolder()
 
 BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
 {
-	if (m_bNetMessageStarted == true)
+	if (m_bNetMessageStarted == 1)
 	{
 		// message already started... engine will crash
 		assert(!m_bNetMessageStarted);

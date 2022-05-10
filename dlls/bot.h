@@ -1000,8 +1000,6 @@ public:
 			return "BOT_TASK_TFC_ROTATE_SENTRY";*/
 		case BOT_TASK_FIND_COVER_POS:
 			return "BOT_TASK_FIND_COVER_POS";
-		case BOT_TASK_USE_TELEPORT:
-			return "BOT_TASK_USE_TELEPORT";
 		case BOT_TASK_COMBAT_UPGRADE:
 			return "BOT_TASK_COMBAT_UPGRADE";
 		case BOT_TASK_CROUCH:
@@ -2157,7 +2155,7 @@ private:
 /////////////////////////////////////////////////////
 // BOT CLASS
 // TODO: need to be initialised for Bot Class to work [APG]RoboCop[CL]
-#define SQUAD_DEFAULT_SPREAD 50.0// say 50 units between each member...?
+#define SQUAD_DEFAULT_SPREAD 50.0f// say 50 units between each member...?
 
 enum eSquadForm
 {

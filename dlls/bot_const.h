@@ -810,7 +810,6 @@ typedef enum
 	   * vector to alter
 	   */
 	   BOT_TASK_FIND_COVER_POS,
-	   BOT_TASK_USE_TELEPORT,
 	   BOT_TASK_COMBAT_UPGRADE,
 	   BOT_TASK_CROUCH,
 	   BOT_TASK_ACCEPT_HEALTH,

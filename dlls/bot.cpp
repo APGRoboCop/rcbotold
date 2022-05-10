@@ -248,71 +248,135 @@ void CBot::BotCommand()
 			m_Tasks.FinishedCurrentTask();
 		}
 		break;
-		/*case BOT_TASK_NONE: break;
-		case BOT_TASK_USE_TANK: break;
-		case BOT_TASK_WAIT_FOR_LIFT: break;
-		case BOT_TASK_RELOAD: break;
-		case BOT_TASK_LISTEN_TO_SOUND: break;
-		case BOT_TASK_FIND_ENEMY_PATH: break;
-		case BOT_TASK_FOLLOW_ENEMY: break;
-		case BOT_TASK_FOLLOW_LEADER: break;
-		case BOT_TASK_FIND_WEAPON: break;
-		case BOT_TASK_FIND_PATH: break;
-		case BOT_TASK_RUN_PATH: break;
-		case BOT_TASK_PICKUP_ITEM: break;
-		case BOT_TASK_WAIT_FOR_RESOURCES: break;
-		case BOT_TASK_GOTO_FLANK_POSITION: break;
-		case BOT_TASK_RANGE_ATTACK: break;
-		case BOT_TASK_NORMAL_ATTACK: break;
-		case BOT_TASK_HIDE: break;
-		case BOT_TASK_ASSEMBLE_SQUAD: break;
-		case BOT_TASK_WAIT_FOR_ORDERS: break;
-		case BOT_TASK_SOLO_RUN: break;
-		case BOT_TASK_ATTACK_ENEMY: break;
-		case BOT_TASK_CHANGE_WEAPON: break;
-		case BOT_TASK_MOVE_TO_VECTOR: break;
-		case BOT_TASK_WELD_OBJECT: break;
-		case BOT_TASK_GOTO_OBJECT: break;
-		case BOT_TASK_HEAL_PLAYER: break;
-		case BOT_TASK_ALIEN_UPGRADE: break;
-		case BOT_TASK_BUILD_ALIEN_STRUCTURE: break;
-		case BOT_TASK_FACE_VECTOR: break;
-		case BOT_TASK_FACE_EDICT: break;
-		case BOT_TASK_WAIT_AND_FACE_VECTOR: break;
-		case BOT_TASK_AVOID_OBJECT: break;
-		case BOT_TASK_BUILD: break;
-		case BOT_TASK_USE: break;
-		case BOT_TASK_DEFEND: break;
-		case BOT_TASK_DEPLOY_MINES: break;
-		case BOT_TASK_USE_AMMO_DISP: break;
-		case BOT_TASK_WALK_PATH: break;
-		case BOT_TASK_TYPE_MESSAGE: break;
-		case BOT_TASK_WAIT_FOR_ENTITY: break;
-		case BOT_TASK_USE_DOOR_BUTTON: break;
-		case BOT_TASK_SEARCH_FOR_ENEMY: break;
-		case BOT_TASK_ALIEN_EVOLVE: break;
-		case BOT_TASK_USE_HEV_CHARGER: break;
-		case BOT_TASK_USE_HEALTH_CHARGER: break;
-		case BOT_TASK_HUMAN_TOWER: break;
-		case BOT_TASK_THROW_GRENADE: break;
-		case BOT_TASK_PUSH_PUSHABLE: break;
-		case BOT_TASK_SECONDARY_ATTACK: break;
-		case BOT_TASK_WAIT_FOR_FLAG: break;
-		case BOT_COMMAND_TASK_SELECT_PLAYERS: break;
-		case BOT_COMMAND_TASK_ISSUE_ORDER: break;
-		case BOT_TASK_FIND_COVER_POS: break;
-		case BOT_TASK_USE_TELEPORT: break;
-		case BOT_TASK_COMBAT_UPGRADE: break;
-		case BOT_TASK_CROUCH: break;
-		case BOT_TASK_ACCEPT_HEALTH: break;
-		case BOT_TASK_WAIT_FOR_BOT_AT_WPT: break;
-		case BOT_TASK_BLINK: break;
-		case BOT_TASK_WEB: break;
-		case BOT_TASK_USE_TELEPORTER: break;
-		case BOT_TASK_WAIT_FOR_RESOURCE_TOWER_BUILD: break;
-		case BOT_TASK_IMPULSE: break;
-		case BOT_TASK_DROP_WEAPON: break;
-		case BOT_TASK_SENSE_ENEMY: break;*/
+			/*
+		case BOT_TASK_USE_TANK:
+			break;
+		case BOT_TASK_WAIT_FOR_LIFT:
+			break;
+		case BOT_TASK_RELOAD:
+			break;
+		case BOT_TASK_LISTEN_TO_SOUND:
+			break;
+		case BOT_TASK_FIND_ENEMY_PATH:
+			break;
+		case BOT_TASK_FOLLOW_ENEMY:
+			break;
+		case BOT_TASK_FOLLOW_LEADER:
+			break;
+		case BOT_TASK_FIND_WEAPON:
+			break;
+		case BOT_TASK_FIND_PATH:
+			break;
+		case BOT_TASK_RUN_PATH:
+			break;
+		case BOT_TASK_PICKUP_ITEM:
+			break;
+		case BOT_TASK_WAIT_FOR_RESOURCES:
+			break;
+		case BOT_TASK_GOTO_FLANK_POSITION:
+			break;
+		case BOT_TASK_RANGE_ATTACK:
+			break;
+		case BOT_TASK_NORMAL_ATTACK:
+			break;
+		case BOT_TASK_HIDE:
+			break;
+		case BOT_TASK_ASSEMBLE_SQUAD:
+			break;
+		case BOT_TASK_WAIT_FOR_ORDERS:
+			break;
+		case BOT_TASK_SOLO_RUN:
+			break;
+		case BOT_TASK_ATTACK_ENEMY:
+			break;
+		case BOT_TASK_CHANGE_WEAPON:
+			break;
+		case BOT_TASK_MOVE_TO_VECTOR:
+			break;
+		case BOT_TASK_WELD_OBJECT:
+			break;
+		case BOT_TASK_GOTO_OBJECT:
+			break;
+		case BOT_TASK_HEAL_PLAYER:
+			break;
+		case BOT_TASK_ALIEN_UPGRADE:
+			break;
+		case BOT_TASK_BUILD_ALIEN_STRUCTURE:
+			break;
+		case BOT_TASK_FACE_VECTOR:
+			break;
+		case BOT_TASK_FACE_EDICT:
+			break;
+		case BOT_TASK_WAIT_AND_FACE_VECTOR:
+			break;
+		case BOT_TASK_AVOID_OBJECT:
+			break;
+		case BOT_TASK_BUILD:
+			break;
+		case BOT_TASK_USE:
+			break;
+		case BOT_TASK_DEFEND:
+			break;
+		case BOT_TASK_DEPLOY_MINES:
+			break;
+		case BOT_TASK_USE_AMMO_DISP:
+			break;
+		case BOT_TASK_WALK_PATH:
+			break;
+		case BOT_TASK_TYPE_MESSAGE:
+			break;
+		case BOT_TASK_WAIT_FOR_ENTITY:
+			break;
+		case BOT_TASK_USE_DOOR_BUTTON:
+			break;
+		case BOT_TASK_SEARCH_FOR_ENEMY:
+			break;
+		case BOT_TASK_ALIEN_EVOLVE:
+			break;
+		case BOT_TASK_USE_HEV_CHARGER:
+			break;
+		case BOT_TASK_USE_HEALTH_CHARGER:
+			break;
+		case BOT_TASK_HUMAN_TOWER:
+			break;
+		case BOT_TASK_THROW_GRENADE:
+			break;
+		case BOT_TASK_PUSH_PUSHABLE:
+			break;
+		case BOT_TASK_SECONDARY_ATTACK:
+			break;
+		case BOT_TASK_WAIT_FOR_FLAG:
+			break;
+		case BOT_COMMAND_TASK_SELECT_PLAYERS:
+			break;
+		case BOT_COMMAND_TASK_ISSUE_ORDER:
+			break;
+		case BOT_TASK_FIND_COVER_POS:
+			break;
+		case BOT_TASK_COMBAT_UPGRADE:
+			break;
+		case BOT_TASK_CROUCH:
+			break;
+		case BOT_TASK_ACCEPT_HEALTH:
+			break;
+		case BOT_TASK_WAIT_FOR_BOT_AT_WPT:
+			break;
+		case BOT_TASK_BLINK:
+			break;
+		case BOT_TASK_WEB:
+			break;
+		case BOT_TASK_USE_TELEPORTER:
+			break;
+		case BOT_TASK_WAIT_FOR_RESOURCE_TOWER_BUILD:
+			break;
+		case BOT_TASK_IMPULSE:
+			break;
+		case BOT_TASK_DROP_WEAPON:
+			break;
+		case BOT_TASK_SENSE_ENEMY:
+			break;
+		case BOT_TASK_NONE:
+			break;*/
 		default:
 			break;
 		}
@@ -7975,7 +8039,7 @@ void CBot::WorkMoveDirection()
 		{
 			BOOL bEnemy = false;
 
-			if ( /*gBotGlobals.IsMod(MOD_TFC) ||*/ (bEnemy = IsEnemy(m_pAvoidEntity)) == true)
+			if ( /*gBotGlobals.IsMod(MOD_TFC) ||*/ (bEnemy = IsEnemy(m_pAvoidEntity)) == 1)
 			{
 				if (m_pAvoidEntity->v.velocity.x || m_pAvoidEntity->v.velocity.y)
 				{
@@ -8337,7 +8401,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 
 		if (bIsDoor)
 		{
-			if ((bIsMoving = BotFunc_EntityIsMoving(pentTouchedpev)) == true)
+			if ((bIsMoving = BotFunc_EntityIsMoving(pentTouchedpev)) == 1)
 				m_fLastSeeWaypoint = 0;
 		}
 

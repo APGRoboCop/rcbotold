@@ -354,12 +354,12 @@ Vector UTIL_VecToAngles(const Vector& vec)
 // Overloaded to add IGNORE_GLASS
 void UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon, IGNORE_GLASS ignoreGlass, edict_t* pentIgnore, TraceResult* ptr)
 {
-	TRACE_LINE(vecStart, vecEnd, (igmon == ignore_monsters ? true : false) | (ignoreGlass ? 0x100 : 0), pentIgnore, ptr);
+	TRACE_LINE(vecStart, vecEnd, (igmon == ignore_monsters ? 1 : 0) | (ignoreGlass ? 0x100 : 0), pentIgnore, ptr);
 }
 
 void UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon, edict_t* pentIgnore, TraceResult* ptr)
 {
-	TRACE_LINE(vecStart, vecEnd, igmon == ignore_monsters ? true : false, pentIgnore, ptr);
+	TRACE_LINE(vecStart, vecEnd, igmon == ignore_monsters ? 1 : 0, pentIgnore, ptr);
 }
 
 void UTIL_MakeVectors(const Vector& vecAngles)
