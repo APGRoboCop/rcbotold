@@ -286,13 +286,13 @@ public:
 				// dont want program to free tempNode, already used in stack.
 				tempNode = NULL;
 
-				return TRUE;
+				return true;
 			}
 
 			tempNode = tempNode->m_Next;
 		}
 
-		return FALSE;
+		return false;
 	}*/
 
 	BOOL IsMember(const T& pObj)
@@ -306,13 +306,13 @@ public:
 				// dont want program to free tempNode, already used in stack.
 				tempNode = NULL;
 
-				return TRUE;
+				return true;
 			}
 
 			tempNode = tempNode->m_Next;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/*void Remove ( T *tRemoved )
@@ -349,7 +349,7 @@ public:
 		dataNode<T>* tempNode = m_Head;
 
 		if (m_Head == nullptr)
-			return FALSE;
+			return false;
 
 		if (m_Head->m_NodeData == pObj)
 		{
@@ -368,7 +368,7 @@ public:
 
 			tempNode = NULL;
 
-			return TRUE;
+			return true;
 		}
 
 		while (tempNode && tempNode->m_Next)
@@ -390,13 +390,13 @@ public:
 				tempNode = NULL;
 				deleteNode = NULL;
 
-				return TRUE;
+				return true;
 			}
 
 			tempNode = tempNode->m_Next;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	BOOL RemoveByPointer(const T* pObj)
@@ -404,7 +404,7 @@ public:
 		dataNode<T>* tempNode = m_Head;
 
 		if (m_Head == nullptr)
-			return FALSE;
+			return false;
 
 		if (&m_Head->m_NodeData == pObj)
 		{
@@ -421,7 +421,7 @@ public:
 			delete tempNode;
 			tempNode = NULL;
 
-			return TRUE;
+			return true;
 		}
 
 		while (tempNode && tempNode->m_Next)
@@ -444,13 +444,13 @@ public:
 				tempNode = NULL;
 				deleteNode = NULL;
 
-				return TRUE;
+				return true;
 			}
 
 			tempNode = tempNode->m_Next;
 		}
 
-		return FALSE;
+		return false;
 	}
 	/*
 			void Remove ( const T &ToRemove )
@@ -537,13 +537,13 @@ public:
 			{
 				// dont want program to free tempNode, already used in stack.
 				tempNode = NULL;
-				return TRUE;
+				return true;
 			}
 
 			tempNode = tempNode->m_Next;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	BOOL RemoveByPointer(const T* pObj)
@@ -551,7 +551,7 @@ public:
 		dataNode<T>* tempNode = m_Head;
 
 		if (m_Head == nullptr)
-			return FALSE;
+			return false;
 
 		if (&m_Head->m_NodeData == pObj)
 		{
@@ -559,7 +559,7 @@ public:
 
 			delete tempNode;
 
-			return TRUE;
+			return true;
 		}
 
 		while (tempNode && tempNode->m_Next)
@@ -576,13 +576,13 @@ public:
 				tempNode = NULL;
 				deleteNode = NULL;
 
-				return TRUE;
+				return true;
 			}
 
 			tempNode = tempNode->m_Next;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	BOOL Remove(const T& pObj)
@@ -590,7 +590,7 @@ public:
 		dataNode<T>* tempNode = m_Head;
 
 		if (m_Head == nullptr)
-			return FALSE;
+			return false;
 
 		if (m_Head->m_NodeData == pObj)
 		{
@@ -598,7 +598,7 @@ public:
 
 			delete tempNode;
 
-			return TRUE;
+			return true;
 		}
 
 		while (tempNode && tempNode->m_Next)
@@ -614,13 +614,13 @@ public:
 				tempNode = NULL;
 				deleteNode = NULL;
 
-				return TRUE;
+				return true;
 			}
 
 			tempNode = tempNode->m_Next;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	void Destroy()
@@ -900,15 +900,15 @@ class dataUnconstArray
 			int i;
 
 			if ( m_pArray == NULL )
-				return FALSE;
+				return false;
 
 			for ( i = 0; i < m_iArrayMax; i ++ )
 			{
 				if ( m_pArray[i] == Obj )
-					return TRUE;
+					return true;
 			}
 
-			return FALSE;
+			return false;
 		}
 
 		int m_iArrayMax;
@@ -1090,10 +1090,10 @@ public:
 		for (unsigned int i = 0; i < size; i++)
 		{
 			if (buffer[i] == Obj)
-				return TRUE;
+				return true;
 		}
 
-		return FALSE;
+		return false;
 	}
 private:
 	T* buffer;

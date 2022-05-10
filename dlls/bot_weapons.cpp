@@ -94,20 +94,20 @@ void CWeapon::SetWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int 
 	m_iAmmoIndex1 = iAmmoIndex1;
 	m_iAmmoIndex2 = iAmmoIndex2;
 
-	m_bRegistered = TRUE;
+	m_bRegistered = true;
 }
 
 BOOL CBotWeapon::CanReload()
 {
 	if (IsMelee())
-		return FALSE;
+		return false;
 
 	if (m_iAmmo1)
 	{
 		return *m_iAmmo1 > 0;
 	}
 
-	return FALSE;
+	return false;
 }
 
 BOOL CWeapon::IsPrimary()
@@ -118,7 +118,7 @@ BOOL CWeapon::IsPrimary()
 		return HudSlot() == 0;
 		break;
 	default:
-		return FALSE;
+		return false;
 	}
 }
 
@@ -130,7 +130,7 @@ BOOL CWeapon::IsSecondary()
 		return HudSlot() == 1;
 		break;
 	default:
-		return FALSE;
+		return false;
 	}
 }
 
@@ -146,7 +146,7 @@ void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
 		// this really should not be NULL!!!
 		//assert(m_pWeaponInfo != NULL);
 
-		m_bHasWeapon = TRUE;
+		m_bHasWeapon = true;
 
 		m_iAmmo1 = nullptr;
 		m_iAmmo2 = nullptr;
@@ -218,7 +218,7 @@ void CWeaponPresets::ReadPresets()
 
 	// bSkipMod will be true when the weapons are not for the current mod
 	// and do not need to be loaded
-	BOOL bSkipMod = FALSE;
+	BOOL bSkipMod = false;
 
 	memset(&sWeaponPreset, 0, sizeof(weapon_preset_t));
 
@@ -357,7 +357,7 @@ BOOL CBotWeapon::HasWeapon(edict_t* pEdict)
 					char* szClassname = this->GetClassname();
 
 					if (szClassname == nullptr)
-						return FALSE; // error
+						return false; // error
 
 					while ((pWeapon = UTIL_FindEntityByClassname(pWeapon, szClassname)) != nullptr)
 					{
@@ -375,18 +375,18 @@ BOOL CBotWeapon::HasWeapon(edict_t* pEdict)
 							if ( m_pWeaponInfo )
 								return (m_pWeaponInfo->HudSlot())<=(UTIL_GetNumHives()+1);
 
-							return FALSE;
+							return false;
 						}
 						else*/ if (pWeapon->v.iuser3 != 1)
 						{
-							return FALSE;
+							return false;
 						}
 					}
 
-					return TRUE;
+					return true;
 				}
 
-				return FALSE;
+				return false;
 			}
 			break;
 		default:
@@ -440,13 +440,13 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	Vector vEnemyOrigin;
 	float fEnemyDist;
 
-	BOOL bEnemyIsElectrified = FALSE;
-	BOOL bEnemyTooHigh = FALSE;
+	BOOL bEnemyIsElectrified = false;
+	BOOL bEnemyTooHigh = false;
 	const BOOL bUnderwater = pEdict->v.waterlevel == 3;
 	const BOOL bIsDMC = gBotGlobals.m_iCurrentMod == MOD_DMC;
 
 	const BOOL bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
-	BOOL bWantToMelee = FALSE;
+	BOOL bWantToMelee = false;
 
 	short int iAllowedWeapons[MAX_WEAPONS];
 
@@ -536,7 +536,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		{
 			// melee breakables.
 			if (FStrEq(STRING(pEnemy->v.classname), "func_breakable"))
-				bWantToMelee = TRUE;
+				bWantToMelee = true;
 		}
 		break;
 	}
@@ -853,7 +853,7 @@ BOOL CBotWeapon::NeedToReload()
 		return !m_iClip && m_iReserve > 0;
 	case MOD_BUMPERCARS:
 	case MOD_DMC:
-		return FALSE;
+		return false;
 	case MOD_GEARBOX:
 		return !m_iClip && m_iReserve > 0;
 	default:
@@ -865,38 +865,38 @@ BOOL CBotWeapon::NeedToReload()
 		return !m_iClip && *m_iAmmo1 > 0;
 	}
 
-	return FALSE;
+	return false;
 }
 
 BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist)
 {
 	if (m_pWeaponInfo == nullptr)
-		return TRUE;
+		return true;
 
 	if (gBotGlobals.m_iCurrentMod == MOD_DMC)
 		return this->PrimaryAmmo() > 0;
 
 	if (this->OutOfAmmo())
-		return FALSE;
-	if (pEdict->v.waterlevel == 3 && CanBeUsedUnderWater() == FALSE)
-		return FALSE;
+		return false;
+	if (pEdict->v.waterlevel == 3 && CanBeUsedUnderWater() == false)
+		return false;
 
 	if (!m_pWeaponInfo->CanUsePrimary())
-		return FALSE;
+		return false;
 
 	if (gBotGlobals.IsMod(MOD_HL_DM))
 	{
 		if (GetID() == VALVE_WEAPON_RPG)
 		{
 			if (!m_pWeaponInfo->PrimaryInRange(flWallDist))
-				return FALSE;
+				return false;
 		}
 	}
 
 	if (!m_pWeaponInfo->PrimaryInRange(flFireDist))
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname)
@@ -910,10 +910,10 @@ BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname)
 			if ((pClassname = m_Weapons[i].GetClassname()) != nullptr)
 			{
 				if (FStrEq(pClassname, szClassname))
-					return TRUE;
+					return true;
 			}
 		}
 	}
 
-	return FALSE;
+	return false;
 }

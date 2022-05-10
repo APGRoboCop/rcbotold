@@ -180,7 +180,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 
 	CBotReputation Rep;
 
-	BOOL bFound = FALSE;
+	BOOL bFound = false;
 
 	sprintf(repfile, "%d.rcr", iBotProfile);
 
@@ -208,7 +208,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 
 	fseek(fp, 0, SEEK_SET); // move pos back to beginning
 
-	while (bFound == FALSE && !feof(fp) && count > 0)
+	while (bFound == false && !feof(fp) && count > 0)
 	{
 		fread(&Rep, sizeof(CBotReputation), 1, fp);
 
@@ -216,7 +216,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 		if (Rep.IsForPlayer(iPlayerRepId))
 		{
 			m_RepList.Push(Rep);
-			bFound = TRUE;
+			bFound = true;
 		}
 
 		count--;
@@ -224,7 +224,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 
 	fclose(fp);
 
-	if (bFound == FALSE)
+	if (bFound == false)
 	{
 		m_RepList.Push(CBotReputation(iPlayerRepId, BOT_MID_REP));
 
@@ -242,7 +242,7 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 
 	CBotReputation Rep;
 
-	BOOL bChanged = FALSE;
+	BOOL bChanged = false;
 
 	if (pRep == nullptr) // error
 		return;
@@ -280,7 +280,7 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 
 	fseek(fp, 0, SEEK_SET); // move pos back to beginning
 
-	while (bChanged == FALSE && !feof(fp) && count > 0)
+	while (bChanged == false && !feof(fp) && count > 0)
 	{
 		fread(&Rep, sizeof(CBotReputation), 1, fp);
 
@@ -296,13 +296,13 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 			// as normal
 			fseek(fp, fPos, SEEK_SET);
 
-			bChanged = TRUE;
+			bChanged = true;
 		}
 		count--;
 	}
 	fclose(fp);
 
-	if (bChanged == FALSE)
+	if (bChanged == false)
 	{
 		fp = fopen(filename, "ab"); // append binary
 

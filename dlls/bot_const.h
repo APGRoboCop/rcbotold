@@ -69,7 +69,7 @@ public:
 	AStarNode();
 	BOOL heuristicSet();
 
-	void setHeuristic(float botDist, float goalDist, BOOL bIsTeleport = FALSE);
+	void setHeuristic(float botDist, float goalDist, BOOL bIsTeleport = false);
 
 	BOOL hasParent();
 
@@ -662,7 +662,7 @@ typedef enum {
 #define BOT_CONDITION_SELECTED_GUN (1<<22) // TS: make a gun to use
 #define BOT_CONDITION_DONT_CLEAR_OBJECTIVES (1<<23)
 
-#define BOT_HEAR_DISTANCE 650.0
+#define BOT_HEAR_DISTANCE 650.0f
 
 #define BOT_UPGRADE_DEF 1
 #define BOT_UPGRADE_SEN 2
@@ -672,9 +672,9 @@ typedef enum {
 #define BOT_LADDER_UP      1
 #define BOT_LADDER_DOWN    2
 
-#define BOT_TASKSTATUS_RANDOM_WAYPOINT -1
-#define BOT_TASKSTATUS_JUMP_OUT -2
-#define BOT_TASKSTATUS_STILL_PENDING -3
+#define BOT_TASKSTATUS_RANDOM_WAYPOINT (-1)
+#define BOT_TASKSTATUS_JUMP_OUT (-2)
+#define BOT_TASKSTATUS_STILL_PENDING (-3)
 
 //////////////////////
 // ENUMERTOR TYPES

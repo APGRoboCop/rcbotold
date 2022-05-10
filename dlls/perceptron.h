@@ -120,7 +120,7 @@ public:
 
 	BOOL trained() { return m_bTrained; }
 
-	void setTrained() { m_bTrained = TRUE; }
+	void setTrained() { m_bTrained = true; }
 
 	void save(FILE* bfp);
 	void load(FILE* bfp);

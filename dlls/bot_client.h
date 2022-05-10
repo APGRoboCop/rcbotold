@@ -83,17 +83,17 @@ public:
 		m_iMessage = 0;
 		m_szMessageName = nullptr;
 		//m_fpMsgFunction = NULL;
-		m_bAllowHumans = FALSE;
+		m_bAllowHumans = false;
 	}
 
-	virtual BOOL isStateMsg() { return FALSE; }
+	virtual BOOL isStateMsg() { return false; }
 
 	BOOL humansAllowed()
 	{
 		return m_bAllowHumans;
 	}
 
-	CBotNetMessage(/*void (*fpBotFunction)(void *, int),*/const char* szMessageName, int iModId, BOOL bAllowHumans = FALSE);
+	CBotNetMessage(/*void (*fpBotFunction)(void *, int),*/const char* szMessageName, int iModId, BOOL bAllowHumans = false);
 
 	BOOL MessageForMod(int iModId)
 	{
@@ -155,7 +155,7 @@ public:
 
 	void allowHumans()
 	{
-		m_bAllowHumans = TRUE;
+		m_bAllowHumans = true;
 	}
 
 private:
@@ -659,7 +659,7 @@ public:
 
 	virtual void messageEnd() { iState = 0; message_end(); };
 
-	BOOL isStateMsg() override { return TRUE; }
+	BOOL isStateMsg() override { return true; }
 
 private:
 	virtual void msg_init() {};

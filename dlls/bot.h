@@ -163,8 +163,8 @@ BOOL    EntityIsSelectable(edict_t* pEdict);
 BOOL	EntityIsMarineStruct(edict_t* pEdict);
 BOOL	EntityIsAlienStruct(edict_t* pEdict);
 
-edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser = nullptr, BOOL bBuilt = FALSE);
-edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, Vector vOrigin);
+edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser = nullptr, BOOL bBuilt = false);
+edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin);
 BOOL UTIL_IsResourceFountainUsed(edict_t* pFountain);
 //////////////////////////////
 // UTIL FUNCTIONS
@@ -214,7 +214,7 @@ void BotPrintTalkMessageOne(edict_t* pClient, char* fmt, ...);
 
 BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource);
 int NS_GetPlayerLevel(int exp);
-int UTIL_GetNumClients(BOOL bReport = FALSE);
+int UTIL_GetNumClients(BOOL bReport = false);
 edict_t* UTIL_FindEntityByTarget(edict_t* pentStart, const char* szName);
 edict_t* UTIL_FindEntityByClassname(edict_t* pentStart, const char* szName);
 edict_t* UTIL_FindEntityByTargetname(edict_t* pentStart, const char* szName);
@@ -227,7 +227,7 @@ int		UTIL_MasterTriggered(string_t sMaster, CBaseEntity* pActivator);
 void		UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, BOOL needmore, char* pText);
 void		UTIL_BuildFileName(char* filename, char* arg1, char* arg2 = nullptr);
 
-edict_t* UTIL_FacingEnt(edict_t* pPlayer, BOOL any = FALSE);
+edict_t* UTIL_FacingEnt(edict_t* pPlayer, BOOL any = false);
 
 void     UTIL_FixAngles(Vector* vAngles);
 void     UTIL_FixFloatAngle(float* fAngle);
@@ -258,7 +258,7 @@ float   UTIL_AngleBetweenVectors(Vector vec1, Vector vec2);
 float	UTIL_AnglesBetweenEdictOrigin(edict_t* pEdict, Vector origin);
 
 int		UTIL_PlayersOnTeam(int iTeam);
-int		UTIL_SpeciesOnTeam(int iSpecies, BOOL bIgnoreEmbryos = FALSE);
+int		UTIL_SpeciesOnTeam(int iSpecies, BOOL bIgnoreEmbryos = false);
 int		UTIL_GetNumHives();
 int		UTIL_CountBuiltEntities(char* classname);
 edict_t* UTIL_GetRandomUnbuiltHive();
@@ -732,7 +732,7 @@ public:
 		m_vInfo = vInfo;
 		m_pInfo.Set(pInfo);
 		m_fInfo = fInfo;
-		m_bFoundPath = FALSE;
+		m_bFoundPath = false;
 
 		m_iScheduleDescription = BOT_SCHED_NONE;
 
@@ -750,7 +750,7 @@ public:
 			return m_fTimeToComplete < gpGlobals->time;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	float TimeToComplete()
@@ -1207,11 +1207,11 @@ public:
 			if (tempTask->IsOfSchedule(iSchedDesc))
 			{
 				tempStack.Init();
-				return TRUE;
+				return true;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/*	void RemoveSchedule ( eScheduleDesc iSched )
@@ -1327,11 +1327,11 @@ public:
 			{
 				tempStack.Init();
 
-				return TRUE;
+				return true;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	// get a actual task  from a task type
@@ -1410,7 +1410,7 @@ public:
 		// Finish all tasks with ScheduleId as its schedule
 	{
 		dataQueue<CBotTask> tempStack = m_Tasks;
-		BOOL bRemoved = FALSE;
+		BOOL bRemoved = false;
 
 		while (!tempStack.IsEmpty())
 		{
@@ -1419,7 +1419,7 @@ public:
 			if (pTask->GetScheduleId() == iScheduleId)
 			{
 				m_Tasks.RemoveByPointer(pTask);
-				bRemoved = TRUE;
+				bRemoved = true;
 				tempStack = m_Tasks;
 			}
 		}
@@ -1432,7 +1432,7 @@ public:
 	BOOL FinishSchedule(eScheduleDesc iSchedDesc)
 	{
 		dataQueue<CBotTask> tempStack = m_Tasks;
-		BOOL bRemoved = FALSE;
+		BOOL bRemoved = false;
 
 		while (!tempStack.IsEmpty())
 		{
@@ -1441,7 +1441,7 @@ public:
 			if (pTask->IsOfSchedule(iSchedDesc))
 			{
 				m_Tasks.RemoveByPointer(pTask);
-				bRemoved = TRUE;
+				bRemoved = true;
 				tempStack = m_Tasks;
 			}
 		}
@@ -1449,7 +1449,7 @@ public:
 		return bRemoved;
 	}
 
-	void FinishedCurrentTask(BOOL bFailed = FALSE)
+	void FinishedCurrentTask(BOOL bFailed = false)
 	{
 		CBotTask* pTask = CurrentTask();
 
@@ -1507,7 +1507,7 @@ public:
 				if (pPrevTask)
 				{
 					// Changed path info to false for these tasks
-					pPrevTask->SetPathInfo(FALSE);
+					pPrevTask->SetPathInfo(false);
 				}
 			}
 		}
@@ -1590,13 +1590,13 @@ public:
 		m_pPath = nullptr;
 		// in case this is added remove it later
 		// by showing that its violated
-		m_bViolated = TRUE;
+		m_bViolated = true;
 	}
 
 	CBotFailedPath(PATH* pPath)
 	{
 		m_pPath = pPath;
-		m_bViolated = FALSE;
+		m_bViolated = false;
 	}
 
 	BOOL IsForPath(PATH* pPath) const
@@ -1606,7 +1606,7 @@ public:
 
 	void Violate()
 	{
-		m_bViolated = TRUE;
+		m_bViolated = true;
 	}
 
 	BOOL IsViolated() const
@@ -1639,11 +1639,11 @@ public:
 				// MUST reset temporary stack to a NULL Head!!!
 				tempStack.Init();
 
-				return TRUE;
+				return true;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	BOOL ClearViolatedPaths()
@@ -1651,7 +1651,7 @@ public:
 	{
 		dataStack<CBotFailedPath> tempStack = m_FailedPaths;
 
-		BOOL bRemoved = FALSE;
+		BOOL bRemoved = false;
 
 		while (!tempStack.IsEmpty())
 		{
@@ -1661,7 +1661,7 @@ public:
 			{
 				m_FailedPaths.RemoveByPointer(pFailedPath);
 
-				bRemoved = TRUE;
+				bRemoved = true;
 				// keep checking for more
 
 				// structure changed
@@ -1719,7 +1719,7 @@ public:
 		m_y = static_cast<T>(vVec.y);
 		m_z = static_cast<T>(vVec.z);
 
-		m_bVectorSet = TRUE;
+		m_bVectorSet = true;
 	}
 
 	Vector GetVector() const
@@ -1734,7 +1734,7 @@ public:
 
 	void UnSet()
 	{
-		m_bVectorSet = FALSE;
+		m_bVectorSet = false;
 	}
 protected:
 	T m_x, m_y, m_z;
@@ -1759,7 +1759,7 @@ public:
 
 	void UnSetPoint()
 	{
-		m_bVectorSet = FALSE;
+		m_bVectorSet = false;
 		m_iFlags = 0;
 	}
 private:
@@ -1810,7 +1810,7 @@ public:
 	BOOL isEntity(edict_t* pEntity)
 	{
 		if (pEntity == nullptr)
-			return FALSE;
+			return false;
 
 		return pEntity == getEntity();
 	}
@@ -2205,7 +2205,7 @@ public:
 
 		m_CombatType = COMBAT_COMBAT;
 
-		bCanFire = TRUE;
+		bCanFire = true;
 
 		if ((pLeader = GetLeader()) != nullptr)
 			m_vLeaderAngle = pLeader->v.angles;
@@ -2366,11 +2366,11 @@ public:
 			if (temp.Get() == pEdict)
 			{
 				tempStack.Init();
-				return TRUE;
+				return true;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	BOOL isFormation(eSquadForm theFormation)
@@ -2509,7 +2509,7 @@ public:
 	BOOL isForTeam(int team)
 	{
 		if (m_iTeam == 0)
-			return TRUE; // any team
+			return true; // any team
 
 		return m_iTeam == team;
 	}
@@ -3166,7 +3166,7 @@ public:
 	/*
 		BOOL CanHealPlayer ( edict_t *pPlayer )
 		{
-			BOOL bCanHeal = FALSE;
+			BOOL bCanHeal = false;
 
 			if ( gBotGlobals.IsNS() )
 			{
@@ -3181,40 +3181,40 @@ public:
 			else if ( gBotGlobals.IsMod(MOD_TFC) )
 			{
 				if ( ( pev->playerclass == TFC_CLASS_MEDIC ) && HasWeapon(TF_WEAPON_MEDIKIT) )
-					bCanHeal = TRUE;
+					bCanHeal = true;
 				else if ( ( pev->playerclass == TFC_CLASS_ENGINEER ) && HasWeapon(TF_WEAPON_SPANNER) )
-					bCanHeal = TRUE;
+					bCanHeal = true;
 			}
 		}*/
 
 	//BOOL ThinkSpyOnTeam(edict_t* pSpy);
 
-	void ThrowGrenade(edict_t* pEnemy, int preference = 0, BOOL bDontPrime = FALSE);
+	void ThrowGrenade(edict_t* pEnemy, int preference = 0, BOOL bDontPrime = false);
 
 	BOOL ThrowingGrenade();
 
 	void LostDisguise()
 	{
-		m_bIsDisguised = FALSE;
+		m_bIsDisguised = false;
 	}
 
 	void Disguised()
 	{
-		m_bIsDisguised = TRUE;
+		m_bIsDisguised = true;
 	}
 
 	void DispenserBuilt()
 	{
-		m_bBuiltDispenser = TRUE;
+		m_bBuiltDispenser = true;
 	}
 
 	void DispenserDestroyed()
 	{
-		m_bBuiltDispenser = FALSE;
+		m_bBuiltDispenser = false;
 	}
 
-	void NeedMetal(BOOL flush = TRUE, BOOL priority = FALSE, int iSched = 0);
-	void FindBackPack(int health = 0, int cells = 0, int armour = 0, int ammo = 0, BOOL flush = TRUE, BOOL priority = FALSE, int iSched = 0);
+	void NeedMetal(BOOL flush = true, BOOL priority = false, int iSched = 0);
+	void FindBackPack(int health = 0, int cells = 0, int armour = 0, int ammo = 0, BOOL flush = true, BOOL priority = false, int iSched = 0);
 
 	void CantBuildHere()
 	{
@@ -3241,12 +3241,12 @@ public:
 
 	/*void TeleportEntranceDestroyed ()
 	{
-		m_bBuiltTeleportEntrance = FALSE;
+		m_bBuiltTeleportEntrance = false;
 	}
 
 	void TeleportExitDestroyed ()
 	{
-		m_bBuiltTeleportExit = FALSE;
+		m_bBuiltTeleportExit = false;
 		//m_pTeleExit = NULL;
 	}
 
@@ -3265,7 +3265,7 @@ public:
 
 	//void TFC_UpdateFlagInfo();
 
-	BOOL m_bAcceptHealth; // if TRUE bot will wait for health when he gets it.
+	BOOL m_bAcceptHealth; // if true bot will wait for health when he gets it.
 
 	Vector m_vAvoidMoveTo;
 	float m_fAvoidTime;
@@ -3287,13 +3287,13 @@ public:
 	BOOL CanUseTank(edict_t* pTank)
 	{
 		if (m_fNextUseTank > gpGlobals->time)
-			return FALSE;
+			return false;
 		// already using one
 		if (IsUsingTank())
-			return FALSE;
+			return false;
 		if (UTIL_TankUsed(pTank))
-			return FALSE;
-		return TRUE;
+			return false;
+		return true;
 	}
 
 	// Use secondary attack for one time only..
@@ -3384,7 +3384,7 @@ public:
 	// nullified on initialise, bot functions assume this is not NULL.
 	struct entvars_s* pev;
 
-	// Returns TRUE when already visited resource tower
+	// Returns true when already visited resource tower
 	// (already added to list of those visited)
 	BOOL HasVisitedResourceTower(edict_t* pEdict);
 
@@ -3460,9 +3460,9 @@ public:
 	// bots current team
 	int m_iTeam;
 
-	// If kill is TRUE, bot will kill itself
+	// If kill is true, bot will kill itself
 	BOOL m_bKill;
-	// if kick is TRUE, bot will be kicked from the game
+	// if kick is true, bot will be kicked from the game
 	BOOL m_bKick;
 
 	// If last attack failed
@@ -3487,7 +3487,7 @@ public:
 	// for Moving
 
 	Vector m_vMoveToVector;		// Is the vector that the bot wants to move to.
-	BOOL m_bMoveToIsValid;		// Is FALSE When bot has no waypoint.
+	BOOL m_bMoveToIsValid;		// Is false When bot has no waypoint.
 
 	/////////////////////////////
 	//
@@ -3524,13 +3524,13 @@ public:
 	void SetLadderAngles(Vector const vAngles)
 	{
 		m_vLadderAngles = vAngles;
-		m_bLadderAnglesSet = TRUE;
+		m_bLadderAnglesSet = true;
 	}
 
 	// clear the angles
 	void UnSetLadderAngleAndMovement()
 	{
-		m_bLadderAnglesSet = FALSE;
+		m_bLadderAnglesSet = false;
 		m_iLadderButtons = 0;
 	}
 
@@ -3558,7 +3558,7 @@ public:
 	// Useful so bot doesn't run away and always follows enemies etc.
 	int m_iQuakeItems;
 
-	// returns TRUE if bot picked up invulnerabilty
+	// returns true if bot picked up invulnerabilty
 	BOOL DMC_HasInvulnerability() const
 	{
 		return (m_iQuakeItems & 1 << DMC_INVULNERABILITY) > 0;
@@ -3784,7 +3784,7 @@ public:
 	// do NOT call within bot functions
 	void FreeLocalMemory();
 
-	int GetLadderDir(BOOL bCheckWaypoint = FALSE);
+	int GetLadderDir(BOOL bCheckWaypoint = false);
 
 	BOOL NotStartedGame();
 
@@ -3859,7 +3859,7 @@ public:
 	BOOL     IsCurrentWeapon(int iId) const
 	{
 		if (m_pCurrentWeapon == nullptr)
-			return FALSE;
+			return false;
 		return m_pCurrentWeapon->GetID() == iId;
 	}
 	// ----------------------------------------------------------
@@ -3888,7 +3888,7 @@ public:
 	// ----------------------------------------------------------
 	//
 
-	// Returns TRUE if pEntity isn't an entity
+	// Returns true if pEntity isn't an entity
 	// that the bot doesn't want to avoid.
 	BOOL CanAvoid(edict_t* pEntity, float fDistanceToEntity, float fAvoidDistance);
 
@@ -3927,9 +3927,9 @@ public:
 
 		// Can't shoot while reloading
 		if (pev->button & IN_RELOAD)
-			return FALSE;
+			return false;
 
-		return TRUE;
+		return true;
 	}
 
 	void Use() const
@@ -3976,10 +3976,10 @@ public:
 	// does bot want to pursue the enemy or stop and do his own thing?
 	BOOL     WantToFollowEnemy(edict_t* pEnemy);
 
-	// returns TRUE when bot is facing the ideal aim position
+	// returns true when bot is facing the ideal aim position
 	BOOL	 FacingIdeal();
 
-	// returns TRUE if bot can pickup the entity pPickup
+	// returns true if bot can pickup the entity pPickup
 	BOOL     CanPickup(edict_t* pPickup);
 
 	// bot hears a sound type from a specific origin vector
@@ -4011,17 +4011,17 @@ public:
 	// does stuff when the bot finds an enemy
 	void     EnemyFound(edict_t* pEnemy);
 
-	// returns TRUE if bot knows where the enemy went
+	// returns true if bot knows where the enemy went
 	BOOL     HasSeenEnemy(edict_t* pEnemy);
 
 	// get bots vector to aim at for shooting the enemy
 	Vector   GetAimVector(edict_t* pBotEnemy);
 
 	// get the distance from vector vec
-	float    DistanceFrom(const Vector& vec, BOOL twoD = FALSE);
+	float    DistanceFrom(const Vector& vec, BOOL twoD = false);
 
 	// set up tasks so bot runs from the origin
-	void	 RunForCover(Vector vOrigin, BOOL bDoItNow = FALSE, int iScheduleId = 0);
+	void	 RunForCover(Vector vOrigin, BOOL bDoItNow = false, int iScheduleId = 0);
 
 	/*BOOL     IsReloading ()
 	{
@@ -4038,7 +4038,7 @@ public:
 	short int SpeciesOnTeam(int species);
 	short int EvolvedSpeciesOnTeam(int species);
 
-	void	 BotChat(eBotChatType iChatType, edict_t* pInfo = nullptr, BOOL bSayNow = FALSE);
+	void	 BotChat(eBotChatType iChatType, edict_t* pInfo = nullptr, BOOL bSayNow = false);
 
 	BOOL     BotCanUseBuiltStructure(edict_t* structure);
 	edict_t* BotCheckForWeldables();
@@ -4089,7 +4089,7 @@ public:
 	BOOL hasWeb();
 	BOOL hasBlink();
 
-	// returns TRUE when bot thinks it is low on ammunition on its current weapon.
+	// returns true when bot thinks it is low on ammunition on its current weapon.
 	BOOL     LowOnAmmo();
 
 	BOOL     HasJetPack() { return IsMarine() && (pev->iuser4 & MASK_UPGRADE_7) == MASK_UPGRADE_7; };
@@ -4105,7 +4105,7 @@ public:
 	//BOOL     BotBuild                  ( void );
 	//BOOL     SelectPlayersForOrder     ( edict_t *pent );
 
-	// returns TRUE when bot can follow the player pEdict
+	// returns true when bot can follow the player pEdict
 	BOOL     CanFollow(edict_t* pEdict);
 
 	// Checks bots weapon bitmask
@@ -4400,7 +4400,7 @@ public:
 	{
 		// Pointers the same somehow?? Well thats the same :)
 		if (szPlayerName == const_cast<char*>(STRING(m_pPlayer->v.netname)))
-			return TRUE;
+			return true;
 
 		return strcmp(szPlayerName, STRING(m_pPlayer->v.netname)) == 0;
 	}
@@ -4488,7 +4488,7 @@ public:
 		strncpy(m_szPass, szPass, BOT_MAX_PASSWORD_LEN - 1);
 		m_szPass[BOT_MAX_PASSWORD_LEN - 1] = 0;
 
-		m_bRecheckAuth = TRUE;
+		m_bRecheckAuth = true;
 	}
 
 	// check if player has already had this tool-tip sent to them
@@ -4506,11 +4506,11 @@ public:
 	// sets auto waypoint on/off or toggle
 	void AutoWaypoint(int state = -1)
 	{
-		m_bDebugAutoWaypoint = FALSE;
-		m_bSetUpAutoWaypoint = FALSE;
+		m_bDebugAutoWaypoint = false;
+		m_bSetUpAutoWaypoint = false;
 
 		if (state == 2)
-			m_bDebugAutoWaypoint = TRUE;
+			m_bDebugAutoWaypoint = true;
 
 		if (state == -1)
 			m_bAutoWaypoint = !m_bAutoWaypoint;
@@ -4764,7 +4764,7 @@ public:
 		if (steamID && *steamID && (m_szSteamId && *m_szSteamId))
 			return strcmp(m_szSteamId, steamID) == 0;
 
-		return FALSE;
+		return false;
 	}
 
 	BOOL operator == (CAllowedPlayer player)
@@ -4909,20 +4909,20 @@ public:
 		return !m_bCanUseOnDedicatedServer && IS_DEDICATED_SERVER();
 	}
 
-	void setupCommand(const char* szCvarName, int iAccessLevel, BOOL bCanUseOnDedicatedServer = TRUE);
+	void setupCommand(const char* szCvarName, int iAccessLevel, BOOL bCanUseOnDedicatedServer = true);
 
 	BOOL needAccess(int iAccessLevel)
 	{
 		if (m_iAccessLevel > 0)
 			return (iAccessLevel & m_iAccessLevel) == 0;
 
-		return FALSE;
+		return false;
 	}
 
 	BOOL IsCvar(const char* szCvarName)
 	{
 		if (szCvarName == m_szCvarName)
-			return TRUE; // Same pointers, same string
+			return true; // Same pointers, same string
 
 		// other wise do a string compare
 		return strcmp(szCvarName, m_szCvarName) == 0;
@@ -5546,7 +5546,7 @@ public:
 	BOOL BotHasEnemy()
 	{
 		if (!m_pCurrentBot)
-			return FALSE;
+			return false;
 
 		return m_pCurrentBot->m_pEnemy != nullptr;
 	}
@@ -5754,7 +5754,7 @@ public:
 		return nullptr;
 	}
 
-	BOOL isFlag(edict_t* pFlag, int team, BOOL bEnemyFlag = FALSE)
+	BOOL isFlag(edict_t* pFlag, int team, BOOL bEnemyFlag = false)
 	{
 		dataStack<CTFCGoal> tempStack = m_Flags;
 
@@ -5764,7 +5764,7 @@ public:
 
 			if (pGotFlag->isEdict(pFlag))
 			{
-				BOOL bValid = FALSE;
+				BOOL bValid = false;
 
 				if (bEnemyFlag) // for demoman, e.g., to pipe enemy flags
 					bValid = pGotFlag->getTeam() && !pGotFlag->isForTeam(team);
@@ -5775,12 +5775,12 @@ public:
 				{
 					tempStack.Init();
 
-					return TRUE;
+					return true;
 				}
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	BOOL getFlagInfo(edict_t* pFlag, int* group, int* goal, int* team)
@@ -5799,11 +5799,11 @@ public:
 
 				tempStack.Init();
 
-				return TRUE;
+				return true;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	edict_t* getRandomHeldFlagByTeam(int team)
@@ -5839,11 +5839,11 @@ public:
 			if (pFlag->v.owner == pPlayer)
 			{
 				tempStack.Init();
-				return TRUE;
+				return true;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 private:
@@ -5944,7 +5944,7 @@ public:
 		m_CapPoints.Pop();
 	}
 
-	edict_t* getCapturePoint(int group, int goal, int team, BOOL noInfo = FALSE);
+	edict_t* getCapturePoint(int group, int goal, int team, BOOL noInfo = false);
 
 private:
 	dataStack<CTFCGoal> m_CapPoints;
@@ -5975,7 +5975,7 @@ public:
 		m_iCost = 0;
 		m_iSlot = 0;
 		m_iRad = 0;
-		m_bAvailable = FALSE;
+		m_bAvailable = false;
 		m_iMessageId = static_cast<AvHMessageID>(0);
 
 		return;
@@ -6184,7 +6184,7 @@ public:
 
 		memset(m_iTeamScores, 0, sizeof(int) * MAX_TEAMS);
 		//m_szWelcomeMessage = NULL;
-		//m_bIsNs3final = TRUE;
+		//m_bIsNs3final = true;
 
 		setDefaults();
 
@@ -6244,42 +6244,42 @@ public:
 
 	void setDefaults()
 	{
-		//m_bGotTsObjectives = FALSE;
+		//m_bGotTsObjectives = false;
 		m_pMessageEntity = nullptr;
 		m_pDebugMessage = nullptr;
 		m_fWallStickTol = BOT_WAYPOINT_TOUCH_DIST;
 
 		m_iLanguage = BOT_LANG_ENGLISH;
-		m_bIsNS = FALSE;
+		m_bIsNS = false;
 
 		//m_pTFCGroup = NULL;
 		//m_pTFCDetect = NULL;
 		//m_pTFCGoal = NULL;
-		m_bCombatMap = FALSE;
+		m_bCombatMap = false;
 		m_pMarineStart = nullptr;
 		//m_iJoiningClients = 0;
 		m_fBotStuckSpeed = 7.0;
 		m_iMaxVisUpdateRevs = 200;
 		m_fReadConfigTime = 0;
-		m_bAutoPathWaypoint = TRUE;
-		m_bWaypointsHavePaths = FALSE;
+		m_bAutoPathWaypoint = true;
+		m_bWaypointsHavePaths = false;
 		m_fUpdateVisTime = 0;
 		m_iDebugLevels = 0;
 		m_iBotMsgIndex = -1;
 		m_iCurrentMessageState = 0;
 		m_iCurrentMessageState2 = 0;
 
-		m_bGameRules = FALSE;
+		m_bGameRules = false;
 
-		m_bIsFakeClientCommand = FALSE;
+		m_bIsFakeClientCommand = false;
 		m_fTurnSpeed = 15;
 
 		m_CurrentMessage = nullptr;
 
 		m_fAutoBuildTime = 0;
-		m_bAutoBuilt = FALSE;
+		m_bAutoBuilt = false;
 
-		m_bNetMessageStarted = FALSE;
+		m_bNetMessageStarted = false;
 
 		m_CurrentHandledCvar = nullptr;
 
@@ -6317,19 +6317,19 @@ public:
 		//	m_fBotAimUpdate = 1;
 		//	m_fBotAimFactor = 1;
 
-		m_bHasDefTech = FALSE;
-		m_bHasSensTech = FALSE;
-		m_bHasMovTech = FALSE;
+		m_bHasDefTech = false;
+		m_bHasSensTech = false;
+		m_bHasMovTech = false;
 
-		m_bCanUpgradeDef = FALSE;
-		m_bCanUpgradeSens = FALSE;
-		m_bCanUpgradeMov = FALSE;
+		m_bCanUpgradeDef = false;
+		m_bCanUpgradeSens = false;
+		m_bCanUpgradeMov = false;
 
 		memset(m_Hives, 0, sizeof(hive_info_t) * BOT_MAX_HIVES);
 		//m_iNumHivesAdded = 0;
 
 		m_fClientUpdateTime = 0;
-		m_bBotCanRejoin = FALSE;
+		m_bBotCanRejoin = false;
 
 		m_fNextJoinTeam = 0;
 		m_iNumBots = 0;
@@ -6339,16 +6339,16 @@ public:
 
 		m_iMaxPathRevs = 200;
 
-		m_bTeamPlay = FALSE;
+		m_bTeamPlay = false;
 
 		m_ThingsToBuild = nullptr;
 
 		m_currCapPoint = nullptr;
 		m_currFlag = nullptr;
 
-		prevBackPackInvalid = FALSE;
-		prevCapturePointInvalid = FALSE;
-		prevFlagInvalid = FALSE;
+		prevBackPackInvalid = false;
+		prevCapturePointInvalid = false;
+		prevFlagInvalid = false;
 
 		m_fHiveImportance = 1.0f;
 		m_fResTowerImportance = 0.7f;
@@ -6358,44 +6358,43 @@ public:
 	}
 
 	void LoadBotModels();
-
-	//TODO: Initialise those variables needed added below? [APG]RoboCop[CL]
+	
 	CBotGlobals()
 	{
 		Init();
-		m_bIsNS = 0;
+		m_bIsNS = false;
 		m_sModelIndexFireball = 0;
-		m_bWaypointsHavePaths = 0;
+		m_bWaypointsHavePaths = false;
 		m_iConfigSettings = 0;
-		m_bAutoPathWaypoint = 0;
+		m_bAutoPathWaypoint = false;
 
-		m_bTeamPlay = 0;
-		m_fNextJoinTeam = 0;
-		m_fAutoWaypointCheckTime = 0;
-		m_fAutoBuildTime = 0;
-		m_bAutoBuilt = 0;
-		m_bHasDefTech = 0;
-		m_bHasSensTech = 0;
-		m_bHasMovTech = 0;
-		m_fWallStickTol = 0;
+		m_bTeamPlay = false;
+		m_fNextJoinTeam = 0.0f;
+		m_fAutoWaypointCheckTime = 0.0f;
+		m_fAutoBuildTime = 0.0f;
+		m_bAutoBuilt = false;
+		m_bHasDefTech = false;
+		m_bHasSensTech = false;
+		m_bHasMovTech = false;
+		m_fWallStickTol = 0.0f;
 
-		m_bNetMessageStarted = 0;
+		m_bNetMessageStarted = false;
 		m_iMinBots = 0;
 		m_iMaxBots = 0;
 
 		m_iMaxVisUpdateRevs = 0;
-		m_fHiveImportance = 0;
-		m_fResTowerImportance = 0;
-		m_fHealingImportance = 0;
-		m_fStructureBuildingImportance = 0;
-		m_fRefillStructureImportance = 0;
-		m_fBotStuckSpeed = 0;
-		m_fUpdateLadderTime = 0; m_fUpdateVisTime = 0;
+		m_fHiveImportance = 0.0f;
+		m_fResTowerImportance = 0.0f;
+		m_fHealingImportance = 0.0f;
+		m_fStructureBuildingImportance = 0.0f;
+		m_fRefillStructureImportance = 0.0f;
+		m_fBotStuckSpeed = 0.0f;
+		m_fUpdateLadderTime = 0.0f; m_fUpdateVisTime = 0.0f;
 		m_szModFolder = nullptr;
 		m_iDebugLevels = 0;
 
 		m_pMarineStart = nullptr;
-		m_fReadConfigTime = 0;
+		m_fReadConfigTime = 0.0f;
 		m_iBotChatPercent = 0;
 		m_iBotChatReplyPercent = 0;
 		m_iBotMsgIndex = 0;
@@ -6411,24 +6410,24 @@ public:
 
 		m_bIsFakeClientCommand = 0;
 		m_iFakeArgCount = 0; m_iForceTeam = 0;
-		m_fGorgeAmount = 0;
+		m_fGorgeAmount = 0.0f;
 		m_pListenServerEdict = nullptr;
 		m_iWaypointTexture = 0;
 
-		m_bGameRules = 0;
-		m_fClientUpdateTime = 0;
-		m_bBotCanRejoin = 0;
-		m_fMapInitTime = 0;
-		m_fBotRejoinTime = 0;
+		m_bGameRules = false;
+		m_fClientUpdateTime = 0.0f;
+		m_bBotCanRejoin = false;
+		m_fMapInitTime = 0.0f;
+		m_fBotRejoinTime = 0.0f;
 		m_iNumBots = 0;
 
-		m_bCanUpgradeDef = 0;
-		m_bCanUpgradeSens = 0;
-		m_bCanUpgradeMov = 0;
+		m_bCanUpgradeDef = false;
+		m_bCanUpgradeSens = false;
+		m_bCanUpgradeMov = false;
 
 		m_iCurrentMod = 0;
-		m_fTurnSpeed = 0;
-		m_bCombatMap = 0;
+		m_fTurnSpeed = 0.0f;
+		m_bCombatMap = false;
 
 		prevBackPackInvalid = 0;
 		prevCapturePointInvalid = 0;
@@ -6459,7 +6458,7 @@ public:
 
 	void KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd);
 
-	/*BOOL TFC_IsAvailableFlag(edict_t* pFlag, int team, BOOL bEnemyFlag = FALSE);
+	/*BOOL TFC_IsAvailableFlag(edict_t* pFlag, int team, BOOL bEnemyFlag = false);
 
 	BOOL TFC_teamsAreAllies(int team1, int team2)
 	{
@@ -6696,15 +6695,15 @@ public:
 		int i = 0;
 
 		if (m_iValidGoals[team - 1].IsEmpty())
-			return TRUE; // no goals stored as valid, just return TRUE (for normal maps e.g.)
+			return true; // no goals stored as valid, just return true (for normal maps e.g.)
 
 		for (i = 0; i < m_iValidGoals[i].Size(); i++)
 		{
 			if (m_iValidGoals[team - 1].ReturnValueFromIndex(i) == goal)
-				return TRUE;
+				return true;
 		}
 
-		return FALSE;
+		return false;
 	}*/
 
 /*/	void changeWelcomeMessage(char* message)
@@ -6861,7 +6860,7 @@ int InconsistentFile(const edict_t* player, const char* filename, char* disconne
 int AllowLagCompensation();
 void RCBot_ServerCommand();
 int GetModId();
-void GetGameDirectory(char* szDir);
+void GetGameDirectory(char* szDir); //TODO: Needs implemented?
 float UTIL_GetAvoidAngle(edict_t* pEdict, Vector origin);
 void ReadBotUsersConfig();
 void BotFunc_MakeSquad(CClient* pClient);

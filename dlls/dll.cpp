@@ -104,7 +104,7 @@ void UpdateClientData(const struct edict_s* ent, int sendweapons, struct clientd
 // checks if this item is for a client
 BOOL CAllowedPlayer::IsForClient(CClient* pClient)
 {
-	BOOL bSameName = FALSE;
+	BOOL bSameName = false;
 
 	if (steamID_defined())
 	{
@@ -117,7 +117,7 @@ BOOL CAllowedPlayer::IsForClient(CClient* pClient)
 	edict_t* pEdict = pClient->GetPlayer();
 
 	if (pEdict == nullptr)
-		return FALSE;
+		return false;
 
 	const BOOL bSamePass = IsForPass(pClient->GetPass());
 
@@ -309,12 +309,12 @@ void DispatchBlocked(edict_t* pentBlocked, edict_t* pentOther)
 	static CBot* pBot = nullptr;
 
 	// Save some time since we use a static variable
-	BOOL bFindNewBot = TRUE;
+	BOOL bFindNewBot = true;
 
 	if (pBot != nullptr)
 	{
 		if (pBot->m_pEdict == pentOther)
-			bFindNewBot = FALSE;
+			bFindNewBot = false;
 	}
 
 	if (bFindNewBot) // takes a few loops
@@ -455,7 +455,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 		{
 			if (gBotGlobals.m_iMinBots != -1)
 			{
-				const int iNumPlayerCheck = UTIL_GetNumClients(TRUE) + 1 + gBotGlobals.GetNumJoiningClients();
+				const int iNumPlayerCheck = UTIL_GetNumClients(true) + 1 + gBotGlobals.GetNumJoiningClients();
 
 				if (gBotGlobals.m_iNumBots > gBotGlobals.m_iMinBots && iNumPlayerCheck > gBotGlobals.m_iMaxBots)
 					// Can it kick a bot to free a slot?
@@ -482,7 +482,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 								SERVER_COMMAND(cmd);  // kick the bot using kick name //(kick #id)
 
 								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 2.0;
-								gBotGlobals.m_bBotCanRejoin = FALSE;
+								gBotGlobals.m_bBotCanRejoin = false;
 
 								break;
 							}
@@ -492,7 +492,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 				}
 				else if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_RESERVE_BOT_SLOTS) && gBotGlobals.m_iNumBots < gBotGlobals.m_iMinBots)
 				{
-					const int iNumPlayers = UTIL_GetNumClients(TRUE) + 1;
+					const int iNumPlayers = UTIL_GetNumClients(true) + 1;
 					const int iBotsStillToJoin = gBotGlobals.m_iMinBots - gBotGlobals.m_iNumBots;
 					const int iNewSlotsFree = gpGlobals->maxClients - iNumPlayers;
 					// dont allow player to connect as the number of bots
@@ -515,7 +515,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 #ifdef RCBOT_META_BUILD
 						RETURN_META_VALUE(MRES_SUPERCEDE, 0);
 #else
-						return FALSE;
+						return false;
 #endif
 					}
 				}
@@ -634,9 +634,9 @@ void ClientDisconnect(edict_t* pEntity)
 
 		pBot->Init();
 		pBot->SetEdict(nullptr);
-		pBot->m_bIsUsed = FALSE;
+		pBot->m_bIsUsed = false;
 		pBot->m_fKickTime = gpGlobals->time;
-		pBot->m_bIsUsed = FALSE;
+		pBot->m_bIsUsed = false;
 
 		pBot->m_Profile.m_iProfileId = iProfileId;
 		pBot->m_Profile.m_iFavTeam = iTeam;
@@ -782,7 +782,7 @@ void ClientCommand(edict_t* pEntity)
 
 	eBotCvarState iState = BOT_CVAR_CONTINUE;
 	int iAccessLevel = 0;
-	BOOL bSayTeamMsg = FALSE;
+	BOOL bSayTeamMsg = false;
 	BOOL bSayMsg;
 
 	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEntity);
@@ -798,9 +798,9 @@ void ClientCommand(edict_t* pEntity)
 		iState = BOT_CVAR_ACCESSED;
 	}
 	// someone said something
-	else if ((bSayMsg = FStrEq(pcmd, "say")) == TRUE || (bSayTeamMsg = FStrEq(pcmd, "say_team")) == TRUE)
+	else if ((bSayMsg = FStrEq(pcmd, "say")) == true || (bSayTeamMsg = FStrEq(pcmd, "say_team")) == true)
 	{
-		BOOL bMadeSquad = FALSE;
+		BOOL bMadeSquad = false;
 
 		if (bSayTeamMsg)
 		{
@@ -810,7 +810,7 @@ void ClientCommand(edict_t* pEntity)
 			{
 				// loop through bots in team
 				BotFunc_MakeSquad(pClient);
-				bMadeSquad = TRUE;
+				bMadeSquad = true;
 			}
 		}
 
@@ -836,7 +836,7 @@ void ClientCommand(edict_t* pEntity)
 					int iLenSoFar = 0;
 					// for concatenating string dynamically
 					char* szTemp = nullptr;
-					BOOL bWasQuote = FALSE;
+					BOOL bWasQuote = false;
 
 					const char* (*CmdArgv_func)(int);
 					int iArgCount;
@@ -879,7 +879,7 @@ void ClientCommand(edict_t* pEntity)
 						// copy old string
 						if (szTemp)
 						{
-							BOOL bIsQuote = FALSE;
+							BOOL bIsQuote = false;
 
 							// if not a bot sending message, then the ' quotes can seperate words
 							// so can spaces argh :-@
@@ -1106,10 +1106,10 @@ void ServerDeactivate()
 	// usually when this function is called...
 	gBotGlobals.FreeLocalMemory();
 
-	gBotGlobals.m_bNetMessageStarted = FALSE;
-	gBotGlobals.m_fBotRejoinTime = 0;
-	gBotGlobals.m_fClientUpdateTime = 0;
-	gBotGlobals.m_bBotCanRejoin = FALSE;
+	gBotGlobals.m_bNetMessageStarted = false;
+	gBotGlobals.m_fBotRejoinTime = 0.0f;
+	gBotGlobals.m_fClientUpdateTime = 0.0f;
+	gBotGlobals.m_bBotCanRejoin = false;
 	gBotGlobals.m_fReadConfigTime = 0;
 	gBotGlobals.m_Squads.FreeMemory();
 	gBotGlobals.m_fNextJoinTeam = 0;
@@ -1507,7 +1507,7 @@ extern "C" EXPORT int GetEntityAPI(DLL_FUNCTIONS * pFunctionTable, int interface
 	// check if engine's pointer is valid and version is correct...
 
 	if (!pFunctionTable || interfaceVersion != INTERFACE_VERSION)
-		return FALSE;
+		return false;
 
 	// pass engine callback function table to engine...
 	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
@@ -1515,10 +1515,10 @@ extern "C" EXPORT int GetEntityAPI(DLL_FUNCTIONS * pFunctionTable, int interface
 	// pass other DLLs engine callbacks to function table...
 	if (!(*other_GetEntityAPI)(&other_gFunctionTable, INTERFACE_VERSION))
 	{
-		return FALSE;  // error initializing function table!!!
+		return false;  // error initializing function table!!!
 	}
 
-	return TRUE;
+	return true;
 }
 
 #ifdef __BORLANDC__
@@ -1528,15 +1528,15 @@ extern "C" EXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS * pFunctionTable, int
 #endif
 {
 	if (other_GetNewDLLFunctions == NULL)
-		return FALSE;
+		return false;
 
 	// pass other DLLs engine callbacks to function table...
 	if (!(*other_GetNewDLLFunctions)(pFunctionTable, interfaceVersion))
 	{
-		return FALSE;  // error initializing function table!!!
+		return false;  // error initializing function table!!!
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif
@@ -1579,7 +1579,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 		return; // if nothing in the command buffer, return
 	}
 
-	gBotGlobals.m_bIsFakeClientCommand = TRUE; // set the "fakeclient command" flag
+	gBotGlobals.m_bIsFakeClientCommand = true; // set the "fakeclient command" flag
 	const int length = strlen(command); // get the total length of the command string
 
 	// process all individual commands (separated by a semicolon) one each a time
@@ -1628,7 +1628,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	}
 
 	g_argv[0] = 0; // when it's done, reset the g_argv field
-	gBotGlobals.m_bIsFakeClientCommand = FALSE; // reset the "fakeclient command" flag
+	gBotGlobals.m_bIsFakeClientCommand = false; // reset the "fakeclient command" flag
 	gBotGlobals.m_iFakeArgCount = 0; // and the argument count
 }
 
@@ -1658,9 +1658,9 @@ void BotFunc_InitProfile(bot_profile_t* bpBotProfile)
 	bpBotProfile->m_szHAL_PreTrainFile = nullptr;
 	bpBotProfile->m_szHAL_SwapFile = nullptr;
 
-	bpBotProfile->m_fAimSpeed = 0.2;
-	bpBotProfile->m_fAimSkill = 0.0;
-	bpBotProfile->m_fAimTime = 1.0;
+	bpBotProfile->m_fAimSpeed = 0.2f;
+	bpBotProfile->m_fAimSkill = 0.0f;
+	bpBotProfile->m_fAimTime = 1.0f;
 
 	bpBotProfile->m_iBottomColour = RANDOM_LONG(0, 255);
 	bpBotProfile->m_iTopColour = RANDOM_LONG(0, 255);
@@ -1681,7 +1681,7 @@ void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile)
 	{
 		char* szTag = nullptr;
 		char* szToWrite = nullptr;
-		int* iToWrite = nullptr;
+		const int* iToWrite = nullptr;
 
 		switch (i)
 		{
@@ -2115,7 +2115,7 @@ void ReadMapConfig()
 	}
 }
 
-edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, Vector vOrigin)
+edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin) //TODO: Incomplete
 {
 	return nullptr;
 }
@@ -2131,7 +2131,7 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 		// find nearest struct resource fountain
 		char* classname[1] = { "func_resource" };
 
-		edict_t* pResource = UTIL_FindNearestEntity(classname, 1, vOrigin, 200, FALSE);
+		edict_t* pResource = UTIL_FindNearestEntity(classname, 1, vOrigin, 200, false);
 
 		if (pResource)
 		{
@@ -2189,7 +2189,7 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 			}
 		}
 
-		build->v.nextthink = gpGlobals->time + 0.1;
+		build->v.nextthink = gpGlobals->time + 0.1f;
 
 #ifdef RCBOT_META_BUILD
 		MDLL_Spawn(build);
@@ -2204,7 +2204,7 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 }
 
 /////////////////////////////////////////
-// Make new BOTCAM.CPP soon!!!
+// TODO: Make new BOTCAM.CPP soon!!!
 CBotCam::CBotCam()
 {
 	m_iPositionSet = 0;
@@ -2213,7 +2213,7 @@ CBotCam::CBotCam()
 	m_pCameraEdict = nullptr;
 	m_fNextChangeBotTime = 0.0f;
 	m_fNextChangeState = 0.0f;
-	m_bTriedToSpawn = FALSE;
+	m_bTriedToSpawn = false;
 }
 
 BOOL CBotCam::IsWorking()
@@ -2226,7 +2226,7 @@ void CBotCam::Spawn()
 	if (m_bTriedToSpawn || !gBotGlobals.IsConfigSettingOn(BOT_CONFIG_ENABLE_BOTCAM))
 		return;
 
-	m_bTriedToSpawn = TRUE;
+	m_bTriedToSpawn = true;
 
 	// Redfox http://www.foxbot.net
 	m_pCameraEdict = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
@@ -2359,7 +2359,7 @@ void CBotCam::Think()
 	if (!m_pCurrentBot || !m_iState)
 		return;
 
-	//const BOOL bSetAngle = TRUE;
+	//const BOOL bSetAngle = true;
 
 	vBotOrigin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 
@@ -2442,7 +2442,7 @@ void CBotCam::Think()
 				m_pCameraEdict->v.origin = tr.vecEndPos - vComp.Normalize() * 32.0;
 			}
 
-			//bSetAngle = FALSE;
+			//bSetAngle = false;
 		}
 		else
 			m_fNextChangeState = 0;
@@ -2451,7 +2451,7 @@ void CBotCam::Think()
 	case BOTCAM_FP:
 		if (m_pCurrentBot)
 		{
-			//bSetAngle = FALSE;
+			//bSetAngle = false;
 			m_pCameraEdict->v.origin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 
 			UTIL_MakeVectors(m_pCurrentBot->pev->v_angle);
@@ -2501,17 +2501,17 @@ BOOL CBotCam::TuneIn(edict_t* pPlayer)
 	if (gBotGlobals.m_iNumBots == 0)
 	{
 		BotMessage(pPlayer, 0, "No Bots are running for bot cam");
-		return FALSE;
+		return false;
 	}
 	else if (m_pCameraEdict == nullptr)
 	{
 		BotMessage(pPlayer, 0, "Oops, looks like camera never worked...");
-		return FALSE;
+		return false;
 	}
 	//m_TunedIn[ENTINDEX(pPlayer)-1] = 1;
 	SET_VIEW(pPlayer, m_pCameraEdict);
 
-	return TRUE;
+	return true;
 }
 
 void CBotCam::TuneOff(edict_t* pPlayer)
@@ -2527,13 +2527,13 @@ void CBotCam::Clear()
 	m_pCameraEdict = nullptr;
 	m_fNextChangeBotTime = 0;
 	m_fNextChangeState = 0;
-	m_bTriedToSpawn = FALSE;
+	m_bTriedToSpawn = false;
 }
 
 /////////////////////////////////////////////
 // TFC Specific
 
-// when noInfo  is TRUE we want to find ...
+// when noInfo  is true we want to find ...
 // any valid capture point for team...
 // and haven't given goal or group info
 /*edict_t* CTFCCapturePoints::getCapturePoint(int group, int goal, int team, BOOL noInfo)
@@ -2591,20 +2591,20 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS* pFunctionTable, int* interfaceVersi
 	// this is one of the initialization functions hooked by metamod in the gamedll API
 	if (!pFunctionTable) {
 		UTIL_LogPrintf("GetEntityAPI2 called with null pFunctionTable");
-		return FALSE;
+		return false;
 	}
 	else if (*interfaceVersion != INTERFACE_VERSION) {
 		UTIL_LogPrintf("GetEntityAPI2 version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
 		//! Tell engine what version we had, so it can figure out who is out of date.
 		*interfaceVersion = INTERFACE_VERSION;
-		return FALSE;
+		return false;
 	}
 
 	// gFunctionTable defined in dll.cpp
 	// copy the whole table for metamod to know which functions we are using here
 	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
 
-	return TRUE; // alright
+	return true; // alright
 }
 
 #endif

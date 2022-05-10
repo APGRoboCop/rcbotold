@@ -405,7 +405,7 @@ public:
 
 		m_szClassname = nullptr;
 
-		m_bRegistered = FALSE; // Registered by the mod.
+		m_bRegistered = false; // Registered by the mod.
 
 		m_iPrimAmmoMax = -1;
 		m_iSecAmmoMax = -1;
@@ -425,7 +425,7 @@ public:
 	virtual BOOL CanBeUsedUnderWater()
 	{
 		// no preset
-		return TRUE;
+		return true;
 	}
 
 	int MaxPrimaryAmmo()
@@ -435,13 +435,13 @@ public:
 
 	virtual BOOL CanUsePrimary()
 	{
-		return TRUE;
+		return true;
 	}
 
 	virtual BOOL CanUseSecondary()
 	{
 		// no preset
-		return TRUE;
+		return true;
 	}
 
 	BOOL IsRegistered()
@@ -461,7 +461,7 @@ public:
 
 	virtual BOOL PrimaryInRange(float fRange)
 	{
-		return TRUE;
+		return true;
 	}
 
 	virtual float PrimMaxRange()
@@ -476,7 +476,7 @@ public:
 
 	virtual BOOL SecondaryInRange(float fRange)
 	{
-		return TRUE;
+		return true;
 	}
 
 	int HudSlot()
@@ -702,7 +702,7 @@ public:
 			return m_iClip <= 0 && !*m_iAmmo1;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	int PrimaryInRange(float fRange)
@@ -740,7 +740,7 @@ public:
 		case NS_WEAPON_MINE:
 		case NS_WEAPON_KNIFE:
 		case NS_WEAPON_WELDER:
-			return FALSE;
+			return false;
 			break;
 		default:
 			break;
@@ -796,7 +796,7 @@ public:
 
 	void RemoveWeapon()
 	{
-		m_bHasWeapon = FALSE;
+		m_bHasWeapon = false;
 	}
 
 	void UpdateWeapon(int iClip)
@@ -815,14 +815,14 @@ public:
 	BOOL IsMelee()
 	{
 		if (m_pWeaponInfo == nullptr)
-			return TRUE;
+			return true;
 		return m_pWeaponInfo->IsMelee();
 	}
 
 	BOOL CanBeUsedUnderWater()
 	{
 		if (m_pWeaponInfo == nullptr)
-			return TRUE;
+			return true;
 
 		return m_pWeaponInfo->CanBeUsedUnderWater();
 	}
@@ -912,7 +912,7 @@ public:
 		if (iId > 0 && iId < MAX_WEAPONS)
 			return m_Weapons[iId].HasWeapon(pEdict);
 		else
-			return FALSE;
+			return false;
 	}
 
 	void setHasWeapon(int id, BOOL bVal)

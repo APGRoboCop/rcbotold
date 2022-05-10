@@ -26,8 +26,8 @@
 //-----------------------------------------------------
 #define CSUITPLAYLIST	4		// max of 4 suit sentences queued up at any time
 
-#define SUIT_GROUP			TRUE
-#define	SUIT_SENTENCE		FALSE
+#define SUIT_GROUP			true
+#define	SUIT_SENTENCE		false
 
 #define	SUIT_REPEAT_OK		0
 #define SUIT_NEXT_IN_30SEC	30
@@ -139,7 +139,7 @@ public:
 	BOOL				m_fInitHUD;				// True when deferred HUD restart msg needs to be sent
 	BOOL				m_fGameHUDInitialized;
 	int					m_iTrain;				// Train control position
-	BOOL				m_fWeapon;				// Set this to FALSE to force a reset of the current weapon HUD info
+	BOOL				m_fWeapon;				// Set this to false to force a reset of the current weapon HUD info
 
 	EHANDLE				m_pTank;				// the tank which the player is currently controlling,  NULL if no tank
 	float				m_fDeadTime;			// the time at which the player died  (used in PlayerDeathThink())
@@ -208,11 +208,11 @@ public:
 		return pev->deadflag == DEAD_NO && pev->health > 0;
 	}
 
-	BOOL ShouldFadeOnDeath() override { return FALSE; }
-	virtual	BOOL IsPlayer() { return TRUE; }			// Spectators should return FALSE for this, they aren't "players" as far as game logic is concerned
+	BOOL ShouldFadeOnDeath() override { return false; }
+	virtual	BOOL IsPlayer() { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
 
-	virtual BOOL IsNetClient() { return TRUE; }		// Bots should return FALSE for this, they can't receive NET messages
-															// Spectators should return TRUE for this
+	virtual BOOL IsNetClient() { return true; }		// Bots should return false for this, they can't receive NET messages
+															// Spectators should return true for this
 	virtual const char* TeamID();
 
 	int		Save(CSave& save) override;

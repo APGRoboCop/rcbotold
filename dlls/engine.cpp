@@ -709,7 +709,7 @@ void pfnMessageEnd()
 	gBotGlobals.m_iCurrentMessageState = 0;
 	gBotGlobals.m_iCurrentMessageState2 = 0;
 
-	gBotGlobals.m_bNetMessageStarted = FALSE;
+	gBotGlobals.m_bNetMessageStarted = false;
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1256,7 +1256,7 @@ byte* pfnLoadFileForMe(char* filename, int* pLength)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnLoadFileForMe: filename=%s\n", filename); fclose(fp); }
 #ifdef RCBOT_META_BUILD
-	RETURN_META_VALUE(MRES_IGNORED, 0);
+	RETURN_META_VALUE(MRES_IGNORED, nullptr);
 #else
 	return (*g_engfuncs.pfnLoadFileForMe)(filename, pLength);
 #endif
@@ -1443,7 +1443,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 
 				if (pClient)
 				{
-					pClient->m_bRecheckAuth = TRUE;
+					pClient->m_bRecheckAuth = true;
 				}
 			}
 		}
