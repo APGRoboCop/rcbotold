@@ -2097,8 +2097,8 @@ void ReadMapConfig()
 		{
 			// dont add bots for another while...
 			// Added more delay to prevent possible "Tried to write to uninitialized sizebuf_t" crashes - [APG]RoboCop[CL]
-			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
-			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 5.0f;
+			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 6.0f;
+			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 6.0f;
 		}
 
 		// Does the command in the text file
