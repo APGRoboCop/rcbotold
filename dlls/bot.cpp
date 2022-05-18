@@ -3763,7 +3763,7 @@ BOOL CBot::WantToFindEnemy()
 
 	return true;
 }
-/*
+
 typedef enum
 {
 	ACTION_BUILD_DEF,
@@ -3957,7 +3957,7 @@ private:
 	vector<CAlienAction> m_Actions;
 };
 
-*/
+
 void CBot::LookForNewTasks()
 {
 	// Do a big check for new tasks
