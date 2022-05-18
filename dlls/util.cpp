@@ -1012,6 +1012,19 @@ int UTIL_GetBotIndex(const edict_t* pEdict)
 	return -1;  // return -1 if edict is not a bot
 }
 
+int UTIL_MasterTriggered(string_t sMaster, CBaseEntity* pActivator) //TODO: Required? [APG]RoboCop[CL]
+{
+	edict_t* pent = nullptr;
+
+	while ((pent = (*g_engfuncs.pfnFindEntityByString)(pent, "targetname", STRING(sMaster))) != nullptr)
+	{
+		if (pent->v.owner == pActivator->edict())
+			return 1;
+	}
+
+	return 0;
+}
+
 CBot* UTIL_GetBotPointer(const edict_t* pEdict)
 {
 	//assert(pEdict != NULL);
@@ -1134,18 +1147,18 @@ float UTIL_AngleDiff(float destAngle, float srcAngle)
 	float delta = destAngle - srcAngle;
 	if (destAngle > srcAngle)
 	{
-		if (delta >= 180)
+		if (delta >= 180.0f)
 			delta -= 360;
 	}
 	else
 	{
-		if (delta <= -180)
-			delta += 360;
+		if (delta <= -180.0f)
+			delta += 360.0f;
 	}
 	return delta;
 }
 
-void UTIL_CountBuildingsInRange(Vector const vOrigin, float fRange, int* iDefs, int* iOffs, int* iSens, int* iMovs)
+void UTIL_CountBuildingsInRange(Vector const& vOrigin, float fRange, int* iDefs, int* iOffs, int* iSens, int* iMovs)
 {
 	edict_t* pEnt = nullptr;
 

@@ -405,8 +405,8 @@ void CBot::BotCommand()
 		// find out from setTech net message(s) ...??? what happened to em?
 	}
 }
+// TODO: may need to be tested [APG]RoboCop[CL]
 /*
-
   typedef enum
   {
 	CH_BASE_ATTACK = 1,
@@ -3764,6 +3764,7 @@ BOOL CBot::WantToFindEnemy()
 	return true;
 }
 
+// TODO: Experimental and NS AlienAction may need to be tested [APG]RoboCop[CL]
 typedef enum
 {
 	ACTION_BUILD_DEF,
@@ -3822,17 +3823,17 @@ public:
 		float fUtility = 1;
 
 		if ( m_result & ACTION_RES_FASTER_RESOURCES )
-			fUtility *= 1.1;
+			fUtility *= 1.1f;
 		if ( m_result & ACTION_RES_MORE_HEALTH )
-			fUtility *= 0.8;
+			fUtility *= 0.8f;
 		if ( m_result & ACTION_RES_MORE_ABILITIES )
-			fUtility *= 1.05;
+			fUtility *= 1.05f;
 		if ( m_result & ACTION_RES_MORE_SPAWNPOINTS )
-			fUtility *= 1.1;
+			fUtility *= 1.1f;
 		if ( m_result & ACTION_RES_MORE_DEFENCES )
-			fUtility *= 0.9;
+			fUtility *= 0.9f;
 		if ( m_result & ACTION_RES_CLOACKED )
-			fUtility *= 0.5;
+			fUtility *= 0.5f;
 	}
 
 	float ResultProbability ( eAlienMaskEvidence evd )
@@ -3842,77 +3843,77 @@ public:
 		if ( m_result & ACTION_RES_FASTER_RESOURCES )
 		{
 			if ( evd & MASK_EVD_SLOW_RESOURCES )
-				fProbability *= 1.0;
+				fProbability *= 1.0f;
 			if ( evd & MASK_EVD_NORM_RESOURCES )
-				fProbability *= 0.6;
+				fProbability *= 0.6f;
 			if ( evd & MASK_EVD_FAST_RESOURCES )
-				fProbability *= 0.3;
+				fProbability *= 0.3f;
 			if ( evd & MASK_EVD_LOSING )
-				fProbability *= 0.9;
+				fProbability *= 0.9f;
 		}
 		if ( m_result & ACTION_RES_MORE_HEALTH )
 		{
 			if ( evd & MASK_EVD_LOW_HEALTH )
-				fProbability *= 1.0;
+				fProbability *= 1.0f;
 			if ( evd & MASK_EVD_BALANCED )
-				fProbability *= 0.6;
+				fProbability *= 0.6f;
 			if ( evd & MASK_EVD_LOSING )
-				fProbability *= 0.9;
+				fProbability *= 0.9f;
 		}
 		if ( m_result & ACTION_RES_MORE_ABILITIES )
 		{
 			if ( evd & MASK_EVD_SLOW_RESOURCES )
-				fProbability *= 1.0;
+				fProbability *= 1.0f;
 			if ( evd & MASK_EVD_NORM_RESOURCES )
-				fProbability *= 0.6;
+				fProbability *= 0.6f;
 			if ( evd & MASK_EVD_NORM_RESOURCES )
-				fProbability *= 0.3;
+				fProbability *= 0.3f;
 			if ( evd & MASK_EVD_LOSING )
-				fProbability *= 0.9;
+				fProbability *= 0.9f;
 		}
 		if ( m_result & ACTION_RES_MORE_SPAWNPOINTS )
 		{
 			if ( evd & MASK_EVD_MIN_HIVES_UP )
-				fProbability *= 1.0;
+				fProbability *= 1.0f;
 			else if ( evd & MASK_EVD_MAX_HIVES_UP )
-				fProbability *= 0.0;
+				fProbability *= 0.0f;
 			else
-				fProbability *= 0.5;
+				fProbability *= 0.5f;
 
 			if ( evd & MASK_EVD_FAST_RESOURCES )
-				fProbability *= 0.9;
+				fProbability *= 0.9f;
 			if ( evd & MASK_EVD_NORM_RESOURCES )
-				fProbability *= 0.7;
+				fProbability *= 0.7f;
 			if ( evd & MASK_EVD_SLOW_RESOURCES )
-				fProbability *= 0.2;
+				fProbability *= 0.2f;
 		}
 		if ( m_result & ACTION_RES_MORE_DEFENCES )
 		{
 			if ( evd & MASK_EVD_NORM_RESOURCES )
-				fProbability *= 0.6;
+				fProbability *= 0.6f;
 			if ( evd & MASK_EVD_NORM_RESOURCES )
-				fProbability *= 0.3;
+				fProbability *= 0.3f;
 			if ( evd & MASK_EVD_LOSING )
-				fProbability *= 0.9;
+				fProbability *= 0.9f;
 		}
 		if ( m_result & ACTION_RES_CLOACKED )
 		{
 			if ( evd & MASK_EVD_BALANCED )
-				fProbability *= 0.7;
+				fProbability *= 0.7f;
 			if ( evd & MASK_EVD_WINNING )
-				fProbability *= 0.9;
+				fProbability *= 0.9f;
 			if ( evd & MASK_EVD_MANY_SENS )
-				fProbability *= 0.1;
+				fProbability *= 0.1f;
 		}
 
 		if ( m_result & ACTION_RES_MORE_TRAITS )
 		{
 			if ( evd & MASK_EVD_MANY_DEFS )
-				fProbability *= 0.66;
+				fProbability *= 0.66f;
 			if ( evd & MASK_EVD_MANY_SENS )
-				fProbability *= 0.66;
+				fProbability *= 0.66f;
 			if ( evd & MASK_EVD_MANY_MOVS )
-				fProbability *= 0.66;
+				fProbability *= 0.66f;
 		}
 	}
 private:
@@ -3925,12 +3926,12 @@ class CAlienActions
 public:
 	void setup ()
 	{
-		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_DEF,ACTION_RES_MORE_DEFENCES|ACTION_RES_MORE_TRAITS|ACTION_RES_MORE_HEALTH));
+		//m_Actions.emplace_back(CAlienAction(ACTION_BUILD_DEF,ACTION_RES_MORE_DEFENCES|ACTION_RES_MORE_TRAITS|ACTION_RES_MORE_HEALTH));
 		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_OFF,ACTION_RES_MORE_DEFENCES));
-		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_SENS,ACTION_RES_CLOACKED|ACTION_RES_MORE_TRAITS));
+		//m_Actions.emplace_back(CAlienAction(ACTION_BUILD_SENS,ACTION_RES_CLOACKED|ACTION_RES_MORE_TRAITS));
 		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_MOV,ACTION_RES_MORE_TRAITS));
 		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_RESTOWER,ACTION_RES_FASTER_RESOURCES));
-		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_HIVE,(ACTION_RES_MORE_SPAWNPOINTS + ACTION_RES_MORE_ABILITIES)));
+		//m_Actions.emplace_back(CAlienAction(ACTION_BUILD_HIVE,(ACTION_RES_MORE_SPAWNPOINTS + ACTION_RES_MORE_ABILITIES)));
 		m_Actions.emplace_back(CAlienAction(ACTION_HEAL_PLAYER,ACTION_RES_MORE_HEALTH));
 	}
 
@@ -3954,7 +3955,7 @@ public:
 		}
 	}
 private:
-	vector<CAlienAction> m_Actions;
+	std::vector<CAlienAction> m_Actions;
 };
 
 
@@ -16122,7 +16123,8 @@ void CBot::CheckStuck()
 		// i.e. dont want to kill ourselves if gestating in NS like what used to happen O_o
 		m_CurrentTask = m_Tasks.CurrentTask();
 
-		bCheckIfStuck = m_fIdealMoveSpeed > 0 && m_bMoveToIsValid && pev->waterlevel < 3 && (!m_CurrentTask || (m_CurrentTask->Task() == BOT_TASK_FIND_PATH || m_CurrentTask->Task() == BOT_TASK_MOVE_TO_VECTOR));
+		bCheckIfStuck = m_fIdealMoveSpeed > 0 && m_bMoveToIsValid && pev->waterlevel < 3 &&
+			(!m_CurrentTask || (m_CurrentTask->Task() == BOT_TASK_FIND_PATH || m_CurrentTask->Task() == BOT_TASK_MOVE_TO_VECTOR));
 
 		if (bCheckIfStuck)
 		{

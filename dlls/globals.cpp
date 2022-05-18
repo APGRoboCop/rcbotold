@@ -189,7 +189,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 					if (m_CurrentMessage->IsMessageName("AlienInfo"))
 					{
 						// can auto build, alien info can happen when game starts
-						m_fAutoBuildTime = gpGlobals->time + 0.1;
+						m_fAutoBuildTime = gpGlobals->time + 0.1f;
 					}
 				}
 			}

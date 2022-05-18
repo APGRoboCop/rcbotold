@@ -154,7 +154,7 @@ BOOL UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore = 
 BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, int max_len);
 
 BOOL	EntityIsBuildable(edict_t* pEdict);
-BOOL    EntityIsWeldable(edict_t* pEdict);
+BOOL    EntityIsWeldable(edict_t* pEdict); //TODO: This is redefined with a diff perimeter [APG]RoboCop[CL]
 BOOL	EntityIsAlive(edict_t* pEdict);
 BOOL	EntityIsMarine(edict_t* pEdict);
 BOOL	EntityIsAlien(edict_t* pEdict);
@@ -267,7 +267,7 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev);
 edict_t* UTIL_FindPlayerByTruncName(const char* name);
 void strlow(char* str);
 void strhigh(char* str);
-void UTIL_CountBuildingsInRange(Vector vOrigin, float fRange, int* iDefs, int* iOffs, int* iSens, int* iMovs);
+void UTIL_CountBuildingsInRange(const Vector& vOrigin, float fRange, int* iDefs, int* iOffs, int* iSens, int* iMovs);
 float BotFunc_DistanceBetweenEdicts(const edict_t* pEdict1, const edict_t* pEdict2);
 
 float UTIL_AngleDiff(float destAngle, float srcAngle);

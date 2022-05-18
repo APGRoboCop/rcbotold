@@ -2117,6 +2117,8 @@ void ReadMapConfig()
 
 edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin) //TODO: Incomplete
 {
+	//edict_t* pPlayer = nullptr;
+	
 	return nullptr;
 }
 
