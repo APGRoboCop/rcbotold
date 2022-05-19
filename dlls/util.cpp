@@ -569,10 +569,10 @@ int GetMessageID(const char* szMsg)
 	return msg_id;
 }
 
-float UTIL_AnglesBetweenEdictOrigin(edict_t* pEdict, Vector const origin)
+float UTIL_AnglesBetweenEdictOrigin(edict_t* pEdict, Vector const& origin)
 {
 	const Vector v_enemy = origin - pEdict->v.origin + pEdict->v.view_ofs;
-	const Vector angles = v_enemy;
+	const Vector& angles = v_enemy;
 	//angles = UTIL_VecToAngles(angles);
 	Vector v_viewpoint = pEdict->v.v_angle;
 
@@ -603,7 +603,7 @@ edict_t* UTIL_getEntityInFront(edict_t* pEntity)
 	return tr.pHit;
 }
 
-float UTIL_AngleBetweenVectors(Vector const vec1, Vector const vec2)
+float UTIL_AngleBetweenVectors(Vector const& vec1, Vector const& vec2)
 {
 	//vec1 = UTIL_FixAngles(vec1);
 	//vec2 = UTIL_FixAngles(vec2);
@@ -614,7 +614,7 @@ float UTIL_AngleBetweenVectors(Vector const vec1, Vector const vec2)
 	return acos(vec1Dotvec2 / veclengths) * (180 / M_PI);
 }
 
-float UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector const vOrigin)
+float UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector const& vOrigin)
 {
 	float fAngle;
 	const Vector vBotAngles = pev->v_angle;
@@ -631,7 +631,7 @@ float UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector const vOrigin)
 	return fAngle;
 }
 
-Vector UTIL_AngleBetweenOrigin(entvars_t* pev, Vector const vOrigin)
+Vector UTIL_AngleBetweenOrigin(entvars_t* pev, Vector const& vOrigin)
 {
 	Vector vAngle;
 	const Vector vBotAngles = pev->v_angle;
@@ -1234,7 +1234,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 }
 
 // from old RCBOT
-Vector UTIL_LengthFromVector(Vector const relation, float length)
+Vector UTIL_LengthFromVector(Vector const& relation, float length)
 {
 	return relation / relation.Length() * length;
 }
@@ -1316,7 +1316,7 @@ int UTIL_CountEntities(char* classname)
 	return iTotal;
 }
 
-int UTIL_CountEntitiesInRange(char* classname, Vector vOrigin, float fRange)
+int UTIL_CountEntitiesInRange(char* classname, const Vector& vOrigin, float fRange)
 {
 	edict_t* pEnt = nullptr;
 	int iTotal = 0;
@@ -1365,7 +1365,7 @@ edict_t* UTIL_GetRandomUnbuiltHive()
 	return pEnt;
 }
 
-int UTIL_GetBuildWaypoint(Vector const vSpawn, dataStack<int>* iFailedGoals)
+int UTIL_GetBuildWaypoint(Vector const& vSpawn, dataStack<int>* iFailedGoals)
 {
 	dataStack<int> iWaypoints;
 
@@ -1729,7 +1729,7 @@ void UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, BOOL needmore, c
 	}
 }
 
-BOOL UTIL_CanStand(Vector const origin, Vector* v_floor)
+BOOL UTIL_CanStand(Vector const& origin, Vector* v_floor)
 {
 	TraceResult tr;
 
@@ -1953,12 +1953,12 @@ void UTIL_PlaySound(edict_t* pPlayer, const char* szSound)
 	CLIENT_COMMAND(pPlayer, szCommand);
 }
 
-float UTIL_EntityDistance(entvars_t* pev, Vector vOrigin)
+float UTIL_EntityDistance(entvars_t* pev, const Vector& vOrigin)
 {
 	return (pev->origin - vOrigin).Length();
 }
 
-float UTIL_EntityDistance2D(entvars_t* pev, Vector vOrigin)
+float UTIL_EntityDistance2D(entvars_t* pev, const Vector& vOrigin)
 {
 	return (pev->origin - vOrigin).Length2D();
 }
@@ -1968,14 +1968,14 @@ float UTIL_GetBestPushableDistance(edict_t* pPushable)
 	return (pPushable->v.size.x + pPushable->v.size.y) / 3;
 }
 
-Vector UTIL_GetDesiredPushableVector(Vector vOrigin, edict_t* pPushable)
+Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, edict_t* pPushable)
 {
 	const Vector vPushable = EntityOrigin(pPushable);
 
 	return vPushable - (vOrigin - vPushable).Normalize() * UTIL_GetBestPushableDistance(pPushable);
 }
 
-BOOL UTIL_AcceptablePushableVector(edict_t* pPushable, Vector const vOrigin)
+BOOL UTIL_AcceptablePushableVector(edict_t* pPushable, Vector const& vOrigin)
 {
 	return UTIL_EntityDistance2D(&pPushable->v, vOrigin) <= UTIL_GetBestPushableDistance(pPushable);
 }
@@ -2291,7 +2291,7 @@ BOOL UTIL_IsButton(edict_t* pButton)
 	return strncmp(szClassname, "func_", 5) == 0;
 }
 
-edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, Vector vOrigin, float fRange, BOOL bVisible, edict_t* pIgnore)
+edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, const Vector& vOrigin, float fRange, BOOL bVisible, edict_t* pIgnore)
 {
 	TraceResult tr;
 
@@ -2430,7 +2430,7 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot)
 	return vPosition;
 }
 
-edict_t* UTIL_CheckTeleEntrance(Vector const vOrigin, edict_t* pExit, edict_t* pOwner)
+edict_t* UTIL_CheckTeleEntrance(Vector const& vOrigin, edict_t* pExit, edict_t* pOwner)
 {
 	edict_t* pent = nullptr;
 
@@ -2485,7 +2485,7 @@ BOOL UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore)
 	return false;
 }
 
-edict_t* UTIL_CheckTeleExit(Vector const vOrigin, edict_t* pOwner, edict_t* pEntrance)
+edict_t* UTIL_CheckTeleExit(Vector const& vOrigin, edict_t* pOwner, edict_t* pEntrance)
 {
 	edict_t* pent = nullptr;
 

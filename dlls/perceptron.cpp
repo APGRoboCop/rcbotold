@@ -90,7 +90,7 @@ void CPerceptron::setWeights(CBotGAValues* vals, int iFrom, int iNum)
 	}
 }
 
-void CPerceptron::setWeights(std::vector <ga_value> const weights, int iFrom, int iNum)
+void CPerceptron::setWeights(std::vector <ga_value> const& weights, int iFrom, int iNum)
 {
 	m_weights.clear();
 
@@ -106,7 +106,7 @@ void CPerceptron::randomize()
 		m_weights[i] = RANDOM_FLOAT(0, 0.6) - 0.3;
 }
 
-void CPerceptron::setWeights(std::vector <ga_value> const weights)
+void CPerceptron::setWeights(std::vector <ga_value> const& weights)
 {
 	m_weights.clear();
 

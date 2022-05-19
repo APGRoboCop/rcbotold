@@ -90,7 +90,7 @@ static unsigned char g_iFailedWaypoints[MAX_WAYPOINTS];
 
 extern CBotGlobals gBotGlobals;
 
-void CWaypointLocations::getMaxMins(Vector const vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk)
+void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk)
 {
 	const int iLoc = std::abs(static_cast<int>(vOrigin.x + 4096) / 256);
 	const int jLoc = std::abs(static_cast<int>(vOrigin.y + 4096) / 256);
@@ -140,7 +140,7 @@ void CWaypointLocations::getMaxMins(Vector const vOrigin, int& mini, int& minj, 
 
 ///////////////
 // return nearest waypoint that can be used to cover from vCoverFrom vector
-int CWaypointLocations::GetCoverWaypoint(Vector const vPlayerOrigin, const Vector vCoverFrom, dataStack<int>* iIgnoreWpts)
+int CWaypointLocations::GetCoverWaypoint(Vector const& vPlayerOrigin, const Vector& vCoverFrom, dataStack<int>* iIgnoreWpts)
 {
 	const int iWaypoint = this->NearestWaypoint(vCoverFrom, REACHABLE_RANGE, -1, false, true);
 
@@ -1132,7 +1132,7 @@ int WaypointFindNearest(edict_t* pEntity, const float range, const int team)
 
 // find the nearest waypoint to the source postition and return the index
 // of that waypoint...
-int WaypointFindNearest(Vector v_src, edict_t* pEntity, const float range, const int team)
+int WaypointFindNearest(const Vector& v_src, edict_t* pEntity, const float range, const int team)
 {
 	TraceResult tr;
 
@@ -1178,8 +1178,8 @@ int WaypointFindNearest(Vector v_src, edict_t* pEntity, const float range, const
 
 // find the goal nearest to the source position (v_src) matching the "flags"
 // bits and return the index of that waypoint...
-int WaypointFindNearestGoal(Vector v_src, edict_t* pEntity, const float range, const int team, const int flags,
-	dataStack<int>* iIgnoreWpts)
+int WaypointFindNearestGoal(const Vector& v_src, edict_t* pEntity, const float range, const int team, const int flags,
+                            dataStack<int>* iIgnoreWpts)
 {
 	//TraceResult tr;
 
@@ -1372,8 +1372,8 @@ int WaypointFindRandomGoal(edict_t* pEntity, const int team, dataStack<int>* iIg
 
 // find a random goal within a range of a position (v_src) matching the
 // "flags" bits and return the index of that waypoint...
-int WaypointFindRandomGoal(Vector v_src, edict_t* pEntity, const float range, const int team, const int flags,
-	dataStack<int>* iIgnoreWpts)
+int WaypointFindRandomGoal(const Vector& v_src, edict_t* pEntity, const float range, const int team, const int flags,
+                           dataStack<int>* iIgnoreWpts)
 {
 	int index;
 	int indexes[50];
@@ -1438,7 +1438,7 @@ int WaypointFindRandomGoal(Vector v_src, edict_t* pEntity, const float range, co
 }
 
 // find the nearest "special" aiming waypoint (for sniper aiming)...
-int WaypointFindNearestAiming(Vector v_origin)
+int WaypointFindNearestAiming(const Vector& v_origin)
 {
 	int min_index = -1;
 	int min_distance = 9999.0;
@@ -1467,7 +1467,7 @@ int WaypointFindNearestAiming(Vector v_origin)
 	return min_index;
 }
 
-void WaypointDrawBeam(edict_t* pEntity, const Vector start, Vector end, int width,
+void WaypointDrawBeam(edict_t* pEntity, const Vector& start, const Vector& end, int width,
 	int noise, int red, int green, int blue, int brightness, int speed)
 {
 	// PM - Use MSG_ONE_UNRELIABLE
@@ -1496,7 +1496,7 @@ void WaypointDrawBeam(edict_t* pEntity, const Vector start, Vector end, int widt
 	MESSAGE_END();
 }
 
-int WaypointAddOrigin(Vector const vOrigin, const int iFlags, edict_t* pEntity,
+int WaypointAddOrigin(Vector const& vOrigin, const int iFlags, edict_t* pEntity,
 	const BOOL bDraw, const BOOL bSound, const BOOL bAutoSetFlagsForPlayer)
 {
 	TraceResult tr;
@@ -2496,7 +2496,7 @@ BOOL WaypointFlagsOnLadderOrFly(const int iWaypointFlags)
 }
 
 // return player edict pointer nearby origin within range.
-edict_t* PlayerNearVector(Vector vOrigin, float fRange)
+edict_t* PlayerNearVector(const Vector& vOrigin, float fRange)
 {
 	edict_t* pNearest = nullptr;
 

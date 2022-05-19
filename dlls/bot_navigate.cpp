@@ -1940,7 +1940,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 	return vPosition;
 }
 
-BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
+BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 {
 	TraceResult tr;
 

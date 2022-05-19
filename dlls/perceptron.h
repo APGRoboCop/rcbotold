@@ -87,9 +87,9 @@ public:
 		load(bfp);
 	}
 
-	void setWeights(std::vector <ga_value> weights);
+	void setWeights(const std::vector <ga_value>& weights);
 
-	void setWeights(std::vector <ga_value> weights, int iFrom, int iNum);
+	void setWeights(const std::vector <ga_value>& weights, int iFrom, int iNum);
 
 	void setWeights(CBotGAValues* vals, int iFrom, int iNum);
 

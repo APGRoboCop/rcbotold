@@ -92,7 +92,7 @@ BOOL CBits::getBit(const int iBit)
 	const int iBitStart = iBit / 8;
 	const int iBitOffset = iBit % 8;
 
-	unsigned char* c = &m_cBits[iBitStart];
+	const unsigned char* c = &m_cBits[iBitStart];
 
 	return (*c & 1 << iBitOffset) == 1 << iBitOffset;
 }

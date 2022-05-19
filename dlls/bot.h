@@ -126,7 +126,7 @@ edict_t* UTIL_getEntityInFront(edict_t* pEntity);
 void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, int magnitude, BOOL doDamage);
 Vector UTIL_GetGroundVector(edict_t* pEdict);
 BOOL UTIL_EntityIsHive(edict_t* pEdict);
-int UTIL_CountEntitiesInRange(char* classname, Vector vOrigin, float fRange);
+int UTIL_CountEntitiesInRange(char* classname, const Vector& vOrigin, float fRange);
 int UTIL_SentryLevel(edict_t* pEntity);
 void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, float flRadius, int iClassIgnore, int bitsDamageType);
 void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency, float duration, float radius);
@@ -187,7 +187,7 @@ void ReadMapConfig();
 int RoundToNearestInteger(float fVal);
 int Ceiling(float fVal);
 BOOL UTIL_IsButton(edict_t* pButton);
-BOOL UTIL_CanStand(Vector origin, Vector* v_floor);
+BOOL UTIL_CanStand(const Vector& origin, Vector* v_floor);
 
 void UTIL_GetArgFromString(char** szString, char* szArg);
 
@@ -199,11 +199,11 @@ edict_t* UTIL_FindEntityInSphere(edict_t* pentStart, const Vector& vecCenter,
 edict_t* UTIL_FindEntityByString(edict_t* pentStart, const char* szKeyword,
 	const char* szValue);
 
-BOOL UTIL_AcceptablePushableVector(edict_t* pPushable, Vector vOrigin);
-float UTIL_EntityDistance(entvars_t* pev, Vector vOrigin);
-float UTIL_EntityDistance2D(entvars_t* pev, Vector vOrigin);
+BOOL UTIL_AcceptablePushableVector(edict_t* pPushable, const Vector& vOrigin);
+float UTIL_EntityDistance(entvars_t* pev, const Vector& vOrigin);
+float UTIL_EntityDistance2D(entvars_t* pev, const Vector& vOrigin);
 float UTIL_GetBestPushableDistance(edict_t* pPushable);
-Vector UTIL_GetDesiredPushableVector(Vector vOrigin, edict_t* pPushable);
+Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, edict_t* pPushable);
 
 //edict_t* UTIL_TFC_PlayerHasFlag(edict_t* pPlayer);
 
@@ -235,9 +235,9 @@ BOOL		UTIL_CanBuildHive(entvars_t* pev);
 
 float UTIL_EntityAnglesToVector2D(entvars_t* pev, const Vector* pOrigin); // For 2d Movement
 float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin);
-edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, Vector vOrigin, float fRange, BOOL bVisible, edict_t* pIgnore = nullptr);
+edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, const Vector& vOrigin, float fRange, BOOL bVisible, edict_t* pIgnore = nullptr);
 
-Vector UTIL_LengthFromVector(Vector relation, float length);
+Vector UTIL_LengthFromVector(const Vector& relation, float length);
 
 BOOL	BotFunc_FInViewCone(Vector* pOrigin, edict_t* pEdict);
 BOOL	BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict);
@@ -245,17 +245,17 @@ Vector	Center(edict_t* pEdict);
 Vector	GetGunPosition(edict_t* pEdict);
 Vector	EntityOrigin(edict_t* pEdict);
 
-edict_t* UTIL_CheckTeleEntrance(Vector vOrigin, edict_t* pExit, edict_t* pOwner);
-edict_t* UTIL_CheckTeleExit(Vector vOrigin, edict_t* pOwner, edict_t* pEntrance);
+edict_t* UTIL_CheckTeleEntrance(const Vector& vOrigin, edict_t* pExit, edict_t* pOwner);
+edict_t* UTIL_CheckTeleExit(const Vector& vOrigin, edict_t* pOwner, edict_t* pEntrance);
 
 Vector UTIL_AngleBetweenOrigin(entvars_t* pev, Vector vOrigin);
 BOOL UTIL_OnGround(entvars_t* pev);
 //int     UTIL_TFC_getMaxArmor(edict_t* pEdict);
 void	ClientPrint(edict_t* pEdict, int msg_dest, const char* msg_name);
-float   UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector vOrigin);
+float   UTIL_YawAngleBetweenOrigin(entvars_t* pev, const Vector& vOrigin);
 BOOL	UTIL_IsFacingEntity(entvars_t* pev, entvars_t* pevEntity);
-float   UTIL_AngleBetweenVectors(Vector vec1, Vector vec2);
-float	UTIL_AnglesBetweenEdictOrigin(edict_t* pEdict, Vector origin);
+float   UTIL_AngleBetweenVectors(const Vector& vec1, const Vector& vec2);
+float	UTIL_AnglesBetweenEdictOrigin(edict_t* pEdict, const Vector& origin);
 
 int		UTIL_PlayersOnTeam(int iTeam);
 int		UTIL_SpeciesOnTeam(int iSpecies, BOOL bIgnoreEmbryos = false);
@@ -274,7 +274,7 @@ float UTIL_AngleDiff(float destAngle, float srcAngle);
 
 void BotPrintTalkMessage(char* fmt, ...);
 
-int BotFunc_GetBitSetOf(int iBits);
+int BotFunc_GetBitSetOf(int iBits); //TODO: This is redefined with a diff perimeter [APG]RoboCop[CL]
 void BotFile_Write(char* string);
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -720,7 +720,7 @@ public:
 	}
 
 	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = nullptr, int iInfo = 0, float fInfo = 0,
-		Vector vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0/*, CBotTask *GoalTask = NULL */)
+	         const Vector& vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0/*, CBotTask *GoalTask = NULL */)
 	{
 		// cheap way of adding schedules.. ;)
 		// means if this task fails we can fail every other task with the same
@@ -758,7 +758,7 @@ public:
 		return m_fTimeToComplete - gpGlobals->time;
 	}
 
-	void SetVector(Vector const vNewVector)
+	void SetVector(Vector const& vNewVector)
 	{
 		m_vInfo = vNewVector;
 	}
@@ -1352,7 +1352,7 @@ public:
 		*GotTask = CBotTask(BOT_TASK_NONE);
 	}
 
-	BOOL HasTask(CBotTask const Task)
+	BOOL HasTask(CBotTask const& Task)
 	{
 		return m_Tasks.IsMember(Task);//changed
 	}
@@ -1711,7 +1711,7 @@ public:
 		memset(this, 0, sizeof(CTypeVector<T>));
 	}
 
-	void SetVector(Vector vVec)
+	void SetVector(const Vector& vVec)
 	{
 		m_x = static_cast<T>(vVec.x);
 		m_y = static_cast<T>(vVec.y);
@@ -1743,7 +1743,7 @@ protected:
 class CAutoWaypointCheck : public CTypeVector<float>
 {
 public:
-	void SetPoint(Vector const vec, int iFlags)
+	void SetPoint(Vector const& vec, int iFlags)
 	{
 		m_iFlags = iFlags;
 
@@ -1779,7 +1779,7 @@ public:
 		memset(this, 0, sizeof(CRememberPosition));
 	}
 
-	CRememberPosition(Vector vOrigin, edict_t* pEntity)
+	CRememberPosition(const Vector& vOrigin, edict_t* pEntity)
 	{
 		m_vOrigin = vOrigin;
 		setEntity(pEntity);
@@ -1818,7 +1818,7 @@ public:
 		return m_vOrigin;
 	}
 
-	void setVisibleOrigin(Vector const vVis)
+	void setVisibleOrigin(Vector const& vVis)
 	{
 		m_vVisibleOrigin = vVis;
 	}
@@ -1935,7 +1935,7 @@ public:
 			}
 		}*/
 
-	void addPosition(Vector const vOrigin, edict_t* pEntity, int flags, const Vector vVisibleOrigin)
+	void addPosition(Vector const& vOrigin, edict_t* pEntity, int flags, const Vector& vVisibleOrigin)
 	{
 		CRememberPosition newPosition = CRememberPosition(vOrigin, pEntity);
 		newPosition.setFlags(flags);
@@ -2069,7 +2069,7 @@ public:
 		return &m_Positions[m_Positions.Size() - 1];//[m_iNewest]);//.getVector();
 	}
 
-	CRememberPosition* positionNearest(Vector vOrigin, Vector vFrom)
+	CRememberPosition* positionNearest(const Vector& vOrigin, Vector vFrom)
 	{
 		CRememberPosition* nearest = nullptr;
 		float fNearest = 0;
@@ -2517,7 +2517,7 @@ public:
 		m_iTeam = team;
 	}
 
-	float distanceFrom(Vector vec)
+	float distanceFrom(const Vector& vec)
 	{
 		return (vec - m_pEdict->v.origin).Length();
 	}
@@ -2549,7 +2549,7 @@ public:
 		m_Backpacks.Pop();
 	}
 
-	edict_t* findBackpack(Vector const location, int team, int min_health, int min_cells, int min_armor, int min_ammo)
+	edict_t* findBackpack(Vector const& location, int team, int min_health, int min_cells, int min_armor, int min_ammo)
 	{
 		float fDist;
 
@@ -2717,7 +2717,7 @@ public:
 		m_vOrigin = Vector(0, 0, 0);
 		m_szName = nullptr;
 	}
-	TSObjective(int id, Vector origin, char* name)
+	TSObjective(int id, const Vector& origin, char* name)
 	{
 		m_iId = id;
 		m_vOrigin = origin;
@@ -3519,7 +3519,7 @@ public:
 	// keep bot facing one certain angle
 	// when climbing ladder so bot doesn't
 	// jerk around like crazy
-	void SetLadderAngles(Vector const vAngles)
+	void SetLadderAngles(Vector const& vAngles)
 	{
 		m_vLadderAngles = vAngles;
 		m_bLadderAnglesSet = true;
@@ -4434,7 +4434,7 @@ public:
 
 	void setSteamID();
 
-	void SetTeleportVector(Vector const vOrigin)
+	void SetTeleportVector(Vector const& vOrigin)
 	{
 		RemoveTeleportVector();
 		m_vTeleportVector = new Vector(vOrigin);
@@ -5198,7 +5198,7 @@ public:
 		return MASTER_NONE;
 	}
 
-	edict_t* GetButtonForEntity(edict_t* pEntity, Vector const vOrigin)
+	edict_t* GetButtonForEntity(edict_t* pEntity, Vector const& vOrigin)
 	{
 		CMasterEntity* pMaster = GetMaster(pEntity);
 
@@ -6672,7 +6672,7 @@ public:
 		return theMapType == m_TFCMapType;
 	}
 
-	edict_t* findBackpack(Vector const location, int team, int min_health, int min_cells, int min_armor, int min_ammo)
+	edict_t* findBackpack(Vector const& location, int team, int min_health, int min_cells, int min_armor, int min_ammo)
 	{
 		return m_Backpacks.findBackpack(location, team, min_health, min_cells, min_armor, min_ammo);
 	}
@@ -6863,7 +6863,7 @@ float UTIL_GetAvoidAngle(edict_t* pEdict, Vector origin);
 void ReadBotUsersConfig();
 void BotFunc_MakeSquad(CClient* pClient);
 void AssertMessage(BOOL bAssert, char* fmt, ...);
-int UTIL_GetBuildWaypoint(Vector vSpawn, dataStack<int>* iFailedGoals = nullptr);
+int UTIL_GetBuildWaypoint(const Vector& vSpawn, dataStack<int>* iFailedGoals = nullptr);
 int BotFunc_GetStructureForGorgeBuild(entvars_t* pGorge, entvars_t* pEntitypev);
 void BotFunc_KickBotFromTeam(int iTeam);
 BOOL BotFunc_BreakableIsEnemy(edict_t* pBreakable, edict_t* pEdict);

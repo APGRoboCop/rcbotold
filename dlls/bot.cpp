@@ -3940,7 +3940,6 @@ public:
 		BOOL gotBest = false;
 		float fMax = 0;
 		float fCur = 0;
-		CAlienAction *best = NULL;
 
 		for ( unsigned int i = 0; i < m_Actions.size(); i ++ )
 		{
@@ -3948,6 +3947,7 @@ public:
 
 			if ( !gotBest || (fCur > fMax) )
 			{
+				CAlienAction *best = nullptr;
 				best = &(m_Actions[i]);
 				fMax = fCur;
 				gotBest = true;
