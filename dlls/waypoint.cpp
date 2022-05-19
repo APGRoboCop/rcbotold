@@ -1689,7 +1689,7 @@ void WaypointDelete(CClient* pClient)
 
 	edict_t* pEntity = pClient->GetPlayer();
 
-	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0, -1, false, true);
+	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0f, -1, false, true);
 
 	const int index = pClient->m_iCurrentWaypoint;
 
@@ -1777,7 +1777,7 @@ void WaypointCreatePath(CClient* pClient, const int cmd)
 
 	if (cmd == 1)  // assign source of path
 	{
-		pClient->m_iPathWaypointCreateIndex = WaypointLocations.NearestWaypoint(pEdict->v.origin, 50.0, -1);
+		pClient->m_iPathWaypointCreateIndex = WaypointLocations.NearestWaypoint(pEdict->v.origin, 50.0f, -1);
 
 		if (pClient->m_iPathWaypointCreateIndex == -1)
 		{
@@ -1796,7 +1796,7 @@ void WaypointCreatePath(CClient* pClient, const int cmd)
 	if (cmd == 2)  // assign dest of path and make path
 	{
 		const int waypoint1 = pClient->m_iPathWaypointCreateIndex;
-		const int waypoint2 = WaypointLocations.NearestWaypoint(pEdict->v.origin, 50.0, -1);
+		const int waypoint2 = WaypointLocations.NearestWaypoint(pEdict->v.origin, 50.0f, -1);
 
 		BOOL bError = false;
 
@@ -1845,7 +1845,7 @@ void WaypointRemovePath(CClient* pClient, const int cmd)
 
 	if (cmd == 1)  // assign source of path
 	{
-		pClient->m_iPathWaypointRemoveIndex = WaypointLocations.NearestWaypoint(pEdict->v.origin, 50.0, -1);
+		pClient->m_iPathWaypointRemoveIndex = WaypointLocations.NearestWaypoint(pEdict->v.origin, 50.0f, -1);
 
 		if (pClient->m_iPathWaypointRemoveIndex == -1)
 		{
@@ -1863,7 +1863,7 @@ void WaypointRemovePath(CClient* pClient, const int cmd)
 
 	if (cmd == 2)  // assign dest of path and make path
 	{
-		const int waypoint2 = WaypointLocations.NearestWaypoint(pEdict->v.origin, 50.0, -1);
+		const int waypoint2 = WaypointLocations.NearestWaypoint(pEdict->v.origin, 50.0f, -1);
 
 		if (pClient->m_iPathWaypointRemoveIndex == -1 || waypoint2 == -1)
 		{
@@ -2027,7 +2027,7 @@ void WaypointPrintInfo(edict_t* pEntity)
 	char msg[80];
 
 	// find the nearest waypoint...
-	const int index = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0, -1, false, true, false, nullptr);
+	const int index = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0f, -1, false, true, false, nullptr);
 
 	//BOOL visible = WaypointVisibility.GetVisibilityFromTo(1,4);
 
@@ -2146,7 +2146,7 @@ void WaypointDrawIndex(edict_t* pEntity, int index)
 
 	waypoint = &waypoints[index];
 
-	colour = Vector(0.0, 0.0, 255.0);
+	colour = Vector(0.0f, 0.0f, 255.0f);
 	start = waypoint->origin - Vector(0, 0, 34);
 	end = start + Vector(0, 0, 68);
 
@@ -2164,7 +2164,7 @@ void WaypointDrawIndex(edict_t* pEntity, int index)
 		end = start + Vector(0, 0, 14);
 	}
 	else if (waypoint_flags & W_FL_JUMP)
-		colour = Vector(0.0, 255.0, 255.0);
+		colour = Vector(0.0f, 255.0f, 255.0f);
 	else if (waypoint_flags & W_FL_LADDER)
 	{
 		// find next ladder waypoint
@@ -2191,48 +2191,48 @@ void WaypointDrawIndex(edict_t* pEntity, int index)
 			WaypointDrawBeam(pEntity, waypoint->origin, waypoint->origin + vComp * 128, 32, 2, 0, 0, 255, 200, 1);
 		}
 
-		colour = Vector(255.0, 255.0, 0.0);
+		colour = Vector(255.0f, 255.0f, 0.0f);
 	}
 	else if (waypoint_flags & W_FL_DOOR)
-		colour = Vector(0.0, 0.0, 255.0);
+		colour = Vector(0.0f, 0.0f, 255.0f);
 	else if (waypoint_flags & W_FL_WALL_STICK)
-		colour = Vector(200.0, 150.0, 0.0);
+		colour = Vector(200.0f, 150.0f, 0.0f);
 	else if (waypoint_flags & W_FL_LIFT)
-		colour = Vector(200.0, 0.0, 0.0);
+		colour = Vector(200.0f, 0.0f, 0.0f);
 	else if (waypoint_flags & W_FL_GREN_THROW)
-		colour = Vector(10.0, 127.0, 10.0);
+		colour = Vector(10.0f, 127.0f, 10.0f);
 	else if (waypoint_flags & W_FL_CROUCH)
-		colour = Vector(200.0, 100.0, 100.0);
+		colour = Vector(200.0f, 100.0f, 100.0f);
 	else if (waypoint_flags & W_FL_CROUCHJUMP)
-		colour = Vector(150.0, 100.0, 50.0);
+		colour = Vector(150.0f, 100.0f, 50.0f);
 	else if (waypoint_flags & W_FL_TELEPORT)
-		colour = Vector(150.0, 150.0, 150.0);
+		colour = Vector(150.0f, 150.0f, 150.0f);
 	else if (waypoint_flags & W_FL_TANK)
-		colour = Vector(200.0, 100.0, 0.0);
+		colour = Vector(200.0f, 100.0f, 0.0f);
 	else if (waypoint_flags & W_FL_FLY)
-		colour = Vector(0.0, 50.0, 150.0);
+		colour = Vector(0.0f, 50.0f, 150.0f);
 	else if (waypoint_flags & W_FL_WAIT_FOR_LIFT)
-		colour = Vector(100.0, 100.0, 100.0);
+		colour = Vector(100.0f, 100.0f, 100.0f);
 	else if (waypoint_flags & W_FL_ENDLEVEL)
-		colour = Vector(0.0, 20.0, 150.0);
+		colour = Vector(0.0f, 20.0f, 150.0f);
 	else if (waypoint_flags & W_FL_HUMAN_TOWER)
-		colour = Vector(200.0, 100.0, 200.0);
+		colour = Vector(200.0f, 100.0f, 200.0f);
 	else if (waypoint_flags & W_FL_OPENS_LATER)
-		colour = Vector(100.0, 100.0, 100.0);
+		colour = Vector(100.0f, 100.0f, 100.0f);
 	else if (waypoint_flags & W_FL_UNREACHABLE)
-		colour = Vector(255.0, 255.0, 255.0);
+		colour = Vector(255.0f, 255.0f, 255.0f);
 	else if (waypoint_flags & W_FL_IMPORTANT)
-		colour = Vector(0.0, 255.0, 0.0);
+		colour = Vector(0.0f, 255.0f, 0.0f);
 	else if (waypoint_flags & W_FL_PUSHABLE)
-		colour = Vector(255.0, 127.0, 0.0);
+		colour = Vector(255.0f, 127.0f, 0.0f);
 	else if (waypoint_flags & W_FL_SCIENTIST_POINT)
-		colour = Vector(127.0, 127.0, 127.0);
+		colour = Vector(127.0f, 127.0f, 127.0f);
 	else if (waypoint_flags & W_FL_BARNEY_POINT)
-		colour = Vector(0.0, 0.0, 127.0);
+		colour = Vector(0.0f, 0.0f, 127.0f);
 	else if (waypoint_flags & W_FL_HEALTH)
-		colour = Vector(200.0, 200.0, 180.0);
+		colour = Vector(200.0f, 200.0f, 180.0f);
 	else if (waypoint_flags & W_FL_ARMOR)
-		colour = Vector(220.0, 180.0, 180.0);
+		colour = Vector(220.0f, 180.0f, 180.0f);
 	else if (waypoint_flags & W_FL_CHECK_LIFT)
 		colour = Vector(213, 234, 129); // blah
 
@@ -2401,7 +2401,7 @@ void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints)
 			if (Waypoint2->flags & W_FL_DELETED)
 				continue;
 
-			UTIL_TraceLine(Waypoint1->origin, Waypoint2->origin + Vector(0, 0, 16.0), ignore_monsters, ignore_glass, nullptr, &tr);
+			UTIL_TraceLine(Waypoint1->origin, Waypoint2->origin + Vector(0, 0, 16.0f), ignore_monsters, ignore_glass, nullptr, &tr);
 
 			SetVisibilityFromTo(i, j, tr.flFraction >= 1.0f);
 		}

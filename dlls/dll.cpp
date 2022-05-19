@@ -2115,9 +2115,24 @@ void ReadMapConfig()
 	}
 }
 
-edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin) //TODO: Incomplete
+edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin) //TODO: Experimental [APG]RoboCop[CL]
 {
-	//edict_t* pPlayer = nullptr;
+	edict_t* pPlayer = nullptr;
+	int i;
+
+	for (i = 1; i <= gpGlobals->maxClients; i++)
+	{
+		pPlayer = INDEXENT(i);
+
+		if (pPlayer && !pPlayer->free && pPlayer->v.iuser3 == iUser3)
+		{
+			if (strcmp(STRING(pPlayer->v.classname), szClassname) == 0)
+			{
+				pPlayer->v.origin = vOrigin;
+				return pPlayer;
+			}
+		}
+	}
 	
 	return nullptr;
 }
