@@ -158,7 +158,7 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 
 ga_value CPopulation::bestFitness()
 {
-	BOOL gotBestFitness = false;
+	BOOL gotBestFitness = FALSE;
 	float fBestFitness = 0.0f;
 
 	for (unsigned int i = 0; i < size(); i++)
@@ -168,7 +168,7 @@ ga_value CPopulation::bestFitness()
 		if (!gotBestFitness || fFitness > fBestFitness)
 		{
 			fBestFitness = fFitness;
-			gotBestFitness = true;
+			gotBestFitness = TRUE;
 		}
 	}
 
@@ -219,7 +219,7 @@ void CGA::addToPopulation(IIndividual* individual)
 
 		if (best && !m_bestIndividual || best && m_bestIndividual->getFitness() < best->getFitness())
 		{
-			BOOL set = true;
+			BOOL set = TRUE;
 
 			if (m_bestIndividual && m_bestIndividual != best)
 			{
@@ -227,7 +227,7 @@ void CGA::addToPopulation(IIndividual* individual)
 				m_bestIndividual = nullptr;
 			}
 			else if (m_bestIndividual == best)
-				set = false;
+				set = FALSE;
 
 			if (set)
 				m_bestIndividual = best->copy();

@@ -113,7 +113,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		}
 	}
 
-	return true;
+	return TRUE;
 }
 #else
 void _fini()

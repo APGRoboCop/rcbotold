@@ -72,7 +72,7 @@ CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, floa
 	else
 		m_LearnRate = fLearnRate;
 
-	m_bTrained = false;
+	m_bTrained = FALSE;
 	m_output = 0;
 }
 
@@ -149,7 +149,7 @@ ga_value CPerceptron::getOutput()
 
 void CPerceptron::train(ga_value expectedOutput)
 {
-	m_bTrained = true;
+	m_bTrained = TRUE;
 
 	// bias
 	m_weights[0] = m_weights[0] + m_LearnRate * (expectedOutput - m_output) * m_Bias;

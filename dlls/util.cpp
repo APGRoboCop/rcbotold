@@ -149,7 +149,7 @@ void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency,
 BOOL UTIL_FriendlyHatesPlayer ( edict_t *pEntity, edict_t *pPlayer )
 {
 	if ( !gBotGlobals.IsMod(MOD_SVENCOOP) )
-		return false;
+		return FALSE;
 
 	CBaseMonster *pEnt = (CBaseMonster*)((CBaseEntity*)GET_PRIVATE(pEntity));
 	CBaseEntity *pPlayerEnt = (CBaseEntity*)GET_PRIVATE(pPlayer);
@@ -169,7 +169,7 @@ BOOL UTIL_FriendlyHatesPlayer ( edict_t *pEntity, edict_t *pPlayer )
 		}
 	}
 
-	return false;
+	return FALSE;
 }
 */
 
@@ -948,7 +948,7 @@ void BotFunc_KickBotFromTeam(int iTeam)
 		pBot = theBots.Random();
 
 		if (pBot)
-			pBot->m_bKick = true;
+			pBot->m_bKick = TRUE;
 
 		theBots.Clear();
 	}
@@ -1118,14 +1118,14 @@ BOOL UTIL_CanEvolveInto(int iSpecies)
 	{
 	case ALIEN_LIFEFORM_ONE:
 	case ALIEN_LIFEFORM_TWO:
-		return true;
+		return TRUE;
 	case ALIEN_LIFEFORM_THREE:
 	case ALIEN_LIFEFORM_FOUR:
 	case ALIEN_LIFEFORM_FIVE:
 		return UTIL_GetNumHives() > 1;
 	}
 
-	return false;
+	return FALSE;
 }
 
 int UTIL_GetNumHives()
@@ -1196,7 +1196,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 		if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL))
 		{
 			if (pResourceTower->v.groundentity == pFuncResource)
-				return true;
+				return TRUE;
 		}
 		else
 		{
@@ -1204,7 +1204,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 				pResourceTower->v.origin.y == pFuncResource->v.origin.y &&
 				std::fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1)
 			{
-				return true;
+				return TRUE;
 			}
 		}
 	}
@@ -1217,7 +1217,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 		if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL))
 		{
 			if (pResourceTower->v.groundentity == pFuncResource)
-				return true;
+				return TRUE;
 		}
 		else
 		{
@@ -1225,12 +1225,12 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 				pResourceTower->v.origin.y == pFuncResource->v.origin.y &&
 				std::fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1)
 			{
-				return true;
+				return TRUE;
 			}
 		}
 	}
 
-	return false;
+	return FALSE;
 }
 
 // from old RCBOT
@@ -1246,7 +1246,7 @@ BOOL UTIL_IsResourceFountainUsed(edict_t* pFountain)
 	while ((pTower = UTIL_FindEntityByClassname(pTower, "resourcetower")) != nullptr)
 	{
 		if (pTower->v.groundentity == pFountain)
-			return true;
+			return TRUE;
 	}
 
 	pTower = nullptr;
@@ -1254,10 +1254,10 @@ BOOL UTIL_IsResourceFountainUsed(edict_t* pFountain)
 	while ((pTower = UTIL_FindEntityByClassname(pTower, "alienresourcetower")) != nullptr)
 	{
 		if (pTower->v.groundentity == pFountain)
-			return true;
+			return TRUE;
 	}
 
-	return false;
+	return FALSE;
 }
 
 edict_t* UTIL_FindRandomUnusedFuncResource(CBot* pBot)
@@ -1379,13 +1379,13 @@ int UTIL_GetBuildWaypoint(Vector const& vSpawn, dataStack<int>* iFailedGoals)
 	while (!tempStack.IsEmpty())
 	{
 		edict_t* pent = nullptr;
-		BOOL bAdd = true;
+		BOOL bAdd = TRUE;
 
 		iWpt = tempStack.ChooseFromStack();
 
 		if (UTIL_PointContents(WaypointOrigin(iWpt)) == CONTENTS_WATER)
 		{
-			bAdd = false;
+			bAdd = FALSE;
 			break;
 		}
 
@@ -1393,7 +1393,7 @@ int UTIL_GetBuildWaypoint(Vector const& vSpawn, dataStack<int>* iFailedGoals)
 		{
 			if (FStrEq(STRING(pent->v.classname), "func_nobuild"))
 			{
-				bAdd = false;
+				bAdd = FALSE;
 				break;
 			}
 		}
@@ -1486,17 +1486,17 @@ BOOL BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict)
 
 	// don't look through water
 	if (bInWater != bLookerInWater)
-		return false;
+		return FALSE;
 
 	UTIL_TraceLine(vecLookerOrigin, vecOrigin, ignore_monsters, ignore_glass, pEdict, &tr);
 
 	if (tr.flFraction != 1)
 	{
-		return false;  // Line of sight is not established
+		return FALSE;  // Line of sight is not established
 	}
 	else
 	{
-		return true;  // line of sight is valid.
+		return TRUE;  // line of sight is valid.
 	}
 }
 
@@ -1750,12 +1750,12 @@ BOOL UTIL_CanStand(Vector const& origin, Vector* v_floor)
 BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid)
 {
 	if (weaponid == 0)
-		return false;
+		return FALSE;
 
 	edict_t* pWeapon = CREATE_NAMED_ENTITY(MAKE_STRING("ts_groundweapon"));
 
 	if (pWeapon == nullptr || FNullEnt(pWeapon))
-		return false;
+		return FALSE;
 
 	char* keyname = "tsweaponid";
 	char keyvalue[8];
@@ -1825,7 +1825,7 @@ BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid)
 
 	pWeapon->v.flags |= FL_KILLME;
 
-	return true;
+	return TRUE;
 }
 
 void UTIL_BuildFileName(char* filename, char* arg1, char* arg2)
@@ -2144,7 +2144,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 // Show a Tooltip (message) to the pEntity
 //
 {
-	static HudText hudmessage = HudText(true);
+	static HudText hudmessage = HudText(TRUE);
 	static char* tooltips[BOT_LANG_MAX][BOT_TOOL_TIP_MAX] =
 	{
 		//---------------------------------------------------------------------------------------------------------------------<MAX
@@ -2237,37 +2237,37 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 
 		const BOOL bSameTeam = UTIL_GetTeam(pPlayer) == iMyTeam;
 
-		BOOL bAdd = false;
+		BOOL bAdd = FALSE;
 
 		if (bListenToFootSteps && !bSameTeam)
 		{
 			if (pPlayerpev->velocity.Length2D() > 120)
-				bAdd = true;
+				bAdd = TRUE;
 
 			if (gBotGlobals.IsNS())
 			{
 				// silence upgrade? can't hear
 				if (EntityIsAlien(pPlayer) && pPlayerpev->iuser4 & MASK_UPGRADE_6)
-					bAdd = false;
+					bAdd = FALSE;
 				if (pPlayerpev->iuser4 & MASK_VIS_DETECTED) // detected though...?
-					bAdd = true;
+					bAdd = TRUE;
 			}
 		}
 		else if (pPlayerpev->button & IN_ATTACK)
-			bAdd = true;
+			bAdd = TRUE;
 
 		if (bAdd)
 		{
 			const float fDistance = (pev->origin - pPlayerpev->origin).Length();
 
-			bAdd = false;
+			bAdd = FALSE;
 
 			if (fDistance < fNearest)
 			{
 				if (bSameTeam && fDistance > 128)
-					bAdd = true;
+					bAdd = TRUE;
 				else if (!bSameTeam && fDistance > 64)
-					bAdd = true;
+					bAdd = TRUE;
 			}
 
 			if (bAdd)
@@ -2284,7 +2284,7 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 BOOL UTIL_IsButton(edict_t* pButton)
 {
 	if (pButton == nullptr)
-		return false;
+		return FALSE;
 
 	const char* szClassname = const_cast<char*>(STRING(pButton->v.classname));
 
@@ -2477,12 +2477,12 @@ BOOL UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore)
 		{
 			if (UTIL_GetTeam(pPlayer) == team)
 			{
-				return true;
+				return TRUE;
 			}
 		}
 	}
 
-	return false;
+	return FALSE;
 }
 
 edict_t* UTIL_CheckTeleExit(Vector const& vOrigin, edict_t* pOwner, edict_t* pEntrance)

@@ -60,8 +60,8 @@
 #else
 #define ULONG ulong
 #endif
-#define false 0
-#define true  1
+#define FALSE 0
+#define TRUE  1
 
 //Fix for GCC 7 - [APG]RoboCop[CL]
 #include <algorithm>

@@ -150,7 +150,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 			gBotGlobals.IsConfigSettingOn(BOT_CONFIG_REAL_MODE) ||
 			RANDOM_LONG(BOT_MIN_REP, BOT_MAX_REP) < iRep) ||
 			/*gBotGlobals.m_Clients*/
-			bNameInMsg || UTIL_GetNumClients(false) == 2))
+			bNameInMsg || UTIL_GetNumClients(FALSE) == 2))
 		{
 			pBot->m_MegaHALTalkEdict = pSender;
 
@@ -241,7 +241,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 	out_string[0] = 0;
 
 	int tag_size = 0;
-	bool space_allowed = false;
+	bool space_allowed = FALSE;
 
 	if (in_string == nullptr)
 		return;
@@ -256,7 +256,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 		return;
 	}
 
-	bool inside_tag = false;
+	bool inside_tag = FALSE;
 
 	while (i < length)
 	{
@@ -266,7 +266,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 		{
 			if (i + 1 < length && in_string[i] == '=' && in_string[i + i] == '-')
 			{
-				inside_tag = false;
+				inside_tag = FALSE;
 				i += 2;
 				continue;
 			}
@@ -274,7 +274,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 			{
 				//char temp = in_string[i];
 
-				inside_tag = false;
+				inside_tag = FALSE;
 
 				//if ( tag_size == 0 )
 				//{
@@ -298,11 +298,11 @@ void RemoveNameTags(const char* in_string, char* out_string)
 		{
 			current_char = in_string[i];
 
-			space_allowed = true;
+			space_allowed = TRUE;
 		}
 		else if (in_string[i] == '(' || in_string[i] == '[' || in_string[i] == '{')
 		{
-			inside_tag = true;
+			inside_tag = TRUE;
 			char tag_start = in_string[i];
 			tag_size = 0;
 			i++;
@@ -310,7 +310,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 		}
 		else if (i + 1 < length && in_string[i] == '-' && in_string[i + i] == '=')
 		{
-			inside_tag = true;
+			inside_tag = TRUE;
 
 			i += 2;
 			continue;
@@ -320,7 +320,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 			if (space_allowed)
 			{
 				current_char = ' ';
-				space_allowed = false;
+				space_allowed = FALSE;
 			}
 			else
 			{
@@ -394,7 +394,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 void BotHALGenerateReply(CBot* pBot, char* output)
 {
 	// this function takes a string of user input and return a string of output which may
-	// vaguely be construed as containing a reply to whatever is in the input string.
+	// vaguely be consTRUEd as containing a reply to whatever is in the input string.
 	// Create an array of keywords from the words in the user's input...
 
 	static char* output_template = nullptr;
@@ -563,7 +563,7 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 	// if the dictionary is empty, then obviously the word won't be found
 	if (dictionary->size == 0)
 	{
-		*find = false;
+		*find = FALSE;
 		return 0;
 	}
 
@@ -571,12 +571,12 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 	int imin = 0;
 	int imax = dictionary->size - 1;
 
-	//BOOL bDone = false;
+	//BOOL bDone = FALSE;
 	//int iFound = 0;
 
 	// search repeatedly, halving the search space each time, until either the entry is found,
 	// or the search space becomes empty
-	while (true)
+	while (TRUE)
 	{
 		// see whether the middle element of the search space is greater than, equal to, or
 		// less than the element being searched for.
@@ -586,14 +586,14 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 		// if equal then we have found the element. Otherwise halve the search space accordingly
 		if (compar == 0)
 		{
-			*find = true;
+			*find = TRUE;
 			return middle;
 		}
 		else if (compar > 0)
 		{
 			if (imax == middle)
 			{
-				*find = false;
+				*find = FALSE;
 				return middle + 1;
 			}
 
@@ -603,7 +603,7 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 		{
 			if (imin == middle)
 			{
-				*find = false;
+				*find = FALSE;
 				return middle;
 			}
 
@@ -814,7 +814,7 @@ HAL_TREE* HAL_FindSymbol(HAL_TREE* node, int symbol)
 	// this function returns a pointer to the child node, if one exists, which contains symbol
 
 	HAL_TREE* found = nullptr;
-	BOOL found_symbol = false;
+	BOOL found_symbol = FALSE;
 
 	// perform a binary search for the symbol
 	const int i = HAL_SearchNode(node, symbol, &found_symbol);
@@ -830,7 +830,7 @@ HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, int symbol)
 	// symbol is not found, a new node is automatically allocated and added to the tree
 
 	HAL_TREE* found;
-	BOOL found_symbol = false;
+	BOOL found_symbol = FALSE;
 
 	// perform a binary search for the symbol. If the symbol isn't found, attach a new sub-node
 	// to the tree node so that it remains sorted.
@@ -881,7 +881,7 @@ int HAL_SearchNode(HAL_TREE* node, int symbol, BOOL* found_symbol)
 	// handle the special case where the subtree is empty
 	if (node->branch == 0)
 	{
-		*found_symbol = false;
+		*found_symbol = FALSE;
 		return 0;
 	}
 
@@ -889,21 +889,21 @@ int HAL_SearchNode(HAL_TREE* node, int symbol, BOOL* found_symbol)
 	int imin = 0;
 	int imax = node->branch - 1;
 
-	while (true)
+	while (TRUE)
 	{
 		const int middle = (imin + imax) / 2;
 		const int compar = symbol - node->tree[middle]->symbol;
 
 		if (compar == 0)
 		{
-			*found_symbol = true;
+			*found_symbol = TRUE;
 			return middle;
 		}
 		else if (compar > 0)
 		{
 			if (imax == middle)
 			{
-				*found_symbol = false;
+				*found_symbol = FALSE;
 				return middle + 1;
 			}
 
@@ -913,7 +913,7 @@ int HAL_SearchNode(HAL_TREE* node, int symbol, BOOL* found_symbol)
 		{
 			if (imin == middle)
 			{
-				*found_symbol = false;
+				*found_symbol = FALSE;
 				return middle;
 			}
 
@@ -1026,7 +1026,7 @@ void HAL_MakeWords(char* input, HAL_DICTIONARY* words)
 	HAL_EmptyDictionary(words);
 
 	// loop forever
-	while (true)
+	while (TRUE)
 	{
 		// if the current character is of the same type as the previous character, then include
 		// it in the word. Otherwise, terminate the current word.
@@ -1129,44 +1129,44 @@ BOOL HAL_BoundaryExists(char* string, int position)
 	// specified location
 
 	if (position == 0)
-		return false;
+		return FALSE;
 
 	if (position == static_cast<int>(strlen(string)))
-		return true;
+		return TRUE;
 
 	if (string[position] == '\'' && isalpha(string[position - 1]) != 0
 		&& isalpha(string[position + 1]) != 0)
-		return false;
+		return FALSE;
 
 	if (position > 1 && string[position - 1] == '\''
 		&& isalpha(string[position - 2]) != 0 && isalpha(string[position]) != 0)
-		return false;
+		return FALSE;
 
 	if (isalpha(string[position]) != 0 && isalpha(string[position - 1]) == 0)
-		return true;
+		return TRUE;
 
 	if (isalpha(string[position]) == 0 && isalpha(string[position - 1]) != 0)
-		return true;
+		return TRUE;
 
 	if (isdigit(string[position]) != isdigit(string[position - 1]))
-		return true;
+		return TRUE;
 
-	return false;
+	return FALSE;
 }
 
 BOOL HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2)
 {
-	// this function returns true if the dictionaries are NOT the same or false if not
+	// this function returns TRUE if the dictionaries are NOT the same or FALSE if not
 
 	if (words1->size != words2->size)
-		return true; // if they haven't the same size, obviously they aren't the same
+		return TRUE; // if they haven't the same size, obviously they aren't the same
 
 	 // for each word of the first dictionary...
 	for (int i = 0; i < static_cast<int>(words1->size); ++i)
 		if (HAL_CompareWords(words1->entry[i], words2->entry[i]) != 0)
-			return true; // compare it with the second and break at the first difference
+			return TRUE; // compare it with the second and break at the first difference
 
-	return false; // looks like those dictionaries are identical
+	return FALSE; // looks like those dictionaries are identical
 }
 
 HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words)
@@ -1406,7 +1406,7 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 	static HAL_DICTIONARY* replies = nullptr;
 	int i;
 	int symbol;
-	BOOL start = true;
+	BOOL start = TRUE;
 
 	if (!pBot || !pBot->IsUsed())
 		return nullptr; // reliability check
@@ -1419,10 +1419,10 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 	// start off by making sure that the model's context is empty
 	HAL_InitializeContext(pBot->m_Profile.m_HAL->bot_model);
 	pBot->m_Profile.m_HAL->bot_model->context[0] = pBot->m_Profile.m_HAL->bot_model->forward;
-	pBot->m_Profile.m_HAL->keyword_is_used = false;
+	pBot->m_Profile.m_HAL->keyword_is_used = FALSE;
 
 	// generate the reply in the forward direction
-	while (true)
+	while (TRUE)
 	{
 		// get a random symbol from the current context
 		if (start == 1)
@@ -1433,7 +1433,7 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 		if (symbol == 0 || symbol == 1)
 			break;
 
-		start = false;
+		start = FALSE;
 
 		// append the symbol to the reply dictionary
 		if (replies->entry == nullptr)
@@ -1466,7 +1466,7 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 		}
 
 	// generate the reply in the backward direction
-	while (true)
+	while (TRUE)
 	{
 		// get a random symbol from the current context
 		symbol = BotHALBabble(pBot, keys, replies);
@@ -1536,7 +1536,7 @@ int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 			&& (pBot->m_Profile.m_HAL->keyword_is_used || HAL_FindWord(pBot->m_Profile.m_HAL->auxiliary_keywords, pBot->m_Profile.m_HAL->bot_model->dictionary->entry[symbol]) == 0)
 			&& !HAL_WordExists(words, pBot->m_Profile.m_HAL->bot_model->dictionary->entry[symbol]))
 		{
-			pBot->m_Profile.m_HAL->keyword_is_used = true;
+			pBot->m_Profile.m_HAL->keyword_is_used = TRUE;
 			break;
 		}
 
@@ -1555,9 +1555,9 @@ BOOL HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	// for each element of the dictionary, compare word with it...
 	for (int i = 0; i < static_cast<int>(dictionary->size); ++i)
 		if (HAL_CompareWords(dictionary->entry[i], word) == 0)
-			return true; // word was found
+			return TRUE; // word was found
 
-	return false; // word was not found
+	return FALSE; // word was not found
 }
 
 int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys)
@@ -1577,7 +1577,7 @@ int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys)
 		int i = RANDOM_LONG(0, keys->size - 1);
 		const int stop = i;
 
-		while (true)
+		while (TRUE)
 		{
 			if (HAL_FindWord(pBot->m_Profile.m_HAL->bot_model->dictionary, keys->entry[i]) != 0 && HAL_FindWord(pBot->m_Profile.m_HAL->auxiliary_keywords, keys->entry[i]) == 0)
 			{
@@ -1850,7 +1850,7 @@ void HAL_FreeSwap(HAL_SWAP* swap)
 	swap = nullptr;
 }
 
-// return true if need to pre-train
+// return TRUE if need to pre-train
 BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 {
 	// this function prepares a HAL personality
@@ -1867,10 +1867,10 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	//   pBotProfile->m_HAL->bot_words = NULL;
 	pBotProfile->m_HAL->input_words = nullptr;
 	pBotProfile->m_HAL->swappable_keywords = nullptr;
-	pBotProfile->m_HAL->keyword_is_used = false;
+	pBotProfile->m_HAL->keyword_is_used = FALSE;
 
 	if (pBotProfile->m_HAL == nullptr)
-		return false; // reliability check
+		return FALSE; // reliability check
 
 	pBotProfile->m_HAL->bot_model = HAL_NewModel(BOT_HAL_MODEL_ORDER); // create a language model of a certain order
 
@@ -1943,7 +1943,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 
 		// check for brain file validity
 		if (strcmp(cookie, "RCBOTHAL") == 0)
-			return false; // ok, brain is valid
+			return FALSE; // ok, brain is valid
 	}
 
 	// there is a problem with the brain, infer a brand new one
@@ -1965,7 +1965,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	HAL_SaveDictionary(fp, pBotProfile->m_HAL->bot_model->dictionary);
 	fclose(fp); // everything is saved, close the file
 
-	return true; // ok, now it is guarantee that this personality has an associated brain
+	return TRUE; // ok, now it is guarantee that this personality has an associated brain
 }
 
 BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
@@ -1994,7 +1994,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 	{
 		//delete szName;
 		BotMessage(nullptr, 0, "LoadHALBrainForPersonality(): %s's HAL brain refuses to wake up! (file does not exist)", pBotProfile->m_szBotName);
-		return true; // there was an error, return true
+		return TRUE; // there was an error, return TRUE
 	}
 
 	// check for brain file validity
@@ -2006,7 +2006,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 		BotMessage(nullptr, 0, "LoadHALBrainForPersonality(): %s's HAL brain damaged!", pBotProfile->m_szBotName); // bad brain
 		BotMessage(nullptr, 2, "damanged bot file, delete %s/%d.brn file", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId); // bad brain
 		fclose(fp); // close file
-		return true; // there was an error, return true
+		return TRUE; // there was an error, return TRUE
 	}
 
 	BotMessage(nullptr, 0, "HAL : restoring brain to %s\n", pBotProfile->m_szBotName);
@@ -2019,7 +2019,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 
 	pBotProfile->m_HAL->input_words = HAL_NewDictionary(); // create the global chat dictionary
 
-	pBotProfile->m_HAL->keyword_is_used = false;
+	pBotProfile->m_HAL->keyword_is_used = FALSE;
 
 	//HAL_AddSwap(pBotProfile->m_HAL->swappable_keywords,szName,name_in_msg);
 
@@ -2071,7 +2071,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 		}
 	}
 
-	return false; // no error, return false
+	return FALSE; // no error, return FALSE
 }
 
 void SaveHALBrainForPersonality(bot_profile_t* pBotProfile)

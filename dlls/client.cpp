@@ -199,7 +199,7 @@ void InitMessage ( const char *message );
 			BotMessage(m_pPlayer, 0, "You have been authenticated");
 		}
 
-		m_bRecheckAuth = false;
+		m_bRecheckAuth = FALSE;
 	}
 
 	/*if (m_fCheckSentryTime && m_fCheckSentryTime < gpGlobals->time)
@@ -452,7 +452,7 @@ void InitMessage ( const char *message );
 			}
 
 			m_vLastAutoWaypointPlacePos = m_pPlayer->v.origin;
-			m_bSetUpAutoWaypoint = true;
+			m_bSetUpAutoWaypoint = TRUE;
 			m_fCanPlaceJump = 0.0f;
 			m_iLastButtons = 0;
 
@@ -482,7 +482,7 @@ void InitMessage ( const char *message );
 
 				if (m_fCanPlaceJump != -1 && (bStunt || m_iLastButtons & IN_JUMP) && !(pev->flags & FL_ONGROUND))
 				{
-					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, true, false, false, nullptr);
+					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 					m_iLastJumpWaypointIndex = -1;
 
@@ -520,7 +520,7 @@ void InitMessage ( const char *message );
 				{
 					if (m_iLastJumpWaypointIndex != -1)
 					{
-						int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, true, false, false, nullptr);
+						int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 						if (iNearestWpt == -1)
 						{
@@ -576,7 +576,7 @@ void InitMessage ( const char *message );
 			{
 				// went ON to a ladder
 
-				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, true, false, false, nullptr);
+				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 				m_iLastLadderWaypointIndex = -1;
 
@@ -591,7 +591,7 @@ void InitMessage ( const char *message );
 
 				m_vLastAutoWaypointPlacePos = vPlayerOrigin;
 
-				bCheckDistance = false;
+				bCheckDistance = FALSE;
 
 				m_fCanPlaceLadder = 0.0f;
 
@@ -616,7 +616,7 @@ void InitMessage ( const char *message );
 				if (m_iLastLadderWaypointIndex != -1)
 					// place a ladder waypoint before jumping off
 				{
-					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, true, false, false, nullptr);
+					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 					if (iNearestWpt == -1)
 					{
@@ -641,7 +641,7 @@ void InitMessage ( const char *message );
 
 				m_iLastLadderWaypointIndex = -1;
 
-				bCheckDistance = false;
+				bCheckDistance = FALSE;
 
 				m_fCanPlaceLadder = 0.0f;
 			}
@@ -651,7 +651,7 @@ void InitMessage ( const char *message );
 			// ****************************************************
 			if (m_iJoinLadderWaypointIndex != -1 && pev->flags & FL_ONGROUND && pev->movetype == MOVETYPE_WALK)
 			{
-				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 40.0f, m_iJoinLadderWaypointIndex, true, false, false, nullptr);
+				int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 40.0f, m_iJoinLadderWaypointIndex, TRUE, FALSE, FALSE, nullptr);
 
 				if (iNearestWpt == -1)
 				{
@@ -689,7 +689,7 @@ void InitMessage ( const char *message );
 
 				Vector vPlacePosition;
 				int iFlags = 0;
-				BOOL bPlace = false;
+				BOOL bPlace = FALSE;
 
 				int i;
 				int n;
@@ -737,7 +737,7 @@ void InitMessage ( const char *message );
 
 				if (m_iLastJumpWaypointIndex == -1 && bCheckDistance && (vPlayerOrigin - m_vLastAutoWaypointPlacePos).Length() > 200)
 				{
-					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 150.0f, -1, true, false, false, nullptr);
+					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 150.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 					if (iNearestWpt == -1)
 						WaypointAddOrigin(vPlayerOrigin, 0, m_pPlayer, m_bWaypointOn, m_bWaypointOn);
@@ -789,11 +789,11 @@ void InitMessage ( const char *message );
 
 							if (tr.flFraction >= 1.0f)
 							{
-								int iNearestWpt = WaypointLocations.NearestWaypoint(vCheckOrigin, 100.0f, -1, true, false, false, nullptr);
+								int iNearestWpt = WaypointLocations.NearestWaypoint(vCheckOrigin, 100.0f, -1, TRUE, FALSE, FALSE, nullptr);
 
 								if (iNearestWpt == -1)
 								{
-									bPlace = true;
+									bPlace = TRUE;
 									vPlacePosition = vCheckOrigin;
 									iFlags = vCurVector->getFlags();
 
@@ -808,7 +808,7 @@ void InitMessage ( const char *message );
 
 				if (bPlace)
 				{
-					int inewwpt = WaypointAddOrigin(vPlacePosition, iFlags, m_pPlayer, m_bWaypointOn, m_bWaypointOn, false);
+					int inewwpt = WaypointAddOrigin(vPlacePosition, iFlags, m_pPlayer, m_bWaypointOn, m_bWaypointOn, FALSE);
 					Vector v_floor;
 
 					m_vLastAutoWaypointPlacePos = vPlacePosition;

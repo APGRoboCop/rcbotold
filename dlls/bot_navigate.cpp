@@ -177,8 +177,8 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	//	int iNode;
 	int iCurrentNode;
 	int iSuccNode;
-	BOOL bFoundGoal = false;
-	BOOL bDeleteLoopPath = false;
+	BOOL bFoundGoal = FALSE;
+	BOOL bDeleteLoopPath = FALSE;
 
 	WAYPOINT* pSuccWpt;
 	WAYPOINT* pCurWpt;
@@ -286,7 +286,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	int iPrevWpt = -1;
 	//BOOL bDetpackWpt;
 
-	while (bFoundGoal == false && !sOpenList->IsEmpty()/*IsEmpty()*/ && iLoops < iMaxLoops)
+	while (bFoundGoal == FALSE && !sOpenList->IsEmpty()/*IsEmpty()*/ && iLoops < iMaxLoops)
 	{
 		float fMinCost;
 		iLoops++;
@@ -320,14 +320,14 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 		//bDetpackWpt = pCurWpt->flags & W_FL_TFC_DETPACK;
 
-		bDeleteLoopPath = false;
+		bDeleteLoopPath = FALSE;
 
 		while ((iSuccNode = WaypointFindPath(&pPath, &iPathIndex, iCurrentNode, iBotTeam)) != -1)
 			// Generate each state node_successor that can come after current node
 		{
 			if (iSuccNode == iCurrentNode)
 			{
-				bDeleteLoopPath = true;
+				bDeleteLoopPath = TRUE;
 				continue;
 			}
 			// going backwards :S Not good
@@ -339,7 +339,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 			// See if the bot has had problems going through this path so it can ignore it
 			// for now...
 
-			// Remove returns true if successfully removed (i.e. in list)
+			// Remove returns TRUE if successfully removed (i.e. in list)
 			// this keeps the paths in until the bot has finished searching the whole
 			// path
 			if (pBot->m_stFailedPaths.Violate(pPath))
@@ -393,7 +393,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 				if (iSuccNodeFlags & W_FL_PAIN)
 				{
 					edict_t* pent = nullptr;
-					BOOL bFound = false;
+					BOOL bFound = FALSE;
 					edict_t* pNearest = nullptr;
 					float fNearestDist = 0;
 
@@ -749,7 +749,7 @@ BOOL BotCantMoveForward(CBot* pBot, TraceResult* tr)
 		return !BotCanJumpUp(pBot);  // bot's body will hit something
 	}
 
-	return false;  // bot can move forward, return false
+	return FALSE;  // bot can move forward, return FALSE
 }
 
 BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
@@ -762,7 +762,7 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 	// above where the bot will jump to, downward to see if there is anything
 	// blocking the jump.  There could be a narrow opening that the body
 	// will not fit into.  These horizontal and vertical TraceLines seem
-	// to catch most of the problems with falsely trying to jump on something
+	// to catch most of the problems with FALSEly trying to jump on something
 	// that the bot can not get onto.
 
 	TraceResult tr;
@@ -786,9 +786,9 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace hit something, return false
+	// if trace hit something, return FALSE
 	if (tr.flFraction < 1.0)
-		return false;
+		return FALSE;
 
 	// now check same height to one side of the bot...
 	v_source = pEdict->v.origin + gpGlobals->v_right * 16 + Vector(0, 0, -36 + 46);
@@ -798,9 +798,9 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace hit something, return false
+	// if trace hit something, return FALSE
 	if (tr.flFraction < 1.0)
-		return false;
+		return FALSE;
 
 	// now check same height on the other side of the bot...
 	v_source = pEdict->v.origin + gpGlobals->v_right * -16 + Vector(0, 0, -36 + 46);
@@ -810,9 +810,9 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace hit something, return false
+	// if trace hit something, return FALSE
 	if (tr.flFraction < 1.0)
-		return false;
+		return FALSE;
 
 	// now trace from head level downward to check for obstructions...
 
@@ -830,9 +830,9 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace hit something, return false
+	// if trace hit something, return FALSE
 	if (tr.flFraction < 1.0)
-		return false;
+		return FALSE;
 
 	// now check same height to one side of the bot...
 	v_source = pEdict->v.origin + gpGlobals->v_right * 16 + gpGlobals->v_forward * 24;
@@ -843,9 +843,9 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace hit something, return false
+	// if trace hit something, return FALSE
 	if (tr.flFraction < 1.0)
-		return false;
+		return FALSE;
 
 	// now check same height on the other side of the bot...
 	v_source = pEdict->v.origin + gpGlobals->v_right * -16 + gpGlobals->v_forward * 24;
@@ -856,11 +856,11 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace hit something, return false
+	// if trace hit something, return FALSE
 	if (tr.flFraction < 1.0)
-		return false;
+		return FALSE;
 
-	return true;
+	return TRUE;
 }
 
 BOOL BotCanDuckUnder(CBot* pBot)
@@ -894,9 +894,9 @@ BOOL BotCanDuckUnder(CBot* pBot)
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace hit something, return false
+	// if trace hit something, return FALSE
 	if (tr.flFraction < 1.0)
-		return false;
+		return FALSE;
 
 	// now check same height to one side of the bot...
 	v_source = pEdict->v.origin + gpGlobals->v_right * 16 + Vector(0, 0, -36 + 37);
@@ -906,9 +906,9 @@ BOOL BotCanDuckUnder(CBot* pBot)
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace hit something, return false
+	// if trace hit something, return FALSE
 	if (tr.flFraction < 1.0)
-		return false;
+		return FALSE;
 
 	// now check same height on the other side of the bot...
 	v_source = pEdict->v.origin + gpGlobals->v_right * -16 + Vector(0, 0, -36 + 37);
@@ -918,9 +918,9 @@ BOOL BotCanDuckUnder(CBot* pBot)
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace hit something, return false
+	// if trace hit something, return FALSE
 	if (tr.flFraction < 1.0)
-		return false;
+		return FALSE;
 
 	// now trace from the ground up to check for object to duck under...
 
@@ -935,9 +935,9 @@ BOOL BotCanDuckUnder(CBot* pBot)
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace didn't hit something, return false
+	// if trace didn't hit something, return FALSE
 	if (tr.flFraction >= 1)
-		return false;
+		return FALSE;
 
 	// now check same height to one side of the bot...
 	v_source = pEdict->v.origin + gpGlobals->v_right * 16 + gpGlobals->v_forward * 24;
@@ -948,9 +948,9 @@ BOOL BotCanDuckUnder(CBot* pBot)
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace didn't hit something, return false
+	// if trace didn't hit something, return FALSE
 	if (tr.flFraction >= 1)
-		return false;
+		return FALSE;
 
 	// now check same height on the other side of the bot...
 	v_source = pEdict->v.origin + gpGlobals->v_right * -16 + gpGlobals->v_forward * 24;
@@ -961,11 +961,11 @@ BOOL BotCanDuckUnder(CBot* pBot)
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
 
-	// if trace didn't hit something, return false
+	// if trace didn't hit something, return FALSE
 	if (tr.flFraction >= 1)
-		return false;
+		return FALSE;
 
-	return true;
+	return TRUE;
 }
 
 BOOL BotCheckWallOnLeft(CBot* pBot)
@@ -989,10 +989,10 @@ BOOL BotCheckWallOnLeft(CBot* pBot)
 		if (pBot->m_fWallAtLeftTime < 1)
 			pBot->m_fWallAtLeftTime = gpGlobals->time;
 
-		return true;
+		return TRUE;
 	}
 
-	return false;
+	return FALSE;
 }
 
 BOOL BotCheckWallOnRight(CBot* pBot)
@@ -1016,10 +1016,10 @@ BOOL BotCheckWallOnRight(CBot* pBot)
 		if (pBot->m_fWallAtRightTime < 1.0f)
 			pBot->m_fWallAtRightTime = gpGlobals->time;
 
-		return true;
+		return TRUE;
 	}
 
-	return false;
+	return FALSE;
 }
 
 int BotNavigate_FindNextWaypoint(CBot* pBot)
@@ -1099,14 +1099,14 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 	}
 
 	if (pBot->m_iCurrentWaypointIndex == -1)
-		pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(pBot->pev->origin, REACHABLE_RANGE, pBot->m_iLastFailedWaypoint, true, false, true);
+		pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(pBot->pev->origin, REACHABLE_RANGE, pBot->m_iLastFailedWaypoint, TRUE, FALSE, TRUE);
 
 	if (pBot->m_iCurrentWaypointIndex == -1)
 	{
 		if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
 			DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "BotFindNextWaypoint() %s has no current waypoint", pBot->m_szBotName);
 
-		return false;
+		return FALSE;
 	}
 
 	return -1;
@@ -1128,7 +1128,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	int iCurrWpt;
 	int iWptFlags;
 
-	BOOL bTouchedWpt = false;
+	BOOL bTouchedWpt = FALSE;
 
 	iCurrWpt = pBot->m_iCurrentWaypointIndex;
 
@@ -1144,7 +1144,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		{
 			if (pBot->m_bNotFollowingWaypoint)
 			{
-				pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, 200.0, -1, false);
+				pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, 200.0, -1, FALSE);
 			}
 
 			if (pBot->m_iCurrentWaypointIndex == -1)
@@ -1153,7 +1153,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 				if (!getNew)
 				{
-					getNew = pBot->DistanceFrom(pBot->m_vMoveToVector, true) < BOT_WAYPOINT_TOUCH_DIST;
+					getNew = pBot->DistanceFrom(pBot->m_vMoveToVector, TRUE) < BOT_WAYPOINT_TOUCH_DIST;
 				}
 
 				if (getNew)
@@ -1161,11 +1161,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 					// use my awful non-navigated method
 					pBot->SetMoveVector(BotNavigate_ScanFOV(pBot));
 
-					pBot->m_bNotFollowingWaypoint = true;
+					pBot->m_bNotFollowingWaypoint = TRUE;
 				}
 			}
 			//else
-			//	pBot->m_bMoveToIsValid = true;
+			//	pBot->m_bMoveToIsValid = TRUE;
 		}
 	}
 
@@ -1188,14 +1188,14 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 				if (pFailed)
 					pBot->m_stFailedPaths.AddFailedPath(pFailed);
 
-				pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, REACHABLE_RANGE, pBot->m_iLastFailedWaypoint, true, false, true);
+				pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, REACHABLE_RANGE, pBot->m_iLastFailedWaypoint, TRUE, FALSE, TRUE);
 				iCurrWpt = pBot->m_iCurrentWaypointIndex;
 
 				CBotTask* pCurrentTask = pBot->m_Tasks.CurrentTask();
 
 				if (pCurrentTask)
 				{
-					pCurrentTask->SetPathInfo(false);
+					pCurrentTask->SetPathInfo(FALSE);
 				}
 
 				if (pBot->m_iCurrentWaypointIndex != -1)
@@ -1211,14 +1211,14 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	if (iCurrWpt == -1)
 	{
 		// no current waypoint, get one
-		pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, REACHABLE_RANGE, pBot->m_iLastFailedWaypoint, true, false, true);
+		pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, REACHABLE_RANGE, pBot->m_iLastFailedWaypoint, TRUE, FALSE, TRUE);
 
 		if (pBot->m_iCurrentWaypointIndex == -1)
 		{
 			if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
 				DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "UpdateWaypoint() %s can't find a current waypoint", pBot->m_szBotName);
 
-			return false;
+			return FALSE;
 		}
 		else
 			pBot->m_fPrevWaypointDist = WaypointDistance(pBot->pev->origin, pBot->m_iCurrentWaypointIndex);
@@ -1226,7 +1226,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		iCurrWpt = pBot->m_iCurrentWaypointIndex;
 	}
 
-	pBot->m_bNotFollowingWaypoint = false;
+	pBot->m_bNotFollowingWaypoint = FALSE;
 
 	wCurWpt = &waypoints[iCurrWpt];
 
@@ -1263,44 +1263,44 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		// ERR!!!
 		if (iNextWaypoint == iCurrWpt)
 		{
-			bTouchedWpt = true;
+			bTouchedWpt = TRUE;
 		}
 		else if (pBot->m_iCurrentWaypointFlags & W_FL_FLY)
 		{
 			if (!pBot->CanFly()) // WTF?????
-				bTouchedWpt = true;
+				bTouchedWpt = TRUE;
 			else
 				bTouchedWpt = vWptOrigin.z < pBot->pev->absmin.z && (vWptOrigin - vBotOrigin).Length2D() < 96;
 		}
 		else if (iNextWaypoint != -1 && WaypointFlagsOnLadderOrFly(waypoints[iNextWaypoint].flags))
 		{
 			int iLadderDir = pBot->GetLadderDir();
-			int iNextLadderDir = pBot->GetLadderDir(true);
+			int iNextLadderDir = pBot->GetLadderDir(TRUE);
 			BOOL bTouchingLadder = gBotGlobals.IsNS() && pBot->IsLerk() || (vWptOrigin - vBotOrigin).Length2D() <= pBot->pev->size.Length2D() / 2;
 
 			bTouchedWpt = bTouchingLadder;
 
 			if (!bTouchingLadder)
-				bTouchedWpt = false;
+				bTouchedWpt = FALSE;
 			else
 			{
 				switch (iLadderDir)
 				{
 				case 0:
-					bTouchedWpt = true;
+					bTouchedWpt = TRUE;
 					break;
 				case -1:
 					switch (iNextLadderDir)
 					{
 					case 0:
-						bTouchedWpt = true;
+						bTouchedWpt = TRUE;
 						break;
 					case -1:
 						bTouchedWpt = vWptOrigin.z >= vBotOrigin.z;
 						break;
 					case 1:
 						// bot has gone passed the waypoint and is going in the right direction
-						bTouchedWpt = true;
+						bTouchedWpt = TRUE;
 						break;
 					}
 					break;
@@ -1308,11 +1308,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 					switch (iNextLadderDir)
 					{
 					case 0:
-						bTouchedWpt = true;
+						bTouchedWpt = TRUE;
 						break;
 					case -1:
 						// bot has gone passed the waypoint and is going in the right direction
-						bTouchedWpt = true;
+						bTouchedWpt = TRUE;
 						break;
 					case 1:
 						bTouchedWpt = vWptOrigin.z <= vBotOrigin.z;
@@ -1350,7 +1350,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 				bTouchedWpt = fzComp <= pBot->pev->size.z / 2;
 			}
 			else
-				bTouchedWpt = false;
+				bTouchedWpt = FALSE;
 		}
 	}
 	// human tower waypoint
@@ -1373,7 +1373,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		}
 
 		if (pBot->pev->origin.z < vWptOrigin.z - 16.0f) // not high enough yet
-			bTouchedWpt = false;
+			bTouchedWpt = FALSE;
 		// player in way so cant get much closer, start human tower here.
 		else if (pPlayer)
 		{
@@ -1389,11 +1389,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		// Is the bot on a ladder or going on a ladder waypoint??
 	{
 		if ( fDistance < 8 )
-			bTouchedWpt = true;
+			bTouchedWpt = TRUE;
 		else if ( !pBot->IsOnLadder() )
-			bTouchedWpt = false;
+			bTouchedWpt = FALSE;
 		else if ( pBot->IsSkulk() && !pBot->IsWallSticking() )
-			bTouchedWpt = false;
+			bTouchedWpt = FALSE;
 		else
 		{
 			float fMin;
@@ -1406,7 +1406,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			if ( siLadderDir == BOT_LADDER_UNKNOWN )
 				// Hasn't figured out a ldder direction yet...
 			{
-				bTouchedWpt = true;
+				bTouchedWpt = TRUE;
 			}
 			else if ( siLadderDir == BOT_LADDER_UP )
 				// If the bot is going up we want the bots feet to be
@@ -1425,7 +1425,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	else if (iWptFlags & W_FL_STAY_NEAR || iWptFlags & W_FL_CROUCH)
 	{
 		if (fDistance <= 24.0f)
-			bTouchedWpt = true;
+			bTouchedWpt = TRUE;
 		else if (fDistance <= 64.0f)
 		{
 			bTouchedWpt = PlayerNearVector(vWptOrigin, 24.0f) != nullptr;
@@ -1435,11 +1435,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		W_FL_CROUCHJUMP))
 	{
 		if (fDistance < 32.0f)
-			bTouchedWpt = true;
+			bTouchedWpt = TRUE;
 	}
-	else if (pBot->DistanceFrom(vWptOrigin, true) < BOT_WAYPOINT_TOUCH_DIST && std::fabs(vWptOrigin.z - vBotOrigin.z) <= pBot->pev->size.z)
+	else if (pBot->DistanceFrom(vWptOrigin, TRUE) < BOT_WAYPOINT_TOUCH_DIST && std::fabs(vWptOrigin.z - vBotOrigin.z) <= pBot->pev->size.z)
 	{
-		bTouchedWpt = true;
+		bTouchedWpt = TRUE;
 	}
 	else if (pBot->pev->waterlevel > 1)
 	{
@@ -1510,7 +1510,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_PUSH_PUSHABLE))
 			{
 				// get nearest pushable
-				edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512, false);
+				edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512, FALSE);
 
 				if (pPushable)
 				{
@@ -1555,7 +1555,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 			pBot->m_iWaypointGoalIndex = -1;
 
-			return false;
+			return FALSE;
 		}
 
 		int iPrevFlags = pBot->m_iCurrentWaypointFlags;
@@ -1579,7 +1579,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
 				DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "UpdateWaypoint() %s has no current waypoint", pBot->m_szBotName);
 
-			return false;
+			return FALSE;
 		}
 		else
 		{
@@ -1677,7 +1677,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
 			DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "UpdateWaypoint() %s has no current waypoint", pBot->m_szBotName);
 
-		return false;
+		return FALSE;
 	}
 
 	pBot->m_iCurrentWaypointFlags = WaypointFlags(pBot->m_iCurrentWaypointIndex);
@@ -1700,7 +1700,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	else
 		pBot->SetMoveVector(WaypointOrigin(pBot->m_iCurrentWaypointIndex));
 
-	return true;
+	return TRUE;
 }
 
 PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam)
@@ -1746,7 +1746,7 @@ PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam
 	char buffer[256];
 	int buffer_len;
 
-	BOOL found = false;
+	BOOL found = FALSE;
 
 	while ( fgets(buffer, 255, fp) != NULL)
 	{
@@ -1757,10 +1757,10 @@ PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam
 		if ( buffer[buffer_len-1] == '\n' )
 			buffer[--buffer_len] = 0;
 
-		if ( found == false )
+		if ( found == FALSE )
 		{
 			if ( strcmp(szLocationName,buffer) == 0 )
-				found = true;
+				found = TRUE;
 		}
 		else
 		{
@@ -1774,7 +1774,7 @@ PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam
 		}
 	}
 
-	if ( found == false )
+	if ( found == FALSE )
 	{
 		GiveName(szLocationName);
 	}
@@ -1987,7 +1987,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 
 					if (pButton)
 					{
-						BOOL bNormalDoor = true;
+						BOOL bNormalDoor = TRUE;
 
 						pBot->m_Tasks.FlushTasks();
 
@@ -1995,7 +1995,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 
 						/*if ( vBotOrigin.z > vCheckOrigin.z )
 						{
-							bIsLift = false;// just use Normal door technique.
+							bIsLift = FALSE;// just use Normal door technique.
 							// going down
 						}*/
 
@@ -2030,7 +2030,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 								pBot->m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(10, 20));
 
 								// found a lift waypoint.. mark as not a normal door
-								bNormalDoor = false;
+								bNormalDoor = FALSE;
 								//if ( pHit->v.movedir.z )
 								//{
 								//  pBot->AddTask(CBotTask(BOT_TASK_USE_DOOR_BUTTON,pHit));
@@ -2048,7 +2048,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 							}
 							else
 							{
-								//int iWpt = WaypointLocations.NearestWaypoint(vButtonOrigin,100,-1,true,false,false,&pBot->m_FailedGoals);
+								//int iWpt = WaypointLocations.NearestWaypoint(vButtonOrigin,100,-1,TRUE,FALSE,FALSE,&pBot->m_FailedGoals);
 
 								pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, 0, 0.0, vButtonOrigin));
 								pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pButton, 0, 1.0));
@@ -2080,7 +2080,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 								char* szClassnames[3] = { "func_button","button_target","func_rot_button" };
 
 								// check nearby the lift button waypoint
-								edict_t* button = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, true);
+								edict_t* button = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, TRUE);
 
 								if (button)
 								{
@@ -2097,7 +2097,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 									// make sure we update these tasks so we know we are using a lift
 									pBot->m_Tasks.GiveSchedIdDescription(iScheduleId, BOT_SCHED_USE_LIFT);
 
-									BOOL bFail = false;
+									BOOL bFail = FALSE;
 								}
 							}
 						}
@@ -2114,7 +2114,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 
 							if ( pCurrentTask )
 							{
-								pCurrentTask->SetPathInfo(false);
+								pCurrentTask->SetPathInfo(FALSE);
 							}
 						}*/
 					}

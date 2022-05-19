@@ -69,7 +69,7 @@ public:
 	AStarNode();
 	BOOL heuristicSet();
 
-	void setHeuristic(float botDist, float goalDist, BOOL bIsTeleport = false);
+	void setHeuristic(float botDist, float goalDist, BOOL bIsTeleport = FALSE);
 
 	BOOL hasParent();
 

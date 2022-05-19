@@ -260,7 +260,7 @@ void BotClient_TS_RoundTime::execute(void* p, int iIndex)
 	case 0:
 	{
 		//if ( gBotGlobals.m_Bots[iIndex].IsUsed() )
-		//	gBotGlobals.m_Bots[iIndex].SpawnInit(false);
+		//	gBotGlobals.m_Bots[iIndex].SpawnInit(FALSE);
 	}
 	break;
 	}
@@ -458,7 +458,7 @@ void BotClient_TS_WeaponInfo::execute(void* p, int iIndex)
 		pBot->m_pCurrentWeapon->UpdateWeapon(clip);
 		pBot->m_pCurrentWeapon->SetWeapon(id, nullptr);
 		pBot->m_iBotWeapons |= id;
-		pBot->m_pCurrentWeapon->setHasWeapon(true);
+		pBot->m_pCurrentWeapon->setHasWeapon(TRUE);
 		pBot->m_pCurrentWeapon->setReserve(ammo);
 		pBot->m_pCurrentWeapon->checkMaxClip(clip);
 
@@ -599,20 +599,20 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 		TXTMSG_TYPE_BUILD_TELE_EXIT,
 		TXTMSG_TYPE_BUILD_SENTRY
 	}eTextMessageType;
-	static BOOL bCheckTeleEntrance = false;
-	static BOOL bCheckTeleExit = false;
-	static BOOL bBuiltSentry = false;*/
+	static BOOL bCheckTeleEntrance = FALSE;
+	static BOOL bCheckTeleExit = FALSE;
+	static BOOL bBuiltSentry = FALSE;*/
 
 	//int iType;
 
 	/*if (p == nullptr)
 	{
-		bCheckTeleEntrance = false;
-		bCheckTeleExit = false;
-		bBuiltSentry = false;
-		bSentryDestroyed = false;
-		TeleExitDestroyed = false;
-		bTeleEntranceDestroyed = false;
+		bCheckTeleEntrance = FALSE;
+		bCheckTeleExit = FALSE;
+		bBuiltSentry = FALSE;
+		bSentryDestroyed = FALSE;
+		TeleExitDestroyed = FALSE;
+		bTeleEntranceDestroyed = FALSE;
 
 		return;
 	}*/
@@ -641,11 +641,11 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 
 			if (FStrEq(szMessage, "#Teleporter_Entrance_Built"))
 			{
-				bCheckTeleEntrance = true;
+				bCheckTeleEntrance = TRUE;
 			}
 			else if (FStrEq(szMessage, "#Teleporter_Exit_Built"))
 			{
-				bCheckTeleExit = true;
+				bCheckTeleExit = TRUE;
 			}
 			else if (FStrEq(szMessage, "#Teleporter_Exit_Destroyed"))
 			{
@@ -669,7 +669,7 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 			}
 			else if (FStrEq(szMessage, "#Sentry_built"))
 			{
-				bBuiltSentry = true;
+				bBuiltSentry = TRUE;
 			}
 			else if (FStrEq(szMessage, "#Sentry_upgrade"))  // sentry gun upgraded
 			{
@@ -1009,9 +1009,9 @@ void BotClient_NS_AlienInfo::execute(void* p, int iIndex)
 
 				read_states = 0;
 
-				gBotGlobals.m_bCanUpgradeDef = false;
-				gBotGlobals.m_bCanUpgradeSens = false;
-				gBotGlobals.m_bCanUpgradeMov = false;
+				gBotGlobals.m_bCanUpgradeDef = FALSE;
+				gBotGlobals.m_bCanUpgradeSens = FALSE;
+				gBotGlobals.m_bCanUpgradeMov = FALSE;
 
 				if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL))
 					BotMessage(nullptr, 0, "num upgrades : %d", num_loops);
@@ -1027,13 +1027,13 @@ void BotClient_NS_AlienInfo::execute(void* p, int iIndex)
 				switch (*static_cast<int*>(p))
 				{
 				case 1:
-					gBotGlobals.m_bCanUpgradeDef = true;
+					gBotGlobals.m_bCanUpgradeDef = TRUE;
 					break;
 				case 2:
-					gBotGlobals.m_bCanUpgradeSens = true;
+					gBotGlobals.m_bCanUpgradeSens = TRUE;
 					break;
 				case 3:
-					gBotGlobals.m_bCanUpgradeMov = true;
+					gBotGlobals.m_bCanUpgradeMov = TRUE;
 					break;
 				}
 
@@ -1275,7 +1275,7 @@ void BotClient_NS_HudText::execute(void* p, int iIndex)
 
 				// reset commander
 				gBotGlobals.SetCommander(nullptr);
-				gBotGlobals.m_bAutoBuilt = false;
+				gBotGlobals.m_bAutoBuilt = FALSE;
 				gBotGlobals.m_fAutoBuildTime = 0.0f;
 
 				/*CBot *pBot = UTIL_GetBotPointer(INDEXENT(iIndex));
@@ -1367,7 +1367,7 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 		iRadius = POINTER_TO_INT(p);
 		break;
 	case 6:
-		const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, true, iRadius, iSlot);
+		const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, TRUE, iRadius, iSlot);
 
 		if (pBot)
 		{
@@ -1678,7 +1678,7 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 			{
 				pBot = &gBotGlobals.m_Bots[i];
 
-				iNotHandled[i] = false;
+				iNotHandled[i] = FALSE;
 
 				if (pBot == pBotKiller)
 					continue;
@@ -1687,7 +1687,7 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 				if (!pBot->IsUsed() || pBot->m_iRespawnState != RESPAWN_IDLE)
 					continue;
 
-				iNotHandled[i] = true;
+				iNotHandled[i] = TRUE;
 
 				pBot->PlayerDead(victim_edict);
 
@@ -1698,20 +1698,20 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 						if (!pBot->IsEnemy(victim_edict))
 						{
 							pBot->BotEvent(BOT_EVENT_SEE_TEAMMATE_DIE, victim_edict, killer_edict);
-							iNotHandled[i] = false;
+							iNotHandled[i] = FALSE;
 							continue;
 						}
 						else
 						{
 							pBot->BotEvent(BOT_EVENT_SEE_ENEMY_DIE, victim_edict, killer_edict);
-							iNotHandled[i] = false;
+							iNotHandled[i] = FALSE;
 							continue;
 						}
 					}
 					else
 					{
 						pBot->BotEvent(BOT_EVENT_SEE_PLAYER_DIE, victim_edict, killer_edict);
-						iNotHandled[i] = false;
+						iNotHandled[i] = FALSE;
 						continue;
 					}
 				}
@@ -1723,20 +1723,20 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 						if (!pBot->IsEnemy(killer_edict))
 						{
 							pBot->BotEvent(BOT_EVENT_SEE_TEAMMATE_KILL, killer_edict, victim_edict);
-							iNotHandled[i] = false;
+							iNotHandled[i] = FALSE;
 							continue;
 						}
 						else if (!pBot->IsEnemy(victim_edict))
 						{
 							pBot->BotEvent(BOT_EVENT_SEE_ENEMY_KILL, killer_edict, victim_edict);
-							iNotHandled[i] = false;
+							iNotHandled[i] = FALSE;
 							continue;
 						}
 					}
 					else
 					{
 						pBot->BotEvent(BOT_EVENT_SEE_PLAYER_DIE, killer_edict, victim_edict);
-						iNotHandled[i] = false;
+						iNotHandled[i] = FALSE;
 						continue;
 					}
 				}
@@ -1899,7 +1899,7 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 				pBot->m_Weapons.AddWeapon(iId);
 				pWeapon = pBot->m_Weapons.GetWeapon(iId);
 
-				//if ( pWeapon->HasWeapon(NULL) == false )
+				//if ( pWeapon->HasWeapon(NULL) == FALSE )
 				//{
 					 // try to add
 				//}
@@ -2003,10 +2003,10 @@ void BotClient_Generic_WeaponPickup::execute(void* p, const int iIndex)
 		case NS_WEAPON_KNIFE:
 		case NS_WEAPON_WELDER:
 		case NS_WEAPON_MINE:
-			pBot->m_bCanUseAmmoDispenser = false;
+			pBot->m_bCanUseAmmoDispenser = FALSE;
 			break;
 		default:
-			pBot->m_bCanUseAmmoDispenser = true;
+			pBot->m_bCanUseAmmoDispenser = TRUE;
 		}
 	}
 	/*else if (gBotGlobals.IsMod(MOD_SVENCOOP))
@@ -2086,7 +2086,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 				if (pSupplier)
 				{
 					pBot->AddPriorityTask(CBotTask(BOT_TASK_ACCEPT_HEALTH, 0, pSupplier, 0, RANDOM_FLOAT(1.5, 2.5)));
-					pBot->m_bAcceptHealth = false;
+					pBot->m_bAcceptHealth = FALSE;
 				}
 			}
 		}

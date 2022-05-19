@@ -9,12 +9,12 @@ public:
 	CTickable()
 	{
 		m_iTicksLeft = 0;
-		m_bDone = false;
+		m_bDone = FALSE;
 	}
 
 	void reset()
 	{
-		m_bDone = false;
+		m_bDone = FALSE;
 		m_iTicksLeft = 0; // ?
 		reset();
 	}

@@ -709,7 +709,7 @@ void pfnMessageEnd()
 	gBotGlobals.m_iCurrentMessageState = 0;
 	gBotGlobals.m_iCurrentMessageState2 = 0;
 
-	gBotGlobals.m_bNetMessageStarted = false;
+	gBotGlobals.m_bNetMessageStarted = FALSE;
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1443,7 +1443,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 
 				if (pClient)
 				{
-					pClient->m_bRecheckAuth = true;
+					pClient->m_bRecheckAuth = TRUE;
 				}
 			}
 		}

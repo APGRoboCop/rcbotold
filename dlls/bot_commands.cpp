@@ -148,7 +148,7 @@ eBotCvarState CWaypointMenuCommand::action(CClient* pClient, const char* arg1, c
 
 	//pEntity = pClient->GetPlayer();
 
-	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(EntityOrigin(pClient->GetPlayer()), 50.0, -1, false, true);
+	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(EntityOrigin(pClient->GetPlayer()), 50.0, -1, FALSE, TRUE);
 
 	if (pClient->m_iCurrentWaypoint != -1)
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_MAIN].Render(pClient);
@@ -254,7 +254,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	}
 	else if (FStrEq("numclients", arg1))
 	{
-		int loopcount = UTIL_GetNumClients(true);
+		int loopcount = UTIL_GetNumClients(TRUE);
 
 		BotMessage(pEntity, 0, "Loop count = %d", loopcount);
 		//      BotMessage(pEntity,0,"unreliable count (joining) = %d",gBotGlobals.m_iJoiningClients);
@@ -311,7 +311,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		}
 
 		int magnitude = 400;
-		bool dodamage = true;
+		bool dodamage = TRUE;
 
 		if (arg2 != nullptr && *arg2 != 0)
 			magnitude = atoi(arg2);
@@ -320,7 +320,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 			int temp = atoi(arg3);
 
 			if (temp > 0)
-				dodamage = false;
+				dodamage = FALSE;
 		}
 
 		TraceResult tr;
@@ -375,7 +375,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 
 					if (pBot)
 					{
-						pBot->m_bKill = true;
+						pBot->m_bKill = TRUE;
 
 						if (pEntity)
 							BotPrintTalkMessage("%s is killing bot \"%s\"...\n", STRING(pEntity->v.netname), STRING(pPlayer->v.netname));
@@ -618,7 +618,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 			if (pPlayerClient->IsUsed())
 			{
 				pPlayerClient->SetAccessLevel(0);
-				pPlayerClient->m_bRecheckAuth = true;
+				pPlayerClient->m_bRecheckAuth = TRUE;
 			}
 		}
 	}
@@ -646,7 +646,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 
 				gBotGlobals.m_BotUsers.AddPlayer(STRING(pPlayer->v.netname), "***", iLev, pPlayerClient->steamID());
 
-				pPlayerClient->m_bRecheckAuth = true;
+				pPlayerClient->m_bRecheckAuth = TRUE;
 
 				BotMessage(pEntity, 0, "Gave %s access level of %d", STRING(pPlayer->v.netname), iLev);
 			}
@@ -738,7 +738,7 @@ eBotCvarState CDebugEntCommand::action(CClient* pClient, const char* arg1, const
 		if (pClient)
 		{
 			edict_t* pEntity = pClient->GetPlayer();
-			edict_t* pOther = UTIL_FacingEnt(pEntity, true);
+			edict_t* pOther = UTIL_FacingEnt(pEntity, TRUE);
 
 			if (pOther)
 				pClient->m_pDebugEnt = pOther;
@@ -829,7 +829,7 @@ eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const ch
 		return BOT_CVAR_ERROR;
 	}
 
-	BOOL bMsg = false;
+	BOOL bMsg = FALSE;
 
 	if (!arg1 || !*arg1 || (!arg2 || !*arg2))
 	{
@@ -846,7 +846,7 @@ eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const ch
 	else if (FStrEq(arg1, "message"))
 	{
 		iDebugLevel = BOT_DEBUG_MESSAGE_LEVEL;
-		bMsg = true;
+		bMsg = TRUE;
 	}
 	else if (FStrEq(arg1, "block"))
 		iDebugLevel = BOT_DEBUG_BLOCK_LEVEL;
@@ -903,7 +903,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	const int iState = atoi(arg2);
 	int iConfig = 0;
 
-	BOOL bSuccess = true;
+	BOOL bSuccess = TRUE;
 
 	if (FStrEq("ts_dont_steal_weapons", arg1))
 		iConfig = BOT_CONFIG_TS_DONT_STEAL_WEAPONS;
@@ -1298,17 +1298,17 @@ eBotCvarState CPathWaypointCommand::action(CClient* pClient, const char* arg1, c
 
 	if (FStrEq(arg1, "on"))
 	{
-		pClient->m_bWaypointPathsOn = true;
+		pClient->m_bWaypointPathsOn = TRUE;
 		BotMessage(pClient->GetPlayer(), 0, "Waypoint paths are now being shown");
 	}
 	else if (FStrEq(arg1, "off"))
 	{
-		pClient->m_bWaypointPathsOn = false;
+		pClient->m_bWaypointPathsOn = FALSE;
 		BotMessage(pClient->GetPlayer(), 0, "Waypoints paths are not being shown");
 	}
 	else if (strncmp(arg1, "create", 6) == 0)
 	{
-		pClient->m_bWaypointPathsOn = true;
+		pClient->m_bWaypointPathsOn = TRUE;
 
 		if (arg1[6] == '1')
 		{
@@ -1321,7 +1321,7 @@ eBotCvarState CPathWaypointCommand::action(CClient* pClient, const char* arg1, c
 	}
 	else if (strncmp(arg1, "remove", 6) == 0)
 	{
-		pClient->m_bWaypointPathsOn = true;
+		pClient->m_bWaypointPathsOn = TRUE;
 
 		if (arg1[6] == '1')
 		{
@@ -1334,12 +1334,12 @@ eBotCvarState CPathWaypointCommand::action(CClient* pClient, const char* arg1, c
 	}
 	else if (FStrEq(arg1, "enable"))
 	{
-		gBotGlobals.m_bAutoPathWaypoint = true;
+		gBotGlobals.m_bAutoPathWaypoint = TRUE;
 		BotMessage(pClient->GetPlayer(), 0, "automatic path generation is now enabled");
 	}
 	else if (FStrEq(arg1, "disable"))
 	{
-		gBotGlobals.m_bAutoPathWaypoint = false;
+		gBotGlobals.m_bAutoPathWaypoint = FALSE;
 		BotMessage(pClient->GetPlayer(), 0, "automatic path generation is now disabled");
 	}
 	else
@@ -1472,12 +1472,12 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 
 	if (FStrEq(arg1, "on"))
 	{
-		pClient->m_bWaypointOn = true;
+		pClient->m_bWaypointOn = TRUE;
 		BotMessage(pEntity, 0, "Waypoints are now being shown");
 	}
 	else if (FStrEq(arg1, "off"))
 	{
-		pClient->m_bWaypointOn = false;
+		pClient->m_bWaypointOn = FALSE;
 		BotMessage(pEntity, 0, "Waypoints are not being shown");
 	}
 	else if (FStrEq(arg1, "load"))
@@ -1495,7 +1495,7 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 				theConverter = new CWhichbotConvert();
 		}
 
-		if (WaypointSave(false, theConverter))
+		if (WaypointSave(FALSE, theConverter))
 		{
 			BotMessage(pEntity, 0, "Waypoints have been saved");
 
@@ -1513,12 +1513,12 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 	}
 	else if (FStrEq(arg1, "add"))
 	{
-		pClient->m_bWaypointOn = true;
+		pClient->m_bWaypointOn = TRUE;
 		WaypointAdd(pClient);
 	}
 	else if (FStrEq(arg1, "delete"))
 	{
-		pClient->m_bWaypointOn = true;
+		pClient->m_bWaypointOn = TRUE;
 		WaypointDelete(pClient);
 	}
 	else if (FStrEq(arg1, "info"))
@@ -1997,12 +1997,12 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	// Workout reaction time.
 	//pBot->m_fReactionTime = BOT_DEFAULT_REACTION_TIME;
 
-	pBot->m_bIsUsed = true;
+	pBot->m_bIsUsed = TRUE;
 	pBot->m_fJoinServerTime = gpGlobals->time;
 
 	pBot->m_iRespawnState = RESPAWN_IDLE;
 
-	pBot->SpawnInit(false);
+	pBot->SpawnInit(FALSE);
 
 	// Get the bots name, could be duplicated in-game and changed by the engine
 	pBot->m_szBotName = gBotGlobals.m_Strings.GetString(STRING(pEdict->v.netname));
