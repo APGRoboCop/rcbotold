@@ -178,7 +178,7 @@ Vector UTIL_GetGroundVector(edict_t* pEdict)
 	const Vector vOrigin = EntityOrigin(pEdict);
 	TraceResult tr;
 
-	UTIL_TraceLine(vOrigin, vOrigin - Vector(0, 0, 4096.0), ignore_monsters, dont_ignore_glass, pEdict, &tr);
+	UTIL_TraceLine(vOrigin, vOrigin - Vector(0, 0, 4096.0f), ignore_monsters, dont_ignore_glass, pEdict, &tr);
 
 	return tr.vecEndPos;
 }
@@ -697,7 +697,7 @@ float UTIL_GetAvoidAngle(edict_t* pEdict, Vector const origin)
 
 	Vector v_viewpoint = pEdict->v.v_angle;
 	UTIL_MakeVectors(v_viewpoint);
-	v_viewpoint = gpGlobals->v_forward * 4096.0;
+	v_viewpoint = gpGlobals->v_forward * 4096.0f;
 
 	v_viewpoint = UTIL_VecToAngles(v_viewpoint);
 
@@ -1597,7 +1597,7 @@ void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker
 	if (flRadius)
 		falloff = flDamage / flRadius;
 	else
-		falloff = 1.0;
+		falloff = 1.0f;
 
 	const int bInWater = UTIL_PointContents(vecSrc) == CONTENTS_WATER;
 
@@ -1650,7 +1650,7 @@ void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker
 					}
 					/*
 						// ALERT( at_console, "hit %s\n", STRING( pEntity->pev->classname ) );
-						if (tr.flFraction != 1.0)
+						if (tr.flFraction != 1.0f)
 						{
 							//ClearMultiDamage( );
 							pEntity->TraceAttack( pevInflictor, flAdjustedDamage, (tr.vecEndPos - vecSrc).Normalize( ), &tr, bitsDamageType );
@@ -1864,7 +1864,7 @@ edict_t* UTIL_FacingEnt(edict_t* pPlayer, BOOL any)
 	UTIL_MakeVectors(pev->v_angle);
 
 	const Vector vSrc = pev->origin + pev->view_ofs;
-	const Vector vEnd = vSrc + gpGlobals->v_forward * 4096.0;
+	const Vector vEnd = vSrc + gpGlobals->v_forward * 4096.0f;
 
 	UTIL_TraceLine(vSrc, vEnd, dont_ignore_monsters, dont_ignore_glass, pPlayer, &tr);
 

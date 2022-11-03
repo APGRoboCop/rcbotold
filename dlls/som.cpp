@@ -41,7 +41,7 @@
 
 #include "som.h"
 
-ga_value CSom::m_fLearnRate = 1.0;
+ga_value CSom::m_fLearnRate = 1.0f;
 
 CSom::CSom(int iW, int iH, int iIn)
 {

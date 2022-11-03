@@ -128,7 +128,7 @@ void CBits::randomize()
 {
 	for (int i = 0; i < m_iNumBits; i++)
 	{
-		setBit(i, RANDOM_FLOAT(0.0, 1.0) >= 0.5);
+		setBit(i, RANDOM_FLOAT(0.0f, 1.0f) >= 0.5f);
 	}
 }
 

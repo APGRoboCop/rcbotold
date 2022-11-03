@@ -586,7 +586,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 			if (!pBot->m_FailedGoals.IsMember(iTo))
 			{
 				pBot->m_FailedGoals.Push(iTo);
-				pBot->m_fNextClearFailedGoals = gpGlobals->time + RANDOM_FLOAT(5.0, 10.0);
+				pBot->m_fNextClearFailedGoals = gpGlobals->time + RANDOM_FLOAT(5.0f, 10.0f);
 			}
 			else
 				pBot->m_FailedGoals.Remove(iTo);
@@ -1144,7 +1144,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		{
 			if (pBot->m_bNotFollowingWaypoint)
 			{
-				pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, 200.0, -1, FALSE);
+				pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, 200.0f, -1, FALSE);
 			}
 
 			if (pBot->m_iCurrentWaypointIndex == -1)
@@ -1467,7 +1467,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			}
 		}
 
-		pBot->m_fPrevWaypointDist = 9999.0;
+		pBot->m_fPrevWaypointDist = 9999.0f;
 
 		if (pBot->m_iCurrentWaypointIndex == pBot->m_iWaypointGoalIndex)
 		{
@@ -1951,7 +1951,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 
 	const Vector vComp = (vCheckToOrigin - vCheckOrigin).Normalize();
 
-	(*g_engfuncs.pfnTraceHull)(vCheckOrigin, vCheckOrigin + vComp * 4096.0, ignore_monsters, point_hull, pBot->m_pEdict, &tr);
+	(*g_engfuncs.pfnTraceHull)(vCheckOrigin, vCheckOrigin + vComp * 4096.0f, ignore_monsters, point_hull, pBot->m_pEdict, &tr);
 
 	if (tr.flFraction < 1.0) // hit something
 		pHit = tr.pHit;
@@ -2015,16 +2015,16 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 
 								if (pOtherButton)
 								{
-									pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pOtherButton, 0, -1.0));
-									pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pOtherButton, 0, 1.0));
+									pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pOtherButton, 0, -1.0f));
+									pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pOtherButton, 0, 1.0f));
 								}
 								else
 								{
-									pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, 0, 0.0, vButtonOrigin));
-									pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pButton, 0, 1.0));
+									pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, 0, 0.0f, vButtonOrigin));
+									pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pButton, 0, 1.0f));
 								}
 
-								pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWaitForLiftWpt, -1.0));
+								pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWaitForLiftWpt, -1.0f));
 								pBot->AddTask(CBotTask(BOT_TASK_WAIT_FOR_ENTITY, iNewScheduleId, pHit));
 
 								pBot->m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(10, 20));
@@ -2044,14 +2044,14 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 							if (gBotGlobals.m_iCurrentMod == MOD_DMC && pButton->v.health > 0)
 							{
 								// if DMC and the button can  be shot, just shoot it, dont walk over to it.
-								pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pButton, -1, 1.0));
+								pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pButton, -1, 1.0f));
 							}
 							else
 							{
 								//int iWpt = WaypointLocations.NearestWaypoint(vButtonOrigin,100,-1,TRUE,FALSE,FALSE,&pBot->m_FailedGoals);
 
-								pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, 0, 0.0, vButtonOrigin));
-								pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pButton, 0, 1.0));
+								pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, 0, 0.0f, vButtonOrigin));
+								pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pButton, 0, 1.0f));
 							}
 
 							//PATH *pIgnore = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex,pBot->m_iCurrentWaypointIndex,pBot->m_iTeam);

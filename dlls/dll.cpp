@@ -481,7 +481,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 
 								SERVER_COMMAND(cmd);  // kick the bot using kick name //(kick #id)
 
-								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 2.0;
+								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 2.0f;
 								gBotGlobals.m_bBotCanRejoin = FALSE;
 
 								break;
@@ -2097,8 +2097,8 @@ void ReadMapConfig()
 		{
 			// dont add bots for another while...
 			// Added more delay to prevent possible "Tried to write to uninitialized sizebuf_t" crashes - [APG]RoboCop[CL]
-			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 6.0f;
-			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 6.0f;
+			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 8.0f;
+			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 8.0f;
 		}
 
 		// Does the command in the text file
@@ -2286,7 +2286,7 @@ void CBotCam::Think()
 			float fNearest = 0;
 
 			// think about next bot to view etc
-			m_fNextChangeBotTime = gpGlobals->time + RANDOM_FLOAT(7.5, 10.0);
+			m_fNextChangeBotTime = gpGlobals->time + RANDOM_FLOAT(7.5f, 10.0f);
 			m_pCurrentBot = nullptr;
 
 			for (i = 0; i < MAX_PLAYERS; i++)
@@ -2325,7 +2325,7 @@ void CBotCam::Think()
 			dataUnconstArray<int> iPossibleBots;
 
 			// think about next bot to view etc
-			m_fNextChangeBotTime = gpGlobals->time + RANDOM_FLOAT(7.5, 10.0);
+			m_fNextChangeBotTime = gpGlobals->time + RANDOM_FLOAT(7.5f, 10.0f);
 			m_pCurrentBot = nullptr;
 
 			for (i = 0; i < MAX_PLAYERS; i++)
@@ -2370,7 +2370,7 @@ void CBotCam::Think()
 
 		m_iPositionSet = -1;
 
-		m_fNextChangeState = gpGlobals->time + RANDOM_FLOAT(4.0, 6.0);
+		m_fNextChangeState = gpGlobals->time + RANDOM_FLOAT(4.0f, 6.0f);
 	}
 
 	if (!m_pCurrentBot || !m_iState)
@@ -2398,9 +2398,9 @@ void CBotCam::Think()
 
 			// looking from the right
 			if (m_iPositionSet == 1)
-				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + gpGlobals->v_right * 64.0;
+				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + gpGlobals->v_right * 64.0f;
 			else
-				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + -gpGlobals->v_right * 64.0;
+				m_pCameraEdict->v.origin = m_pCameraEdict->v.origin + -gpGlobals->v_right * 64.0f;
 
 			vBotOrigin = EntityOrigin(m_pCurrentBot->m_pEnemy);
 		}
@@ -2437,7 +2437,7 @@ void CBotCam::Think()
 
 			vComp = vComp.Normalize();
 
-			vComp = vComp * (fLength + 128.0);
+			vComp = vComp * (fLength + 128.0f);
 
 			m_pCameraEdict->v.origin = vBotOrigin + vComp;
 			m_pCameraEdict->v.origin.z += 24.0f;
@@ -2456,7 +2456,7 @@ void CBotCam::Think()
 
 			if (tr.flFraction < 1.0)
 			{
-				m_pCameraEdict->v.origin = tr.vecEndPos - vComp.Normalize() * 32.0;
+				m_pCameraEdict->v.origin = tr.vecEndPos - vComp.Normalize() * 32.0f;
 			}
 
 			//bSetAngle = FALSE;

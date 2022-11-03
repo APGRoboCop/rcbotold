@@ -637,12 +637,12 @@ void AutoWaypoint ()
 			vOrigin = pNode->v.origin;
 
 			// hit the floor
-			UTIL_TraceLine(vOrigin,Vector(0,0,-4096.0),ignore_monsters,dont_ignore_glass,NULL,&tr);
+			UTIL_TraceLine(vOrigin,Vector(0,0,-4096.0f),ignore_monsters,dont_ignore_glass,NULL,&tr);
 
 			min = tr.vecEndPos;
 
 			// hit the ceiling
-			UTIL_TraceLine(vOrigin,Vector(0,0,4096.0),ignore_monsters,dont_ignore_glass,NULL,&tr);
+			UTIL_TraceLine(vOrigin,Vector(0,0,4096.0f),ignore_monsters,dont_ignore_glass,NULL,&tr);
 
 			max = tr.vecEndPos;
 
@@ -1096,7 +1096,7 @@ int WaypointFindNearest(edict_t* pEntity, const float range, const int team)
 	// find the nearest waypoint...
 
 	int min_index = -1;
-	float min_distance = 9999.0;
+	float min_distance = 9999.0f;
 
 	for (int i = 0; i < num_waypoints; i++)
 	{
@@ -1441,7 +1441,7 @@ int WaypointFindRandomGoal(const Vector& v_src, edict_t* pEntity, const float ra
 int WaypointFindNearestAiming(const Vector& v_origin)
 {
 	int min_index = -1;
-	int min_distance = 9999.0;
+	int min_distance = 9999.0f;
 
 	if (num_waypoints < 1)
 		return -1;
@@ -1546,7 +1546,7 @@ int WaypointAddOrigin(Vector const& vOrigin, const int iFlags, edict_t* pEntity,
 
 	edict_t* pEnt = nullptr;
 
-	while ((pEnt = UTIL_FindEntityInSphere(pEnt, vOrigin, 72.0)) != nullptr)
+	while ((pEnt = UTIL_FindEntityInSphere(pEnt, vOrigin, 72.0f)) != nullptr)
 	{
 		if (pEnt->v.owner != nullptr)
 			continue;
@@ -1704,7 +1704,7 @@ void WaypointDelete(CClient* pClient)
 	{
 	   int i;
 	   int min_index = -1;
-	   int min_distance = 9999.0;
+	   int min_distance = 9999.0f;
 	   float distance;
 
 	   // search for nearby aiming waypoint and delete it also...
@@ -1981,7 +1981,7 @@ int WaypointFindReachable(edict_t* pEntity, const float range, const int team)
 
 	// find the nearest waypoint...
 
-	float min_distance = 9999.0;
+	float min_distance = 9999.0f;
 
 	for (int i = 0; i < num_waypoints; i++)
 	{
@@ -2266,7 +2266,7 @@ void WaypointThink ( void )
 
 		/////////////////////////////////////////////////////////////////
 		// GET ALL INFO NEEDED...
-		cCurClient->m_fWaypointDisplayTime = gpGlobals->time + 1.0;
+		cCurClient->m_fWaypointDisplayTime = gpGlobals->time + 1.0f;
 
 		pPlayer = cCurClient->GetPlayer();
 		vOrigin = pPlayer->v.origin;

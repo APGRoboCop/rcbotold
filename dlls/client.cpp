@@ -178,7 +178,7 @@ void InitMessage ( const char *message );
 		hudmessage.SetEffect(HUD_EFFECT_CREDITS);
 		hudmessage.SetFadeTime(0, 0);
 		hudmessage.SetEffectTime(1);
-		hudmessage.SetPosition(0.0, 0.1);
+		hudmessage.SetPosition(0.0f, 0.1f);
 		hudmessage.SetColour1(Vector(200, 200, 200), 200);
 		hudmessage.SetColour2(Vector(255, 255, 255), 200);
 		hudmessage.SayMessage(message, m_pPlayer);
@@ -229,7 +229,7 @@ void InitMessage ( const char *message );
 		TraceResult tr;
 
 		Vector vSrc = pev->origin + pev->view_ofs;
-		Vector vEnd = vSrc + gpGlobals->v_forward * 210.0;
+		Vector vEnd = vSrc + gpGlobals->v_forward * 210.0f;
 		Vector vComp;
 		Vector vAngles;
 

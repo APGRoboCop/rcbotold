@@ -148,7 +148,7 @@ eBotCvarState CWaypointMenuCommand::action(CClient* pClient, const char* arg1, c
 
 	//pEntity = pClient->GetPlayer();
 
-	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(EntityOrigin(pClient->GetPlayer()), 50.0, -1, FALSE, TRUE);
+	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(EntityOrigin(pClient->GetPlayer()), 50.0f, -1, FALSE, TRUE);
 
 	if (pClient->m_iCurrentWaypoint != -1)
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_MAIN].Render(pClient);
@@ -293,9 +293,9 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 
 			hudmessage.SetChannel(3);
 			hudmessage.SetEffect(HUD_EFFECT_FADE_IN_OUT);
-			hudmessage.SetFadeTime(0.75, 0.75);
-			hudmessage.SetEffectTime(0.75);
-			hudmessage.SetHoldTime(2.0);
+			hudmessage.SetFadeTime(0.75f, 0.75f);
+			hudmessage.SetEffectTime(0.75f);
+			hudmessage.SetHoldTime(2.0f);
 			hudmessage.SetPosition(-1, -1);
 			hudmessage.SetColour1(colour, 200);
 			hudmessage.SetColour2(colour, 200);
@@ -332,7 +332,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		UTIL_MakeVectors(pev->v_angle);
 
 		vSrc = pev->origin + pev->view_ofs;
-		vEnd = vSrc + gpGlobals->v_forward * 4096.0;
+		vEnd = vSrc + gpGlobals->v_forward * 4096.0f;
 
 		UTIL_TraceLine(vSrc, vEnd, dont_ignore_monsters, dont_ignore_glass, pEntity, &tr);
 

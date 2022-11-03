@@ -256,7 +256,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 void CBotGlobals::StartFrame()
 {
 	static int iIndex = 0;
-	static float fPreviousTime = -1.0;
+	static float fPreviousTime = -1.0f;
 	static BOOL bCheckedTeamplay = FALSE;
 
 	if (bCheckedTeamplay && m_iCurrentMod == MOD_GEARBOX)
@@ -621,7 +621,7 @@ void CBotGlobals::StartFrame()
 				{
 					if (!pBot->m_fLeaveTime)
 					{
-						pBot->m_fLeaveTime = gpGlobals->time + RANDOM_FLOAT(3.0, 6.0);
+						pBot->m_fLeaveTime = gpGlobals->time + RANDOM_FLOAT(3.0f, 6.0f);
 
 						pBot->BotEvent(BOT_EVENT_LEAVING);
 					}

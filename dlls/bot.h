@@ -720,7 +720,7 @@ public:
 	}
 
 	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = nullptr, int iInfo = 0, float fInfo = 0,
-	         const Vector& vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0/*, CBotTask *GoalTask = NULL */)
+	         const Vector& vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0f/*, CBotTask *GoalTask = NULL */)
 	{
 		// cheap way of adding schedules.. ;)
 		// means if this task fails we can fail every other task with the same
@@ -2556,7 +2556,7 @@ public:
 		dataStack<CTFCBackpack> tempStack = m_Backpacks;
 
 		edict_t* pNearest = nullptr;
-		float fNearestDist = 4096.0;
+		float fNearestDist = 4096.0f;
 
 		while (!tempStack.IsEmpty())
 		{
@@ -2830,7 +2830,7 @@ private:
 	void SawSpy(edict_t* pPlayer)
 	{
 		m_pSpySpotted = pPlayer;
-		m_fSeeSpyTime = gpGlobals->time + RANDOM_FLOAT(4.0, 8.0);
+		m_fSeeSpyTime = gpGlobals->time + RANDOM_FLOAT(4.0f, 8.0f);
 	}
 
 	CBotGAValues* m_GASurvival;
@@ -3216,7 +3216,7 @@ public:
 
 	void CantBuildHere()
 	{
-		m_fNextBuildTime = gpGlobals->time + RANDOM_FLOAT(1.0, 2.0);
+		m_fNextBuildTime = gpGlobals->time + RANDOM_FLOAT(1.0f, 2.0f);
 	}
 
 	void StoppedBuilding()
@@ -6256,12 +6256,12 @@ public:
 		m_bCombatMap = FALSE;
 		m_pMarineStart = nullptr;
 		//m_iJoiningClients = 0;
-		m_fBotStuckSpeed = 7.0;
+		m_fBotStuckSpeed = 7.0f;
 		m_iMaxVisUpdateRevs = 200;
-		m_fReadConfigTime = 0;
+		m_fReadConfigTime = 0.0f;
 		m_bAutoPathWaypoint = TRUE;
 		m_bWaypointsHavePaths = FALSE;
-		m_fUpdateVisTime = 0;
+		m_fUpdateVisTime = 0.0f;
 		m_iDebugLevels = 0;
 		m_iBotMsgIndex = -1;
 		m_iCurrentMessageState = 0;
@@ -6270,11 +6270,11 @@ public:
 		m_bGameRules = FALSE;
 
 		m_bIsFakeClientCommand = FALSE;
-		m_fTurnSpeed = 15;
+		m_fTurnSpeed = 15.0f;
 
 		m_CurrentMessage = nullptr;
 
-		m_fAutoBuildTime = 0;
+		m_fAutoBuildTime = 0.0f;
 		m_bAutoBuilt = FALSE;
 
 		m_bNetMessageStarted = FALSE;

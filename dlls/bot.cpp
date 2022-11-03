@@ -516,7 +516,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 		// Didn't see the team mate but was near by and is visible from bot
 	{
 		if (!m_pEnemy)
-			AddPriorityTask(CBotTask(BOT_TASK_FACE_EDICT, 0, pInfo, 0, 1.0));
+			AddPriorityTask(CBotTask(BOT_TASK_FACE_EDICT, 0, pInfo, 0, 1.0f));
 	}
 	break;
 	case BOT_EVENT_SEE_TEAMMATE_DIE:
@@ -855,7 +855,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 
 			// face origin of damage
 			if (bAdd)
-				AddPriorityTask(CBotTask(BOT_TASK_FACE_VECTOR, 0, nullptr, 0, RANDOM_FLOAT(2.0, 3.0), Vector(pFloatInfo)));
+				AddPriorityTask(CBotTask(BOT_TASK_FACE_VECTOR, 0, nullptr, 0, RANDOM_FLOAT(2.0f, 3.0f), Vector(pFloatInfo)));
 		}
 
 		if (gBotGlobals.IsNS() && IsGorge())
@@ -869,7 +869,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 				{
 					BotChat(BOT_CHAT_HELP);
 					// ask for help
-					m_fChatMessageTime = gpGlobals->time + RANDOM_FLOAT(10.0, 12.0);
+					m_fChatMessageTime = gpGlobals->time + RANDOM_FLOAT(10.0f, 12.0f);
 				}
 			}
 		}
@@ -929,7 +929,7 @@ void CBot::EnemyFound(edict_t* pEnemy)
 	UpdateCondition(BOT_CONDITION_SEE_ENEMY);
 
 	m_fStrafeSpeed = 1;
-	m_fStrafeTime = RANDOM_FLOAT(2.0, 6.0);
+	m_fStrafeTime = RANDOM_FLOAT(2.0f, 6.0f);
 	
 	m_pEnemy = pEnemy;
 
@@ -985,7 +985,7 @@ void CBot::EnemyFound(edict_t* pEnemy)
 	if (m_fNextUseSayMessage > gpGlobals->time)
 		return;
 
-	m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(4.0, 8.0);
+	m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(4.0f, 8.0f);
 
 	// do something when an enemy is found
 	switch (gBotGlobals.m_iCurrentMod)
@@ -1864,29 +1864,29 @@ void CBot::SpawnInit(const BOOL bInit)
 	m_iCurrentWaypointIndex = -1;
 	m_iPrevWaypointIndex = -1;
 	m_iCurrentWaypointFlags = 0;
-	m_fPrevWaypointDist = 4096.0;
+	m_fPrevWaypointDist = 4096.0f;
 	m_fLastSeeWaypoint = 0;
 
 	m_pAvoidEntity = nullptr;
 
-	m_fStuckTime = 0;
-	m_fMoveSpeed = 0;
-	m_fUpSpeed = 0;
-	m_fStrafeSpeed = 0;
+	m_fStuckTime = 0.0f;
+	m_fMoveSpeed = 0.0f;
+	m_fUpSpeed = 0.0f;
+	m_fStrafeSpeed = 0.0f;
 
-	m_fStrafeTime = 0;
+	m_fStrafeTime = 0.0f;
 
-	m_fStartJumpTime = 0;
-	m_fEndJumpTime = 0;
-	m_fStartDuckTime = 0;
-	m_fEndDuckTime = 0;
+	m_fStartJumpTime = 0.0f;
+	m_fEndJumpTime = 0.0f;
+	m_fStartDuckTime = 0.0f;
+	m_fEndDuckTime = 0.0f;
 
-	m_fFindPathTime = 0;
+	m_fFindPathTime = 0.0f;
 
-	m_fWallAtLeftTime = 0;
-	m_fWallAtRightTime = 0;
+	m_fWallAtLeftTime = 0.0f;
+	m_fWallAtRightTime = 0.0f;
 
-	m_fUpdateVisiblesTime = 0;
+	m_fUpdateVisiblesTime = 0.0f;
 
 	////////////////////////////
 	// NATURAL SELECTION RELATED
@@ -1905,8 +1905,8 @@ void CBot::SpawnInit(const BOOL bInit)
 
 	m_pEnemy = nullptr;
 
-	m_fFirstSeeEnemyTime = 0;
-	m_fGetAimVectorTime = 0;
+	m_fFirstSeeEnemyTime = 0.0f;
+	m_fGetAimVectorTime = 0.0f;
 
 	m_pEnemyRep = nullptr;
 
@@ -1933,7 +1933,7 @@ void CBot::SpawnInit(const BOOL bInit)
 	m_iWaypointGoalIndex = -1;
 	m_iCurrentWaypointIndex = -1;
 	m_iCurrentWaypointFlags = 0;
-	m_fPrevWaypointDist = 4096;
+	m_fPrevWaypointDist = 4096.0f;
 
 	m_bNeedToInit = FALSE;
 
@@ -2604,7 +2604,7 @@ break;*/
 			{
 				m_pCombatBits->setFitness(m_fCombatFitness);
 				gBotGlobals.m_pCombatGA[m_iCombatTeam].addToPopulation(m_pCombatBits->copy());
-				m_fCombatFitness = 0;//That line triggers crash [APG]RoboCop[CL]
+				m_fCombatFitness = 0.0f;//That line triggers crash? [APG]RoboCop[CL]
 
 				if (m_pCombatBits)
 				{
@@ -3096,9 +3096,9 @@ void CBot::Think()
 						const float fval = m_pTSWeaponSelect->get(i);
 
 						if (fval < 0.0f)
-							m_pTSWeaponSelect->set(i, 0.0);
+							m_pTSWeaponSelect->set(i, 0.0f);
 						else if (fval > 1.0f)
-							m_pTSWeaponSelect->set(i, 1.0);
+							m_pTSWeaponSelect->set(i, 1.0f);
 					}
 				}
 			}
@@ -3562,7 +3562,7 @@ void CBot::Think()
 	if (gBotGlobals.IsNS() && bCanUpgrade && gBotGlobals.IsCombatMap() && m_fUpgradeTime < gpGlobals->time)
 	{
 		AddPriorityTask(CBotTask(BOT_TASK_COMBAT_UPGRADE, 0));
-		m_fUpgradeTime = gpGlobals->time + RANDOM_FLOAT(5.0, 10.0);
+		m_fUpgradeTime = gpGlobals->time + RANDOM_FLOAT(5.0f, 10.0f);
 	}
 
 	if (bFollowLeader && m_stSquad && m_pSquadLeader && HasCondition(BOT_CONDITION_SEE_SQUAD_LEADER) && !HasCondition(BOT_CONDITION_SQUAD_LEADER_DEAD))
@@ -3606,7 +3606,7 @@ void CBot::Think()
 			{
 				if (!m_Tasks.HasTask(BOT_TASK_LISTEN_TO_SOUND))
 				{
-					AddPriorityTask(CBotTask(BOT_TASK_LISTEN_TO_SOUND, 0, pPlayer, 0, RANDOM_FLOAT(2.0, 3.0)));
+					AddPriorityTask(CBotTask(BOT_TASK_LISTEN_TO_SOUND, 0, pPlayer, 0, RANDOM_FLOAT(2.0f, 3.0f)));
 				}
 			}
 		}
@@ -4409,7 +4409,7 @@ void CBot::LookForNewTasks()
 			//else
 			//	ALERT(at_console,"WTF??? %s has no objectives\n",m_szBotName);
 
-			iWpt = WaypointFindRandomGoal(pev->origin, m_pEdict, 4096.0, -1, W_FL_ENDLEVEL, &m_FailedGoals);
+			iWpt = WaypointFindRandomGoal(pev->origin, m_pEdict, 4096.0f, -1, W_FL_ENDLEVEL, &m_FailedGoals);
 
 			if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
 			{
@@ -4442,10 +4442,10 @@ void CBot::LookForNewTasks()
 			{
 				// TO:DO:::Use real SCHEDULES.. arghhh!!!
 				AddPriorityTask(CBotTask(BOT_TASK_BUILD, iNewScheduleId, pNearestBuildable));
-				AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestBuildable, 0, 0, Vector(0, 0, 0), 30.0));
+				AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestBuildable, 0, 0, Vector(0, 0, 0), 30.0f));
 
 				m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_BUILD);
-				//m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId,60.0);
+				//m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId,60.0f);
 
 				break;
 			}
@@ -4489,7 +4489,7 @@ void CBot::LookForNewTasks()
 							// look around for some thing to do.
 							m_CurrentLookTask = BOT_LOOK_TASK_LOOK_AROUND;
 
-							m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(8.0, 12.0);
+							m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(8.0f, 12.0f);
 
 							CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(gBotGlobals.GetCommander());
 
@@ -4641,7 +4641,7 @@ void CBot::LookForNewTasks()
 							AddTask(CBotTask(BOT_TASK_BUILD_ALIEN_STRUCTURE, iNewScheduleId, pNearestHive, ALIEN_BUILD_HIVE));
 
 							m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_BUILD);
-							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(55.0, 65.0));
+							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(55.0f, 65.0f));
 						}
 						break;
 					case BOT_CAN_BUILD_RESOURCE:
@@ -4662,14 +4662,14 @@ void CBot::LookForNewTasks()
 
 							// should be nearby and shouldn't take to long to complete
 							// if takes too long then forget it for now (set the time)
-							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(25.0, 35.0));
+							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(25.0f, 35.0f));
 							break;
 						}
 					case BOT_CAN_BUILD_STRUCT:
 						if (bNotCombatMap)
 						{
 							if (fNearestBuildPositionDist < 96) // too close
-								AddPriorityTask(CBotTask(BOT_TASK_AVOID_OBJECT, iNewScheduleId, pNearestBuildEdict, 0, 2.0));
+								AddPriorityTask(CBotTask(BOT_TASK_AVOID_OBJECT, iNewScheduleId, pNearestBuildEdict, 0, 2.0f));
 
 							AddPriorityTask(CBotTask(BOT_TASK_BUILD_ALIEN_STRUCTURE, iNewScheduleId, nullptr, iBestStructureToBuild));
 
@@ -4689,7 +4689,7 @@ void CBot::LookForNewTasks()
 							}
 
 							m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_BUILD);
-							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(30.0, 40.0));
+							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(30.0f, 40.0f));
 							break;
 						}
 					case BOT_CAN_HEAL:
@@ -4697,7 +4697,7 @@ void CBot::LookForNewTasks()
 
 						if (UTIL_EntityIsHive(pNearestHealablePlayer))
 						{
-							AddTask(CBotTask(BOT_TASK_MOVE_TO_VECTOR, iNewScheduleId, nullptr, 0, 32.0, UTIL_GetGroundVector(pNearestHealablePlayer) + Vector(0, 0, pev->size.z / 2)));
+							AddTask(CBotTask(BOT_TASK_MOVE_TO_VECTOR, iNewScheduleId, nullptr, 0, 32.0f, UTIL_GetGroundVector(pNearestHealablePlayer) + Vector(0, 0, pev->size.z / 2)));
 						}
 
 						AddTask(CBotTask(BOT_TASK_HEAL_PLAYER, iNewScheduleId, pNearestHealablePlayer));
@@ -4760,7 +4760,7 @@ void CBot::LookForNewTasks()
 								AddTask(CBotTask(BOT_TASK_BUILD_ALIEN_STRUCTURE, iNewScheduleId, pHive, ALIEN_BUILD_HIVE));
 
 								m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_BUILD);
-								m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(55.0, 65.0));
+								m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(55.0f, 65.0f));
 							}
 						}
 					}
@@ -4775,7 +4775,7 @@ void CBot::LookForNewTasks()
 							AddTask(CBotTask(BOT_TASK_BUILD_ALIEN_STRUCTURE, iNewScheduleId, pFuncResource, ALIEN_BUILD_RESOURCES));
 
 							m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_BUILD);
-							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(70.0, 80.0));
+							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(70.0f, 80.0f));
 						}
 					}
 				}
@@ -5249,7 +5249,7 @@ void CBot::LookForNewTasks()
 		{
 			if (WaypointFlags(m_iCurrentWaypointIndex) & W_FL_ENDLEVEL)
 			{
-				iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0, -1, W_FL_IMPORTANT, &m_FailedGoals);
+				iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0f, -1, W_FL_IMPORTANT, &m_FailedGoals);
 
 				if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
 				{
@@ -5259,7 +5259,7 @@ void CBot::LookForNewTasks()
 			}
 		}
 
-		iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0, -1, W_FL_ENDLEVEL, &m_FailedGoals);
+		iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0f, -1, W_FL_ENDLEVEL, &m_FailedGoals);
 
 		if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
 		{
@@ -5272,7 +5272,7 @@ void CBot::LookForNewTasks()
 	{
 		gBotGlobals.m_bTeamPlay = TRUE; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
 
-		int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0, -1, W_FL_ENDLEVEL, &m_FailedGoals);
+		int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0f, -1, W_FL_ENDLEVEL, &m_FailedGoals);
 
 		if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
 		{
@@ -5294,7 +5294,7 @@ void CBot::LookForNewTasks()
 		// need health and a health waypoint nearby ?
 		if (bNeedHealth)
 		{
-			int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 2000.0, -1, W_FL_HEALTH, &m_FailedGoals);
+			int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 2000.0f, -1, W_FL_HEALTH, &m_FailedGoals);
 
 			if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
 			{
@@ -5462,7 +5462,7 @@ void CBot::LookForNewTasks()
 					if (iWpt != -1)
 					{
 						// wait for 8 seconds or something for capture
-						AddPriorityTask(CBotTask(BOT_TASK_WAIT, iNewScheduleId, nullptr, 0, RANDOM_FLOAT(8.0, 12.0)));
+						AddPriorityTask(CBotTask(BOT_TASK_WAIT, iNewScheduleId, nullptr, 0, RANDOM_FLOAT(8.0f, 12.0f)));
 						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWpt, -1));
 					}
 				}
@@ -5489,7 +5489,7 @@ void CBot::LookForNewTasks()
 					if (iWpt != -1)
 					{
 						// wait for 8 seconds or something for capture
-						AddPriorityTask(CBotTask(BOT_TASK_WAIT, iNewScheduleId, nullptr, 0, RANDOM_FLOAT(8.0, 12.0)));
+						AddPriorityTask(CBotTask(BOT_TASK_WAIT, iNewScheduleId, nullptr, 0, RANDOM_FLOAT(8.0f, 12.0f)));
 						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWpt, -1));
 					}
 				}
@@ -5620,7 +5620,7 @@ void CBot::LookForNewTasks()
 					{
 						// Get bot to look for other players to group
 						AddTask(CBotTask(BOT_TASK_ASSEMBLE_SQUAD, iNewScheduleId));
-						m_fLookForSquadTime = gpGlobals->time + RANDOM_FLOAT(10.0, 20.0);
+						m_fLookForSquadTime = gpGlobals->time + RANDOM_FLOAT(10.0f, 20.0f);
 					}
 					else
 						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, -1, -1));
@@ -5671,7 +5671,7 @@ void CBot::LookForNewTasks()
 
 						if (vSpottedOrigin != vPos)
 						{
-							AddPriorityTask(CBotTask(BOT_TASK_WAIT_AND_FACE_VECTOR, iNewScheduleId, nullptr, 0, 1.0, vSpottedOrigin));
+							AddPriorityTask(CBotTask(BOT_TASK_WAIT_AND_FACE_VECTOR, iNewScheduleId, nullptr, 0, 1.0f, vSpottedOrigin));
 						}
 
 						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWpt, -1));
@@ -5737,7 +5737,7 @@ void CBot::LookForNewTasks()
 				if (gBotGlobals.IsNS())
 				{
 					if (IsMarine() && HasWeapon(NS_WEAPON_MINE))
-						AddTask(CBotTask(BOT_TASK_DEPLOY_MINES, iNewScheduleId, nullptr, 0, 0, Vector(0, 0, 0), 10.0));
+						AddTask(CBotTask(BOT_TASK_DEPLOY_MINES, iNewScheduleId, nullptr, 0, 0, Vector(0, 0, 0), 10.0f));
 				}
 				/*else if (gBotGlobals.IsMod(MOD_TFC))
 				{
@@ -6256,7 +6256,7 @@ BOOL CBot::UpdateVisibles()
 				AddTask(CBotTask(BOT_TASK_BUILD_ALIEN_STRUCTURE, iNewScheduleId, pNearestHive, ALIEN_BUILD_HIVE));
 
 				m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_BUILD);
-				m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(55.0, 65.0));
+				m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(55.0f, 65.0f));
 				break;
 			case BOT_CAN_BUILD_RESOURCE:
 				AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestResourceFountain, NS_RESOURCE_TOWER_RESOURCES));
@@ -6274,7 +6274,7 @@ BOOL CBot::UpdateVisibles()
 				if (fNearestBuildPositionDist < 85) // too close
 				{
 					// avoid the object first
-					AddPriorityTask(CBotTask(BOT_TASK_AVOID_OBJECT, iNewScheduleId, pNearestBuildEdict, 0, 2.0));
+					AddPriorityTask(CBotTask(BOT_TASK_AVOID_OBJECT, iNewScheduleId, pNearestBuildEdict, 0, 2.0f));
 				}
 
 				AddPriorityTask(CBotTask(BOT_TASK_BUILD_ALIEN_STRUCTURE, iNewScheduleId, nullptr, iBestStructureToBuild));
@@ -6295,7 +6295,7 @@ BOOL CBot::UpdateVisibles()
 				}
 
 				m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_BUILD);
-				m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(55.0, 65.0));
+				m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(55.0f, 65.0f));
 				break;
 			default:
 				if (!EntityIsCommander(nullptr) && pNearestResourceFountain && IsMarine() && !gBotGlobals.IsCombatMap() && gBotGlobals.IsConfigSettingOn(BOT_CONFIG_WAIT_AT_RESOURCES))
@@ -6355,7 +6355,7 @@ BOOL CBot::UpdateVisibles()
 			pTeleporter->v.origin));
 		AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iSched, pTeleporter));
 
-		m_Tasks.SetTimeToCompleteSchedule(iSched, 15.0);
+		m_Tasks.SetTimeToCompleteSchedule(iSched, 15.0f);
 	}
 
 	/*if (pNearestSentry && !m_Tasks.HasTask(BOT_TASK_TFC_DISCARD))
@@ -7059,7 +7059,7 @@ void CBot::WorkViewAngles()
 
 		break;
 	case BOT_LOOK_TASK_FACE_GROUND:
-		SetViewAngles(pev->origin - Vector(0, 0, 4096.0));
+		SetViewAngles(pev->origin - Vector(0, 0, 4096.0f));
 		break;
 		// our next waypoint?
 	case BOT_LOOK_TASK_NEXT_WAYPOINT:
@@ -7164,7 +7164,7 @@ void CBot::WorkViewAngles()
 			vRandom = vRandom * 64.0f;
 
 			m_vCurrentLookDir = vBaseLookOrigin + vRandom;
-			m_fLastLookTime = gpGlobals->time + RANDOM_FLOAT(2.0, 4.0);
+			m_fLastLookTime = gpGlobals->time + RANDOM_FLOAT(2.0f, 4.0f);
 		}
 
 		SetViewAngles(m_vCurrentLookDir);
@@ -7176,7 +7176,7 @@ void CBot::WorkViewAngles()
 	{
 		const float fTempspeed = m_fTurnSpeed;
 
-		//m_fTurnSpeed = 10.0*m_Profile.m_fAimSpeed;
+		//m_fTurnSpeed = 10.0f*m_Profile.m_fAimSpeed;
 		m_fTurnSpeed = 15 * (1 - m_Profile.m_fAimSpeed);
 		if (m_fTurnSpeed <= 0)
 			m_fTurnSpeed = 1;
@@ -7192,7 +7192,7 @@ void CBot::WorkViewAngles()
 			// Had an enemy but lost it or killed it
 			// search for another/same enemy again
 			m_CurrentLookTask = BOT_LOOK_TASK_SEARCH_FOR_LAST_ENEMY;
-			m_fSearchEnemyTime = gpGlobals->time + RANDOM_FLOAT(5.0, 8.0);
+			m_fSearchEnemyTime = gpGlobals->time + RANDOM_FLOAT(5.0f, 8.0f);
 		}
 
 		m_fTurnSpeed = fTempspeed;
@@ -7586,7 +7586,7 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 		vAngles = GetLadderAngles();
 
 		bUsePitch = TRUE;
-		//		m_fTurnSpeed = 12.0;
+		//		m_fTurnSpeed = 12.0f;
 	}
 	else
 	{
@@ -8119,36 +8119,36 @@ void CBot::WorkMoveDirection()
 	// Spread the angle onto a scale from -1 to 1 (-1 being left, 1 being right)
 	flSide = fAngle;
 
-	if ( flSide < -90.0 )
+	if ( flSide < -90.0f )
 	{
-		while (flSide < -90.0)
-			flSide+=90.0;
+		while (flSide < -90.0f)
+			flSide+=90.0f;
 
-		flSide = -90.0 - flSide;
+		flSide = -90.0f - flSide;
 	}
 
-	if ( flSide > 90.0 )
+	if ( flSide > 90.0f )
 	{
-		while (flSide > 90.0)
-			flSide-=90.0;
+		while (flSide > 90.0f)
+			flSide-=90.0f;
 
-		flSide = 90.0 - flSide;
+		flSide = 90.0f - flSide;
 	}
 
-	flSide/=90.0;
+	flSide/=90.0f;
 
 	// wrap angle onto a scale for -1 being backwards and 1 being forwards
 	// Flip scale for forward/back
 
-	if( fAngle >= 0.0 )
-		flMove = 1 - (fAngle/90.0);
+	if( fAngle >= 0.0f )
+		flMove = 1 - (fAngle/90.0f);
 	else
-		flMove = 1 + (fAngle/90.0);
+		flMove = 1 + (fAngle/90.0f);
 
-	if( flMove < -1.0 )
-		flMove += 1.0;
-	else if ( flMove  > 1.0 )
-		flMove -= 1.0;
+	if( flMove < -1.0f )
+		flMove += 1.0f;
+	else if ( flMove  > 1.0f )
+		flMove -= 1.0f;
 
 	//*/
 
@@ -8388,7 +8388,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 			}
 		}
 
-		m_fPickupItemTime = gpGlobals->time + RANDOM_FLOAT(5.0, 10.0);
+		m_fPickupItemTime = gpGlobals->time + RANDOM_FLOAT(5.0f, 10.0f);
 
 		m_pPickupEntity = nullptr;
 
@@ -8434,7 +8434,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 							AddPriorityTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pBestTarget));
 							AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pBestTarget));
 							m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_USE_LIFT);
-							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(10.0, 15.0));
+							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(10.0f, 15.0f));
 						}
 					}
 					else
@@ -8748,7 +8748,7 @@ edict_t* CBot::FindEnemy()
 								if (fDistance > 400)
 									continue;
 							}
-							else if (fDistance > 100.0)
+							else if (fDistance > 100.0f)
 								continue;
 							else if (BotFunc_FInViewCone(&pev->origin, pEntity))
 								continue;
@@ -9337,7 +9337,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			{
 				if (!pEntity->v.frame && pEntity->v.health > 0)
 				{
-					//m_fNextShootButton = gpGlobals->time + RANDOM_FLOAT(1.0,2.0);
+					//m_fNextShootButton = gpGlobals->time + RANDOM_FLOAT(1.0f,2.0f);
 
 					return TRUE;
 				}
@@ -10356,23 +10356,23 @@ void CBot :: BotOnLadder ( void )
 {
 	Vector v_src, v_dest, view_angles;
 	TraceResult tr;
-	float angle = 0.0;
+	float angle = 0.0f;
 	bool done = FALSE;
 
 	// check if the bot has JUST touched this ladder...
 	if (m_siLadderDir == LADDER_UNKNOWN)
 	{
 		// try to square up the bot on the ladder...
-		while ((!done) && (angle < 180.0))
+		while ((!done) && (angle < 180.0f))
 		{
 			// try looking in one direction (forward + angle)
 			view_angles = pev->v_angle;
 			view_angles.y = pev->v_angle.y + angle;
 
-			if (view_angles.y < 0.0)
-				view_angles.y += 360.0;
-			if (view_angles.y > 360.0)
-				view_angles.y -= 360.0;
+			if (view_angles.y < 0.0f)
+				view_angles.y += 360.0f;
+			if (view_angles.y > 360.0f)
+				view_angles.y -= 360.0f;
 
 			UTIL_MakeVectors( view_angles );
 
@@ -10382,7 +10382,7 @@ void CBot :: BotOnLadder ( void )
 			UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
 				pev->pContainingEntity, &tr);
 
-			if (tr.flFraction < 1.0)  // hit something?
+			if (tr.flFraction < 1.0f)  // hit something?
 			{
 				if (strcmp("func_wall", STRING(tr.pHit->v.classname)) == 0)
 				{
@@ -10408,10 +10408,10 @@ void CBot :: BotOnLadder ( void )
 				view_angles = pev->v_angle;
 				view_angles.y = pev->v_angle.y - angle;
 
-				if (view_angles.y < 0.0)
-					view_angles.y += 360.0;
-				if (view_angles.y > 360.0)
-					view_angles.y -= 360.0;
+				if (view_angles.y < 0.0f)
+					view_angles.y += 360.0f;
+				if (view_angles.y > 360.0f)
+					view_angles.y -= 360.0f;
 
 				UTIL_MakeVectors( view_angles );
 
@@ -10421,7 +10421,7 @@ void CBot :: BotOnLadder ( void )
 				UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
 					pev->pContainingEntity, &tr);
 
-				if (tr.flFraction < 1.0)  // hit something?
+				if (tr.flFraction < 1.0f)  // hit something?
 				{
 					if (strcmp("func_wall", STRING(tr.pHit->v.classname)) == 0)
 					{
@@ -10464,7 +10464,7 @@ void CBot :: BotOnLadder ( void )
 		pev->v_angle.x = -60;  // look upwards
 
 		// check if the bot hasn't moved much since the last location...
-		if ((moved_distance <= 1) && (prev_speed >= 1.0))
+		if ((moved_distance <= 1) && (prev_speed >= 1.0f))
 		{
 			// the bot must be stuck, change directions...
 
@@ -10477,7 +10477,7 @@ void CBot :: BotOnLadder ( void )
 		pev->v_angle.x = 60;  // look downwards
 
 		// check if the bot hasn't moved much since the last location...
-		if ((moved_distance <= 1) && (prev_speed >= 1.0))
+		if ((moved_distance <= 1) && (prev_speed >= 1.0f))
 		{
 			// the bot must be stuck, change directions...
 
@@ -11055,14 +11055,14 @@ void CBot::RunForCover(Vector const vOrigin, const BOOL bDoItNow, int iScheduleI
 		// always try to crouch
 
 		// ----------------------.....task......,.....ID....,..edict..,.int.,.........float .......
-		AddPriorityTask(CBotTask(BOT_TASK_CROUCH, iScheduleId, nullptr, 0, RANDOM_FLOAT(1.0, 2.0)));
+		AddPriorityTask(CBotTask(BOT_TASK_CROUCH, iScheduleId, nullptr, 0, RANDOM_FLOAT(1.0f, 2.0f)));
 
 		if (iCoverWpt == -1)
 		{
 			// no cover point
 
 			// use lowest cost techniques
-			iCoverWpt = WaypointLocations.NearestWaypoint(m_vLowestEnemyCostVec, 320.0, -1);
+			iCoverWpt = WaypointLocations.NearestWaypoint(m_vLowestEnemyCostVec, 320.0f, -1);
 
 			// not found
 			if (iCoverWpt == -1)
@@ -11098,7 +11098,7 @@ void CBot::RunForCover(Vector const vOrigin, const BOOL bDoItNow, int iScheduleI
 
 		m_Tasks.GiveSchedIdDescription(iScheduleId, BOT_SCHED_RUN_FOR_COVER);
 		// 7.5 seconds avg to run for cover
-		m_Tasks.SetTimeToCompleteSchedule(iScheduleId, RANDOM_FLOAT(5.0, 10.0));
+		m_Tasks.SetTimeToCompleteSchedule(iScheduleId, RANDOM_FLOAT(5.0f, 10.0f));
 	}
 }
 
@@ -11204,7 +11204,7 @@ void CBot::FindBackPack(const int health, const int cells, const int armour, con
 			char *classname[1] = {"building_sentrygun"};
 
 			// get nearest sentry
-			sentry = UTIL_FindNearestEntity(classname,1,m_vSentry,200.0,FALSE);
+			sentry = UTIL_FindNearestEntity(classname,1,m_vSentry,200.0f,FALSE);
 		}
 
 		if (sentry)
@@ -11360,12 +11360,12 @@ void CBot::DoTasks()
 
 				m_CurrentTask->SetInt(1);
 
-				m_CurrentTask->SetTimeToComplete(RANDOM_FLOAT(8.0, 10.0));
+				m_CurrentTask->SetTimeToComplete(RANDOM_FLOAT(8.0f, 10.0f));
 
 				// look for current sentries around player and ignore it for finding my sentry
 				//char *classname[1] = {"building_sentrygun"};
 
-				//m_CurrentTask->SetEdict(UTIL_FindNearestEntity(classname,1,pev->origin,200.0,TRUE));
+				//m_CurrentTask->SetEdict(UTIL_FindNearestEntity(classname,1,pev->origin,200.0f,TRUE));
 			}
 			else
 			{
@@ -11382,7 +11382,7 @@ void CBot::DoTasks()
 
 					//char *classname[1] = {"building_sentrygun"};
 
-					//m_pSentry.Set(UTIL_FindNearestEntity(classname,1,m_CurrentTask->TaskVector(),100.0,TRUE,m_CurrentTask->TaskEdict()));
+					//m_pSentry.Set(UTIL_FindNearestEntity(classname,1,m_CurrentTask->TaskVector(),100.0f,TRUE,m_CurrentTask->TaskEdict()));
 
 					//m_Tasks.FinishedCurrentTask();
 					AddPriorityTask(CBotTask(BOT_TASK_TFC_REPAIR_BUILDABLE, iSched, getSentry()));
@@ -11398,13 +11398,13 @@ void CBot::DoTasks()
 
 			char* classname[1] = { "building_sentrygun_base" };
 
-			edict_t* sentry = UTIL_FindNearestEntity(classname, 1, pev->origin, 120.0, TRUE);
+			edict_t* sentry = UTIL_FindNearestEntity(classname, 1, pev->origin, 120.0f, TRUE);
 
 			if (sentry)
 			{
 				float fAngle = UTIL_YawAngleBetweenOrigin(&sentry->v, ideal);
 
-				fAngle += 180.0;
+				fAngle += 180.0f;
 
 				if (fAngle >= 23 && fAngle < 70)
 					FakeClientCommand(m_pEdict, "rotatesentry"); // 45 degree
@@ -11478,7 +11478,7 @@ void CBot::DoTasks()
 				if (m_CurrentTask->TaskInt() == 0)
 				{
 					m_CurrentTask->SetInt(1);
-					m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(2.0, 3.0));
+					m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(2.0f, 3.0f));
 				}
 
 				if (RANDOM_LONG(1, 10) <= 1)
@@ -11665,7 +11665,7 @@ void CBot::DoTasks()
 
 			if (m_CurrentTask->TaskInt() == 0)
 			{
-				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(12.0, 15.0));
+				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(12.0f, 15.0f));
 
 				m_CurrentTask->SetInt(1);
 
@@ -11693,7 +11693,7 @@ void CBot::DoTasks()
 				m_CurrentTask->SetVector(UTIL_FurthestVectorAroundYaw(this));
 
 				if (m_CurrentTask->TaskFloat() == 0)
-					m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(30.0, 60.0));
+					m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(30.0f, 60.0f));
 
 				if (m_iCurrentWaypointIndex == -1)
 					m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(pev->origin, 100, -1);
@@ -11742,7 +11742,7 @@ void CBot::DoTasks()
 
 			if (m_CurrentTask->TaskInt() == 0)
 			{
-				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(4.0, 5.0));
+				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(4.0f, 5.0f));
 				m_CurrentTask->SetInt(1);
 			}
 
@@ -11804,7 +11804,7 @@ void CBot::DoTasks()
 					else
 					{
 						m_CurrentTask->SetInt(1);
-						m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(7.0, 9.0));
+						m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(7.0f, 9.0f));
 
 						m_bPlacedPipes = TRUE;
 						m_vPipeLocation = m_CurrentTask->TaskVector();
@@ -11861,7 +11861,7 @@ void CBot::DoTasks()
 
 			if (iState == 0)
 			{
-				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(6.0, 8.0));
+				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(6.0f, 8.0f));
 				m_CurrentTask->SetInt(1);
 			}
 			else if (iState == 1)
@@ -11887,7 +11887,7 @@ void CBot::DoTasks()
 				else
 					m_CurrentTask->SetInt(3); // next state
 
-				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(6.0, 8.0));
+				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(6.0f, 8.0f));
 			}
 			else
 			{
@@ -11999,18 +11999,18 @@ void CBot::DoTasks()
 					{
 						if (m_pCurrentWeapon->GetID() == VALVE_WEAPON_SHOTGUN)
 						{
-							m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(2.0, 3.0));
+							m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(2.0f, 3.0f));
 							bSetTime = TRUE;
 						}
 					}
 					else */if (gBotGlobals.IsMod(MOD_BG))
 					{
 						bSetTime = TRUE;
-						m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(2.0, 3.0));
+						m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(2.0f, 3.0f));
 					}
 
 					if (!bSetTime)
-						m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(0.5, 1.5));
+						m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(0.5f, 1.5f));
 
 					m_CurrentTask->SetInt(1);
 				}
@@ -12088,7 +12088,7 @@ void CBot::DoTasks()
 					{
 						int iGotoWpt = -1;
 
-						m_fInvestigateSoundTime = gpGlobals->time + RANDOM_FLOAT(8.0, 16.0);
+						m_fInvestigateSoundTime = gpGlobals->time + RANDOM_FLOAT(8.0f, 16.0f);
 
 						// investigate!
 
@@ -12105,7 +12105,7 @@ void CBot::DoTasks()
 
 							UTIL_TraceLine(GetGunPosition(), EntityOrigin(pSound), ignore_monsters, ignore_glass, m_pEdict, &tr);
 
-							if (tr.flFraction < 1.0)
+							if (tr.flFraction < 1.0f)
 							{
 								pos = tr.vecEndPos;
 							}
@@ -12582,7 +12582,7 @@ void CBot::DoTasks()
 
 			if (m_CurrentTask->TaskFloat() == 0)
 			{
-				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_LONG(4.0, 6.0));
+				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_LONG(4.0f, 6.0f));
 			}
 
 			CBot* pBot = UTIL_GetBotPointer(pBotEdict);
@@ -12830,7 +12830,7 @@ void CBot::DoTasks()
 						StopMoving();
 					}
 					else
-						TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, VALVE_WEAPON_HANDGRENADE, 0.0, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
+						TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, VALVE_WEAPON_HANDGRENADE, 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
 
 					m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_VECTOR;
 				}
@@ -12909,7 +12909,7 @@ void CBot::DoTasks()
 							bDone = TRUE;
 						}
 
-						m_CurrentTask->SetFloat(1.0);
+						m_CurrentTask->SetFloat(1.0f);
 					}
 				}
 				else if (m_CurrentTask->TaskFloat() == -2 || m_fFindPathTime < gpGlobals->time)
@@ -12951,7 +12951,7 @@ void CBot::DoTasks()
 						}
 						else if (m_CurrentTask->TaskFloat() == 0)
 						{
-							m_CurrentTask->SetFloat(1.0);
+							m_CurrentTask->SetFloat(1.0f);
 
 							vOrigin = m_CurrentTask->TaskVector();
 
@@ -13511,7 +13511,7 @@ void CBot::DoTasks()
 						iWeaponId = m_iSecondaryWeaponId;
 
 						m_CurrentTask->SetInt(iWeaponId);
-						TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, iWeaponId, 0.0, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
+						TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, iWeaponId, 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
 					}
 					else
 						bDone = TRUE;
@@ -13888,7 +13888,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 			{
 				m_pPickupEntity = m_CurrentTask->TaskEdict();
 				m_CurrentTask->SetInt(1);
-				m_CurrentTask->SetTimeToComplete(10.0);
+				m_CurrentTask->SetTimeToComplete(10.0f);
 			}
 
 			if (m_pPickupEntity == nullptr)
@@ -14113,7 +14113,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 								if (m_iLastFailedTask == BOT_TASK_CHANGE_WEAPON)
 									bTaskFailed = TRUE;
 								else
-									TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, NS_WEAPON_METABOLIZE, 0.0, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
+									TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, NS_WEAPON_METABOLIZE, 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
 							}
 							else
 							{
@@ -14147,7 +14147,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 								if (m_iLastFailedTask == BOT_TASK_CHANGE_WEAPON)
 									bTaskFailed = TRUE;
 								else
-									TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, NS_WEAPON_HEALINGSPRAY, 0.0, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
+									TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, NS_WEAPON_HEALINGSPRAY, 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
 							}
 							else
 							{
@@ -14728,7 +14728,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 								if ( RANDOM_LONG(0,100) > 75 )
 									Jump();
 						}*/
-						if (!WaypointReachable(pev->origin, EntityOrigin(m_pEnemy), FALSE))// fEnemyDist > 512.0 )
+						if (!WaypointReachable(pev->origin, EntityOrigin(m_pEnemy), FALSE))// fEnemyDist > 512.0f )
 						{
 							//------------------
 							SetMoveVector(m_vLowestEnemyCostVec);
@@ -15003,7 +15003,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 								if (m_bIsDisguised)
 								{
-									bAttack = m_fFirstSeeEnemyTime + RANDOM_FLOAT(7.0, 9.0) < gpGlobals->time;
+									bAttack = m_fFirstSeeEnemyTime + RANDOM_FLOAT(7.0f, 9.0f) < gpGlobals->time;
 
 									StopMoving();
 									m_fEndDuckTime = gpGlobals->time + 1.0f;
@@ -15077,7 +15077,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 							{
 								PrimaryAttack();
 
-								m_fNextShootButton = gpGlobals->time + RANDOM_FLOAT(1.0, 2.0);
+								m_fNextShootButton = gpGlobals->time + RANDOM_FLOAT(1.0f, 2.0f);
 							}
 							//	}
 						}
@@ -15125,11 +15125,11 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 								if (!m_Tasks.HasTask(BOT_TASK_SEARCH_FOR_ENEMY))
 								{
 									if (gBotGlobals.IsNS() && IsMarine() && HasWeapon(NS_WEAPON_MINE))
-										AddPriorityTask(CBotTask(BOT_TASK_DEPLOY_MINES, iNewScheduleId, nullptr, 0, 0, Vector(0, 0, 0), 10.0));
+										AddPriorityTask(CBotTask(BOT_TASK_DEPLOY_MINES, iNewScheduleId, nullptr, 0, 0, Vector(0, 0, 0), 10.0f));
 									else if (IsGorge() && hasWeb())
 										AddPriorityTask(CBotTask(BOT_TASK_WEB, iNewScheduleId)); // do a little webbing
-									AddPriorityTask(CBotTask(BOT_TASK_SEARCH_FOR_ENEMY, iNewScheduleId, nullptr, 0, RANDOM_FLOAT(3.0, 6.0)));
-									AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, 0, 0, vLastEnemyPosition, RANDOM_FLOAT(10.0, 20.0)));
+									AddPriorityTask(CBotTask(BOT_TASK_SEARCH_FOR_ENEMY, iNewScheduleId, nullptr, 0, RANDOM_FLOAT(3.0f, 6.0f)));
+									AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, 0, 0, vLastEnemyPosition, RANDOM_FLOAT(10.0f, 20.0f)));
 								}
 							}
 							else
@@ -15157,8 +15157,8 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 					/*if ( !m_Tasks.HasTask(BOT_TASK_SEARCH_FOR_ENEMY) )
 					{
-						AddPriorityTask(CBotTask(BOT_TASK_SEARCH_FOR_ENEMY,iNewScheduleId,NULL,0,RANDOM_FLOAT(3.0,6.0)));
-						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH,iNewScheduleId,NULL,0,0,m_vLastSeeEnemyPosition.GetVector(),RANDOM_FLOAT(10.0,20.0)));
+						AddPriorityTask(CBotTask(BOT_TASK_SEARCH_FOR_ENEMY,iNewScheduleId,NULL,0,RANDOM_FLOAT(3.0f,6.0f)));
+						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH,iNewScheduleId,NULL,0,0,m_vLastSeeEnemyPosition.GetVector(),RANDOM_FLOAT(10.0f,20.0f)));
 					}*/
 
 					m_CurrentLookTask = BOT_LOOK_TASK_SEARCH_FOR_LAST_ENEMY;
@@ -15271,7 +15271,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 			if (m_CurrentTask->TaskInt() == 0)
 			{
-				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(4.0, 6.0));
+				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(4.0f, 6.0f));
 				m_CurrentTask->SetInt(1);
 			}
 			else
@@ -15722,7 +15722,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 		case BOT_TASK_DEFEND: // DEFEND object
 
 			if (m_CurrentTask->TaskFloat() == 0)
-				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(20.0, 80.0));
+				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(20.0f, 80.0f));
 
 			if (m_CurrentTask->TaskFloat() < gpGlobals->time)
 				bDone = TRUE;
@@ -15796,7 +15796,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 							}
 						}
 
-						m_fNextUseTank = m_CurrentTask->TaskFloat() + RANDOM_FLOAT(5.0, 20.0);
+						m_fNextUseTank = m_CurrentTask->TaskFloat() + RANDOM_FLOAT(5.0f, 20.0f);
 
 						if (pTank == nullptr)
 						{
@@ -15883,7 +15883,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 			{
 				Vector wallLeft = CrossProduct((WaypointOrigin(m_iCurrentWaypointIndex) - WaypointOrigin(m_iPrevWaypointIndex)).Normalize(), Vector(0, 0, 1));
 
-				m_CurrentTask->SetVector(pev->origin + wallLeft * 512.0);
+				m_CurrentTask->SetVector(pev->origin + wallLeft * 512.0f);
 
 				m_CurrentTask->SetFloat(gpGlobals->time + 1.5f);
 				m_CurrentTask->SetInt(1);
@@ -15896,7 +15896,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 					PrimaryAttack();
 
-					m_CurrentTask->SetVector(pev->origin - wallRight * 512.0);
+					m_CurrentTask->SetVector(pev->origin - wallRight * 512.0f);
 
 					m_CurrentTask->SetFloat(gpGlobals->time + 1.5f);
 					m_CurrentTask->SetInt(2);
@@ -16151,7 +16151,7 @@ void CBot::CheckStuck()
 	}
 
 	// Check if bot is REALLY stuck!
-	if (bCheckIfStuck)//m_fIdealMoveSpeed > 1.0 )
+	if (bCheckIfStuck)//m_fIdealMoveSpeed > 1.0f )
 	{
 		// stuck inside something...
 		if (pev->pContainingEntity != m_pEdict)
@@ -16244,7 +16244,7 @@ void CBot::CheckStuck()
 
 			m_fUpTime = gpGlobals->time + RANDOM_FLOAT(2.0f, 3.0f);
 
-			UTIL_TraceLine(GetGunPosition(), GetGunPosition() + Vector(0, 0, 64.0), ignore_monsters, dont_ignore_glass, m_pEdict, &tr);
+			UTIL_TraceLine(GetGunPosition(), GetGunPosition() + Vector(0, 0, 64.0f), ignore_monsters, dont_ignore_glass, m_pEdict, &tr);
 
 			if (tr.flFraction < 1.0f)
 				m_fUpSpeed = -m_fMaxSpeed;

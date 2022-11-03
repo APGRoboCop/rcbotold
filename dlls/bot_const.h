@@ -179,7 +179,7 @@ typedef enum
 // BOT CONTANTS
 // (constants that bot structures may depend on below)
 
-#define MAX_JUMP_HEIGHT 45.0
+#define MAX_JUMP_HEIGHT 45.0f
 
 #define MAX_TEAMS     4
 
