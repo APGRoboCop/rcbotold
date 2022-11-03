@@ -2145,7 +2145,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 //
 {
 	static HudText hudmessage = HudText(TRUE);
-	static char* tooltips[BOT_LANG_MAX][BOT_TOOL_TIP_MAX] =
+	static const char* tooltips[BOT_LANG_MAX][BOT_TOOL_TIP_MAX] = //char* needs to be const? [APG]RoboCop[CL]
 	{
 		//---------------------------------------------------------------------------------------------------------------------<MAX
 		{"Welcome %n\nUse the command \"rcbot addbot\" to add a bot\nor use the bot menu (\"rcbot bot_menu\")",
