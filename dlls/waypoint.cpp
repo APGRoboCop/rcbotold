@@ -872,7 +872,7 @@ void WaypointFree()
 				p = p_next;
 
 #ifdef _DEBUG
-				count++;
+				int count;
 				if (count > 1000) WaypointDebug();
 #endif
 			}
@@ -934,7 +934,7 @@ void WaypointAddPath(const short int add_index, const short int path_index)
 		p = p->next;  // go to next node in linked list
 
 #ifdef _DEBUG
-		count++;
+		int count;
 		if (count > 100) WaypointDebug();
 #endif
 	}
@@ -987,7 +987,7 @@ void WaypointDeletePath(const short int del_index)
 			p = p->next;  // go to next node in linked list
 
 #ifdef _DEBUG
-			count++;
+			int count;
 			if (count > 100) WaypointDebug();
 #endif
 		}
@@ -1020,7 +1020,7 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 		p = p->next;  // go to next node in linked list
 
 #ifdef _DEBUG
-		count++;
+		int count;
 		if (count > 100) WaypointDebug();
 #endif
 	}
@@ -1076,7 +1076,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 		*pPath = (*pPath)->next;  // go to next node in linked list
 
 #ifdef _DEBUG
-		count++;
+		int count;
 		if (count > 100) WaypointDebug();
 #endif
 	}
@@ -1748,7 +1748,7 @@ void WaypointDelete(CClient* pClient)
 			p = p_next;
 
 #ifdef _DEBUG
-			count++;
+			int count;
 			if (count > 100) WaypointDebug();
 #endif
 		}
