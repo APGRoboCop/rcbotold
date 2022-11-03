@@ -4759,7 +4759,7 @@ public:
 	BOOL IsForSteamID(char* steamID)
 	{
 		// gotta take care if no steam id is mentioned, could be WON we are playing
-		if (steamID && *steamID && (m_szSteamId && *m_szSteamId))
+		if (steamID && *steamID && (m_szSteamId && *m_szSteamId)) //m_szSteamId always true [APG]RoboCop[CL]
 			return strcmp(m_szSteamId, steamID) == 0;
 
 		return FALSE;

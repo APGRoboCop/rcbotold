@@ -103,7 +103,8 @@ public:
 		else
 		{
 			fread(&check, sizeof(int), 1, bfp);
-			m_Value = RANDOM_LONG(0, 4294967295);
+			//m_Value = RANDOM_LONG(0, 4294967295); // Too long? [APG]RoboCop[CL]
+			m_Value = RANDOM_LONG(0, 429496729);
 		}
 	}
 

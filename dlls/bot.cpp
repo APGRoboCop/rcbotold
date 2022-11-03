@@ -3926,30 +3926,30 @@ private:
 class CAlienActions
 {
 public:
-	void setup ()
+	void setup()
 	{
 		//m_Actions.emplace_back(CAlienAction(ACTION_BUILD_DEF,ACTION_RES_MORE_DEFENCES|ACTION_RES_MORE_TRAITS|ACTION_RES_MORE_HEALTH));
-		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_OFF,ACTION_RES_MORE_DEFENCES));
+		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_OFF, ACTION_RES_MORE_DEFENCES));
 		//m_Actions.emplace_back(CAlienAction(ACTION_BUILD_SENS,ACTION_RES_CLOACKED|ACTION_RES_MORE_TRAITS));
-		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_MOV,ACTION_RES_MORE_TRAITS));
-		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_RESTOWER,ACTION_RES_FASTER_RESOURCES));
+		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_MOV, ACTION_RES_MORE_TRAITS));
+		m_Actions.emplace_back(CAlienAction(ACTION_BUILD_RESTOWER, ACTION_RES_FASTER_RESOURCES));
 		//m_Actions.emplace_back(CAlienAction(ACTION_BUILD_HIVE,(ACTION_RES_MORE_SPAWNPOINTS + ACTION_RES_MORE_ABILITIES)));
-		m_Actions.emplace_back(CAlienAction(ACTION_HEAL_PLAYER,ACTION_RES_MORE_HEALTH));
+		m_Actions.emplace_back(CAlienAction(ACTION_HEAL_PLAYER, ACTION_RES_MORE_HEALTH));
 	}
 
-	CAlienAction *getBestAction ( eAlienMaskEvidence evd )
+	CAlienAction* getBestAction(eAlienMaskEvidence evd)
 	{
 		BOOL gotBest = FALSE;
 		float fMax = 0;
 		float fCur = 0;
 
-		for ( unsigned int i = 0; i < m_Actions.size(); i ++ )
+		for (unsigned int i = 0; i < m_Actions.size(); i++)
 		{
 			fCur = m_Actions[i].Utility() * m_Actions[i].ResultProbability(evd);
 
-			if ( !gotBest || (fCur > fMax) )
+			if (!gotBest || (fCur > fMax))
 			{
-				CAlienAction *best = nullptr;
+				CAlienAction* best = nullptr;
 				best = &(m_Actions[i]);
 				fMax = fCur;
 				gotBest = TRUE;
@@ -7051,6 +7051,25 @@ void CBot::WorkViewAngles()
 		// nothing...
 	case BOT_LOOK_TASK_NONE:
 		break;
+	case BOT_LOOK_TASK_FACE_ENTITY: //TODO: Experimental [APG]RoboCop[CL]
+	{
+		// face entity
+		// get the edict
+		edict_t* pEdict = m_CurrentTask->TaskEdict();
+
+		// check if the edict is valid
+		/*if (pEdict != nullptr)
+		{
+			// if it is, face it
+			FacePosition(pEdict->v.origin);
+		}
+		else
+		{
+			// if not, clear the task
+			m_CurrentLookTask = BOT_LOOK_TASK_NONE;
+		}*/
+	}
+	break;
 	case BOT_LOOK_TASK_FACE_NEAREST_REMEMBER_POS:
 
 		if (m_bNearestRememberPointVisible && !m_pEnemy && m_bLookingForEnemy)
@@ -10082,7 +10101,7 @@ void CBot::AddVisitedResourceTower(edict_t* pEdict)
 
 	if (iMax > MAX_REMEMBER_POSITIONS)
 	{
-		m_pVisitedFuncResources[RANDOM_LONG(0, MAX_REMEMBER_POSITIONS - 1)];
+		m_pVisitedFuncResources[RANDOM_LONG(0, MAX_REMEMBER_POSITIONS - 1)];//TODO: unused [APG]RoboCop[CL]
 	}
 	else
 	{
@@ -10185,6 +10204,10 @@ Vector CBotSquad::GetFormationVector(edict_t* pEdict)
 	// going to have members on either side.
 	switch (m_theDesiredFormation)
 	{
+	case SQUAD_FORM_NONE://TODO: Checked if it functions [APG]RoboCop[CL]
+	{
+		break;
+	}
 	case SQUAD_FORM_VEE:
 	{
 		if (iMod)

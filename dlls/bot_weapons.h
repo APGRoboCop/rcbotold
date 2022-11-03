@@ -566,7 +566,7 @@ public:
 
 	void Init()
 	{
-		memset(this, 0, sizeof(CWeaponPreset));
+		memset((void*)this, 0, sizeof(CWeaponPreset));
 	}
 
 	BOOL CanBeUsedUnderWater() override
