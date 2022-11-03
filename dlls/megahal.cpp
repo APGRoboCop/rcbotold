@@ -2004,7 +2004,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 	{
 		// delete szName;
 		BotMessage(nullptr, 0, "LoadHALBrainForPersonality(): %s's HAL brain damaged!", pBotProfile->m_szBotName); // bad brain
-		BotMessage(nullptr, 2, "damanged bot file, delete %s/%d.brn file", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId); // bad brain
+		BotMessage(nullptr, 2, "damaged bot file, delete %s/%d.brn file", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId); // bad brain
 		fclose(fp); // close file
 		return TRUE; // there was an error, return TRUE
 	}
