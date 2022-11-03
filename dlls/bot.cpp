@@ -3516,12 +3516,12 @@ void CBot::Think()
 			else
 			{
 				UpdateCondition(BOT_CONDITION_SEE_NEXT_WAYPOINT);
-				m_fLastSeeWaypoint = 0;
+				m_fLastSeeWaypoint = 0.0f;
 			}
 		}
 	}
 	else if (m_bMoveToIsValid)
-		m_fLastSeeWaypoint = 0;
+		m_fLastSeeWaypoint = 0.0f;
 
 	m_CurrentTask = m_Tasks.CurrentTask();
 
@@ -3820,7 +3820,7 @@ public:
 
 	float Utility ()
 	{
-		float fUtility = 1;
+		float fUtility = 1.0f;
 
 		if ( m_result & ACTION_RES_FASTER_RESOURCES )
 			fUtility *= 1.1f;
@@ -3834,6 +3834,7 @@ public:
 			fUtility *= 0.9f;
 		if ( m_result & ACTION_RES_CLOACKED )
 			fUtility *= 0.5f;
+		return fUtility;
 	}
 
 	float ResultProbability ( eAlienMaskEvidence evd )
@@ -3914,6 +3915,7 @@ public:
 				fProbability *= 0.66f;
 			if ( evd & MASK_EVD_MANY_MOVS )
 				fProbability *= 0.66f;
+			return fProbability;
 		}
 	}
 private:
@@ -3951,6 +3953,7 @@ public:
 				best = &(m_Actions[i]);
 				fMax = fCur;
 				gotBest = TRUE;
+				return best;
 			}
 		}
 	}
@@ -3977,19 +3980,19 @@ void CBot::LookForNewTasks()
 	edict_t* pEntity;
 	entvars_t* pEntitypev;
 
-	float fDistance = 0;
-	float fNearestBuildableDist = 0;
-	float fNearestAmmoDispDist = 0;
-	float fNearestWeldableDist = 0;
-	float fNearestHealablePlayerDist = 0;
-	float fNearestCommandStationDist = 0;
-	float fNearestBuildPositionDist = 0;
-	float fNearestPickupEntityDist = 0;
-	float fNearestHiveDist = 0;
-	float fNearestResourceFountainDist = 0;
-	float fNearestHEVchargerDist = 0;
-	float fNearestHealthchargerDist = 0;
-	float fNearestButtonDist = 0;
+	float fDistance = 0.0f;
+	float fNearestBuildableDist = 0.0f;
+	float fNearestAmmoDispDist = 0.0f;
+	float fNearestWeldableDist = 0.0f;
+	float fNearestHealablePlayerDist = 0.0f;
+	float fNearestCommandStationDist = 0.0f;
+	float fNearestBuildPositionDist = 0.0f;
+	float fNearestPickupEntityDist = 0.0f;
+	float fNearestHiveDist = 0.0f;
+	float fNearestResourceFountainDist = 0.0f;
+	float fNearestHEVchargerDist = 0.0f;
+	float fNearestHealthchargerDist = 0.0f;
+	float fNearestButtonDist = 0.0f;
 
 	edict_t* pNearestHEVcharger = nullptr;
 	edict_t* pNearestHealthcharger = nullptr;
