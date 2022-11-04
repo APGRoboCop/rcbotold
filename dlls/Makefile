@@ -15,8 +15,8 @@ BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -DRCBOT_META_BUILD -D__lin
 #           -Wno-write-strings -std=gnu++14
 
 CPPFLAGS = ${BASEFLAGS} -mtune=generic -march=i686 -mmmx -msse -msse2 -mfpmath=sse -O2 \
-			-Wno-write-strings -Wno-unused-local-typedefs -funsafe-math-optimizations -g0 -I. \
-			-I../engine -I../common -I../pm_shared -std=gnu++14
+			-Wno-write-strings -Wno-unused-local-typedefs -funsafe-math-optimizations -g0 \
+            -I. -I../engine -I../common -I../pm_shared -std=gnu++14
 		
 OBJ = bits.o bot.o bot_client.o bot_commands.o bot_ga.o bot_menu.o bot_navigate.o bot_nn.o \
 	bot_rep.o bot_visibles.o bot_weapons.o client.o dir.o dll.o engine.o ga.o globals.o \
