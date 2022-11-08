@@ -3421,7 +3421,7 @@ void CBot::Think()
 		}
 	}
 	break;
-	case MOD_TS:
+	case MOD_TS: //TODO: Add BOT_TASK_RELOAD to allow bots to reload sooner when attacking and running on a empty clip
 	{
 		/*if ( gBotGlobals.m_iForceTeam != -1 )
 		{
@@ -8735,7 +8735,7 @@ edict_t* CBot::FindEnemy()
 		// i.e. which enemies to choose first
 		int iBestPriority = 0;
 
-		float fBestFitness = 0;
+		float fBestFitness = 0.0f;
 
 		//dataStack<edict_t*> tempStack;
 
