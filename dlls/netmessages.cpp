@@ -64,7 +64,7 @@ extern CBotGlobals gBotGlobals;
 //////////////////////////////////////////////////////////////////////////////
 // NET MESSAGE HANDLING
 
-void CBotNetMessage::setName(char* szName)
+void CBotNetMessage::setName(const char* szName)
 {
 	m_szMessageName = gBotGlobals.m_Strings.GetString(szName);
 }

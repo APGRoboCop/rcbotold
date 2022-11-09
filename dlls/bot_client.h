@@ -146,7 +146,7 @@ public:
 		m_iSize = iSize;
 	}
 
-	void setName(char* szName);
+	void setName(const char* szName);
 
 	void setMod(int iModId)
 	{

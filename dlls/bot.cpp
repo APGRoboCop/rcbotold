@@ -503,13 +503,17 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 	case BOT_EVENT_FAIL_TASK:
 		if (m_CurrentTask && gBotGlobals.IsDebugLevelOn(BOT_DEBUG_THINK_LEVEL))
 		{
-			DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0, "%s failed task \"%s\" part of schedule \"%s\"", m_szBotName, m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
+			DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0,
+			             "%s failed task \"%s\" part of schedule \"%s\"", m_szBotName,
+			             m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
 		}
 		break;
 	case BOT_EVENT_COMPLETE_TASK:
 		if (m_CurrentTask && gBotGlobals.IsDebugLevelOn(BOT_DEBUG_THINK_LEVEL))
 		{
-			DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0, "%s finished task \"%s\" part of schedule \"%s\"", m_szBotName, m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
+			DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0,
+			             "%s finished task \"%s\" part of schedule \"%s\"", m_szBotName,
+			             m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
 		}
 		break;
 	case BOT_EVENT_HEAR_TEAMMATE_DIE:

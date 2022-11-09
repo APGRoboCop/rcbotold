@@ -315,7 +315,7 @@ public:
 
 	CBotReputation(int iPlayerRepId, int iRep);
 
-	BOOL operator == (CBotReputation Rep)
+	BOOL operator == (CBotReputation Rep) const
 	{
 		return Rep.IsForPlayer(m_iPlayerRepId);
 	}
@@ -719,7 +719,7 @@ public:
 		memset(this, 0, sizeof(CBotTask));
 	}
 
-	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = nullptr, int iInfo = 0, float fInfo = 0,
+	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = nullptr, int iInfo = 0, float fInfo = 0.0f,
 	         const Vector& vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0f/*, CBotTask *GoalTask = NULL */)
 	{
 		// cheap way of adding schedules.. ;)
@@ -843,7 +843,7 @@ public:
 
 	char* getTaskDescription()
 	{
-		return CBotTask::_getTaskDescription(m_Task);
+		return _getTaskDescription(m_Task);
 	}
 
 	static char* _getTaskDescription(eBotTask itask)
@@ -1761,7 +1761,7 @@ public:
 		m_iFlags = 0;
 	}
 private:
-	int m_iFlags;
+	int m_iFlags = 0;
 };
 
 #define BOT_REMEMBER_POSITION			0
