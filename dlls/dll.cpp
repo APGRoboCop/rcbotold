@@ -2117,12 +2117,9 @@ void ReadMapConfig()
 
 edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin) //TODO: Experimental [APG]RoboCop[CL]
 {
-	edict_t* pPlayer = nullptr;
-	int i;
-
-	for (i = 1; i <= gpGlobals->maxClients; i++)
+	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
-		pPlayer = INDEXENT(i);
+		edict_t* pPlayer = INDEXENT(i);
 
 		if (pPlayer && !pPlayer->free && pPlayer->v.iuser3 == iUser3)
 		{
@@ -2412,7 +2409,7 @@ void CBotCam::Think()
 
 		UTIL_TraceLine(vBotOrigin, m_pCameraEdict->v.origin, ignore_monsters, ignore_glass, m_pCameraEdict, &tr);
 
-		if (tr.flFraction < 1.0)
+		if (tr.flFraction < 1.0f)
 			m_pCameraEdict->v.origin = tr.vecEndPos;
 	}
 		break;
@@ -2454,7 +2451,7 @@ void CBotCam::Think()
 			//----
 			UTIL_TraceLine(m_pCurrentBot->m_pEnemy->v.origin, m_pCameraEdict->v.origin, ignore_monsters, ignore_glass, m_pCameraEdict, &tr);
 
-			if (tr.flFraction < 1.0)
+			if (tr.flFraction < 1.0f)
 			{
 				m_pCameraEdict->v.origin = tr.vecEndPos - vComp.Normalize() * 32.0f;
 			}
@@ -2462,7 +2459,7 @@ void CBotCam::Think()
 			//bSetAngle = FALSE;
 		}
 		else
-			m_fNextChangeState = 0;
+			m_fNextChangeState = 0.0f;
 	}
 		break;
 	case BOTCAM_FP:

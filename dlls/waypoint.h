@@ -219,7 +219,7 @@ public:
 
 	//virtual Vector getOrigin () { return origin; }
 
-	WAYPOINT(int f, Vector vec) { flags = f; origin = vec; };
+	WAYPOINT(const int f, const Vector& vec) { flags = f; origin = vec; };
 	WAYPOINT(): origin()
 	{
 		flags = 0;
@@ -271,22 +271,22 @@ public:
 		init();
 	}
 
-	void setExtension(char* szExt)
+	void setExtension(const char* szExt)
 	{
 		m_szExtension = strdup(szExt);
 	}
 
-	void setFolder(char* szFolder)
+	void setFolder(const char* szFolder)
 	{
 		m_szFolder = strdup(szFolder);
 	}
 
-	void setName(char* szName)
+	void setName(const char* szName)
 	{
 		m_szName = strdup(szName); // duplicate the string
 	}
 
-	void setHeader(char* szHeader)
+	void setHeader(const char* szHeader)
 	{
 		m_szHeader = strdup(szHeader);
 	}
@@ -528,7 +528,7 @@ public:
 
 		if (iByte < g_iMaxVisibilityByte)
 		{
-			unsigned char* ToReturn = m_VisTable + iByte;
+			const unsigned char* ToReturn = m_VisTable + iByte;
 
 			return (*ToReturn & 1 << iBit) > 0;
 		}

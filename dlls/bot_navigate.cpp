@@ -370,7 +370,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 						UTIL_TraceLine(vOrigin, WaypointOrigin(iSuccNode), ignore_monsters, dont_ignore_glass, NULL, &tr);
 
 						// closed
-						if (tr.flFraction < 1.0)
+						if (tr.flFraction < 1.0f)
 						{
 							if (!pBot->iDetPackWaypoints.IsMember(iCurrentNode))
 								pBot->iDetPackWaypoints.Add(iCurrentNode);
@@ -448,7 +448,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 				// first do a traceline
 
-				if (tr.flFraction < 1.0)
+				if (tr.flFraction < 1.0f)
 					// hit something?
 				{
 					/*if (gBotGlobals.m_iCurrentMod == MOD_SVENCOOP)
@@ -787,7 +787,7 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace hit something, return FALSE
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 		return FALSE;
 
 	// now check same height to one side of the bot...
@@ -799,7 +799,7 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace hit something, return FALSE
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 		return FALSE;
 
 	// now check same height on the other side of the bot...
@@ -811,7 +811,7 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace hit something, return FALSE
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 		return FALSE;
 
 	// now trace from head level downward to check for obstructions...
@@ -831,7 +831,7 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace hit something, return FALSE
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 		return FALSE;
 
 	// now check same height to one side of the bot...
@@ -844,7 +844,7 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace hit something, return FALSE
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 		return FALSE;
 
 	// now check same height on the other side of the bot...
@@ -857,7 +857,7 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace hit something, return FALSE
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 		return FALSE;
 
 	return TRUE;
@@ -895,7 +895,7 @@ BOOL BotCanDuckUnder(CBot* pBot)
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace hit something, return FALSE
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 		return FALSE;
 
 	// now check same height to one side of the bot...
@@ -907,7 +907,7 @@ BOOL BotCanDuckUnder(CBot* pBot)
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace hit something, return FALSE
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 		return FALSE;
 
 	// now check same height on the other side of the bot...
@@ -919,7 +919,7 @@ BOOL BotCanDuckUnder(CBot* pBot)
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace hit something, return FALSE
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 		return FALSE;
 
 	// now trace from the ground up to check for object to duck under...
@@ -984,7 +984,7 @@ BOOL BotCheckWallOnLeft(CBot* pBot)
 		pEdict->v.pContainingEntity, &tr);
 
 	// check if the trace hit something...
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 	{
 		if (pBot->m_fWallAtLeftTime < 1)
 			pBot->m_fWallAtLeftTime = gpGlobals->time;
@@ -1011,7 +1011,7 @@ BOOL BotCheckWallOnRight(CBot* pBot)
 		pEdict->v.pContainingEntity, &tr);
 
 	// check if the trace hit something...
-	if (tr.flFraction < 1.0)
+	if (tr.flFraction < 1.0f)
 	{
 		if (pBot->m_fWallAtRightTime < 1.0f)
 			pBot->m_fWallAtRightTime = gpGlobals->time;
@@ -1953,7 +1953,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 
 	(*g_engfuncs.pfnTraceHull)(vCheckOrigin, vCheckOrigin + vComp * 4096.0f, ignore_monsters, point_hull, pBot->m_pEdict, &tr);
 
-	if (tr.flFraction < 1.0) // hit something
+	if (tr.flFraction < 1.0f) // hit something
 		pHit = tr.pHit;
 
 	if (pHit)

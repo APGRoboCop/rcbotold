@@ -1990,7 +1990,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	gBotGlobals.m_iNumBots++;
 
 	// give some time for next client command
-	gBotGlobals.m_fNextJoinTeam = gpGlobals->time + 0.2;
+	gBotGlobals.m_fNextJoinTeam = gpGlobals->time + 0.2f;
 
 	iSkill = pBot->m_Profile.m_iSkill;
 

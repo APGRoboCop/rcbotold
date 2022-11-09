@@ -398,7 +398,7 @@ public:
 		this->Init();
 	}
 
-	void Init()
+	virtual void Init()
 	{
 		m_iAmmoIndex1 = -1;
 		m_iAmmoIndex2 = -1;
