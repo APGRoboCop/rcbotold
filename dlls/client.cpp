@@ -344,10 +344,10 @@ void InitMessage ( const char *message );
 
 		Vector v_other;
 		Vector v_comp;
-		Vector v_origin = m_pPlayer->v.origin - Vector(0, 0, m_pPlayer->v.size.z * 0.5);
+		Vector v_origin = m_pPlayer->v.origin - Vector(0, 0, m_pPlayer->v.size.z * 0.5f);
 		Vector v_original_vel;
 
-		while ((pEntity = UTIL_FindEntityInSphere(pEntity, m_pPlayer->v.origin, m_pPlayer->v.size.Length() * 1.1)) != nullptr)
+		while ((pEntity = UTIL_FindEntityInSphere(pEntity, m_pPlayer->v.origin, m_pPlayer->v.size.Length() * 1.1f)) != nullptr)
 		{
 			if (pEntity == m_pPlayer)
 				continue;
@@ -830,7 +830,7 @@ void InitMessage ( const char *message );
 						pos++;
 					}
 
-					for (i = i; i < MAX_STORED_AUTOWAYPOINT; i++)
+					for (i = 1; i < MAX_STORED_AUTOWAYPOINT; i++)// i supposed to = 1? [APG]RoboCop[CL]
 					{
 						m_vLastAutoWaypointCheckPos[i].UnSetPoint();
 					}

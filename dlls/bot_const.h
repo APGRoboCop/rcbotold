@@ -89,7 +89,7 @@ public:
 	short int getParent();
 	void setParent(int iWpt);
 
-	bool operator()(AStarNode* a, AStarNode* b);
+	bool operator()(const AStarNode* a, const AStarNode* b);
 
 	bool operator<(AStarNode* b);
 

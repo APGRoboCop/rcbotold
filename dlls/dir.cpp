@@ -55,7 +55,7 @@
 
 // Call Find Directory with dirspec = the starting directory you want to look in
 
-HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec)
+HANDLE FindDirectory(HANDLE hFile, char* dirname, const char* dirspec)
 {
 	WIN32_FIND_DATA pFindFileData;
 

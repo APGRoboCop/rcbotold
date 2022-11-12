@@ -193,6 +193,6 @@ private:
 	IIndividual* m_bestIndividual;
 };
 
-FILE* RCBOpenFile(char* file, char* readtype, eGASaveType savedtype, int iId);
+FILE* RCBOpenFile(char* file, const char* readtype, eGASaveType savedtype, int iId);
 
 #endif

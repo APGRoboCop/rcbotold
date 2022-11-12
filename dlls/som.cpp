@@ -106,11 +106,15 @@ CSomNeuron* CSom::inputOne(std::vector <ga_value>* inputs)
 
 	updateAround(inputs, winner);
 
-	m_fNSize *= 0.75;
-	m_fLearnRate *= 0.75;
+	m_fNSize *= 0.75f;
+	m_fLearnRate *= 0.75f;
 	m_iEpochs++;
 
 	return winner;
+}
+
+void CSom::input(std::vector<std::vector<ga_value>>* inputs, int epochs)
+{
 }
 
 CSomNeuron* CSom::input(std::vector < std::vector <ga_value> >* inputs)

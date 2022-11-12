@@ -117,7 +117,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		strlow(szMsg);
 		strlow(szName);
 
-		char* szNamePos = strstr(szMsg, szName);
+		const char* szNamePos = strstr(szMsg, szName);
 		const BOOL bNameInMsg = szNamePos != nullptr;
 
 		const int iSenderNameLength = strlen(STRING(pSender->v.netname));
@@ -555,7 +555,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	return dictionary->index[position];
 }
 
-int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find)
+int HAL_SearchDictionary(const HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find)
 {
 	// search the dictionary for the specified word, returning its position in the index if
 	// found, or the position where it should be inserted otherwise
@@ -677,7 +677,7 @@ HAL_DICTIONARY* HAL_NewDictionary()
 	return dictionary;
 }
 
-void HAL_SaveDictionary(FILE* file, HAL_DICTIONARY* dictionary)
+void HAL_SaveDictionary(FILE* file, const HAL_DICTIONARY* dictionary)
 {
 	// this function saves a dictionary to the specified file
 
@@ -770,7 +770,7 @@ HAL_MODEL* HAL_NewModel(int order)
 	return model;
 }
 
-void HAL_UpdateModel(HAL_MODEL* model, int symbol)
+void HAL_UpdateModel(const HAL_MODEL* model, int symbol)
 {
 	// this function uppdates the model with the specified symbol
 
@@ -782,7 +782,7 @@ void HAL_UpdateModel(HAL_MODEL* model, int symbol)
 	return;
 }
 
-void HAL_UpdateContext(HAL_MODEL* model, int symbol)
+void HAL_UpdateContext(const HAL_MODEL* model, int symbol)
 {
 	// this function updates the context of the model without adding the symbol
 
@@ -872,7 +872,7 @@ void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position)
 	tree->branch++;
 }
 
-int HAL_SearchNode(HAL_TREE* node, int symbol, BOOL* found_symbol)
+int HAL_SearchNode(const HAL_TREE* node, int symbol, BOOL* found_symbol)
 {
 	// this function performs a binary search for the specified symbol on the subtree of the
 	// given node. Return the position of the child node in the subtree if the symbol was found,
@@ -922,7 +922,7 @@ int HAL_SearchNode(HAL_TREE* node, int symbol, BOOL* found_symbol)
 	}
 }
 
-void HAL_InitializeContext(HAL_MODEL* model)
+void HAL_InitializeContext(const HAL_MODEL* model)
 {
 	// this function sets the context of the model to a default value
 
@@ -930,7 +930,7 @@ void HAL_InitializeContext(HAL_MODEL* model)
 		model->context[i] = nullptr; // reset all the context elements
 }
 
-void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words)
+void HAL_Learn(HAL_MODEL* model, const HAL_DICTIONARY* words)
 {
 	// this function learns from the user's input
 
@@ -971,7 +971,7 @@ void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words)
 	return;
 }
 
-void HAL_SaveTree(FILE* file, HAL_TREE* node)
+void HAL_SaveTree(FILE* file, const HAL_TREE* node)
 {
 	// this function saves a tree structure to the specified file
 
@@ -1123,7 +1123,7 @@ void HAL_MakeWords (char *input, HAL_DICTIONARY *words)
    }
 }*/
 
-BOOL HAL_BoundaryExists(char* string, int position)
+BOOL HAL_BoundaryExists(const char* string, int position)
 {
 	// this function returns whether or not a word boundary exists in a string at the
 	// specified location
@@ -1154,7 +1154,7 @@ BOOL HAL_BoundaryExists(char* string, int position)
 	return FALSE;
 }
 
-BOOL HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2)
+BOOL HAL_DictionariesDiffer(const HAL_DICTIONARY* words1, const HAL_DICTIONARY* words2)
 {
 	// this function returns TRUE if the dictionaries are NOT the same or FALSE if not
 
@@ -1169,7 +1169,7 @@ BOOL HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2)
 	return FALSE; // looks like those dictionaries are identical
 }
 
-HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words)
+HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, const HAL_DICTIONARY* words)
 {
 	// this function puts all the interesting words from the user's input into a keywords
 	// dictionary, which will be used when generating a reply
@@ -1265,7 +1265,7 @@ void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int st
 	after = nullptr;
 }
 
-void BotHALAddKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
+void BotHALAddKeyword(const CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
 {
 	// this function adds a word to the keyword dictionary
 
@@ -1377,7 +1377,7 @@ void BotHALAddKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
 	HAL_AddWord(keys, word); // once we are sure this word isn't known yet, we can add it
 }
 
-void BotHALAddAuxiliaryKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
+void BotHALAddAuxiliaryKeyword(const CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
 {
 	// this function adds an auxilliary keyword to the keyword dictionary
 
@@ -1500,7 +1500,7 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 	return replies;
 }
 
-int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
+int BotHALBabble(const CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 {
 	// this function returns a random symbol from the current context, or a zero symbol
 	// identifier if we've reached either the start or end of the sentence. Selection of the
@@ -1548,7 +1548,7 @@ int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 	return symbol;
 }
 
-BOOL HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word)
+BOOL HAL_WordExists(const HAL_DICTIONARY* dictionary, HAL_STRING word)
 {
 	// here's a silly brute-force searcher for the reply string
 
@@ -1560,7 +1560,7 @@ BOOL HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	return FALSE; // word was not found
 }
 
-int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys)
+int BotHALSeedReply(const CBot* pBot, const HAL_DICTIONARY* keys)
 {
 	// this function seeds the reply by guaranteeing that it contains a keyword, if one exists
 
@@ -1613,7 +1613,7 @@ HAL_SWAP* HAL_NewSwap()
 	return list; // return the fresh new swap
 }
 
-void HAL_AddSwap(HAL_SWAP* list, char* s, char* d)
+void HAL_AddSwap(HAL_SWAP* list, const char* s, const char* d)
 {
 	// this function adds a new entry to the swap structure.
 
@@ -1646,7 +1646,7 @@ void HAL_AddSwap(HAL_SWAP* list, char* s, char* d)
 	list->size++;
 }
 
-HAL_SWAP* HAL_InitializeSwap(char* filename)
+HAL_SWAP* HAL_InitializeSwap(const char* filename)
 {
 	// this function reads a swap structure from a file.
 
@@ -1678,7 +1678,7 @@ HAL_SWAP* HAL_InitializeSwap(char* filename)
 	return list;
 }
 
-HAL_DICTIONARY* HAL_InitializeList(char* filename)
+HAL_DICTIONARY* HAL_InitializeList(const char* filename)
 {
 	// this function reads a dictionary from a file
 
@@ -1968,7 +1968,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	return TRUE; // ok, now it is guarantee that this personality has an associated brain
 }
 
-BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
+BOOL LoadHALBrainForPersonality(const bot_profile_t* pBotProfile, BOOL bPreTrain)
 {
 	// this function loads a HAL brain
 
@@ -2074,7 +2074,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 	return FALSE; // no error, return FALSE
 }
 
-void SaveHALBrainForPersonality(bot_profile_t* pBotProfile)
+void SaveHALBrainForPersonality(const bot_profile_t* pBotProfile)
 {
 	// this function saves the current state to a HAL brain file
 
@@ -2102,7 +2102,7 @@ void SaveHALBrainForPersonality(bot_profile_t* pBotProfile)
 	fclose(fp);
 }
 
-void FreeHALBrain(bot_profile_t* pBotProfile)
+void FreeHALBrain(const bot_profile_t* pBotProfile)
 {
 	if (!pBotProfile->m_HAL)
 		return;

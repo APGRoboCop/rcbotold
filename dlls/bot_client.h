@@ -78,8 +78,8 @@ public:
 
 	CBotNetMessage()
 	{
-		//m_iModId = 0;
-		//m_iSize = 0;
+		m_iModId = 0;
+		m_iSize = 0;
 		m_iMessage = 0;
 		m_szMessageName = nullptr;
 		//m_fpMsgFunction = NULL;

@@ -114,7 +114,7 @@ BOOL CAllowedPlayer::IsForClient(CClient* pClient)
 	if (m_szName && *m_szName) //m_szName always true [APG]RoboCop[CL]
 		bSameName = pClient->HasPlayerName(m_szName);
 
-	edict_t* pEdict = pClient->GetPlayer();
+	const edict_t* pEdict = pClient->GetPlayer();
 
 	if (pEdict == nullptr)
 		return FALSE;
@@ -267,7 +267,7 @@ void DispatchTouch(edict_t* pentTouched, edict_t* pentOther)
 	// only don't touch triggers if "no touch" is on the client.
 	if (pentTouched->v.solid == SOLID_TRIGGER)
 	{
-		CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pentOther);
+		const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pentOther);
 
 		if (pClient)
 		{
@@ -462,7 +462,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 				{
 					for (int i = 0; i < MAX_PLAYERS; i++)
 					{
-						CBot* pBot = &gBotGlobals.m_Bots[i];
+						const CBot* pBot = &gBotGlobals.m_Bots[i];
 
 						if (pBot)  // is this slot used?
 						{
@@ -734,7 +734,7 @@ void BotFunc_TraceToss(edict_t* ent, edict_t* ignore, TraceResult* tr)
 
 	for (int i = 0; i < 4; i++)
 	{
-		Vector nextvel = tempent.v.velocity + (tempent.v.velocity - gravity) * 0.5;//Vector(0,0,(CVAR_GET_FLOAT("sv_gravity")/tempent.v.velocity.Length()));
+		Vector nextvel = tempent.v.velocity + (tempent.v.velocity - gravity) * 0.5f;//Vector(0,0,(CVAR_GET_FLOAT("sv_gravity")/tempent.v.velocity.Length()));
 		Vector nextstep = tempent.v.origin + nextvel;
 
 		UTIL_TraceLine(tempent.v.origin, nextstep, dont_ignore_monsters, dont_ignore_glass, ignore, tr);
@@ -2528,7 +2528,7 @@ BOOL CBotCam::TuneIn(edict_t* pPlayer)
 	return TRUE;
 }
 
-void CBotCam::TuneOff(edict_t* pPlayer)
+void CBotCam::TuneOff(const edict_t* pPlayer)
 {
 	//m_TunedIn[ENTINDEX(pPlayer)-1] = 0;
 	SET_VIEW(pPlayer, pPlayer);

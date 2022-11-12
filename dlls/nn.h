@@ -93,7 +93,7 @@ public:
 	void randomize();
 
 	void getOutputs(std::vector<ga_value>* outputs);
-	void trainOutputs(std::vector<ga_value>* wanted_outputs);
+	void trainOutputs(const std::vector<ga_value>* wanted_outputs);
 
 	void load(FILE* bfp);
 

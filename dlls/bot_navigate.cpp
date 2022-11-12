@@ -147,7 +147,7 @@ bool AStarNode::precedes(AStarNode* b)
 	return m_fCost + getHeuristic() < b->m_fCost + b->getHeuristic();
 }
 
-bool AStarNode::operator()(AStarNode* a, AStarNode* b)
+bool AStarNode::operator()(const AStarNode* a, const AStarNode* b)
 {
 	return a < b;
 }
@@ -293,7 +293,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 		iCurrentNode = -1;
 
-		fMinCost = 0;
+		fMinCost = 0.0f;
 		unsigned int bestIndex = 0;
 
 		bestIndex = sOpenList->GetBestNode(CompareAStarNode);
@@ -393,7 +393,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 				if (iSuccNodeFlags & W_FL_PAIN)
 				{
 					edict_t* pent = nullptr;
-					BOOL bFound = FALSE;
+					BOOL bFound = false;
 					edict_t* pNearest = nullptr;
 					float fNearestDist = 0;
 
@@ -635,7 +635,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	return iNextWaypoint;
 }
 
-void BotTurnAtWall(CBot* pBot, TraceResult* tr)
+void BotTurnAtWall(const CBot* pBot, const TraceResult* tr)
 {
 	edict_t* pEdict = pBot->m_pEdict;
 	float Z;
@@ -752,7 +752,7 @@ BOOL BotCantMoveForward(CBot* pBot, TraceResult* tr)
 	return FALSE;  // bot can move forward, return FALSE
 }
 
-BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
+BOOL BotCanJumpUp(const CBot* pBot) // BotCanJumpUp : By : Botman
 {
 	// What I do here is trace 3 lines straight out, one unit higher than
 	// the highest normal jumping distance.  I trace once at the center of
@@ -863,7 +863,7 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 	return TRUE;
 }
 
-BOOL BotCanDuckUnder(CBot* pBot)
+BOOL BotCanDuckUnder(const CBot* pBot)
 {
 	// What I do here is trace 3 lines straight out, one unit higher than
 	// the ducking height.  I trace once at the center of the body, once
@@ -1128,7 +1128,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	int iCurrWpt;
 	int iWptFlags;
 
-	BOOL bTouchedWpt = FALSE;
+	BOOL bTouchedWpt = false;
 
 	iCurrWpt = pBot->m_iCurrentWaypointIndex;
 
@@ -1862,13 +1862,13 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 		}
 	}
 
-	float fHighDistance = 0;
+	float fHighDistance = 0.0f;
 
 	////////////
 	// copy for velocity
 	UTIL_FixFloatAngle(&fStartAngle);
 
-	fAngle = fStartAngle;
+	//fAngle = fStartAngle;
 
 	for (iStep = iMinStep; iStep <= iMaxStep; iStep += 15)
 	{
@@ -2097,7 +2097,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 									// make sure we update these tasks so we know we are using a lift
 									pBot->m_Tasks.GiveSchedIdDescription(iScheduleId, BOT_SCHED_USE_LIFT);
 
-									BOOL bFail = FALSE;
+									BOOL bFail = false;
 								}
 							}
 						}

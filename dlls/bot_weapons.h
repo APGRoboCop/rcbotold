@@ -545,23 +545,23 @@ public:
 		this->Init();
 	}
 
-	CWeaponPreset(weapon_preset_t* pPreset)
+	CWeaponPreset(weapon_preset_t* p_preset)
 	{
-		m_bCanFireUnderWater = pPreset->m_bCanFireUnderWater;
+		m_bCanFireUnderWater = p_preset->m_bCanFireUnderWater;
 
-		m_bHasPrimaryFire = pPreset->m_bHasPrimaryFire;
-		m_bHasSecondaryFire = pPreset->m_bHasSecondaryFire;
+		m_bHasPrimaryFire = p_preset->m_bHasPrimaryFire;
+		m_bHasSecondaryFire = p_preset->m_bHasSecondaryFire;
 
-		m_fPrimMinRange = pPreset->m_fPrimMinRange;
-		m_fPrimMaxRange = pPreset->m_fPrimMaxRange;
+		m_fPrimMinRange = p_preset->m_fPrimMinRange;
+		m_fPrimMaxRange = p_preset->m_fPrimMaxRange;
 
-		m_fSecMinRange = pPreset->m_fSecMinRange;
-		m_fSecMaxRange = pPreset->m_fSecMaxRange;
+		m_fSecMinRange = p_preset->m_fSecMinRange;
+		m_fSecMaxRange = p_preset->m_fSecMaxRange;
 
-		m_bIsMelee = pPreset->m_bIsMelee;
+		m_bIsMelee = p_preset->m_bIsMelee;
 
 		//m_iModId;
-		m_iPriority = pPreset->m_iPriority;
+		m_iPriority = p_preset->m_iPriority;
 	}
 
 	void Init()
@@ -767,7 +767,7 @@ public:
 
 	BOOL CanReload();
 
-	BOOL CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist);
+	BOOL CanShootPrimary(const edict_t* pEdict, float flFireDist, float flWallDist);
 
 	BOOL CanShootSecondary()
 	{
@@ -792,7 +792,7 @@ public:
 		return -1;
 	}
 
-	BOOL HasWeapon(edict_t* pEdict);
+	BOOL HasWeapon(const edict_t* pEdict);
 
 	void RemoveWeapon()
 	{
@@ -905,7 +905,7 @@ public:
 			this->RemoveWeapon(i);
 	}
 
-	BOOL HasWeapon(edict_t* pEdict, char* szClassname);
+	BOOL HasWeapon(edict_t* pEdict, const char* szClassname);
 
 	BOOL HasWeapon(edict_t* pEdict, int iId)
 	{

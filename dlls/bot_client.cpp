@@ -1393,7 +1393,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 	static AvHOrderType			iOrderType = ORDERTYPE_UNDEFINED;
 	static AvHOrderTargetType	iOrderTargetType = ORDERTARGETTYPE_UNDEFINED;
 	static int					iOrderStatus = 0;
-	static int                   iReceivers = 0;
+	static int                  iReceivers = 0;
 	static int					iEntityUser3 = 0;
 	static edict_t* pEntity = nullptr;
 

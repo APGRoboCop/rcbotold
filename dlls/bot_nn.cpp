@@ -101,7 +101,7 @@ void NN::getWeights(std::vector<ga_value>* weights)
 	}
 }
 
-void NN::trainOutputs(std::vector<ga_value>* wanted_outputs)
+void NN::trainOutputs(const std::vector<ga_value>* wanted_outputs)
 {
 	unsigned short int w = 0;
 
@@ -120,7 +120,7 @@ void NN::trainOutputs(std::vector<ga_value>* wanted_outputs)
 
 void NN::getOutputs(std::vector<ga_value>* outputs)
 {
-	unsigned short int w = 0;
+	//unsigned short int w = 0;
 
 	outputs->clear();
 

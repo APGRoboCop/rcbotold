@@ -125,21 +125,21 @@ BOOL UTIL_FriendlyHatesPlayer(edict_t* pEntity, edict_t* pPlayer);
 edict_t* UTIL_getEntityInFront(edict_t* pEntity);
 void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, int magnitude, BOOL doDamage);
 Vector UTIL_GetGroundVector(edict_t* pEdict);
-BOOL UTIL_EntityIsHive(edict_t* pEdict);
-int UTIL_CountEntitiesInRange(char* classname, const Vector& vOrigin, float fRange);
-int UTIL_SentryLevel(edict_t* pEntity);
+BOOL UTIL_EntityIsHive(const edict_t* pEdict);
+int UTIL_CountEntitiesInRange(const char* classname, const Vector& vOrigin, float fRange);
+int UTIL_SentryLevel(const edict_t* pEntity);
 void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, float flRadius, int iClassIgnore, int bitsDamageType);
 void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency, float duration, float radius);
 edict_t* UTIL_GetPlayerByPlayerId(int id);
 Vector UTIL_FurthestVectorAroundYaw(CBot* pBot);
 int UTIL_ClassOnTeam(int iClass, int iTeam);
-BOOL UTIL_EntityHasClassname(edict_t* pEntity, char* classname);
-float UTIL_GetPlayerEnergy(entvars_t* pev);
-int UTIL_NS_GetMaxArmour(edict_t* pEntity);
+BOOL UTIL_EntityHasClassname(const edict_t* pEntity, const char* classname);
+float UTIL_GetPlayerEnergy(const entvars_t* pev);
+int UTIL_NS_GetMaxArmour(const edict_t* pEntity);
 edict_t* UTIL_GetCommander();
-int UTIL_CountEntities(char* classname);
+int UTIL_CountEntities(const char* classname);
 edict_t* BotFunc_FindRandomEntity(char* szClassname);
-BOOL UTIL_IsGrenadeRocket(edict_t* pEntity);
+BOOL UTIL_IsGrenadeRocket(const edict_t* pEntity);
 //void BotFunc_StringCopy(char *, const char *);
 BOOL BotFunc_IsLongRangeWeapon(int iId);
 BOOL BotFunc_IncreaseRep(int iRep, float fInfo = 0.0f, float fSkill = 0.0f);
@@ -149,7 +149,7 @@ void BotFunc_TraceToss(edict_t* ent, edict_t* ignore, TraceResult* tr);
 
 CBaseEntity* CreateEnt(char* szName, const Vector& vecOrigin, const Vector& vecAngles, edict_t* pentOwner);
 
-BOOL UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore = nullptr);
+BOOL UTIL_PlayerStandingOnEntity(const edict_t* pEntity, int team, const edict_t* pIgnore = nullptr);
 
 BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, int max_len);
 
@@ -165,7 +165,7 @@ BOOL	EntityIsAlienStruct(edict_t* pEdict);
 
 edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser = nullptr, BOOL bBuilt = FALSE);
 edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin);
-BOOL UTIL_IsResourceFountainUsed(edict_t* pFountain);
+BOOL UTIL_IsResourceFountainUsed(const edict_t* pFountain);
 //////////////////////////////
 // UTIL FUNCTIONS
 
@@ -174,8 +174,8 @@ unsigned short FixedUnsigned16(float value, float scale);
 short FixedSigned16(float value, float scale);
 #endif
 //int LookupActivity( void *pmodel, entvars_t *pev, int activity );
-Vector AbsOrigin(edict_t* pEdict);
-BOOL UTIL_TankUsed(edict_t* pTank);
+Vector AbsOrigin(const edict_t* pEdict);
+BOOL UTIL_TankUsed(const edict_t* pTank);
 void UTIL_BotHudMessageAll(const hudtextparms_t& textparms, const char* pMessage);
 void UTIL_BotHudMessage(edict_t* pEntity, const hudtextparms_t& textparms, const char* pMessage);
 //unsigned short FixedUnsigned16( float value, float scale );
@@ -186,7 +186,7 @@ int strpos(char* pos, char* start);
 void ReadMapConfig();
 int RoundToNearestInteger(float fVal);
 int Ceiling(float fVal);
-BOOL UTIL_IsButton(edict_t* pButton);
+BOOL UTIL_IsButton(const edict_t* pButton);
 BOOL UTIL_CanStand(const Vector& origin, Vector* v_floor);
 
 void UTIL_GetArgFromString(char** szString, char* szArg);
@@ -199,11 +199,11 @@ edict_t* UTIL_FindEntityInSphere(edict_t* pentStart, const Vector& vecCenter,
 edict_t* UTIL_FindEntityByString(edict_t* pentStart, const char* szKeyword,
 	const char* szValue);
 
-BOOL UTIL_AcceptablePushableVector(edict_t* pPushable, const Vector& vOrigin);
-float UTIL_EntityDistance(entvars_t* pev, const Vector& vOrigin);
-float UTIL_EntityDistance2D(entvars_t* pev, const Vector& vOrigin);
-float UTIL_GetBestPushableDistance(edict_t* pPushable);
-Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, edict_t* pPushable);
+BOOL UTIL_AcceptablePushableVector(const edict_t* pPushable, const Vector& vOrigin);
+float UTIL_EntityDistance(const entvars_t* pev, const Vector& vOrigin);
+float UTIL_EntityDistance2D(const entvars_t* pev, const Vector& vOrigin);
+float UTIL_GetBestPushableDistance(const edict_t* pPushable);
+Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, const edict_t* pPushable);
 
 //edict_t* UTIL_TFC_PlayerHasFlag(edict_t* pPlayer);
 
@@ -212,7 +212,7 @@ void UTIL_PlaySound(edict_t* pPlayer, const char* szSound);
 
 void BotPrintTalkMessageOne(edict_t* pClient, char* fmt, ...);
 
-BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource);
+BOOL UTIL_FuncResourceIsOccupied(const edict_t* pFuncResource);
 int NS_GetPlayerLevel(int exp);
 int UTIL_GetNumClients(BOOL bReport = FALSE);
 edict_t* UTIL_FindEntityByTarget(edict_t* pentStart, const char* szName);
@@ -224,46 +224,46 @@ int		UTIL_GetTeam(edict_t* pEntity);
 int	    UTIL_GetClass(edict_t* pEntity);
 int		UTIL_GetBotIndex(const edict_t* pEdict);
 int		UTIL_MasterTriggered(string_t sMaster, CBaseEntity* pActivator);
-void		UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, BOOL needmore, char* pText);
-void		UTIL_BuildFileName(char* filename, char* arg1, char* arg2 = nullptr);
+void		UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, BOOL needmore, const char* pText);
+void		UTIL_BuildFileName(char* filename, const char* arg1, const char* arg2 = nullptr);
 
 edict_t* UTIL_FacingEnt(edict_t* pPlayer, BOOL any = FALSE);
 
 void     UTIL_FixAngles(Vector* vAngles);
 void     UTIL_FixFloatAngle(float* fAngle);
-BOOL		UTIL_CanBuildHive(entvars_t* pev);
+BOOL		UTIL_CanBuildHive(const entvars_t* pev);
 
-float UTIL_EntityAnglesToVector2D(entvars_t* pev, const Vector* pOrigin); // For 2d Movement
-float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin);
-edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, const Vector& vOrigin, float fRange, BOOL bVisible, edict_t* pIgnore = nullptr);
+float UTIL_EntityAnglesToVector2D(const entvars_t* pev, const Vector* pOrigin); // For 2d Movement
+float UTIL_EntityAnglesToVector3D(const entvars_t* pev, const Vector* pOrigin);
+edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, const Vector& vOrigin, float fRange, BOOL bVisible, const edict_t* pIgnore = nullptr);
 
 Vector UTIL_LengthFromVector(const Vector& relation, float length);
 
-BOOL	BotFunc_FInViewCone(Vector* pOrigin, edict_t* pEdict);
+BOOL	BotFunc_FInViewCone(const Vector* pOrigin, const edict_t* pEdict);
 BOOL	BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict);
 Vector	Center(edict_t* pEdict);
-Vector	GetGunPosition(edict_t* pEdict);
-Vector	EntityOrigin(edict_t* pEdict);
+Vector	GetGunPosition(const edict_t* pEdict);
+Vector	EntityOrigin(const edict_t* pEdict);
 
 edict_t* UTIL_CheckTeleEntrance(const Vector& vOrigin, edict_t* pExit, edict_t* pOwner);
 edict_t* UTIL_CheckTeleExit(const Vector& vOrigin, edict_t* pOwner, edict_t* pEntrance);
 
 Vector UTIL_AngleBetweenOrigin(entvars_t* pev, Vector vOrigin);
-BOOL UTIL_OnGround(entvars_t* pev);
+BOOL UTIL_OnGround(const entvars_t* pev);
 //int     UTIL_TFC_getMaxArmor(edict_t* pEdict);
 void	ClientPrint(edict_t* pEdict, int msg_dest, const char* msg_name);
-float   UTIL_YawAngleBetweenOrigin(entvars_t* pev, const Vector& vOrigin);
-BOOL	UTIL_IsFacingEntity(entvars_t* pev, entvars_t* pevEntity);
+float   UTIL_YawAngleBetweenOrigin(const entvars_t* pev, const Vector& vOrigin);
+BOOL	UTIL_IsFacingEntity(const entvars_t* pev, const entvars_t* pevEntity);
 float   UTIL_AngleBetweenVectors(const Vector& vec1, const Vector& vec2);
-float	UTIL_AnglesBetweenEdictOrigin(edict_t* pEdict, const Vector& origin);
+float	UTIL_AnglesBetweenEdictOrigin(const edict_t* pEdict, const Vector& origin);
 
 int		UTIL_PlayersOnTeam(int iTeam);
 int		UTIL_SpeciesOnTeam(int iSpecies, BOOL bIgnoreEmbryos = FALSE);
 int		UTIL_GetNumHives();
-int		UTIL_CountBuiltEntities(char* classname);
+int		UTIL_CountBuiltEntities(const char* classname);
 edict_t* UTIL_GetRandomUnbuiltHive();
 edict_t* UTIL_FindRandomUnusedFuncResource(CBot* pBot);
-edict_t* UTIL_UpdateSounds(entvars_t* pev);
+edict_t* UTIL_UpdateSounds(const entvars_t* pev);
 edict_t* UTIL_FindPlayerByTruncName(const char* name);
 void strlow(char* str);
 void strhigh(char* str);
@@ -370,7 +370,7 @@ public:
 
 	CClient* GetRandomClient(int iRep);
 
-	static void WriteToFile(int iBotProfile, CBotReputation* pRep);
+	static void WriteToFile(int iBotProfile, const CBotReputation* pRep);
 
 	void RemoveSaveRep(int iBotProfile, int iPlayerRepId);
 
@@ -410,7 +410,7 @@ public:
 	void AddRep(int iPlayerRepId, int iRep)
 		// Add a NEW Reputation WITH a reputation value
 	{
-		CBotReputation* l_Rep = GetRep(iPlayerRepId);
+		const CBotReputation* l_Rep = GetRep(iPlayerRepId);
 
 		if (l_Rep == nullptr) // Don't want to add a duplicate
 			m_RepList.Push(CBotReputation(iPlayerRepId, iRep));
@@ -458,7 +458,7 @@ public:
 		return nullptr;
 	}
 
-	int GetClientRep(CClient* pClient);
+	int GetClientRep(const CClient* pClient);
 
 	void IncreaseRep(int iPlayerRepId)
 	{
@@ -1143,7 +1143,7 @@ public:
 
 	void RemoveTimedOutSchedules()
 	{
-		CBotTask* pCurrentTask = this->CurrentTask();
+		const CBotTask* pCurrentTask = this->CurrentTask();
 
 		if (pCurrentTask == nullptr)
 			return;
@@ -1597,7 +1597,7 @@ public:
 		m_bViolated = FALSE;
 	}
 
-	BOOL IsForPath(PATH* pPath) const
+	BOOL IsForPath(const PATH* pPath) const
 	{
 		return m_pPath == pPath;
 	}
@@ -1805,7 +1805,7 @@ public:
 		return m_pEntity.Get();
 	}
 
-	BOOL isEntity(edict_t* pEntity)
+	BOOL isEntity(const edict_t* pEntity)
 	{
 		if (pEntity == nullptr)
 			return FALSE;
@@ -1941,7 +1941,7 @@ public:
 		newPosition.setFlags(flags);
 		newPosition.setVisibleOrigin(vVisibleOrigin);
 
-		CRememberPosition* e = m_Positions.getExisting(newPosition);
+		const CRememberPosition* e = m_Positions.getExisting(newPosition);
 
 		const int index = m_Positions.getExistingIndex(newPosition);
 
@@ -2069,7 +2069,7 @@ public:
 		return &m_Positions[m_Positions.Size() - 1];//[m_iNewest]);//.getVector();
 	}
 
-	CRememberPosition* positionNearest(const Vector& vOrigin, Vector vFrom)
+	CRememberPosition* positionNearest(const Vector& vOrigin, const Vector vFrom)
 	{
 		CRememberPosition* nearest = nullptr;
 		float fNearest = 0;
@@ -2303,7 +2303,7 @@ public:
 		}
 	}
 
-	void removeMember(edict_t* pMember)
+	void removeMember(const edict_t* pMember)
 	{
 		dataStack<MyEHandle> tempStack = m_theSquad;
 
@@ -2320,7 +2320,7 @@ public:
 		}
 	}
 
-	BOOL IsLeader(edict_t* pLeader) const
+	BOOL IsLeader(const edict_t* pLeader) const
 	{
 		return GetLeader() == pLeader;
 	}
@@ -2353,7 +2353,7 @@ public:
 		return num;
 	}
 
-	BOOL IsMember(edict_t* pEdict)
+	BOOL IsMember(const edict_t* pEdict)
 	{
 		dataStack<MyEHandle> tempStack = m_theSquad;
 
@@ -2391,7 +2391,7 @@ public:
 		m_fDesiredSpread = fNewSpread;
 	}
 
-	int GetFormationPosition(edict_t* pEdict)
+	int GetFormationPosition(const edict_t* pEdict)
 	{
 		int iPosition = 0;
 
@@ -2479,7 +2479,7 @@ public:
 		return m_pEdict;
 	}
 
-	BOOL isEdict(edict_t* pEdict)
+	BOOL isEdict(const edict_t* pEdict)
 	{
 		return m_pEdict == pEdict;
 	}
@@ -3154,7 +3154,7 @@ public:
 
 	BOOL WantToFindEnemy();
 
-	void PlayerDead(edict_t* pPlayer)
+	void PlayerDead(const edict_t* pPlayer)
 	{
 		if (pPlayer == m_pSpySpotted)
 			m_pSpySpotted = nullptr;
@@ -3309,7 +3309,7 @@ public:
 	//BOOL IsHoldingMiniGun();
 
 	// temporary storage to later pick up weapons needed
-	void SetWeaponsNeeded(short int* iArray)
+	void SetWeaponsNeeded(const short int* iArray)
 	{
 		memcpy(m_iWeaponsNeeded, iArray, sizeof(short int) * MAX_WEAPONS);
 	}
@@ -3342,7 +3342,7 @@ public:
 	}
 
 	// is in the squad "theSquad"?
-	BOOL InSquad(CBotSquad* theSquad) const
+	BOOL InSquad(const CBotSquad* theSquad) const
 	{
 		return theSquad == m_stSquad;
 	}
@@ -4196,10 +4196,20 @@ public:
 	}
 
 	void SayMessage(const char* message, edict_t* pPlayer);
-	void SayMessage(const char* message, Vector colour1, Vector colour2, edict_t* pPlayer);
+	void SayMessage(const char* message, const Vector& colour1, const Vector& colour2, edict_t* pPlayer);
 	void Initialise();
-	void SetColour1(Vector const colours, int alpha) { m_textParms.r1 = static_cast<int>(colours.x), m_textParms.g1 = static_cast<int>(colours.y), m_textParms.b1 = static_cast<int>(colours.z); m_textParms.a1 = alpha; };
-	void SetColour2(Vector const colours, int alpha) { m_textParms.r2 = static_cast<int>(colours.x), m_textParms.g2 = static_cast<int>(colours.y), m_textParms.b2 = static_cast<int>(colours.z); m_textParms.a2 = alpha; };
+	void SetColour1(Vector const& colours, int alpha)
+	{
+		m_textParms.r1 = static_cast<int>(colours.x), m_textParms.g1 = static_cast<int>(colours.y), m_textParms.b1 =
+			static_cast<int>(colours.z);
+		m_textParms.a1 = alpha;
+	};
+	void SetColour2(Vector const& colours, int alpha)
+	{
+		m_textParms.r2 = static_cast<int>(colours.x), m_textParms.g2 = static_cast<int>(colours.y), m_textParms.b2 =
+			static_cast<int>(colours.z);
+		m_textParms.a2 = alpha;
+	};
 	void InitMessage(const char* message);
 
 private:
@@ -4384,7 +4394,7 @@ public:
 		return m_iAccessLevel;
 	}
 
-	BOOL IsPlayer(edict_t* pPlayer)
+	BOOL IsPlayer(const edict_t* pPlayer)
 	{
 		return m_pPlayer == pPlayer;
 	}
@@ -4741,12 +4751,12 @@ public:
 		memset(this, 0, sizeof(CAllowedPlayer));
 	}
 
-	CAllowedPlayer(const char* szName, char* szPass, int iAccessLevel, char* szSteamId)
+	CAllowedPlayer(const char* szName, char* sz_pass, int iAccessLevel, char* sz_steam_id)
 	{
 		strcpy(m_szName, szName);
-		strncpy(m_szPass, szPass, BOT_MAX_PASSWORD_LEN - 1);
+		strncpy(m_szPass, sz_pass, BOT_MAX_PASSWORD_LEN - 1);
 		m_szPass[BOT_MAX_PASSWORD_LEN - 1] = 0;
-		strncpy(m_szSteamId, szSteamId, STEAM_ID_LEN - 1);
+		strncpy(m_szSteamId, sz_steam_id, STEAM_ID_LEN - 1);
 		m_szSteamId[STEAM_ID_LEN - 1] = 0;
 		m_iAccessLevel = iAccessLevel;
 	}
@@ -4756,7 +4766,7 @@ public:
 		return m_szSteamId[0] != 0;
 	}
 
-	BOOL IsForSteamID(char* steamID)
+	BOOL IsForSteamID(const char* steamID)
 	{
 		// gotta take care if no steam id is mentioned, could be WON we are playing
 		if (steamID && *steamID && (m_szSteamId && *m_szSteamId)) //m_szSteamId always true [APG]RoboCop[CL]
@@ -4884,6 +4894,7 @@ private:
 class CBotCvar
 {
 public:
+	virtual ~CBotCvar() = default;
 
 	CBotCvar()
 	{
@@ -5136,11 +5147,11 @@ typedef enum { MASTER_NONE, MASTER_NOT_TRIGGERED, MASTER_TRIGGERED, MASTER_FAULT
 class CMasterEntity
 {
 public:
-	CMasterEntity(edict_t* pEntity, char* szMasterName)
+	CMasterEntity(edict_t* pEntity, char* sz_master_name)
 	{
 		m_pEntity = pEntity;
-		m_szMasterName = new char[strlen(szMasterName) + 1];
-		strcpy(m_szMasterName, szMasterName);
+		m_szMasterName = new char[strlen(sz_master_name) + 1];
+		strcpy(m_szMasterName, sz_master_name);
 	}
 
 	~CMasterEntity()
@@ -5150,7 +5161,7 @@ public:
 		m_pEntity = nullptr;
 	}
 
-	BOOL IsForEntity(edict_t* pEntity)
+	BOOL IsForEntity(const edict_t* pEntity)
 	{
 		return m_pEntity == pEntity;
 	}
@@ -5537,7 +5548,7 @@ public:
 
 	BOOL TuneIn(edict_t* pPlayer);
 
-	static void TuneOff(edict_t* pPlayer);
+	static void TuneOff(const edict_t* pPlayer);
 
 	BOOL IsWorking();
 
@@ -5592,7 +5603,7 @@ public:
 		m_pEntity = pEntity;
 	}
 
-	BOOL isEdict(edict_t* pEdict)
+	BOOL isEdict(const edict_t* pEdict)
 	{
 		return m_pEntity == pEdict;
 	}
@@ -5824,7 +5835,7 @@ public:
 		return nullptr;
 	}
 
-	BOOL playerHasFlag(edict_t* pPlayer)
+	BOOL playerHasFlag(const edict_t* pPlayer)
 	{
 		dataStack<CTFCGoal> tempStack = m_Flags;
 
@@ -6066,7 +6077,7 @@ class CBotGlobals
 {
 public:
 
-	CBot* otherBotAtWaypoint(CBot* pBot, int iWpt)
+	CBot* otherBotAtWaypoint(const CBot* pBot, int iWpt)
 	{
 		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
@@ -6099,7 +6110,8 @@ public:
 	}
 	void ReadBotFolder();
 
-	TraceResult* Traceline(Vector& vecStart, Vector& vecEnd, IGNORE_MONSTERS igmon, IGNORE_GLASS ignoreGlass, edict_t* pentIgnore)
+	TraceResult* Traceline(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon,
+	                       IGNORE_GLASS ignoreGlass, edict_t* pentIgnore)
 	{
 		UTIL_TraceLine(vecStart, vecEnd, igmon, ignoreGlass, pentIgnore, &m_tr);
 
@@ -6454,7 +6466,7 @@ public:
 		return (m_iDebugLevels & iDebugLevel) > 0;
 	}
 
-	void KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd);
+	void KeyValue(edict_t* pentKeyvalue, const KeyValueData* pkvd);
 
 	/*BOOL TFC_IsAvailableFlag(edict_t* pFlag, int team, BOOL bEnemyFlag = FALSE);
 
@@ -6795,10 +6807,10 @@ edict_t* BotFunc_FindNearestButton(Vector vOrigin, entvars_t* pDoor, Vector* vFo
 ////////////////////////////////////////////////////
 // NAVIGATION
 
-void BotTurnAtWall(CBot* pBot, TraceResult* tr);
+void BotTurnAtWall(const CBot* pBot, const TraceResult* tr);
 BOOL BotCantMoveForward(CBot* pBot, TraceResult* tr);
-BOOL BotCanJumpUp(CBot* pBot); // BotCanJumpUp : By : Botman
-BOOL BotCanDuckUnder(CBot* pBot);
+BOOL BotCanJumpUp(const CBot* pBot); // BotCanJumpUp : By : Botman
+BOOL BotCanDuckUnder(const CBot* pBot);
 BOOL BotCheckWallOnLeft(CBot* pBot);
 BOOL BotCheckWallOnRight(CBot* pBot);
 const char* BotFunc_GetRandomPlayerName(CBot* pBot, int iState);
@@ -6859,7 +6871,7 @@ int AllowLagCompensation();
 void RCBot_ServerCommand();
 int GetModId();
 void GetGameDirectory(char* szDir); //TODO: Needs implemented?
-float UTIL_GetAvoidAngle(edict_t* pEdict, Vector origin);
+float UTIL_GetAvoidAngle(const edict_t* pEdict, const Vector& origin);
 void ReadBotUsersConfig();
 void BotFunc_MakeSquad(CClient* pClient);
 void AssertMessage(BOOL bAssert, char* fmt, ...);

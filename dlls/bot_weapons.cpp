@@ -337,7 +337,7 @@ void CWeaponPresets::ReadPresets()
 	fclose(fp);
 }
 
-BOOL CBotWeapon::HasWeapon(edict_t* pEdict)
+BOOL CBotWeapon::HasWeapon(const edict_t* pEdict)
 {
 	if (pEdict)
 	{
@@ -354,7 +354,7 @@ BOOL CBotWeapon::HasWeapon(edict_t* pEdict)
 				{
 					edict_t* pWeapon = nullptr;
 
-					char* szClassname = this->GetClassname();
+					const char* szClassname = this->GetClassname();
 
 					if (szClassname == nullptr)
 						return FALSE; // error
@@ -868,7 +868,7 @@ BOOL CBotWeapon::NeedToReload()
 	return FALSE;
 }
 
-BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist)
+BOOL CBotWeapon::CanShootPrimary(const edict_t* pEdict, float flFireDist, float flWallDist)
 {
 	if (m_pWeaponInfo == nullptr)
 		return TRUE;
@@ -899,7 +899,7 @@ BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWall
 	return TRUE;
 }
 
-BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname)
+BOOL CBotWeapons::HasWeapon(edict_t* pEdict, const char* szClassname)
 {
 	const char* pClassname;
 

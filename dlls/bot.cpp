@@ -10952,7 +10952,7 @@ void CBot::FlapWings()
 
 	if (m_fEndJumpTime + m_pFlyGAVals->get(0) < gpGlobals->time)
 	{
-		m_fStartJumpTime = 0;
+		m_fStartJumpTime = 0.0f;
 		m_fEndJumpTime = gpGlobals->time + m_pFlyGAVals->get(1);
 	}
 }

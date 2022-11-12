@@ -235,7 +235,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 	return;
 }
 
-void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
+void CBotReputations::WriteToFile(const int iBotProfile, const CBotReputation* pRep)
 {
 	char filename[256];
 	char repfile[16];
@@ -326,7 +326,7 @@ int GetPlayerEdictRepId(edict_t* pEdict)
 	if (pEdict == nullptr)
 		return -1;
 
-	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEdict);
+	const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEdict);
 
 	if (pClient)
 		return pClient->GetPlayerRepId();
@@ -434,7 +434,7 @@ int GetPlayerRepId(const char* szPlayerName)
 	return -1;
 }
 
-int CBotReputations::GetClientRep(CClient* pClient)
+int CBotReputations::GetClientRep(const CClient* pClient)
 {
 	if (pClient == nullptr)
 	{

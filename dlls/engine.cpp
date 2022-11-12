@@ -495,7 +495,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 			}
 		}
 
-		edict_t* pEntityOwner = entity->v.owner;
+		const edict_t* pEntityOwner = entity->v.owner;
 
 		for (int i = 0; i < 32; i++)
 		{

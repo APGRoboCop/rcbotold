@@ -786,7 +786,7 @@ eBotCvarState CDebugBotCommand::action(CClient* pClient, const char* arg1, const
 		{
 			edict_t* pEntity = pClient->GetPlayer();
 
-			edict_t* pOther = UTIL_FacingEnt(pEntity);
+			const edict_t* pOther = UTIL_FacingEnt(pEntity);
 
 			if (pOther)
 			{
@@ -1671,7 +1671,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			CBot* tempBot = &gBotGlobals.m_Bots[i];
+			const CBot* tempBot = &gBotGlobals.m_Bots[i];
 
 			if (tempBot && tempBot->m_bIsUsed && tempBot->m_pEdict)
 				l_IdsInUse.Push(tempBot->m_Profile.m_iProfileId);
