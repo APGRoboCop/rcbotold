@@ -194,7 +194,7 @@ public:
 
 	{
 		int pev;
-		return Center() + pev->view_ofs * RANDOM_FLOAT(0.5, 1.1);
+		return Center() + pev->view_ofs * RANDOM_FLOAT(0.5f, 1.1f);
 	};		// position to shoot at
 
 	virtual void StartSneaking() { m_tSneaking = gpGlobals->time - 1; }
@@ -204,7 +204,7 @@ public:
 	BOOL IsAlive() override
 
 	{
-		BOOL pev;
+		BOOL pev = 0;
 		return pev->deadflag == DEAD_NO && pev->health > 0;
 	}
 

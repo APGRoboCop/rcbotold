@@ -435,7 +435,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	CBotWeapon* pWeapon;
 	//CWeapon *pWeaponInfo;
 
-	edict_t* pEdict = pBot->m_pEdict;
+	const edict_t* pEdict = pBot->m_pEdict;
 
 	Vector vEnemyOrigin;
 	float fEnemyDist;
@@ -849,7 +849,7 @@ BOOL CBotWeapon::NeedToReload()
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
-	case MOD_TS:
+	case MOD_TS: //TODO: Add BOT_TASK_RELOAD to allow bots to reload sooner when attacking and running on a empty clip
 		return !m_iClip && m_iReserve > 0;
 	case MOD_BUMPERCARS:
 	case MOD_DMC:

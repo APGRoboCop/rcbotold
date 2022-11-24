@@ -74,10 +74,10 @@ void player(entvars_t* pev)
 #else
 	extern void* h_Library;
 #endif
-	static LINK_ENTITY_FUNC otherClassName = NULL;
-	if (otherClassName == NULL)
+	static LINK_ENTITY_FUNC otherClassName = nullptr;
+	if (otherClassName == nullptr)
 		otherClassName = (LINK_ENTITY_FUNC)GetProcAddress(h_Library, "player");
-	if (otherClassName != NULL)
+	if (otherClassName != nullptr)
 	{
 		(*otherClassName)(pev);
 	}
@@ -559,7 +559,8 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 				else
 					pPlayer->v.takedamage = DAMAGE_YES;
 
-				BotPrintTalkMessage("%s used godmode %d on %s\n", STRING(pEntity->v.netname), pPlayer->v.takedamage == DAMAGE_NO, STRING(pPlayer->v.netname));
+				BotPrintTalkMessage("%s used godmode %d on %s\n", STRING(pEntity->v.netname),
+				                    pPlayer->v.takedamage == DAMAGE_NO, STRING(pPlayer->v.netname));
 			}
 		}
 		else if (pEntity)
@@ -577,7 +578,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		edict_t* pEnt = nullptr;
 		edict_t* p_entity = pClient->GetPlayer();
 
-		float range = 100;
+		float range = 100.0f;
 
 		if (arg2 && *arg2)
 			range = atof(arg2);
@@ -898,7 +899,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	}
 
 	const BOOL bSetting = arg2 && *arg2; // is player setting the value or wanting details?
-	float fSetVal = 0;
+	float fSetVal = 0.0f;
 
 	const int iState = atoi(arg2);
 	int iConfig = 0;
@@ -1019,7 +1020,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 			fSetVal = static_cast<float>(gBotGlobals.m_iMaxBots);
 	}
 	/*
-			m_fHiveImportance = 1.0f;
+		m_fHiveImportance = 1.0f;
 		m_fResTowerImportance = 0.7f;
 		m_fHealingImportance = 0.75f;
 		m_fStructureBuildingImportance = 0.4f;

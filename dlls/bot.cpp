@@ -1822,7 +1822,7 @@ void CBot::SpawnInit(const BOOL bInit)
 	m_iBotWeapons = 0;
 	m_pCurrentWeapon = nullptr;
 
-	m_fNextCheckCover = 0;
+	m_fNextCheckCover = 0.0f;
 
 	m_pLastEnemy = nullptr;
 
@@ -1832,23 +1832,23 @@ void CBot::SpawnInit(const BOOL bInit)
 
 	m_iLastFailedWaypoint = -1;
 
-	//m_fMaxDangerFactor = 0;
-	//m_fMinDangerFactor = 0;
+	//m_fMaxDangerFactor = 0.0f;
+	//m_fMinDangerFactor = 0.0f;
 
-	m_fListenToSoundTime = 0;
+	m_fListenToSoundTime = 0.0f;
 
 	//m_bGotEnemyPath = FALSE;
 
-	m_fLastCallRunPlayerMove = 0;
+	m_fLastCallRunPlayerMove = 0.0f;
 
 	m_pPickupEntity = nullptr;
 
-	m_fLastUpdateConditions = 0;
+	m_fLastUpdateConditions = 0.0f;
 
 	m_CurrentTask = nullptr;
 
-	m_fLastThinkTime = 0;
-	m_fUpdateWaypointTime = 0;
+	m_fLastThinkTime = 0.0f;
+	m_fUpdateWaypointTime = 0.0f;
 
 	//    m_pSound = NULL;
 	m_bKill = FALSE;
@@ -1856,7 +1856,7 @@ void CBot::SpawnInit(const BOOL bInit)
 	m_bCanUseAmmoDispenser = TRUE;
 
 	//  m_bCurrentLookDirIsValid = FALSE;
-	m_fLastLookTime = 0;
+	m_fLastLookTime = 0.0f;
 
 	m_bMoveToIsValid = FALSE;       // Is FALSE When bot has no waypoint.
 
@@ -1869,7 +1869,7 @@ void CBot::SpawnInit(const BOOL bInit)
 	m_iPrevWaypointIndex = -1;
 	m_iCurrentWaypointFlags = 0;
 	m_fPrevWaypointDist = 4096.0f;
-	m_fLastSeeWaypoint = 0;
+	m_fLastSeeWaypoint = 0.0f;
 
 	m_pAvoidEntity = nullptr;
 
@@ -1929,7 +1929,7 @@ void CBot::SpawnInit(const BOOL bInit)
 	m_iPrevWaypointIndex = -1;
 
 	//m_Tasks.FlushTasks();
-	m_fFindPathTime = 0;
+	m_fFindPathTime = 0.0f;
 
 	m_pEnemyRep = nullptr;
 
@@ -2428,7 +2428,7 @@ int CBot::GetLadderDir(const BOOL bCheckWaypoint)
 {
 	if (m_fUpdateFlagTime < gpGlobals->time)
 	{
-		m_fUpdateFlagTime = gpGlobals->time + 0.5;
+		m_fUpdateFlagTime = gpGlobals->time + 0.5f;
 	}
 	else
 	{
@@ -2534,7 +2534,7 @@ void CBot::StartGame()
 	{
 	case VGUI_MENU_TFC_TEAM_SELECT:
 
-		if (m_fJoinServerTime + 5.0 < gpGlobals->time)
+		if (m_fJoinServerTime + 5.0f < gpGlobals->time)
 		{
 			FakeClientCommand(m_pEdict, "jointeam %d", RANDOM_LONG(1, 4));
 			// hack for team select bug
@@ -2555,7 +2555,7 @@ void CBot::StartGame()
 	break;
 	case 0:
 
-		if (m_fJoinServerTime + 5.0 < gpGlobals->time)
+		if (m_fJoinServerTime + 5.0f < gpGlobals->time)
 		{
 			// hack for team select bug
 			this->m_iVguiMenu = VGUI_MENU_TFC_TEAM_SELECT;
@@ -2748,8 +2748,16 @@ break;*/
 		m_bStartedGame = TRUE;
 		return;
 		break;
+		break;
+	case MOD_WW:
+		sprintf(c_class, "%d", pBot->bot_class);
+		FakeClientCommand(pEdict, "changeclass", c_class, nullptr);
+		m_bStartedGame = TRUE;
+		return;
+		break;
 	default:
 		break;
+		
 	}
 
 	// generic case, just press fire :)
@@ -2837,12 +2845,12 @@ void CBot::Think()
 	m_bLookForNewTasks = TRUE;
 
 	// Reset bots main forward move speed
-	m_fMoveSpeed = 0;
+	m_fMoveSpeed = 0.0f;
 
 	// If stuck code has not overidden upspeed (while swimming)
 	// reset it to 0
 	if (m_fUpTime < gpGlobals->time)
-		m_fUpSpeed = 0;
+		m_fUpSpeed = 0.0f;
 
 	// Save last buttons held in incase some need to be held in after
 	// resetting (for ladder climbing etc)
@@ -2952,7 +2960,8 @@ void CBot::Think()
 				const int teamScoreSinceDeath = gBotGlobals.m_iTeamScores[team] - m_iPrevTeamScore;
 				m_iPrevTeamScore = gBotGlobals.m_iTeamScores[team];
 
-				const float fFitness = m_fSurvivalTime * 0.001f + static_cast<float>(fragsSinceDeath) * 0.2f + static_cast<float>(teamScoreSinceDeath) * 0.2f;
+				const float fFitness = m_fSurvivalTime * 0.001f + static_cast<float>(fragsSinceDeath) * 0.2f +
+					static_cast<float>(teamScoreSinceDeath) * 0.2f;
 
 				m_GASurvival->setFitness(fFitness);
 
@@ -3014,7 +3023,7 @@ void CBot::Think()
 			m_CurrentLookTask = BOT_LOOK_TASK_NONE;
 	}
 
-	if (m_fSpawnTime == 0)
+	if (m_fSpawnTime == 0.0f)
 	{
 		m_fSpawnTime = gpGlobals->time;
 		m_iNumFragsSinceDeath = pev->frags;
@@ -3460,7 +3469,7 @@ void CBot::Think()
 				if ( iCoverWpt != -1 )
 				{
 					AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH,0,NULL,iCoverWpt,-2));
-					m_fNextCheckCover = gpGlobals->time + 1.0;
+					m_fNextCheckCover = gpGlobals->time + 1.0f;
 				}*/
 			}
 			// cant get Damage message, do it manually
@@ -3729,7 +3738,7 @@ void CBot::Think()
 	/*
 		if ( bAimStopMoving )
 			StopMoving();
-	//*/
+	*/
 	return;
 }
 
@@ -3944,8 +3953,8 @@ public:
 	CAlienAction* getBestAction(eAlienMaskEvidence evd)
 	{
 		BOOL gotBest = FALSE;
-		float fMax = 0;
-		float fCur = 0;
+		float fMax = 0.0f;
+		float fCur = 0.0f;
 
 		for (unsigned int i = 0; i < m_Actions.size(); i++)
 		{
@@ -4264,6 +4273,18 @@ void CBot::LookForNewTasks()
 				}
 			}
 			break;
+		case MOD_WW:
+		{
+			if (!pNearestPickupEntity || fDistance < fNearestPickupEntityDist)
+			{
+				if (CanPickup(pEntity))
+				{
+					fNearestPickupEntityDist = fDistance;
+					pNearestPickupEntity = pEntity;
+					continue;
+				}
+			}
+		}
 		case MOD_NS:
 
 			if (bCanBuild)

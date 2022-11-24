@@ -151,7 +151,7 @@ public:
 	void clear() override
 	{
 		m_Value = 0;
-	};
+	}
 
 	// get new copy of this
 	// sub classes return their class with own values

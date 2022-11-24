@@ -55,10 +55,10 @@ CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, floa
 	m_iInputs = iInputs;
 
 	// bias weight
-	m_weights.emplace_back(RANDOM_FLOAT(0, 0.6) - 0.3);
+	m_weights.emplace_back(RANDOM_FLOAT(0, 0.6f) - 0.3f);
 
 	for (unsigned int i = 0; i < m_iInputs; i++)
-		m_weights.emplace_back(RANDOM_FLOAT(0, 0.6) - 0.3);
+		m_weights.emplace_back(RANDOM_FLOAT(0, 0.6f) - 0.3f);
 
 	m_transferFunction = transferFunction;
 
@@ -103,7 +103,7 @@ void CPerceptron::setWeights(std::vector <ga_value> const& weights, int iFrom, i
 void CPerceptron::randomize()
 {
 	for (unsigned int i = 0; i < m_weights.size(); i++)
-		m_weights[i] = RANDOM_FLOAT(0, 0.6) - 0.3;
+		m_weights[i] = RANDOM_FLOAT(0, 0.6f) - 0.3f;
 }
 
 void CPerceptron::setWeights(std::vector <ga_value> const& weights)

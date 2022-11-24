@@ -145,7 +145,7 @@ CClient* CBotReputations::GetRandomClient(const int iRep)
 // Saves ONE rep and removes it
 void CBotReputations::RemoveSaveRep(const int iBotProfile, const int iPlayerRepId)
 {
-	CBotReputation* pRep = this->GetRep(iPlayerRepId);
+	const CBotReputation* pRep = this->GetRep(iPlayerRepId);
 
 	if (pRep)
 	{
@@ -162,7 +162,7 @@ void CBotReputations::SaveAllRep(const int iBotProfile)
 
 	while (!tempStack.IsEmpty())
 	{
-		CBotReputation* pRep = tempStack.ChoosePointerFromStack();
+		const CBotReputation* pRep = tempStack.ChoosePointerFromStack();
 
 		if (pRep)
 		{

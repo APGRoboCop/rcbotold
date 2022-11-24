@@ -556,7 +556,7 @@ int GetMessageID(const char* szMsg)
 	int msg_id;
 
 #ifndef RCBOT_META_BUILD
-	CBotNetMessage* msg = NULL;
+	CBotNetMessage* msg = nullptr;
 	msg = gBotGlobals.m_NetEntityMessages.GetMessage(0, szMsg);
 	if (msg)
 		msg_id = msg->MessageNum();

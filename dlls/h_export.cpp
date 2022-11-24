@@ -57,8 +57,8 @@
 #include "bot.h"
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
-HINSTANCE h_Library = NULL;
-HGLOBAL h_global_argv = NULL;
+HINSTANCE h_Library = nullptr;
+HGLOBAL h_global_argv = nullptr;
 #else
 
 void* h_Library = NULL;
@@ -71,10 +71,10 @@ globalvars_t* gpGlobals;
 
 char* g_argv;
 
-GETENTITYAPI other_GetEntityAPI = NULL;
-GETNEWDLLFUNCTIONS other_GetNewDLLFunctions = NULL;
-GIVEFNPTRSTODLL other_GiveFnptrsToDll = NULL;
-CONSTRUCT_USE NS_constructUse = NULL;
+GETENTITYAPI other_GetEntityAPI = nullptr;
+GETNEWDLLFUNCTIONS other_GetNewDLLFunctions = nullptr;
+GIVEFNPTRSTODLL other_GiveFnptrsToDll = nullptr;
+CONSTRUCT_USE NS_constructUse = nullptr;
 
 int debug_engine = 0;
 
@@ -133,8 +133,6 @@ void DLLEXPORT GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, globalvars_t
 extern "C" DLLEXPORT void GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, globalvars_t * pGlobals)
 #endif // __linux__
 {
-	const char* game_dll_filename;
-
 	// get the engine functions from the engine...
 	memset(&g_engfuncs, 0, sizeof(enginefuncs_t));
 	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
@@ -142,18 +140,18 @@ extern "C" DLLEXPORT void GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, g
 
 	gBotGlobals.Init();
 
-	game_dll_filename = gBotGlobals.GetModInfo();
+	const char* game_dll_filename = gBotGlobals.GetModInfo();
 
-	if (game_dll_filename == NULL)
+	if (game_dll_filename == nullptr)
 	{
-		BotMessage(NULL, 1, "Error : Mod is NOT supported with this version of the bot!\nIf you intended to run the bot with a different mod,\ndownload the latest version to see if it is supported at: %s", BOT_WEBSITE);
+		BotMessage(nullptr, 1, "Error : Mod is NOT supported with this version of the bot!\nIf you intended to run the bot with a different mod,\ndownload the latest version to see if it is supported at: %s", BOT_WEBSITE);
 	}
 	else
 	{
 		// set-up menu's, some menus might depend on the MOD
 		SetupMenus();
 
-		BotMessage(NULL, 0, "DLL Attaching To : %s", game_dll_filename);
+		BotMessage(nullptr, 0, "DLL Attaching To : %s", game_dll_filename);
 
 #ifndef __linux__
 		h_Library = LoadLibrary(game_dll_filename);
@@ -162,33 +160,33 @@ extern "C" DLLEXPORT void GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, g
 #endif
 	}
 
-	if (h_Library == NULL)
+	if (h_Library == nullptr)
 	{
 		// Directory error or Unsupported MOD!
 
-		BotMessage(NULL, 1, "Error: MOD DLL not found (or unsupported MOD)!");
+		BotMessage(nullptr, 1, "Error: MOD DLL not found (or unsupported MOD)!");
 	}
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
 	h_global_argv = GlobalAlloc(GMEM_SHARE, 1024);
-	g_argv = (char*)GlobalLock(h_global_argv);
+	g_argv = static_cast<char*>(GlobalLock(h_global_argv));
 #else
 	//g_argv = (char *)h_global_argv;
 	g_argv = (char*)malloc(1024); // allocate space for the bots' client commands argv field
 #endif
 
-	other_GetEntityAPI = (GETENTITYAPI)GetProcAddress(h_Library, "GetEntityAPI");
+	other_GetEntityAPI = GETENTITYAPI(GetProcAddress(h_Library, "GetEntityAPI"));
 
-	if (other_GetEntityAPI == NULL)
+	if (other_GetEntityAPI == nullptr)
 	{
 		// Can't find GetEntityAPI!
 
-		BotMessage(NULL, 1, "RCBot - Can't get MOD's GetEntityAPI! Mod DLL May be missing!");
+		BotMessage(nullptr, 1, "RCBot - Can't get MOD's GetEntityAPI! Mod DLL May be missing!");
 	}
 
 	//NS_constructUse = (CONSTRUCT_USE)GetProcAddress(h_Library, "?ConstructUse@AvHBaseBuildable@@QAEXPAVCBaseEntity@@0W4USE_TYPE@@M@Z");
 
-	other_GetNewDLLFunctions = (GETNEWDLLFUNCTIONS)GetProcAddress(h_Library, "GetNewDLLFunctions");
+	other_GetNewDLLFunctions = GETNEWDLLFUNCTIONS(GetProcAddress(h_Library, "GetNewDLLFunctions"));
 
 	/*if (other_GetNewDLLFunctions == NULL)
 	{
@@ -197,9 +195,9 @@ extern "C" DLLEXPORT void GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, g
 		 ALERT( at_error, "RCBot - Can't get MOD's GetNewDLLFunctions!" );
 	}*/
 
-	other_GiveFnptrsToDll = (GIVEFNPTRSTODLL)GetProcAddress(h_Library, "GiveFnptrsToDll");
+	other_GiveFnptrsToDll = GIVEFNPTRSTODLL(GetProcAddress(h_Library, "GiveFnptrsToDll"));
 
-	if (other_GiveFnptrsToDll == NULL)
+	if (other_GiveFnptrsToDll == nullptr)
 	{
 		// Can't find GiveFnptrsToDll!
 

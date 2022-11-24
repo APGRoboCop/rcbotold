@@ -42,7 +42,7 @@ public:
 	{
 		const float rand = RANDOM_FLOAT(0, getTotalUtility());
 
-		float total = 0;
+		float total = 0.0f;
 
 		for (unsigned int i = 0; i < m_Utilities.size(); i++)
 		{
@@ -57,7 +57,7 @@ public:
 
 	float getTotalUtility()
 	{
-		float total = 0;
+		float total = 0.0f;
 
 		for (unsigned int i = 0; i < m_Utilities.size(); i++)
 		{

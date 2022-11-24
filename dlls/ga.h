@@ -64,7 +64,7 @@ public:
 	// sub classes return their class with own values
 	virtual IIndividual* copy() = 0;
 protected:
-	ga_value m_fFitness = 0;
+	ga_value m_fFitness = 0.0f;
 };
 
 class CGA;
@@ -132,7 +132,7 @@ public:
 		m_theNewPopulation.setGA(this);
 
 		m_iNumGenerations = 0;
-		m_fPrevAvgFitness = 0;
+		m_fPrevAvgFitness = 0.0f;
 
 		m_iMaxPopSize = iMaxPopSize;
 		m_bestIndividual = nullptr;

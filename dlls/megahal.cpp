@@ -140,7 +140,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		// break the new message into an array of words
 		HAL_MakeWords(szMsg, pBot->m_Profile.m_HAL->input_words);
 
-		CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender);
+		const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender);
 		const int iRep = pBot->m_Profile.m_Rep.GetClientRep(pClient);
 
 		// does the bot feel concerned ? (more chances of replying if its name appears)
@@ -412,7 +412,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 	output_template[0] = 0; // first reset the reply string
 
 	HAL_DICTIONARY* keywords = BotHALMakeKeywords(pBot, pBot->m_Profile.m_HAL->input_words);
-	HAL_DICTIONARY* replywords = BotHALBuildReplyDictionary(pBot, keywords);
+	const HAL_DICTIONARY* replywords = BotHALBuildReplyDictionary(pBot, keywords);
 
 	const int last_entry = pBot->m_Profile.m_HAL->input_words->size - 1;
 	const int last_character = pBot->m_Profile.m_HAL->input_words->entry[last_entry].length - 1;
