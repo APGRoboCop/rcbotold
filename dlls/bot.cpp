@@ -2751,7 +2751,9 @@ break;*/
 		break;
 	case MOD_WW:
 		//sprintf(c_class, "%d", pBot->bot_class);
-		FakeClientCommand(m_pEdict, "changeclass", RANDOM_LONG(1, 9), RANDOM_LONG(1, 9));
+		//FakeClientCommand(m_pEdict, "classmenu", RANDOM_LONG(1, 9), nullptr);
+		FakeClientCommand(m_pEdict, "teammenu 5");
+		FakeClientCommand(m_pEdict, "classmenu 0");
 		m_bStartedGame = TRUE;
 		return;
 		break;
