@@ -945,7 +945,7 @@ enum
 	MOD_HL_DM = 13,		// half-life deathmatch
 	MOD_HL_RALLY = 14,  // half-life rally (game crashes when adding a bot!!)
 	MOD_RS = 15,		// rival species meh...
-	MOD_WW = 16.		// Wizard Wars
+	MOD_WW = 16,		// Wizard Wars
 };
 
 #define VGUI_MENU_NONE 0

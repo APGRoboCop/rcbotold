@@ -2750,8 +2750,8 @@ break;*/
 		break;
 		break;
 	case MOD_WW:
-		sprintf(c_class, "%d", pBot->bot_class);
-		FakeClientCommand(pEdict, "changeclass", c_class, nullptr);
+		//sprintf(c_class, "%d", pBot->bot_class);
+		FakeClientCommand(m_pEdict, "changeclass", RANDOM_LONG(1, 9), RANDOM_LONG(1, 9));
 		m_bStartedGame = TRUE;
 		return;
 		break;
