@@ -413,9 +413,9 @@ iii. Post in forum or e-mail me with :
 8. Credits
 --------------
 
-Botman : for the main HPB_Bot template
-Flayra : for NS and code needed to get a bot to work with NS
-Sven Viking : for SvenCoop and allowing me access to Beta versions to allow bot support  
-PM (@RACC-ai.com) : for good FakeClientCommand code.
-SandMan : For waypointing NS maps
-Tsmod.net : For allowing TS v3.0 support
+- Botman : for the main HPB_Bot template
+- Flayra : for NS and code needed to get a bot to work with NS
+- Sven Viking : for SvenCoop and allowing me access to Beta versions to allow bot support  
+- PM (@RACC-ai.com) : for good FakeClientCommand code.
+- SandMan : For waypointing NS maps
+- Tsmod.net : For allowing TS v3.0 support
