@@ -5,7 +5,7 @@ RCBot versions
 --------------
 
 V 1.51
-=---------=
+---------
 
 * added: Enhanced performance
 * added: AMBuild compiling support
@@ -27,7 +27,7 @@ V 1.51
 * TODO: To allow bots to use and climb ladders properly
 
 V 1.5-final
-=---------=
+---------
 
 * added: Few waypoints for The Specialists v3.0 and Natural Selection v3.x
 * added: The Specialists v3.0 support, big thanks to Cheeseh and some admins from tsmod.net
@@ -43,7 +43,7 @@ V 1.5-final
 * TODO: To fix that NS Squad Joining Bug or enhance it
 
 V 1.443
-=---------=
+---------
 
 * added: linux build optimised for floating-point arithmetic and tuned for newer arch
 * added: waypoint console info for adding and delete a single waypoint
@@ -56,7 +56,7 @@ V 1.443
 * note: bot_ga.cpp appears to be unstable with BotGAValues::get(int)()
 
 V 1.3
-=---------=
+---------
 
 * added: support for Battlegrounds mod.
 * added: support for half-life deathmatch.
@@ -82,7 +82,7 @@ V 1.3
 * fixed: wait_for_orders command not working in NS.
 
 V 1.2
-=---------=
+---------
 
 All Mods
 --------
@@ -124,7 +124,7 @@ Bumper Cars
 * added: bots attack grunts in hunt the grunt maps
 
 V 1.1
-=---------=
+---------
 * fixed: killbot command not working in metamod
 * fixed: bot menu kick bot option not working
 * fixed: crash bugs in task code
@@ -154,7 +154,7 @@ V 1.1
 * added: 'unreachable' waypoint types (helps bots find cover areas)
 
 V 1.01
-=--------=
+--------
 
 * fixed: Altered weapons config (you can also edit it) to make bots not to use
        the sniper rifle too close to the enemy in SvenCoop beta 3.0.
@@ -186,7 +186,7 @@ V 1.01
 * added: ability to add bots to certain teams in Natural-selection using the bot menu.
 
 V. 1.0
-=--------=
+--------
 General:
 
 -: Supports Mods: NS 2.0+, SvenCoop 2.1/3.0, DMC, HL Bumpercars 1.3.
@@ -273,9 +273,9 @@ http://rcbot.bots-united.com/
 7. Reporting bugs
 8. Credits
 
-=--------=
+--------
 1. Install
-=--------=
+--------
 
 First of all EXTRACT all files into the Half-Life Folder, it should create a
 folder called rcbot inside HL folder with all the files in it.
@@ -331,9 +331,9 @@ Supported Mods
 
 Svencoop 5.x
 
-=--------=
+--------
 2. Playing
-=--------=
+--------
 
 Once you've created  a game, and you want to add bots, use the  console command
 "rcbot addbot"
@@ -350,9 +350,9 @@ You can also kick bots from the game by using the bot menu (bot_menu command).
 You can set up min_bots and max_bots setting in the config file.
 Read the rcbot_commands.txt about these commands.
 
-=--------=
+--------
 3. Commands
-=--------=
+--------
 
 The commands are slightly different from last versions but most commands are the same
 but to access them you must type "rcbot" before each, incase other bots are running
@@ -360,9 +360,9 @@ and have the same commands.
 
 Read the rcbot_commands.txt file about the commands.
 
-=--------=
+--------
 4. Waypoints
-=--------=
+--------
 
 The waypoints are slightly different from last versions but most commands are the same
 but to access them you must type "rcbot" before each, incase other bots are running
@@ -370,9 +370,9 @@ and have the same commands.
 
 Read the rcbot_commands.txt file about the commands or rcbot_waypoint_readme.txt
 
-=--------=
+--------
 5. Admin Use
-=--------=
+--------
 
 If you want to have access to bot commands on a dedicated server or another server
 you must set up your name and password on the bot_users.ini file on the server.
@@ -387,17 +387,17 @@ rcbot set_pass <your password in bot_users.ini file>
 this will authenticate you and if successful you should have access to the bot commands
 with the access level written in the bot_users.ini next to your name & password.
 
-=--------=
+--------
 6. Faq
-=--------=
+--------
 
 SEE faq.htm that comes with the bot! It will be in the rcbot folder.
 
 !!!Also, check out the FAQ page on the rcbot site for the latest FAQ page!!!
 
-=-------------------=
+-------------------
 7. Reporting Bugs
-=-------------------=
+-------------------
 
 Please follow these steps.
 
@@ -409,9 +409,9 @@ iii. Post in forum or e-mail me with :
      What you think the bot(s) are trying to do,
      Info in your config file.
 
-=--------------=
+--------------
 8. Credits
-=--------------=
+--------------
 
 Botman : for the main HPB_Bot template
 Flayra : for NS and code needed to get a bot to work with NS
