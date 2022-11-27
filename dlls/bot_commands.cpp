@@ -1493,7 +1493,7 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 		if (arg2 && *arg2)
 		{
 			if (FStrEq(arg2, "wb"))
-				theConverter = new CWhichbotConvert();
+				theConverter = new CWhichbotConvert(); //GravebotConvert(); //TODO: Allow Gravebot waypoints conversion [APG]RoboCop[CL]
 		}
 
 		if (WaypointSave(FALSE, theConverter))

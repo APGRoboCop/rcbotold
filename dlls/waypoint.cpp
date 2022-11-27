@@ -438,6 +438,8 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, const Vector& vOrigin, 
 
 #define WPT_CONVERT_FROM_HPBBOT 1
 #define WPT_CONVERT_FROM_WHICHBOT 2
+//TODO: Allow Gravebot waypoints conversion [APG]RoboCop[CL]
+//#define WPT_CONVERT_FROM_GRAVEBOT 3
 
 BOOL WaypointLoad(edict_t* pEntity)
 {
@@ -478,6 +480,8 @@ BOOL WaypointLoad(edict_t* pEntity)
 
 		if (gBotGlobals.IsMod(MOD_NS))
 			iConvertFrom = WPT_CONVERT_FROM_WHICHBOT;
+		//else if (gBotGlobals.IsMod(MOD_SI)) //TODO: Allow Gravebot waypoints conversion [APG]RoboCop[CL]
+		//	iConvertFrom = WPT_CONVERT_FROM_GRAVEBOT;
 		else
 			iConvertFrom = WPT_CONVERT_FROM_HPBBOT;
 	}

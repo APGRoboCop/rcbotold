@@ -2757,6 +2757,8 @@ break;*/
 		m_bStartedGame = TRUE;
 		return;
 		break;
+	case MOD_SI:
+		break;
 	default:
 		break;
 		
@@ -4287,6 +4289,8 @@ void CBot::LookForNewTasks()
 				}
 			}
 		}
+		case MOD_SI:
+			break;
 		case MOD_NS:
 
 			if (bCanBuild)
