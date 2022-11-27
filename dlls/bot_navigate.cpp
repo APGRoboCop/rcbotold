@@ -1586,13 +1586,16 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
 			pBot->m_iCurrentWaypointFlags = WaypointFlags(pBot->m_iCurrentWaypointIndex);
 
-			if (!gBotGlobals.IsMod(MOD_TFC) && (pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE) && pBot->m_iCurrentWaypointFlags & W_FL_GREN_THROW))
+			if (/*!gBotGlobals.IsMod(MOD_TFC) &&*/ (pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE) && pBot->
+				m_iCurrentWaypointFlags & W_FL_GREN_THROW))
 			{
 				pBot->AddPriorityTask(CBotTask(BOT_TASK_THROW_GRENADE, 0, nullptr, 0, 0, vWptOrigin));
 			}
-			else if (pBot->pev->flags & FL_ONGROUND && pBot->pev->waterlevel < 3 && (pBot->m_iCurrentWaypointFlags & W_FL_JUMP && iPrevFlags & W_FL_CROUCH || pBot->m_iCurrentWaypointFlags & W_FL_JUMP && pBot->m_iCurrentWaypointFlags & W_FL_STAY_NEAR))
+			else if (pBot->pev->flags & FL_ONGROUND && pBot->pev->waterlevel < 3 && (pBot->m_iCurrentWaypointFlags &
+				W_FL_JUMP && iPrevFlags & W_FL_CROUCH || pBot->m_iCurrentWaypointFlags & W_FL_JUMP && pBot->
+				m_iCurrentWaypointFlags & W_FL_STAY_NEAR))
 			{
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_AND_FACE_VECTOR, 0, nullptr, 0, 0.75, vWptOrigin));
+				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_AND_FACE_VECTOR, 0, nullptr, 0, 0.75f, vWptOrigin));
 			}
 
 			/*if ( pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) )

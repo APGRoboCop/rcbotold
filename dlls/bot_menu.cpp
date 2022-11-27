@@ -131,8 +131,8 @@ void SetupMenus()
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS4].AddMenuItem(1, "Capture Point", BotMenu_Func_EndLevel_Waypoint);
 	else if (gBotGlobals.IsMod(MOD_HL_RALLY))
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS4].AddMenuItem(1, "End of Race/New Lap", BotMenu_Func_EndLevel_Waypoint);
-	else if (gBotGlobals.IsMod(MOD_TFC))
-		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS4].AddMenuItem(1, "Detpack (Also add \"Opens Later\" point at other side)", BotMenu_Func_EndLevel_Waypoint);
+	//else if (gBotGlobals.IsMod(MOD_TFC))
+	//	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS4].AddMenuItem(1, "Detpack (Also add \"Opens Later\" point at other side)", BotMenu_Func_EndLevel_Waypoint);
 	else
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS4].AddMenuItem(1, "End Of Level/Objective", BotMenu_Func_EndLevel_Waypoint);
 
@@ -150,13 +150,13 @@ void SetupMenus()
 
 	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6] = CBotMenu("More Waypoint Flags...");
 
-	if (gBotGlobals.IsMod(MOD_TFC))
+	/*if (gBotGlobals.IsMod(MOD_TFC))
 	{
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(1, "Sniper Point", Bot_Menu_GrenThrow_Waypoint);
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(2, "Sentry Point", BotMenu_Func_Pushable_Waypoint);
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(3, "Flag Point", BotMenu_Func_Sci_Waypoint);
-	}
-	else if (gBotGlobals.IsMod(MOD_GEARBOX))
+	}*/
+	if (gBotGlobals.IsMod(MOD_GEARBOX))
 	{
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(1, "Flag Point Op4", BotMenu_Func_Sci_Waypoint);
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(2, "Capture Point Op4", BotMenu_Func_Barney_Waypoint);
@@ -177,9 +177,9 @@ void SetupMenus()
 
 	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7] = CBotMenu("More Waypoint Flags...");
 
-	if (gBotGlobals.IsMod(MOD_TFC))
-		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(1, "Capture Point", BotMenu_Func_Barney_Waypoint);
-	else
+	//if (gBotGlobals.IsMod(MOD_TFC))
+	//	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(1, "Capture Point", BotMenu_Func_Barney_Waypoint);
+	//else
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(1, "Barney Point", BotMenu_Func_Barney_Waypoint);
 
 	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(2, "Check for lift", BotMenu_CheckForLift_Waypoint);
@@ -187,9 +187,9 @@ void SetupMenus()
 	//if ( gBotGlobals.IsMod(MOD_TFC) )
 	//	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(3,"Defend Zone",BotMenu_Func_Defend_Waypoint);
 	/*else*/
-	if (gBotGlobals.IsMod(MOD_COUNTERSTRIKE))
-		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(3, "VIP Rescue Zone", BotMenu_Func_Defend_Waypoint);
-	else if (gBotGlobals.IsMod(MOD_NS))
+	//if (gBotGlobals.IsMod(MOD_COUNTERSTRIKE))
+	//	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(3, "VIP Rescue Zone", BotMenu_Func_Defend_Waypoint);
+	if (gBotGlobals.IsMod(MOD_NS))
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(3, "Marine Building", BotMenu_Func_Defend_Waypoint);
 	else
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(3, "Defend Zone", BotMenu_Func_Defend_Waypoint);

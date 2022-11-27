@@ -3044,8 +3044,8 @@ void CBot::Think()
 
 	m_bNeedToInit = TRUE;
 
-	if (gBotGlobals.IsMod(MOD_TFC))
-		m_fMaxSpeed = pev->maxspeed;
+	//if (gBotGlobals.IsMod(MOD_TFC))
+	//	m_fMaxSpeed = pev->maxspeed;
 
 	if (m_stSquad)
 	{
@@ -14879,7 +14879,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 					}
 				}
 				break;
-				case MOD_COUNTERSTRIKE:
+				//case MOD_COUNTERSTRIKE:
 				case MOD_RC:
 				case MOD_RC2:
 					//case MOD_TFC:

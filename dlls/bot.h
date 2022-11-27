@@ -6217,13 +6217,14 @@ public:
 		//m_Mods.AddMod("SvenCoop", "hl", MOD_SVENCOOP);
 		m_Mods.AddMod("valve", "hl", MOD_HL_DM);
 		m_Mods.AddMod("hlrally", "hlrally", MOD_HL_RALLY);
-		m_Mods.AddMod("cstrike", "mp", MOD_COUNTERSTRIKE);
+		//m_Mods.AddMod("cstrike", "mp", MOD_COUNTERSTRIKE);
 		//m_Mods.AddMod("tfc", "tfc", MOD_TFC);
 		m_Mods.AddMod("rspecies", "hl", MOD_RS); // rival species meh..
 		m_Mods.AddMod("gearbox", "opfor", MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 		m_Mods.AddMod("wizardwars_beta", "wizardwars", MOD_WW); // Support for Wiz Wars v1.3.0 [APG]RoboCop[CL]
 		m_Mods.AddMod("wizawars", "hl", MOD_WW); // Support for Wiz Wars v1.2.9
 		m_Mods.AddMod("wizardwars", "wizardwars", MOD_WW); // Support for Wiz Wars v1.2.7 [APG]RoboCop[CL]
+		m_Mods.AddMod("si", "si", MOD_SI); // Support for Science and Industry [APG]RoboCop[CL]
 
 
 #else
@@ -6244,13 +6245,14 @@ public:
 		//m_Mods.AddMod("SvenCoop", "hl", MOD_SVENCOOP);
 		m_Mods.AddMod("valve", "hl", MOD_HL_DM);
 		m_Mods.AddMod("hlrally", "hlr", MOD_HL_RALLY);
-		m_Mods.AddMod("cstrike", "mp", MOD_COUNTERSTRIKE);
+		//m_Mods.AddMod("cstrike", "mp", MOD_COUNTERSTRIKE);
 		//m_Mods.AddMod("tfc", "tfc", MOD_TFC);
 		m_Mods.AddMod("rspecies", "hl", MOD_RS);
 		m_Mods.AddMod("gearbox", "opfor", MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 		m_Mods.AddMod("wizardwars_beta", "wizardwars", MOD_WW); // Support for Wiz Wars v1.3.0 [APG]RoboCop[CL]
 		m_Mods.AddMod("wizawars", "mp", MOD_WW); // Support for Wiz Wars v1.2.9
 		m_Mods.AddMod("wizardwars", "wizardwars", MOD_WW); // Support for Wiz Wars v1.2.7 [APG]RoboCop[CL]
+		m_Mods.AddMod("si", "si", MOD_SI); // Support for Science and Industry [APG]RoboCop[CL]
 
 
 #endif
