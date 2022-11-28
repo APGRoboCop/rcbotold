@@ -423,7 +423,6 @@ public:
 		setConvertBit(9, W_FL_LIFT);
 		setConvertBit(18, W_FL_JUMP);
 		setConvertBit(31, W_FL_DELETED);
-			
 		/*
 		#define W_FL_TEAM        ((1<<0) + (1<<1))  // allow for 4 teams (0-3)
 		#define W_FL_TEAM_SPECIFIC (1<<2)  // waypoint only for specified team
@@ -437,48 +436,11 @@ public:
 		#define W_FL_JUMP        (1<<18) // must jump to reach this waypoint
 		W_FL_LIFT #define W_FL_LIFT_SWITCH (1<<21) // press this switch to activate the nearby lift
 		W_FL_CHECK_FOR_LIFT #define W_FL_LIFT_WAIT (1 << 22) // wait at this waypoint for the lift to move
-		#define W_FL_DELETED     (1<<31) // used by waypoint allocation code
-		*/
+		#define W_FL_DELETED     (1<<31) // used by waypoint allocation code*/
 	}
 };
-
-/*class CGravebotConvert() : public CWaypointConversion
-{
-//TODO: Allow Gravebot waypoints conversion [APG]RoboCop[CL]
-public:
-	CGravebotConvert()
-	{
-		setName("Gravebot");
-		setExtension("gbw");
-		setHeader("[Grave]");
-		setVersion(4);
-
-#ifndef __linux__ 
-		setFolder("si\\maps");
-#else 
-		setFolder("si/maps");
-#endif
-		setConvertBit(0, 1 << 0);
-		setConvertBit(1, 1 << 1);
-		setConvertBit(2, 1 << 2);
-		setConvertBit(3, 1 << 3);
-		setConvertBit(4, 1 << 4);
-		setConvertBit(5, 1 << 5);
-		setConvertBit(6, 1 << 6);
-		setConvertBit(7, 1 << 7);
-		setConvertBit(8, 1 << 8);
-		setConvertBit(9, 1 << 9);
-		setConvertBit(11, W_FL_SCIENTIST_POINT);
-		setConvertBit(12, W_FL_BARNEY_POINT);
-		setConvertBit(14, 1 << 14);
-		setConvertBit(17, W_FL_JUMP);
-		setConvertBit(18, W_FL_WEAPON);
-		setConvertBit(20, W_FL_CROUCHJUMP);
-		setConvertBit(31, W_FL_DELETED);
-	}
-};*/
-
-/*class CWhichbotConvert : public CWaypointConversion
+/*
+class CWhichbotConvert : public CWaypointConversion
 {
 public:
   CWhichbotConvert()
