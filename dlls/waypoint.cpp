@@ -142,7 +142,7 @@ void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj,
 // return nearest waypoint that can be used to cover from vCoverFrom vector
 int CWaypointLocations::GetCoverWaypoint(Vector const& vPlayerOrigin, const Vector& vCoverFrom, dataStack<int>* iIgnoreWpts)
 {
-	const int iWaypoint = this->NearestWaypoint(vCoverFrom, REACHABLE_RANGE, -1, FALSE, TRUE);
+	const int iWaypoint = this->NearestWaypoint(vCoverFrom, REACHABLE_RANGE, -1, false, true);
 
 	if (iWaypoint == -1)
 		return -1;
@@ -333,8 +333,8 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 		{
 			BOOL bAdd;
 
-			if (bGetVisible == FALSE)
-				bAdd = TRUE;
+			if (bGetVisible == false)
+				bAdd = true;
 			else
 			{
 				UTIL_TraceLine(vOrigin, curr_wpt->origin, ignore_monsters, dont_ignore_glass, nullptr, &tr);
@@ -500,7 +500,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible RCBot waypoint file version!\nWaypoints not loaded!\n");
 
 				fclose(bfp);
-				return FALSE;
+				return false;
 			}
 
 			header.mapname[31] = 0;
@@ -546,7 +546,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 					}
 				}
 
-				gBotGlobals.m_bWaypointsHavePaths = TRUE;  // keep track so path can be freed
+				gBotGlobals.m_bWaypointsHavePaths = true;  // keep track so path can be freed
 			}
 			else
 			{
@@ -557,7 +557,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 				}
 
 				fclose(bfp);
-				return FALSE;
+				return false;
 			}
 		}
 		else
@@ -569,7 +569,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 			}
 
 			fclose(bfp);
-			return FALSE;
+			return false;
 		}
 
 		fclose(bfp);
@@ -595,7 +595,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 			BotMessage(nullptr, 0, "Done! Saving To File...");
 
 			if (WaypointVisibility.SaveToFile())
-				WaypointSave(TRUE);
+				WaypointSave(true);
 		}
 	}
 	else
@@ -610,10 +610,10 @@ BOOL WaypointLoad(edict_t* pEntity)
 		}
 
 		//AutoWaypoint();
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 /*
 void AutoWaypoint ()
@@ -675,7 +675,7 @@ FILE* CWaypointConversion::openWaypoint()
 }
 
 /////////////////////////////
-// Saves the waypoints, bVisiblilityMade will be TRUE when a visibility file has been made OK
+// Saves the waypoints, bVisiblilityMade will be true when a visibility file has been made OK
 BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 {
 	WAYPOINT_HDR header;
@@ -752,14 +752,14 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 					BotMessage(pEntity,0,"ERROR: Cannot open waypoint file \"%s\" for writing, NOT SAVED (check permissions)",filename);
 			   }
 		*/
-		return FALSE;
+		return false;
 	}
 
 	/*bfp = fopen(filename, "wb");
 
 	if ( bfp == NULL )
 	{
-		return FALSE;
+		return false;
 	}*/
 
 	// write the waypoint header to the file...
@@ -835,7 +835,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	if (theConverter == nullptr)
 		WaypointVisibility.SaveToFile();
 
-	return TRUE;
+	return true;
 }
 
 static FILE* fp;
@@ -1689,7 +1689,7 @@ void WaypointDelete(CClient* pClient)
 
 	edict_t* pEntity = pClient->GetPlayer();
 
-	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0f, -1, FALSE, TRUE);
+	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0f, -1, false, true);
 
 	const int index = pClient->m_iCurrentWaypoint;
 
@@ -1798,23 +1798,23 @@ void WaypointCreatePath(CClient* pClient, const int cmd)
 		const int waypoint1 = pClient->m_iPathWaypointCreateIndex;
 		const int waypoint2 = WaypointLocations.NearestWaypoint(pEdict->v.origin, 50.0f, -1);
 
-		BOOL bError = FALSE;
+		BOOL bError = false;
 
 		if (waypoint1 == waypoint2)
 		{
 			// cant add path to same waypoint
 			BotMessage(pEdict, 0, "Error: Waypoint is the same waypoint");
-			bError = TRUE;
+			bError = true;
 		}
 		else if (waypoint1 == -1 || waypoint2 == -1)
 		{
 			BotMessage(pEdict, 0, "Error: Waypoint invalid");
-			bError = TRUE;
+			bError = true;
 		}
 		else if (BotNavigate_FindPathFromTo(waypoint1, waypoint2, -1) != nullptr)
 		{
 			BotMessage(pEdict, 0, "Error: Waypoint already has a path to this waypoint");
-			bError = TRUE;
+			bError = true;
 		}
 
 		if (bError)
@@ -1901,7 +1901,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 			if (POINT_CONTENTS(v_src) == CONTENTS_WATER &&
 				POINT_CONTENTS(v_dest) == CONTENTS_WATER)
 			{
-				return TRUE;
+				return true;
 			}
 
 			// check for special case of waypoint being suspended in mid-air...
@@ -1920,7 +1920,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 				// check if we didn't hit anything, if not then it's in mid-air
 				if (tr.flFraction >= 1)
 				{
-					return FALSE;  // can't reach this one
+					return false;  // can't reach this one
 				}
 			}
 
@@ -1958,7 +1958,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 				if (last_height - curr_height > MAX_JUMP_HEIGHT)
 				{
 					// can't get there from here...
-					return FALSE;
+					return false;
 				}
 
 				last_height = curr_height;
@@ -1966,11 +1966,11 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 				distance = (v_dest - v_check).Length();  // distance from goal
 			}
 
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 // find the nearest reachable waypoint
@@ -2027,7 +2027,7 @@ void WaypointPrintInfo(edict_t* pEntity)
 	char msg[80];
 
 	// find the nearest waypoint...
-	const int index = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0f, -1, FALSE, TRUE, FALSE, nullptr);
+	const int index = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0f, -1, false, true, false, nullptr);
 
 	//BOOL visible = WaypointVisibility.GetVisibilityFromTo(1,4);
 
@@ -2355,12 +2355,12 @@ int WaypointFlags(const int iWaypointIndex)
 
 int NearestWaypointToEdict(edict_t* pEdict, const int iIgnoreWpt, dataStack<int>* iFailedWpts)
 {
-	return WaypointLocations.NearestWaypoint(EntityOrigin(pEdict), REACHABLE_RANGE, iIgnoreWpt, TRUE, FALSE, FALSE, iFailedWpts);
+	return WaypointLocations.NearestWaypoint(EntityOrigin(pEdict), REACHABLE_RANGE, iIgnoreWpt, true, false, false, iFailedWpts);
 }
 
 int NearestWaypointToOrigin(const Vector& vOrigin, const int iIgnoreWpt, dataStack<int>* iFailedWpts)
 {
-	return WaypointLocations.NearestWaypoint(vOrigin, REACHABLE_RANGE, iIgnoreWpt, TRUE, FALSE, FALSE, iFailedWpts);
+	return WaypointLocations.NearestWaypoint(vOrigin, REACHABLE_RANGE, iIgnoreWpt, true, false, false, iFailedWpts);
 }
 
 WAYPOINT& WAYPOINTS :: operator [] (const int index)
@@ -2428,14 +2428,14 @@ BOOL CWaypointVisibilityTable::SaveToFile()
 	if (bfp == nullptr)
 	{
 		BotMessage(nullptr, 0, "Can't open Waypoint Visibility table for writing!");
-		return FALSE;
+		return false;
 	}
 
 	fwrite(m_VisTable, sizeof(unsigned char), Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8), bfp);
 
 	fclose(bfp);
 
-	return TRUE;
+	return true;
 }
 
 BOOL CWaypointVisibilityTable::ReadFromFile()
@@ -2461,7 +2461,7 @@ BOOL CWaypointVisibilityTable::ReadFromFile()
 	if (bfp == nullptr)
 	{
 		BotMessage(nullptr, 0, "Can't open Waypoint Visibility table for reading!");
-		return FALSE;
+		return false;
 	}
 
 	fseek(bfp, 0, SEEK_END); // seek at end
@@ -2469,11 +2469,11 @@ BOOL CWaypointVisibilityTable::ReadFromFile()
 	iSize = ftell(bfp); // get file size
 	iDesiredSize = Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8);
 
-	// size not right, return FALSE to re workout table
+	// size not right, return false to re workout table
 	if (iSize != iDesiredSize)
 	{
 		fclose(bfp);
-		return FALSE;
+		return false;
 	}
 
 	fseek(bfp, 0, SEEK_SET); // seek at start
@@ -2486,12 +2486,12 @@ BOOL CWaypointVisibilityTable::ReadFromFile()
 
 	fclose(bfp);
 
-	return TRUE;
+	return true;
 }
 
 BOOL WaypointFlagsOnLadderOrFly(const int iWaypointFlags)
 {
-	// return TRUE if waypoint index is on a ladder or a fly waypoint.
+	// return true if waypoint index is on a ladder or a fly waypoint.
 	return (iWaypointFlags & (W_FL_FLY | W_FL_LADDER)) > 0;
 }
 

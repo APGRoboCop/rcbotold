@@ -145,13 +145,13 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 		// message already started... engine will crash
 		assert(!m_bNetMessageStarted);
 		//ALERT(at_console,"[RCBOT] NET MESSAGE %d ALREADY STARTED, IGNORING (info lost)\n",msg_type);
-		return FALSE;
+		return false;
 		//	MESSAGE_END();
 	}
 
 	m_CurrentMessage = nullptr;
 
-	m_bNetMessageStarted = TRUE;
+	m_bNetMessageStarted = true;
 
 	if (gpGlobals->deathmatch)
 	{
@@ -250,25 +250,25 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 void CBotGlobals::StartFrame()
 {
 	static int iIndex = 0;
 	static float fPreviousTime = -1.0f;
-	static BOOL bCheckedTeamplay = FALSE;
+	static BOOL bCheckedTeamplay = false;
 
 	if (bCheckedTeamplay && m_iCurrentMod == MOD_GEARBOX)
 	{
 		m_bTeamPlay = CVAR_GET_FLOAT("mp_teamplay") > 1;
-		bCheckedTeamplay = TRUE;
+		bCheckedTeamplay = true;
 	}
 
 	// new map?
 	if (gpGlobals->time + 0.1 < fPreviousTime)
 	{
-		bCheckedTeamplay = FALSE;
+		bCheckedTeamplay = false;
 		//RoundInit();
 	}
 	else
@@ -294,13 +294,13 @@ void CBotGlobals::StartFrame()
 			m_fClientUpdateTime = gpGlobals->time + 1.0f;
 		}
 
-		if (m_bBotCanRejoin == FALSE)
+		if (m_bBotCanRejoin == false)
 		{
 			if (m_fMapInitTime + 10.0f < gpGlobals->time)
 			{
 				if (m_fBotRejoinTime < gpGlobals->time)
 				{
-					m_bBotCanRejoin = TRUE;
+					m_bBotCanRejoin = true;
 				}
 			}
 		}
@@ -318,9 +318,9 @@ void CBotGlobals::StartFrame()
 			int iNumHivesUp = 0;
 			int iNumUpgrades = 0;
 
-			m_bHasDefTech = FALSE;
-			m_bHasMovTech = FALSE;
-			m_bHasSensTech = FALSE;
+			m_bHasDefTech = false;
+			m_bHasMovTech = false;
+			m_bHasSensTech = false;
 
 			// update who is commander
 			SetCommander(UTIL_GetCommander());
@@ -342,14 +342,14 @@ void CBotGlobals::StartFrame()
 					Vector vOrigin = pEntity->v.origin;
 
 					// find a nearby waypoint
-					int iWpt = WaypointLocations.NearestWaypoint(vOrigin, REACHABLE_RANGE, -1, FALSE);
+					int iWpt = WaypointLocations.NearestWaypoint(vOrigin, REACHABLE_RANGE, -1, false);
 
 					if (iWpt == -1)
 						BotMessage(nullptr, 0, "No waypoints for auto-build!!!");
 					else
 					{
 						// find another waypoint but ignire the nearest one to comm console
-						iWpt = WaypointLocations.NearestWaypoint(WaypointOrigin(iWpt), REACHABLE_RANGE, iWpt, FALSE);
+						iWpt = WaypointLocations.NearestWaypoint(WaypointOrigin(iWpt), REACHABLE_RANGE, iWpt, false);
 
 						if (iWpt == -1)
 							BotMessage(nullptr, 0, "No waypoints for auto-build!!!");
@@ -373,7 +373,7 @@ void CBotGlobals::StartFrame()
 				else
 					BotMessage(nullptr, 0, "No marine spawn found for auto-build!!!");
 
-				m_bAutoBuilt = TRUE;
+				m_bAutoBuilt = true;
 			}
 
 			for ( iIndex = 0; iIndex < BOT_MAX_HIVES; iIndex ++ )
@@ -417,9 +417,9 @@ void CBotGlobals::StartFrame()
 			}
 			else
 			{
-				m_bHasDefTech = TRUE;
-				m_bHasMovTech = TRUE;
-				m_bHasSensTech = TRUE;
+				m_bHasDefTech = true;
+				m_bHasMovTech = true;
+				m_bHasSensTech = true;
 			}
 
 			if (IsCombatMap() && m_pMarineStart)
@@ -538,7 +538,7 @@ void CBotGlobals::StartFrame()
 			}
 		}
 
-		BOOL bBotJoin = FALSE;
+		BOOL bBotJoin = false;
 
 		if (IsConfigSettingOn(BOT_CONFIG_BOTS_LEAVE_AND_JOIN))
 		{
@@ -571,14 +571,14 @@ void CBotGlobals::StartFrame()
 				// ---------------------------------------
 				if (!bServerFull && m_bBotCanRejoin)
 				{
-					BOOL bAddBot = FALSE;
+					BOOL bAddBot = false;
 
 					// Bot was in last game so is re-connecting
 					if (m_iMaxBots == -1 &&
 						m_iMinBots == -1)
 					{
 						if (pBot->m_iRespawnState == RESPAWN_NEED_TO_REJOIN)
-							bAddBot = TRUE;
+							bAddBot = true;
 						else
 						{
 							bAddBot = bBotJoin;
@@ -588,7 +588,7 @@ void CBotGlobals::StartFrame()
 					if (m_iMaxBots != -1)
 					{
 						if (iNumClients < m_iMaxBots)
-							bAddBot = TRUE;
+							bAddBot = true;
 					}
 
 					// Number of clients already maximum so can't add a bot
@@ -597,7 +597,7 @@ void CBotGlobals::StartFrame()
 					{
 						// number of bots is less than minimum, so add the bot
 						if (m_iNumBots < m_iMinBots)
-							bAddBot = TRUE;
+							bAddBot = true;
 					}
 
 					if (bAddBot)
@@ -605,10 +605,10 @@ void CBotGlobals::StartFrame()
 						// Call addbot function with no parameters to add a bot
 						BotFunc_AddBot(nullptr, nullptr, nullptr, nullptr, nullptr);
 
-						m_bBotCanRejoin = FALSE;
+						m_bBotCanRejoin = false;
 						m_fBotRejoinTime = gpGlobals->time + 8.0f;
 
-						bAddBot = FALSE;
+						bAddBot = false;
 					}
 				}
 
@@ -628,7 +628,7 @@ void CBotGlobals::StartFrame()
 					else if (pBot->m_fLeaveTime < gpGlobals->time)
 					{
 						// kick the bot from the game
-						pBot->m_bKick = TRUE;
+						pBot->m_bKick = true;
 						pBot->m_fLeaveTime = 0;
 						pBot->RemoveCondition(BOT_CONDITION_WANT_TO_LEAVE_GAME);
 					}
@@ -648,7 +648,7 @@ void CBotGlobals::StartFrame()
 
 					SERVER_COMMAND(cmd);
 
-					pBot->m_bKick = FALSE;
+					pBot->m_bKick = false;
 				}
 				// If the bot is alive and the kill flag is set
 				// Kill the bot and put the kill flag off.
@@ -659,12 +659,12 @@ void CBotGlobals::StartFrame()
 #else
 					ClientKill(pBot->m_pEdict);
 #endif
-					pBot->m_bKill = FALSE;
+					pBot->m_bKill = false;
 				}
 				else
 				{
 					/*	if ( m_iJoiningClients > m_iMaxBots )
-							pBot->m_bKick = TRUE;
+							pBot->m_bKick = true;
 						else */if (bUpdateClientData)
 						{
 							// Check to see if the bot has dropped any weapons
@@ -698,7 +698,7 @@ void CBotGlobals::StartFrame()
 										{
 											CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(j);
 
-											BOOL bWeaponStatus = TRUE;
+											BOOL bWeaponStatus = true;
 
 											if (pWeapon)
 												bWeaponStatus = pWeapon->HasWeapon(pBot->m_pEdict);
@@ -718,7 +718,7 @@ void CBotGlobals::StartFrame()
 											CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(j);
 
 											if (pWeapon)
-												pWeapon->setHasWeapon(FALSE);
+												pWeapon->setHasWeapon(false);
 
 											pBot->m_Weapons.RemoveWeapon(j);
 											pBot->m_iBotWeapons &= ~(1 << j);
@@ -843,7 +843,7 @@ BOOL CBotGlobals::TFC_canGoClass(int iClass, int iTeam)
 
 	// can't go this class
 	if (team_class_limits[iTeam - 1] & 1 << iClass - 1)
-		return FALSE;
+		return false;
 
 	switch (iClass)
 	{
@@ -920,7 +920,7 @@ BOOL CBotGlobals::TFC_IsAvailableFlag(edict_t* pFlag, int team, BOOL bEnemyFlag)
 		return pFlag->v.owner == NULL;
 	}
 
-	return FALSE;
+	return false;
 }
 
 edict_t* CBotGlobals::randomHeldFlagOnTeam(int team)
@@ -945,11 +945,11 @@ BOOL CBotGlobals::TFC_getCaptureLocationForFlag(Vector* vec, edict_t* pFlag)
 			vec->y = mins.y - (mins.y - maxs.y) / 2;
 			vec->z = mins.z - (mins.z - maxs.z) / 2;
 
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 */
 void CBotGlobals::KeyValue(edict_t* pentKeyvalue, const KeyValueData* pkvd)
@@ -986,7 +986,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, const KeyValueData* pkvd)
 			{
 				m_currCapPoint->setGoal(atoi(pkvd->szValue));
 
-				prevCapturePointInvalid = FALSE;
+				prevCapturePointInvalid = false;
 
 				ALERT(at_console, "Cap point validated\n");
 			}
@@ -994,7 +994,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, const KeyValueData* pkvd)
 			{
 				m_currCapPoint->setGroup(atoi(pkvd->szValue));
 
-				prevCapturePointInvalid = FALSE;
+				prevCapturePointInvalid = false;
 
 				ALERT(at_console, "Cap point validated\n");
 			}
@@ -1010,7 +1010,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, const KeyValueData* pkvd)
 
 				m_currCapPoint = m_CapPoints.addCapturePoint(pentKeyvalue);
 				ALERT(at_console, "Capture point found\n");
-				prevCapturePointInvalid = TRUE;
+				prevCapturePointInvalid = true;
 			}
 		}
 
@@ -1059,7 +1059,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, const KeyValueData* pkvd)
 				m_currFlag->setTeam(atoi(pkvd->szValue));
 			else if (strcmpi(pkvd->szKeyName, "mdl") == 0)
 			{
-				prevFlagInvalid = FALSE;
+				prevFlagInvalid = false;
 			}
 			else if (strcmp(pkvd->szKeyName, "goal_no") == 0)
 				m_currFlag->setGoal(atoi(pkvd->szValue)); // Goal number of flag for cap point
@@ -1077,7 +1077,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, const KeyValueData* pkvd)
 					m_Flags.removePrevFlag();
 				}
 
-				prevFlagInvalid = TRUE;
+				prevFlagInvalid = true;
 				m_currFlag = m_Flags.addFlag(pentKeyvalue);
 			}
 		}
@@ -1094,7 +1094,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, const KeyValueData* pkvd)
 
 			m_currBackPack = m_Backpacks.addBackpack(pentKeyvalue);
 
-			prevBackPackInvalid = TRUE;
+			prevBackPackInvalid = true;
 		}
 		else if (m_currBackPack && m_currBackPack->isEdict(pentKeyvalue))
 		{
@@ -1117,7 +1117,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, const KeyValueData* pkvd)
 			if (strcmp(pkvd->szKeyName, "mdl") == 0) &&
 				(strcmp(pkvd->szValue, "models/backpack.mdl") == 0))
 			{
-				prevBackPackInvalid = FALSE;
+				prevBackPackInvalid = false;
 			}
 		}
 	}*/
@@ -1140,46 +1140,46 @@ void CBotGlobals::MapInit()
 	//m_pTFCDetect = nullptr;
 	//m_pTFCGoal = nullptr;
 	m_pMarineStart = nullptr;
-	m_bAutoPathWaypoint = TRUE;
-	m_bWaypointsHavePaths = FALSE;
+	m_bAutoPathWaypoint = true;
+	m_bWaypointsHavePaths = false;
 	m_iBotMsgIndex = -1;
 	m_iCurrentMessageState = 0;
 	m_iCurrentMessageState2 = 0;
-	m_bIsFakeClientCommand = FALSE;
+	m_bIsFakeClientCommand = false;
 	m_CurrentMessage = nullptr;
 	m_fAutoBuildTime = 0.0f;
-	m_bAutoBuilt = FALSE;
-	m_bNetMessageStarted = FALSE;
+	m_bAutoBuilt = false;
+	m_bNetMessageStarted = false;
 	m_CurrentHandledCvar = nullptr;
 	m_fMapInitTime = 0.0f;
 	m_fBotRejoinTime = 0.0f;
 	m_pCommander.Set(nullptr);
 
-	m_bHasDefTech = FALSE;
-	m_bHasSensTech = FALSE;
-	m_bHasMovTech = FALSE;
+	m_bHasDefTech = false;
+	m_bHasSensTech = false;
+	m_bHasMovTech = false;
 
-	m_bCanUpgradeDef = FALSE;
-	m_bCanUpgradeSens = FALSE;
-	m_bCanUpgradeMov = FALSE;
+	m_bCanUpgradeDef = false;
+	m_bCanUpgradeSens = false;
+	m_bCanUpgradeMov = false;
 
 	memset(m_Hives, 0, sizeof(hive_info_t) * BOT_MAX_HIVES);
 	//m_iNumHivesAdded = 0;
 
 	m_fClientUpdateTime = 0.0f;
-	m_bBotCanRejoin = FALSE;
+	m_bBotCanRejoin = false;
 
 	m_fNextJoinTeam = 0.0f;
 	m_iNumBots = 0;
 
-	m_bTeamPlay = FALSE;
+	m_bTeamPlay = false;
 
 	m_currCapPoint = nullptr;
 	m_currFlag = nullptr;
 
-	prevBackPackInvalid = FALSE;
-	prevCapturePointInvalid = FALSE;
-	prevFlagInvalid = FALSE;
+	prevBackPackInvalid = false;
+	prevCapturePointInvalid = false;
+	prevFlagInvalid = false;
 
 	const char* mapname = STRING(gpGlobals->mapname);
 
@@ -1229,12 +1229,12 @@ void CBotGlobals::MapInit()
 		if (strncmp(mapname, "tm_", 3) == 0)
 		{
 			setMapType(NON_TFC_TS_TEAMPLAY);
-			m_bTeamPlay = TRUE;
+			m_bTeamPlay = true;
 		}
 	}
 	else if (IsMod(MOD_GEARBOX))
 	{
-			m_bTeamPlay = TRUE;
+			m_bTeamPlay = true;
 	}
 
 	PRECACHE_MODEL("models/mechgibs.mdl");
@@ -1245,9 +1245,9 @@ void CBotGlobals::MapInit()
 	m_pMarineStart = nullptr;
 
 	// key value stuff
-	prevFlagInvalid = FALSE;
-	prevBackPackInvalid = FALSE;
-	prevCapturePointInvalid = FALSE;
+	prevFlagInvalid = false;
+	prevBackPackInvalid = false;
+	prevCapturePointInvalid = false;
 	m_currCapPoint = nullptr;
 	m_currFlag = nullptr;
 	//m_pTFCGroup = NULL;
@@ -1256,22 +1256,22 @@ void CBotGlobals::MapInit()
 	m_currBackPack = nullptr;
 
 	m_fAutoBuildTime = 0;
-	m_bAutoBuilt = FALSE;
+	m_bAutoBuilt = false;
 
 	memset(m_Hives, 0, sizeof(hive_info_t) * BOT_MAX_HIVES);
 	//	m_iNumHivesAdded = 0;
 
 	m_iWaypointTexture = PRECACHE_MODEL("sprites/lgtning.spr");
-	m_bGameRules = TRUE;
+	m_bGameRules = true;
 
 	m_fMapInitTime = gpGlobals->time;
 	m_fBotRejoinTime = gpGlobals->time;
 
 	SetCommander(nullptr);
 
-	m_bCanUpgradeDef = FALSE;
-	m_bCanUpgradeSens = FALSE;
-	m_bCanUpgradeMov = FALSE;
+	m_bCanUpgradeDef = false;
+	m_bCanUpgradeSens = false;
+	m_bCanUpgradeMov = false;
 
 	m_bCombatMap = strncmp("co_", STRING(gpGlobals->mapname), 3) == 0;
 
@@ -1709,19 +1709,19 @@ void CBotGlobals::FreeLocalMemory()
 	this->m_iCurrentMessageState = 0;
 	this->m_iCurrentMessageState2 = 0;
 	this->m_iFakeArgCount = 0.0f;
-	this->m_bIsFakeClientCommand = FALSE;
+	this->m_bIsFakeClientCommand = false;
 
 	//	this->m_EntityMasters.Destroy();
 	//	this->m_EntityMasters.Init();
 
-	this->m_bWaypointsHavePaths = FALSE;
-	this->m_bBotCanRejoin = FALSE;
-	this->m_bCanUpgradeDef = FALSE;
-	this->m_bCanUpgradeMov = FALSE;
-	this->m_bCanUpgradeSens = FALSE;
-	this->m_bHasDefTech = FALSE;
-	this->m_bHasSensTech = FALSE;
-	this->m_bHasMovTech = FALSE;
+	this->m_bWaypointsHavePaths = false;
+	this->m_bBotCanRejoin = false;
+	this->m_bCanUpgradeDef = false;
+	this->m_bCanUpgradeMov = false;
+	this->m_bCanUpgradeSens = false;
+	this->m_bHasDefTech = false;
+	this->m_bHasSensTech = false;
+	this->m_bHasMovTech = false;
 
 	for (i = 0; i < MAX_PLAYERS; i++)
 	{

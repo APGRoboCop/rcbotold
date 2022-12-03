@@ -405,7 +405,7 @@ void CBotMenu::Render(CClient* pClient)
 		}
 	}
 
-	UTIL_ShowMenu(pClient->GetPlayer(), iSlots, -1, FALSE, szMenuText);
+	UTIL_ShowMenu(pClient->GetPlayer(), iSlots, -1, false, szMenuText);
 }
 
 /*
@@ -746,7 +746,7 @@ void BotMenu_Func_KickBot(CClient* pClient)
 	pBot = m_Bots.Random();
 
 	if (pBot)
-		pBot->m_bKick = TRUE;
+		pBot->m_bKick = true;
 
 	m_Bots.Clear();
 }
@@ -1035,7 +1035,7 @@ void BotMenu_Func_KickBotFromTeam(CClient* pClient)
 		pBot = theBots.Random();
 
 		if (pBot)
-			pBot->m_bKick = TRUE;
+			pBot->m_bKick = true;
 
 		theBots.Clear();
 	}

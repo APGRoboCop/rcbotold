@@ -83,7 +83,7 @@ class CDebugBotCommand : public CBotCvar
 public:
 	CDebugBotCommand()
 	{
-		setupCommand("debug_bot", BOT_COMMAND_ACCESS_DEBUG, FALSE);
+		setupCommand("debug_bot", BOT_COMMAND_ACCESS_DEBUG, false);
 	}
 
 	void showHelp(edict_t* pEntity) override
@@ -104,7 +104,7 @@ class CDebugEntCommand : public CBotCvar
 public:
 	CDebugEntCommand()
 	{
-		setupCommand("debug_ent", BOT_COMMAND_ACCESS_DEBUG, FALSE);
+		setupCommand("debug_ent", BOT_COMMAND_ACCESS_DEBUG, false);
 	}
 
 	void showHelp(edict_t* pEntity) override
@@ -125,7 +125,7 @@ class CUsersCommand : public CBotCvar
 public:
 	CUsersCommand()
 	{
-		setupCommand("users", BOT_COMMAND_ACCESS_USERS, TRUE);
+		setupCommand("users", BOT_COMMAND_ACCESS_USERS, true);
 	}
 
 	void showHelp(edict_t* pEntity) override
@@ -148,7 +148,7 @@ class CHelpCommand : public CBotCvar
 public:
 	CHelpCommand()
 	{
-		setupCommand("help", BOT_COMMAND_ACCESS_ALLOWED, TRUE);
+		setupCommand("help", BOT_COMMAND_ACCESS_ALLOWED, true);
 	}
 
 	void showHelp(edict_t* pEntity) override
@@ -174,7 +174,7 @@ class CAutoWaypointCommand : public CBotCvar
 public:
 	CAutoWaypointCommand()
 	{
-		setupCommand("autowaypoint", BOT_COMMAND_ACCESS_WAYPOINTING, TRUE);
+		setupCommand("autowaypoint", BOT_COMMAND_ACCESS_WAYPOINTING, true);
 	}
 
 	void showHelp(edict_t* pEntity) override
@@ -196,7 +196,7 @@ class CMenuSelectCommand : public CBotCvar
 public:
 	CMenuSelectCommand()
 	{
-		setupCommand("menuselect", BOT_COMMAND_ACCESS_ALLOWED, FALSE);
+		setupCommand("menuselect", BOT_COMMAND_ACCESS_ALLOWED, false);
 	}
 
 	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
@@ -207,7 +207,7 @@ class CSetPassCommand : public CBotCvar
 public:
 	CSetPassCommand()
 	{
-		setupCommand("set_pass", BOT_COMMAND_ACCESS_ALLOWED, FALSE);
+		setupCommand("set_pass", BOT_COMMAND_ACCESS_ALLOWED, false);
 	}
 
 	void showHelp(edict_t* pEntity) override
@@ -229,7 +229,7 @@ class CWaypointMenuCommand : public CBotCvar
 public:
 	CWaypointMenuCommand()
 	{
-		setupCommand("waypoint_menu", BOT_COMMAND_ACCESS_WAYPOINTING, FALSE);
+		setupCommand("waypoint_menu", BOT_COMMAND_ACCESS_WAYPOINTING, false);
 	}
 
 	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
@@ -240,7 +240,7 @@ class CBotMenuCommand : public CBotCvar
 public:
 	CBotMenuCommand()
 	{
-		setupCommand("bot_menu", BOT_COMMAND_ACCESS_ADD_REMOVE_BOTS, FALSE);
+		setupCommand("bot_menu", BOT_COMMAND_ACCESS_ADD_REMOVE_BOTS, false);
 	}
 
 	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
@@ -251,7 +251,7 @@ class CUtilCommand : public CBotCvar
 public:
 	CUtilCommand()
 	{
-		setupCommand("util", BOT_COMMAND_ACCESS_UTIL, TRUE);
+		setupCommand("util", BOT_COMMAND_ACCESS_UTIL, true);
 	}
 
 	void showHelp(edict_t* pEntity) override
@@ -287,7 +287,7 @@ class CAddBotCommand : public CBotCvar
 public:
 	CAddBotCommand()
 	{
-		setupCommand("addbot", BOT_COMMAND_ACCESS_ADD_REMOVE_BOTS, TRUE);
+		setupCommand("addbot", BOT_COMMAND_ACCESS_ADD_REMOVE_BOTS, true);
 	}
 
 	void showHelp(edict_t* pEntity) override;
@@ -300,7 +300,7 @@ class CWaypointCommand : public CBotCvar
 public:
 	CWaypointCommand()
 	{
-		setupCommand("waypoint", BOT_COMMAND_ACCESS_WAYPOINTING, FALSE);
+		setupCommand("waypoint", BOT_COMMAND_ACCESS_WAYPOINTING, false);
 	}
 
 	void showHelp(edict_t* pEntity) override;
@@ -313,7 +313,7 @@ class CBotCamCommand : public CBotCvar
 public:
 	CBotCamCommand()
 	{
-		setupCommand("botcam", BOT_COMMAND_ACCESS_ALLOWED, FALSE);
+		setupCommand("botcam", BOT_COMMAND_ACCESS_ALLOWED, false);
 	}
 
 	void showHelp(edict_t* pEntity) override
@@ -334,7 +334,7 @@ class CBotSquadCommand : public CBotCvar
 public:
 	CBotSquadCommand()
 	{
-		setupCommand("squad", BOT_COMMAND_ACCESS_ALLOWED, FALSE);
+		setupCommand("squad", BOT_COMMAND_ACCESS_ALLOWED, false);
 	}
 
 	void showHelp(edict_t* pEntity) override
@@ -356,7 +356,7 @@ class CDebugCommand : public CBotCvar
 public:
 	CDebugCommand()
 	{
-		setupCommand("debug", BOT_COMMAND_ACCESS_DEBUG, TRUE);
+		setupCommand("debug", BOT_COMMAND_ACCESS_DEBUG, true);
 	}
 
 	void showHelp(edict_t* pEntity) override
@@ -385,7 +385,7 @@ class CSquadMenuCommand : public CBotCvar
 public:
 	CSquadMenuCommand()
 	{
-		setupCommand("squad_menu", BOT_COMMAND_ACCESS_ALLOWED, FALSE);
+		setupCommand("squad_menu", BOT_COMMAND_ACCESS_ALLOWED, false);
 	}
 
 	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
@@ -396,7 +396,7 @@ class CConfigCommand : public CBotCvar
 public:
 	CConfigCommand()
 	{
-		setupCommand("config", BOT_COMMAND_ACCESS_CONFIG, TRUE);
+		setupCommand("config", BOT_COMMAND_ACCESS_CONFIG, true);
 	}
 
 	void showHelp(edict_t* pEntity) override
@@ -475,7 +475,7 @@ class CPathWaypointCommand : public CBotCvar
 public:
 	CPathWaypointCommand()
 	{
-		setupCommand("pathwaypoint", BOT_COMMAND_ACCESS_WAYPOINTING, FALSE);
+		setupCommand("pathwaypoint", BOT_COMMAND_ACCESS_WAYPOINTING, false);
 	}
 
 	void showHelp(edict_t* pEntity) override
