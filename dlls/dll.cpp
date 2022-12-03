@@ -481,7 +481,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 
 								SERVER_COMMAND(cmd);  // kick the bot using kick name //(kick #id)
 
-								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 2.0f;
+								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
 								gBotGlobals.m_bBotCanRejoin = FALSE;
 
 								break;
@@ -1110,9 +1110,9 @@ void ServerDeactivate()
 	gBotGlobals.m_fBotRejoinTime = 0.0f;
 	gBotGlobals.m_fClientUpdateTime = 0.0f;
 	gBotGlobals.m_bBotCanRejoin = FALSE;
-	gBotGlobals.m_fReadConfigTime = 0;
+	gBotGlobals.m_fReadConfigTime = 0.0f;
 	gBotGlobals.m_Squads.FreeMemory();
-	gBotGlobals.m_fNextJoinTeam = 0;
+	gBotGlobals.m_fNextJoinTeam = 0.0f;
 
 	gBotGlobals.saveLearnedData();
 
@@ -1133,7 +1133,7 @@ void ServerDeactivate()
 		// when server was deactivated
 		// assume that bots were just kicked because the server changed map
 		// and let them reconnect upon map change.
-		if (pBot->m_fKickTime + 0.5 >= gpGlobals->time)
+		if (pBot->m_fKickTime + 0.5f >= gpGlobals->time)
 			pBot->m_iRespawnState = RESPAWN_NEED_TO_REJOIN;
 	}
 
@@ -1679,7 +1679,7 @@ void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 	while (i <= 10)
 	{
-		char* szTag = nullptr;
+		const char* szTag = nullptr;
 		char* szToWrite = nullptr;
 		const int* iToWrite = nullptr;
 
@@ -1947,7 +1947,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 		}
 	}
 
-	const BOOL bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
+	BOOL bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
 	LoadHALBrainForPersonality(bpBotProfile, bPreTrain); // wake the bot's HAL brain up
 
 	// Also read bots rep with other players on the server
@@ -2421,7 +2421,7 @@ void CBotCam::Think()
 			m_pCameraEdict->v.origin.z += 16.0f;
 		}
 		else
-			m_fNextChangeState = 0;
+			m_fNextChangeState = 0.0f;
 	}
 		break;
 	case BOTCAM_ENEMY:
@@ -2496,7 +2496,7 @@ void CBotCam::Think()
 		fTurnSpeed = std::fabs(180 + ideal.y - (180 + m_pCameraEdict->v.angles.y)) / 20;
 		BotFunc_ChangeAngles(&fTurnSpeed, &ideal.y, &m_pCameraEdict->v.v_angle.y, &m_pCameraEdict->v.angles.y);
 
-		m_pCameraEdict->v.origin = m_pCameraEdict->v.origin - (m_pCameraEdict->v.origin - oldOrigin) * 0.5;
+		m_pCameraEdict->v.origin = m_pCameraEdict->v.origin - (m_pCameraEdict->v.origin - oldOrigin) * 0.5f;
 		/*
 		m_pCameraEdict->v.angles = UTIL_VecToAngles(vBotOrigin - m_pCameraEdict->v.origin);
 
@@ -2539,8 +2539,8 @@ void CBotCam::Clear()
 	m_pCurrentBot = nullptr;
 	m_iState = BOTCAM_NONE;
 	m_pCameraEdict = nullptr;
-	m_fNextChangeBotTime = 0;
-	m_fNextChangeState = 0;
+	m_fNextChangeBotTime = 0.0f;
+	m_fNextChangeState = 0.0f;
 	m_bTriedToSpawn = FALSE;
 }
 

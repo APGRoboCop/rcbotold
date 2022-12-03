@@ -291,12 +291,12 @@ void CBotGlobals::StartFrame()
 
 		if (bUpdateClientData)
 		{
-			m_fClientUpdateTime = gpGlobals->time + 1;
+			m_fClientUpdateTime = gpGlobals->time + 1.0f;
 		}
 
 		if (m_bBotCanRejoin == FALSE)
 		{
-			if (m_fMapInitTime + 10 < gpGlobals->time)
+			if (m_fMapInitTime + 10.0f < gpGlobals->time)
 			{
 				if (m_fBotRejoinTime < gpGlobals->time)
 				{
@@ -543,9 +543,9 @@ void CBotGlobals::StartFrame()
 		if (IsConfigSettingOn(BOT_CONFIG_BOTS_LEAVE_AND_JOIN))
 		{
 			const int iClientsInGame = iNumClients; // argh, can't debug static variables
-			const float val = static_cast<float>(iClientsInGame) / gpGlobals->maxClients * RANDOM_FLOAT(0.9, 1.3);
+			const float val = static_cast<float>(iClientsInGame) / gpGlobals->maxClients * RANDOM_FLOAT(0.9f, 1.3f);
 
-			bBotJoin = val < 0.75;
+			bBotJoin = val < 0.75f;
 		}
 
 		const BOOL bServerFull = iNumClients >= gpGlobals->maxClients;
@@ -606,7 +606,7 @@ void CBotGlobals::StartFrame()
 						BotFunc_AddBot(nullptr, nullptr, nullptr, nullptr, nullptr);
 
 						m_bBotCanRejoin = FALSE;
-						m_fBotRejoinTime = gpGlobals->time + 5;
+						m_fBotRejoinTime = gpGlobals->time + 5.0f;
 
 						bAddBot = FALSE;
 					}

@@ -77,7 +77,7 @@ typedef struct
 	HAL_SWAP* swappable_keywords; // array of swappable keywords with their equivalences
 	HAL_MODEL* bot_model; // Markov model of the bot
 	HAL_DICTIONARY* input_words; // global chat's dictionary of words
- //   HAL_DICTIONARY *bot_words; // bot's own dictionary of words
+	//   HAL_DICTIONARY *bot_words; // bot's own dictionary of words
 	BOOL keyword_is_used;
 } HAL_bot_t;
 
@@ -96,52 +96,52 @@ void BotSayText(CBot* pBot);
 void BotSayAudio(CBot* pBot);
 void BotTalk(CBot* pBot, char* sound_path);
 
-void FreeHALBrain(const struct bot_profile_s* pBotProfile);
+void FreeHALBrain(struct bot_profile_s* pBotProfile);
 void HAL_LoadTree(FILE* file, HAL_TREE* node);
 void HAL_LoadDictionary(FILE* file, HAL_DICTIONARY* dictionary);
-void HAL_SaveTree(FILE* file, const HAL_TREE* node);
-void HAL_SaveDictionary(FILE* file, const HAL_DICTIONARY* dictionary);
-void HAL_Learn(HAL_MODEL* model, const HAL_DICTIONARY* words);
+void HAL_SaveTree(FILE* file, HAL_TREE* node);
+void HAL_SaveDictionary(FILE* file, HAL_DICTIONARY* dictionary);
+void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words);
 unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word);
-int HAL_SearchDictionary(const HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find);
+int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find);
 unsigned short HAL_FindWord(HAL_DICTIONARY* dictionary, HAL_STRING word);
 int HAL_CompareWords(HAL_STRING word1, HAL_STRING word2);
 void HAL_InitializeDictionary(HAL_DICTIONARY* dictionary);
 HAL_DICTIONARY* HAL_NewDictionary();
 HAL_TREE* HAL_NewNode();
 HAL_MODEL* HAL_NewModel(int order);
-void HAL_UpdateModel(const HAL_MODEL* model, int symbol);
-void HAL_UpdateContext(const HAL_MODEL* model, int symbol);
+void HAL_UpdateModel(HAL_MODEL* model, int symbol);
+void HAL_UpdateContext(HAL_MODEL* model, int symbol);
 HAL_TREE* HAL_AddSymbol(HAL_TREE* tree, unsigned short symbol);
 HAL_TREE* HAL_FindSymbol(HAL_TREE* node, int symbol);
 HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, int symbol);
 void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position);
-int HAL_SearchNode(const HAL_TREE* node, int symbol, BOOL* found_symbol);
-void HAL_InitializeContext(const HAL_MODEL* model);
+int HAL_SearchNode(HAL_TREE* node, int symbol, BOOL* found_symbol);
+void HAL_InitializeContext(HAL_MODEL* model);
 void BotHALTrainModel(CBot* pBot, HAL_MODEL* model);
 void HAL_ShowDictionary(HAL_DICTIONARY* dictionary);
 void HAL_MakeWords(char* input, HAL_DICTIONARY* words);
 void BotHALGenerateReply(CBot* pBot, char* output);
-BOOL HAL_BoundaryExists(const char* string, int position);
+BOOL HAL_BoundaryExists(char* string, int position);
 void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg);
-BOOL HAL_DictionariesDiffer(const HAL_DICTIONARY* words1, const HAL_DICTIONARY* words2);
-HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, const HAL_DICTIONARY* words);
-void BotHALAddKeyword(const CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word);
-void BotHALAddAuxiliaryKeyword(const CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word);
+BOOL HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2);
+HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words);
+void BotHALAddKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word);
+void BotHALAddAuxiliaryKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word);
 HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys);
-int BotHALBabble(const CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words);
-BOOL HAL_WordExists(const HAL_DICTIONARY* dictionary, HAL_STRING word);
-int BotHALSeedReply(const CBot* pBot, const HAL_DICTIONARY* keys);
+int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words);
+BOOL HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word);
+int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys);
 HAL_SWAP* HAL_NewSwap();
-void HAL_AddSwap(HAL_SWAP* list, const char* s, const char* d);
-HAL_SWAP* HAL_InitializeSwap(const char* filename);
-HAL_DICTIONARY* HAL_InitializeList(const char* filename);
+void HAL_AddSwap(HAL_SWAP* list, char* s, char* d);
+HAL_SWAP* HAL_InitializeSwap(char* filename);
+HAL_DICTIONARY* HAL_InitializeList(char* filename);
 void HAL_EmptyDictionary(HAL_DICTIONARY* dictionary);
 void HAL_FreeModel(HAL_MODEL* model);
 void HAL_FreeTree(HAL_TREE* tree);
 void HAL_FreeSwap(HAL_SWAP* swap);
 BOOL PrepareHALBrainForPersonality(struct bot_profile_s* pBotProfile);
-BOOL LoadHALBrainForPersonality(const struct bot_profile_s* pBotProfile, BOOL bPreTrain);
-void SaveHALBrainForPersonality(const struct bot_profile_s* pBotProfile);
+BOOL LoadHALBrainForPersonality(struct bot_profile_s* pBotProfile, BOOL bPreTrain);
+void SaveHALBrainForPersonality(struct bot_profile_s* pBotProfile);
 
 #endif
