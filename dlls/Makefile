@@ -9,10 +9,10 @@
 
 CPP = g++ -m32
 
-BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -DRCBOT_META_BUILD -D__linux__ \
+BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -DRCBOT_META_BUILD -D__linux__
 
 #CPPFLAGS = ${BASEFLAGS} -D_DEBUG -g3 -ggdb3 -Og -march=i686 -I. -I../engine -I../common -I../pm_shared \
-#           -Wno-write-strings -std=gnu++14
+#            -Wno-write-strings -Wno-unused-local-typedefs -std=gnu++14 -static-libstdc++ -static-libgcc
 
 CPPFLAGS = ${BASEFLAGS} -mtune=generic -march=i686 -mmmx -msse -msse2 -mfpmath=sse -O2 \
            -Wno-write-strings -Wno-unused-local-typedefs -funsafe-math-optimizations -g0 \

@@ -43,16 +43,19 @@
 #define	SOUND_FLASHLIGHT_OFF	"items/flashlight1.wav"
 
 #define TEAM_NAME_LENGTH	16
-#include <basemonster.h>
-#include <const.h>
-#include "cdll_dll.h"
-#include <util.h>
-#include <cbase.h>
-#include "vector.h"
-#include <progdefs.h>
-#include <eiface.h>
-#include "bot.h"
-#include <minwindef.h>
+//#include <basemonster.h>
+//#include <const.h>
+//#include "cdll_dll.h"
+//#include <util.h>
+//#include <cbase.h>
+//#include "vector.h"
+//#include <progdefs.h>
+//#include <eiface.h>
+//#include "bot.h"
+
+//#ifndef __linux__
+//#include <minwindef.h>
+//#endif
 
 typedef enum
 {
@@ -190,24 +193,12 @@ public:
 	int TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType) override;
 	void Killed(entvars_t* pevAttacker, int iGib) override;
 
-	Vector BodyTarget(const Vector& posSrc) override
-
-	{
-		int pev;
-		return Center() + pev->view_ofs * RANDOM_FLOAT(0.5f, 1.1f);
-	};		// position to shoot at
-
+	virtual Vector BodyTarget( const Vector &posSrc ) { return Center( ) + pev->view_ofs * RANDOM_FLOAT( 0.5f, 1.1f ); }	// position to shoot at
 	virtual void StartSneaking() { m_tSneaking = gpGlobals->time - 1; }
 	virtual void StopSneaking() { m_tSneaking = gpGlobals->time + 30; }
 	virtual BOOL IsSneaking() { return m_tSneaking <= gpGlobals->time; }
-
-	BOOL IsAlive() override
-
-	{
-		BOOL pev = 0;
-		return pev->deadflag == DEAD_NO && pev->health > 0;
-	}
-
+	virtual BOOL IsAlive() { return (pev->deadflag == DEAD_NO) && pev->health > 0; }
+	
 	BOOL ShouldFadeOnDeath() override { return FALSE; }
 	virtual	BOOL IsPlayer() { return TRUE; }			// Spectators should return FALSE for this, they aren't "players" as far as game logic is concerned
 
@@ -298,6 +289,7 @@ public:
 	int GetCustomDecalFrames();
 
 	void TabulateAmmo();
+	//void CBasePlayer::TabulateAmmo(); // Bugged for older Metamod Addons? [APG]RoboCop[CL]
 
 	float m_flStartCharge;
 	float m_flAmmoStartCharge;
@@ -315,5 +307,13 @@ public:
 
 	float m_flNextChatTime;
 };
+
+#define AUTOAIM_2DEGREES  0.0348994967025
+#define AUTOAIM_5DEGREES  0.08715574274766
+#define AUTOAIM_8DEGREES  0.1391731009601
+#define AUTOAIM_10DEGREES 0.1736481776669
+
+extern int	gmsgHudText;
+extern BOOL gInitHUD;
 
 #endif

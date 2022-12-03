@@ -65,7 +65,7 @@ CSom :: ~CSom()
 	m_Neurons.clear();
 }
 
-CSomNeuron* CSom::getBMU(std::vector <ga_value>* inputs)
+CSomNeuron* CSom::getBMU(std::vector <ga_value>* inputs) const
 {
 	CSomNeuron* winner = nullptr;
 	ga_value bestdistance = 0;
@@ -84,7 +84,7 @@ CSomNeuron* CSom::getBMU(std::vector <ga_value>* inputs)
 	return winner;
 }
 
-void CSom::updateAround(std::vector<ga_value>* inputs, CSomNeuron* bmu)
+void CSom::updateAround(std::vector<ga_value>* inputs, CSomNeuron* bmu) const
 {
 	ga_value dist;
 	const ga_value nsiz = m_fNSize * m_fNSize;
@@ -113,16 +113,16 @@ CSomNeuron* CSom::inputOne(std::vector <ga_value>* inputs)
 	return winner;
 }
 
-void CSom::input(std::vector<std::vector<ga_value>>* inputs, int epochs)
+void CSom::input(std::vector<std::vector<ga_value>>* inputs, int epochs)//TODO: needs implemented [APG]RoboCop[CL]
 {
 }
 
-CSomNeuron* CSom::input(std::vector < std::vector <ga_value> >* inputs)
+CSomNeuron* CSom::input(std::vector <std::vector <ga_value> >* inputs)
 {
 	return inputOne(&(*inputs)[RANDOM_LONG(0, static_cast<int>(inputs->size()) - 1)]);
 }
 
-void CSom::display()
+void CSom::display() const
 {
 	//printf("\nDisplaying...\n");
 
@@ -153,7 +153,7 @@ CSomNeuron::CSomNeuron()
 {
 	m_iX = 0;
 	m_iY = 0;
-	
+
 	return;
 }
 
@@ -166,9 +166,9 @@ CSomNeuron::CSomNeuron(int iInp, int iX, int iY)
 		fWeights.emplace_back(RANDOM_FLOAT(0, 1));
 }
 
-//void CSomNeuron :: update ( std::vector<ga_value> *inputs, ga_value inf );
+//void CSomNeuron::update(std::vector<ga_value>* inputs, ga_value inf);
 
-ga_value CSomNeuron::distance(std::vector <ga_value>* inputs)
+ga_value CSomNeuron::distance(std::vector <ga_value>* inputs) const
 {
 	ga_value dist = 0;
 
@@ -187,16 +187,18 @@ std::vector <ga_value>* CSomNeuron::weights()
 	return &fWeights;
 }
 
-void CSomNeuron::displayWeights()
+void CSomNeuron::displayWeights() const
 {
 	for (unsigned int i = 0; i < fWeights.size(); i++)
 	{
-		printf("%0.4f,", fWeights[i]);
+		printf("%0.4f,", static_cast<double>(fWeights[i]));
 	}
 }
 
 ga_value CSomNeuron::neighbourDistance(CSomNeuron* other, ga_value fDistance)
 {
+	fDistance = 0;
+	
 	const ga_value distx = getX() - other->getX();
 	const ga_value disty = getY() - other->getY();
 

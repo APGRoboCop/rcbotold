@@ -62,7 +62,7 @@ public:
 
 	void freeMemory();
 
-	void save(FILE* bfp);
+	void save(FILE* bfp) const;
 
 	void load(FILE* bfp);
 private:
@@ -78,26 +78,26 @@ public:
 	NN()
 	{
 		m_iNumInputs = 0;
-	};
+	}
 
 	NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
 
-	void setWeights(std::vector<ga_value>* weights);
+	void setWeights(std::vector<ga_value>* weights) const;
 
-	void getWeights(std::vector<ga_value>* weights);
+	void getWeights(std::vector<ga_value>* weights) const;
 
-	void execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs);
+	void execute(std::vector<ga_value>* outputs, std::vector<ga_value>* inputs) const;
 
 	void freeMemory();
 
-	void randomize();
+	void randomize() const;
 
-	void getOutputs(std::vector<ga_value>* outputs);
-	void trainOutputs(const std::vector<ga_value>* wanted_outputs);
+	void getOutputs(std::vector<ga_value>* outputs) const;
+	void trainOutputs(const std::vector<ga_value>* wanted_outputs) const;
 
 	void load(FILE* bfp);
 
-	void save(FILE* bfp);
+	void save(FILE* bfp) const;
 
 	virtual void train(std::vector<CNNTrainSet> trainingsets)
 	{

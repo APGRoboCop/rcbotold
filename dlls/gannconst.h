@@ -65,12 +65,12 @@ public:
 		return m_szHeader;
 	}
 
-	BOOL operator == (CGenericHeader other)
+	BOOL operator == (CGenericHeader other) const
 	{
 		return strcmp(m_szHeader, other.getHeader()) == 0;
 	}
 
-	void write(FILE* bfp)
+	void write(FILE* bfp) const
 	{
 		fwrite(this, sizeof(CGenericHeader), 1, bfp);
 	}

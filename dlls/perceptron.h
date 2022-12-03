@@ -43,7 +43,6 @@ class CBotGAValues;
 class ITransfer
 {
 public:
-	virtual ~ITransfer() = default;
 	virtual ga_value transfer(ga_value netInput) = 0;
 };
 
@@ -59,26 +58,26 @@ public:
 
 	static ga_value m_fDefaultLearnRate;// = 0.5f;
 	static ga_value m_fDefaultBias;// = 1.0f;
-/*
-	void load ( FILE *bfp, int req_size ) = 0;
-	//void save ( FILE *bfp ) = 0;
+	/*
+		void load ( FILE *bfp, int req_size ) = 0;
+		//void save ( FILE *bfp ) = 0;
 
-	// crossover with other individual
-	virtual void crossOver ( IIndividual *other )
-	{
-		memset(other,this,sizeof(CPerceptron));
-		other->clear();
-	}
+		// crossover with other individual
+		virtual void crossOver ( IIndividual *other )
+		{
+			memset(other,this,sizeof(CPerceptron));
+			other->clear();
+		}
 
-	// mutate some values
-	virtual void mutate () = 0;
+		// mutate some values
+		virtual void mutate () = 0;
 
-	virtual void clear () = 0;
+		virtual void clear () = 0;
 
-	// get new copy of this
-	// sub classes return their class with own values
-	virtual IIndividual *copy () = 0;
-*/
+		// get new copy of this
+		// sub classes return their class with own values
+		virtual IIndividual *copy () = 0;
+	*/
 
 	CPerceptron(unsigned int iInputs, ITransfer* transferFunction = nullptr, float fLearnRate = 0.0f);
 
@@ -87,9 +86,9 @@ public:
 		load(bfp);
 	}
 
-	void setWeights(const std::vector <ga_value>& weights);
+	void setWeights(std::vector<ga_value> weights);
 
-	void setWeights(const std::vector <ga_value>& weights, int iFrom, int iNum);
+	void setWeights(std::vector<ga_value> weights, int iFrom, int iNum);
 
 	void setWeights(CBotGAValues* vals, int iFrom, int iNum);
 
@@ -99,13 +98,13 @@ public:
 
 	ga_value getWeight(int iWeight) { return m_weights[iWeight]; }
 
-	void input(std::vector <ga_value>* inputs);
+	void input(std::vector<ga_value>* inputs);
 
 	ga_value execute();
 
-	BOOL fired();
+	BOOL fired() const;
 
-	ga_value getOutput();
+	ga_value getOutput() const;
 
 	void train(ga_value expectedOutput);
 

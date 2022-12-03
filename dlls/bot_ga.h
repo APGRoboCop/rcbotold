@@ -45,8 +45,8 @@ public:
 	void load(FILE* bfp, int req_size) override;
 	void save(FILE* bfp) override;
 
-	//void loadForBot ( char *file, int iProfile );
-	//void saveForBot ( char *file, int iProfile );
+	void loadForBot(char* file, int iProfile);
+	void saveForBot(char* file, int iProfile);
 
 	//~CBotGAValues();
 
@@ -62,10 +62,10 @@ public:
 	// sub classes return their class with own values
 	IIndividual* copy() override;
 
-	void setVector(const std::vector<ga_value>& values);
+	void setVector(std::vector<ga_value> values);
 	void getVector(std::vector<ga_value>* values);
 
-	float get(int iIndex);
+	float get(int iIndex) const;
 
 	void set(int iIndex, ga_value fVal);
 
@@ -136,7 +136,7 @@ public:
 	// mutate some values
 	void mutate() override
 	{
-		for (int i = 0; i < 32; i++)
+		for (unsigned i = 0; i < 32; i++)
 		{
 			if (RANDOM_FLOAT(0, 1) <= 0.1f)
 			{
@@ -198,9 +198,9 @@ public:
 	//void setBits ( CBits values );
 	//void getBits ( CBits *values );
 
-	BOOL get(int iIndex);
+	BOOL get(int iIndex) const;
 
-	void set(int iIndex, BOOL bSet);
+	void set(int iIndex, BOOL bSet) const;
 
 	void clear() override;
 

@@ -38,7 +38,7 @@
 #include "meta_api.h"
 #endif
 #include "cbase.h" // Need CBASE for classify()
- //#include "player.h"
+#include "player.h"
 #include "bot_const.h"
 #include "bot.h"
 #include "bot_ga.h"
@@ -103,12 +103,12 @@ void CBotGAValues::mutate()
 	}
 }
 
-float CBotGAValues::get(const int iIndex) //Unstable? [APG]RoboCop[CL]
+float CBotGAValues::get(int iIndex) const //Unstable? [APG]RoboCop[CL]
 {
 	return m_theValues[iIndex];
 }
 
-void CBotGAValues::set(const int iIndex, const ga_value fVal)
+void CBotGAValues::set(int iIndex, ga_value fVal)
 {
 	m_theValues[iIndex] = fVal;
 }
@@ -129,7 +129,7 @@ IIndividual* CBotGAValues::copy()
 	return individual;
 }
 
-void CBotGAValues::setVector(std::vector<ga_value> const& values)
+void CBotGAValues::setVector(std::vector<ga_value> values)
 {
 	m_theValues.clear();
 
@@ -174,7 +174,7 @@ void CBotGAValues :: saveForBot ( char *file, int iProfile )
 
 void CBotGAValues::save(FILE* bfp)
 {
-	const unsigned int iSize = m_theValues.size();
+	unsigned int iSize = m_theValues.size();
 
 	CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, m_theValues.size());
 
@@ -182,7 +182,7 @@ void CBotGAValues::save(FILE* bfp)
 
 	fwrite(&iSize, sizeof(unsigned int), 1, bfp);
 
-	for (unsigned int i = 0; i < iSize; i++)
+	for (int i = 0; i < iSize; i++)
 	{
 		fwrite(&m_theValues[i], sizeof(ga_value), 1, bfp);
 	}
@@ -190,7 +190,7 @@ void CBotGAValues::save(FILE* bfp)
 	fwrite(&m_fFitness, sizeof(ga_value), 1, bfp);
 }
 
-void CBotGAValues::load(FILE* bfp, const int req_size)
+void CBotGAValues::load(FILE* bfp, int req_size)
 {
 	unsigned int iSize;
 	ga_value fRead;
@@ -200,7 +200,7 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 
 	const CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, req_size);
 
-	if (!CGenericHeader::read(bfp, header))
+	if (!header.read(bfp, header))
 	{
 		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;
@@ -210,7 +210,7 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 
 	fread(&iSize, sizeof(unsigned int), 1, bfp);
 
-	for (unsigned int i = 0; i < iSize; i++)
+	for (int i = 0; i < iSize; i++)
 	{
 		// reliability check
 		if (feof(bfp))
@@ -240,7 +240,7 @@ void CBitsGAValues::convert(int* iBits)
 	}
 }
 
-CBitsGAValues::CBitsGAValues(const unsigned int iNumBits)
+CBitsGAValues::CBitsGAValues(unsigned int iNumBits)
 {
 	m_theBits = new CBits(iNumBits);
 }
@@ -297,7 +297,7 @@ void CBitsGAValues::crossOver(IIndividual* other)
 // mutate some values
 void CBitsGAValues::mutate()
 {
-	for (int i = 0; i < m_theBits->numBits(); i++)
+	for (unsigned int i = 0; i < m_theBits->numBits(); i++)
 	{
 		if (RANDOM_FLOAT(0.0f, 1.0f) < CGA::g_fMutateRate)
 		{
@@ -318,12 +318,12 @@ IIndividual* CBitsGAValues::copy()
 //void setBits ( CBits values );
 //void getBits ( CBits *values );
 
-BOOL CBitsGAValues::get(const int iIndex)
+BOOL CBitsGAValues::get(int iIndex) const
 {
 	return m_theBits->getBit(iIndex);
 }
 
-void CBitsGAValues::set(const int iIndex, const BOOL bSet)
+void CBitsGAValues::set(int iIndex, BOOL bSet) const
 {
 	m_theBits->setBit(iIndex, bSet);
 }

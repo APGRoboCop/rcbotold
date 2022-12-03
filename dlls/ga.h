@@ -44,7 +44,6 @@ typedef enum
 class IIndividual
 {
 public:
-	virtual ~IIndividual() = default;
 	// get fitness for this individual
 	ga_value getFitness() { return m_fFitness; }
 	void setFitness(float fVal) { m_fFitness = fVal; }
@@ -111,7 +110,6 @@ private:
 class ISelection
 {
 public:
-	virtual ~ISelection() = default;
 	virtual IIndividual* select(CPopulation* population) = 0;
 };
 
@@ -172,7 +170,7 @@ public:
 
 	void setPopType(int t) { m_iPopType = t; }
 
-	unsigned int m_iMaxPopSize;
+	int m_iMaxPopSize;
 	static const int g_iDefaultMaxPopSize;
 	static const float g_fCrossOverRate;
 	static const float g_fMutateRate;

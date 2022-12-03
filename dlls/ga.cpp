@@ -106,7 +106,7 @@ ga_value CPopulation::totalFitness()
 
 void CPopulation::save(FILE* bfp)
 {
-	const unsigned int iSize = m_theIndividuals.size();
+	unsigned int iSize = m_theIndividuals.size();
 
 	CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
 
@@ -114,7 +114,7 @@ void CPopulation::save(FILE* bfp)
 
 	fwrite(&iSize, sizeof(int), 1, bfp);
 
-	for (unsigned int i = 0; i < iSize; i++)
+	for (int i = 0; i < iSize; i++)
 		m_theIndividuals[i]->save(bfp);
 }
 
@@ -139,7 +139,7 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 
 	m_theIndividuals.clear();
 
-	for (unsigned int i = 0; i < iSize; i++)
+	for (int i = 0; i < iSize; i++)
 	{
 		// reliability check
 		if (feof(bfp))
@@ -163,7 +163,7 @@ ga_value CPopulation::bestFitness()
 
 	for (unsigned int i = 0; i < size(); i++)
 	{
-		const float fFitness = m_theIndividuals[i]->getFitness();
+		float fFitness = m_theIndividuals[i]->getFitness();
 
 		if (!gotBestFitness || fFitness > fBestFitness)
 		{
@@ -197,7 +197,7 @@ IIndividual* CPopulation::pick()
 
 CGA::CGA(ISelection* selectFunction) : m_theSelectFunction(selectFunction)
 {
-	m_iMaxPopSize = 0 ;
+	m_iMaxPopSize = 0;
 	m_iNumGenerations = 0;
 	m_fPrevAvgFitness = 0.0f;
 	m_iPopType = 0;
