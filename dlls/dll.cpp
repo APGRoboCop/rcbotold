@@ -481,7 +481,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 
 								SERVER_COMMAND(cmd);  // kick the bot using kick name //(kick #id)
 
-								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
+								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 8.0f;
 								gBotGlobals.m_bBotCanRejoin = FALSE;
 
 								break;

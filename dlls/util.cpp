@@ -1830,7 +1830,7 @@ BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid)
 
 void UTIL_BuildFileName(char* filename, const char* arg1, const char* arg2)
 {
-	// Build file name will set up the directoy for the filename
+	// Build file name will set up the directory for the filename
 	strcpy(filename, gBotGlobals.botFolder());
 #ifndef __linux__
 	strcat(filename, "\\");

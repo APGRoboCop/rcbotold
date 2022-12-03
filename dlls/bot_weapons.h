@@ -322,8 +322,8 @@ typedef enum
 	TS_KungFu = 36
 }eTSWeaponID;
 
-// WIZARD WARS
-enum
+// WIZARD WARS //TODO
+typedef enum
 {
 	WEAPON_STAFF = 1,
 	WEAPON_SHIELD,
@@ -351,7 +351,7 @@ enum
 	WEAPON_THORNBLAST,
 	WEAPON_BEANSTALK,
 	WEAPON_COMBOSPELL,
-};
+}eWizWeaponID;
 
 void GetNoWeaponArray(int* Array);
 void GetArrayOfExplosives(int* Array);
