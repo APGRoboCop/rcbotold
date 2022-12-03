@@ -77,6 +77,7 @@
 
 extern CBotGlobals gBotGlobals;
 extern enginefuncs_t g_engfuncs;
+//extern edict_t* pent_info_ctfdetect; // Op4CTF Support [APG]RoboCop[CL]
 extern CWaypointLocations WaypointLocations;
 
 //#define PI 3.141592654
@@ -871,50 +872,81 @@ int UTIL_GetTeam(edict_t* pEntity)
 	case MOD_NS:
 		return pEntity->v.team;
 	case MOD_TS:
-	{
-		char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-
-		char model[64];
-
-		strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
-
-		if (strncmp("tm_", STRING(gpGlobals->mapname), 3) == 0)
 		{
-			if (FStrEq(model, "merc"))
-				return 0;
-			if (FStrEq(model, "seal"))
-				return 1;
-		}
-		else if (gBotGlobals.m_bTeamPlay)
-		{
-			const char* teamlist = CVAR_GET_STRING("mp_teamlist");
+			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
 
-			const char* pos = strstr(teamlist, model);
-			char* sofar = const_cast<char*>(teamlist);
+			char model[64];
 
-			int team = 0;
+			strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
 
-			if (sofar == nullptr)
-				team = -1; //TODO: team not assigned [APG]RoboCop[CL]
-			else
+			if (strncmp("tm_", STRING(gpGlobals->mapname), 3) == 0)
 			{
-				// count ";"s
-				while (sofar < pos)
-				{
-					if (*sofar == ';')
-						team++;
+				if (FStrEq(model, "merc"))
+					return 0;
+				if (FStrEq(model, "seal"))
+					return 1;
+			}
+			else if (gBotGlobals.m_bTeamPlay)
+			{
+				const char* teamlist = CVAR_GET_STRING("mp_teamlist");
 
-					sofar = sofar + 1;
+				const char* pos = strstr(teamlist, model);
+				char* sofar = const_cast<char*>(teamlist);
+
+				int team = 0;
+
+				if (sofar == nullptr)
+					team = -1; //TODO: team not assigned [APG]RoboCop[CL]
+				else
+				{
+					// count ";"s
+					while (sofar < pos)
+					{
+						if (*sofar == ';')
+							team++;
+
+						sofar = sofar + 1;
+					}
 				}
 			}
-		}
 
-		return -1;
-	}
+			return -1;
+		}
 	case MOD_BG:
 		return pEntity->v.team;
 	case MOD_GEARBOX:
-		return pEntity->v.team;
+		//if (pent_info_ctfdetect != nullptr)
+		//{
+			// OpFor CTF map...
+			if (gBotGlobals.m_bTeamPlay)
+			{
+				char model_name[32];
+
+				char* infobuffer = GET_INFOKEYBUFFER(pEntity);
+				strcpy(model_name, INFOKEY_VALUE(infobuffer, "model"));
+
+				if (strcmp(model_name, "ctf_barney") == 0 ||
+					strcmp(model_name, "cl_suit") == 0 ||
+					strcmp(model_name, "ctf_gina") == 0 ||
+					strcmp(model_name, "ctf_gordon") == 0 ||
+					strcmp(model_name, "otis") == 0 ||
+					strcmp(model_name, "ctf_scientist") == 0)
+				{
+					return 0;
+				}
+				if (strcmp(model_name, "beret") == 0 ||
+					strcmp(model_name, "drill") == 0 ||
+					strcmp(model_name, "grunt") == 0 ||
+					strcmp(model_name, "recruit") == 0 ||
+					strcmp(model_name, "shephard") == 0 ||
+					strcmp(model_name, "tower") == 0)
+				{
+					return 1;
+				}
+
+				return 0;  // return zero if team is unknown
+			}
+		//}
 	/*case MOD_TFC:
 		return pEntity->v.team - 1;
 	case MOD_SVENCOOP:
@@ -2167,8 +2199,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 
 	// check it tooltips are on
 	// check if array positions are in bounds
-	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) && gBotGlobals.IsConfigSettingOn(iLang < BOT_LANG_MAX) && (
-		iTooltip < BOT_TOOL_TIP_MAX))
+	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) && gBotGlobals.IsConfigSettingOn(iLang < BOT_LANG_MAX) && iTooltip < BOT_TOOL_TIP_MAX)
 	{
 		char final_message[1024];
 
@@ -2214,7 +2245,7 @@ edict_t* UTIL_UpdateSounds(const entvars_t* pev)
 	// i. footsteps are on AND..
 	// ii. mod isnt svencoop (dont listen to teammates... (except when shooting)
 	// iii. OR mod is bumpercars (hear engine always)
-	const BOOL bListenToFootSteps = CVAR_GET_FLOAT("mp_footsteps") > 0 && (gBotGlobals.m_iCurrentMod == MOD_BUMPERCARS);
+	const BOOL bListenToFootSteps = CVAR_GET_FLOAT("mp_footsteps") > 0 && gBotGlobals.m_iCurrentMod == MOD_BUMPERCARS;
 
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{

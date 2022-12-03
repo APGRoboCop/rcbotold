@@ -6676,10 +6676,10 @@ public:
 
 	//CGA m_combatGAForTeam[MAX_TEAMS];
 	CGA m_enemyCostGAsForTeam[MAX_TEAMS];
-	//	CGA m_TFCspiesForTeam[MAX_TEAMS];
+	/*/	CGA m_TFCspiesForTeam[MAX_TEAMS];
 
-	//edict_t* m_pTFCDetect;
-	//edict_t* m_pTFCGoal;
+	edict_t* m_pTFCDetect;
+	edict_t* m_pTFCGoal;
 
 	void setMapType(eTFCMapType theMapType)
 	{
@@ -6694,7 +6694,7 @@ public:
 	BOOL isMapType(eTFCMapType theMapType)
 	{
 		return theMapType == m_TFCMapType;
-	}
+	}*/
 
 	edict_t* findBackpack(Vector const& location, int team, int min_health, int min_cells, int min_armor, int min_ammo)
 	{
@@ -6760,7 +6760,7 @@ private:
 
 	///////////
 	// TFC
-	eTFCMapType m_TFCMapType;
+	//eTFCMapType m_TFCMapType;
 
 	int max_team_players[MAX_TEAMS];
 	int team_class_limits[MAX_TEAMS];

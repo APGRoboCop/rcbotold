@@ -82,7 +82,7 @@ typedef struct
 class CRestore : public CSaveRestoreBuffer
 {
 public:
-	CRestore( SAVERESTOREDATA *pdata ) : CSaveRestoreBuffer( pdata ) { m_global = 0; m_precache = TRUE; }
+	CRestore( SAVERESTOREDATA *pdata ) : CSaveRestoreBuffer( pdata ) { m_global = 0; m_precache = true; }
 
 	int		ReadEntVars( const char *pname, entvars_t *pev );		// entvars_t
 	int		ReadFields( const char *pname, void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCount );
@@ -91,7 +91,7 @@ public:
 	short	ReadShort( void );
 	int		ReadNamedInt( const char *pName );
 	char	*ReadNamedString( const char *pName );
-	int		Empty( void ) { return (m_pdata == NULL) || ((m_pdata->pCurrentData-m_pdata->pBaseData)>=m_pdata->bufferSize); }
+	int		Empty( void ) { return (m_pdata == nullptr) || ((m_pdata->pCurrentData-m_pdata->pBaseData)>=m_pdata->bufferSize); }
 	inline	void SetGlobalMode( int global ) { m_global = global; }
 	void	PrecacheMode( BOOL mode ) { m_precache = mode; }
 
@@ -150,7 +150,7 @@ public:
 	void			EntityUpdate( string_t globalname, string_t mapname );
 	const globalentity_t	*EntityFromTable( string_t globalname );
 	GLOBALESTATE	EntityGetState( string_t globalname );
-	int				EntityInTable( string_t globalname ) { return (Find( globalname ) != NULL) ? 1 : 0; }
+	int				EntityInTable( string_t globalname ) { return (Find( globalname ) != nullptr) ? 1 : 0; }
 	int				Save( CSave &save );
 	int				Restore( CRestore &restore );
 	static TYPEDESCRIPTION m_SaveData[];

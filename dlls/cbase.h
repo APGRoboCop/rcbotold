@@ -154,7 +154,7 @@ public:
 	// initialization functions
 	virtual void	Spawn( void ) { return; }
 	virtual void	Precache( void ) { return; }
-	virtual void	KeyValue( KeyValueData* pkvd) { pkvd->fHandled = FALSE; }
+	virtual void	KeyValue( KeyValueData* pkvd) { pkvd->fHandled = false; }
 	virtual int		Save( CSave &save );
 	virtual int		Restore( CRestore &restore );
 	virtual int		ObjectCaps( void ) { return FCAP_ACROSS_TRANSITION; }
@@ -177,9 +177,9 @@ public:
 	virtual void	Killed( entvars_t *pevAttacker, int iGib );
 	virtual int		BloodColor( void ) { return DONT_BLEED; }
 	virtual void	TraceBleed( float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType );
-	virtual BOOL    IsTriggered( CBaseEntity *pActivator ) {return TRUE;}
-	virtual CBaseMonster *MyMonsterPointer( void ) { return NULL;}
-	virtual CSquadMonster *MySquadMonsterPointer( void ) { return NULL;}
+	virtual BOOL    IsTriggered( CBaseEntity *pActivator ) {return true;}
+	virtual CBaseMonster *MyMonsterPointer( void ) { return nullptr;}
+	virtual CSquadMonster *MySquadMonsterPointer( void ) { return nullptr;}
 	virtual	int		GetToggleState( void ) { return TS_AT_TOP; }
 	virtual void	AddPoints( int score, BOOL bAllowNegativeScore ) {}
 	virtual void	AddPointsToTeam( int score, BOOL bAllowNegativeScore ) {}
@@ -194,15 +194,15 @@ public:
 	virtual void	SetToggleState( int state ) {}
 	virtual void    StartSneaking( void ) {}
 	virtual void    StopSneaking( void ) {}
-	virtual BOOL	OnControls( entvars_t *pev ) { return FALSE; }
-	virtual BOOL    IsSneaking( void ) { return FALSE; }
+	virtual BOOL	OnControls( entvars_t *pev ) { return false; }
+	virtual BOOL    IsSneaking( void ) { return false; }
 	virtual BOOL	IsAlive( void ) { return (pev->deadflag == DEAD_NO) && pev->health > 0; }
 	virtual BOOL	IsBSPModel( void ) { return pev->solid == SOLID_BSP || pev->movetype == MOVETYPE_PUSHSTEP; }
 	virtual BOOL	ReflectGauss( void ) { return ( IsBSPModel() && !pev->takedamage ); }
 	virtual BOOL	HasTarget( string_t targetname ) { return FStrEq(STRING(targetname), STRING(pev->targetname) ); }
 	virtual BOOL    IsInWorld( void );
-	virtual	BOOL	IsPlayer( void ) { return FALSE; }
-	virtual BOOL	IsNetClient( void ) { return FALSE; }
+	virtual	BOOL	IsPlayer( void ) { return false; }
+	virtual BOOL	IsNetClient( void ) { return false; }
 	virtual const char *TeamID( void ) { return ""; }
 
 
@@ -247,16 +247,16 @@ public:
 	void EXPORT SUB_FadeOut ( void );
 	void EXPORT SUB_CallUseToggle( void ) { this->Use( this, this, USE_TOGGLE, 0 ); }
 	int			ShouldToggle( USE_TYPE useType, BOOL currentState );
-	void		FireBullets( ULONG	cShots, Vector  vecSrc, Vector	vecDirShooting,	Vector	vecSpread, float flDistance, int iBulletType, int iTracerFreq = 4, int iDamage = 0, entvars_t *pevAttacker = NULL  );
+	void		FireBullets( ULONG	cShots, Vector  vecSrc, Vector	vecDirShooting,	Vector	vecSpread, float flDistance, int iBulletType, int iTracerFreq = 4, int iDamage = 0, entvars_t *pevAttacker = nullptr  );
 
-	virtual CBaseEntity *Respawn( void ) { return NULL; }
+	virtual CBaseEntity *Respawn( void ) { return nullptr; }
 
 	void SUB_UseTargets( CBaseEntity *pActivator, USE_TYPE useType, float value );
 	// Do the bounding boxes of these two intersect?
 	int		Intersects( CBaseEntity *pOther );
 	void	MakeDormant( void );
 	int		IsDormant( void );
-	BOOL    IsLockedByMaster( void ) { return FALSE; }
+	BOOL    IsLockedByMaster( void ) { return false; }
 
 #ifdef _DEBUG
 	static CBaseEntity *Instance( edict_t *pent ) 
@@ -264,7 +264,7 @@ public:
 		if ( !pent )
 			pent = ENT(0);
 		CBaseEntity *pEnt = (CBaseEntity *)GET_PRIVATE(pent); 
-		ASSERT(pEnt!=NULL); 
+		ASSERT(pEnt!=nullptr); 
 		return pEnt; 
 	}
 #else
@@ -285,14 +285,14 @@ public:
 		CBaseEntity *pEntity = Instance( pevMonster );
 		if ( pEntity )
 			return pEntity->MyMonsterPointer();
-		return NULL;
+		return nullptr;
 	}
 	CBaseMonster *GetMonsterPointer( edict_t *pentMonster ) 
 	{ 
 		CBaseEntity *pEntity = Instance( pentMonster );
 		if ( pEntity )
 			return pEntity->MyMonsterPointer();
-		return NULL;
+		return nullptr;
 	}
 
 
@@ -341,9 +341,9 @@ public:
 
 
 	//
-	static CBaseEntity *Create( char *szName, const Vector &vecOrigin, const Vector &vecAngles, edict_t *pentOwner = NULL );
+	static CBaseEntity *Create( char *szName, const Vector &vecOrigin, const Vector &vecAngles, edict_t *pentOwner = nullptr );
 
-	virtual BOOL FBecomeProne( void ) {return FALSE;};
+	virtual BOOL FBecomeProne( void ) {return false;};
 	edict_t *edict() { return ENT( pev ); };
 	EOFFSET eoffset( ) { return OFFSET( pev ); };
 	int	  entindex( ) { return ENTINDEX( edict() ); };
@@ -733,13 +733,13 @@ template <class T> T * GetClassPtr( T *a )
 	entvars_t *pev = (entvars_t *)a;
 
 	// allocate entity if necessary
-	if (pev == NULL)
+	if (pev == nullptr)
 		pev = VARS(CREATE_ENTITY());
 
 	// get the private data
 	a = (T *)GET_PRIVATE(ENT(pev));
 
-	if (a == NULL) 
+	if (a == nullptr) 
 	{
 		// allocate private data 
 		a = new(pev) T;
@@ -820,7 +820,7 @@ public:
 	// Bmodels don't go across transitions
 	virtual int	ObjectCaps( void ) { return CBaseEntity :: ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
 
-	inline BOOL IsActive( void ) { return (pev->spawnflags & SF_TANK_ACTIVE)?TRUE:FALSE; }
+	inline BOOL IsActive( void ) { return (pev->spawnflags & SF_TANK_ACTIVE)?true:false; }
 	inline void TankActivate( void ) { pev->spawnflags |= SF_TANK_ACTIVE; pev->nextthink = pev->ltime + 0.1; m_fireLast = 0; }
 	inline void TankDeactivate( void ) { pev->spawnflags &= ~SF_TANK_ACTIVE; m_fireLast = 0; StopRotSound(); }
 	inline BOOL CanFire( void ) { return (gpGlobals->time - m_lastSightTime) < m_persist; }

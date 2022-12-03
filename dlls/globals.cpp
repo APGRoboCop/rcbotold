@@ -259,14 +259,14 @@ void CBotGlobals::StartFrame()
 	static float fPreviousTime = -1.0f;
 	static BOOL bCheckedTeamplay = false;
 
-	if (bCheckedTeamplay && m_iCurrentMod == MOD_GEARBOX)
+	if (bCheckedTeamplay && m_iCurrentMod)
 	{
-		m_bTeamPlay = CVAR_GET_FLOAT("mp_teamplay") > 1;
+		m_bTeamPlay = CVAR_GET_FLOAT("mp_teamplay") >= 1;
 		bCheckedTeamplay = true;
 	}
 
 	// new map?
-	if (gpGlobals->time + 0.1 < fPreviousTime)
+	if (gpGlobals->time + 0.1f < fPreviousTime)
 	{
 		bCheckedTeamplay = false;
 		//RoundInit();
@@ -1228,13 +1228,17 @@ void CBotGlobals::MapInit()
 	{
 		if (strncmp(mapname, "tm_", 3) == 0)
 		{
-			setMapType(NON_TFC_TS_TEAMPLAY);
+			//setMapType(NON_TFC_TS_TEAMPLAY);
 			m_bTeamPlay = true;
 		}
 	}
 	else if (IsMod(MOD_GEARBOX))
 	{
+		if (strncmp(mapname, "op4ctf_", 3) == 0)
+		{
+			//setMapType(NON_TFC_TS_TEAMPLAY);
 			m_bTeamPlay = true;
+		}
 	}
 
 	PRECACHE_MODEL("models/mechgibs.mdl");
@@ -1255,7 +1259,7 @@ void CBotGlobals::MapInit()
 	//m_pTFCGoal = nullptr;
 	m_currBackPack = nullptr;
 
-	m_fAutoBuildTime = 0;
+	m_fAutoBuildTime = 0.0f;
 	m_bAutoBuilt = false;
 
 	memset(m_Hives, 0, sizeof(hive_info_t) * BOT_MAX_HIVES);

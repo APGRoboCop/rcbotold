@@ -228,7 +228,7 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	// returns 0==success, non-zero==failure
 	inline int THREAD_CREATE(THREAD_T *tid, void (*func)(void)) {
 		int ret;
-		ret=pthread_create(tid, NULL, (void *(*)(void*)) func, NULL);
+		ret=pthread_create(tid, nullptr, (void *(*)(void*)) func, nullptr);
 		if(ret != 0) {
 			META_ERROR("Failure starting thread: %s", strerror(ret));
 			return(ret);
@@ -245,11 +245,11 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	// returns 0==success, non-zero==failure
 	inline int THREAD_CREATE(THREAD_T *tid, void (*func)(void)) {
 		HANDLE ret;
-		// win32 returns NULL==failure, non-NULL==success
-		ret=CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE) func, NULL, 0, tid);
-		if(ret==NULL)
+		// win32 returns nullptr==failure, non-nullptr==success
+		ret=CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE) func, nullptr, 0, tid);
+		if(ret==nullptr)
 			META_ERROR("Failure starting thread: %s", str_GetLastError());
-		return(ret==NULL);
+		return(ret==nullptr);
 	}
 #endif /* _WIN32 */
 #define THREAD_OK	0
@@ -260,7 +260,7 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	typedef pthread_mutex_t		MUTEX_T;
 	inline int MUTEX_INIT(MUTEX_T *mutex) {
 		int ret;
-		ret=pthread_mutex_init(mutex, NULL);
+		ret=pthread_mutex_init(mutex, nullptr);
 		if(ret!=THREAD_OK)
 			META_ERROR("mutex_init failed: %s", strerror(ret));
 		return(ret);
@@ -305,7 +305,7 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	typedef pthread_cond_t	COND_T;
 	inline int COND_INIT(COND_T *cond) {
 		int ret;
-		ret=pthread_cond_init(cond, NULL);
+		ret=pthread_cond_init(cond, nullptr);
 		if(ret!=THREAD_OK)
 			META_ERROR("cond_init failed: %s", strerror(ret));
 		return(ret);
@@ -340,12 +340,12 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	//    http://msdn.microsoft.com/library/en-us/dllproc/synchro_8ann.asp
 	typedef HANDLE COND_T; 
 	inline int COND_INIT(COND_T *cond) {
-		*cond = CreateEvent(NULL,	// security attributes (none)
-							FALSE,	// manual-reset type (false==auto-reset)
-							FALSE,	// initial state (unsignaled)
-							NULL);	// object name (unnamed)
-		// returns NULL on error
-		if(*cond==NULL) {
+		*cond = CreateEvent(nullptr,	// security attributes (none)
+							false,	// manual-reset type (false==auto-reset)
+							false,	// initial state (unsignaled)
+							nullptr);	// object name (unnamed)
+		// returns nullptr on error
+		if(*cond==nullptr) {
 			META_ERROR("cond_init failed: %s", str_GetLastError());
 			return(-1);
 		}
@@ -409,12 +409,12 @@ inline void normalize_pathname(char *path) {
 //  - a UNC network address (ie "\\srv1\blah").
 // Also, handle both native and normalized pathnames.
 inline int is_absolute_path(const char *path) {
-	if(path[0]=='/') return(TRUE);
+	if(path[0]=='/') return(true);
 #ifdef _WIN32
-	if(path[1]==':') return(TRUE);
-	if(path[0]=='\\') return(TRUE);
+	if(path[1]==':') return(true);
+	if(path[0]=='\\') return(true);
 #endif /* _WIN32 */
-	return(FALSE);
+	return(false);
 }
 
 #ifdef _WIN32
@@ -422,17 +422,17 @@ inline int is_absolute_path(const char *path) {
 // string of PATH_MAX length.
 inline char *realpath(const char *file_name, char *resolved_name) {
 	int ret;
-	ret=GetFullPathName(file_name, PATH_MAX, resolved_name, NULL);
+	ret=GetFullPathName(file_name, PATH_MAX, resolved_name, nullptr);
 	if(ret > PATH_MAX) {
 		errno=ENAMETOOLONG;
-		return(NULL);
+		return(nullptr);
 	}
 	else if(ret > 0) {
 		normalize_pathname(resolved_name);
 		return(resolved_name);
 	}
 	else 
-		return(NULL);
+		return(nullptr);
 }
 #endif /* _WIN32 */
 

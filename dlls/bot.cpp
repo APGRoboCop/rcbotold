@@ -2489,42 +2489,44 @@ void CBot::StartGame()
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
-		/*	case MOD_RS: // how the hell do you start a game in rival species!!!?!??
-		switch ( this->m_iVguiMenu )
-		{
-		case 255:
-		//FakeClientCommand(m_pEdict, "jointeam %d", gBotGlobals.TFC_getBestTeam(m_Profile.m_iFavTeam));
-		break;
-		}
-			break;*/
-	case MOD_HL_RALLY:
+	/*	case MOD_RS: // how the hell do you start a game in rival species!!!?!??
+	switch ( this->m_iVguiMenu )
+	{
+	case 255:
+	//FakeClientCommand(m_pEdict, "jointeam %d", gBotGlobals.TFC_getBestTeam(m_Profile.m_iFavTeam));
+	break;
+	}
+		break;*/
+		case MOD_HL_RALLY:
 
-		/*if ( !m_bSelectedCar )
-		{
-		FakeClientCommand(m_pEdict,"menuselect 1");
-		FakeClientCommand(m_pEdict,"menuselect %d",RANDOM_LONG(1,8));
-		FakeClientCommand(m_pEdict,"menuselect 4");
+			/*if ( !m_bSelectedCar )
+			{
+			FakeClientCommand(m_pEdict,"menuselect 1");
+			FakeClientCommand(m_pEdict,"menuselect %d",RANDOM_LONG(1,8));
+			FakeClientCommand(m_pEdict,"menuselect 4");
+	
+			  FakeClientCommand(m_pEdict,"menuselect 1");
+			  FakeClientCommand(m_pEdict,"menuselect 1");
+	
+				m_bSelectedCar = true;
+			}*/
 
-		  FakeClientCommand(m_pEdict,"menuselect 1");
-		  FakeClientCommand(m_pEdict,"menuselect 1");
-
-			m_bSelectedCar = true;
-		}*/
-
-		break;
+			break;
 	case MOD_GEARBOX: // Support for OP4CTF [APG]RoboCop[CL]
 
-		FakeClientCommand(m_pEdict, "jointeam 3");
-		FakeClientCommand(m_pEdict, "selectchar 7");
-		m_bStartedGame = true;
+		//if (pent_info_ctfdetect != nullptr)
+		//{
+			FakeClientCommand(m_pEdict, "jointeam 3");
+			FakeClientCommand(m_pEdict, "selectchar 7");
+			m_bStartedGame = true;
 
-		FakeClientCommand(m_pEdict, "slot2"); //Draw Deagle
-		FakeClientCommand(m_pEdict, "+attack");
-		FakeClientCommand(m_pEdict, "-attack");
+			FakeClientCommand(m_pEdict, "slot2"); //Draw Deagle
+			FakeClientCommand(m_pEdict, "+attack");
+			FakeClientCommand(m_pEdict, "-attack");
 
-		FakeClientCommand(m_pEdict, "+attack2"); //Toggle Laser Sight
-		FakeClientCommand(m_pEdict, "-attack2");
-
+			FakeClientCommand(m_pEdict, "+attack2"); //Toggle Laser Sight
+			FakeClientCommand(m_pEdict, "-attack2");
+		//}
 		break;
 
 		// team fortress
@@ -4405,7 +4407,7 @@ void CBot::LookForNewTasks()
 			break;
 		}
 
-		if (gBotGlobals.m_bTeamPlay || gBotGlobals.isMapType(NON_TFC_TS_TEAMPLAY))
+		if (gBotGlobals.m_bTeamPlay)
 		{
 			int iWpt;
 
@@ -5303,7 +5305,7 @@ void CBot::LookForNewTasks()
 	break;
 	case MOD_GEARBOX:
 	{
-		gBotGlobals.m_bTeamPlay = true; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
+		//gBotGlobals.m_bTeamPlay = true; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
 
 		int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0f, -1, W_FL_ENDLEVEL, &m_FailedGoals);
 
@@ -8415,6 +8417,9 @@ BOOL CBot::Touch(edict_t* pentTouched)
 		if (strcmp(szClassname, "item_longjump") == 0)
 			m_bHasLongJump = true;
 		else if (!m_bHasFlag && strcmp(szClassname, "item_tfgoal") == 0)
+			m_bHasFlag = true;
+		else if (!m_bHasFlag && strcmp(szClassname, "item_ctfflag") == 0)
+			m_bHasFlag = true;
 		{
 #ifdef RCBOT_META_BUILD
 			MDLL_Touch(pentTouched, m_pEdict);
@@ -9116,7 +9121,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (pEntity->v.flags & FL_CLIENT)
 		{
-			BOOL team = gBotGlobals.isMapType(NON_TFC_TS_TEAMPLAY) || gBotGlobals.m_bTeamPlay;
+			BOOL team = gBotGlobals.m_bTeamPlay;
 
 			if (team)
 			{
@@ -9241,14 +9246,14 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 	{
 		//const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-		gBotGlobals.m_bTeamPlay = true; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
+		//gBotGlobals.m_bTeamPlay = true; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
 
 		if (!EntityIsAlive(pEntity))
 			return false;
 
 		if (pEntity->v.flags & FL_CLIENT)
 		{
-			BOOL team = gBotGlobals.isMapType(NON_TFC_TS_TEAMPLAY) || gBotGlobals.m_bTeamPlay;
+			BOOL team = gBotGlobals.m_bTeamPlay;
 
 			if (team)
 			{

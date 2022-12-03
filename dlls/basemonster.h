@@ -353,7 +353,7 @@ public:
 	BOOL FindLateralSafetyGrenade ( const Vector &vecThreat, const Vector &vecViewOffset );
 	//End Sniper
 	
-	virtual BOOL FValidateCover ( const Vector &vecCoverLocation ){return TRUE;};
+	virtual BOOL FValidateCover ( const Vector &vecCoverLocation ){return true;};
 	
 	virtual float CoverRadius( void ) { return 784; } // Default cover radius
 	
@@ -364,8 +364,8 @@ public:
 	
 	inline void SetConditions( int iConditions ) { m_afConditions |= iConditions; }
 	inline void ClearConditions( int iConditions ) { m_afConditions &= ~iConditions; }
-	inline BOOL HasConditions( int iConditions ) { if ( m_afConditions & iConditions ) return TRUE; return FALSE; }
-	inline BOOL HasAllConditions( int iConditions ) { if ( (m_afConditions & iConditions) == iConditions ) return TRUE; return FALSE; }
+	inline BOOL HasConditions( int iConditions ) { if ( m_afConditions & iConditions ) return true; return false; }
+	inline BOOL HasAllConditions( int iConditions ) { if ( (m_afConditions & iConditions) == iConditions ) return true; return false; }
 	
 	virtual BOOL FValidateHintType( short sHint );
 	int FindHintNode ( void );
@@ -476,8 +476,8 @@ public:
 	
 	inline void Remember( int iMemory ) { m_afMemory |= iMemory; }
 	inline void Forget( int iMemory ) { m_afMemory &= ~iMemory; }
-	inline BOOL HasMemory( int iMemory ) { if ( m_afMemory & iMemory ) return TRUE; return FALSE; }
-	inline BOOL HasAllMemories( int iMemory ) { if ( (m_afMemory & iMemory) == iMemory ) return TRUE; return FALSE; }
+	inline BOOL HasMemory( int iMemory ) { if ( m_afMemory & iMemory ) return true; return false; }
+	inline BOOL HasAllMemories( int iMemory ) { if ( (m_afMemory & iMemory) == iMemory ) return true; return false; }
 	
 	BOOL ExitScriptedSequence( );
 	BOOL CineCleanup( );
@@ -668,13 +668,13 @@ public:
 
 	inline void	SetConditions( int iConditions ) { m_afConditions |= iConditions; }
 	inline void	ClearConditions( int iConditions ) { m_afConditions &= ~iConditions; }
-	inline BOOL HasConditions( int iConditions ) { if ( m_afConditions & iConditions ) return TRUE; return FALSE; }
-	inline BOOL HasAllConditions( int iConditions ) { if ( (m_afConditions & iConditions) == iConditions ) return TRUE; return FALSE; }
+	inline BOOL HasConditions( int iConditions ) { if ( m_afConditions & iConditions ) return true; return false; }
+	inline BOOL HasAllConditions( int iConditions ) { if ( (m_afConditions & iConditions) == iConditions ) return true; return false; }
 
 	inline void	Remember( int iMemory ) { m_afMemory |= iMemory; }
 	inline void	Forget( int iMemory ) { m_afMemory &= ~iMemory; }
-	inline BOOL HasMemory( int iMemory ) { if ( m_afMemory & iMemory ) return TRUE; return FALSE; }
-	inline BOOL HasAllMemories( int iMemory ) { if ( (m_afMemory & iMemory) == iMemory ) return TRUE; return FALSE; }
+	inline BOOL HasMemory( int iMemory ) { if ( m_afMemory & iMemory ) return true; return false; }
+	inline BOOL HasAllMemories( int iMemory ) { if ( (m_afMemory & iMemory) == iMemory ) return true; return false; }
 
 	// This will stop animation until you call ResetSequenceInfo() at some point in the future
 	inline void StopAnimation( void ) { pev->framerate = 0; }
@@ -765,13 +765,13 @@ public:
 
 	inline void	SetConditions( int iConditions ) { m_afConditions |= iConditions; }
 	inline void	ClearConditions( int iConditions ) { m_afConditions &= ~iConditions; }
-	inline BOOL HasConditions( int iConditions ) { if ( m_afConditions & iConditions ) return TRUE; return FALSE; }
-	inline BOOL HasAllConditions( int iConditions ) { if ( (m_afConditions & iConditions) == iConditions ) return TRUE; return FALSE; }
+	inline BOOL HasConditions( int iConditions ) { if ( m_afConditions & iConditions ) return true; return false; }
+	inline BOOL HasAllConditions( int iConditions ) { if ( (m_afConditions & iConditions) == iConditions ) return true; return false; }
 
 	inline void	Remember( int iMemory ) { m_afMemory |= iMemory; }
 	inline void	Forget( int iMemory ) { m_afMemory &= ~iMemory; }
-	inline BOOL HasMemory( int iMemory ) { if ( m_afMemory & iMemory ) return TRUE; return FALSE; }
-	inline BOOL HasAllMemories( int iMemory ) { if ( (m_afMemory & iMemory) == iMemory ) return TRUE; return FALSE; }
+	inline BOOL HasMemory( int iMemory ) { if ( m_afMemory & iMemory ) return true; return false; }
+	inline BOOL HasAllMemories( int iMemory ) { if ( (m_afMemory & iMemory) == iMemory ) return true; return false; }
 
 	// This will stop animation until you call ResetSequenceInfo() at some point in the future
 	inline void StopAnimation( void ) { pev->framerate = 0; }

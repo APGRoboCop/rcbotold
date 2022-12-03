@@ -986,7 +986,7 @@ enum
 
 #define TFC_TELEPORTER_ENTRANCE 1
 #define TFC_TELEPORTER_EXIT		2
-*/
+
 typedef enum
 {
 	TFC_MAP_UNKNOWN = 0,		// unknown map type
@@ -998,7 +998,7 @@ typedef enum
 	TFC_MAP_CAPTURE_FLAG_MULTIPLE = 6,  // capture many points e.g. cz2
 	TFC_MAP_VIP = 7, // hunted type map
 	NON_TFC_TS_TEAMPLAY = 12
-}eTFCMapType;
+}eTFCMapType;*/
 
 ////////////////////////////////
 // AUTHOR SHIP & PLUGIN INFO
