@@ -935,15 +935,14 @@ enum
 	MOD_BUMPERCARS = 3,
 	MOD_RC = 4,			// rocket crowbar
 	MOD_RC2 = 5,		// rocket crowbar 2
-	//MOD_COUNTERSTRIKE = 6,
-	MOD_DMC = 6,		// deathmatch classic
-	MOD_TS = 7,			// the specialists
-	MOD_GEARBOX = 8,	// Support for OP4CTF [APG]RoboCop[CL]
-	MOD_IOS = 9,		// international online soccer (gave up :p)
-	MOD_BG = 10,		// battlegrounds
-	MOD_SI = 11,		// TODO: Science and Industry 
-	MOD_HL_DM = 12,		// half-life deathmatch
-	MOD_HL_RALLY = 13,  // half-life rally (game crashes when adding a bot!!)
+	MOD_SI = 6,			// TODO: Science and Industry
+	MOD_DMC = 7,		// deathmatch classic
+	MOD_TS = 8,			// the specialists
+	MOD_GEARBOX = 9,	// Support for OP4CTF [APG]RoboCop[CL]
+	MOD_IOS = 10,		// international online soccer (gave up :p)
+	MOD_BG = 11,		// battlegrounds
+	MOD_HL_RALLY = 12,  // half-life rally (game crashes when adding a bot!!)
+	MOD_HL_DM = 13,		// half-life deathmatch
 	MOD_RS = 14,		// rival species meh...
 	MOD_WW = 15,		// TODO: Wizard Wars
 };

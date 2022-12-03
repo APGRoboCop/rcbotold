@@ -2748,7 +2748,6 @@ break;*/
 		m_bStartedGame = TRUE;
 		return;
 		break;
-		break;
 	case MOD_WW:
 		//sprintf(c_class, "%d", pBot->bot_class);
 		//FakeClientCommand(m_pEdict, "classmenu", RANDOM_LONG(1, 9), nullptr);
@@ -5502,6 +5501,15 @@ void CBot::LookForNewTasks()
 				}
 				break;
 				case MOD_DMC:
+				{
+					// go for a new weapon
+					int iWpt = WaypointFindRandomGoal(m_pEdict, -1, W_FL_WEAPON, &m_FailedGoals);
+
+					if (iWpt != -1)
+					{
+						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWpt, -1));
+					}
+				}
 				case MOD_HL_DM:
 				{
 					// go for a new weapon
@@ -5620,6 +5628,8 @@ void CBot::LookForNewTasks()
 						gBotGlobals.m_iCurrentMod != MOD_RC2 &&
 						gBotGlobals.m_iCurrentMod != MOD_BUMPERCARS &&
 						gBotGlobals.m_iCurrentMod != MOD_DMC &&
+						gBotGlobals.m_iCurrentMod != MOD_SI &&
+						gBotGlobals.m_iCurrentMod != MOD_WW &&
 						gBotGlobals.m_iCurrentMod != MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 						//gBotGlobals.m_iCurrentMod != MOD_TFC
 
