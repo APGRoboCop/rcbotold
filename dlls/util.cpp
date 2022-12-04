@@ -914,7 +914,7 @@ int UTIL_GetTeam(edict_t* pEntity)
 		}
 	case MOD_BG:
 		return pEntity->v.team;
-	case MOD_GEARBOX: //TODO: To add proper teamplay for CTF [APG]RoboCop[CL]
+	case MOD_GEARBOX:
 		//if (pent_info_ctfdetect != nullptr)
 		//{
 			// OpFor CTF map...

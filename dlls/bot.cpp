@@ -9102,7 +9102,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 	{
 		if (!EntityIsAlive(pEntity))
 			return false;
-
+			
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
 		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
@@ -9279,7 +9279,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 				return TEAM_OPPOSING_FORCE;
 			}
 			// different teams are enemies
-			return pEntity->v.flags & FL_CLIENT && GetTeam() != UTIL_GetTeam(pEntity); //TODO: To prevent team shooting in Op4CTF [APG]RoboCop[CL]
+			return pEntity->v.flags & FL_CLIENT && GetTeam() != UTIL_GetTeam(pEntity);
 		}
 	}
 	break;
@@ -12175,7 +12175,7 @@ void CBot::DoTasks()
 
 						// investigate!
 
-						/*switch (gBotGlobals.m_iCurrentMod) //Needed for Op4CTF? [APG]RoboCop[CL]
+						/*switch (gBotGlobals.m_iCurrentMod)
 						{
 						case MOD_TFC:
 							break;
