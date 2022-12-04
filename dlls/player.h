@@ -179,8 +179,8 @@ public:
 
 	char m_szTeamName[TEAM_NAME_LENGTH];
 
-	virtual void Spawn();
-	void Pain();
+	void Spawn() override;
+	void pain();
 
 	//	virtual void Think( void );
 	virtual void Jump();
@@ -188,23 +188,23 @@ public:
 	virtual void PreThink();
 	virtual void PostThink();
 	Vector GetGunPosition() override;
-	virtual int TakeHealth(float flHealth, int bitsDamageType);
-	virtual void TraceAttack(entvars_t* pevAttacker, float flDamage, Vector vecDir, TraceResult* ptr, int bitsDamageType);
+	int TakeHealth(float flHealth, int bitsDamageType) override;
+	void TraceAttack(entvars_t* pevAttacker, float flDamage, Vector vecDir, TraceResult* ptr, int bitsDamageType) override;
 	int TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType) override;
 	void Killed(entvars_t* pevAttacker, int iGib) override;
 
-	virtual Vector BodyTarget( const Vector &posSrc ) { return Center( ) + pev->view_ofs * RANDOM_FLOAT( 0.5f, 1.1f ); }	// position to shoot at
-	virtual void StartSneaking() { m_tSneaking = gpGlobals->time - 1; }
-	virtual void StopSneaking() { m_tSneaking = gpGlobals->time + 30; }
-	virtual BOOL IsSneaking() { return m_tSneaking <= gpGlobals->time; }
-	virtual BOOL IsAlive() { return (pev->deadflag == DEAD_NO) && pev->health > 0; }
+	Vector BodyTarget( const Vector &posSrc ) override { return Center( ) + pev->view_ofs * RANDOM_FLOAT( 0.5f, 1.1f ); }	// position to shoot at
+	void StartSneaking() override { m_tSneaking = gpGlobals->time - 1; }
+	void StopSneaking() override { m_tSneaking = gpGlobals->time + 30; }
+	BOOL IsSneaking() override { return m_tSneaking <= gpGlobals->time; }
+	BOOL IsAlive() override { return (pev->deadflag == DEAD_NO) && pev->health > 0; }
 	
 	BOOL ShouldFadeOnDeath() override { return false; }
-	virtual	BOOL IsPlayer() { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
+	BOOL IsPlayer() override { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
 
-	virtual BOOL IsNetClient() { return true; }		// Bots should return false for this, they can't receive NET messages
+	BOOL IsNetClient() override { return true; }		// Bots should return false for this, they can't receive NET messages
 															// Spectators should return true for this
-	virtual const char* TeamID();
+	const char* TeamID() override;
 
 	int		Save(CSave& save) override;
 	int		Restore(CRestore& restore) override;
@@ -219,8 +219,8 @@ public:
 	static	TYPEDESCRIPTION m_playerSaveData[];
 
 	// Player is moved across the transition by other means
-	virtual int		ObjectCaps() { return CBaseMonster::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
-	virtual void	Precache();
+	int		ObjectCaps() override { return CBaseMonster::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
+	void	Precache() override;
 	BOOL			IsOnLadder();
 	BOOL			FlashlightIsOn();
 	void			FlashlightTurnOn();
@@ -229,7 +229,7 @@ public:
 	void UpdatePlayerSound();
 	void DeathSound() override;
 
-	int Classify();
+	int Classify() override;
 	void SetAnimation(PLAYER_ANIM playerAnim);
 	void SetWeaponAnimType(const char* szExtention);
 	char m_szAnimExtention[32];
@@ -241,10 +241,10 @@ public:
 	void StartDeathCam();
 	void StartObserver(Vector vecPosition, Vector vecViewAngle);
 
-	void AddPoints(int score, BOOL bAllowNegativeScore);
-	void AddPointsToTeam(int score, BOOL bAllowNegativeScore);
-	BOOL AddPlayerItem(CBasePlayerItem* pItem);
-	BOOL RemovePlayerItem(CBasePlayerItem* pItem);
+	void AddPoints(int score, BOOL bAllowNegativeScore) override;
+	void AddPointsToTeam(int score, BOOL bAllowNegativeScore) override;
+	BOOL AddPlayerItem(CBasePlayerItem* pItem) override;
+	BOOL RemovePlayerItem(CBasePlayerItem* pItem) override;
 	void DropPlayerItem(char* pszItemName);
 	BOOL HasPlayerItem(CBasePlayerItem* pCheckItem);
 	BOOL HasNamedPlayerItem(const char* pszItemName);
@@ -258,7 +258,7 @@ public:
 	void GiveNamedItem(const char* szName);
 	void EnableControl(BOOL fControl);
 
-	int  GiveAmmo(int iAmount, char* szName, int iMax);
+	int  GiveAmmo(int iAmount, char* szName, int iMax) override;
 	void SendAmmoUpdate();
 
 	void WaterMove();
@@ -270,12 +270,12 @@ public:
 	void UpdateGeigerCounter();
 	void CheckTimeBasedDamage();
 
-	BOOL FBecomeProne();
+	BOOL FBecomeProne() override;
 	void BarnacleVictimBitten(entvars_t* pevBarnacle) override;
 	void BarnacleVictimReleased() override;
 	static int GetAmmoIndex(const char* psz);
 	int AmmoInventory(int iAmmoIndex);
-	int Illumination();
+	int Illumination() override;
 
 	void ResetAutoaim();
 	Vector GetAutoaimVector(float flDelta);

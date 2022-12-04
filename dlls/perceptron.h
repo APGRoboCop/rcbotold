@@ -43,6 +43,7 @@ class CBotGAValues;
 class ITransfer
 {
 public:
+	virtual ~ITransfer() = default;
 	virtual ga_value transfer(ga_value netInput) = 0;
 };
 
@@ -120,7 +121,7 @@ public:
 	BOOL trained() { return m_bTrained; }
 
 	void setTrained() { m_bTrained = true; }
-
+	
 	void save(FILE* bfp);
 	void load(FILE* bfp);
 

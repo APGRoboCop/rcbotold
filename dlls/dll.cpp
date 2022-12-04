@@ -111,7 +111,7 @@ BOOL CAllowedPlayer::IsForClient(CClient* pClient)
 		return IsForSteamID(pClient->steamID());
 	}
 
-	if (m_szName && *m_szName) //m_szName always true [APG]RoboCop[CL]
+	if (*m_szName) //m_szName always true [APG]RoboCop[CL]
 		bSameName = pClient->HasPlayerName(m_szName);
 
 	const edict_t* pEdict = pClient->GetPlayer();

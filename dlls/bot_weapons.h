@@ -595,7 +595,7 @@ public:
 		m_iPriority = p_preset->m_iPriority;
 	}
 
-	void Init()
+	void Init() override
 	{
 		memset((void*)this, 0, sizeof(CWeaponPreset));
 	}

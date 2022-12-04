@@ -261,7 +261,7 @@ void CBotGlobals::StartFrame()
 
 	if (bCheckedTeamplay && m_iCurrentMod)
 	{
-		m_bTeamPlay = CVAR_GET_FLOAT("mp_teamplay") >= 1;
+		m_bTeamPlay = CVAR_GET_FLOAT("mp_teamplay") > 0.0f;
 		bCheckedTeamplay = true;
 	}
 

@@ -914,38 +914,29 @@ int UTIL_GetTeam(edict_t* pEntity)
 		}
 	case MOD_BG:
 		return pEntity->v.team;
-	case MOD_GEARBOX:
+	case MOD_GEARBOX: //TODO: To add proper teamplay for CTF [APG]RoboCop[CL]
 		//if (pent_info_ctfdetect != nullptr)
 		//{
 			// OpFor CTF map...
-			if (gBotGlobals.m_bTeamPlay)
+		if (gBotGlobals.m_bTeamPlay)
+		{
+			char model_name[32];
+			char* infobuffer = GET_INFOKEYBUFFER(pEntity);
+			strcpy(model_name, INFOKEY_VALUE(infobuffer, "model"));
+
+			if (!strcmp(model_name, "ctf_barney") || !strcmp(model_name, "cl_suit") || !strcmp(model_name, "ctf_gina") ||
+				!strcmp(model_name, "ctf_gordon") || !strcmp(model_name, "otis") || !strcmp(model_name, "ctf_scientist"))
 			{
-				char model_name[32];
-
-				char* infobuffer = GET_INFOKEYBUFFER(pEntity);
-				strcpy(model_name, INFOKEY_VALUE(infobuffer, "model"));
-
-				if (strcmp(model_name, "ctf_barney") == 0 ||
-					strcmp(model_name, "cl_suit") == 0 ||
-					strcmp(model_name, "ctf_gina") == 0 ||
-					strcmp(model_name, "ctf_gordon") == 0 ||
-					strcmp(model_name, "otis") == 0 ||
-					strcmp(model_name, "ctf_scientist") == 0)
-				{
-					return 0;
-				}
-				if (strcmp(model_name, "beret") == 0 ||
-					strcmp(model_name, "drill") == 0 ||
-					strcmp(model_name, "grunt") == 0 ||
-					strcmp(model_name, "recruit") == 0 ||
-					strcmp(model_name, "shephard") == 0 ||
-					strcmp(model_name, "tower") == 0)
-				{
-					return 1;
-				}
-
-				return 0;  // return zero if team is unknown
+				return TEAM_BLACK_MESA;
 			}
+			else if (!strcmp(model_name, "beret") || !strcmp(model_name, "drill") || !strcmp(model_name, "grunt") ||
+				!strcmp(model_name, "recruit") || !strcmp(model_name, "shephard") || !strcmp(model_name, "tower"))
+			{
+				return TEAM_OPPOSING_FORCE;
+			}
+			// unknown team
+			return 0;
+		}
 		//}
 	/*case MOD_TFC:
 		return pEntity->v.team - 1;

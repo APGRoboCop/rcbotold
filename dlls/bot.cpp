@@ -173,7 +173,6 @@ void CBot::BotCommand()
 		int iScheduleId;
 		switch (m_CurrentTask->Task())
 		{
-
 		case BOT_COMMAND_TASK_MOVE_TO_VECTOR:
 		{
 			Vector vMoveTo = m_CurrentTask->TaskVector();
@@ -248,135 +247,135 @@ void CBot::BotCommand()
 			m_Tasks.FinishedCurrentTask();
 		}
 		break;
-			/*
-		case BOT_TASK_USE_TANK:
-			break;
-		case BOT_TASK_WAIT_FOR_LIFT:
-			break;
-		case BOT_TASK_RELOAD:
-			break;
-		case BOT_TASK_LISTEN_TO_SOUND:
-			break;
-		case BOT_TASK_FIND_ENEMY_PATH:
-			break;
-		case BOT_TASK_FOLLOW_ENEMY:
-			break;
-		case BOT_TASK_FOLLOW_LEADER:
-			break;
-		case BOT_TASK_FIND_WEAPON:
-			break;
-		case BOT_TASK_FIND_PATH:
-			break;
-		case BOT_TASK_RUN_PATH:
-			break;
-		case BOT_TASK_PICKUP_ITEM:
-			break;
-		case BOT_TASK_WAIT_FOR_RESOURCES:
-			break;
-		case BOT_TASK_GOTO_FLANK_POSITION:
-			break;
-		case BOT_TASK_RANGE_ATTACK:
-			break;
-		case BOT_TASK_NORMAL_ATTACK:
-			break;
-		case BOT_TASK_HIDE:
-			break;
-		case BOT_TASK_ASSEMBLE_SQUAD:
-			break;
-		case BOT_TASK_WAIT_FOR_ORDERS:
-			break;
-		case BOT_TASK_SOLO_RUN:
-			break;
-		case BOT_TASK_ATTACK_ENEMY:
-			break;
-		case BOT_TASK_CHANGE_WEAPON:
-			break;
-		case BOT_TASK_MOVE_TO_VECTOR:
-			break;
-		case BOT_TASK_WELD_OBJECT:
-			break;
-		case BOT_TASK_GOTO_OBJECT:
-			break;
-		case BOT_TASK_HEAL_PLAYER:
-			break;
-		case BOT_TASK_ALIEN_UPGRADE:
-			break;
-		case BOT_TASK_BUILD_ALIEN_STRUCTURE:
-			break;
-		case BOT_TASK_FACE_VECTOR:
-			break;
-		case BOT_TASK_FACE_EDICT:
-			break;
-		case BOT_TASK_WAIT_AND_FACE_VECTOR:
-			break;
-		case BOT_TASK_AVOID_OBJECT:
-			break;
-		case BOT_TASK_BUILD:
-			break;
-		case BOT_TASK_USE:
-			break;
-		case BOT_TASK_DEFEND:
-			break;
-		case BOT_TASK_DEPLOY_MINES:
-			break;
-		case BOT_TASK_USE_AMMO_DISP:
-			break;
-		case BOT_TASK_WALK_PATH:
-			break;
-		case BOT_TASK_TYPE_MESSAGE:
-			break;
-		case BOT_TASK_WAIT_FOR_ENTITY:
-			break;
-		case BOT_TASK_USE_DOOR_BUTTON:
-			break;
-		case BOT_TASK_SEARCH_FOR_ENEMY:
-			break;
-		case BOT_TASK_ALIEN_EVOLVE:
-			break;
-		case BOT_TASK_USE_HEV_CHARGER:
-			break;
-		case BOT_TASK_USE_HEALTH_CHARGER:
-			break;
-		case BOT_TASK_HUMAN_TOWER:
-			break;
-		case BOT_TASK_THROW_GRENADE:
-			break;
-		case BOT_TASK_PUSH_PUSHABLE:
-			break;
-		case BOT_TASK_SECONDARY_ATTACK:
-			break;
-		case BOT_TASK_WAIT_FOR_FLAG:
-			break;
-		case BOT_COMMAND_TASK_SELECT_PLAYERS:
-			break;
-		case BOT_COMMAND_TASK_ISSUE_ORDER:
-			break;
-		case BOT_TASK_FIND_COVER_POS:
-			break;
-		case BOT_TASK_COMBAT_UPGRADE:
-			break;
-		case BOT_TASK_CROUCH:
-			break;
-		case BOT_TASK_ACCEPT_HEALTH:
-			break;
-		case BOT_TASK_WAIT_FOR_BOT_AT_WPT:
-			break;
-		case BOT_TASK_BLINK:
-			break;
-		case BOT_TASK_WEB:
-			break;
-		case BOT_TASK_USE_TELEPORTER:
-			break;
-		case BOT_TASK_WAIT_FOR_RESOURCE_TOWER_BUILD:
-			break;
-		case BOT_TASK_IMPULSE:
-			break;
-		case BOT_TASK_DROP_WEAPON:
-			break;
-		case BOT_TASK_SENSE_ENEMY:
-			break;
-		case BOT_TASK_NONE:
-			break;*/
+		/*
+	case BOT_TASK_USE_TANK:
+		break;
+	case BOT_TASK_WAIT_FOR_LIFT:
+		break;
+	case BOT_TASK_RELOAD:
+		break;
+	case BOT_TASK_LISTEN_TO_SOUND:
+		break;
+	case BOT_TASK_FIND_ENEMY_PATH:
+		break;
+	case BOT_TASK_FOLLOW_ENEMY:
+		break;
+	case BOT_TASK_FOLLOW_LEADER:
+		break;
+	case BOT_TASK_FIND_WEAPON:
+		break;
+	case BOT_TASK_FIND_PATH:
+		break;
+	case BOT_TASK_RUN_PATH:
+		break;
+	case BOT_TASK_PICKUP_ITEM:
+		break;
+	case BOT_TASK_WAIT_FOR_RESOURCES:
+		break;
+	case BOT_TASK_GOTO_FLANK_POSITION:
+		break;
+	case BOT_TASK_RANGE_ATTACK:
+		break;
+	case BOT_TASK_NORMAL_ATTACK:
+		break;
+	case BOT_TASK_HIDE:
+		break;
+	case BOT_TASK_ASSEMBLE_SQUAD:
+		break;
+	case BOT_TASK_WAIT_FOR_ORDERS:
+		break;
+	case BOT_TASK_SOLO_RUN:
+		break;
+	case BOT_TASK_ATTACK_ENEMY:
+		break;
+	case BOT_TASK_CHANGE_WEAPON:
+		break;
+	case BOT_TASK_MOVE_TO_VECTOR:
+		break;
+	case BOT_TASK_WELD_OBJECT:
+		break;
+	case BOT_TASK_GOTO_OBJECT:
+		break;
+	case BOT_TASK_HEAL_PLAYER:
+		break;
+	case BOT_TASK_ALIEN_UPGRADE:
+		break;
+	case BOT_TASK_BUILD_ALIEN_STRUCTURE:
+		break;
+	case BOT_TASK_FACE_VECTOR:
+		break;
+	case BOT_TASK_FACE_EDICT:
+		break;
+	case BOT_TASK_WAIT_AND_FACE_VECTOR:
+		break;
+	case BOT_TASK_AVOID_OBJECT:
+		break;
+	case BOT_TASK_BUILD:
+		break;
+	case BOT_TASK_USE:
+		break;
+	case BOT_TASK_DEFEND:
+		break;
+	case BOT_TASK_DEPLOY_MINES:
+		break;
+	case BOT_TASK_USE_AMMO_DISP:
+		break;
+	case BOT_TASK_WALK_PATH:
+		break;
+	case BOT_TASK_TYPE_MESSAGE:
+		break;
+	case BOT_TASK_WAIT_FOR_ENTITY:
+		break;
+	case BOT_TASK_USE_DOOR_BUTTON:
+		break;
+	case BOT_TASK_SEARCH_FOR_ENEMY:
+		break;
+	case BOT_TASK_ALIEN_EVOLVE:
+		break;
+	case BOT_TASK_USE_HEV_CHARGER:
+		break;
+	case BOT_TASK_USE_HEALTH_CHARGER:
+		break;
+	case BOT_TASK_HUMAN_TOWER:
+		break;
+	case BOT_TASK_THROW_GRENADE:
+		break;
+	case BOT_TASK_PUSH_PUSHABLE:
+		break;
+	case BOT_TASK_SECONDARY_ATTACK:
+		break;
+	case BOT_TASK_WAIT_FOR_FLAG:
+		break;
+	case BOT_COMMAND_TASK_SELECT_PLAYERS:
+		break;
+	case BOT_COMMAND_TASK_ISSUE_ORDER:
+		break;
+	case BOT_TASK_FIND_COVER_POS:
+		break;
+	case BOT_TASK_COMBAT_UPGRADE:
+		break;
+	case BOT_TASK_CROUCH:
+		break;
+	case BOT_TASK_ACCEPT_HEALTH:
+		break;
+	case BOT_TASK_WAIT_FOR_BOT_AT_WPT:
+		break;
+	case BOT_TASK_BLINK:
+		break;
+	case BOT_TASK_WEB:
+		break;
+	case BOT_TASK_USE_TELEPORTER:
+		break;
+	case BOT_TASK_WAIT_FOR_RESOURCE_TOWER_BUILD:
+		break;
+	case BOT_TASK_IMPULSE:
+		break;
+	case BOT_TASK_DROP_WEAPON:
+		break;
+	case BOT_TASK_SENSE_ENEMY:
+		break;
+	case BOT_TASK_NONE:
+		break;*/
 		default:
 			break;
 		}
@@ -504,16 +503,16 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 		if (m_CurrentTask && gBotGlobals.IsDebugLevelOn(BOT_DEBUG_THINK_LEVEL))
 		{
 			DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0,
-			             "%s failed task \"%s\" part of schedule \"%s\"", m_szBotName,
-			             m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
+				"%s failed task \"%s\" part of schedule \"%s\"", m_szBotName,
+				m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
 		}
 		break;
 	case BOT_EVENT_COMPLETE_TASK:
 		if (m_CurrentTask && gBotGlobals.IsDebugLevelOn(BOT_DEBUG_THINK_LEVEL))
 		{
 			DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0,
-			             "%s finished task \"%s\" part of schedule \"%s\"", m_szBotName,
-			             m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
+				"%s finished task \"%s\" part of schedule \"%s\"", m_szBotName,
+				m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
 		}
 		break;
 	case BOT_EVENT_HEAR_TEAMMATE_DIE:
@@ -567,7 +566,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 
 		//edict_t* pEntity = NULL;
 		//m_pAvoidEntity = pEntity;
-			
+
 		if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
 		{
 			// I like a lot of people on the server so lets laugh
@@ -934,7 +933,7 @@ void CBot::EnemyFound(edict_t* pEnemy)
 
 	m_fStrafeSpeed = 1;
 	m_fStrafeTime = RANDOM_FLOAT(2.0f, 6.0f);
-	
+
 	m_pEnemy = pEnemy;
 
 	if (pEnemy == nullptr)
@@ -2457,8 +2456,8 @@ BOOL CBot::NotStartedGame()
 			break;*/
 	case MOD_HL_RALLY:
 		return !m_bSelectedCar;
-	//case MOD_GEARBOX: //Needed for Op4CTF? [APG]RoboCop[CL]
-	//	return false;
+		//case MOD_GEARBOX: //Needed for Op4CTF? [APG]RoboCop[CL]
+		//	return false;
 	case MOD_NS:
 
 		// Not joined a team yet.
@@ -2473,8 +2472,8 @@ BOOL CBot::NotStartedGame()
 		return !pev->playerclass && !pev->team;
 	case MOD_TS:
 		return false;
-	//case MOD_COUNTERSTRIKE:
-	//	break;
+		//case MOD_COUNTERSTRIKE:
+		//	break;
 	default:
 		break;
 	}
@@ -2489,43 +2488,43 @@ void CBot::StartGame()
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
-	/*	case MOD_RS: // how the hell do you start a game in rival species!!!?!??
-	switch ( this->m_iVguiMenu )
-	{
-	case 255:
-	//FakeClientCommand(m_pEdict, "jointeam %d", gBotGlobals.TFC_getBestTeam(m_Profile.m_iFavTeam));
-	break;
-	}
-		break;*/
-		case MOD_HL_RALLY:
+		/*	case MOD_RS: // how the hell do you start a game in rival species!!!?!??
+		switch ( this->m_iVguiMenu )
+		{
+		case 255:
+		//FakeClientCommand(m_pEdict, "jointeam %d", gBotGlobals.TFC_getBestTeam(m_Profile.m_iFavTeam));
+		break;
+		}
+			break;*/
+	case MOD_HL_RALLY:
 
-			/*if ( !m_bSelectedCar )
-			{
-			FakeClientCommand(m_pEdict,"menuselect 1");
-			FakeClientCommand(m_pEdict,"menuselect %d",RANDOM_LONG(1,8));
-			FakeClientCommand(m_pEdict,"menuselect 4");
-	
-			  FakeClientCommand(m_pEdict,"menuselect 1");
-			  FakeClientCommand(m_pEdict,"menuselect 1");
-	
-				m_bSelectedCar = true;
-			}*/
+		/*if ( !m_bSelectedCar )
+		{
+		FakeClientCommand(m_pEdict,"menuselect 1");
+		FakeClientCommand(m_pEdict,"menuselect %d",RANDOM_LONG(1,8));
+		FakeClientCommand(m_pEdict,"menuselect 4");
 
-			break;
+		  FakeClientCommand(m_pEdict,"menuselect 1");
+		  FakeClientCommand(m_pEdict,"menuselect 1");
+
+			m_bSelectedCar = true;
+		}*/
+
+		break;
 	case MOD_GEARBOX: // Support for OP4CTF [APG]RoboCop[CL]
 
 		//if (pent_info_ctfdetect != nullptr)
 		//{
-			FakeClientCommand(m_pEdict, "jointeam 3");
-			FakeClientCommand(m_pEdict, "selectchar 7");
-			m_bStartedGame = true;
+		FakeClientCommand(m_pEdict, "jointeam 3");
+		FakeClientCommand(m_pEdict, "selectchar 7");
+		m_bStartedGame = true;
 
-			FakeClientCommand(m_pEdict, "slot2"); //Draw Deagle
-			FakeClientCommand(m_pEdict, "+attack");
-			FakeClientCommand(m_pEdict, "-attack");
+		FakeClientCommand(m_pEdict, "slot2"); //Draw Deagle
+		FakeClientCommand(m_pEdict, "+attack");
+		FakeClientCommand(m_pEdict, "-attack");
 
-			FakeClientCommand(m_pEdict, "+attack2"); //Toggle Laser Sight
-			FakeClientCommand(m_pEdict, "-attack2");
+		FakeClientCommand(m_pEdict, "+attack2"); //Toggle Laser Sight
+		FakeClientCommand(m_pEdict, "-attack2");
 		//}
 		break;
 
@@ -2762,7 +2761,6 @@ break;*/
 		break;
 	default:
 		break;
-		
 	}
 
 	// generic case, just press fire :)
@@ -3025,7 +3023,7 @@ void CBot::Think()
 			return;
 		}
 		//else
-			m_CurrentLookTask = BOT_LOOK_TASK_NONE;
+		m_CurrentLookTask = BOT_LOOK_TASK_NONE;
 	}
 
 	if (m_fSpawnTime == 0.0f)
@@ -3782,7 +3780,7 @@ BOOL CBot::WantToFindEnemy()
 	return true;
 }
 
-// TODO: Experimental and NS AlienAction may need to be tested [APG]RoboCop[CL]
+// TODO: Experimental and NS AlienAction may need to be tested and added in bot.h [APG]RoboCop[CL]
 typedef enum
 {
 	ACTION_BUILD_DEF,
@@ -3830,108 +3828,108 @@ typedef enum
 class CAlienAction
 {
 public:
-	CAlienAction ( eAlienAction action, eMaskAlienActionResult result )
+	CAlienAction(eAlienAction action, eMaskAlienActionResult result)
 	{
 		m_action = action;
 		m_result = result;
 	}
 
-	float Utility ()
+	float Utility()
 	{
 		float fUtility = 1.0f;
 
-		if ( m_result & ACTION_RES_FASTER_RESOURCES )
+		if (m_result & ACTION_RES_FASTER_RESOURCES)
 			fUtility *= 1.1f;
-		if ( m_result & ACTION_RES_MORE_HEALTH )
+		if (m_result & ACTION_RES_MORE_HEALTH)
 			fUtility *= 0.8f;
-		if ( m_result & ACTION_RES_MORE_ABILITIES )
+		if (m_result & ACTION_RES_MORE_ABILITIES)
 			fUtility *= 1.05f;
-		if ( m_result & ACTION_RES_MORE_SPAWNPOINTS )
+		if (m_result & ACTION_RES_MORE_SPAWNPOINTS)
 			fUtility *= 1.1f;
-		if ( m_result & ACTION_RES_MORE_DEFENCES )
+		if (m_result & ACTION_RES_MORE_DEFENCES)
 			fUtility *= 0.9f;
-		if ( m_result & ACTION_RES_CLOACKED )
+		if (m_result & ACTION_RES_CLOACKED)
 			fUtility *= 0.5f;
 		return fUtility;
 	}
 
-	float ResultProbability ( eAlienMaskEvidence evd )
+	float ResultProbability(eAlienMaskEvidence evd)
 	{
 		float fProbability = 1.0f;
 
-		if ( m_result & ACTION_RES_FASTER_RESOURCES )
+		if (m_result & ACTION_RES_FASTER_RESOURCES)
 		{
-			if ( evd & MASK_EVD_SLOW_RESOURCES )
+			if (evd & MASK_EVD_SLOW_RESOURCES)
 				fProbability *= 1.0f;
-			if ( evd & MASK_EVD_NORM_RESOURCES )
+			if (evd & MASK_EVD_NORM_RESOURCES)
 				fProbability *= 0.6f;
-			if ( evd & MASK_EVD_FAST_RESOURCES )
+			if (evd & MASK_EVD_FAST_RESOURCES)
 				fProbability *= 0.3f;
-			if ( evd & MASK_EVD_LOSING )
+			if (evd & MASK_EVD_LOSING)
 				fProbability *= 0.9f;
 		}
-		if ( m_result & ACTION_RES_MORE_HEALTH )
+		if (m_result & ACTION_RES_MORE_HEALTH)
 		{
-			if ( evd & MASK_EVD_LOW_HEALTH )
+			if (evd & MASK_EVD_LOW_HEALTH)
 				fProbability *= 1.0f;
-			if ( evd & MASK_EVD_BALANCED )
+			if (evd & MASK_EVD_BALANCED)
 				fProbability *= 0.6f;
-			if ( evd & MASK_EVD_LOSING )
+			if (evd & MASK_EVD_LOSING)
 				fProbability *= 0.9f;
 		}
-		if ( m_result & ACTION_RES_MORE_ABILITIES )
+		if (m_result & ACTION_RES_MORE_ABILITIES)
 		{
-			if ( evd & MASK_EVD_SLOW_RESOURCES )
+			if (evd & MASK_EVD_SLOW_RESOURCES)
 				fProbability *= 1.0f;
-			if ( evd & MASK_EVD_NORM_RESOURCES )
+			if (evd & MASK_EVD_NORM_RESOURCES)
 				fProbability *= 0.6f;
-			if ( evd & MASK_EVD_NORM_RESOURCES )
+			if (evd & MASK_EVD_NORM_RESOURCES)
 				fProbability *= 0.3f;
-			if ( evd & MASK_EVD_LOSING )
+			if (evd & MASK_EVD_LOSING)
 				fProbability *= 0.9f;
 		}
-		if ( m_result & ACTION_RES_MORE_SPAWNPOINTS )
+		if (m_result & ACTION_RES_MORE_SPAWNPOINTS)
 		{
-			if ( evd & MASK_EVD_MIN_HIVES_UP )
+			if (evd & MASK_EVD_MIN_HIVES_UP)
 				fProbability *= 1.0f;
-			else if ( evd & MASK_EVD_MAX_HIVES_UP )
+			else if (evd & MASK_EVD_MAX_HIVES_UP)
 				fProbability *= 0.0f;
 			else
 				fProbability *= 0.5f;
 
-			if ( evd & MASK_EVD_FAST_RESOURCES )
+			if (evd & MASK_EVD_FAST_RESOURCES)
 				fProbability *= 0.9f;
-			if ( evd & MASK_EVD_NORM_RESOURCES )
+			if (evd & MASK_EVD_NORM_RESOURCES)
 				fProbability *= 0.7f;
-			if ( evd & MASK_EVD_SLOW_RESOURCES )
+			if (evd & MASK_EVD_SLOW_RESOURCES)
 				fProbability *= 0.2f;
 		}
-		if ( m_result & ACTION_RES_MORE_DEFENCES )
+		if (m_result & ACTION_RES_MORE_DEFENCES)
 		{
-			if ( evd & MASK_EVD_NORM_RESOURCES )
+			if (evd & MASK_EVD_NORM_RESOURCES)
 				fProbability *= 0.6f;
-			if ( evd & MASK_EVD_NORM_RESOURCES )
+			if (evd & MASK_EVD_NORM_RESOURCES)
 				fProbability *= 0.3f;
-			if ( evd & MASK_EVD_LOSING )
+			if (evd & MASK_EVD_LOSING)
 				fProbability *= 0.9f;
 		}
-		if ( m_result & ACTION_RES_CLOACKED )
+		if (m_result & ACTION_RES_CLOACKED)
 		{
-			if ( evd & MASK_EVD_BALANCED )
+			if (evd & MASK_EVD_BALANCED)
 				fProbability *= 0.7f;
-			if ( evd & MASK_EVD_WINNING )
+			if (evd & MASK_EVD_WINNING)
 				fProbability *= 0.9f;
-			if ( evd & MASK_EVD_MANY_SENS )
+			if (evd & MASK_EVD_MANY_SENS)
 				fProbability *= 0.1f;
 		}
 
-		if ( m_result & ACTION_RES_MORE_TRAITS )
+		if (m_result & ACTION_RES_MORE_TRAITS)
 		{
-			if ( evd & MASK_EVD_MANY_DEFS )
+			if (evd & MASK_EVD_MANY_DEFS)
 				fProbability *= 0.66f;
-			if ( evd & MASK_EVD_MANY_SENS )
+			if (evd & MASK_EVD_MANY_SENS)
 				fProbability *= 0.66f;
-			if ( evd & MASK_EVD_MANY_MOVS )
+			if (evd & MASK_EVD_MANY_MOVS)
 				fProbability *= 0.66f;
 			return fProbability;
 		}
@@ -3978,7 +3976,6 @@ public:
 private:
 	std::vector<CAlienAction> m_Actions;
 };
-
 
 void CBot::LookForNewTasks()
 {
@@ -4737,6 +4734,9 @@ void CBot::LookForNewTasks()
 
 						AddTask(CBotTask(BOT_TASK_HEAL_PLAYER, iNewScheduleId, pNearestHealablePlayer));
 						break;
+					case BOT_CAN_NONE:
+						break;
+					default:;
 					}
 				}
 				else
@@ -5633,15 +5633,15 @@ void CBot::LookForNewTasks()
 						gBotGlobals.m_iCurrentMod != MOD_SI &&
 						gBotGlobals.m_iCurrentMod != MOD_WW &&
 						gBotGlobals.m_iCurrentMod != MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
-						//gBotGlobals.m_iCurrentMod != MOD_TFC
+					//gBotGlobals.m_iCurrentMod != MOD_TFC
 
-					/*if ( gBotGlobals.IsMod(MOD_TFC) )
-					{
-					// assemble squad on civilian on hunted maps
-					if ( gBotGlobals.IsMapType(
-			}*/
+				/*if ( gBotGlobals.IsMod(MOD_TFC) )
+				{
+				// assemble squad on civilian on hunted maps
+				if ( gBotGlobals.IsMapType(
+		}*/
 
-			// if Natural Selction is the MOD..
+		// if Natural Selction is the MOD..
 					if (bCanMakeSquad && gBotGlobals.IsNS())
 					{
 						if (IsFade())
@@ -6540,12 +6540,12 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 	}
 	break;
 	case MOD_TS:
-	/*case MOD_TFC:
-	{
-		if (UTIL_IsGrenadeRocket(pEntity))//strstr(szClassname,"grenade") )
-			return true;
-	}
-	break;*/
+		/*case MOD_TFC:
+		{
+			if (UTIL_IsGrenadeRocket(pEntity))//strstr(szClassname,"grenade") )
+				return true;
+		}
+		break;*/
 	default:
 		break;
 	}
@@ -7344,9 +7344,9 @@ void BotFunc_ChangeAngles(float* fSpeed, const float* fIdeal, float* fCurrent, f
 	if (fDiff < *fSpeed)
 		*fSpeed = fDiff;  // just need to turn a little bit (less than max)
 
-	 // here we have four cases, both angle positive, one positive and
-	 // the other negative, one negative and the other positive, or
-	 // both negative.  handle each case separately...
+	// here we have four cases, both angle positive, one positive and
+	// the other negative, one negative and the other positive, or
+	// both negative.  handle each case separately...
 
 	if (*fCurrent >= 0 && *fIdeal >= 0)  // both positive
 	{
@@ -8875,19 +8875,19 @@ edict_t* CBot::FindEnemy()
 					else if (EntityIsMarineStruct(pEntity))
 						iPriority = 8;
 					break;
-				/*case MOD_TFC:
-					// Teleporter/disp/sentry gun (quick check)
-					if (pEntity->v.flags & FL_MONSTER)
-						iPriority = 12;
-					else if (pEntity->v.flags & FL_CLIENT)
-					{
-						// flag carrier
-						if (UTIL_TFC_PlayerHasFlag(pEntity))
-							iPriority = 13;
-						else if (pev->playerclass == pEntity->v.playerclass)
-							iPriority = 11;
-					}
-					break;*/
+					/*case MOD_TFC:
+						// Teleporter/disp/sentry gun (quick check)
+						if (pEntity->v.flags & FL_MONSTER)
+							iPriority = 12;
+						else if (pEntity->v.flags & FL_CLIENT)
+						{
+							// flag carrier
+							if (UTIL_TFC_PlayerHasFlag(pEntity))
+								iPriority = 13;
+							else if (pev->playerclass == pEntity->v.playerclass)
+								iPriority = 11;
+						}
+						break;*/
 				default:
 					break;
 				}
@@ -8924,7 +8924,7 @@ edict_t* CBot::FindEnemy()
 			}
 		}
 	}
-	
+
 		// if something mucked up
 		if ( gBotGlobals.IsNS() )
 		{
@@ -9103,7 +9103,18 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 		if (!EntityIsAlive(pEntity))
 			return false;
 
-		return pEntity->v.flags & FL_CLIENT;
+		if (!gBotGlobals.m_bTeamPlay)
+			return pEntity->v.flags & FL_CLIENT;
+		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		{
+			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
+			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+
+			const char* model1 = g_engfuncs.pfnInfoKeyValue(infobuffer1, "model");
+			const char* model2 = g_engfuncs.pfnInfoKeyValue(infobuffer2, "model");
+
+			return !FStrEq(model1, model2);
+		}
 	}
 	break;
 	case MOD_BUMPERCARS:
@@ -9244,34 +9255,34 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 		break;*/
 	case MOD_GEARBOX:
 	{
-		//const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
-
 		//gBotGlobals.m_bTeamPlay = true; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
 
 		if (!EntityIsAlive(pEntity))
 			return false;
-
-		if (pEntity->v.flags & FL_CLIENT)
+		if (!gBotGlobals.m_bTeamPlay)
+			return pEntity->v.flags & FL_CLIENT;
+		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
-			BOOL team = gBotGlobals.m_bTeamPlay;
+			const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-			if (team)
+			char* infobuffer = GET_INFOKEYBUFFER(pEntity);
+			//strcpy(szClassname, INFOKEY_VALUE(infobuffer, "model"));
+
+			if (!strcmp(szClassname, "ctf_barney") || !strcmp(szClassname, "cl_suit") || !strcmp(szClassname, "ctf_gina") ||
+				!strcmp(szClassname, "ctf_gordon") || !strcmp(szClassname, "otis") || !strcmp(szClassname, "ctf_scientist"))
 			{
-				char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-				char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
-				char model1[64];
-				char model2[64];
-
-				strcpy(model1, g_engfuncs.pfnInfoKeyValue(infobuffer1, "model"));
-				strcpy(model2, g_engfuncs.pfnInfoKeyValue(infobuffer2, "model"));
-
-				return strcmp(model1, model2) != 0;
+				return TEAM_BLACK_MESA;
 			}
-
-			return true;
+			else if (!strcmp(szClassname, "beret") || !strcmp(szClassname, "drill") || !strcmp(szClassname, "grunt") ||
+				!strcmp(szClassname, "recruit") || !strcmp(szClassname, "shephard") || !strcmp(szClassname, "tower"))
+			{
+				return TEAM_OPPOSING_FORCE;
+			}
+			// different teams are enemies
+			return pEntity->v.flags & FL_CLIENT && GetTeam() != UTIL_GetTeam(pEntity); //TODO: To prevent team shooting in Op4CTF [APG]RoboCop[CL]
 		}
 	}
-		break;
+	break;
 	case MOD_HL_DM:
 	{
 		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
@@ -10924,60 +10935,60 @@ BOOL BotFunc_GetStructuresToBuildForEntity(AvHUser3 iBuildingType, int* iDefs, i
 	case AVH_USER3_SENSORY_CHAMBER:
 		theThingsToBuild = &gBotGlobals.m_ThingsToBuild->m_forSensoryChamber;
 		break;
-	/*case AVH_USER3_NONE: break;
-	case AVH_USER3_MARINE_PLAYER: break;
-	case AVH_USER3_COMMANDER_PLAYER: break;
-	case AVH_USER3_ALIEN_PLAYER1: break;
-	case AVH_USER3_ALIEN_PLAYER2: break;
-	case AVH_USER3_ALIEN_PLAYER3: break;
-	case AVH_USER3_ALIEN_PLAYER4: break;
-	case AVH_USER3_ALIEN_PLAYER5: break;
-	case AVH_USER3_ALIEN_EMBRYO: break;
-	case AVH_USER3_SPAWN_TEAMA: break;
-	case AVH_USER3_SPAWN_TEAMB: break;
-	case AVH_USER3_PARTICLE_ON: break;
-	case AVH_USER3_PARTICLE_OFF: break;
-	case AVH_USER3_WELD: break;
-	case AVH_USER3_ALPHA: break;
-	case AVH_USER3_MARINEITEM: break;
-	case AVH_USER3_WAYPOINT: break;
-	case AVH_USER3_NOBUILD: break;
-	case AVH_USER3_USEABLE: break;
-	case AVH_USER3_AUDIO_ON: break;
-	case AVH_USER3_AUDIO_OFF: break;
-	case AVH_USER3_FUNC_RESOURCE: break;
-	case AVH_USER3_COMMANDER_STATION: break;
-	case AVH_USER3_TURRET_FACTORY: break;
-	case AVH_USER3_ARMORY: break;
-	case AVH_USER3_ADVANCED_ARMORY: break;
-	case AVH_USER3_ARMSLAB: break;
-	case AVH_USER3_PROTOTYPE_LAB: break;
-	case AVH_USER3_OBSERVATORY: break;
-	case AVH_USER3_CHEMLAB: break;
-	case AVH_USER3_MEDLAB: break;
-	case AVH_USER3_NUKEPLANT: break;
-	case AVH_USER3_TURRET: break;
-	case AVH_USER3_SIEGETURRET: break;
-	case AVH_USER3_RESTOWER: break;
-	case AVH_USER3_PLACEHOLDER: break;
-	case AVH_USER3_INFANTRYPORTAL: break;
-	case AVH_USER3_NUKE: break;
-	case AVH_USER3_BREAKABLE: break;
-	case AVH_USER3_UMBRA: break;
-	case AVH_USER3_PHASEGATE: break;
-	case AVH_USER3_HEAVY: break;
-	case AVH_USER3_JETPACK: break;
-	case AVH_USER3_ADVANCED_TURRET_FACTORY: break;
-	case AVH_USER3_SPAWN_READYROOM: break;
-	case AVH_USER3_CLIENT_COMMAND: break;
-	case AVH_USER3_FUNC_ILLUSIONARY: break;
-	case AVH_USER3_MENU_BUILD: break;
-	case AVH_USER3_MENU_BUILD_ADVANCED: break;
-	case AVH_USER3_MENU_ASSIST: break;
-	case AVH_USER3_MENU_EQUIP: break;
-	case AVH_USER3_MINE: break;
-	case AVH_USER3_UNKNOWN: break;
-	case AVH_USER3_MAX: break;*/
+		/*case AVH_USER3_NONE: break;
+		case AVH_USER3_MARINE_PLAYER: break;
+		case AVH_USER3_COMMANDER_PLAYER: break;
+		case AVH_USER3_ALIEN_PLAYER1: break;
+		case AVH_USER3_ALIEN_PLAYER2: break;
+		case AVH_USER3_ALIEN_PLAYER3: break;
+		case AVH_USER3_ALIEN_PLAYER4: break;
+		case AVH_USER3_ALIEN_PLAYER5: break;
+		case AVH_USER3_ALIEN_EMBRYO: break;
+		case AVH_USER3_SPAWN_TEAMA: break;
+		case AVH_USER3_SPAWN_TEAMB: break;
+		case AVH_USER3_PARTICLE_ON: break;
+		case AVH_USER3_PARTICLE_OFF: break;
+		case AVH_USER3_WELD: break;
+		case AVH_USER3_ALPHA: break;
+		case AVH_USER3_MARINEITEM: break;
+		case AVH_USER3_WAYPOINT: break;
+		case AVH_USER3_NOBUILD: break;
+		case AVH_USER3_USEABLE: break;
+		case AVH_USER3_AUDIO_ON: break;
+		case AVH_USER3_AUDIO_OFF: break;
+		case AVH_USER3_FUNC_RESOURCE: break;
+		case AVH_USER3_COMMANDER_STATION: break;
+		case AVH_USER3_TURRET_FACTORY: break;
+		case AVH_USER3_ARMORY: break;
+		case AVH_USER3_ADVANCED_ARMORY: break;
+		case AVH_USER3_ARMSLAB: break;
+		case AVH_USER3_PROTOTYPE_LAB: break;
+		case AVH_USER3_OBSERVATORY: break;
+		case AVH_USER3_CHEMLAB: break;
+		case AVH_USER3_MEDLAB: break;
+		case AVH_USER3_NUKEPLANT: break;
+		case AVH_USER3_TURRET: break;
+		case AVH_USER3_SIEGETURRET: break;
+		case AVH_USER3_RESTOWER: break;
+		case AVH_USER3_PLACEHOLDER: break;
+		case AVH_USER3_INFANTRYPORTAL: break;
+		case AVH_USER3_NUKE: break;
+		case AVH_USER3_BREAKABLE: break;
+		case AVH_USER3_UMBRA: break;
+		case AVH_USER3_PHASEGATE: break;
+		case AVH_USER3_HEAVY: break;
+		case AVH_USER3_JETPACK: break;
+		case AVH_USER3_ADVANCED_TURRET_FACTORY: break;
+		case AVH_USER3_SPAWN_READYROOM: break;
+		case AVH_USER3_CLIENT_COMMAND: break;
+		case AVH_USER3_FUNC_ILLUSIONARY: break;
+		case AVH_USER3_MENU_BUILD: break;
+		case AVH_USER3_MENU_BUILD_ADVANCED: break;
+		case AVH_USER3_MENU_ASSIST: break;
+		case AVH_USER3_MENU_EQUIP: break;
+		case AVH_USER3_MINE: break;
+		case AVH_USER3_UNKNOWN: break;
+		case AVH_USER3_MAX: break;*/
 	default:
 		break;
 	}
@@ -12849,13 +12860,13 @@ void CBot::DoTasks()
 		case BOT_TASK_THROW_GRENADE:
 			switch (gBotGlobals.m_iCurrentMod)
 			{
-			/*case MOD_TFC:
-				FakeClientCommand(m_pEdict, "+gren1");
-				FakeClientCommand(m_pEdict, "-gren1");
-				bDone = true;
-				break;
-			case MOD_SVENCOOP:
-				break;*/
+				/*case MOD_TFC:
+					FakeClientCommand(m_pEdict, "+gren1");
+					FakeClientCommand(m_pEdict, "-gren1");
+					bDone = true;
+					break;
+				case MOD_SVENCOOP:
+					break;*/
 			case MOD_GEARBOX:
 
 				if (HasWeapon(VALVE_WEAPON_HANDGRENADE))
@@ -13807,7 +13818,7 @@ void CBot::DoTasks()
 
 					if (UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2) == 0 || UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2)
 						< static_cast<int>(UTIL_PlayersOnTeam(TEAM_ALIEN) *
-						gBotGlobals.m_fGorgeAmount / 2))
+							gBotGlobals.m_fGorgeAmount / 2))
 						m_iPossibleUpgrades.Add(ALIEN_LIFEFORM_TWO); //gorge
 				}
 				else if (IsFade())
@@ -16597,7 +16608,7 @@ void CBot::decideJumpDuckStrafe(float fEnemyDist, const Vector vEnemyOrigin)
 		Jump();
 	if (dec_duck->fired())
 		JumpAndDuck(); // try this
-//		Duck();
+	//		Duck();
 	if (m_fStrafeTime + 0.75f < gpGlobals->time)
 	{
 		float fout = dec_strafe->getOutput();
