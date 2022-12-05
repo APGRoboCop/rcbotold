@@ -1,6 +1,17 @@
 # rcbotold
 RCbot created by Cheeseh
 
+--------------
+Supported Mods
+--------------
+
+- Bumpercars
+- Rocket Crowbar
+- Deathmatch Classic
+- Opposing Force (CTF)
+- Natural Selection
+- The Specialists
+
 RCBot versions
 --------------
 
@@ -325,12 +336,6 @@ linux ../rcbot/dlls/rcbot_mm.so
 
 to the file.
 
---------------
-Supported Mods
---------------
-
-Svencoop 5.x
-
 --------
 2. Playing
 --------
@@ -413,9 +418,14 @@ iii. Post in forum or e-mail me with :
 8. Credits
 --------------
 
-- Botman : for the main HPB_Bot template
-- Flayra : for NS and code needed to get a bot to work with NS
-- Sven Viking : for SvenCoop and allowing me access to Beta versions to allow bot support  
-- PM (@RACC-ai.com) : for good FakeClientCommand code.
+- Cheeseh : RCBot founder
+- RoboCop : For compiling Linux builds and adding waypoints
+- Botman : For the main HPB_Bot template
+- Flayra : For NS and code needed to get a bot to work with NS
+- Sven Viking & Sniper: For SvenCoop and allowing me access to Beta versions to allow bot support  
+- PM (racc.bots-united.com) : For good FakeClientCommand code.
+- Jason Hutchens : For MegaHAL used for bot personality
 - SandMan : For waypointing NS maps
+- RedFox : For the BotCam code from FoXBot
 - Tsmod.net : For allowing TS v3.0 support
+- Tschumann : For the code needed for Op4CTF

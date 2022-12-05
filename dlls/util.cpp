@@ -917,7 +917,7 @@ int UTIL_GetTeam(edict_t* pEntity)
 	case MOD_GEARBOX:
 		//if (pent_info_ctfdetect != nullptr)
 		//{
-			// OpFor CTF map...
+			// OpFor CTF map... code from Sandbot by tschumann
 		if (gBotGlobals.m_bTeamPlay)
 		{
 			char model_name[32];

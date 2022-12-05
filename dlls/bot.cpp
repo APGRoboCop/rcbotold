@@ -9263,6 +9263,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			return pEntity->v.flags & FL_CLIENT;
 		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
+			// code from Sandbot by tschumann
 			const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
 			char* infobuffer = GET_INFOKEYBUFFER(pEntity);
