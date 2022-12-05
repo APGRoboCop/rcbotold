@@ -6879,7 +6879,7 @@ BOOL CBot::FInViewCone(Vector* pOrigin)
 	//	return BotFunc_FInViewCone(pOrigin, m_pEdict);
 	//}
 
-	return DotProductFromOrigin(pOrigin) > 0.5f; // 60 degree field of view
+	return DotProductFromOrigin(pOrigin) > 0.8f; // 60 degree field of view
 }
 
 float CBot::DotProductFromOrigin(Vector* pOrigin)
