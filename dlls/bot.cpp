@@ -1627,6 +1627,8 @@ void CBot::SpawnInit(const BOOL bInit)
 
 	m_bAcceptHealth = false;
 
+	m_bEagle_secondary_state = false; // JK-Botti Deagle Laser Sight script
+	
 	m_fNextUseScientist = 0.0f;
 	m_fNextUseBarney = 0.0f;
 
@@ -8792,7 +8794,7 @@ edict_t* CBot::FindEnemy()
 
 		m_pVisibles->resetIter();
 		//return NULL;
-
+		
 		while ((pEntity = m_pVisibles->nextVisible()) != nullptr)//!tempStack.IsEmpty() )
 		{
 			//pEntity = tempStack.ChooseFromStack();
@@ -8875,6 +8877,17 @@ edict_t* CBot::FindEnemy()
 					else if (EntityIsMarineStruct(pEntity))
 						iPriority = 8;
 					break;
+				case MOD_GEARBOX: // JK-Botti Deagle Laser Sight script
+					{
+						if (HasWeapon(GEARBOX_WEAPON_EAGLE) &&
+							m_bEagle_secondary_state != false &&
+							!(pEntity->v.button & (IN_ATTACK | IN_ATTACK2)))
+						{
+							pEntity->v.button |= IN_ATTACK2;
+							m_bEagle_secondary_state = false;
+						}
+						break;
+					}
 					/*case MOD_TFC:
 						// Teleporter/disp/sentry gun (quick check)
 						if (pEntity->v.flags & FL_MONSTER)

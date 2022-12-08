@@ -616,7 +616,7 @@ unsigned short HAL_FindWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	BOOL found;
 	int position = HAL_SearchDictionary(dictionary, word, &found);
 
-	if (found == true)
+	if (found == 1)
 		return dictionary->index[position];
 	else
 		return 0;
@@ -1421,7 +1421,7 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 	while (true)
 	{
 		// get a random symbol from the current context
-		if (start == true)
+		if (start == 1)
 			symbol = BotHALSeedReply(pBot, keys);
 		else
 			symbol = BotHALBabble(pBot, keys, replies);

@@ -87,6 +87,7 @@ elif cxx.like('msvc'):
   ]
 
   cxx.cxxflags += [
+	'/std:c++14',
 	'/arch:SSE2',
     '/EHsc'
   ]

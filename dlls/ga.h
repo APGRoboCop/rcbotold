@@ -172,7 +172,7 @@ public:
 
 	void setPopType(int t) { m_iPopType = t; }
 
-	int m_iMaxPopSize;
+	unsigned int m_iMaxPopSize;
 	static const int g_iDefaultMaxPopSize;
 	static const float g_fCrossOverRate;
 	static const float g_fMutateRate;

@@ -381,6 +381,7 @@ typedef struct
 	int m_fSecMinRange;
 	int m_fSecMaxRange;
 
+	//TODO: Maybe add ammo count and to hold fire button? [APG]RoboCop[CL]
 	BOOL m_bIsMelee;
 
 	short int m_iModId;

@@ -2861,6 +2861,8 @@ private:
 	float m_fGrenadePrimeTime;
 	int m_iGrenadeHolding;
 
+	bool m_bEagle_secondary_state; // JK-Botti Deagle Laser Sight script
+	
 	float m_fUpdateFlagTime;
 	BOOL m_bHasFlag; // has a flag or the only flag?
 	edict_t* m_pFlag; // holding this flag

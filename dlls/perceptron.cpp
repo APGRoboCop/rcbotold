@@ -102,7 +102,7 @@ void CPerceptron::setWeights(std::vector <ga_value> weights, int iFrom, int iNum
 
 void CPerceptron::randomize()
 {
-	for (int i = 0; i < m_weights.size(); i++)
+	for (unsigned int i = 0; i < m_weights.size(); i++)
 		m_weights[i] = RANDOM_FLOAT(0, 0.6f) - 0.3f;
 }
 
