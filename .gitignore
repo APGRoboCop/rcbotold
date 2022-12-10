@@ -300,3 +300,4 @@ __pycache__/
 build/*
 build-linux/*
 apg-load
+obj-windows/

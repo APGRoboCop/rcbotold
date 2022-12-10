@@ -1942,7 +1942,7 @@ void CBot::SpawnInit(const BOOL bInit)
 
 	m_bNeedToInit = false;
 
-	Vector m_vCurrentLookDir = Vector(0, 0, 0);
+	//Vector m_vCurrentLookDir = Vector(0, 0, 0);
 	//    m_bCurrentLookDirIsValid = false;
 
 	m_vMoveToVector = Vector(0, 0, 0);
@@ -7100,7 +7100,7 @@ void CBot::WorkViewAngles()
 	{
 		// face entity
 		// get the edict
-		edict_t* pEdict = m_CurrentTask->TaskEdict();
+		//edict_t* pEdict = m_CurrentTask->TaskEdict();
 
 		// check if the edict is valid
 		/*if (pEdict != nullptr)
@@ -7685,7 +7685,7 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 
 	// get the current task name
 	if (m_CurrentTask != nullptr)
-		eBotTask iCurrentTask = m_CurrentTask->Task();
+		eBotTask iCurrentTask = m_CurrentTask->Task(); //iCurrentTask unused? [APG]RoboCop[CL]
 
 	vAngles.z = 0;
 	pev->v_angle.z = pev->v_angle.z = 0;
@@ -9279,7 +9279,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			// code from Sandbot by tschumann
 			const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-			char* infobuffer = GET_INFOKEYBUFFER(pEntity);
+			//char* infobuffer = GET_INFOKEYBUFFER(pEntity);
 			//strcpy(szClassname, INFOKEY_VALUE(infobuffer, "model"));
 
 			if (!strcmp(szClassname, "ctf_barney") || !strcmp(szClassname, "cl_suit") || !strcmp(szClassname, "ctf_gina") ||
@@ -15843,7 +15843,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 			{
 				//float fDist;
 
-				float fDist = DistanceFromEdict(pTank);
+				//float fDist = DistanceFromEdict(pTank);
 
 				if (!CanUseTank(pTank))
 				{

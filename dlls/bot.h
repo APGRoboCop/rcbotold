@@ -1943,7 +1943,7 @@ public:
 
 		const CRememberPosition* e = m_Positions.getExisting(newPosition);
 
-		const int index = m_Positions.getExistingIndex(newPosition);
+		m_Positions.getExistingIndex(newPosition);
 
 		if (e != nullptr)
 			m_Positions.Remove(*e);

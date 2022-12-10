@@ -664,7 +664,7 @@ public:
 		{
 			if (m_Weapons[i] != nullptr)
 			{
-				delete m_Weapons[i];
+				delete[] m_Weapons[i];
 				m_Weapons[i] = nullptr;
 			}
 		}

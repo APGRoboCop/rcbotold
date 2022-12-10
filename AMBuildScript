@@ -53,7 +53,9 @@ if cxx.like('gcc'):
 	'-Wno-write-strings',
     '-Wno-error=unused-result',
     '-Wno-error=unused-variable',
+    '-Wno-class-memaccess',
     '-Wno-unused-value',
+    '-Wno-parentheses',
     '-fno-strict-aliasing',
     '-fPIC',
 	'-msse2',
@@ -109,7 +111,7 @@ elif cxx.like('msvc'):
   ]
 
   if builder.options.opt == '1':
-    cxx.cflags += ['/Ox']
+    cxx.cflags += ['/O2']
     cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
 
   if builder.options.debug == '1':
