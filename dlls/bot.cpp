@@ -1628,7 +1628,7 @@ void CBot::SpawnInit(const BOOL bInit)
 	m_bAcceptHealth = false;
 
 	m_bEagle_secondary_state = false; // JK-Botti Deagle Laser Sight script
-	
+
 	m_fNextUseScientist = 0.0f;
 	m_fNextUseBarney = 0.0f;
 
@@ -2531,45 +2531,45 @@ void CBot::StartGame()
 		break;
 
 		// team fortress
-/*case MOD_TFC:
-{
-	switch (this->m_iVguiMenu)
+	/*case MOD_TFC:
 	{
-	case VGUI_MENU_TFC_TEAM_SELECT:
-
-		if (m_fJoinServerTime + 5.0f < gpGlobals->time)
+		switch (this->m_iVguiMenu)
 		{
-			FakeClientCommand(m_pEdict, "jointeam %d", RANDOM_LONG(1, 4));
-			// hack for team select bug
-			this->m_iVguiMenu = VGUI_MENU_TFC_CLASS_SELECT;
+		case VGUI_MENU_TFC_TEAM_SELECT:
+
+			if (m_fJoinServerTime + 5.0f < gpGlobals->time)
+			{
+				FakeClientCommand(m_pEdict, "jointeam %d", RANDOM_LONG(1, 4));
+				// hack for team select bug
+				this->m_iVguiMenu = VGUI_MENU_TFC_CLASS_SELECT;
+			}
+
+			FakeClientCommand(m_pEdict, "jointeam %d", gBotGlobals.TFC_getBestTeam(m_Profile.m_iFavTeam));
+			break;
+			//	default:
+		case VGUI_MENU_TFC_CLASS_SELECT:
+		{
+			int iclass = gBotGlobals.TFC_getBestClass(m_Profile.m_iClass, pev->team);
+
+			FakeClientCommand(m_pEdict, gBotGlobals.TFC_getClassName(iclass));
+
+			m_bChoseClass = true;
 		}
-
-		FakeClientCommand(m_pEdict, "jointeam %d", gBotGlobals.TFC_getBestTeam(m_Profile.m_iFavTeam));
 		break;
-		//	default:
-	case VGUI_MENU_TFC_CLASS_SELECT:
-	{
-		int iclass = gBotGlobals.TFC_getBestClass(m_Profile.m_iClass, pev->team);
+		case 0:
 
-		FakeClientCommand(m_pEdict, gBotGlobals.TFC_getClassName(iclass));
+			if (m_fJoinServerTime + 5.0f < gpGlobals->time)
+			{
+				// hack for team select bug
+				this->m_iVguiMenu = VGUI_MENU_TFC_TEAM_SELECT;
+			}
 
-		m_bChoseClass = true;
-	}
+			if (RANDOM_LONG(0, 10) == 0)
+				PrimaryAttack();
+			break;
+		}
+	}*/
 	break;
-	case 0:
-
-		if (m_fJoinServerTime + 5.0f < gpGlobals->time)
-		{
-			// hack for team select bug
-			this->m_iVguiMenu = VGUI_MENU_TFC_TEAM_SELECT;
-		}
-
-		if (RANDOM_LONG(0, 10) == 0)
-			PrimaryAttack();
-		break;
-	}
-}
-break;*/
 	case MOD_BUMPERCARS:
 	{
 		FakeClientCommand(m_pEdict, "changeclass %d", RANDOM_LONG(1, 20));
@@ -2754,6 +2754,7 @@ break;*/
 	case MOD_WW:
 		//sprintf(c_class, "%d", pBot->bot_class);
 		//FakeClientCommand(m_pEdict, "classmenu", RANDOM_LONG(1, 9), nullptr);
+		//FakeClientCommand(m_pEdict, "menuselect 1");
 		FakeClientCommand(m_pEdict, "teammenu 5");
 		FakeClientCommand(m_pEdict, "classmenu 0");
 		m_bStartedGame = true;
@@ -5514,6 +5515,22 @@ void CBot::LookForNewTasks()
 						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWpt, -1));
 					}
 				}
+				break;
+				case MOD_WW:
+				{
+					// go for a capture point
+					int iWpt = WaypointFindRandomGoal(m_pEdict, -1, W_FL_IMPORTANT, &m_FailedGoals);
+
+					bRoam = false;
+
+					if (iWpt != -1)
+					{
+						// wait for 8 seconds or something for capture
+						AddPriorityTask(CBotTask(BOT_TASK_WAIT, iNewScheduleId, nullptr, 0, RANDOM_FLOAT(8.0f, 12.0f)));
+						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWpt, -1));
+					}
+				}
+				break;
 				case MOD_HL_DM:
 				{
 					// go for a new weapon
@@ -8794,7 +8811,7 @@ edict_t* CBot::FindEnemy()
 
 		m_pVisibles->resetIter();
 		//return NULL;
-		
+
 		while ((pEntity = m_pVisibles->nextVisible()) != nullptr)//!tempStack.IsEmpty() )
 		{
 			//pEntity = tempStack.ChooseFromStack();
@@ -8878,29 +8895,29 @@ edict_t* CBot::FindEnemy()
 						iPriority = 8;
 					break;
 				case MOD_GEARBOX: // JK-Botti Deagle Laser Sight script
+				{
+					if (m_pCurrentWeapon->GetID() == GEARBOX_WEAPON_EAGLE &&
+						m_bEagle_secondary_state != false &&
+						!(pEntity->v.button & (IN_ATTACK | IN_ATTACK2)))
 					{
-						if (HasWeapon(GEARBOX_WEAPON_EAGLE) &&
-							m_bEagle_secondary_state != false &&
-							!(pEntity->v.button & (IN_ATTACK | IN_ATTACK2)))
-						{
-							pEntity->v.button |= IN_ATTACK2;
-							m_bEagle_secondary_state = false;
-						}
-						break;
+						pEntity->v.button |= IN_ATTACK2;
+						m_bEagle_secondary_state = false;
 					}
-					/*case MOD_TFC:
-						// Teleporter/disp/sentry gun (quick check)
-						if (pEntity->v.flags & FL_MONSTER)
-							iPriority = 12;
-						else if (pEntity->v.flags & FL_CLIENT)
-						{
-							// flag carrier
-							if (UTIL_TFC_PlayerHasFlag(pEntity))
-								iPriority = 13;
-							else if (pev->playerclass == pEntity->v.playerclass)
-								iPriority = 11;
-						}
-						break;*/
+					break;
+				}
+				/*case MOD_TFC:
+					// Teleporter/disp/sentry gun (quick check)
+					if (pEntity->v.flags & FL_MONSTER)
+						iPriority = 12;
+					else if (pEntity->v.flags & FL_CLIENT)
+					{
+						// flag carrier
+						if (UTIL_TFC_PlayerHasFlag(pEntity))
+							iPriority = 13;
+						else if (pev->playerclass == pEntity->v.playerclass)
+							iPriority = 11;
+					}
+					break;*/
 				default:
 					break;
 				}
@@ -9115,7 +9132,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 	{
 		if (!EntityIsAlive(pEntity))
 			return false;
-			
+
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
 		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play

@@ -942,6 +942,8 @@ int UTIL_GetTeam(edict_t* pEntity)
 		return pEntity->v.team - 1;
 	case MOD_SVENCOOP:
 		return -1;*/
+	case MOD_WW:
+		return pEntity->v.team - 1;
 	default:
 		break;
 	}
