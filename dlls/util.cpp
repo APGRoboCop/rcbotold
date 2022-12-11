@@ -1496,7 +1496,7 @@ BOOL BotFunc_FInViewCone(const Vector* pOrigin, const edict_t* pEdict)
 
 	const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-	return flDot > 0.50f;  // 60 degree field of view
+	return flDot > 0.60f;  // 60 degree field of view
 }
 
 BOOL BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict)
@@ -2135,7 +2135,7 @@ unsigned short FixedUnsigned16(float value, float scale)
 
 short FixedSigned16(float value, float scale)
 {
-	int output = value * scale;
+	int output = (value * scale);
 
 	if (output > 32767)
 		output = 32767;

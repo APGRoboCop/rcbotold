@@ -963,10 +963,10 @@ void CBot::EnemyFound(edict_t* pEnemy)
 
 	m_fInvestigateSoundTime = gpGlobals->time + 2.0f;
 
-	if (strstr(STRING(pEnemy->v.classname), "osprey"))
-		UpdateCondition(BOT_CONDITION_ENEMY_IS_OSPREY);
-	else
-		RemoveCondition(BOT_CONDITION_ENEMY_IS_OSPREY);
+	//if (strstr(STRING(pEnemy->v.classname), "osprey"))
+	//	UpdateCondition(BOT_CONDITION_ENEMY_IS_OSPREY);
+	//else
+	//	RemoveCondition(BOT_CONDITION_ENEMY_IS_OSPREY);
 
 	if (!gBotGlobals.m_BotCam.BotHasEnemy())
 	{
@@ -6661,9 +6661,10 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 	{
 		// shoot cockpit of the osprey
 
-		if (HasCondition(BOT_CONDITION_ENEMY_IS_OSPREY))
-			vEnemyOrigin = pBotEnemy->v.origin + pBotEnemy->v.view_ofs;
-		else if (!HasCondition(BOT_CONDITION_SEE_ENEMY_BODY) && HasCondition(BOT_CONDITION_SEE_ENEMY_HEAD))
+		//if (HasCondition(BOT_CONDITION_ENEMY_IS_OSPREY))
+		//	vEnemyOrigin = pBotEnemy->v.origin + pBotEnemy->v.view_ofs;
+
+		if (!HasCondition(BOT_CONDITION_SEE_ENEMY_BODY) && HasCondition(BOT_CONDITION_SEE_ENEMY_HEAD))
 			vEnemyOrigin = pBotEnemy->v.origin + pBotEnemy->v.view_ofs;
 		else if (HasCondition(BOT_CONDITION_SEE_ENEMY_HEAD))
 		{
@@ -8771,7 +8772,7 @@ edict_t* CBot::FindEnemy()
 {
 	edict_t* pOldEnemy = m_pEnemy;
 	// If bot is shooting a structure in NS
-	// keep looking for more improtant structures to shoot
+	// keep looking for more important structures to shoot
 	// OR more importantly other players
 	if (m_pEnemy && m_fNextGetEnemyTime < gpGlobals->time)
 	{
@@ -8894,7 +8895,8 @@ edict_t* CBot::FindEnemy()
 					else if (EntityIsMarineStruct(pEntity))
 						iPriority = 8;
 					break;
-				case MOD_GEARBOX: // JK-Botti Deagle Laser Sight script
+					//TODO: Allow bots to toggle Deagle Laser Sight
+				/*case MOD_GEARBOX: // JK-Botti Deagle Laser Sight script
 				{
 					if (m_pCurrentWeapon->GetID() == GEARBOX_WEAPON_EAGLE &&
 						m_bEagle_secondary_state != false &&
@@ -8904,7 +8906,7 @@ edict_t* CBot::FindEnemy()
 						m_bEagle_secondary_state = false;
 					}
 					break;
-				}
+				}*/
 				/*case MOD_TFC:
 					// Teleporter/disp/sentry gun (quick check)
 					if (pEntity->v.flags & FL_MONSTER)
@@ -10466,7 +10468,7 @@ BOOL CBot::RemoveMySquad()
 	return false;
 }
 /*
-void CBot :: BotOnLadder ( void )
+void CBot :: BotOnLadder ()
 {
 	Vector v_src, v_dest, view_angles;
 	TraceResult tr;

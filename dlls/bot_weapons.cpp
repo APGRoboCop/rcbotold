@@ -845,7 +845,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	return iBestMeleeWeaponId;*/
 }
 
-BOOL CBotWeapon::NeedToReload()
+BOOL CBotWeapon::NeedToReload() const
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{

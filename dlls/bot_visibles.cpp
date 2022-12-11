@@ -64,7 +64,7 @@ CBotVisibles::CBotVisibles()
 	m_iVisibleList.Clear();
 }
 
-BOOL CBotVisibles::isVisible(int iIndex)
+BOOL CBotVisibles::isVisible(int iIndex) const
 {
 	return m_iVisibles->getBit(iIndex);
 }

@@ -85,7 +85,7 @@ elif cxx.like('msvc'):
   ]
   
   cxx.cflags += [
-    '/W3'
+    '/W4'
   ]
 
   cxx.cxxflags += [

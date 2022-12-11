@@ -91,7 +91,7 @@ void CBotNetMessages::execute(int iMessage, void* p, int i)
 		pMsg->execute(p, i);
 }
 
-CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName)
+CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName) const
 {
 	dataStack<CBotNetMessage*> l_tempStack = m_NetMessages;
 

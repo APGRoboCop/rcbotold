@@ -195,7 +195,7 @@ void CSomNeuron::displayWeights() const
 	}
 }
 
-ga_value CSomNeuron::neighbourDistance(CSomNeuron* other, ga_value fDistance)
+ga_value CSomNeuron::neighbourDistance(CSomNeuron* other, ga_value fDistance) const
 {
 	fDistance = 0;
 	

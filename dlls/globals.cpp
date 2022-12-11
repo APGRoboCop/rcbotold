@@ -1516,7 +1516,7 @@ void CBotGlobals::ReadConfig()
 		BotMessage(nullptr, 0, "Error: could not find bot config file (%s)", filename);
 }
 
-void CBotGlobals::saveLearnedData()
+void CBotGlobals::saveLearnedData() const
 {
 	char szFilename[256];
 	char tmpFilename[64];
@@ -1746,7 +1746,7 @@ void CBotGlobals::FreeLocalMemory()
 		this->m_TeamTechs[i].freeMemory();
 }
 
-void CBotGlobals::ReadThingsToBuild()
+void CBotGlobals::ReadThingsToBuild() const
 {
 	char filename[512];
 

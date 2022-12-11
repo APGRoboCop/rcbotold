@@ -46,7 +46,7 @@ class IIndividual
 public:
 	virtual ~IIndividual() = default;
 	// get fitness for this individual
-	ga_value getFitness() { return m_fFitness; }
+	ga_value getFitness() const { return m_fFitness; }
 	void setFitness(float fVal) { m_fFitness = fVal; }
 
 	virtual void load(FILE* bfp, int req_size) = 0;
@@ -77,27 +77,27 @@ public:
 
 	void setGA(CGA* ga) { m_ga = ga; }
 	// size of population
-	unsigned int size() { return m_theIndividuals.size(); };
+	unsigned int size() const { return m_theIndividuals.size(); };
 
 	// get from population index
-	IIndividual* get(int iIndex);
+	IIndividual* get(int iIndex) const;
 
 	// add individual to population
 	void add(IIndividual* individual);
 
 	void clear();
 
-	IIndividual* getBestIndividual();
+	IIndividual* getBestIndividual() const;
 
-	ga_value totalFitness();
+	ga_value totalFitness() const;
 
-	ga_value bestFitness();
+	ga_value bestFitness() const;
 
-	ga_value averageFitness();
+	ga_value averageFitness() const;
 
 	void load(FILE* bfp, int chromosize, int type = TYPE_BOTGAVALS);
 
-	void save(FILE* bfp);
+	void save(FILE* bfp) const;
 
 	// returns individual
 	IIndividual* pick();
@@ -156,16 +156,16 @@ public:
 	void addToPopulation(IIndividual* individual);
 
 	// can get an individual off new population
-	bool canPick();
+	bool canPick() const;
 
 	IIndividual* pick();
 
 	void load(FILE* bfp, int chromosize);
 
-	void save(FILE* bfp);
+	void save(FILE* bfp) const;
 
 	void loadTeam(char* szName, int iTeam, int chromosize);
-	void saveTeam(char* szName, int iTeam);
+	void saveTeam(char* szName, int iTeam) const;
 
 	//void loadBotGA ( char *szName, int iProfileId );
 	//void saveBotGA ( char *szName, int iProfileId );

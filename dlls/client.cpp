@@ -821,18 +821,18 @@ void InitMessage ( const char *message );
 					//clear from i
 
 					int pos = n;
-					int i = 0;
+					int j = 0;
 
-					for (i = 0; pos < MAX_STORED_AUTOWAYPOINT; i++)
+					for (j = 0; pos < MAX_STORED_AUTOWAYPOINT; j++)
 					{
-						m_vLastAutoWaypointCheckPos[i] = m_vLastAutoWaypointCheckPos[pos];
+						m_vLastAutoWaypointCheckPos[j] = m_vLastAutoWaypointCheckPos[pos];
 
 						pos++;
 					}
 
-					for (i = 1; i < MAX_STORED_AUTOWAYPOINT; i++)// i supposed to = 1? [APG]RoboCop[CL]
+					for (j = 1; j < MAX_STORED_AUTOWAYPOINT; j++)// i supposed to = 1? [APG]RoboCop[CL]
 					{
-						m_vLastAutoWaypointCheckPos[i].UnSetPoint();
+						m_vLastAutoWaypointCheckPos[j].UnSetPoint();
 					}
 				}
 
@@ -908,7 +908,7 @@ void CClient::setSteamID()
 
 void CClient::checkBuiltSentry()
 {
-	m_fCheckSentryTime = gpGlobals->time + 0.1;
+	m_fCheckSentryTime = gpGlobals->time + 0.1f;
 }
 
 void CClient::clearIgnoreSentries()

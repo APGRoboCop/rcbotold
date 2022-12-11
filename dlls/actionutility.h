@@ -14,12 +14,12 @@ public:
 		m_fUtility = utility;
 	}
 
-	float getUtility()
+	float getUtility() const
 	{
 		return m_fUtility;
 	}
 
-	eCanDoStuff getAction()
+	eCanDoStuff getAction() const
 	{
 		return m_Action;
 	}

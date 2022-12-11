@@ -89,7 +89,7 @@ CBotReputation::CBotReputation(const int iPlayerRepId, const int iRep)
 	m_iRep = iRep;
 }
 
-CClient* CBotReputations::GetRandomClient(const int iRep)
+CClient* CBotReputations::GetRandomClient(const int iRep) const
 // return a random client that conforms to the iRep (reputation)
 // -1 will return a random bad client
 // 0 : a random neutral client
@@ -156,7 +156,7 @@ void CBotReputations::RemoveSaveRep(const int iBotProfile, const int iPlayerRepI
 }
 ////////////////////////////////
 // Saves ALL rep
-void CBotReputations::SaveAllRep(const int iBotProfile)
+void CBotReputations::SaveAllRep(const int iBotProfile) const
 {
 	dataStack <CBotReputation> tempStack = m_RepList;
 

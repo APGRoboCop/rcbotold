@@ -107,7 +107,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 	// is bot chat allowed AND this message is not from this bot itself ?
 	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHATTING) && pSender != pBot->m_pEdict)
 	{
-		int iNameLength = strlen(pBot->m_szBotName);
+		const int iNameLength = strlen(pBot->m_szBotName);
 		char* szName = new char[sizeof(char) * (iNameLength + 1)];
 		RemoveNameTags(pBot->m_szBotName, szName);
 		szName[iNameLength] = 0;
@@ -117,10 +117,10 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		strlow(szMsg);
 		strlow(szName);
 
-		char* szNamePos = strstr(szMsg, szName);
-		BOOL bNameInMsg = szNamePos != nullptr;
+		const char* szNamePos = strstr(szMsg, szName);
+		const BOOL bNameInMsg = szNamePos != nullptr;
 
-		int iSenderNameLength = strlen(STRING(pSender->v.netname));
+		const int iSenderNameLength = strlen(STRING(pSender->v.netname));
 		char* szSenderName = new char[sizeof(char) * (iSenderNameLength + 1)];
 		RemoveNameTags(STRING(pSender->v.netname), szSenderName);
 		szSenderName[iSenderNameLength] = 0;
@@ -140,8 +140,8 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		// break the new message into an array of words
 		HAL_MakeWords(szMsg, pBot->m_Profile.m_HAL->input_words);
 
-		CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender);
-		int iRep = pBot->m_Profile.m_Rep.GetClientRep(pClient);
+		const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender);
+		const int iRep = pBot->m_Profile.m_Rep.GetClientRep(pClient);
 
 		// does the bot feel concerned ? (more chances of replying if its name appears)
 		// if real mode is on, then bot chat is affected by bots rep with sender
@@ -189,7 +189,7 @@ void HumanizeString(char* string)
 		const int drop_percent = 1;
 		if (i + 1 < length && RANDOM_LONG(0, 100) < swap_percent)
 		{
-			char temp = string[i];
+			const char temp = string[i];
 
 			string[i] = string[i + 1];
 
@@ -244,7 +244,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 	if (in_string == nullptr)
 		return;
 
-	int length = strlen(in_string);
+	const int length = strlen(in_string);
 
 	if (length > 127)
 	{
@@ -412,8 +412,8 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 	HAL_DICTIONARY* keywords = BotHALMakeKeywords(pBot, pBot->m_Profile.m_HAL->input_words);
 	HAL_DICTIONARY* replywords = BotHALBuildReplyDictionary(pBot, keywords);
 
-	int last_entry = pBot->m_Profile.m_HAL->input_words->size - 1;
-	int last_character = pBot->m_Profile.m_HAL->input_words->entry[last_entry].length - 1;
+	const int last_entry = pBot->m_Profile.m_HAL->input_words->size - 1;
+	const int last_character = pBot->m_Profile.m_HAL->input_words->entry[last_entry].length - 1;
 
 	// was it a question (i.e. was the last word in the general chat record a question mark ?)
 	if (pBot->m_Profile.m_HAL->input_words->entry[last_entry].word[last_character] == '?')
@@ -506,7 +506,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	BOOL found;
 
 	// if the word's already in the dictionary, there is no need to add it
-	int position = HAL_SearchDictionary(dictionary, word, &found);
+	const int position = HAL_SearchDictionary(dictionary, word, &found);
 	if (found)
 		return dictionary->index[position];
 
@@ -526,7 +526,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	if (dictionary->entry == nullptr)
 		dictionary->entry = static_cast<HAL_STRING*>(malloc(sizeof(HAL_STRING) * dictionary->size));
 	else
-		dictionary->entry = static_cast<HAL_STRING*>(realloc((HAL_STRING*)dictionary->entry, sizeof(HAL_STRING) * dictionary->size));
+		dictionary->entry = static_cast<HAL_STRING*>(realloc(dictionary->entry, sizeof(HAL_STRING) * dictionary->size));
 
 	if (dictionary->entry == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_AddWord() unable to reallocate the dictionary to %d elements\n", dictionary->size);
@@ -576,8 +576,8 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 	{
 		// see whether the middle element of the search space is greater than, equal to, or
 		// less than the element being searched for.
-		int middle = (imin + imax) / 2;
-		int compar = HAL_CompareWords(word, dictionary->entry[dictionary->index[middle]]);
+		const int middle = (imin + imax) / 2;
+		const int compar = HAL_CompareWords(word, dictionary->entry[dictionary->index[middle]]);
 
 		// if equal then we have found the element. Otherwise halve the search space accordingly
 		if (compar == 0)
@@ -614,7 +614,7 @@ unsigned short HAL_FindWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	// the word with index zero is equal to a NULL word, indicating an error condition.
 
 	BOOL found;
-	int position = HAL_SearchDictionary(dictionary, word, &found);
+	const int position = HAL_SearchDictionary(dictionary, word, &found);
 
 	if (found == 1)
 		return dictionary->index[position];
@@ -629,7 +629,7 @@ int HAL_CompareWords(HAL_STRING word1, HAL_STRING word2)
 
 	try
 	{
-		int bound = min(word1.length, word2.length);
+		const int bound = min(word1.length, word2.length);
 
 		for (int i = 0; i < bound; ++i)
 			if (toupper(word1.word[i]) != toupper(word2.word[i]))
@@ -651,8 +651,8 @@ void HAL_InitializeDictionary(HAL_DICTIONARY* dictionary)
 {
 	// this function adds dummy words to the dictionary
 
-	HAL_STRING word = { 7, "<ERROR>" };
-	HAL_STRING end = { 5, "<FIN>" };
+	const HAL_STRING word = { 7, "<ERROR>" };
+	const HAL_STRING end = { 5, "<FIN>" };
 
 	(void)HAL_AddWord(dictionary, word);
 	(void)HAL_AddWord(dictionary, end);
@@ -813,7 +813,7 @@ HAL_TREE* HAL_FindSymbol(HAL_TREE* node, int symbol)
 	BOOL found_symbol = false;
 
 	// perform a binary search for the symbol
-	int i = HAL_SearchNode(node, symbol, &found_symbol);
+	const int i = HAL_SearchNode(node, symbol, &found_symbol);
 	if (found_symbol)
 		found = node->tree[i];
 
@@ -830,7 +830,7 @@ HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, int symbol)
 
 	// perform a binary search for the symbol. If the symbol isn't found, attach a new sub-node
 	// to the tree node so that it remains sorted.
-	int i = HAL_SearchNode(node, symbol, &found_symbol);
+	const int i = HAL_SearchNode(node, symbol, &found_symbol);
 
 	if (found_symbol)
 		found = node->tree[i];
@@ -853,7 +853,7 @@ void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position)
 		tree->tree = static_cast<HAL_TREE**>(malloc(sizeof(HAL_TREE*) * (tree->branch + 1)));
 	else
 	{
-		tree->tree = static_cast<HAL_TREE**>(realloc((HAL_TREE**)tree->tree, sizeof(HAL_TREE*) * (tree->branch + 1)));
+		tree->tree = static_cast<HAL_TREE**>(realloc(tree->tree, sizeof(HAL_TREE*) * (tree->branch + 1)));
 	}
 
 	if (tree->tree == nullptr)
@@ -887,8 +887,8 @@ int HAL_SearchNode(HAL_TREE* node, int symbol, BOOL* found_symbol)
 
 	while (true)
 	{
-		int middle = (imin + imax) / 2;
-		int compar = symbol - node->tree[middle]->symbol;
+		const int middle = (imin + imax) / 2;
+		const int compar = symbol - node->tree[middle]->symbol;
 
 		if (compar == 0)
 		{
@@ -1237,7 +1237,7 @@ int strpos(char* pos, char* start)
 
 void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int start, int end)
 {
-	int size = sizeof(char) * (maxstring + 1);
+	const int size = sizeof(char) * (maxstring + 1);
 
 	char* before = static_cast<char*>(malloc(size));
 	char* after = static_cast<char*>(malloc(size));
@@ -1503,7 +1503,7 @@ int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 	// symbol is based on probabilities, favouring keywords. In all cases, use the longest
 	// available context to choose the symbol
 
-	HAL_TREE* node = nullptr;
+	const HAL_TREE* node = nullptr;
 	int i;
 	int symbol = 0;
 
@@ -1571,7 +1571,7 @@ int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys)
 	if (keys->size > 0)
 	{
 		int i = RANDOM_LONG(0, keys->size - 1);
-		int stop = i;
+		const int stop = i;
 
 		while (true)
 		{
@@ -1700,7 +1700,7 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 		if (buffer[0] == '#' || buffer[0] == '\n')
 			continue;
 
-		char* string = strtok(buffer, "\t\n#");
+		const char* string = strtok(buffer, "\t\n#");
 
 		if (string != nullptr && strlen(string) > 0)
 		{
@@ -2060,7 +2060,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 				if (!szBuffer[0])
 					continue; // nothing on this line
 
-				int iLen = strlen(szBuffer);
+				const int iLen = strlen(szBuffer);
 
 				if (szBuffer[iLen - 1] == '\n')
 					szBuffer[iLen - 1] = 0;

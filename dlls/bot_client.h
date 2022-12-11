@@ -88,14 +88,14 @@ public:
 
 	virtual BOOL isStateMsg() { return false; }
 
-	BOOL humansAllowed()
+	BOOL humansAllowed() const
 	{
 		return m_bAllowHumans;
 	}
 
 	CBotNetMessage(/*void (*fpBotFunction)(void *, int),*/const char* szMessageName, int iModId, BOOL bAllowHumans = false);
 
-	BOOL MessageForMod(int iModId)
+	BOOL MessageForMod(int iModId) const
 	{
 		return m_iModId == MOD_ANY || iModId == m_iModId;
 	}
@@ -119,19 +119,19 @@ public:
 			(*m_fpMsgFunction)(p,i);
 	}*/
 
-	const char* getMessageName()
+	const char* getMessageName() const
 	{
 		return m_szMessageName;
 	}
 
-	int MessageNum()
+	int MessageNum() const
 	{
 		return m_iMessage;
 	}
 
 	BOOL IsMessage(int iMessage);
 
-	BOOL IsMessageName(const char* szMessage)
+	BOOL IsMessageName(const char* szMessage) const
 	{
 		return strcmp(m_szMessageName, szMessage) == 0;
 	}
@@ -184,7 +184,7 @@ public:
 
 	//void *GetFunction ( int iMessage );
 
-	CBotNetMessage* GetMessage(int iMessage, const char* szName);
+	CBotNetMessage* GetMessage(int iMessage, const char* szName) const;
 
 	void UpdateMessage(const char* szMessageName, int iMessage, int iSize)
 	{
@@ -696,7 +696,7 @@ public:
 
 	void write_short(int s) override
 	{
-		if (!m_ReceivedPlayers.size())
+		if (m_ReceivedPlayers.empty())
 			m_ReceivedPlayers.emplace_back(INDEXENT(s));
 		else if (!m_iOrderType)
 			m_iOrderType = static_cast<AvHOrderType>(s);

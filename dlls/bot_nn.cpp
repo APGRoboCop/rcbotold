@@ -130,7 +130,7 @@ void NN::getOutputs(std::vector<ga_value>* outputs) const
 
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
-			CPerceptron* n = l->getNeuron(j);
+			const CPerceptron* n = l->getNeuron(j);
 
 			outputs->emplace_back(n->getOutput());
 		}
@@ -179,7 +179,7 @@ void NNLayer::save(FILE* bfp) const
 
 	fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_NN_LAYER, static_cast<int>(iTemp));
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_NN_LAYER, static_cast<int>(iTemp));
 
 	header.write(bfp);
 
@@ -233,7 +233,7 @@ void NN::save(FILE* bfp) const
 	if (feof(bfp))
 		return;
 
-	unsigned int iTemp = m_Layers.size();
+	const unsigned int iTemp = m_Layers.size();
 
 	fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 
@@ -347,7 +347,7 @@ void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
 
 		for (unsigned int j = 0; j < outputs.size(); j++)
 		{
-			ga_value fError = outputs[j] - trainingsets[i].outputs[j];
+			const ga_value fError = outputs[j] - trainingsets[i].outputs[j];
 
 			fTotalError += fError * fError;
 			iNum++;

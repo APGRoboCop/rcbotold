@@ -90,7 +90,7 @@ static unsigned char g_iFailedWaypoints[MAX_WAYPOINTS];
 
 extern CBotGlobals gBotGlobals;
 
-void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk)
+void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk) const
 {
 	const int iLoc = std::abs(static_cast<int>(vOrigin.x + 4096) / 256);
 	const int jLoc = std::abs(static_cast<int>(vOrigin.y + 4096) / 256);
@@ -140,7 +140,7 @@ void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj,
 
 ///////////////
 // return nearest waypoint that can be used to cover from vCoverFrom vector
-int CWaypointLocations::GetCoverWaypoint(Vector const& vPlayerOrigin, const Vector& vCoverFrom, dataStack<int>* iIgnoreWpts)
+int CWaypointLocations::GetCoverWaypoint(Vector const& vPlayerOrigin, const Vector& vCoverFrom, dataStack<int>* iIgnoreWpts) const
 {
 	const int iWaypoint = this->NearestWaypoint(vCoverFrom, REACHABLE_RANGE, -1, false, true);
 
@@ -208,8 +208,8 @@ void CWaypointLocations::DeleteWptLocation(const int iIndex, const float* fOrigi
 
 void CWaypointLocations::FindNearestCoverWaypointInBucket(const int i, const int j, const int k, const Vector& vOrigin,
 	float* pfMinDist, int* piIndex, const dataStack<int>* iIgnoreWpts,
-	const int iCoverFromWpt)
-	// Search for the nearest waypoint : I.e.
+	const int iCoverFromWpt) const
+// Search for the nearest waypoint : I.e.
 	// Find the waypoint that is closest to vOrigin from the distance pfMinDist
 	// And set the piIndex to the waypoint index if closer.
 {
@@ -260,8 +260,8 @@ void CWaypointLocations::FindNearestCoverWaypointInBucket(const int i, const int
 void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int k, const Vector& vOrigin,
 	float* pfMinDist, int* piIndex, const int iIgnoreWpt,
 	const BOOL bGetVisible, const BOOL bGetUnReachable, const BOOL bIsBot,
-	const dataStack<int>* iFailedWpts, const BOOL bNearestAimingOnly)
-	// Search for the nearest waypoint : I.e.
+	const dataStack<int>* iFailedWpts, const BOOL bNearestAimingOnly) const
+// Search for the nearest waypoint : I.e.
 	// Find the waypoint that is closest to vOrigin from the distance pfMinDist
 	// And set the piIndex to the waypoint index if closer.
 {
@@ -366,7 +366,7 @@ void CWaypointLocations::FillWaypointsInBucket(const int i, const int j, const i
 	}
 }
 
-void CWaypointLocations::FillNearbyWaypoints(const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts)
+void CWaypointLocations::FillNearbyWaypoints(const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts) const
 {
 	FOR_EACH_WPT_LOC_BUCKET(vOrigin);
 
@@ -379,7 +379,7 @@ void CWaypointLocations::FillNearbyWaypoints(const Vector& vOrigin, dataStack<in
 // get the nearest waypoint INDEX from an origin
 int CWaypointLocations::NearestWaypoint(const Vector& vOrigin, float fNearestDist, const int iIgnoreWpt,
 	const BOOL bGetVisible, const BOOL bGetUnReachable, const BOOL bIsBot,
-	dataStack<int>* iFailedWpts, const BOOL bNearestAimingOnly)
+	dataStack<int>* iFailedWpts, const BOOL bNearestAimingOnly) const
 {
 	int iNearestIndex = -1;
 
@@ -396,7 +396,7 @@ int CWaypointLocations::NearestWaypoint(const Vector& vOrigin, float fNearestDis
 
 //////////////////////////////////
 // Draw waypoints around a player
-void CWaypointLocations::DrawWaypoints(edict_t* pEntity, const Vector& vOrigin, float fDist)
+void CWaypointLocations::DrawWaypoints(edict_t* pEntity, const Vector& vOrigin, float fDist) const
 {
 	unsigned char* pvs;
 	unsigned char* pas;
@@ -662,7 +662,7 @@ void AutoWaypoint ()
 }
 */
 
-FILE* CWaypointConversion::openWaypoint()
+FILE* CWaypointConversion::openWaypoint() const
 {
 	char szFilename[512];
 
@@ -2374,7 +2374,7 @@ WAYPOINT& WAYPOINTS :: operator [] (const int index)
 	}
 }
 
-void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints)
+void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints) const
 {
 	TraceResult tr;
 
@@ -2408,7 +2408,7 @@ void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints)
 	}
 }
 
-BOOL CWaypointVisibilityTable::SaveToFile()
+BOOL CWaypointVisibilityTable::SaveToFile() const
 {
 	char filename[512];
 	char file[256];
@@ -2438,7 +2438,7 @@ BOOL CWaypointVisibilityTable::SaveToFile()
 	return true;
 }
 
-BOOL CWaypointVisibilityTable::ReadFromFile()
+BOOL CWaypointVisibilityTable::ReadFromFile() const
 {
 	char filename[512];
 	char file[256];

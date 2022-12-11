@@ -163,7 +163,7 @@ public:
 		return p;
 	}
 
-	int get() { return m_Value; }
+	int get() const { return m_Value; }
 	void set(int value) { m_Value = value; }
 private:
 	int m_Value;
@@ -194,7 +194,7 @@ public:
 	// sub classes return their class with own values
 	IIndividual* copy() override;
 
-	unsigned int size();
+	unsigned int size() const;
 
 	//void setBits ( CBits values );
 	//void getBits ( CBits *values );
@@ -205,9 +205,9 @@ public:
 
 	void clear() override;
 
-	inline void random();
+	inline void random() const;
 
-	CBits* returnBits() { return m_theBits; }
+	CBits* returnBits() const { return m_theBits; }
 
 	void freeMemory();
 

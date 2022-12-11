@@ -50,12 +50,12 @@ const float CGA::g_fMaxPerturbation = 0.3f;
 // POPULATION
 ////////////////////
 
-IIndividual* CPopulation::get(int iIndex)
+IIndividual* CPopulation::get(int iIndex) const
 {
 	return m_theIndividuals[iIndex];
 }
 
-IIndividual* CPopulation::getBestIndividual()
+IIndividual* CPopulation::getBestIndividual() const
 {
 	IIndividual* best = nullptr;
 
@@ -92,7 +92,7 @@ void CPopulation::clear()
 	m_theIndividuals.clear();
 }
 
-ga_value CPopulation::totalFitness()
+ga_value CPopulation::totalFitness() const
 {
 	float fTotalFitness = 0.0f;
 
@@ -104,11 +104,11 @@ ga_value CPopulation::totalFitness()
 	return fTotalFitness;
 }
 
-void CPopulation::save(FILE* bfp)
+void CPopulation::save(FILE* bfp) const
 {
-	unsigned int iSize = m_theIndividuals.size();
+	const unsigned int iSize = m_theIndividuals.size();
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
 
 	header.write(bfp);
 
@@ -156,14 +156,14 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 	}
 }
 
-ga_value CPopulation::bestFitness()
+ga_value CPopulation::bestFitness() const
 {
 	BOOL gotBestFitness = false;
 	float fBestFitness = 0.0f;
 
 	for (unsigned int i = 0; i < size(); i++)
 	{
-		float fFitness = m_theIndividuals[i]->getFitness();
+		const float fFitness = m_theIndividuals[i]->getFitness();
 
 		if (!gotBestFitness || fFitness > fBestFitness)
 		{
@@ -175,7 +175,7 @@ ga_value CPopulation::bestFitness()
 	return fBestFitness;
 }
 
-ga_value CPopulation::averageFitness()
+ga_value CPopulation::averageFitness() const
 {
 	return totalFitness() / m_theIndividuals.size();
 }
@@ -251,7 +251,7 @@ void CGA::loadTeam(char* szName, int iTeam, int chromosize)
 	}
 }
 
-void CGA::saveTeam(char* szName, int iTeam)
+void CGA::saveTeam(char* szName, int iTeam) const
 {
 	FILE* bfp = RCBOpenFile(szName, "wb", SAVETYPE_TEAM, iTeam);
 
@@ -285,7 +285,7 @@ void CGA :: saveBotGA ( char *szName, int iProfileId )
 }
 */
 
-void CGA::save(FILE* bfp)
+void CGA::save(FILE* bfp) const
 {
 	m_thePopulation.save(bfp);
 	m_theNewPopulation.save(bfp);
@@ -353,7 +353,7 @@ void CGA::freeGlobalMemory()
 	m_theSelectFunction = nullptr;
 }
 
-bool CGA::canPick()
+bool CGA::canPick() const
 {
 	return m_theNewPopulation.size() > 0;
 }

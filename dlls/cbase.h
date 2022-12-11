@@ -194,7 +194,7 @@ public:
 	virtual void	SetToggleState( int state ) {}
 	virtual void    StartSneaking( void ) {}
 	virtual void    StopSneaking( void ) {}
-	virtual BOOL	OnControls( entvars_t *pev ) { return false; }
+	virtual BOOL	OnControls( entvars_t *onpev ) { return false; }
 	virtual BOOL    IsSneaking( void ) { return false; }
 	virtual BOOL	IsAlive( void ) { return (pev->deadflag == DEAD_NO) && pev->health > 0; }
 	virtual BOOL	IsBSPModel( void ) { return pev->solid == SOLID_BSP || pev->movetype == MOVETYPE_PUSHSTEP; }
@@ -225,13 +225,13 @@ public:
 	virtual void Blocked( CBaseEntity *pOther ) { if (m_pfnBlocked) (this->*m_pfnBlocked)( pOther ); };
 
 	// allow engine to allocate instance data
-    void *operator new( size_t stAllocateBlock, entvars_t *pev )
+    void *operator new( size_t stAllocateBlock, entvars_t *newpev )
 	{
-		return (void *)ALLOC_PRIVATE(ENT(pev), stAllocateBlock);
+		return (void *)ALLOC_PRIVATE(ENT(newpev), stAllocateBlock);
 	};
 
 	// don't use this.
-#if _MSC_VER >= 1200 // only build this code if MSVC++ 6.0 or higher
+#if defined(_MSC_VER) && _MSC_VER >= 1200 // only build this code if MSVC++ 6.0 or higher
 	void operator delete(void *pMem, entvars_t *pev)
 	{
 		pev->flags |= FL_KILLME;
@@ -248,6 +248,7 @@ public:
 	void EXPORT SUB_CallUseToggle( void ) { this->Use( this, this, USE_TOGGLE, 0 ); }
 	int			ShouldToggle( USE_TYPE useType, BOOL currentState );
 	void		FireBullets( ULONG	cShots, Vector  vecSrc, Vector	vecDirShooting,	Vector	vecSpread, float flDistance, int iBulletType, int iTracerFreq = 4, int iDamage = 0, entvars_t *pevAttacker = nullptr  );
+	Vector		FireBulletsPlayer( ULONG	cShots, Vector  vecSrc, Vector	vecDirShooting,	Vector	vecSpread, float flDistance, int iBulletType, int iTracerFreq = 4, int iDamage = 0, entvars_t *pevAttacker = nullptr, int shared_rand = 0 );						 
 
 	virtual CBaseEntity *Respawn( void ) { return nullptr; }
 
@@ -277,8 +278,8 @@ public:
 	}
 #endif
 
-	static CBaseEntity *Instance( entvars_t *pev ) { return Instance( ENT( pev ) ); }
-	static CBaseEntity *Instance( int eoffset) { return Instance( ENT( eoffset) ); }
+	static CBaseEntity *Instance( entvars_t *instpev ) { return Instance( ENT( instpev ) ); }
+	static CBaseEntity *Instance( int inst_eoffset) { return Instance( ENT( inst_eoffset) ); }
 
 	CBaseMonster *GetMonsterPointer( entvars_t *pevMonster ) 
 	{ 
@@ -357,6 +358,24 @@ public:
 
 	virtual	BOOL FVisible ( CBaseEntity *pEntity );
 	virtual	BOOL FVisible ( const Vector &vecOrigin );
+
+	//We use this variables to store each ammo count.
+	int ammo_9mm;
+	int ammo_357;
+	int ammo_bolts;
+	int ammo_buckshot;
+	int ammo_rockets;
+	int ammo_uranium;
+	int ammo_hornets;
+	int ammo_argrens;
+	//Special stuff for grenades and satchels.
+	float m_flStartThrow;
+	float m_flReleaseThrow;
+	int m_chargeReady;
+	int m_fInAttack;
+
+	enum EGON_FIRESTATE { FIRE_OFF, FIRE_CHARGE };
+	int m_fireState;		 
 };
 
 

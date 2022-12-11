@@ -160,7 +160,7 @@ void CPerceptron::train(ga_value expectedOutput)
 	}
 }
 
-void CPerceptron::save(FILE* bfp)
+void CPerceptron::save(FILE* bfp) const
 {
 	unsigned int iTemp;
 	unsigned int i;

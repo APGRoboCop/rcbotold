@@ -67,15 +67,15 @@ class AStarNode
 {
 public:
 	AStarNode();
-	BOOL heuristicSet();
+	BOOL heuristicSet() const;
 
 	void setHeuristic(float botDist, float goalDist, BOOL bIsTeleport = false);
 
-	BOOL hasParent();
+	BOOL hasParent() const;
 
-	BOOL isOpen();
+	BOOL isOpen() const;
 
-	BOOL isClosed();
+	BOOL isClosed() const;
 
 	void unClose();
 
@@ -84,16 +84,16 @@ public:
 	void unOpen();
 
 	void open();
-	float getHeuristic();
+	float getHeuristic() const;
 
-	short int getParent();
+	short int getParent() const;
 	void setParent(int iWpt);
 
-	bool operator()(const AStarNode* a, const AStarNode* b);
+	bool operator()(const AStarNode* a, const AStarNode* b) const;
 
-	bool operator<(AStarNode* b);
+	bool operator<(AStarNode* b) const;
 
-	bool precedes(AStarNode* b);
+	bool precedes(AStarNode* b) const;
 
 	short int m_iWaypoint;
 

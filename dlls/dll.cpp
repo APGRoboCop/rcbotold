@@ -1947,7 +1947,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 		}
 	}
 
-	BOOL bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
+	const BOOL bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
 	LoadHALBrainForPersonality(bpBotProfile, bPreTrain); // wake the bot's HAL brain up
 
 	// Also read bots rep with other players on the server
@@ -2230,7 +2230,7 @@ CBotCam::CBotCam()
 	m_bTriedToSpawn = false;
 }
 
-BOOL CBotCam::IsWorking()
+BOOL CBotCam::IsWorking() const
 {
 	return m_pCameraEdict != nullptr && gBotGlobals.IsConfigSettingOn(BOT_CONFIG_ENABLE_BOTCAM);
 }
@@ -2510,7 +2510,7 @@ void CBotCam::Think()
 	DispatchThink(m_pCameraEdict);
 }
 
-BOOL CBotCam::TuneIn(edict_t* pPlayer)
+BOOL CBotCam::TuneIn(edict_t* pPlayer) const
 {
 	if (gBotGlobals.m_iNumBots == 0)
 	{

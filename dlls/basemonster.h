@@ -434,7 +434,7 @@ public:
 	virtual void FadeMonster( void ); // Called instead of GibMonster() when gibs are disabled
 	
 	Vector ShootAtEnemy( const Vector &shootOrigin );
-	virtual Vector BodyTarget( const Vector &posSrc )
+	/*virtual Vector BodyTarget( const Vector &posSrc )
 	{
 		//Shoot the Osprey at the engines, return closest -Sniper
 		if( FClassnameIs(pev,"monster_osprey") || FClassnameIs(pev,"monster_blkop_osprey"))
@@ -453,7 +453,7 @@ public:
 		
 		return Center( ) * 0.75 + EyePosition() * 0.25;
 	};  // position to shoot at
-	
+	*/
 	virtual Vector  GetGunPosition( void );
 	
 	virtual int TakeHealth( float flHealth, int bitsDamageType, int health_cap = 0 );
