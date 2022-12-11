@@ -6,6 +6,7 @@ Supported Mods
 --------------
 
 - Bumpercars
+- Battlegrounds
 - Rocket Crowbar
 - Deathmatch Classic
 - Opposing Force (CTF)
