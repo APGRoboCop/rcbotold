@@ -1028,9 +1028,9 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 
 // find a path from the current waypoint. (pPath MUST be NULL on the
 // initial call. subsequent calls will return other paths if they exist.)
-int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, const int team)
+int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team)
 {
-	//int count = 0;
+	int count = 0;
 
 	if (*pPath == nullptr)
 	{
@@ -1064,7 +1064,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 
 				// set up stuff for subsequent calls...
 				(*path_index)++;
-
+				
 				return index;
 			}
 

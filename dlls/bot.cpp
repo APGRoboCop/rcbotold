@@ -54,7 +54,7 @@
 #include "meta_api.h"
 #endif
 #include "cbase.h" // Need CBASE for classify()
-//#include "player.h"
+#include "player.h"
 #include "bot_const.h"
 #include "bot.h"
 #include "waypoint.h"
@@ -7685,11 +7685,12 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 		if (bCanClimb && m_CurrentLookTask == BOT_LOOK_TASK_NEXT_WAYPOINT)
 		{
 			const int iLadderDir = GetLadderDir();
-
+			//TODO: increase speed for when climbing ladders [APG]RoboCop[CL]
+			// Keep angles at 90 degrees for better climbing [APG]RoboCop[CL]
 			if (iLadderDir == 1)// && ((vAngles.x < 0)||(vAngles.x > 60)))
-				vAngles.x = 60;
+				vAngles.x = 90;
 			else if (iLadderDir == -1)// && ((vAngles.x > 0)||(vAngles.x < -60)) )
-				vAngles.x = -60;
+				vAngles.x = -90;
 
 			SetLadderAngles(vAngles);
 			bUsePitch = true;
