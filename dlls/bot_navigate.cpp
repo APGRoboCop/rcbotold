@@ -1510,7 +1510,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_PUSH_PUSHABLE))
 			{
 				// get nearest pushable
-				edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512, false);
+				edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512.0f, false);
 
 				if (pPushable)
 				{
@@ -1706,7 +1706,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	return true;
 }
 
-PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam)
+PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam)
 {
 	PATH* pPath = nullptr;
 	int iPathIndex = 0;

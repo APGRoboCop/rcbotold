@@ -592,7 +592,7 @@ void WaypointDrawBeam(edict_t* pEntity, const Vector& start, const Vector& end, 
 	int noise, int red, int green, int blue, int brightness, int speed);
 void WaypointInit();
 int  WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team);
-int  WaypointFindNearest(const edict_t* pEntity, float distance, int team); //TODO: This is redefined with a diff perimeter [APG]RoboCop[CL]
+int  WaypointFindNearest(const edict_t* pEntity, float range, int team);
 int  WaypointFindNearest(const Vector& v_src, const edict_t* pEntity, float range, int team);
 int  WaypointFindNearestGoal(const Vector& v_src, edict_t* pEntity, float range, int team, int flags, const dataStack<int>* iIgnoreWpts);
 int WaypointFindRandomGoal(edict_t* pEntity, int team, const dataStack<int>* iIgnoreWpts);
