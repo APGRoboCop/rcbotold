@@ -100,13 +100,13 @@ public:
 
 	void FindNearestCoverWaypointInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, const dataStack<int>* iIgnoreWpts, int iCoverFromWpt) const;
 
-	void AddWptLocation(int iIndex, const float* fOrigin);
+	void AddWptLocation(int iIndex, float* fOrigin);
 
 	void FindNearestInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, int iIgnoreWpt, BOOL bGetVisible = true, BOOL bGetUnreachable = false, BOOL bIsBot = false, const dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = false) const;
 
 	void DrawWaypoints(edict_t* pEntity, const Vector& vOrigin, float fDist) const;
 
-	void DeleteWptLocation(int iIndex, const float* fOrigin);
+	void DeleteWptLocation(int iIndex, float* fOrigin);
 
 	//TODO: This is redefined with a diff perimeter [APG]RoboCop[CL]
 	int NearestWaypoint(const Vector& vOrigin, float fDist, int iIgnoreWpt, BOOL bGetVisible = true,
@@ -600,11 +600,11 @@ int WaypointFindRandomGoal(edict_t* pEntity, int team, int flags, const dataStac
 int WaypointFindRandomGoal(const Vector& v_src, edict_t* pEntity, float range, int team, int flags, const dataStack<int>* iIgnoreWpts);
 int  WaypointFindNearestAiming(const Vector& v_origin);
 void WaypointAdd(CClient* pClient);
-void WaypointAddPath(short int add_index, short int path_index);
+void WaypointAddPath(int add_index, int path_index);
 void WaypointAddAiming(edict_t* pEntity);
 void WaypointDelete(CClient* pClient);
-void WaypointDeletePath(short int del_index);
-void WaypointDeletePath(short int path_index, short int del_index);
+void WaypointDeletePath(int del_index);
+void WaypointDeletePath(int path_index, int del_index);
 void WaypointCreatePath(CClient* pClient, int cmd);
 void WaypointRemovePath(CClient* pClient, int cmd);
 BOOL WaypointLoad(edict_t* pEntity);
@@ -619,7 +619,8 @@ Vector WaypointOrigin(int iWaypointIndex);
 int NearestWaypointToEdict(edict_t* pEdict, int iIgnoreWpt, dataStack<int>* iFailedWpts);
 int NearestWaypointToOrigin(const Vector& vOrigin, int iIgnoreWpt, dataStack<int>* iFailedWpts = nullptr);
 int WaypointFlags(int iWaypointIndex);
-int WaypointAddOrigin(const Vector& vOrigin, int iFlags, edict_t* pEntity, BOOL bDraw = true, BOOL bSound = true, BOOL bAutoSetFlagsForPlayer = true);
+int WaypointAddOrigin(float* vOrigin, int iFlags, edict_t* pEntity, BOOL bDraw = true, BOOL bSound = true, BOOL
+                      bAutoSetFlagsForPlayer = true);
 void AutoWaypoint();
 Vector BotNavigate_ScanFOV(CBot* pBot);
 edict_t* PlayerNearVector(const Vector& vOrigin, float fRange);

@@ -180,7 +180,7 @@ public:
 		m_NetMessages.Push(pMessage);
 	}
 
-	void execute(int iMessage, void* p, int i);
+	void execute(int iMessage, void* p, int i) const;
 
 	//void *GetFunction ( int iMessage );
 
@@ -648,31 +648,31 @@ public:
 
 	void init(int index) { iState = 0; m_pEdict = nullptr; if (index) { m_pEdict = INDEXENT(index); } msg_init(); }
 
-	virtual void writeChar(char c) { write_char(c); iState++; };
-	virtual void writeByte(int b) { write_byte(b); iState++; };
-	virtual void writeShort(int s) { write_short(s); iState++; };
-	virtual void writeLong(int l) { write_long(l); iState++; };
-	virtual void writeString(const char* s) { write_string(s); iState++; };
-	virtual void writeCoord(float f) { write_coord(f); iState++; };
-	virtual void writeEntity(edict_t* p) { write_entity(p); iState++; };
-	virtual void writeAngle(float f) { write_angle(f); iState++; };
+	virtual void writeChar(char c) { write_char(c); iState++; }
+	virtual void writeByte(int b) { write_byte(b); iState++; }
+	virtual void writeShort(int s) { write_short(s); iState++; }
+	virtual void writeLong(int l) { write_long(l); iState++; }
+	virtual void writeString(const char* s) { write_string(s); iState++; }
+	virtual void writeCoord(float f) { write_coord(f); iState++; }
+	virtual void writeEntity(edict_t* p) { write_entity(p); iState++; }
+	virtual void writeAngle(float f) { write_angle(f); iState++; }
 
-	virtual void messageEnd() { iState = 0; message_end(); };
+	virtual void messageEnd() { iState = 0; message_end(); }
 
 	BOOL isStateMsg() override { return true; }
 
 private:
-	virtual void msg_init() {};
+	virtual void msg_init() {}
 
-	virtual void write_char(char c) {};
-	virtual void write_byte(int b) {};
-	virtual void write_short(int s) {};
-	virtual void write_long(int l) {};
-	virtual void write_string(const char* s) {};
-	virtual void write_coord(float p) {};
-	virtual void write_entity(edict_t* p) {};
-	virtual void write_angle(float f) {};
-	virtual void message_end() {};
+	virtual void write_char(char c) {}
+	virtual void write_byte(int b) {}
+	virtual void write_short(int s) {}
+	virtual void write_long(int l) {}
+	virtual void write_string(const char* s) {}
+	virtual void write_coord(float p) {}
+	virtual void write_entity(edict_t* p) {}
+	virtual void write_angle(float f) {}
+	virtual void message_end() {}
 
 protected:
 	edict_t* m_pEdict; // player receiving message

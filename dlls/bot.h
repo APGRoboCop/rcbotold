@@ -123,7 +123,7 @@ int GetPlayerEdictRepId(edict_t* pEdict);
 void BotFunc_ChangeAngles(float* fSpeed, const float* fIdeal, float* fCurrent, float* fUpdate);
 BOOL UTIL_FriendlyHatesPlayer(edict_t* pEntity, edict_t* pPlayer);
 edict_t* UTIL_getEntityInFront(edict_t* pEntity);
-void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, int magnitude, BOOL doDamage);
+void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, float magnitude, BOOL doDamage);
 Vector UTIL_GetGroundVector(edict_t* pEdict);
 BOOL UTIL_EntityIsHive(const edict_t* pEdict);
 int UTIL_CountEntitiesInRange(const char* classname, const Vector& vOrigin, float fRange);
@@ -154,7 +154,7 @@ BOOL UTIL_PlayerStandingOnEntity(const edict_t* pEntity, int team, const edict_t
 BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, int max_len);
 
 BOOL	EntityIsBuildable(edict_t* pEdict);
-BOOL    EntityIsWeldable(edict_t* pEdict); //TODO: This is redefined with a diff perimeter [APG]RoboCop[CL]
+BOOL    EntityIsWeldable(edict_t* pEntity);
 BOOL	EntityIsAlive(edict_t* pEdict);
 BOOL	EntityIsMarine(edict_t* pEdict);
 BOOL	EntityIsAlien(edict_t* pEdict);
@@ -274,7 +274,7 @@ float UTIL_AngleDiff(float destAngle, float srcAngle);
 
 void BotPrintTalkMessage(char* fmt, ...);
 
-int BotFunc_GetBitSetOf(int iBits); //TODO: This is redefined with a diff perimeter [APG]RoboCop[CL]
+int BotFunc_GetBitSetOf(int iId);
 void BotFile_Write(char* string);
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -397,7 +397,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CBotReputation* pRep = tempStack.ChoosePointerFromStack();
+			const CBotReputation* pRep = tempStack.ChoosePointerFromStack();
 
 			// bug fixed... didn't add :-P
 			iTotal += pRep->CurrentRep();
@@ -839,7 +839,7 @@ public:
 		m_fTimeToComplete = gpGlobals->time + fTime;
 	}
 
-	BOOL operator == (const CBotTask& Task);
+	BOOL operator == (const CBotTask& Task) const;
 
 	char* getTaskDescription() const
 	{
@@ -1154,7 +1154,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CBotTask* tempTask = tempStack.ChoosePointerFrom();
+			const CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
 			const int iFailSchedule = tempTask->GetScheduleId();
 
@@ -1200,7 +1200,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CBotTask* tempTask = tempStack.ChoosePointerFrom();
+			const CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
 			if (tempTask->IsOfSchedule(iSchedDesc))
 			{
@@ -1434,7 +1434,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CBotTask* pTask = tempStack.ChoosePointerFrom();
+			const CBotTask* pTask = tempStack.ChoosePointerFrom();
 
 			if (pTask->IsOfSchedule(iSchedDesc))
 			{
@@ -1521,7 +1521,7 @@ private:
 // connections between two points.  There is an array called "paths" that
 // contains head pointers to these structures for each waypoint index.
 typedef struct path {
-	short int index[MAX_PATH_INDEX];  // indexes of waypoints (index -1 means not used)
+	int index[MAX_PATH_INDEX];  // indexes of waypoints (index -1 means not used)
 	struct path* next;   // link to next structure
 } PATH;
 
@@ -1805,7 +1805,7 @@ public:
 		return m_pEntity.Get();
 	}
 
-	BOOL isEntity(const edict_t* pEntity)
+	BOOL isEntity(const edict_t* pEntity) const
 	{
 		if (pEntity == nullptr)
 			return false;
@@ -1828,7 +1828,7 @@ public:
 		return m_vVisibleOrigin;
 	}
 
-	BOOL operator == (CRememberPosition other)
+	BOOL operator == (CRememberPosition other) const
 	{
 		return other.getEntity() == getEntity();
 	}
@@ -2069,7 +2069,7 @@ public:
 		return &m_Positions[m_Positions.Size() - 1];//[m_iNewest]);//.getVector();
 	}
 
-	CRememberPosition* positionNearest(const Vector& vOrigin, const Vector vFrom)
+	CRememberPosition* positionNearest(const Vector& vOrigin, const Vector& vFrom)
 	{
 		CRememberPosition* nearest = nullptr;
 		float fNearest = 0;
@@ -2418,7 +2418,7 @@ public:
 	{
 		const edict_t* pLeader = GetLeader();
 
-		if (pLeader->v.velocity.Length2D() != 0)
+		if (pLeader->v.velocity.Length2D() != 0.0f)
 		{
 			m_vLeaderAngle = UTIL_VecToAngles(pLeader->v.velocity);
 		}
@@ -2825,7 +2825,7 @@ private:
 
 	CTypeVector<short int> m_seenFlagPos;
 
-	void decideJumpDuckStrafe(float fEnemyDist, Vector vEnemyOrigin);
+	void decideJumpDuckStrafe(float fEnemyDist, const Vector& vEnemyOrigin);
 
 	//float utility ( CBotTask eTask );
 
@@ -2844,7 +2844,7 @@ private:
 
 	void clearEnemyCosts();
 
-	void workEnemyCosts(edict_t* pEntity, Vector vOrigin, float fDistance);
+	void workEnemyCosts(edict_t* pEntity, const Vector& vOrigin, float fDistance);
 
 	float m_fNextWorkRangeCosts;
 
@@ -3141,7 +3141,7 @@ public:
 
 	void printBoredoms(edict_t* pEdictTo) const
 	{
-		BotMessage(pEdictTo, 0, "%s's boredom = %d (%0.1f percent)", m_szBotName, m_iBoredom, static_cast<float>(m_iBoredom) / 255);
+		BotMessage(pEdictTo, 0, "%s's boredom = %d (%0.1f percent)", m_szBotName, m_iBoredom, static_cast<double>(m_iBoredom) / 255);
 	}
 
 	void havingFun()
@@ -3398,7 +3398,7 @@ public:
 	void AddVisitedResourceTower(edict_t* pEdict);
 
 	// Make bot remember this vector position, bot will return to it at some point
-	void RememberPosition(Vector vOrigin, edict_t* pEntity, int flags = 0);
+	void RememberPosition(const Vector& vOrigin, edict_t* pEntity, int flags = 0);
 
 	// Add a task to the end of the task stack
 	void AddTask(const CBotTask& Task);
@@ -3662,7 +3662,7 @@ public:
 	////////////////////////////
 	// NATURAL SELECTION RELATED
 
-	short int m_iResources;
+	int m_iResources;
 	//		short int m_siLastGestationState;
 	//		short int m_siCurrentUpgrades;
 
@@ -3720,7 +3720,7 @@ public:
 	////////////////////////////
 	// MISCELLANEOUS
 
-	short int m_iCombatInfo;
+	int m_iCombatInfo;
 	//short int m_iCombatUpgrades;
 
 	edict_t* m_pSquadLeader;
@@ -3988,7 +3988,7 @@ public:
 	BOOL     CanPickup(edict_t* pPickup);
 
 	// bot hears a sound type from a specific origin vector
-	void     HearSound(eSoundType iSound, Vector vOrigin, edict_t* pEdict);
+	void     HearSound(eSoundType iSound, const Vector& vOrigin, edict_t* pEdict);
 
 	// when the bot wants to think this function is called
 	void     Think();
@@ -4026,7 +4026,7 @@ public:
 	float    DistanceFrom(const Vector& vOrigin, BOOL twoD = false);
 
 	// set up tasks so bot runs from the origin
-	void	 RunForCover(Vector vOrigin, BOOL bDoItNow = false, int iScheduleId = 0);
+	void	 RunForCover(const Vector& vOrigin, BOOL bDoItNow = false, int iScheduleId = 0);
 
 	/*BOOL     IsReloading ()
 	{
@@ -4224,16 +4224,18 @@ public:
 	void Initialise();
 	void SetColour1(Vector const& colours, int alpha)
 	{
-		m_textParms.r1 = static_cast<int>(colours.x), m_textParms.g1 = static_cast<int>(colours.y), m_textParms.b1 =
-			static_cast<int>(colours.z);
-		m_textParms.a1 = alpha;
-	};
+		m_textParms.r1 = static_cast<byte>(colours.x), m_textParms.g1 = static_cast<byte>(colours.y), m_textParms.b1 =
+			static_cast<byte>(colours.z);
+		m_textParms.a1 = static_cast<byte>(alpha);
+	}
+
 	void SetColour2(Vector const& colours, int alpha)
 	{
-		m_textParms.r2 = static_cast<int>(colours.x), m_textParms.g2 = static_cast<int>(colours.y), m_textParms.b2 =
-			static_cast<int>(colours.z);
-		m_textParms.a2 = alpha;
-	};
+		m_textParms.r2 = static_cast<byte>(colours.x), m_textParms.g2 = static_cast<byte>(colours.y), m_textParms.b2 =
+			static_cast<byte>(colours.z);
+		m_textParms.a2 = static_cast<byte>(alpha);
+	}
+
 	void InitMessage(const char* message);
 
 private:
@@ -5032,7 +5034,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CBotCvar* pCommand = tempStack.ChooseFromStack();
+			const CBotCvar* pCommand = tempStack.ChooseFromStack();
 
 			BotMessage(pEdict, 0, "\"%s\"", pCommand->GetCommandName());
 		}
@@ -5192,7 +5194,7 @@ public:
 
 	eMasterType CanFire(edict_t* pActivator);
 
-	edict_t* FindButton(Vector vOrigin);
+	edict_t* FindButton(const Vector& vOrigin);
 
 private:
 	char* m_szMasterName;
@@ -6046,7 +6048,7 @@ public:
 	void update(CBotNSTech const tech)
 	{
 		m_bAvailable = tech.getAvailable();
-		m_iCost = tech.getCost();
+		m_iCost = static_cast<short>(tech.getCost());
 	}
 
 private:
@@ -6483,12 +6485,12 @@ public:
 		m_currFlag = nullptr;
 	}
 
-	void SayToolTip(edict_t* pEntity, eToolTip tooltip) const
+	inline void SayToolTip(edict_t* pEntity, eToolTip tooltip) const
 	{
 		UTIL_BotToolTip(pEntity, m_iLanguage, tooltip);
 	}
 
-	BOOL IsMod(int iMod) const
+	inline BOOL IsMod(int iMod) const
 	{
 		return m_iCurrentMod == iMod;
 	}
@@ -6497,7 +6499,7 @@ public:
 
 	const char* GetModInfo();
 
-	BOOL IsDebugLevelOn(int iDebugLevel) const
+	inline BOOL IsDebugLevelOn(int iDebugLevel) const
 	{
 		return (m_iDebugLevels & iDebugLevel) > 0;
 	}
@@ -6838,7 +6840,7 @@ void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile);
 CBot* UTIL_GetBotPointer(const edict_t* pEdict);
 
 BOOL BotFunc_EntityIsMoving(entvars_t* pev);
-edict_t* BotFunc_FindNearestButton(Vector vOrigin, entvars_t* pDoor, Vector* vFoundOrigin = nullptr);
+edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, entvars_t* pDoor, Vector* vFoundOrigin = nullptr);
 
 ////////////////////////////////////////////////////
 // NAVIGATION

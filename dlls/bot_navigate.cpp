@@ -1203,7 +1203,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 				pBot->m_fLastSeeWaypoint = 0.0f;
 			}
-			else if (pBot->m_fLastSeeWaypoint == 0)
+			else if (pBot->m_fLastSeeWaypoint == 0.0f)
 				pBot->m_fLastSeeWaypoint = gpGlobals->time;
 		}
 	}
@@ -1837,7 +1837,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 		vAngles = pBot->m_pEdict->v.angles;
 
-		vAngles.y = vAngles.y + (fAngle - iMaxStep / 2);
+		vAngles.y = vAngles.y + (fAngle - static_cast<float>(iMaxStep) / 2);
 
 		UTIL_FixFloatAngle(&vAngles.y);
 
@@ -1879,7 +1879,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 		vAngles = UTIL_VecToAngles(pBot->m_pEdict->v.velocity);
 
-		vAngles.y = vAngles.y + (fAngle - iMaxStep / 2);
+		vAngles.y = vAngles.y + (fAngle - static_cast<float>(iMaxStep) / 2);
 
 		UTIL_FixFloatAngle(&vAngles.y);
 

@@ -310,7 +310,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 			return BOT_CVAR_ERROR;
 		}
 
-		int magnitude = 400;
+		float magnitude = 400.0f;
 		bool dodamage = true;
 
 		if (arg2 != nullptr && *arg2 != 0)

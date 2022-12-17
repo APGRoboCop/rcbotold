@@ -132,7 +132,7 @@ void InitMessage ( const char *message );
 				hudmessage.SetEffect(HUD_EFFECT_CREDITS);
 				hudmessage.SetFadeTime(0, 0);
 				hudmessage.SetEffectTime(1);
-				hudmessage.SetPosition(0.6, 0.1);
+				hudmessage.SetPosition(0.6f, 0.1f);
 				hudmessage.SetColour1(Vector(200, 200, 200), 200);
 				hudmessage.SetColour2(Vector(255, 255, 255), 200);
 				hudmessage.SayMessage(message, m_pPlayer);
@@ -566,7 +566,7 @@ void InitMessage ( const char *message );
 				}
 			}
 
-			BOOL bCheckDistance = pev->movetype != MOVETYPE_FLY && m_fCanPlaceLadder == 0; // always check distance unless ladder climbing
+			BOOL bCheckDistance = pev->movetype != MOVETYPE_FLY && m_fCanPlaceLadder == 0.0f; // always check distance unless ladder climbing
 
 			// ****************************************************
 			// Ladder waypoint
@@ -972,7 +972,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 			pBot->m_Profile.m_Rep.AddLoadRep(pBot->m_Profile.m_iProfileId, iPlayerRepId);
 		}
 
-		CAllowedPlayer* pUser = gBotGlobals.m_BotUsers.GetPlayer(pClient);
+		const CAllowedPlayer* pUser = gBotGlobals.m_BotUsers.GetPlayer(pClient);
 
 		if (pUser)
 		{

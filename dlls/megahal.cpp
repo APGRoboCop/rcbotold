@@ -156,7 +156,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 
 			BotFunc_FillString(szReplyMsg, name_in_msg, szSenderName, BOT_CHAT_MESSAGE_LENGTH);
 
-			if (strcmp(szReplyMsg, szMsg)) // not the exact same message? :-p
+			if (strcmp(szReplyMsg, szMsg) != 0) // not the exact same message? :-p
 				strlow(szReplyMsg); // convert the output string to lowercase
 			else
 				szReplyMsg[0] = 0;

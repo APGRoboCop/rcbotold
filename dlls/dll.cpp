@@ -1023,7 +1023,7 @@ void ClientCommand(edict_t* pEntity)
 			if (gBotGlobals.m_CurrentHandledCvar->needAccess(iAccessLevel))
 				iState = BOT_CVAR_NEEDACCESS;
 			else
-				iState = gBotGlobals.m_CurrentHandledCvar->action(pClient, arg2, arg3, arg4, arg5);
+				iState = gBotGlobals.m_CurrentHandledCvar->action(pClient, arg1, arg2, arg3, arg4);
 		}
 		else
 			iState = BOT_CVAR_NOTEXIST;
@@ -1954,7 +1954,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 	for (i = 0; i < MAX_PLAYERS; i++)
 	{
-		CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
+		const CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
 
 		if (pClient->IsUsed())
 		{

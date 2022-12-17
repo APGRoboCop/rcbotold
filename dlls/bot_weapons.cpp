@@ -116,7 +116,6 @@ BOOL CWeapon::IsPrimary()
 	{
 	case MOD_NS:
 		return HudSlot() == 0;
-		break;
 	default:
 		return false;
 	}
@@ -128,7 +127,6 @@ BOOL CWeapon::IsSecondary()
 	{
 	case MOD_NS:
 		return HudSlot() == 1;
-		break;
 	default:
 		return false;
 	}

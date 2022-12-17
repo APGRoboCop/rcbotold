@@ -486,8 +486,8 @@ BOOL CBot::IsInVisibleList(edict_t* pEntity)
 void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, float* pFloatInfo)
 // a type of event happens on the bot
 {
-	CClient* pClient = nullptr;
-	CClient* pExtClient = nullptr;
+	const CClient* pClient = nullptr;
+	const CClient* pExtClient = nullptr;
 
 	if (pInfo)
 		pClient = gBotGlobals.m_Clients.GetClientByEdict(pInfo);
@@ -598,7 +598,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 		{
 			const int rep = m_Profile.m_Rep.GetClientRep(pExtClient);
 
-			if (BotFunc_IncreaseRep(rep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), m_Profile.m_iSkill))
+			if (BotFunc_IncreaseRep(rep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), static_cast<float>(m_Profile.m_iSkill)))
 			{
 				m_Profile.m_Rep.IncreaseRep(pExtClient->GetPlayerRepId());
 				BotChat(BOT_CHAT_LAUGH, pInfo);
@@ -611,7 +611,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 		else if (m_Profile.m_Rep.GetClientRep(pClient) > BOT_MID_REP)
 		{
 			// decrease rep upon killer
-			if (BotFunc_DecreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), m_Profile.m_iSkill))
+			if (BotFunc_DecreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), static_cast<float>(m_Profile.m_iSkill)))
 			{
 				m_Profile.m_Rep.DecreaseRep(pExtClient->GetPlayerRepId());
 				BotChat(BOT_CHAT_LAUGH, pInfo);
@@ -692,7 +692,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			// killed a player i didn't like, are we even?
 
 			// if i got him (by making him want to decrease his rep)
-			if (BotFunc_IncreaseRep(iRep, DistanceFromEdict(m_pKilledEdict), m_Profile.m_iSkill))
+			if (BotFunc_IncreaseRep(iRep, DistanceFromEdict(m_pKilledEdict), static_cast<float>(m_Profile.m_iSkill)))
 			{
 				m_Profile.m_Rep.IncreaseRep(pClient->GetPlayerRepId());
 			}
@@ -738,7 +738,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
 				BotChat(BOT_CHAT_KILLED, pInfo);
 
-			CClient* pKillerClient = gBotGlobals.m_Clients.GetClientByEdict(m_pKillerEdict);
+			const CClient* pKillerClient = gBotGlobals.m_Clients.GetClientByEdict(m_pKillerEdict);
 
 			if (pKillerClient)
 			{
@@ -750,13 +750,13 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 				{
 					if (m_pKillerEdict != m_pEdict)
 					{
-						CBotReputation* pRep = m_Profile.m_Rep.GetRep(pKillerClient->GetPlayerRepId());
+						const CBotReputation* pRep = m_Profile.m_Rep.GetRep(pKillerClient->GetPlayerRepId());
 
 						if (pRep)
 						{
 							const int iRep = pRep->CurrentRep();
 
-							if (BotFunc_DecreaseRep(iRep, DistanceFrom(EntityOrigin(m_pKillerEdict)), m_Profile.m_iSkill))
+							if (BotFunc_DecreaseRep(iRep, DistanceFrom(EntityOrigin(m_pKillerEdict)), static_cast<float>(m_Profile.m_iSkill)))
 								m_Profile.m_Rep.DecreaseRep(pKillerClient->GetPlayerRepId());
 						}
 					}
@@ -1966,7 +1966,7 @@ int CBot::GetTeam()
 void CBot::BotChat(const eBotChatType iChatType, edict_t* pChatEdict, const BOOL bSayNow)
 // pChatEdict will be NULL if not directly talking to someone
 {
-	CClient* pClient = nullptr;
+	const CClient* pClient = nullptr;
 	int iTeamOnly = 0;
 
 	if (!FBitSet(gBotGlobals.m_iConfigSettings, BOT_CONFIG_CHATTING))
@@ -2089,7 +2089,7 @@ void CBot::BotChat(const eBotChatType iChatType, edict_t* pChatEdict, const BOOL
 	// ahhh!
 	assert(pChatArray->Size() > 0);
 
-	char* pChatStr = pChatArray->Random();
+	const char* pChatStr = pChatArray->Random();
 
 	if (pChatStr == nullptr)
 		return;
@@ -2215,7 +2215,7 @@ const char* BotFunc_GetRandomPlayerName(CBot* pBot, const int iState)
 {
 	dataUnconstArray<const char*> arrayNames;
 
-	edict_t* pEdict = pBot->m_pEdict;
+	const edict_t* pEdict = pBot->m_pEdict;
 
 	CClient* pClient;
 
@@ -2284,7 +2284,7 @@ const char* BotFunc_GetRandomPlayerName(CBot* pBot, const int iState)
 // fills the points of a string with %l, %r, %whatever with readable text
 BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, const int max_len)
 {
-	int len = strlen(string) + 1;
+	unsigned int len = strlen(string) + 1;
 
 	if (fill_with == nullptr)
 		return false;
@@ -2310,7 +2310,7 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		string[start] = 0;
 
 		// 'strlen' function called too many times inside loop [APG]RoboCop[CL]
-		const int end = start + strlen(fill_point);
+		const unsigned int end = start + strlen(fill_point);
 		strncpy(after, &string[end], len - end);
 		after[len - end] = 0;
 
@@ -2469,7 +2469,6 @@ BOOL CBot::NotStartedGame()
 		}
 
 		return IsInReadyRoom();
-		break;
 	case MOD_BG:
 		return !pev->playerclass && !pev->team;
 	case MOD_TS:
@@ -2568,8 +2567,8 @@ void CBot::StartGame()
 				PrimaryAttack();
 			break;
 		}
-	}*/
-	break;
+	}
+	break;*/
 	case MOD_BUMPERCARS:
 	{
 		FakeClientCommand(m_pEdict, "changeclass %d", RANDOM_LONG(1, 20));
@@ -2609,9 +2608,9 @@ void CBot::StartGame()
 		{
 			if (m_fCombatFitness > 0.0f)
 			{
-				m_pCombatBits->setFitness(m_fCombatFitness);
+				m_pCombatBits->setFitness(m_fCombatFitness); //TODO: That line triggers crash? [APG]RoboCop[CL]
 				gBotGlobals.m_pCombatGA[m_iCombatTeam].addToPopulation(m_pCombatBits->copy());
-				m_fCombatFitness = 0.0f;//That line triggers crash? [APG]RoboCop[CL]
+				m_fCombatFitness = 0.0f; 
 
 				if (m_pCombatBits)
 				{
@@ -2691,7 +2690,6 @@ void CBot::StartGame()
 
 		return;
 	}
-	break;
 	// international online soccer
 	case MOD_IOS:
 	{
@@ -2750,7 +2748,6 @@ void CBot::StartGame()
 		FakeClientCommand(m_pEdict, "_firstspawn");
 		m_bStartedGame = true;
 		return;
-		break;
 	case MOD_WW:
 		//sprintf(c_class, "%d", pBot->bot_class);
 		//FakeClientCommand(m_pEdict, "classmenu", RANDOM_LONG(1, 9), nullptr);
@@ -2759,7 +2756,6 @@ void CBot::StartGame()
 		FakeClientCommand(m_pEdict, "classmenu 0");
 		m_bStartedGame = true;
 		return;
-		break;
 	case MOD_SI:
 		break;
 	default:
@@ -2939,7 +2935,7 @@ void CBot::Think()
 
 	//	try
 	//	{
-	m_fCombatFitness = pev->frags / m_iNumDeaths;
+	m_fCombatFitness = pev->frags / static_cast<float>(m_iNumDeaths);
 
 	// Not alive anymore
 	if (!IsAlive())
@@ -2957,7 +2953,7 @@ void CBot::Think()
 			{
 				m_iNumDeaths++;
 				m_fSurvivalTime = gpGlobals->time - m_fSpawnTime;
-				const int fragsSinceDeath = pev->frags - m_iNumFragsSinceDeath;
+				const int fragsSinceDeath = static_cast<int>(pev->frags) - m_iNumFragsSinceDeath;
 				int team = GetTeam();
 
 				if (team < 0 || team >= MAX_TEAMS)
@@ -3026,13 +3022,13 @@ void CBot::Think()
 			return;
 		}
 		//else
-		m_CurrentLookTask = BOT_LOOK_TASK_NONE;
+		//m_CurrentLookTask = BOT_LOOK_TASK_NONE;
 	}
 
 	if (m_fSpawnTime == 0.0f)
 	{
 		m_fSpawnTime = gpGlobals->time;
-		m_iNumFragsSinceDeath = pev->frags;
+		m_iNumFragsSinceDeath = static_cast<int>(pev->frags);
 		m_fPrevHealth = pev->health;
 
 		m_vSpawnPosition.SetVector(pev->origin);
@@ -3367,7 +3363,7 @@ void CBot::Think()
 		const int iSpecies = pev->iuser3;
 
 		// clamatius : getting Resources
-		m_iResources = pev->vuser4.z / 100;
+		m_iResources = pev->vuser4.z / 100.0f;
 		// clamatius : getting Experience
 		m_iExperience = pev->vuser4.z;
 		// ns get level from experience
@@ -4245,7 +4241,7 @@ void CBot::LookForNewTasks()
 				}
 			}
 
-			if (pEntity->v.frame == 0)
+			if (pEntity->v.frame == 0.0f)
 			{
 				if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
 				{
@@ -4560,7 +4556,8 @@ void CBot::LookForNewTasks()
 				float fNumResourceTowers = 1.0f;
 
 				if (iNumResourceFountains > 0)
-					fNumResourceTowers = 1.0f - static_cast<float>(iNumAlienResourceTowers) / iNumResourceFountains;
+					fNumResourceTowers = 1.0f - static_cast<float>(iNumAlienResourceTowers) /
+					static_cast<float>(iNumResourceFountains);
 
 				//-au2
 
@@ -4660,7 +4657,7 @@ void CBot::LookForNewTasks()
 				}
 				*/
 				// stop going gorge, look for a new species to evolve into
-				if (bNotCombatMap && UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2, true) > static_cast<int>(UTIL_PlayersOnTeam(TEAM_ALIEN) * gBotGlobals.m_fGorgeAmount))
+				if (bNotCombatMap && UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2, true) > UTIL_PlayersOnTeam(TEAM_ALIEN) * gBotGlobals.m_fGorgeAmount)
 				{
 					m_bHasGestated = false;
 				}
@@ -4762,10 +4759,10 @@ void CBot::LookForNewTasks()
 							fHiveUtility *= fNumHives;
 							fResTowerUtility *= (fNumResourceTowers*0.7);
 					*/
-					if (fHiveResources == 0 && UTIL_GetNumHives() < 3)
-						fHiveResources = gBotGlobals.m_fHiveImportance / (UTIL_GetNumHives() + 1);
-					if (fResTowerResources == 0)
-						fResTowerResources = gBotGlobals.m_fResTowerImportance / (UTIL_CountEntities("alienresourcetower") + 1);
+					if (fHiveResources == 0.0f && UTIL_GetNumHives() < 3)
+						fHiveResources = gBotGlobals.m_fHiveImportance / static_cast<float>(UTIL_GetNumHives() + 1);
+					if (fResTowerResources == 0.0f)
+						fResTowerResources = gBotGlobals.m_fResTowerImportance / static_cast<float>(UTIL_CountEntities("alienresourcetower") + 1);
 
 					actions.add(BOT_CAN_BUILD_HIVE, iNumAlienResourceTowers && !gBotGlobals.IsCombatMap(), fHiveResources);//fHiveUtility);
 					actions.add(BOT_CAN_BUILD_RESOURCE, !gBotGlobals.IsCombatMap(), fResTowerResources);//fResTowerUtility);
@@ -4839,8 +4836,8 @@ void CBot::LookForNewTasks()
 					// Not enough gorges on team?
 					BOOL bGoGorge = true;
 
-					if (UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2) >= static_cast<int>(UTIL_PlayersOnTeam(TEAM_ALIEN) *
-						gBotGlobals.m_fGorgeAmount))
+					if (UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2) >= UTIL_PlayersOnTeam(TEAM_ALIEN) *
+						gBotGlobals.m_fGorgeAmount)
 						bGoGorge = false;
 					else if (this->m_Profile.m_GorgePercent > 0)
 						bGoGorge = true;
@@ -6234,7 +6231,7 @@ BOOL CBot::UpdateVisibles()
 			float fNumResourceTowers = 1.0f;
 
 			if (iNumResourceFountains > 0)
-				fNumResourceTowers = 1.0f - static_cast<float>(iNumAlienResourceTowers) / iNumResourceFountains;
+				fNumResourceTowers = 1.0f - static_cast<float>(iNumAlienResourceTowers) / static_cast<float>(iNumResourceFountains);
 			/*
 			gBotGlobals.m_fHiveImportance = 1.0f;
 			gBotGlobals.m_fResTowerImportance = 0.7f;
@@ -6477,8 +6474,8 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 				//BOOL bAvoid = true;
 
 				// NOT a weapon or ammo (strncmp will return -1 or 1)... save time!
-		if (strncmp(szClassname, "weapon_", 7) &&
-			strncmp(szClassname, "ammo_", 5))
+		if (strncmp(szClassname, "weapon_", 7) != 0 &&
+			strncmp(szClassname, "ammo_", 5) != 0)
 		{
 			// oh crap, a grenade!
 			if (UTIL_IsGrenadeRocket(pEntity))//strstr(szClassname,"grenade") != NULL )
@@ -6506,7 +6503,7 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 //	}
 
 	// NOT a weapon or ammo (strncmp will return -1 or 1)
-		if (strncmp(szClassname, "rpg_rocket", 10))
+		if (strncmp(szClassname, "rpg_rocket", 10) != 0)
 		{
 			if (BotFunc_EntityIsMoving(&pEntity->v))
 			{
@@ -6724,7 +6721,7 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 			{
 				TraceResult tr;
 
-				float fFootZ = vEnemyOrigin.z - pBotEnemy->v.size.z / 2 + 1;
+				const float fFootZ = vEnemyOrigin.z - pBotEnemy->v.size.z / 2 + 1;
 
 				UTIL_TraceLine(GetGunPosition(), Vector(vEnemyOrigin.x, vEnemyOrigin.y, fFootZ), ignore_monsters, m_pEdict, &tr);
 
@@ -6748,7 +6745,7 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 		if (m_pEnemyRep == nullptr) // Isn't a player (monster or breakable...)
 		{
 			// Aim factor dependant on skill
-			m_fAimFactor = MAX_BOT_SKILL - m_Profile.m_iSkill;
+			m_fAimFactor = MAX_BOT_SKILL - static_cast<float>(m_Profile.m_iSkill);
 			// get a 0 to 1 representation factor.
 			m_fAimFactor /= MAX_BOT_SKILL;
 
@@ -6758,17 +6755,17 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 		{
 			const int iRep = m_pEnemyRep->CurrentRep();
 			// Aim factor dependant on skill and reputation.
-			m_fAimFactor = MAX_BOT_SKILL - m_Profile.m_iSkill + (BOT_MAX_REP - iRep);
+			m_fAimFactor = MAX_BOT_SKILL - static_cast<float>(m_Profile.m_iSkill + BOT_MAX_REP - iRep);
 			// get a 0 to 1 representation factor.
 			m_fAimFactor /= MAX_BOT_SKILL + BOT_MAX_REP;
 
 			fSpeed = static_cast<float>(iRep) / BOT_MAX_REP;
 
-			if (fSpeed == 0)
+			if (fSpeed == 0.0f)
 				fSpeed = 0.1f;
 		}
 
-		Vector vEnemyFactors = pBotEnemy->v.size / 2 + pBotEnemy->v.velocity;
+		const Vector vEnemyFactors = pBotEnemy->v.size / 2 + pBotEnemy->v.velocity;
 
 		// snipers better aim,
 		//if (gBotGlobals.IsMod(MOD_TFC) && pev->playerclass == TFC_CLASS_SNIPER)
@@ -7684,13 +7681,12 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 		// ladder angles
 		if (bCanClimb && m_CurrentLookTask == BOT_LOOK_TASK_NEXT_WAYPOINT)
 		{
-			const int iLadderDir = GetLadderDir();
+			const int iLadderDir = GetLadderDir(); // Ladder Direction
 			//TODO: increase speed for when climbing ladders [APG]RoboCop[CL]
-			// Keep angles at 90 degrees for better climbing [APG]RoboCop[CL]
 			if (iLadderDir == 1)// && ((vAngles.x < 0)||(vAngles.x > 60)))
-				vAngles.x = 90;
+				vAngles.x = 45; // Angle of Elevation
 			else if (iLadderDir == -1)// && ((vAngles.x > 0)||(vAngles.x < -60)) )
-				vAngles.x = -90;
+				vAngles.x = -45; // Angle of Depression
 
 			SetLadderAngles(vAngles);
 			bUsePitch = true;
@@ -7988,7 +7984,7 @@ void CBot::WorkMoveDirection()
 					dec_flapWings->input(&inputs);
 					dec_flapWings->execute();
 
-					if (fEnergy == 100 || (!dec_flapWings->trained() || dec_flapWings->fired()))//(NS_AmountOfEnergy()*0.01 > m_pFlyGAVals->get(2)) )//!dec_flapWings->trained() || dec_flapWings->fired () )
+					if (fEnergy == 100.0f || (!dec_flapWings->trained() || dec_flapWings->fired()))//(NS_AmountOfEnergy()*0.01 > m_pFlyGAVals->get(2)) )//!dec_flapWings->trained() || dec_flapWings->fired () )
 					{
 						FlapWings();
 						//BotMessage(NULL,0,"%s flappin ma wings",m_szBotName);
@@ -8391,7 +8387,7 @@ BOOL CBot::CanPickup(edict_t* pPickup)
 		const char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
 
 		// quad damage etc..
-		if (strncmp(szClassname, "ts_powerup", 12) == 0)
+		if (strncmp(szClassname, "ts_powerup", 11) == 0)
 			return true;
 		else if (strcmp(szClassname, "ts_groundweapon") == 0)
 			return true;
@@ -8542,7 +8538,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 							{
 								const int iScheduleId = m_Tasks.GetNewScheduleId();
 
-								CBotTask* pCurrentTask = m_Tasks.CurrentTask();
+								const CBotTask* pCurrentTask = m_Tasks.CurrentTask();
 								CBotTask CurrentTask = CBotTask(BOT_TASK_NONE);
 
 								if (pCurrentTask)
@@ -8636,7 +8632,7 @@ void CBot::Blocked(edict_t* pentBlocked)
 {
 	char* szClassname = const_cast<char*>(STRING(pentBlocked->v.classname));
 
-	entvars_t* pentBlockedpev = &pentBlocked->v;
+	const entvars_t* pentBlockedpev = &pentBlocked->v;
 
 	if (pentBlockedpev->flags & FL_WORLDBRUSH && pentBlockedpev->velocity.z)
 	{
@@ -8705,8 +8701,8 @@ void CBot::RunPlayerMove()
 		}
 	}*/
 
-	(*g_engfuncs.pfnRunPlayerMove)(m_pEdict, pev->angles, m_fMoveSpeed, m_fStrafeSpeed, m_fUpSpeed, pev->button,
-		pev->impulse, static_cast<byte>(m_iMsecVal));
+	(*g_engfuncs.pfnRunPlayerMove)(m_pEdict, pev->angles, m_fMoveSpeed, m_fStrafeSpeed, m_fUpSpeed,
+					static_cast<unsigned short>(pev->button), static_cast<byte>(pev->impulse), static_cast<byte>(m_iMsecVal));
 }
 
 void CBot::ThrowGrenade(edict_t* pEnemy, int preference, const BOOL bDontPrime)
@@ -8771,7 +8767,7 @@ edict_t* CBot::FindEnemy()
 // Search the bot visibles for a good enemy
 // ie. nearby and isn't running fast..
 {
-	edict_t* pOldEnemy = m_pEnemy;
+	const edict_t* pOldEnemy = m_pEnemy;
 	// If bot is shooting a structure in NS
 	// keep looking for more important structures to shoot
 	// OR more importantly other players
@@ -8848,13 +8844,13 @@ edict_t* CBot::FindEnemy()
 				// default enemy priority
 				int iPriority = 10;
 
-				entvars_t* pEnemypev = &pEntity->v;
+				const entvars_t* pEnemypev = &pEntity->v;
 
 				CBotReputation* pRep = nullptr;
 
 				if (pEnemypev->flags & FL_CLIENT)
 				{
-					CClient* pEnemyClient = gBotGlobals.m_Clients.GetClientByEdict(pEntity);
+					const CClient* pEnemyClient = gBotGlobals.m_Clients.GetClientByEdict(pEntity);
 
 					if (pEnemyClient)
 					{
@@ -9083,7 +9079,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (pEntity->v.iuser3 == AVH_USER3_BREAKABLE)
 		{
-			CBotWeapon* pBestWeapon = m_Weapons.GetWeapon(iBestWeaponId);
+			const CBotWeapon* pBestWeapon = m_Weapons.GetWeapon(iBestWeaponId);
 
 			if (pBestWeapon)
 			{
@@ -9158,14 +9154,13 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			return true;
 
 		return pEntity->v.flags & FL_CLIENT;
-		break;
 	case MOD_TS:
 		if (!EntityIsAlive(pEntity))
 			return false;
 
 		if (pEntity->v.flags & FL_CLIENT)
 		{
-			BOOL team = gBotGlobals.m_bTeamPlay;
+			const BOOL team = gBotGlobals.m_bTeamPlay;
 
 			if (team)
 			{
@@ -9356,7 +9351,6 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 		// different teams are enemies
 		return pEntity->v.flags & FL_CLIENT && GetTeam() != UTIL_GetTeam(pEntity);
 	}
-	break;
 	/*case MOD_SVENCOOP:
 	{
 		char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
@@ -9466,13 +9460,20 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 //////////////////////////////////////////////////////////////////////////////
 // NON-CLASS RELATED FUNCTIONS
 
-BOOL BotFunc_IsLongRangeWeapon(const int iId)
+BOOL BotFunc_IsLongRangeWeapon(int iId)
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
 	case MOD_NS:
 		switch (iId)
 		{
+		case NS_WEAPON_CLAWS:
+		case NS_WEAPON_SPIT:
+		case NS_WEAPON_SPIKE:
+		case NS_WEAPON_BITE:
+		case NS_WEAPON_BITE2:
+		case NS_WEAPON_SWIPE:
+			return false;
 		case NS_WEAPON_PISTOL:
 		case NS_WEAPON_MG:
 		case NS_WEAPON_SONIC:
@@ -9488,11 +9489,11 @@ BOOL BotFunc_IsLongRangeWeapon(const int iId)
 		case NS_WEAPON_BILEBOMB:
 		case NS_WEAPON_ACIDROCKET:
 		case NS_WEAPON_HEALINGSPRAY:
-		case NS_WEAPON_BABBLER:
+		case NS_WEAPON_GRENADE:
 		case NS_WEAPON_STOMP:
 		case NS_WEAPON_DEVOUR:
 			return true;
-		default:
+		default: 
 			return false;
 		}
 	default:
@@ -9665,7 +9666,7 @@ void BotPrintTalkMessage(char* fmt, ...)
 
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
-		CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
+		const CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
 
 		if (!pClient->IsUsed())
 			continue;
@@ -9807,7 +9808,7 @@ void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...)
 
 ///////////////////////////////////////////////////////////////////////////
 // BOT TASK EQUAL OPERATOR...
-BOOL CBotTask :: operator == (const CBotTask& Task)
+BOOL CBotTask::operator == (const CBotTask& Task) const
 {
 	return m_Task == Task.Task() &&
 		m_iInfo == Task.TaskInt() &&
@@ -9848,7 +9849,8 @@ BOOL EntityIsWeldable(edict_t* pEntity)
 		if (EntityIsCommander(pEntity))
 			return false;
 
-		return pEntity->v.velocity.Length() < 1 && EntityIsAlive(pEntity) && pEntity->v.armorvalue < UTIL_NS_GetMaxArmour(pEntity);
+		return pEntity->v.velocity.Length() < 1 && EntityIsAlive(pEntity) && pEntity->v.armorvalue < 
+			static_cast<float>(UTIL_NS_GetMaxArmour(pEntity));
 	}
 
 	if (strcmp("team_webstrand", STRING(pEntity->v.classname)) == 0)
@@ -9857,7 +9859,7 @@ BOOL EntityIsWeldable(edict_t* pEntity)
 	return false;
 }
 
-void CBot::HearSound(const eSoundType iSound, Vector const vOrigin, edict_t* pEdict)
+void CBot::HearSound(const eSoundType iSound, Vector const& vOrigin, edict_t* pEdict)
 // bot hears a type of sound
 {
 	CBotTask TaskToAdd = CBotTask(BOT_TASK_NONE);
@@ -9868,7 +9870,7 @@ void CBot::HearSound(const eSoundType iSound, Vector const vOrigin, edict_t* pEd
 		break;
 	case SOUND_PLAYER_PAIN:
 	{
-		CBotTask* currentTask = m_Tasks.CurrentTask();
+		const CBotTask* currentTask = m_Tasks.CurrentTask();
 
 		if (currentTask && currentTask->TaskEdict())
 		{
@@ -9993,7 +9995,7 @@ void CBot::HearSound(const eSoundType iSound, Vector const vOrigin, edict_t* pEd
 		AddPriorityTask(TaskToAdd);
 }
 
-edict_t* BotFunc_FindNearestButton(Vector vOrigin, entvars_t* pDoor, Vector* vFoundOrigin)
+edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, entvars_t* pDoor, Vector* vFoundOrigin)
 //
 // finds the nearest button to the door pDoor
 {
@@ -10085,11 +10087,11 @@ edict_t* BotFunc_FindNearestButton(Vector vOrigin, entvars_t* pDoor, Vector* vFo
 
 BOOL CBot::SentryNeedsRepaired()
 {
-	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict);
+	const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict);
 
 	if (pClient)
 	{
-		edict_t* pSentry = pClient->getTFCSentry();
+		const edict_t* pSentry = pClient->getTFCSentry();
 
 		if (pSentry == nullptr)
 		{
@@ -10114,12 +10116,10 @@ BOOL CBot::HasUpgraded(int iUpgrade)
 		return pev->iuser4 & MASK_UPGRADE_4 || // Needs movement upgrade?
 			pev->iuser4 & MASK_UPGRADE_5 ||
 			pev->iuser4 & MASK_UPGRADE_6;
-		break;
 	case BOT_UPGRADE_MOV:
 		return pev->iuser4 & MASK_UPGRADE_7 ||
 			pev->iuser4 & MASK_UPGRADE_8 ||
 			pev->iuser4 & MASK_UPGRADE_9;
-		break;
 	default:
 		break;
 	}
@@ -10203,7 +10203,7 @@ void CBot::AddVisitedResourceTower(edict_t* pEdict)
 }
 
 // Remember Position of enemy or something else important
-void CBot::RememberPosition(const Vector vOrigin, edict_t* pEntity, int flags)
+void CBot::RememberPosition(const Vector& vOrigin, edict_t* pEntity, int flags)
 {
 	m_vRememberedPositions.addPosition(vOrigin, pEntity, flags, pev->origin);
 }
@@ -10231,7 +10231,7 @@ void CBot::SetMoveVector(const Vector& vOrigin)
 }
 
 // Get proper Id value for weapon, DMC mucks things up
-int BotFunc_GetBitSetOf(const int iId)
+int BotFunc_GetBitSetOf(int iId)
 {
 	int weapon_index = 0;
 	int value = iId;
@@ -10245,7 +10245,7 @@ int BotFunc_GetBitSetOf(const int iId)
 	return weapon_index;
 }
 
-BOOL CBot::HasWeapon(const int iWeapon)
+BOOL CBot::HasWeapon(int iWeapon)
 {
 	//	if ( gBotGlobals.IsMod(MOD_DMC) )
 	//		return ((m_iBotWeapons) & (1<<(iWeapon-1))) != 0;
@@ -10342,7 +10342,7 @@ Vector CBotSquad::GetFormationVector(edict_t* pEdict)
 	break;
 	}
 
-	vBase = vBase * m_fDesiredSpread * iPosition;
+	vBase = vBase * m_fDesiredSpread * static_cast<float>(iPosition);
 
 	TraceResult tr;
 
@@ -10723,10 +10723,10 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 	return (pev->health > (pev->max_health * 0.3));*/
 }
 
-edict_t* CMasterEntity::FindButton(Vector vOrigin)
+edict_t* CMasterEntity::FindButton(const Vector& vOrigin)
 {
 	edict_t* pButton = nullptr;
-	edict_t* pStart = nullptr;
+	const edict_t* pStart = nullptr;
 
 	//edict_t *pBestButton = NULL;
 
@@ -10775,7 +10775,7 @@ edict_t* CMasterEntity::FindButton(Vector vOrigin)
 			const char* szRelayName = const_cast<char*>(STRING(pButton->v.targetname));
 
 			edict_t* pButton2 = nullptr;
-			edict_t* pStart2 = nullptr;
+			const edict_t* pStart2 = nullptr;
 
 			while ((pButton2 = FIND_ENTITY_BY_TARGET(pButton, szRelayName)) != nullptr)
 			{
@@ -10881,7 +10881,7 @@ void CBotSquad::ReturnAllToFormation()
 
 	while (!tempStack.IsEmpty())
 	{
-		edict_t* pMember = tempStack.ChooseFromStack().Get();
+		const edict_t* pMember = tempStack.ChooseFromStack().Get();
 
 		if (pMember->v.flags & FL_FAKECLIENT)
 		{
@@ -10899,7 +10899,7 @@ void CBotSquad::ReturnAllToFormation()
 
 BOOL BotFunc_BreakableIsEnemy(edict_t* pBreakable, edict_t* pEdict)
 {
-	entvars_t* pEnemypev = &pBreakable->v;
+	const entvars_t* pEnemypev = &pBreakable->v;
 	// i. explosives required to blow breakable
 	// ii. OR is not a world brush (non breakable) and can be broken by shooting
 	if (!(pEnemypev->flags & FL_WORLDBRUSH) && !(pEnemypev->spawnflags & SF_BREAK_TRIGGER_ONLY))
@@ -10945,7 +10945,7 @@ edict_t* BotFunc_FindRandomEntity(char* szClassname)
 
 BOOL BotFunc_GetStructuresToBuildForEntity(AvHUser3 iBuildingType, int* iDefs, int* iOffs, int* iSens, int* iMovs)
 {
-	CThingToBuild* theThingsToBuild = nullptr;
+	const CThingToBuild* theThingsToBuild = nullptr;
 
 	switch (iBuildingType)
 	{
@@ -11152,7 +11152,7 @@ void CBot::SayInPosition()
 	return gBotGlobals.IsMod(MOD_SVENCOOP) && m_pCurrentWeapon && m_pCurrentWeapon->GetID() == SVEN_WEAPON_MINIGUN;
 }*/
 
-void CBot::RunForCover(Vector const vOrigin, const BOOL bDoItNow, int iScheduleId)
+void CBot::RunForCover(Vector const& vOrigin, const BOOL bDoItNow, int iScheduleId)
 {
 	const BOOL bCovering = m_Tasks.HasSchedule(BOT_SCHED_RUN_FOR_COVER);
 
@@ -11334,7 +11334,7 @@ void CBot::FindBackPack(const int health, const int cells, const int armour, con
 
 edict_t* CBot::getSentry()
 {
-	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict);
+	const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict);
 
 	if (pClient)
 		return pClient->getTFCSentry();
@@ -12310,7 +12310,7 @@ void CBot::DoTasks()
 			// set vector:- source teleporter origin
 		{
 			edict_t* pDestinationTeleporter = m_CurrentTask->TaskEdict();
-			edict_t* pSourceTeleporter = (edict_t*)(m_CurrentTask->TaskInt());
+			edict_t* pSourceTeleporter = reinterpret_cast<edict_t*>(m_CurrentTask->TaskInt());
 
 			Vector vSourceTeleporter = m_CurrentTask->TaskVector();
 
@@ -12697,7 +12697,7 @@ void CBot::DoTasks()
 				break;
 			}
 
-			if (m_CurrentTask->TaskFloat() == 0)
+			if (m_CurrentTask->TaskFloat() == 0.0f)
 			{
 				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_LONG(4.0f, 6.0f));
 			}
@@ -12935,7 +12935,7 @@ void CBot::DoTasks()
 							if (m_CurrentTask->TaskFloat() < gpGlobals->time)
 							{
 								bDone = true;
-								TaskToAdd = CBotTask(BOT_TASK_WAIT, m_CurrentTask->GetScheduleId(), nullptr, 0, RANDOM_FLOAT(2.1, 3.5));
+								TaskToAdd = CBotTask(BOT_TASK_WAIT, m_CurrentTask->GetScheduleId(), nullptr, 0, RANDOM_FLOAT(2.1f, 3.5f));
 							}
 							else
 							{
@@ -12947,7 +12947,9 @@ void CBot::DoTasks()
 						StopMoving();
 					}
 					else
-						TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, VALVE_WEAPON_HANDGRENADE, 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
+						TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr,
+						                     VALVE_WEAPON_HANDGRENADE, 0.0f, Vector(0, 0, 0),
+						                     m_CurrentTask->TimeToComplete());
 
 					m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_VECTOR;
 				}
@@ -13066,7 +13068,7 @@ void CBot::DoTasks()
 
 							m_iWaypointGoalIndex = NearestWaypointToOrigin(vOrigin, m_iLastFailedWaypoint, &m_FailedGoals);
 						}
-						else if (m_CurrentTask->TaskFloat() == 0)
+						else if (m_CurrentTask->TaskFloat() == 0.0f)
 						{
 							m_CurrentTask->SetFloat(1.0f);
 
@@ -13851,8 +13853,7 @@ void CBot::DoTasks()
 						m_iPossibleUpgrades.Add(ALIEN_LIFEFORM_THREE); // lerk
 
 					if (UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2) == 0 || UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2)
-						< static_cast<int>(UTIL_PlayersOnTeam(TEAM_ALIEN) *
-							gBotGlobals.m_fGorgeAmount / 2))
+						< UTIL_PlayersOnTeam(TEAM_ALIEN) * gBotGlobals.m_fGorgeAmount / 2)
 						m_iPossibleUpgrades.Add(ALIEN_LIFEFORM_TWO); //gorge
 				}
 				else if (IsFade())
@@ -14680,7 +14681,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						{
 							// Does bot have a bomb?
 							if (pev->rendermode == 0 &&
-								pev->renderamt == 30 &&
+								pev->renderamt == 30.0f &&
 								pev->rendercolor == Vector(255, 255, 255) &&
 								pev->renderfx == 19)
 							{
@@ -15295,7 +15296,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 			if (m_CurrentTask->TaskInt() == 0) // use as initializer
 			{
 				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(1.0f, 2.0f));
-				m_CurrentTask->SetInt(pev->health);
+				m_CurrentTask->SetFloat(pev->health);
 			}
 
 			int iPrevHealth = m_CurrentTask->TaskInt();
@@ -15303,8 +15304,8 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 			if (pev->health > iPrevHealth) // wait a bit longer
 			{
 				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(1.0f, 2.0f));
-				m_CurrentTask->SetVector(Vector(1.0, 0, 0));
-				m_CurrentTask->SetInt(pev->health);
+				m_CurrentTask->SetVector(Vector(1.0f, 0, 0));
+				m_CurrentTask->SetFloat(pev->health);
 			}
 
 			if (pev->health >= pev->max_health || m_CurrentTask->TaskFloat() < gpGlobals->time)
@@ -15659,7 +15660,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 			{
 				float fUseTime = m_CurrentTask->TaskVector().x;
 
-				if (fUseTime == 0)
+				if (fUseTime == 0.0f)
 				{
 					fUseTime = gpGlobals->time + m_CurrentTask->TaskFloat();
 
@@ -15775,7 +15776,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 			// It is done if the HEV charger has no energy left (Found from it's texture frame)
 			// or the bot has max armor.
-			bDone = pev->armorvalue >= VALVE_MAX_NORMAL_BATTERY || pCharger->v.frame != 0;
+			bDone = pev->armorvalue >= VALVE_MAX_NORMAL_BATTERY || pCharger->v.frame != 0.0f;
 
 			if (bDone == false)
 			{
@@ -15813,7 +15814,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 			m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_EDICT;
 
-			bDone = pev->health >= pev->max_health || pCharger->v.frame != 0;
+			bDone = pev->health >= pev->max_health || pCharger->v.frame != 0.0f;
 
 			if (bDone == false)
 			{
@@ -15838,7 +15839,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 		break;
 		case BOT_TASK_DEFEND: // DEFEND object
 
-			if (m_CurrentTask->TaskFloat() == 0)
+			if (m_CurrentTask->TaskFloat() == 0.0f)
 				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(20.0f, 80.0f));
 
 			if (m_CurrentTask->TaskFloat() < gpGlobals->time)
@@ -16043,7 +16044,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 			{
 				CBotWeapon* pMines = m_Weapons.GetWeapon(NS_WEAPON_MINE);
 
-				if (m_CurrentTask->TaskFloat() == 0)
+				if (m_CurrentTask->TaskFloat() == 0.0f)
 					m_CurrentTask->SetFloat(gpGlobals->time + 0.5f);
 
 				if (!HasWeapon(NS_WEAPON_MINE))
@@ -16295,16 +16296,13 @@ void CBot::CheckStuck()
 	}
 	else
 		m_fLastNoMove = 0.0f;
-
-	//if ( m_fLastNoMove == 0.0f )
-	//{
+	
 	/////////////////////////
 	// STUCK CODE          //
 	/////////////////////////
-	if (m_fStuckTime == 0)
+	if (m_fStuckTime == 0.0f)
 	{
 		// Check if Stuck
-
 		if (pev->waterlevel != 3)
 			// not in water
 		{
@@ -16345,7 +16343,6 @@ void CBot::CheckStuck()
 		else
 		{
 			// swimming
-
 			// moving slow (3d velocity since we are swimming)
 			if (m_f3dVelocity < 32)
 			{
@@ -16371,7 +16368,6 @@ void CBot::CheckStuck()
 		else
 		{
 			/// Bot is STUCK.
-
 			// Climbing.. reset view angle
 			if (iCurrentClimbState != BOT_CLIMB_NONE)
 			{
@@ -16557,7 +16553,7 @@ BOOL CBot::IsUsingTank()
 	return false;
 }
 
-void CBot::workEnemyCosts(edict_t* pEntity, Vector vOrigin, const float fDistance)
+void CBot::workEnemyCosts(edict_t* pEntity, const Vector& vOrigin, const float fDistance)
 {
 	if (m_fNextWorkRangeCosts > gpGlobals->time)
 		return;
@@ -16611,7 +16607,7 @@ void CBot::workEnemyCosts(edict_t* pEntity, Vector vOrigin, const float fDistanc
 	}
 }
 
-void CBot::decideJumpDuckStrafe(float fEnemyDist, const Vector vEnemyOrigin)
+void CBot::decideJumpDuckStrafe(float fEnemyDist, const Vector& vEnemyOrigin)
 {
 	std::vector<ga_value> inputs;
 
@@ -16645,7 +16641,7 @@ void CBot::decideJumpDuckStrafe(float fEnemyDist, const Vector vEnemyOrigin)
 	//		Duck();
 	if (m_fStrafeTime + 0.75f < gpGlobals->time)
 	{
-		float fout = dec_strafe->getOutput();
+		const float fout = dec_strafe->getOutput();
 
 		if (fout >= 0.75f || fout <= 0.25f)
 			m_fStrafeSpeed = fout * m_fMaxSpeed;

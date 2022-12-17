@@ -49,7 +49,7 @@ CSom::CSom(int iW, int iH, int iIn)
 	m_iH = iH;
 
 	// neighbourhood size
-	m_fNSize = static_cast<int>(static_cast<ga_value>(iW) / 2);
+	m_fNSize = static_cast<ga_value>(iW) / 2;
 
 	for (int i = 0; i < iH; i++)
 	{

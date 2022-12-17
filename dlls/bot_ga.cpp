@@ -273,7 +273,7 @@ void CBitsGAValues::crossOver(IIndividual* other)
 {
 	const unsigned int iNumBits = m_theBits->numBits();
 	const unsigned int iCrossoverPoint = static_cast<unsigned int>(RANDOM_LONG(0, iNumBits));
-	CBits* tempBits = new CBits(iNumBits);
+	const CBits* tempBits = new CBits(iNumBits);
 
 	const CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
 

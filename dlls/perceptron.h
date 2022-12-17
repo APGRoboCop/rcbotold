@@ -93,11 +93,11 @@ public:
 
 	void setWeights(CBotGAValues* vals, int iFrom, int iNum);
 
-	int numWeights() const { return m_weights.size(); }
+	unsigned int numWeights() const { return m_weights.size(); }
 
-	void setWeight(int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
+	void setWeight(unsigned int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
 
-	ga_value getWeight(int iWeight) const { return m_weights[iWeight]; }
+	ga_value getWeight(unsigned int iWeight) const { return m_weights[iWeight]; }
 
 	void input(std::vector<ga_value>* inputs);
 
@@ -126,7 +126,7 @@ public:
 	void load(FILE* bfp);
 
 	void load(char* filename, int iProfileId);
-	void save(char* filename, int iProfileId);
+	void save(char* filename, int iProfileId) const;
 
 private:
 

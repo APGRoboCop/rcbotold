@@ -31,7 +31,7 @@ V 1.51
 * changed: Reduced further Sven Co-op and TFC support
 * changed: Converted some doubles into floats
 * changed: Added returns for NS CAlienAction 
-* TODO: To find out why RCBot sometimes crashes after loading HAL Personality file - problem with steamclient.so and libc.so.6?
+* TODO: To allow Skulk Aliens to bite and attack properly
 * TODO: To find out why the Welcome Message from util.cpp isn't displaying
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
 * TODO: To learn properly on avoiding taking too much falling damage and die in lava pits - add AvoidEntity for "func_lava" in bot_navigate.cpp ?

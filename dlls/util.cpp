@@ -371,22 +371,22 @@ void UTIL_MakeVectors(const Vector& vecAngles)
 void strlow(char* str)
 // lower a string to make it lower case.
 {
-	const int len = strlen(str);
+	const unsigned int len = strlen(str);
 
-	for (int i = 0; i < len; i++)
+	for (unsigned int i = 0; i < len; i++)
 	{
-		str[i] = tolower(str[i]);
+		str[i] = static_cast<char>(tolower(str[i]));
 	}
 }
 
 void strhigh(char* str)
 // higher a string to make it upper case.
 {
-	const int len = strlen(str);
+	const unsigned int len = strlen(str);
 
-	for (int i = 0; i < len; i++)
+	for (unsigned int i = 0; i < len; i++)
 	{
-		str[i] = toupper(str[i]);
+		str[i] = static_cast<char>(toupper(str[i]));
 	}
 }
 
@@ -403,7 +403,7 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 			if (!pent->free)
 			{
 				// 'strlen' function called too many times inside loop [APG]RoboCop[CL]
-				const int length = strlen(name);
+				const unsigned int length = strlen(name);
 
 				char arg_lwr[80];
 				char pent_lwr[80];
@@ -609,10 +609,10 @@ float UTIL_AngleBetweenVectors(Vector const& vec1, Vector const& vec2)
 	//vec1 = UTIL_FixAngles(vec1);
 	//vec2 = UTIL_FixAngles(vec2);
 
-	const double vec1Dotvec2 = vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
-	const double veclengths = vec1.Length() * vec2.Length();
+	const float vec1Dotvec2 = vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
+	const float veclengths = vec1.Length() * vec2.Length();
 
-	return acos(vec1Dotvec2 / veclengths) * (180 / M_PI);
+	return acos(vec1Dotvec2 / veclengths) * (3.141592f * 180.0f);
 }
 
 float UTIL_YawAngleBetweenOrigin(const entvars_t* pev, Vector const& vOrigin)
@@ -759,8 +759,8 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 	else
 		sprintf(text, "%c%s: ", 2, STRING(pEntity->v.netname));
 
-	const int j = sizeof text - 2 - strlen(text);  // -2 for /n and null terminator
-	if (static_cast<int>(strlen(message)) > j)
+	const unsigned int j = sizeof text - 2 - strlen(text);  // -2 for /n and null terminator
+	if (strlen(message) > j)
 		message[j] = 0;
 
 	strcat(text, message);
@@ -942,7 +942,7 @@ int UTIL_GetTeam(edict_t* pEntity)
 		return pEntity->v.team - 1;
 	case MOD_SVENCOOP:
 		return -1;*/
-	case MOD_WW:
+	case MOD_WW: //TODO: Unannotated fall-through [APG]RoboCop[CL]
 		return pEntity->v.team - 1;
 	default:
 		break;
@@ -1080,7 +1080,7 @@ float UTIL_EntityAnglesToVector2D(const entvars_t* pev, const Vector* pOrigin) /
 
 	const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-	return static_cast<float>(acos(flDot) / M_PI * 180);
+	return acos(flDot) / 3.141592f * 180.0f;
 }
 
 float UTIL_EntityAnglesToVector3D(const entvars_t* pev, const Vector* pOrigin) // For 3d Movement (e.g. swimming)
@@ -1173,7 +1173,7 @@ float UTIL_AngleDiff(float destAngle, float srcAngle)
 	if (destAngle > srcAngle)
 	{
 		if (delta >= 180.0f)
-			delta -= 360;
+			delta -= 360.0f;
 	}
 	else
 	{
@@ -1515,7 +1515,7 @@ BOOL BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict)
 
 	UTIL_TraceLine(vecLookerOrigin, vecOrigin, ignore_monsters, ignore_glass, pEdict, &tr);
 
-	if (tr.flFraction != 1)
+	if (tr.flFraction != 1.0f)
 	{
 		return false;  // Line of sight is not established
 	}
@@ -1537,7 +1537,7 @@ void UTIL_SelectItem(edict_t* pEdict, char* item_name)
 
 //#ifndef RCBOT_META_BUILD
 
-void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, int magnitude, BOOL doDamage)
+void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, float magnitude, BOOL doDamage)
 {
 	/*if ( gBotGlobals.IsMod(MOD_SVENCOOP) )
 	{
@@ -1560,13 +1560,13 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 		DispatchSpawn(pExplosion);//->Spawn();
 		DispatchUse(pExplosion,pOwner);//->Use( (CBaseEntity*)GET_PRIVATE(pOwner), (CBaseEntity*)GET_PRIVATE(pOwner), USE_TOGGLE, 0 );
 	}
-	else if ( !gBotGlobals.IsMod(MOD_SVENCOOP) )
+	if ( !gBotGlobals.IsMod(MOD_SVENCOOP) )*/
 	{
 		KeyValueData	kvd;
 		char			buf[128];
 
 		CBaseEntity *pExplosion = CreateEnt( "env_explosion", center, angles, pOwner );
-		sprintf( buf, "%3d", magnitude );
+		sprintf( buf, "%3f", magnitude );
 		kvd.szKeyName = "iMagnitude";
 		kvd.szValue = buf;
 		pExplosion->KeyValue( &kvd );
@@ -1574,8 +1574,8 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 			pExplosion->pev->spawnflags |= (1<<0);//SF_ENVEXPLOSION_NODAMAGE;
 
 		pExplosion->Spawn();
-		pExplosion->Use( (CBaseEntity*)GET_PRIVATE(pOwner), (CBaseEntity*)GET_PRIVATE(pOwner), USE_TOGGLE, 0 );
-	}*/
+		pExplosion->Use( static_cast<CBaseEntity*>(GET_PRIVATE(pOwner)), static_cast<CBaseEntity*>(GET_PRIVATE(pOwner)), USE_TOGGLE, 0.0f );
+	}
 	/*
 	#define	TE_EXPLOSION		3		// additive sprite, 2 dynamic lights, flickering particles, explosion sound, move vertically 8 pps
 	// coord coord coord (position)
@@ -1585,7 +1585,7 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 	// byte (flags)	*/
 	//	else
 	{
-		int byteMag = magnitude;
+		int byteMag = static_cast<int>(magnitude);
 
 		if (byteMag > 255)
 			byteMag = 255;
@@ -1601,7 +1601,7 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 		WRITE_BYTE(TE_EXPLFLAG_NONE);
 		MESSAGE_END();
 
-		float mag = magnitude * 4;
+		//float mag = magnitude * 4;
 
 		if (doDamage)
 		{
@@ -1656,7 +1656,7 @@ void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker
 
 				UTIL_TraceLine(vecSrc, vecSpot, dont_ignore_monsters, ENT(pevInflictor), &tr);
 
-				if (tr.flFraction == 1 || tr.pHit == pEntity->edict())
+				if (tr.flFraction == 1.0f || tr.pHit == pEntity->edict())
 				{// the explosion can 'see' this entity, so hurt them!
 					if (tr.fStartSolid)
 					{
@@ -2059,17 +2059,17 @@ void HudText::Initialise()
 	m_textParms.g2 = 255;
 	m_textParms.b2 = 255;
 	m_textParms.a2 = 200;
-	m_textParms.fadeinTime = 0.2;
-	m_textParms.fadeoutTime = 0.5;
+	m_textParms.fadeinTime = 0.2f;
+	m_textParms.fadeoutTime = 0.5f;
 	m_textParms.holdTime = 4;
-	m_textParms.fxTime = 0.5;
+	m_textParms.fxTime = 0.5f;
 }
 
 void UTIL_BotHudMessageAll(const hudtextparms_t& textparms, const char* pMessage)
 {
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
-		CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
+		const CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
 
 		if (pClient && pClient->IsUsed())
 		{
@@ -2124,7 +2124,7 @@ void UTIL_BotHudMessage(edict_t* pEntity, const hudtextparms_t& textparms, const
 
 unsigned short FixedUnsigned16(float value, float scale)
 {
-	int output = value * scale;
+	int output = static_cast<int>(value * scale);
 	if (output < 0)
 		output = 0;
 	if (output > 0xFFFF)
@@ -2135,7 +2135,7 @@ unsigned short FixedUnsigned16(float value, float scale)
 
 short FixedSigned16(float value, float scale)
 {
-	int output = (value * scale);
+	int output = static_cast<int>(value * scale);
 
 	if (output > 32767)
 		output = 32767;
@@ -2170,7 +2170,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 //
 {
 	static HudText hudmessage = HudText(true);
-	static const char* tooltips[BOT_LANG_MAX][BOT_TOOL_TIP_MAX] = //char* needs to be const? [APG]RoboCop[CL]
+	static char* tooltips[BOT_LANG_MAX][BOT_TOOL_TIP_MAX] = //char* needs to be const? [APG]RoboCop[CL]
 	{
 		//---------------------------------------------------------------------------------------------------------------------<MAX
 		{"Welcome %n\nUse the command \"rcbot addbot\" to add a bot\nor use the bot menu (\"rcbot bot_menu\")",
@@ -2202,7 +2202,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 		if (strstr(final_message, "%n") != nullptr)
 		{
 			const char* szName = const_cast<char*>(STRING(pEntity->v.netname));
-			const int iLen = strlen(szName);
+			const unsigned int iLen = strlen(szName);
 			char* szNewName = static_cast<char*>(malloc(sizeof(char) * (iLen + 1)));
 
 			RemoveNameTags(szName, szNewName);
@@ -2470,7 +2470,7 @@ edict_t* UTIL_CheckTeleEntrance(Vector const& vOrigin, edict_t* pExit, edict_t* 
 	{
 		if (FStrEq(STRING(pent->v.classname), "building_teleporter"))
 		{
-			if (pent->v.framerate == 0)
+			if (pent->v.framerate == 0.0f)
 			{
 				pent->v.euser2 = pOwner;
 				pent->v.iuser1 = 1;
@@ -2527,7 +2527,7 @@ edict_t* UTIL_CheckTeleExit(Vector const& vOrigin, edict_t* pOwner, edict_t* pEn
 	{
 		if (FStrEq(STRING(pent->v.classname), "building_teleporter"))
 		{
-			if (pent->v.framerate == 0)
+			if (pent->v.framerate == 0.0f)
 			{
 				pent->v.euser2 = pOwner;
 				pent->v.iuser1 = 2;

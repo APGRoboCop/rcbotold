@@ -430,7 +430,6 @@ void BotClient_TS_WeaponInfo::execute(void* p, int iIndex)
 		return;
 	}
 	//from tsxmod
-	static int wpn;
 	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 	switch (gBotGlobals.m_iCurrentMessageState)
 	{
@@ -449,6 +448,7 @@ void BotClient_TS_WeaponInfo::execute(void* p, int iIndex)
 		break;
 	case 3:
 	{
+		static int wpn;
 		int mode = *static_cast<int*>(p);
 
 		gBotGlobals.m_Weapons.AddWeapon(id, "tsweapon", ammo, ammo, 0, 0, 0, 0, 0);

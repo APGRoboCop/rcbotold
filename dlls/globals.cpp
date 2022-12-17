@@ -543,7 +543,8 @@ void CBotGlobals::StartFrame()
 		if (IsConfigSettingOn(BOT_CONFIG_BOTS_LEAVE_AND_JOIN))
 		{
 			const int iClientsInGame = iNumClients; // argh, can't debug static variables
-			const float val = static_cast<float>(iClientsInGame) / gpGlobals->maxClients * RANDOM_FLOAT(0.9f, 1.3f);
+			const float val = static_cast<float>(iClientsInGame) / static_cast<float>(gpGlobals->maxClients) *
+				RANDOM_FLOAT(0.9f, 1.3f);
 
 			bBotJoin = val < 0.75f;
 		}
@@ -1339,7 +1340,7 @@ const char* CBotGlobals::GetModInfo()
 
 	if (pModInfo != nullptr)
 	{
-		m_iCurrentMod = pModInfo->GetModId();
+		m_iCurrentMod = static_cast<short>(pModInfo->GetModId());
 
 		m_bIsNS = m_iCurrentMod == MOD_NS;
 

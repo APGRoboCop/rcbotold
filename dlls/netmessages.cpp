@@ -83,7 +83,7 @@ BOOL CBotNetMessage::IsMessage(const int iMessage)
 	return m_iMessage == iMessage;
 }
 
-void CBotNetMessages::execute(int iMessage, void* p, int i)
+void CBotNetMessages::execute(int iMessage, void* p, int i) const
 {
 	CBotNetMessage* pMsg = GetMessage(iMessage, nullptr);
 

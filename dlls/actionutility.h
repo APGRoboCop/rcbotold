@@ -55,7 +55,7 @@ public:
 		return BOT_CAN_NONE;
 	}
 
-	float getTotalUtility()
+	float getTotalUtility() const
 	{
 		float total = 0.0f;
 

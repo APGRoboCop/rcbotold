@@ -55,7 +55,7 @@ public:
 		m_szHeader[0] = 0;
 	}
 
-	CGenericHeader(int iType, int iSize)
+	CGenericHeader(int iType, unsigned int iSize)
 	{
 		sprintf(m_szHeader, "t-%d-s-%d", iType, iSize);
 	}
