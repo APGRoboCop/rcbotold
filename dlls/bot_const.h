@@ -123,13 +123,13 @@ typedef enum
 	BOT_CAN_REFILL_STRUCT, // already built but needs health
 	BOT_CAN_BUILD_STRUCT,
 	BOT_CAN_HEAL,
-	/*BOT_CAN_BUILD_SENTRY,
+	BOT_CAN_BUILD_SENTRY,
 	BOT_CAN_UPGRADE_SENTRY,
 	BOT_CAN_BUILD_TELE_ENTRANCE,
 	BOT_CAN_BUILD_TELE_EXIT,
 	BOT_CAN_BUILD_DISPENSER,
 	BOT_CAN_GET_METAL,
-	BOT_CAN_REPAIR_TELE_EXIT*/
+	BOT_CAN_REPAIR_TELE_EXIT
 }eCanDoStuff;
 
 // macros
@@ -185,7 +185,7 @@ typedef enum
 
 #define BOT_MIN_SOUND_DIST 128
 
-#define BOT_MIN_MSECVAL 1
+#define BOT_MIN_MSECVAL 30
 #define BOT_MAX_MSECVAL 60
 #define BOT_DEF_MSECDELTIME 0.5f
 
@@ -346,7 +346,7 @@ typedef enum
 	ORDER_REQUEST = 80,
 	ORDER_ACK = 81,
 
-	// Commander mode
+	// Commander mode 
 	COMMANDER_MOUSECOORD = 82,
 	COMMANDER_MOVETO = 83,
 	COMMANDER_SCROLL = 84,
@@ -412,6 +412,7 @@ typedef enum
 
 	// NOTE: If this gets larger then a byte, AvHTechNode will have to change it's networking, possibly other code too
 	// NOTE: When changing any of these values, make sure to update titles.txt, skill.cfg and dlls\game.cpp, and tech*s.spr
+
 } AvHMessageID;
 
 // 200 units away max from building (2d distance)
@@ -433,6 +434,7 @@ typedef enum
 {
 	PLAYERCLASS_NONE = 0,
 	PLAYERCLASS_ALIVE_MARINE,
+	PLAYERCLASS_ALIVE_JETPACK_MARINE,
 	PLAYERCLASS_ALIVE_HEAVY_MARINE,
 	PLAYERCLASS_ALIVE_LEVEL1,
 	PLAYERCLASS_ALIVE_LEVEL2,
@@ -445,7 +447,8 @@ typedef enum
 	PLAYERCLASS_DEAD_ALIEN,
 	PLAYERCLASS_COMMANDER,
 	PLAYERCLASS_REINFORCING,
-	PLAYERCLASS_SPECTATOR
+	PLAYERCLASS_SPECTATOR,
+	PLAYERCLASS_REINFORCINGCOMPLETE
 } AvHPlayerClass;
 
 // Only one of these allowed per entity, stored in pev->iuser3.
@@ -531,7 +534,7 @@ typedef enum
 	BALANCE_ACTION_NOTIFY_FINISHED = 6
 } BalanceMessageAction;
 
-// AvHSpecials, only one per entity, stored in pev->iuser4.
+// AvHSpecials, only one per entity, stored in pev->iuser4.  
 // Stored in iuser4.  Some entities don't use these values, but most do.  The ones that don't include:
 // AVH_USER3_AUDIO_OFF
 // AVH_USER3_AUDIO_ON
@@ -552,7 +555,7 @@ typedef enum
 	MASK_UPGRADE_9 = 0x00000800,	// Scent of fear, exoskeleton
 	MASK_UPGRADE_10 = 0x00001000,	// Defensive level 2, power armor
 	MASK_UPGRADE_11 = 0x00002000,	// Defensive level 3, electrical defense
-	MASK_UPGRADE_12 = 0x00004000,	// Movement level 2,
+	MASK_UPGRADE_12 = 0x00004000,	// Movement level 2, 
 	MASK_UPGRADE_13 = 0x00008000,	// Movement level 3, marine heavy armor
 	MASK_UPGRADE_14 = 0x00010000,	// Sensory level 2
 	MASK_UPGRADE_15 = 0x00020000,	// Sensory level 3
