@@ -1063,7 +1063,7 @@ public:
 		return (buffer[iIndex]);
 	}
 
-	int getExistingIndex(T obj)
+	unsigned int getExistingIndex(T obj)
 	{
 		for (unsigned int i = 0; i < size; i++)
 		{

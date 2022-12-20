@@ -1266,7 +1266,7 @@ void BotClient_NS_HudText::execute(void* p, int iIndex)
 
 		if (msg)
 		{
-			const int length = strlen(msg);
+			const unsigned int length = strlen(msg);
 
 			// If a team has won (used to say "one" duhhh), round is over
 			if (!strcmpi(&msg[length - 3], "Won"))

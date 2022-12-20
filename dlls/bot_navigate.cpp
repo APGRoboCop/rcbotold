@@ -294,7 +294,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		iCurrentNode = -1;
 
 		fMinCost = 0.0f;
-		unsigned int bestIndex = 0;
+		int bestIndex = 0;
 
 		bestIndex = sOpenList->GetBestNode(CompareAStarNode);
 

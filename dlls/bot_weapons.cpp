@@ -225,7 +225,7 @@ void CWeaponPresets::ReadPresets()
 		if (buffer[0] == '#')
 			continue;
 
-		int iLength = strlen(buffer);
+		unsigned int iLength = strlen(buffer);
 
 		if (iLength <= 0) // blank line...
 			continue;

@@ -76,7 +76,7 @@ public:
 
 	void clear() const;
 
-	int size() const;
+	unsigned size() const;
 
 private:
 	int m_iNumBits;

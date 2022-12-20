@@ -198,13 +198,13 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 	}
 
 	fseek(fp, 0, SEEK_END); // move pos to end of file
-	const long   fPos = ftell(fp);  // get length of file
+	const long  fPos = ftell(fp);  // get length of file
 
 	// do some error checking - verify the file is not corrupt
 	if (fPos % sizeof(CBotReputation) != 0) return;
 
 	// get the count of items in the file
-	long   count = fPos / sizeof(CBotReputation);
+	long  count = fPos / sizeof(CBotReputation);
 
 	fseek(fp, 0, SEEK_SET); // move pos back to beginning
 
@@ -270,13 +270,13 @@ void CBotReputations::WriteToFile(const int iBotProfile, const CBotReputation* p
 	}
 
 	fseek(fp, 0, SEEK_END); // move pos to end of file
-	long   fPos = ftell(fp);  // get length of file
+	unsigned long fPos = ftell(fp);  // get length of file
 
 	// do some error checking - verify the file is not corrupt
 	if (fPos % sizeof(CBotReputation) != 0) return;
 
 	// get the count of items in the file
-	long   count = fPos / sizeof(CBotReputation);
+	unsigned long count = fPos / sizeof(CBotReputation);
 
 	fseek(fp, 0, SEEK_SET); // move pos back to beginning
 
@@ -380,7 +380,7 @@ int GetPlayerRepId(const char* szPlayerName)
 			if (buffer[0] == '#') // comment
 				continue;
 
-			int length = strlen(buffer);
+			unsigned int length = strlen(buffer);
 
 			if (length == 0)
 				continue; // nothing on this line

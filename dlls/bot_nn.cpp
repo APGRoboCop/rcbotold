@@ -107,7 +107,7 @@ void NN::trainOutputs(const std::vector<ga_value>* wanted_outputs) const
 
 	for (unsigned int i = 0; i < m_Layers.size(); i++)
 	{
-		NNLayer* l = m_Layers[i];
+		const NNLayer* l = m_Layers[i];
 
 		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
@@ -126,7 +126,7 @@ void NN::getOutputs(std::vector<ga_value>* outputs) const
 
 	for (unsigned int i = 0; i < m_Layers.size(); i++)
 	{
-		NNLayer* l = m_Layers[i];
+		const NNLayer* l = m_Layers[i];
 
 		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
@@ -354,7 +354,7 @@ void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
 		}
 	}
 
-	fTotalError = fTotalError / iNum;
+	fTotalError = fTotalError / static_cast<float>(iNum);
 
 	m_pInd->setFitness(1 / fTotalError);
 

@@ -4481,7 +4481,7 @@ void CBot::LookForNewTasks()
 				break;
 			}
 			// can I use an ammo disp?
-			else if (pNearestAmmoDisp &&
+			if (pNearestAmmoDisp &&
 				//m_bCanUseAmmoDispenser &&
 				m_pCurrentWeapon &&
 				m_pCurrentWeapon->HasWeapon(m_pEdict) &&
@@ -4492,7 +4492,7 @@ void CBot::LookForNewTasks()
 				break;
 			}
 			// Got something to weld?
-			else if (pNearestWeldable && HasWeapon(NS_WEAPON_WELDER))
+			if (pNearestWeldable && HasWeapon(NS_WEAPON_WELDER))
 			{
 				AddPriorityTask(CBotTask(BOT_TASK_WELD_OBJECT, iNewScheduleId, pNearestWeldable, 0, 0, EntityOrigin(pNearestWeldable)));
 				AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestWeldable));
@@ -4504,7 +4504,7 @@ void CBot::LookForNewTasks()
 			AddPriorityTask(CBotTask(BOT_TASK_USE,iNewScheduleId,pNearestCommandStation,0,0,EntityOrigin(pNearestCommandStation)));
 			AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH,iNewScheduleId,pNearestCommandStation));
 		}*/
-		// Nothing else to do...?
+			// Nothing else to do...?
 			else if (gBotGlobals.GetCommander())// a commander is in the console
 			{
 				if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_WAIT_FOR_ORDERS))
@@ -7025,7 +7025,7 @@ BOOL CBot::SwitchWeapon(int iId)
 			user.lightlevel = 127;
 			user.buttons = 0;
 			user.impulse = 0;
-			user.weaponselect = iId;
+			user.weaponselect = static_cast<unsigned char>(iId);
 			user.impact_index = 0;
 			user.impact_position = Vector(0, 0, 0);
 			// send a client update command
@@ -7060,7 +7060,7 @@ BOOL CBot::SwitchWeapon(int iId)
 			user.lightlevel = 127;
 			user.buttons = 0;
 			user.impulse = 0;
-			user.weaponselect = iId;
+			user.weaponselect = static_cast<unsigned char>(iId);
 			user.impact_index = 0;
 			user.impact_position = Vector(0, 0, 0);
 			// send a client update command
@@ -9467,7 +9467,7 @@ BOOL BotFunc_IsLongRangeWeapon(int iId)
 	case MOD_NS:
 		switch (iId)
 		{
-		case NS_WEAPON_CLAWS:
+		case NS_WEAPON_CLAWS: //Required to prevent aliens from attacking too far away? [APG]RoboCop[CL]
 		case NS_WEAPON_SPIT:
 		case NS_WEAPON_SPIKE:
 		case NS_WEAPON_BITE:

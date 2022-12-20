@@ -137,7 +137,7 @@ public:
 	// mutate some values
 	void mutate() override
 	{
-		for (unsigned i = 0; i < 32; i++)
+		for (int i = 0; i < 32; i++)
 		{
 			if (RANDOM_FLOAT(0, 1) <= 0.1f)
 			{
@@ -172,7 +172,7 @@ private:
 class CBitsGAValues : public IIndividual
 {
 public:
-	CBitsGAValues(unsigned int iNumBits);
+	CBitsGAValues(int iNumBits);
 
 	void load(FILE* bfp, int req_size) override;
 	void save(FILE* bfp) override;
@@ -181,7 +181,7 @@ public:
 	//void saveForBot ( char *file, int iProfile );
 
 	//~CBotGAValues();
-	void convert(int* iBits);
+	void convert(int* iBits) const;
 	CBitsGAValues(CBits* bits);
 
 	// crossover with other individual
@@ -194,7 +194,7 @@ public:
 	// sub classes return their class with own values
 	IIndividual* copy() override;
 
-	unsigned int size() const;
+	int size() const;
 
 	//void setBits ( CBits values );
 	//void getBits ( CBits *values );

@@ -107,7 +107,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 	// is bot chat allowed AND this message is not from this bot itself ?
 	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHATTING) && pSender != pBot->m_pEdict)
 	{
-		const int iNameLength = strlen(pBot->m_szBotName);
+		const unsigned int iNameLength = strlen(pBot->m_szBotName);
 		char* szName = new char[sizeof(char) * (iNameLength + 1)];
 		RemoveNameTags(pBot->m_szBotName, szName);
 		szName[iNameLength] = 0;
@@ -120,7 +120,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		const char* szNamePos = strstr(szMsg, szName);
 		const BOOL bNameInMsg = szNamePos != nullptr;
 
-		const int iSenderNameLength = strlen(STRING(pSender->v.netname));
+		const unsigned int iSenderNameLength = strlen(STRING(pSender->v.netname));
 		char* szSenderName = new char[sizeof(char) * (iSenderNameLength + 1)];
 		RemoveNameTags(STRING(pSender->v.netname), szSenderName);
 		szSenderName[iSenderNameLength] = 0;
@@ -134,7 +134,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 
 		if (bNameInMsg)
 		{
-			BotFunc_FillString(szMsg, szName, name_in_msg, strlen(szMsg));
+			BotFunc_FillString(szMsg, szName, name_in_msg, static_cast<int>(strlen(szMsg)));
 		}
 
 		// break the new message into an array of words
@@ -177,9 +177,9 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 // from old rcbot
 void HumanizeString(char* string)
 {
-	int length = strlen(string);
-	int i = 0;
-	int n = 0;
+	unsigned int length = strlen(string);
+	unsigned int i = 0;
+	unsigned int n = 0;
 	int rand;
 
 	while (i < length)
@@ -244,7 +244,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 	if (in_string == nullptr)
 		return;
 
-	const int length = strlen(in_string);
+	const unsigned int length = strlen(in_string);
 
 	if (length > 127)
 	{
@@ -412,7 +412,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 	HAL_DICTIONARY* keywords = BotHALMakeKeywords(pBot, pBot->m_Profile.m_HAL->input_words);
 	HAL_DICTIONARY* replywords = BotHALBuildReplyDictionary(pBot, keywords);
 
-	const int last_entry = pBot->m_Profile.m_HAL->input_words->size - 1;
+	const int last_entry = static_cast<long>(pBot->m_Profile.m_HAL->input_words->size - 1);
 	const int last_character = pBot->m_Profile.m_HAL->input_words->entry[last_entry].length - 1;
 
 	// was it a question (i.e. was the last word in the general chat record a question mark ?)
@@ -502,7 +502,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	// word. If the word already exists in the dictionary, then return its current identifier
 	// without adding it again.
 
-	int i;
+	unsigned int i;
 	BOOL found;
 
 	// if the word's already in the dictionary, there is no need to add it
@@ -564,8 +564,8 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 	}
 
 	// initialize the lower and upper bounds of the search
-	int imin = 0;
-	int imax = dictionary->size - 1;
+	unsigned int imin = 0;
+	unsigned int imax = dictionary->size - 1;
 
 	//BOOL bDone = false;
 	//int iFound = 0;
@@ -576,8 +576,8 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 	{
 		// see whether the middle element of the search space is greater than, equal to, or
 		// less than the element being searched for.
-		const int middle = (imin + imax) / 2;
-		const int compar = HAL_CompareWords(word, dictionary->entry[dictionary->index[middle]]);
+		const unsigned int middle = (imin + imax) / 2;
+		const unsigned int compar = HAL_CompareWords(word, dictionary->entry[dictionary->index[middle]]);
 
 		// if equal then we have found the element. Otherwise halve the search space accordingly
 		if (compar == 0)
@@ -590,7 +590,7 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 			if (imax == middle)
 			{
 				*find = false;
-				return middle + 1;
+				return static_cast<int>(middle + 1);
 			}
 
 			imin = middle + 1;
@@ -600,7 +600,7 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 			if (imin == middle)
 			{
 				*find = false;
-				return middle;
+				return static_cast<int>(middle);
 			}
 
 			imax = middle - 1;
@@ -930,7 +930,7 @@ void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words)
 {
 	// this function learns from the user's input
 
-	int i;
+	unsigned int i;
 	unsigned short symbol;
 
 	if (words->size <= model->order)
@@ -940,7 +940,7 @@ void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words)
 	HAL_InitializeContext(model);
 	model->context[0] = model->forward;
 
-	for (i = 0; i < static_cast<int>(words->size); ++i)
+	for (i = 0; i < static_cast<unsigned int>(words->size); ++i)
 	{
 		// add the symbol to the model's dictionary if necessary, and update the model accordingly
 		symbol = HAL_AddWord(model->dictionary, words->entry[i]);
@@ -954,7 +954,7 @@ void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words)
 	HAL_InitializeContext(model);
 	model->context[0] = model->backward;
 
-	for (i = words->size - 1; i >= 0; --i)
+	for (i = words->size - 1; i == 0; --i)
 	{
 		// find the symbol in the model's dictionary, and update the backward model accordingly
 		symbol = HAL_FindWord(model->dictionary, words->entry[i]);
@@ -1016,7 +1016,7 @@ void HAL_MakeWords(char* input, HAL_DICTIONARY* words)
 
 	// re-written
 
-	int iLen = strlen(input);
+	unsigned int iLen = strlen(input);
 
 	// clear the entries in the dictionary
 	HAL_EmptyDictionary(words);
@@ -1237,7 +1237,7 @@ int strpos(char* pos, char* start)
 
 void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int start, int end)
 {
-	const int size = sizeof(char) * (maxstring + 1);
+	const unsigned int size = sizeof(char) * (maxstring + 1);
 
 	char* before = static_cast<char*>(malloc(size));
 	char* after = static_cast<char*>(malloc(size));
@@ -1400,7 +1400,7 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 	// this function generates a dictionary of reply words relevant to the dictionary of keywords
 
 	static HAL_DICTIONARY* replies = nullptr;
-	int i;
+	unsigned int i;
 	int symbol;
 	BOOL start = true;
 
@@ -1455,7 +1455,7 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 	// re-create the context of the model from the current reply dictionary so that we can
 	// generate backwards to reach the beginning of the string.
 	if (replies->size > 0)
-		for (i = min(replies->size - 1, pBot->m_Profile.m_HAL->bot_model->order); i >= 0; --i)
+		for (i = min(replies->size - 1, pBot->m_Profile.m_HAL->bot_model->order); i == 0; --i)
 		{
 			symbol = HAL_FindWord(pBot->m_Profile.m_HAL->bot_model->dictionary, replies->entry[i]);
 			HAL_UpdateContext(pBot->m_Profile.m_HAL->bot_model, symbol);
@@ -1520,7 +1520,7 @@ int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 
 	// choose a symbol at random from this context
 	i = RANDOM_LONG(0, node->branch - 1);
-	int count = RANDOM_LONG(0, node->usage - 1);
+	int count = RANDOM_LONG(0, static_cast<long>(node->usage - 1));
 
 	while (count >= 0)
 	{
@@ -1570,7 +1570,7 @@ int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys)
 
 	if (keys->size > 0)
 	{
-		int i = RANDOM_LONG(0, keys->size - 1);
+		int i = RANDOM_LONG(0, static_cast<long>(keys->size - 1));
 		const int stop = i;
 
 		while (true)
@@ -2060,7 +2060,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 				if (!szBuffer[0])
 					continue; // nothing on this line
 
-				const int iLen = strlen(szBuffer);
+				const unsigned int iLen = strlen(szBuffer);
 
 				if (szBuffer[iLen - 1] == '\n')
 					szBuffer[iLen - 1] = 0;

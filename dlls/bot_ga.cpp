@@ -67,12 +67,12 @@ void CBotGAValues::clear()
 // crossover with other individual
 void CBotGAValues::crossOver(IIndividual* other)
 {
-	const unsigned int iPoint = RANDOM_LONG(0, m_theValues.size());
+	const int iPoint = RANDOM_LONG(0, m_theValues.size());
 	float fTemp;
 
 	CBotGAValues* vother = static_cast<CBotGAValues*>(other);
 
-	unsigned int i;
+	int i;
 
 	for (i = 0; i < iPoint; i++)
 	{
@@ -92,7 +92,7 @@ void CBotGAValues::crossOver(IIndividual* other)
 // mutate some values
 void CBotGAValues::mutate()
 {
-	for (unsigned int i = 0; i < m_theValues.size(); i++)
+	for (int i = 0; i < m_theValues.size(); i++)
 	{
 		if (RANDOM_FLOAT(0, 1) < CGA::g_fMutateRate)
 		{
@@ -226,21 +226,21 @@ void CBotGAValues::load(FILE* bfp, int req_size)
 // bits
 //----------------------
 
-unsigned int CBitsGAValues::size() const
+int CBitsGAValues::size() const
 {
 	return m_theBits->size();
 }
 
-void CBitsGAValues::convert(int* iBits)
+void CBitsGAValues::convert(int* iBits) const
 {
-	for (unsigned int i = 0; i < size(); i++)
+	for (int i = 0; i < size(); i++)
 	{
 		if (m_theBits->getBit(i))
 			*iBits = *iBits + (1 << i);
 	}
 }
 
-CBitsGAValues::CBitsGAValues(unsigned int iNumBits)
+CBitsGAValues::CBitsGAValues(int iNumBits)
 {
 	m_theBits = new CBits(iNumBits);
 }
@@ -271,13 +271,13 @@ CBitsGAValues::CBitsGAValues(CBits* bits): m_theBits(nullptr)
 // crossover with other individual
 void CBitsGAValues::crossOver(IIndividual* other)
 {
-	const unsigned int iNumBits = m_theBits->numBits();
-	const unsigned int iCrossoverPoint = static_cast<unsigned int>(RANDOM_LONG(0, iNumBits));
+	const int iNumBits = m_theBits->numBits();
+	const int iCrossoverPoint = static_cast<int>(RANDOM_LONG(0, iNumBits));
 	const CBits* tempBits = new CBits(iNumBits);
 
 	const CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
 
-	unsigned int i;
+	int i;
 
 	for (i = 0; i < iCrossoverPoint; i++)
 	{

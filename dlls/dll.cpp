@@ -833,7 +833,7 @@ void ClientCommand(edict_t* pEntity)
 				{
 					// argh! someone said something in series of arguments. work out the message
 					int i = 1;
-					int iLenSoFar = 0;
+					unsigned int iLenSoFar = 0;
 					// for concatenating string dynamically
 					char* szTemp = nullptr;
 					BOOL bWasQuote = false;
@@ -1580,7 +1580,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	}
 
 	gBotGlobals.m_bIsFakeClientCommand = true; // set the "fakeclient command" flag
-	const int length = strlen(command); // get the total length of the command string
+	const unsigned int length = strlen(command); // get the total length of the command string
 
 	// process all individual commands (separated by a semicolon) one each a time
 	while (stringindex < length)
@@ -1772,7 +1772,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 		if (szBuffer[0] == '#')
 			continue;
 
-		int iLength = strlen(szBuffer);
+		unsigned int iLength = strlen(szBuffer);
 
 		if (szBuffer[iLength - 1] == '\n')
 			szBuffer[--iLength] = '\0';
@@ -1990,7 +1990,7 @@ void ReadBotUsersConfig()
 
 			buffer[255] = 0;
 
-			int length = strlen(buffer);
+			unsigned int length = strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;
@@ -2004,7 +2004,7 @@ void ReadBotUsersConfig()
 			if (length == 0) // nothing on line
 				continue;
 
-			int i = 0;
+			unsigned int i = 0;
 
 			while (i < length && buffer[i] != '"')
 				i++;
@@ -2081,7 +2081,7 @@ void ReadMapConfig()
 		if (*szTemp == '#')
 			return;
 
-		int iLen = strlen(szTemp);
+		unsigned int iLen = strlen(szTemp);
 
 		if (iLen > 255)
 			szTemp[255] = 0;

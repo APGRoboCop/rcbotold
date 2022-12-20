@@ -1314,7 +1314,7 @@ const char* CBotGlobals::GetModInfo()
 
 	GET_GAME_DIR(game_dir);
 
-	int pos = 0;
+	unsigned int pos = 0;
 
 	if (strchr(game_dir, '/') != nullptr)
 	{
@@ -1446,9 +1446,9 @@ void CBotGlobals::ReadConfig()
 
 		while (fgets(buffer, 127, fp) != nullptr)
 		{
-			int i = 0;
+			unsigned int i = 0;
 
-			int length = strlen(buffer);
+			unsigned int length = strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;
@@ -1773,7 +1773,7 @@ void CBotGlobals::ReadThingsToBuild() const
 			if (szbuffer[0] == '#')
 				continue; // comment
 
-			int ilen = strlen(szbuffer);
+			unsigned int ilen = strlen(szbuffer);
 
 			if (ilen == 0)
 				continue;
@@ -1786,7 +1786,7 @@ void CBotGlobals::ReadThingsToBuild() const
 
 			if (szbuffer[0] == '[')
 			{
-				int i = 1;
+				unsigned int i = 1;
 				int j = 0;
 
 				while (i < ilen && szbuffer[i] != ']')
@@ -1981,7 +1981,7 @@ void CBotGlobals::SetupBotChat()
 		if (buffer[0] == '#')
 			continue;
 
-		int iLength = strlen(buffer);
+		unsigned int iLength = strlen(buffer);
 
 		if (buffer[iLength - 1] == '\n')
 		{

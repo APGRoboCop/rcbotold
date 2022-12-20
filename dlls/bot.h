@@ -1251,7 +1251,7 @@ public:
 		{
 			try
 			{
-				CBotTask* pTask = tempStack.ChoosePointerFrom();
+				const CBotTask* pTask = tempStack.ChoosePointerFrom();
 
 				if (*pTask == Task)
 				{
@@ -1828,7 +1828,7 @@ public:
 		return m_vVisibleOrigin;
 	}
 
-	BOOL operator == (CRememberPosition other) const
+	BOOL operator == (const CRememberPosition& other) const
 	{
 		return other.getEntity() == getEntity();
 	}
@@ -4282,7 +4282,7 @@ public:
 
 	char* GetString(const char* szString)
 	{
-		int iHashNum = szString[0];
+		int iHashNum = static_cast<unsigned char>(szString[0]);
 
 		if (iHashNum < 0)
 			iHashNum = -iHashNum;

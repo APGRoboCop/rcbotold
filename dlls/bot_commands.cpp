@@ -1886,10 +1886,10 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		const char* teamlist = CVAR_GET_STRING("mp_teamlist");
 
-		int i = 0;
-		int j = 0;
+		unsigned int i = 0;
+		unsigned int j = 0;
 
-		const int len = strlen(teamlist);
+		const unsigned int len = strlen(teamlist);
 
 		while (i < len)
 		{

@@ -144,7 +144,7 @@ void CBits::setup(const int iNumBits)
 }
 
 // memory size
-int CBits::size() const
+unsigned CBits::size() const
 {
 	return Ceiling(static_cast<float>(m_iNumBits) / 8);
 }
