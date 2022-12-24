@@ -5423,6 +5423,8 @@ public:
 							iPriority = 10; // max for command console
 							break;
 						case AVH_USER3_TURRET_FACTORY:
+							iPriority = 7;
+							break;
 						case AVH_USER3_ADVANCED_TURRET_FACTORY:
 							iPriority = 9;
 							break;
