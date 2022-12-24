@@ -391,7 +391,7 @@ int GetPlayerRepId(const char* szPlayerName)
 				buffer[length] = 0;
 			}
 
-			int i = 0;
+			unsigned int i = 0;
 
 			while (i < length && buffer[i] != '"')
 				i++;

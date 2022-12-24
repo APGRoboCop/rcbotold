@@ -1556,7 +1556,10 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 
 	va_list argptr;
 	static char command[256];
-	int fieldstop, i, stringindex = 0;
+	
+	unsigned int fieldstop;
+	unsigned int i;
+	unsigned int stringindex = 0;
 
 	if (!pFakeClient)
 	{
@@ -1585,7 +1588,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	// process all individual commands (separated by a semicolon) one each a time
 	while (stringindex < length)
 	{
-		const int fieldstart = stringindex; // save field start position (first character)
+		const unsigned int fieldstart = stringindex; // save field start position (first character)
 		while (stringindex < length && command[stringindex] != ';')
 			stringindex++; // reach end of field
 		if (command[stringindex - 1] == '\n')
@@ -1597,7 +1600,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 		g_argv[i - fieldstart] = 0; // terminate the string
 		stringindex++; // move the overall string index one step further to bypass the semicolon
 
-		int index = 0;
+		unsigned int index = 0;
 		gBotGlobals.m_iFakeArgCount = 0; // let's now parse that command and count the different arguments
 
 		// count the number of arguments
@@ -1758,10 +1761,10 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 {
 	char szBuffer[128];
 
-	int i;
+	unsigned int i;
 
 	char szTemp[64];
-	int j;
+	unsigned int j;
 
 	// read bot profile with bots name etc on it.
 

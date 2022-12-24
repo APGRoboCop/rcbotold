@@ -233,8 +233,8 @@ void HumanizeString(char* string)
 // from old rcbot
 void RemoveNameTags(const char* in_string, char* out_string)
 {
-	int i = 0; // index of in_string
-	int n = 0; // length of out_string
+	unsigned int i = 0; // index of in_string
+	unsigned int n = 0; // length of out_string
 
 	out_string[0] = 0;
 
@@ -268,7 +268,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 				i += 2;
 				continue;
 			}
-			else if (in_string[i] == ')' || in_string[i] == ']' || in_string[i] == '}')
+			if (in_string[i] == ')' || in_string[i] == ']' || in_string[i] == '}')
 			{
 				//char temp = in_string[i];
 
@@ -284,12 +284,9 @@ void RemoveNameTags(const char* in_string, char* out_string)
 
 				continue;
 			}
-			else
-			{
-				tag_size++;
-				i++;
-				continue;
-			}
+			tag_size++;
+			i++;
+			continue;
 		}
 
 		if (isalnum(in_string[i]))
@@ -506,7 +503,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	BOOL found;
 
 	// if the word's already in the dictionary, there is no need to add it
-	const int position = HAL_SearchDictionary(dictionary, word, &found);
+	const unsigned int position = HAL_SearchDictionary(dictionary, word, &found);
 	if (found)
 		return dictionary->index[position];
 

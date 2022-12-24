@@ -81,7 +81,7 @@ void CBotGAValues::crossOver(IIndividual* other)
 		vother->set(i, fTemp);
 	}
 
-	for (i = iPoint; i < m_theValues.size(); i++)
+	for (i = iPoint; i < static_cast<int>(m_theValues.size()); i++)
 	{
 		fTemp = vother->get(i);
 		vother->set(i, get(i));
@@ -92,7 +92,7 @@ void CBotGAValues::crossOver(IIndividual* other)
 // mutate some values
 void CBotGAValues::mutate()
 {
-	for (int i = 0; i < m_theValues.size(); i++)
+	for (int i = 0; i < static_cast<int>(m_theValues.size()); i++)
 	{
 		if (RANDOM_FLOAT(0, 1) < CGA::g_fMutateRate)
 		{
