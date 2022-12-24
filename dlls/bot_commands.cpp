@@ -1923,8 +1923,8 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		if (newteam[0] == 0)
 			strcpy(newteam, teams.Random());
 
-		for (i = 0; i < teams.Size(); i++)
-			free(teams.ReturnValueFromIndex(i));
+		for (int i_index = 0; i_index < teams.Size(); i_index++)
+			free(teams.ReturnValueFromIndex(i_index));
 
 		teams.Clear();
 
