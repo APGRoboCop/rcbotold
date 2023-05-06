@@ -3837,7 +3837,7 @@ public:
 
 	/////////////////////////////////////
 	// VISIBLES
-	BOOL IsInVisibleList(edict_t* pEntity);
+	BOOL IsInVisibleList(edict_t* pEntity) const;
 
 	BOOL HasUpgraded(int iUpgrade);
 
@@ -3982,7 +3982,7 @@ public:
 	BOOL     WantToFollowEnemy(edict_t* pEnemy);
 
 	// returns true when bot is facing the ideal aim position
-	BOOL	 FacingIdeal();
+	BOOL	 FacingIdeal() const;
 
 	// returns true if bot can pickup the entity pPickup
 	BOOL     CanPickup(edict_t* pPickup);

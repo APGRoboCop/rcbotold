@@ -404,52 +404,52 @@ void CBot::BotCommand()
 		// find out from setTech net message(s) ...??? what happened to em?
 	}
 }
+
 // TODO: may need to be tested [APG]RoboCop[CL]
-/*
-  typedef enum
-  {
+/*typedef enum
+{
 	CH_BASE_ATTACK = 1,
 	CH_ENEMY_SPOT = 2,
 	CH_NO_RESOURCES = 4,
-	CH_ENEMY_STRUCT = 8
+	CH_ENEMY_STRUCT = 8,
 	CH_ENEMY_RESOURCE_ON_FOUNTAIN = 16,
 	CH_ENEMY_HIVE = 32
-  }eCommanderHappen;
+}eCommanderHappen;
 
-  typedef enum
-  {
+typedef enum
+{
 	CE_ENEMY_SPOT = 1,
 	CE_MARINE_SPOT_ENEMY = 2,
 	CE_MARINE_DEATH = 4,
 	CE_ALIEN_SOUND = 8
-  }eCommanderEvidence;
+}eCommanderEvidence;
 
-  class CCommEvidence
-  {
-  public:
+class CCommEvidence
+{
+public:
 
-  private:
+private:
 	eCommanderEvidence m_iType;
 	ga_value m_fWeight;
-  };
+};
 
-  class CCommanderEvidenceList
-  {
-	public:
-		void addEvidence ();
-		void removeEvidence ();
-		void workProbability ( Vector loc, float fRange )
-	private:
-		vector<CCommEvidence*> m_evd;
-  };
+class CCommanderEvidenceList
+{
+public:
+	void addEvidence();
+	void removeEvidence();
+	void workProbability(Vector loc, float fRange);
+private:
+	std::vector<CCommEvidence*> m_evd;
+};
 
-void CBot :: CommanderStrategy ()
+void CBot::CommanderStrategy()
 {
 }
 
-float CBot :: CommanderUtility ( eCommanderAction action, Vector vLocation )
+float CBot::CommanderUtility(eCommanderAction action, Vector vLocation)
 {
-	switch ( action )
+	switch (action)
 	{
 	case CMD_ACT_BUILD_TURRET_FACTORY:
 
@@ -458,14 +458,14 @@ float CBot :: CommanderUtility ( eCommanderAction action, Vector vLocation )
 	}
 }
 
-float CBot :: CommanderProbability ( eCommanderHappen happen, vector<comm_evid_t *> evd )
+float CBot::CommanderProbability(eCommanderHappen happen, vector<comm_evid_t*> evd)
 {
-	switch ( happen )
+	switch (happen)
 	{
 	}
 }*/
 
-BOOL CBot::FacingIdeal()
+BOOL CBot::FacingIdeal() const
 {
 	// looking within "2.0" degrees of target?
 	return std::fabs(UTIL_AngleDiff(pev->ideal_yaw, pev->v_angle.y)) < 2.0f &&
@@ -478,7 +478,7 @@ float BotFunc_DistanceBetweenEdicts(const edict_t* pEdict1, const edict_t* pEdic
 	return (pEdict1->v.origin - pEdict2->v.origin).Length();
 }
 
-BOOL CBot::IsInVisibleList(edict_t* pEntity)
+BOOL CBot::IsInVisibleList(edict_t* pEntity) const
 {
 	return m_pVisibles->isVisible(ENTINDEX(pEntity));
 }
@@ -2610,7 +2610,7 @@ void CBot::StartGame()
 			{
 				m_pCombatBits->setFitness(m_fCombatFitness); //TODO: That line triggers crash? [APG]RoboCop[CL]
 				gBotGlobals.m_pCombatGA[m_iCombatTeam].addToPopulation(m_pCombatBits->copy());
-				m_fCombatFitness = 0.0f; 
+				m_fCombatFitness = 0.0f;
 
 				if (m_pCombatBits)
 				{
@@ -4504,7 +4504,7 @@ void CBot::LookForNewTasks()
 			AddPriorityTask(CBotTask(BOT_TASK_USE,iNewScheduleId,pNearestCommandStation,0,0,EntityOrigin(pNearestCommandStation)));
 			AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH,iNewScheduleId,pNearestCommandStation));
 		}*/
-			// Nothing else to do...?
+		// Nothing else to do...?
 			else if (gBotGlobals.GetCommander())// a commander is in the console
 			{
 				if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_WAIT_FOR_ORDERS))
@@ -8702,7 +8702,7 @@ void CBot::RunPlayerMove()
 	}*/
 
 	(*g_engfuncs.pfnRunPlayerMove)(m_pEdict, pev->angles, m_fMoveSpeed, m_fStrafeSpeed, m_fUpSpeed,
-					static_cast<unsigned short>(pev->button), static_cast<byte>(pev->impulse), static_cast<byte>(m_iMsecVal));
+		static_cast<unsigned short>(pev->button), static_cast<byte>(pev->impulse), static_cast<byte>(m_iMsecVal));
 }
 
 void CBot::ThrowGrenade(edict_t* pEnemy, int preference, const BOOL bDontPrime)
@@ -9493,7 +9493,7 @@ BOOL BotFunc_IsLongRangeWeapon(int iId)
 		case NS_WEAPON_STOMP:
 		case NS_WEAPON_DEVOUR:
 			return true;
-		default: 
+		default:
 			return false;
 		}
 	default:
@@ -9849,7 +9849,7 @@ BOOL EntityIsWeldable(edict_t* pEntity)
 		if (EntityIsCommander(pEntity))
 			return false;
 
-		return pEntity->v.velocity.Length() < 1 && EntityIsAlive(pEntity) && pEntity->v.armorvalue < 
+		return pEntity->v.velocity.Length() < 1 && EntityIsAlive(pEntity) && pEntity->v.armorvalue <
 			static_cast<float>(UTIL_NS_GetMaxArmour(pEntity));
 	}
 
@@ -12948,8 +12948,8 @@ void CBot::DoTasks()
 					}
 					else
 						TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr,
-						                     VALVE_WEAPON_HANDGRENADE, 0.0f, Vector(0, 0, 0),
-						                     m_CurrentTask->TimeToComplete());
+							VALVE_WEAPON_HANDGRENADE, 0.0f, Vector(0, 0, 0),
+							m_CurrentTask->TimeToComplete());
 
 					m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_VECTOR;
 				}
@@ -16296,7 +16296,7 @@ void CBot::CheckStuck()
 	}
 	else
 		m_fLastNoMove = 0.0f;
-	
+
 	/////////////////////////
 	// STUCK CODE          //
 	/////////////////////////

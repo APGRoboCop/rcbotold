@@ -572,7 +572,7 @@ void InitMessage ( const char *message );
 			// Ladder waypoint
 			// make the frist waypoint (e.g. bottom waypoint)
 			// ****************************************************
-			if (pev->movetype == MOVETYPE_FLY && !(m_iLastMoveType == MOVETYPE_FLY))
+			if (pev->movetype == MOVETYPE_FLY && m_iLastMoveType != MOVETYPE_FLY)
 			{
 				// went ON to a ladder
 
@@ -601,7 +601,7 @@ void InitMessage ( const char *message );
 					m_vLastAutoWaypointCheckPos[i].UnSetPoint();
 				}
 			}
-			else if (!(pev->movetype == MOVETYPE_FLY) && m_iLastMoveType == MOVETYPE_FLY)
+			else if (pev->movetype != MOVETYPE_FLY && m_iLastMoveType == MOVETYPE_FLY)
 			{
 				// went OFF a ladder
 				m_fCanPlaceLadder = gpGlobals->time + 0.2f;
