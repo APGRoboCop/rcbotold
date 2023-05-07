@@ -22,10 +22,11 @@ V 1.51
 * added: Enhanced performance
 * added: AMBuild compiling support
 * added: Opposing Force CTF Support
-* added: gnu++14 Support for Linux Servers
+* added: gnu++17 Support for Linux Servers
 * added: Strafing combat to evade being easy target bots
 * changed: Increased the bot's flexability
 * changed: Reduced redundant coding
+* changed: Reverted basemonster.h that was modified for Sven Coop
 * changed: The bot add or spawn delay for 5-7 seconds to prevent crashes
 * changed: Increasing bot's viewing angle to detect enemies better
 * changed: Reduced further Sven Co-op and TFC support
@@ -421,6 +422,7 @@ iii. Post in forum or e-mail me with :
 
 - Cheeseh : RCBot founder
 - RoboCop : For compiling Linux builds and adding waypoints
+- Anonymous Player : For adding AMBuild support
 - Botman : For the main HPB_Bot template
 - Flayra : For NS and code needed to get a bot to work with NS
 - Sven Viking & Sniper: For SvenCoop and allowing me access to Beta versions to allow bot support  
