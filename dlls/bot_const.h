@@ -1078,17 +1078,17 @@ typedef enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b2_mm_debug"
+#define BOT_VER "1.51b3_mm_debug"
 #else
-#define BOT_VER "1.51b2_mm"
+#define BOT_VER "1.51b3_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b2_debug"
+#define BOT_VER "1.51b3_debug"
 #else
-#define BOT_VER "1.51b2"
+#define BOT_VER "1.51b3"
 #endif
 
 #endif
@@ -1102,17 +1102,17 @@ typedef enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b2_mm_debug"
+#define BOT_VER "1.51b3_mm_debug"
 #else
-#define BOT_VER "1.51b2_mm"
+#define BOT_VER "1.51b3_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b2_debug"
+#define BOT_VER "1.51b3_debug"
 #else
-#define BOT_VER "1.51b2"
+#define BOT_VER "1.51b3"
 #endif
 
 #endif

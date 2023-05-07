@@ -3833,7 +3833,7 @@ public:
 		m_result = result;
 	}
 
-	float Utility()
+	float Utility() const
 	{
 		float fUtility = 1.0f;
 
@@ -3852,7 +3852,7 @@ public:
 		return fUtility;
 	}
 
-	float ResultProbability(eAlienMaskEvidence evd)
+	float ResultProbability(eAlienMaskEvidence evd) const
 	{
 		float fProbability = 1.0f;
 
@@ -3932,6 +3932,7 @@ public:
 				fProbability *= 0.66f;
 			return fProbability;
 		}
+		return 0;
 	}
 private:
 	eAlienAction m_action;
@@ -3971,6 +3972,7 @@ public:
 				return best;
 			}
 		}
+		return nullptr;
 	}
 private:
 	std::vector<CAlienAction> m_Actions;

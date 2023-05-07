@@ -328,6 +328,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actionutility.h" />
+    <ClInclude Include="basemonster.h" />
     <ClInclude Include="bits.h" />
     <ClInclude Include="bot.h" />
     <ClInclude Include="bot_client.h" />
@@ -338,6 +339,7 @@
     <ClInclude Include="bot_tick.h" />
     <ClInclude Include="bot_visibles.h" />
     <ClInclude Include="bot_weapons.h" />
+    <ClInclude Include="cbase.h" />
     <ClInclude Include="cdll_dll.h" />
     <ClInclude Include="dir.h" />
     <ClInclude Include="enginecallback.h" />

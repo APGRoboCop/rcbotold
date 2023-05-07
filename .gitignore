@@ -298,6 +298,6 @@ __pycache__/
 *.cfg
 *.recipe
 build/*
-build-linux/*
+build_linux/*
 apg-load
 obj-windows/

@@ -187,7 +187,7 @@ public:
 	virtual void Duck();
 	virtual void PreThink();
 	virtual void PostThink();
-	Vector GetGunPosition() override;
+	Vector GetGunPosition();
 	int TakeHealth(float flHealth, int bitsDamageType) override;
 	void TraceAttack(entvars_t* pevAttacker, float flDamage, Vector vecDir, TraceResult* ptr, int bitsDamageType) override;
 	int TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType) override;
@@ -227,7 +227,7 @@ public:
 	void			FlashlightTurnOff();
 
 	void UpdatePlayerSound();
-	void DeathSound() override;
+	void DeathSound();
 
 	int Classify() override;
 	void SetAnimation(PLAYER_ANIM playerAnim);
@@ -271,8 +271,8 @@ public:
 	void CheckTimeBasedDamage();
 
 	BOOL FBecomeProne() override;
-	void BarnacleVictimBitten(entvars_t* pevBarnacle) override;
-	void BarnacleVictimReleased() override;
+	void BarnacleVictimBitten(entvars_t* pevBarnacle);
+	void BarnacleVictimReleased();
 	static int GetAmmoIndex(const char* psz);
 	int AmmoInventory(int iAmmoIndex);
 	int Illumination() override;
