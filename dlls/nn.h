@@ -115,7 +115,7 @@ public:
 
 	~NNGATrained();
 
-	void train(std::vector<CNNTrainSet> trainingsets) override;
+	void train(std::vector<CNNTrainSet> trainingsets);
 private:
 	CGA* m_pGA;
 	IIndividual* m_pInd;

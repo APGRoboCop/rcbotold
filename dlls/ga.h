@@ -117,7 +117,7 @@ public:
 
 class CRouletteSelection : public ISelection
 {
-	IIndividual* select(CPopulation* population) override;
+	IIndividual* select(CPopulation* population);
 };
 
 class CGA

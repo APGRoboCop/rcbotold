@@ -50,7 +50,7 @@ public:
 class CSigmoidTransfer : public ITransfer
 {
 public:
-	ga_value transfer(ga_value netInput) override;
+	ga_value transfer(ga_value netInput);
 };
 
 class CPerceptron //: public IIndividual

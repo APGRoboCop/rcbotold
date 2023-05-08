@@ -22,7 +22,7 @@ V 1.51
 * added: Enhanced performance
 * added: AMBuild compiling support
 * added: Opposing Force CTF Support
-* added: gnu++17 Support for Linux Servers
+* added: C++17 Support 
 * added: Strafing combat to evade being easy target bots
 * changed: Increased the bot's flexability
 * changed: Reduced redundant coding
