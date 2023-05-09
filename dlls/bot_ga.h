@@ -42,8 +42,8 @@ class CBotGAValues : public IIndividual
 public:
 	CBotGAValues();
 
-	void load(FILE* bfp, int req_size);
-	void save(FILE* bfp);
+	void load(FILE* bfp, int req_size) override;
+	void save(FILE* bfp) override;
 
 	void loadForBot(char* file, int iProfile);
 	void saveForBot(char* file, int iProfile);
@@ -53,14 +53,14 @@ public:
 	CBotGAValues(const std::vector<ga_value>& values);
 
 	// crossover with other individual
-	void crossOver(IIndividual* other);
+	void crossOver(IIndividual* other) override;
 
 	// mutate some values
-	void mutate();
+	void mutate() override;
 
 	// get new copy of this
 	// sub classes return their class with own values
-	IIndividual* copy();
+	IIndividual* copy() override;
 
 	void setVector(std::vector<ga_value> values);
 	void getVector(std::vector<ga_value>* values);
@@ -69,7 +69,7 @@ public:
 
 	void set(int iIndex, ga_value fVal);
 
-	void clear();
+	void clear() override;
 
 	void add(ga_value val) { m_theValues.emplace_back(val); }
 
@@ -92,7 +92,7 @@ public:
 		m_Value = val;
 	}
 
-	void load(FILE* bfp, int req_size)
+	void load(FILE* bfp, int req_size) override
 	{
 		int check;
 
@@ -108,7 +108,7 @@ public:
 		}
 	}
 
-	void save(FILE* bfp)
+	void save(FILE* bfp) override
 	{
 		const int iSiz = 1;
 		fwrite(&iSiz, sizeof(int), 1, bfp);
@@ -116,7 +116,7 @@ public:
 	}
 
 	// crossover with other individual
-	void crossOver(IIndividual* other)
+	void crossOver(IIndividual* other) override
 	{
 		CIntGAValues* p = static_cast<CIntGAValues*>(other);
 
@@ -135,7 +135,7 @@ public:
 	}
 
 	// mutate some values
-	void mutate()
+	void mutate() override
 	{
 		for (int i = 0; i < 32; i++)
 		{
@@ -149,14 +149,14 @@ public:
 		}
 	}
 
-	void clear()
+	void clear() override
 	{
 		m_Value = 0;
 	}
 
 	// get new copy of this
 	// sub classes return their class with own values
-	IIndividual* copy()
+	IIndividual* copy() override
 	{
 		IIndividual* p = new CIntGAValues(m_Value);
 		p->setFitness(getFitness());
@@ -174,8 +174,8 @@ class CBitsGAValues : public IIndividual
 public:
 	CBitsGAValues(int iNumBits);
 
-	void load(FILE* bfp, int req_size);
-	void save(FILE* bfp);
+	void load(FILE* bfp, int req_size) override;
+	void save(FILE* bfp) override;
 
 	//void loadForBot ( char *file, int iProfile );
 	//void saveForBot ( char *file, int iProfile );
@@ -185,14 +185,14 @@ public:
 	CBitsGAValues(CBits* bits);
 
 	// crossover with other individual
-	void crossOver(IIndividual* other);
+	void crossOver(IIndividual* other) override;
 
 	// mutate some values
-	void mutate();
+	void mutate() override;
 
 	// get new copy of this
 	// sub classes return their class with own values
-	IIndividual* copy();
+	IIndividual* copy() override;
 
 	int size() const;
 
@@ -203,7 +203,7 @@ public:
 
 	void set(int iIndex, BOOL bSet) const;
 
-	void clear();
+	void clear() override;
 
 	inline void random() const;
 

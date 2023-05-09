@@ -4119,15 +4119,15 @@ public:
 	/*/BOOL CanFollow(const edict_t* pEdict) //TODO: Experimental [APG]RoboCop[CL]
 	{
 		//if ( pEdict == m_pEdict )
-		//	return FALSE;
+		//	return false;
 
 		if (pEdict->v.flags & FL_FAKECLIENT)
-			return FALSE;
+			return false;
 
 		if (pEdict->v.team != GetTeam())
-			return FALSE;
+			return false;
 
-		return TRUE;
+		return true;
 	}*/
 
 	// Checks bots weapon bitmask

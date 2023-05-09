@@ -23,7 +23,7 @@ V 1.51
 * added: AMBuild compiling support
 * added: Opposing Force CTF Support
 * added: C++17 Support 
-* added: Strafing combat to evade being easy target bots
+* added: Strafing combat to evade from being easy target bots
 * changed: Increased the bot's flexability
 * changed: Reduced redundant coding
 * changed: Reverted basemonster.h that was modified for Sven Coop

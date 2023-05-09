@@ -762,7 +762,7 @@ BOOL BotCanJumpUp(const CBot* pBot) // BotCanJumpUp : By : Botman
 	// above where the bot will jump to, downward to see if there is anything
 	// blocking the jump.  There could be a narrow opening that the body
 	// will not fit into.  These horizontal and vertical TraceLines seem
-	// to catch most of the problems with FALSEly trying to jump on something
+	// to catch most of the problems with falsely trying to jump on something
 	// that the bot can not get onto.
 
 	TraceResult tr;
