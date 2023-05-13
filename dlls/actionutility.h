@@ -14,12 +14,12 @@ public:
 		m_fUtility = utility;
 	}
 
-	float getUtility() const
+	float getUtility()
 	{
 		return m_fUtility;
 	}
 
-	eCanDoStuff getAction() const
+	eCanDoStuff getAction()
 	{
 		return m_Action;
 	}
@@ -40,7 +40,7 @@ public:
 
 	eCanDoStuff getBestAction()
 	{
-		const float rand = RANDOM_FLOAT(0, getTotalUtility());
+		float rand = RANDOM_FLOAT(0, getTotalUtility());
 
 		float total = 0.0f;
 
@@ -55,7 +55,7 @@ public:
 		return BOT_CAN_NONE;
 	}
 
-	float getTotalUtility() const
+	float getTotalUtility()
 	{
 		float total = 0.0f;
 

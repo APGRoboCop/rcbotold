@@ -190,6 +190,18 @@
     <ClInclude Include="basemonster.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="saverestore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="osdep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="types_meta.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

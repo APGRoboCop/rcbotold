@@ -105,14 +105,14 @@ public:
 
 	CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CClient*));
 
-	BOOL HasNextMenu() const
+	BOOL HasNextMenu()
 	{
 		return m_pNextMenu != nullptr;
 	}
 
-	void Activate(CClient* pClient) const;
+	void Activate(CClient* pClient);
 
-	const char* GetCaption() const
+	const char* GetCaption()
 	{
 		return m_szMenuCaption;
 	}
@@ -137,7 +137,7 @@ public:
 		//memset(m_Menus,0,sizeof(CBotMenuItem)*10);
 	}
 
-	void DestroyMenu() const;
+	void DestroyMenu();
 
 	void InitMenu();
 
@@ -167,7 +167,7 @@ public:
 		m_Menus[iMenuNum] = new CBotMenuItem(szMenuCaption, m_pMenuFunction);
 	}
 
-	void Activate(int iMenuItem, CClient* pClient) const
+	void Activate(int iMenuItem, CClient* pClient)
 	{
 		if (iMenuItem < 0 || iMenuItem >= 10)
 			return;

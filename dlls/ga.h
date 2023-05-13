@@ -46,7 +46,7 @@ class IIndividual
 public:
 	virtual ~IIndividual() = default;
 	// get fitness for this individual
-	ga_value getFitness() const { return m_fFitness; }
+	ga_value getFitness() { return m_fFitness; }
 	void setFitness(float fVal) { m_fFitness = fVal; }
 
 	virtual void load(FILE* bfp, int req_size) = 0;
@@ -77,27 +77,27 @@ public:
 
 	void setGA(CGA* ga) { m_ga = ga; }
 	// size of population
-	unsigned int size() const { return m_theIndividuals.size(); }
+	unsigned int size() { return m_theIndividuals.size(); };
 
 	// get from population index
-	IIndividual* get(int iIndex) const;
+	IIndividual* get(int iIndex);
 
 	// add individual to population
 	void add(IIndividual* individual);
 
 	void clear();
 
-	IIndividual* getBestIndividual() const;
+	IIndividual* getBestIndividual();
 
-	ga_value totalFitness() const;
+	ga_value totalFitness();
 
-	ga_value bestFitness() const;
+	ga_value bestFitness();
 
-	ga_value averageFitness() const;
+	ga_value averageFitness();
 
 	void load(FILE* bfp, int chromosize, int type = TYPE_BOTGAVALS);
 
-	void save(FILE* bfp) const;
+	void save(FILE* bfp);
 
 	// returns individual
 	IIndividual* pick();
@@ -117,7 +117,7 @@ public:
 
 class CRouletteSelection : public ISelection
 {
-	IIndividual* select(CPopulation* population) override;
+	IIndividual* select(CPopulation* population);
 };
 
 class CGA
@@ -156,16 +156,16 @@ public:
 	void addToPopulation(IIndividual* individual);
 
 	// can get an individual off new population
-	bool canPick() const;
+	bool canPick();
 
 	IIndividual* pick();
 
 	void load(FILE* bfp, int chromosize);
 
-	void save(FILE* bfp) const;
+	void save(FILE* bfp);
 
 	void loadTeam(char* szName, int iTeam, int chromosize);
-	void saveTeam(char* szName, int iTeam) const;
+	void saveTeam(char* szName, int iTeam);
 
 	//void loadBotGA ( char *szName, int iProfileId );
 	//void saveBotGA ( char *szName, int iProfileId );
@@ -193,6 +193,6 @@ private:
 	IIndividual* m_bestIndividual;
 };
 
-FILE* RCBOpenFile(char* file, const char* readtype, eGASaveType savedtype, int iId);
+FILE* RCBOpenFile(char* file, char* readtype, eGASaveType savedtype, int iId);
 
 #endif

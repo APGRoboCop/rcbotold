@@ -1,9 +1,9 @@
 /***
 *
 *	Copyright (c) 1996-2002, Valve LLC. All rights reserved.
-*	
-*	This product contains software technology licensed from Id 
-*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc. 
+*
+*	This product contains software technology licensed from Id
+*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
 *	All Rights Reserved.
 *
 *   Use, distribution, and modification of this source code and/or resulting
@@ -26,7 +26,7 @@ typedef struct usercmd_s
 	byte	msec;           // Duration in ms of command
 	vec3_t	viewangles;     // Command view angles.
 
-// intended velocities
+	// intended velocities
 	float	forwardmove;    // Forward velocity.
 	float	sidemove;       // Sideways velocity.
 	float	upmove;         // Upward velocity.
@@ -35,7 +35,7 @@ typedef struct usercmd_s
 	byte    impulse;          // Impulse command issued.
 	byte	weaponselect;	// Current weapon id
 
-// Experimental player impact stuff.
+	// Experimental player impact stuff.
 	int		impact_index;
 	vec3_t	impact_position;
 } usercmd_t;

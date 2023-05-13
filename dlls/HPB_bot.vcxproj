@@ -351,10 +351,14 @@
     <ClInclude Include="h_export_meta.h" />
     <ClInclude Include="megahal.h" />
     <ClInclude Include="nn.h" />
+    <ClInclude Include="osdep.h" />
     <ClInclude Include="perceptron.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="saverestore.h" />
     <ClInclude Include="som.h" />
+    <ClInclude Include="types_meta.h" />
     <ClInclude Include="usercmd.h" />
+    <ClInclude Include="util.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="waypoint.h" />
   </ItemGroup>

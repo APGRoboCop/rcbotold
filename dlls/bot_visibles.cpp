@@ -64,14 +64,14 @@ CBotVisibles::CBotVisibles()
 	m_iVisibleList.Clear();
 }
 
-BOOL CBotVisibles::isVisible(int iIndex) const
+BOOL CBotVisibles::isVisible(int iIndex)
 {
 	return m_iVisibles->getBit(iIndex);
 }
 
 void CBotVisibles::setVisible(int iIndex, BOOL bVisible)
 {
-	const BOOL bCurrentlyVisible = isVisible(iIndex);
+	BOOL bCurrentlyVisible = isVisible(iIndex);
 
 	if (bCurrentlyVisible && !bVisible)
 		m_iVisibleList.Remove(iIndex);
@@ -99,7 +99,9 @@ edict_t* CBotVisibles::nextVisible()
 {
 	if (m_iIter < m_iVisibleList.Size())
 	{
-		const int iEntityIndex = m_iVisibleList.ReturnValueFromIndex(m_iIter);
+		int iEntityIndex = 0;
+
+		iEntityIndex = m_iVisibleList.ReturnValueFromIndex(m_iIter);
 
 		m_iIter++;
 

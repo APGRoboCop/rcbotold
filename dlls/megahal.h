@@ -58,7 +58,7 @@ typedef struct HAL_NODE
 	unsigned long usage; // usage information
 	unsigned short count; // usage count (?)
 	unsigned short branch; // branch of the tree
-	struct HAL_NODE** tree; // pointer to tree node pointer
+	HAL_NODE** tree; // pointer to tree node pointer
 } HAL_TREE;
 
 typedef struct
@@ -140,8 +140,8 @@ void HAL_EmptyDictionary(HAL_DICTIONARY* dictionary);
 void HAL_FreeModel(HAL_MODEL* model);
 void HAL_FreeTree(HAL_TREE* tree);
 void HAL_FreeSwap(HAL_SWAP* swap);
-BOOL PrepareHALBrainForPersonality(struct bot_profile_s* pBotProfile);
-BOOL LoadHALBrainForPersonality(struct bot_profile_s* pBotProfile, BOOL bPreTrain);
-void SaveHALBrainForPersonality(struct bot_profile_s* pBotProfile);
+BOOL PrepareHALBrainForPersonality(bot_profile_s* pBotProfile);
+BOOL LoadHALBrainForPersonality(bot_profile_s* pBotProfile, BOOL bPreTrain);
+void SaveHALBrainForPersonality(bot_profile_s* pBotProfile);
 
 #endif

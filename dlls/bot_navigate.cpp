@@ -67,7 +67,6 @@ static FILE* fp;
 extern WAYPOINTS waypoints;//[MAX_WAYPOINTS];
 extern CWaypointLocations WaypointLocations;
 extern CBotGlobals gBotGlobals;
-//extern edict_t *pent_info_ctfdetect; // Op4CTF Support [APG]RoboCop[CL]
 
 AStarNode::AStarNode()
 {
@@ -75,7 +74,7 @@ AStarNode::AStarNode()
 	m_iWaypoint = -1;
 }
 
-BOOL AStarNode::heuristicSet() const
+BOOL AStarNode::heuristicSet()
 {
 	return (flags & FL_ASTAR_HEURISTIC) == FL_ASTAR_HEURISTIC;
 }
@@ -90,17 +89,17 @@ void AStarNode::setHeuristic(const float botDist, const float goalDist, const BO
 	flags |= FL_ASTAR_HEURISTIC;
 }
 
-BOOL AStarNode::hasParent() const
+BOOL AStarNode::hasParent()
 {
 	return (flags & FL_ASTAR_PARENT) == FL_ASTAR_PARENT;
 }
 
-BOOL AStarNode::isOpen() const
+BOOL AStarNode::isOpen()
 {
 	return (flags & FL_ASTAR_OPEN) == FL_ASTAR_OPEN;
 }
 
-BOOL AStarNode::isClosed() const
+BOOL AStarNode::isClosed()
 {
 	return (flags & FL_ASTAR_CLOSED) == FL_ASTAR_CLOSED;
 }
@@ -125,12 +124,12 @@ void AStarNode::open()
 	flags |= FL_ASTAR_OPEN;
 }
 
-float AStarNode::getHeuristic() const
+float AStarNode::getHeuristic()
 {
 	return m_fHeuristic;
 }
 
-short int AStarNode::getParent() const
+short int AStarNode::getParent()
 {
 	return m_iParent;
 }
@@ -141,18 +140,18 @@ void AStarNode::setParent(const int iWpt)
 	flags |= FL_ASTAR_PARENT;
 }
 
-bool AStarNode::precedes(AStarNode* b) const
+bool AStarNode::precedes(AStarNode* b)
 {
 	// lowest cost first
 	return m_fCost + getHeuristic() < b->m_fCost + b->getHeuristic();
 }
 
-bool AStarNode::operator()(const AStarNode* a, const AStarNode* b) const
+bool AStarNode::operator()(AStarNode* a, AStarNode* b)
 {
 	return a < b;
 }
 
-bool AStarNode::operator<(AStarNode* b) const
+bool AStarNode::operator<(AStarNode* b)
 {
 	return precedes(b);
 }
@@ -163,13 +162,14 @@ bool CompareAStarNode(AStarNode* a, AStarNode* b)
 int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 {
 	dataStack<int> sTempList;
-	dataUnconstArray<AStarNode*>* sOpenList;
+	dataUnconstArray<AStarNode*> *sOpenList;
 	//std::priority_queue<AStarNode*, std::vector<AStarNode*>, CompareAStarNode>* sOpenList;
 
 	AStarNode* aPathsFound;
 	AStarNode* sCurrNodeInfo = nullptr; // Info of the current node
 	AStarNode* sSuccNodeInfo = nullptr; // Info of the succesor to the current node
 
+	float fMinCost;
 	float fOldCost;
 	float fCurCost;
 
@@ -288,13 +288,12 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 	while (bFoundGoal == false && !sOpenList->IsEmpty()/*IsEmpty()*/ && iLoops < iMaxLoops)
 	{
-		float fMinCost;
 		iLoops++;
 
 		iCurrentNode = -1;
 
 		fMinCost = 0.0f;
-		int bestIndex = 0;
+		unsigned int bestIndex = 0;
 
 		bestIndex = sOpenList->GetBestNode(CompareAStarNode);
 
@@ -635,21 +634,22 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	return iNextWaypoint;
 }
 
-void BotTurnAtWall(const CBot* pBot, const TraceResult* tr)
+void BotTurnAtWall(CBot* pBot, TraceResult* tr)
 {
 	edict_t* pEdict = pBot->m_pEdict;
-	float Z;
+	Vector Normal;
+	float Y, Y1, Y2, D1, D2, Z;
 
 	// Find the normal vector from the trace result.  The normal vector will
 	// be a vector that is perpendicular to the surface from the TraceResult.
 
-	Vector Normal = UTIL_VecToAngles(tr->vecPlaneNormal);
+	Normal = UTIL_VecToAngles(tr->vecPlaneNormal);
 
 	// Since the bot keeps it's view angle in -180 < x < 180 degrees format,
 	// and since TraceResults are 0 < x < 360, we convert the bot's view
 	// angle (yaw) to the same format at TraceResult.
 
-	float Y = pEdict->v.v_angle.y;
+	Y = pEdict->v.v_angle.y;
 	Y = Y + 180;
 	if (Y > 359) Y -= 360;
 
@@ -668,14 +668,14 @@ void BotTurnAtWall(const CBot* pBot, const TraceResult* tr)
 	// least amount of turning (saves time) and have the bot head off in that
 	// direction.
 
-	float Y1 = Normal.y - 90;
+	Y1 = Normal.y - 90;
 	if (RANDOM_LONG(1, 100) <= 50)
 	{
 		Y1 = Y1 - RANDOM_FLOAT(5.0f, 20.0f);
 	}
 	if (Y1 < 0) Y1 += 360;
 
-	float Y2 = Normal.y + 90;
+	Y2 = Normal.y + 90;
 	if (RANDOM_LONG(1, 100) <= 50)
 	{
 		Y2 = Y2 + RANDOM_FLOAT(5.0f, 20.0f);
@@ -685,10 +685,10 @@ void BotTurnAtWall(const CBot* pBot, const TraceResult* tr)
 	// D1 and D2 are the difference (in degrees) between the bot's current
 	// angle and Y1 or Y2 (respectively).
 
-	float D1 = std::fabs(Y - Y1);
-	if (D1 > 179) D1 = std::fabs(D1 - 360);
-	float D2 = std::fabs(Y - Y2);
-	if (D2 > 179) D2 = std::fabs(D2 - 360);
+	D1 = fabs(Y - Y1);
+	if (D1 > 179) D1 = fabs(D1 - 360);
+	D2 = fabs(Y - Y2);
+	if (D2 > 179) D2 = fabs(D2 - 360);
 
 	// If difference 1 (D1) is more than difference 2 (D2) then the bot will
 	// have to turn LESS if it heads in direction Y1 otherwise, head in
@@ -712,24 +712,26 @@ void BotTurnAtWall(const CBot* pBot, const TraceResult* tr)
 
 BOOL BotCantMoveForward(CBot* pBot, TraceResult* tr)
 {
-	const edict_t* pEdict = pBot->m_pEdict;
+	edict_t* pEdict = pBot->m_pEdict;
 
 	// use some TraceLines to determine if anything is blocking the current
 	// path of the bot.
+
+	Vector v_src, v_forward;
 
 	UTIL_MakeVectors(pEdict->v.v_angle);
 
 	// first do a trace from the bot's eyes forward...
 
-	Vector v_src = pEdict->v.origin + pEdict->v.view_ofs;  // EyePosition()
-	Vector v_forward = v_src + gpGlobals->v_forward * 40;
+	v_src = pEdict->v.origin + pEdict->v.view_ofs;  // EyePosition()
+	v_forward = v_src + gpGlobals->v_forward * 40;
 
 	// trace from the bot's eyes straight forward...
 	UTIL_TraceLine(v_src, v_forward, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, tr);
 
 	// check if the trace hit something...
-	if (tr->flFraction < 1)
+	if (tr->flFraction < 1.0f)
 	{
 		return !BotCanDuckUnder(pBot);  // bot's head will hit something
 	}
@@ -744,7 +746,7 @@ BOOL BotCantMoveForward(CBot* pBot, TraceResult* tr)
 		pEdict->v.pContainingEntity, tr);
 
 	// check if the trace hit something...
-	if (tr->flFraction < 1)
+	if (tr->flFraction < 1.0f)
 	{
 		return !BotCanJumpUp(pBot);  // bot's body will hit something
 	}
@@ -752,7 +754,7 @@ BOOL BotCantMoveForward(CBot* pBot, TraceResult* tr)
 	return false;  // bot can move forward, return false
 }
 
-BOOL BotCanJumpUp(const CBot* pBot) // BotCanJumpUp : By : Botman
+BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 {
 	// What I do here is trace 3 lines straight out, one unit higher than
 	// the highest normal jumping distance.  I trace once at the center of
@@ -766,11 +768,12 @@ BOOL BotCanJumpUp(const CBot* pBot) // BotCanJumpUp : By : Botman
 	// that the bot can not get onto.
 
 	TraceResult tr;
-	const edict_t* pEdict = pBot->m_pEdict;
+	Vector v_jump, v_source, v_dest;
+	edict_t* pEdict = pBot->m_pEdict;
 
 	// convert current view angle to vectors for TraceLine math...
 
-	Vector v_jump = pEdict->v.v_angle;
+	v_jump = pEdict->v.v_angle;
 	v_jump.x = 0;  // reset pitch to 0 (level horizontally)
 	v_jump.z = 0;  // reset roll to 0 (straight up and down)
 
@@ -779,8 +782,8 @@ BOOL BotCanJumpUp(const CBot* pBot) // BotCanJumpUp : By : Botman
 	// use center of the body first...
 
 	// maximum jump height is 45, so check one unit above that (46)
-	Vector v_source = pEdict->v.origin + Vector(0, 0, -36 + (MAX_JUMP_HEIGHT + 1));
-	Vector v_dest = v_source + gpGlobals->v_forward * 24;
+	v_source = pEdict->v.origin + Vector(0, 0, -36 + (MAX_JUMP_HEIGHT + 1));
+	v_dest = v_source + gpGlobals->v_forward * 24;
 
 	// trace a line forward at maximum jump height...
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
@@ -863,7 +866,7 @@ BOOL BotCanJumpUp(const CBot* pBot) // BotCanJumpUp : By : Botman
 	return true;
 }
 
-BOOL BotCanDuckUnder(const CBot* pBot)
+BOOL BotCanDuckUnder(CBot* pBot)
 {
 	// What I do here is trace 3 lines straight out, one unit higher than
 	// the ducking height.  I trace once at the center of the body, once
@@ -874,11 +877,12 @@ BOOL BotCanDuckUnder(const CBot* pBot)
 	// we can duck under it.
 
 	TraceResult tr;
-	const edict_t* pEdict = pBot->m_pEdict;
+	Vector v_duck, v_source, v_dest;
+	edict_t* pEdict = pBot->m_pEdict;
 
 	// convert current view angle to vectors for TraceLine math...
 
-	Vector v_duck = pEdict->v.v_angle;
+	v_duck = pEdict->v.v_angle;
 	v_duck.x = 0;  // reset pitch to 0 (level horizontally)
 	v_duck.z = 0;  // reset roll to 0 (straight up and down)
 
@@ -887,8 +891,8 @@ BOOL BotCanDuckUnder(const CBot* pBot)
 	// use center of the body first...
 
 	// duck height is 36, so check one unit above that (37)
-	Vector v_source = pEdict->v.origin + Vector(0, 0, -36 + 37);
-	Vector v_dest = v_source + gpGlobals->v_forward * 24;
+	v_source = pEdict->v.origin + Vector(0, 0, -36 + 37);
+	v_dest = v_source + gpGlobals->v_forward * 24;
 
 	// trace a line forward at duck height...
 	UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters,
@@ -936,7 +940,7 @@ BOOL BotCanDuckUnder(const CBot* pBot)
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace didn't hit something, return false
-	if (tr.flFraction >= 1)
+	if (tr.flFraction >= 1.0f)
 		return false;
 
 	// now check same height to one side of the bot...
@@ -949,7 +953,7 @@ BOOL BotCanDuckUnder(const CBot* pBot)
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace didn't hit something, return false
-	if (tr.flFraction >= 1)
+	if (tr.flFraction >= 1.0f)
 		return false;
 
 	// now check same height on the other side of the bot...
@@ -962,7 +966,7 @@ BOOL BotCanDuckUnder(const CBot* pBot)
 		pEdict->v.pContainingEntity, &tr);
 
 	// if trace didn't hit something, return false
-	if (tr.flFraction >= 1)
+	if (tr.flFraction >= 1.0f)
 		return false;
 
 	return true;
@@ -970,15 +974,16 @@ BOOL BotCanDuckUnder(const CBot* pBot)
 
 BOOL BotCheckWallOnLeft(CBot* pBot)
 {
-	const edict_t* pEdict = pBot->m_pEdict;
+	edict_t* pEdict = pBot->m_pEdict;
+	Vector v_src, v_left;
 	TraceResult tr;
 
 	UTIL_MakeVectors(pEdict->v.v_angle);
 
 	// do a trace to the left...
 
-	const Vector v_src = pEdict->v.origin;
-	const Vector v_left = v_src + gpGlobals->v_right * -40;  // 40 units to the left
+	v_src = pEdict->v.origin;
+	v_left = v_src + gpGlobals->v_right * -40;  // 40 units to the left
 
 	UTIL_TraceLine(v_src, v_left, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
@@ -986,7 +991,7 @@ BOOL BotCheckWallOnLeft(CBot* pBot)
 	// check if the trace hit something...
 	if (tr.flFraction < 1.0f)
 	{
-		if (pBot->m_fWallAtLeftTime < 1)
+		if (pBot->m_fWallAtLeftTime < 1.0f)
 			pBot->m_fWallAtLeftTime = gpGlobals->time;
 
 		return true;
@@ -997,15 +1002,16 @@ BOOL BotCheckWallOnLeft(CBot* pBot)
 
 BOOL BotCheckWallOnRight(CBot* pBot)
 {
-	const edict_t* pEdict = pBot->m_pEdict;
+	edict_t* pEdict = pBot->m_pEdict;
+	Vector v_src, v_right;
 	TraceResult tr;
 
 	UTIL_MakeVectors(pEdict->v.v_angle);
 
 	// do a trace to the right...
 
-	const Vector v_src = pEdict->v.origin;
-	const Vector v_right = v_src + gpGlobals->v_right * 40;  // 40 units to the right
+	v_src = pEdict->v.origin;
+	v_right = v_src + gpGlobals->v_right * 40;  // 40 units to the right
 
 	UTIL_TraceLine(v_src, v_right, dont_ignore_monsters,
 		pEdict->v.pContainingEntity, &tr);
@@ -1026,13 +1032,15 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 {
 	extern CWaypointLocations WaypointLocations;
 
+	int iIndex = -1;
+
 	if (pBot->m_iWaypointGoalIndex != -1/* && (pBot->m_iPrevWaypointGoalIndex == pBot->m_iWaypointGoalIndex)*/)
 	{
 		// Need to find path?
 		if (!pBot->m_stBotPaths.IsEmpty())
 			// Still some more waypoints to go before we reach the goal
 		{
-			int iIndex = pBot->m_stBotPaths.Pop();
+			iIndex = pBot->m_stBotPaths.Pop();
 
 			if (iIndex != pBot->m_iCurrentWaypointIndex)
 			{
@@ -1329,8 +1337,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			// and is some 2d distance away.. jump off ladder
 			if (pBot->IsOnLadder() && !(pBot->m_iCurrentWaypointFlags & W_FL_LADDER) && iNextWaypoint != -1 && pBot->m_iPrevWaypointIndex != -1)
 			{
-				if (WaypointOrigin(pBot->m_iCurrentWaypointIndex).z <= WaypointOrigin(pBot->m_iPrevWaypointIndex).z && (
-					vBotOrigin - WaypointOrigin(iNextWaypoint)).Length2D() > 100.0f)
+				if (WaypointOrigin(pBot->m_iCurrentWaypointIndex).z <= WaypointOrigin(pBot->m_iPrevWaypointIndex).z && (vBotOrigin - WaypointOrigin(iNextWaypoint)).Length2D() > 100.0f)
 				{
 					if (RANDOM_LONG(0, 1))
 						pBot->Jump();
@@ -1437,7 +1444,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		if (fDistance < 32.0f)
 			bTouchedWpt = true;
 	}
-	else if (pBot->DistanceFrom(vWptOrigin, true) < BOT_WAYPOINT_TOUCH_DIST && std::fabs(vWptOrigin.z - vBotOrigin.z) <= pBot->pev->size.z)
+	else if (pBot->DistanceFrom(vWptOrigin, true) < BOT_WAYPOINT_TOUCH_DIST && fabs(vWptOrigin.z - vBotOrigin.z) <= pBot->pev->size.z)
 	{
 		bTouchedWpt = true;
 	}
@@ -1510,7 +1517,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_PUSH_PUSHABLE))
 			{
 				// get nearest pushable
-				edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512.0f, false);
+				edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512, false);
 
 				if (pPushable)
 				{
@@ -1586,8 +1593,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
 			pBot->m_iCurrentWaypointFlags = WaypointFlags(pBot->m_iCurrentWaypointIndex);
 
-			if (/*!gBotGlobals.IsMod(MOD_TFC) &&*/ (pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE) && pBot->
-				m_iCurrentWaypointFlags & W_FL_GREN_THROW))
+			if (/*!gBotGlobals.IsMod(MOD_TFC) &&*/ (pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE) && pBot->m_iCurrentWaypointFlags & W_FL_GREN_THROW))
 			{
 				pBot->AddPriorityTask(CBotTask(BOT_TASK_THROW_GRENADE, 0, nullptr, 0, 0, vWptOrigin));
 			}
@@ -1688,14 +1694,14 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	// Wall stick waypoint
 	if (gBotGlobals.IsNS() && (pBot->IsSkulk() && pBot->m_iCurrentWaypointFlags & (W_FL_WALL_STICK | W_FL_LADDER) && pBot->m_iPrevWaypointIndex != -1))
 	{
-		Vector v_wpt_origin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
+		Vector vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
 		Vector vTemp = WaypointOrigin(pBot->m_iPrevWaypointIndex);
 
-		vTemp.z = v_wpt_origin.z;
+		vTemp.z = vWptOrigin.z;
 
-		Vector vComp = (v_wpt_origin - vTemp).Normalize();
+		Vector vComp = (vWptOrigin - vTemp).Normalize();
 
-		pBot->SetMoveVector(v_wpt_origin + vComp * gBotGlobals.m_fWallStickTol);
+		pBot->SetMoveVector(vWptOrigin + vComp * gBotGlobals.m_fWallStickTol);
 
 		pBot->m_CurrentLookTask = BOT_LOOK_TASK_NEXT_WAYPOINT;
 		//WaypointDrawBeam(gBotGlobals.m_pListenServerEdict,pBot->pev->origin,pBot->m_vMoveToVector,20,10,200,200,200,100,10);
@@ -1706,7 +1712,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	return true;
 }
 
-PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam)
+PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam)
 {
 	PATH* pPath = nullptr;
 	int iPathIndex = 0;
@@ -1805,22 +1811,23 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 // Thanks PM's racc bot source for some info pointers. (racc.bots-united.com)
 {
-	const float fFov = 100.5f;
-	int iStep;
+	const float fFov = 105.0f;
+	int iStep = 0;
 
-	const entvars_t* pev = &pBot->m_pEdict->v;
+	entvars_t* pev = &pBot->m_pEdict->v;
 
 	float fStartAngle = pev->angles.y - fFov;
+	float fAngle;
 
-	const int iMinStep = -100;
-	const int iMaxStep = 100;
+	int iMinStep = -60;
+	int iMaxStep = 60;
 
 	float fMaxDistance = BOT_WAYPOINT_TOUCH_DIST * 2;
 	float fDistance;
 
 	dataUnconstArray<Vector> vPositions;
 
-	const Vector vStart = pBot->GetGunPosition();
+	Vector vStart = pBot->GetGunPosition();
 	Vector vEnd;
 	Vector vAngles;
 
@@ -1829,7 +1836,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 	UTIL_FixFloatAngle(&fStartAngle);
 
 	// angle
-	float fAngle;
+	fAngle = fStartAngle;
 
 	for (iStep = iMinStep; iStep <= iMaxStep; iStep += 10)
 	{
@@ -1837,7 +1844,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 		vAngles = pBot->m_pEdict->v.angles;
 
-		vAngles.y = vAngles.y + (fAngle - static_cast<float>(iMaxStep) / 2);
+		vAngles.y = vAngles.y + (fAngle - iMaxStep / 2);
 
 		UTIL_FixFloatAngle(&vAngles.y);
 
@@ -1871,7 +1878,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 	// copy for velocity
 	UTIL_FixFloatAngle(&fStartAngle);
 
-	//fAngle = fStartAngle;
+	fAngle = fStartAngle;
 
 	for (iStep = iMinStep; iStep <= iMaxStep; iStep += 15)
 	{
@@ -1879,7 +1886,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 		vAngles = UTIL_VecToAngles(pBot->m_pEdict->v.velocity);
 
-		vAngles.y = vAngles.y + (fAngle - static_cast<float>(iMaxStep) / 2);
+		vAngles.y = vAngles.y + (fAngle - iMaxStep / 2);
 
 		UTIL_FixFloatAngle(&vAngles.y);
 
@@ -1912,12 +1919,13 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 	Vector vLow = pBot->pev->origin;
 	vLow.z -= pBot->pev->size.z / 3;
+	float fLowDistance;
 
 	UTIL_TraceLine(vLow, vLow + pBot->pev->velocity * 2, ignore_monsters, ignore_glass, pBot->m_pEdict, &tr);
 
 	vEnd = tr.vecEndPos;
 
-	const float fLowDistance = pBot->DistanceFrom(vEnd);
+	fLowDistance = pBot->DistanceFrom(vEnd);
 
 	if (fLowDistance < 64 && fLowDistance < fHighDistance)
 		pBot->Jump();
@@ -1943,7 +1951,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 	return vPosition;
 }
 
-BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
+BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 {
 	TraceResult tr;
 
@@ -1952,7 +1960,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 	//if ( gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL) )
 	//	WaypointDrawBeam(gBotGlobals.m_Clients.GetClientByIndex(0)->GetPlayer(),vBotOrigin,vCheckOrigin,16,8,200,200,200,200,10);
 
-	const Vector vComp = (vCheckToOrigin - vCheckOrigin).Normalize();
+	Vector vComp = (vCheckToOrigin - vCheckOrigin).Normalize();
 
 	(*g_engfuncs.pfnTraceHull)(vCheckOrigin, vCheckOrigin + vComp * 4096.0f, ignore_monsters, point_hull, pBot->m_pEdict, &tr);
 
@@ -1968,12 +1976,12 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 				strncmp("func_plat", STRING(pHit->v.classname), 9) == 0 ||
 				strncmp("func_train", STRING(pHit->v.classname), 9) == 0)
 			{
-				const char* szTargetname = const_cast<char*>(STRING(pHit->v.targetname));
+				char* szTargetname = const_cast<char*>(STRING(pHit->v.targetname));
 
 				// a way to find out if this is a lift (big enough for the bot to walk on)
-				const BOOL bIsLift = pHit->v.movedir.z &&
-					(pHit->v.size.x > pBot->pev->size.z &&
-						pHit->v.size.y > pBot->pev->size.z);
+				BOOL bIsLift = pHit->v.movedir.z &&
+				(pHit->v.size.x > pBot->pev->size.z &&
+					pHit->v.size.y > pBot->pev->size.z);
 
 				if (BotFunc_EntityIsMoving(&pHit->v))
 				{
@@ -1982,11 +1990,14 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 				{
 					// list of tasks to use it...
 
+					edict_t* pButton;
+					int iWaitForLiftWpt = -1;
+
 					Vector vButtonOrigin;
 
-					edict_t* pButton = BotFunc_FindNearestButton(pBot->pev->origin + pBot->pev->view_ofs, &pHit->v, &vButtonOrigin);
+					pButton = BotFunc_FindNearestButton(pBot->pev->origin + pBot->pev->view_ofs, &pHit->v, &vButtonOrigin);
 
-					const int iNewScheduleId = pBot->m_Tasks.GetNewScheduleId();
+					int iNewScheduleId = pBot->m_Tasks.GetNewScheduleId();
 
 					if (pButton)
 					{
@@ -2006,8 +2017,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 						// (if angle velocity is more than 0)
 						if (bIsLift)
 						{
-							int iWaitForLiftWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, REACHABLE_RANGE,
-								pBot->m_iTeam, W_FL_LIFT, &pBot->m_FailedGoals);
+							iWaitForLiftWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, REACHABLE_RANGE, pBot->m_iTeam, W_FL_LIFT, &pBot->m_FailedGoals);
 
 							if (iWaitForLiftWpt == -1)
 								iWaitForLiftWpt = pBot->m_iPrevWaypointIndex;
@@ -2067,15 +2077,17 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 					}
 					else
 					{
+						BOOL bFail = true;
+
 						// Button not found, see if there is a lift button waypoint nearby
 
 						if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_LIFT))
 							// Not already using a lift?
 						{
-							const float fRange = pHit->v.size.Length2D();
+							float fRange = pHit->v.size.Length2D();
 
 							// get the lift button waypoint
-							const int iWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, fRange, -1, W_FL_LIFT, &pBot->m_FailedGoals);
+							int iWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, fRange, -1, W_FL_LIFT, &pBot->m_FailedGoals);
 
 							if (iWpt != -1)
 							{
@@ -2083,24 +2095,24 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 								char* szClassnames[3] = { "func_button","button_target","func_rot_button" };
 
 								// check nearby the lift button waypoint
-								edict_t* button = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, true);
+								edict_t* pButton = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, true);
 
-								if (button)
+								if (pButton)
 								{
 									// if a button if found use this one
 
-									const int iScheduleId = pBot->m_Tasks.GetNewScheduleId();
+									int iScheduleId = pBot->m_Tasks.GetNewScheduleId();
 
 									// Bot was below the lift so wait for the lift to descend
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_ENTITY, iScheduleId, pHit));
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, nullptr, iWpt, -1));
-									pBot->AddPriorityTask(CBotTask(BOT_TASK_USE, iScheduleId, button));
-									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, button));
+									pBot->AddPriorityTask(CBotTask(BOT_TASK_USE, iScheduleId, pButton));
+									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, pButton));
 
 									// make sure we update these tasks so we know we are using a lift
 									pBot->m_Tasks.GiveSchedIdDescription(iScheduleId, BOT_SCHED_USE_LIFT);
 
-									BOOL bFail = false;
+									bFail = false;
 								}
 							}
 						}

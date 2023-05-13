@@ -50,7 +50,7 @@ public:
 class CSigmoidTransfer : public ITransfer
 {
 public:
-	ga_value transfer(ga_value netInput) override;
+	ga_value transfer(ga_value netInput);
 };
 
 class CPerceptron //: public IIndividual
@@ -87,25 +87,25 @@ public:
 		load(bfp);
 	}
 
-	void setWeights(std::vector<ga_value> weights);
+	void setWeights(std::vector <ga_value> weights);
 
-	void setWeights(std::vector<ga_value> weights, int iFrom, int iNum);
+	void setWeights(std::vector <ga_value> weights, int iFrom, int iNum);
 
 	void setWeights(CBotGAValues* vals, int iFrom, int iNum);
 
-	unsigned int numWeights() const { return m_weights.size(); }
+	int numWeights() { return m_weights.size(); }
 
-	void setWeight(unsigned int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
+	void setWeight(int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
 
-	ga_value getWeight(unsigned int iWeight) const { return m_weights[iWeight]; }
+	ga_value getWeight(int iWeight) { return m_weights[iWeight]; }
 
-	void input(std::vector<ga_value>* inputs);
+	void input(std::vector <ga_value>* inputs);
 
 	ga_value execute();
 
-	BOOL fired() const;
+	BOOL fired();
 
-	ga_value getOutput() const;
+	ga_value getOutput();
 
 	void train(ga_value expectedOutput);
 
@@ -118,15 +118,15 @@ public:
 		m_transferFunction = nullptr;
 	}
 
-	BOOL trained() const { return m_bTrained; }
+	BOOL trained() { return m_bTrained; }
 
 	void setTrained() { m_bTrained = true; }
-	
-	void save(FILE* bfp) const;
+
+	void save(FILE* bfp);
 	void load(FILE* bfp);
 
 	void load(char* filename, int iProfileId);
-	void save(char* filename, int iProfileId) const;
+	void save(char* filename, int iProfileId);
 
 private:
 

@@ -78,10 +78,10 @@ CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, floa
 
 void CPerceptron::setWeights(CBotGAValues* vals, int iFrom, int iNum)
 {
-	const float bias = m_weights[0];
-	
+	float bias = m_weights[0];
+
 	m_weights.clear();
-	
+
 	m_weights.emplace_back(bias);
 
 	for (int i = iFrom; i < iFrom + iNum; i++)
@@ -90,7 +90,7 @@ void CPerceptron::setWeights(CBotGAValues* vals, int iFrom, int iNum)
 	}
 }
 
-void CPerceptron::setWeights(std::vector <ga_value> weights, int iFrom, int iNum)
+void CPerceptron::setWeights(std::vector <ga_value> const weights, int iFrom, int iNum)
 {
 	m_weights.clear();
 
@@ -106,7 +106,7 @@ void CPerceptron::randomize()
 		m_weights[i] = RANDOM_FLOAT(0, 0.6f) - 0.3f;
 }
 
-void CPerceptron::setWeights(std::vector <ga_value> weights)
+void CPerceptron::setWeights(std::vector <ga_value> const weights)
 {
 	m_weights.clear();
 
@@ -137,12 +137,12 @@ ga_value CPerceptron::execute()
 	return m_output;
 }
 
-BOOL CPerceptron::fired() const
+BOOL CPerceptron::fired()
 {
 	return m_output >= 0.5f;
 }
 
-ga_value CPerceptron::getOutput() const
+ga_value CPerceptron::getOutput()
 {
 	return m_output;
 }
@@ -160,12 +160,12 @@ void CPerceptron::train(ga_value expectedOutput)
 	}
 }
 
-void CPerceptron::save(FILE* bfp) const
+void CPerceptron::save(FILE* bfp)
 {
 	unsigned int iTemp;
 	unsigned int i;
 
-	const CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
+	CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
 
 	header.write(bfp);
 
@@ -197,7 +197,7 @@ void CPerceptron::load(FILE* bfp)
 	if (feof(bfp))
 		return;
 
-	const CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
+	CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
 
 	if (!header.read(bfp, header))
 	{
@@ -253,7 +253,7 @@ void CPerceptron::load(char* filename, int iProfileId)
 	}
 }
 
-void CPerceptron::save(char* filename, int iProfileId) const
+void CPerceptron::save(char* filename, int iProfileId)
 {
 	FILE* bfp = RCBOpenFile(filename, "wb", SAVETYPE_BOT, iProfileId);
 

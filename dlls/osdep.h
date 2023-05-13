@@ -131,8 +131,8 @@
 	}
 	// Windows doesn't provide a function corresponding to dlerror(), so
 	// we make our own.
-	char *str_GetLastError(void);
-	inline char* DLERROR(void) {
+	char *str_GetLastError();
+	inline char* DLERROR() {
 		return(str_GetLastError());
 	}
 #endif /* _WIN32 */
@@ -228,7 +228,7 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	// returns 0==success, non-zero==failure
 	inline int THREAD_CREATE(THREAD_T *tid, void (*func)(void)) {
 		int ret;
-		ret=pthread_create(tid, nullptr, (void *(*)(void*)) func, nullptr);
+		ret=pthread_create(tid, NULL, (void *(*)(void*)) func, NULL);
 		if(ret != 0) {
 			META_ERROR("Failure starting thread: %s", strerror(ret));
 			return(ret);
@@ -243,9 +243,9 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	//    http://msdn.microsoft.com/library/en-us/dllproc/prothred_4084.asp
 	typedef	DWORD 		THREAD_T;
 	// returns 0==success, non-zero==failure
-	inline int THREAD_CREATE(THREAD_T *tid, void (*func)(void)) {
+	inline int THREAD_CREATE(THREAD_T *tid, void (*func)()) {
 		HANDLE ret;
-		// win32 returns nullptr==failure, non-nullptr==success
+		// win32 returns NULL==failure, non-NULL==success
 		ret=CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE) func, nullptr, 0, tid);
 		if(ret==nullptr)
 			META_ERROR("Failure starting thread: %s", str_GetLastError());
@@ -260,7 +260,7 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	typedef pthread_mutex_t		MUTEX_T;
 	inline int MUTEX_INIT(MUTEX_T *mutex) {
 		int ret;
-		ret=pthread_mutex_init(mutex, nullptr);
+		ret=pthread_mutex_init(mutex, NULL);
 		if(ret!=THREAD_OK)
 			META_ERROR("mutex_init failed: %s", strerror(ret));
 		return(ret);
@@ -305,7 +305,7 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	typedef pthread_cond_t	COND_T;
 	inline int COND_INIT(COND_T *cond) {
 		int ret;
-		ret=pthread_cond_init(cond, nullptr);
+		ret=pthread_cond_init(cond, NULL);
 		if(ret!=THREAD_OK)
 			META_ERROR("cond_init failed: %s", strerror(ret));
 		return(ret);
@@ -343,7 +343,7 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 		*cond = CreateEvent(nullptr,	// security attributes (none)
 							false,	// manual-reset type (false==auto-reset)
 							false,	// initial state (unsignaled)
-							nullptr);	// object name (unnamed)
+		nullptr);	// object name (unnamed)
 		// returns nullptr on error
 		if(*cond==nullptr) {
 			META_ERROR("cond_init failed: %s", str_GetLastError());
@@ -438,7 +438,7 @@ inline char *realpath(const char *file_name, char *resolved_name) {
 
 // Generic "error string" from a recent OS call.  For linux, this is based
 // on errno.  For win32, it's based on GetLastError.
-inline const char *str_os_error(void) {
+inline const char *str_os_error() {
 #ifdef linux
 	return(strerror(errno));
 #elif defined(_WIN32)

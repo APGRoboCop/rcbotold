@@ -71,23 +71,22 @@ elif builder.cxx.target.platform == 'windows':
   builder.cxx.cxxflags += [
     '/std:c++17',
 	'/arch:SSE2',
-    '/fp:precise'
+    '/fp:precise',
+	'/EHsc'
   ]
   # Windows linker flags
   builder.cxx.linkflags += [
     '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
-    'kernel32.lib',
-    'user32.lib',
-    'gdi32.lib',
-    'winspool.lib',
-    'comdlg32.lib',
-    'advapi32.lib',
-    'shell32.lib',
-    'ole32.lib',
-    'oleaut32.lib',
-    'uuid.lib',
-    'odbc32.lib',
-    'odbccp32.lib',
+	'kernel32.lib',
+	'user32.lib',
+	'gdi32.lib',
+	'winspool.lib',
+	'comdlg32.lib',
+	'advapi32.lib',
+	'shell32.lib',
+	'ole32.lib',
+	'oleaut32.lib',
+	'uuid.lib',
     '/SECTION:.data,RW',
     '/MACHINE:X86'
   ]

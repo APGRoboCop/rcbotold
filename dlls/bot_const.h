@@ -67,15 +67,15 @@ class AStarNode
 {
 public:
 	AStarNode();
-	BOOL heuristicSet() const;
+	BOOL heuristicSet();
 
 	void setHeuristic(float botDist, float goalDist, BOOL bIsTeleport = false);
 
-	BOOL hasParent() const;
+	BOOL hasParent();
 
-	BOOL isOpen() const;
+	BOOL isOpen();
 
-	BOOL isClosed() const;
+	BOOL isClosed();
 
 	void unClose();
 
@@ -84,16 +84,16 @@ public:
 	void unOpen();
 
 	void open();
-	float getHeuristic() const;
+	float getHeuristic();
 
-	short int getParent() const;
+	short int getParent();
 	void setParent(int iWpt);
 
-	bool operator()(const AStarNode* a, const AStarNode* b) const;
+	bool operator()(AStarNode* a, AStarNode* b);
 
-	bool operator<(AStarNode* b) const;
+	bool operator<(AStarNode* b);
 
-	bool precedes(AStarNode* b) const;
+	bool precedes(AStarNode* b);
 
 	short int m_iWaypoint;
 
@@ -346,7 +346,7 @@ typedef enum
 	ORDER_REQUEST = 80,
 	ORDER_ACK = 81,
 
-	// Commander mode 
+	// Commander mode
 	COMMANDER_MOUSECOORD = 82,
 	COMMANDER_MOVETO = 83,
 	COMMANDER_SCROLL = 84,
@@ -412,7 +412,6 @@ typedef enum
 
 	// NOTE: If this gets larger then a byte, AvHTechNode will have to change it's networking, possibly other code too
 	// NOTE: When changing any of these values, make sure to update titles.txt, skill.cfg and dlls\game.cpp, and tech*s.spr
-
 } AvHMessageID;
 
 // 200 units away max from building (2d distance)
@@ -534,7 +533,7 @@ typedef enum
 	BALANCE_ACTION_NOTIFY_FINISHED = 6
 } BalanceMessageAction;
 
-// AvHSpecials, only one per entity, stored in pev->iuser4.  
+// AvHSpecials, only one per entity, stored in pev->iuser4.
 // Stored in iuser4.  Some entities don't use these values, but most do.  The ones that don't include:
 // AVH_USER3_AUDIO_OFF
 // AVH_USER3_AUDIO_ON
@@ -555,7 +554,7 @@ typedef enum
 	MASK_UPGRADE_9 = 0x00000800,	// Scent of fear, exoskeleton
 	MASK_UPGRADE_10 = 0x00001000,	// Defensive level 2, power armor
 	MASK_UPGRADE_11 = 0x00002000,	// Defensive level 3, electrical defense
-	MASK_UPGRADE_12 = 0x00004000,	// Movement level 2, 
+	MASK_UPGRADE_12 = 0x00004000,	// Movement level 2,
 	MASK_UPGRADE_13 = 0x00008000,	// Movement level 3, marine heavy armor
 	MASK_UPGRADE_14 = 0x00010000,	// Sensory level 2
 	MASK_UPGRADE_15 = 0x00020000,	// Sensory level 3
@@ -813,6 +812,7 @@ typedef enum
 	   * vector to alter
 	   */
 	   BOT_TASK_FIND_COVER_POS,
+	   BOT_TASK_USE_TELEPORT,
 	   BOT_TASK_COMBAT_UPGRADE,
 	   BOT_TASK_CROUCH,
 	   BOT_TASK_ACCEPT_HEALTH,

@@ -96,7 +96,7 @@ cvar_t bot_ver_cvar = { BOT_VER_CVAR,BOT_VER,FCVAR_SERVER };
 
 FILE* fpMapConfig = nullptr;
 
-void UpdateClientData(const struct edict_s* ent, int sendweapons, struct clientdata_s* cd);
+void UpdateClientData(const edict_s* ent, int sendweapons, clientdata_s* cd);
 
 ///////////////////////////////////////////////////////////
 //
@@ -105,6 +105,7 @@ void UpdateClientData(const struct edict_s* ent, int sendweapons, struct clientd
 BOOL CAllowedPlayer::IsForClient(CClient* pClient)
 {
 	BOOL bSameName = false;
+	BOOL bSamePass = false;
 
 	if (steamID_defined())
 	{
@@ -114,12 +115,12 @@ BOOL CAllowedPlayer::IsForClient(CClient* pClient)
 	if (*m_szName) //m_szName always true [APG]RoboCop[CL]
 		bSameName = pClient->HasPlayerName(m_szName);
 
-	const edict_t* pEdict = pClient->GetPlayer();
+	edict_t* pEdict = pClient->GetPlayer();
 
 	if (pEdict == nullptr)
 		return false;
 
-	const BOOL bSamePass = IsForPass(pClient->GetPass());
+	bSamePass = IsForPass(pClient->GetPass());
 
 	return bSameName && bSamePass;
 }
@@ -134,9 +135,12 @@ edict_t* UTIL_GetCommander()
 {
 	if (gBotGlobals.IsNS())
 	{
-		for (int i = 1; i <= gpGlobals->maxClients; i++)
+		int i;
+		edict_t* pPlayer;
+
+		for (i = 1; i <= gpGlobals->maxClients; i++)
 		{
-			edict_t* pPlayer = INDEXENT(i);
+			pPlayer = INDEXENT(i);
 
 			if (!pPlayer || pPlayer->free)
 				continue;
@@ -184,7 +188,9 @@ int DispatchSpawn(edict_t* pent)
 
 		if (debug_engine)
 		{
-			FILE* fp = fopen("bot.txt", "a");
+			FILE* fp;
+
+			fp = fopen("bot.txt", "a");
 			fprintf(fp, "DispatchSpawn: %p %s\n", pent, pClassname);
 			if (pent->v.model != 0)
 				fprintf(fp, " model=%s\n", STRING(pent->v.model));
@@ -267,7 +273,7 @@ void DispatchTouch(edict_t* pentTouched, edict_t* pentOther)
 	// only don't touch triggers if "no touch" is on the client.
 	if (pentTouched->v.solid == SOLID_TRIGGER)
 	{
-		const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pentOther);
+		CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pentOther);
 
 		if (pClient)
 		{
@@ -417,7 +423,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 {
 	if (gpGlobals->deathmatch)
 	{
-		const int iIndex = ENTINDEX(pEntity) - 1;
+		int iIndex = ENTINDEX(pEntity) - 1;
 
 		CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(iIndex);
 
@@ -428,7 +434,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 			pClient->Init();
 		}
 
-		if (debug_engine) { FILE* fp = fopen("bot.txt", "a"); fprintf(fp, "ClientConnect: pent=%p name=%s\n", pEntity, pszName); fclose(fp); }
+		if (debug_engine) { FILE* fp; fp = fopen("bot.txt", "a"); fprintf(fp, "ClientConnect: pent=%p name=%s\n", pEntity, pszName); fclose(fp); }
 
 		if (!IS_DEDICATED_SERVER())
 		{
@@ -455,20 +461,24 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 		{
 			if (gBotGlobals.m_iMinBots != -1)
 			{
-				const int iNumPlayerCheck = UTIL_GetNumClients(true) + 1 + gBotGlobals.GetNumJoiningClients();
+				int iNumPlayerCheck = UTIL_GetNumClients(true) + 1 + gBotGlobals.GetNumJoiningClients();
 
 				if (gBotGlobals.m_iNumBots > gBotGlobals.m_iMinBots && iNumPlayerCheck > gBotGlobals.m_iMaxBots)
 					// Can it kick a bot to free a slot?
 				{
-					for (int i = 0; i < MAX_PLAYERS; i++)
+					int i;
+					CBot* pBot;
+
+					char cmd[80];
+
+					for (i = 0; i < MAX_PLAYERS; i++)
 					{
-						const CBot* pBot = &gBotGlobals.m_Bots[i];
+						pBot = &gBotGlobals.m_Bots[i];
 
 						if (pBot)  // is this slot used?
 						{
 							if (pBot->IsUsed())
 							{
-								char cmd[80];
 								//int iUserId;
 
 								//iUserId = (*g_engfuncs.pfnGetPlayerUserId)(pBot->m_pEdict);
@@ -492,19 +502,19 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 				}
 				else if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_RESERVE_BOT_SLOTS) && gBotGlobals.m_iNumBots < gBotGlobals.m_iMinBots)
 				{
-					const int iNumPlayers = UTIL_GetNumClients(true) + 1;
-					const int iBotsStillToJoin = gBotGlobals.m_iMinBots - gBotGlobals.m_iNumBots;
-					const int iNewSlotsFree = gpGlobals->maxClients - iNumPlayers;
+					int iNumPlayers = UTIL_GetNumClients(true) + 1;
+					int iBotsStillToJoin = gBotGlobals.m_iMinBots - gBotGlobals.m_iNumBots;
+					int iNewSlotsFree = gpGlobals->maxClients - iNumPlayers;
 					// dont allow player to connect as the number of bots
 					// have not been reached yet.
 
 					BotMessage(nullptr, 0, "Player joining, min_bots not reached, Checking to disallow player...");
 					BotMessage(nullptr, 0, "numplayers to be = %d\nmin_bots = %d\nbots still to join = %d\nmax clients = %d\nnew slots = %d\nnum bots = %d", iNumPlayers,
-					           gBotGlobals.m_iMinBots,
-					           iBotsStillToJoin,
-					           gpGlobals->maxClients,
-					           iNewSlotsFree,
-					           gBotGlobals.m_iNumBots);
+						gBotGlobals.m_iMinBots,
+						iBotsStillToJoin,
+						gpGlobals->maxClients,
+						iNewSlotsFree,
+						gBotGlobals.m_iNumBots);
 
 					if (iNewSlotsFree < iBotsStillToJoin)
 					{
@@ -537,7 +547,7 @@ void ClientDisconnect(edict_t* pEntity)
 	// Is the player that is disconnecting an RCbot?
 	CBot* pBot = UTIL_GetBotPointer(pEntity);
 
-	const int iIndex = ENTINDEX(pEntity) - 1;
+	int iIndex = ENTINDEX(pEntity) - 1;
 
 	if (EntityIsCommander(pEntity))
 		gBotGlobals.SetCommander(nullptr);
@@ -621,8 +631,8 @@ void ClientDisconnect(edict_t* pEntity)
 				else
 					BotMessage(NULL,0,"Error: Couldn't Create Bot Profile!");*/
 
-		const int iProfileId = pBot->m_Profile.m_iProfileId;
-		const int iTeam = pBot->m_Profile.m_iFavTeam;
+		int iProfileId = pBot->m_Profile.m_iProfileId;
+		int iTeam = pBot->m_Profile.m_iFavTeam;
 
 		SaveHALBrainForPersonality(&pBot->m_Profile); // save this personality's HAL brain
 
@@ -672,8 +682,8 @@ void ClientDisconnect(edict_t* pEntity)
 void ClientKill(edict_t* pEntity)
 {
 	if (debug_engine) {
-		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientKill: %x\n", reinterpret_cast<unsigned>(pEntity));
+		FILE* fp; fp = fopen("bot.txt", "a");
+		fprintf(fp, "ClientKill: %x\n", unsigned(pEntity));
 		fclose(fp);
 	}
 
@@ -687,8 +697,8 @@ void ClientKill(edict_t* pEntity)
 void ClientPutInServer(edict_t* pEntity)
 {
 	if (debug_engine) {
-		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientPutInServer: %x\n", reinterpret_cast<unsigned>(pEntity));
+		FILE* fp; fp = fopen("bot.txt", "a");
+		fprintf(fp, "ClientPutInServer: %x\n", unsigned(pEntity));
 		fclose(fp);
 	}
 
@@ -783,9 +793,11 @@ void ClientCommand(edict_t* pEntity)
 	eBotCvarState iState = BOT_CVAR_CONTINUE;
 	int iAccessLevel = 0;
 	BOOL bSayTeamMsg = false;
-	BOOL bSayMsg;
+	BOOL bSayMsg = false;
 
-	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEntity);
+	CClient* pClient;
+
+	pClient = gBotGlobals.m_Clients.GetClientByEdict(pEntity);
 
 	if (pClient)
 		iAccessLevel = pClient->GetAccessLevel();
@@ -819,12 +831,12 @@ void ClientCommand(edict_t* pEntity)
 		{
 			///////
 			// see if bot can learn its HAL brain from this person speaking
-			const BOOL bSenderIsBot = UTIL_GetBotPointer(pEntity) != nullptr;
+			BOOL bSenderIsBot = UTIL_GetBotPointer(pEntity) != nullptr;
 
 			if (!bSenderIsBot || gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHAT_REPLY_TO_BOTS))
 			{
 				// team only message?
-				const int iTeamOnly = bSayTeamMsg;
+				int iTeamOnly = (int)bSayTeamMsg;
 
 				char* szMessage = nullptr;
 				//				char *szTempArgument;
@@ -833,9 +845,11 @@ void ClientCommand(edict_t* pEntity)
 				{
 					// argh! someone said something in series of arguments. work out the message
 					int i = 1;
-					unsigned int iLenSoFar = 0;
+					int iLenSoFar = 0;
+					const char* szArgument;
 					// for concatenating string dynamically
 					char* szTemp = nullptr;
+					BOOL bIsQuote;
 					BOOL bWasQuote = false;
 
 					const char* (*CmdArgv_func)(int);
@@ -854,7 +868,7 @@ void ClientCommand(edict_t* pEntity)
 
 					while (i < iArgCount)
 					{
-						const char* szArgument = CmdArgv_func(i);
+						szArgument = CmdArgv_func(i);
 
 						if (!szArgument || !*szArgument)
 						{
@@ -879,7 +893,7 @@ void ClientCommand(edict_t* pEntity)
 						// copy old string
 						if (szTemp)
 						{
-							BOOL bIsQuote = false;
+							bIsQuote = false;
 
 							// if not a bot sending message, then the ' quotes can seperate words
 							// so can spaces argh :-@
@@ -916,9 +930,12 @@ void ClientCommand(edict_t* pEntity)
 
 				if (szMessage)
 				{
-					for (int i = 0; i < MAX_PLAYERS; i++)
+					int i;
+					CBot* pBot;
+
+					for (i = 0; i < MAX_PLAYERS; i++)
 					{
-						CBot* pBot = &gBotGlobals.m_Bots[i];
+						pBot = &gBotGlobals.m_Bots[i];
 
 						if (pBot && pBot->IsUsed())
 						{
@@ -1072,8 +1089,8 @@ void ClientCommand(edict_t* pEntity)
 void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
 {
 	if (debug_engine) {
-		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", reinterpret_cast<unsigned>(pEntity), infobuffer);
+		FILE* fp; fp = fopen("bot.txt", "a");
+		fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", unsigned(pEntity), infobuffer);
 		fclose(fp);
 	}
 
@@ -1101,6 +1118,9 @@ void ServerDeactivate()
 	// server has finished (map changed for example) but new map
 	// hasn't loaded yet!!
 
+	int iIndex;
+	CBot* pBot;
+
 	// free our memory, I call it local meaning not everywhere,
 	// since we are only changing maps, not quitting the game
 	// usually when this function is called...
@@ -1117,9 +1137,9 @@ void ServerDeactivate()
 	gBotGlobals.saveLearnedData();
 
 	// mark the bots as needing to be rejoined next game...
-	for (int iIndex = 0; iIndex < MAX_PLAYERS; iIndex++)
+	for (iIndex = 0; iIndex < MAX_PLAYERS; iIndex++)
 	{
-		CBot* pBot = &gBotGlobals.m_Bots[iIndex];
+		pBot = &gBotGlobals.m_Bots[iIndex];
 
 		// Respawn left game when bot wants to leave game
 		// initialize bot so that it wont re-use the profile (hopefully)
@@ -1227,8 +1247,8 @@ const char* GetGameDescription()
 void PlayerCustomization(edict_t* pEntity, customization_t* pCust)
 {
 	if (debug_engine) {
-		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "PlayerCustomization: %x\n", reinterpret_cast<unsigned>(pEntity));
+		FILE* fp; fp = fopen("bot.txt", "a");
+		fprintf(fp, "PlayerCustomization: %x\n", unsigned(pEntity));
 		fclose(fp);
 	}
 
@@ -1282,7 +1302,7 @@ void Sys_Error(const char* error_string)
 #endif
 }
 
-void PM_Move(struct playermove_s* ppmove, int server)
+void PM_Move(playermove_s* ppmove, int server)
 {
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1291,7 +1311,7 @@ void PM_Move(struct playermove_s* ppmove, int server)
 #endif
 }
 
-void PM_Init(struct playermove_s* ppmove)
+void PM_Init(playermove_s* ppmove)
 {
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1318,7 +1338,7 @@ void SetupVisibility(edict_t* pViewEntity, edict_t* pClient, unsigned char** pvs
 #endif
 }
 
-void UpdateClientData(const struct edict_s* ent, int sendweapons, struct clientdata_s* cd)
+void UpdateClientData(const edict_s* ent, int sendweapons, clientdata_s* cd)
 {
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1327,7 +1347,7 @@ void UpdateClientData(const struct edict_s* ent, int sendweapons, struct clientd
 #endif
 }
 
-int AddToFullPack(struct entity_state_s* state, int e, edict_t* ent, edict_t* host, int hostflags, int player, unsigned char* pSet)
+int AddToFullPack(entity_state_s* state, int e, edict_t* ent, edict_t* host, int hostflags, int player, unsigned char* pSet)
 {
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
@@ -1336,7 +1356,7 @@ int AddToFullPack(struct entity_state_s* state, int e, edict_t* ent, edict_t* ho
 #endif
 }
 
-void CreateBaseline(int player, int eindex, struct entity_state_s* baseline, struct edict_s* entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs)
+void CreateBaseline(int player, int eindex, entity_state_s* baseline, edict_s* entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs)
 {
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1354,7 +1374,7 @@ void RegisterEncoders()
 #endif
 }
 
-int GetWeaponData(struct edict_s* player, struct weapon_data_s* info)
+int GetWeaponData(edict_s* player, weapon_data_s* info)
 {
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
@@ -1363,7 +1383,7 @@ int GetWeaponData(struct edict_s* player, struct weapon_data_s* info)
 #endif
 }
 
-void CmdStart(const edict_t* player, const struct usercmd_s* cmd, unsigned int random_seed)
+void CmdStart(const edict_t* player, const usercmd_s* cmd, unsigned int random_seed)
 {
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1381,7 +1401,7 @@ void CmdEnd(const edict_t* player)
 #endif
 }
 
-int ConnectionlessPacket(const struct netadr_s* net_from, const char* args, char* response_buffer, int* response_buffer_size)
+int ConnectionlessPacket(const netadr_s* net_from, const char* args, char* response_buffer, int* response_buffer_size)
 {
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
@@ -1411,8 +1431,8 @@ void CreateInstancedBaselines()
 int InconsistentFile(const edict_t* player, const char* filename, char* disconnect_message)
 {
 	if (debug_engine) {
-		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "InconsistentFile: %x filename=%s\n", reinterpret_cast<unsigned>(player), filename);
+		FILE* fp; fp = fopen("bot.txt", "a");
+		fprintf(fp, "InconsistentFile: %x filename=%s\n", unsigned(player), filename);
 		fclose(fp);
 	}
 
@@ -1527,7 +1547,7 @@ int EXPORT GetNewDLLFunctions(NEW_DLL_FUNCTIONS* pFunctionTable, int* interfaceV
 extern "C" EXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS * pFunctionTable, int* interfaceVersion)
 #endif
 {
-	if (other_GetNewDLLFunctions == nullptr)
+	if (other_GetNewDLLFunctions == NULL)
 		return false;
 
 	// pass other DLLs engine callbacks to function table...
@@ -1556,10 +1576,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 
 	va_list argptr;
 	static char command[256];
-	
-	unsigned int fieldstop;
-	unsigned int i;
-	unsigned int stringindex = 0;
+	int length, fieldstart, fieldstop, i, index, stringindex = 0;
 
 	if (!pFakeClient)
 	{
@@ -1575,7 +1592,6 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	vsprintf(command, fmt, argptr);
 	va_end(argptr);
 
-	//if (command == nullptr || *command == 0 || *command == '\n') //nullptr cmd redundant? [APG]RoboCop[CL]
 	if (*command == 0 || *command == '\n')
 	{
 		BugMessage(nullptr, "FakeClientCommand : No command!");
@@ -1583,12 +1599,12 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	}
 
 	gBotGlobals.m_bIsFakeClientCommand = true; // set the "fakeclient command" flag
-	const unsigned int length = strlen(command); // get the total length of the command string
+	length = strlen(command); // get the total length of the command string
 
 	// process all individual commands (separated by a semicolon) one each a time
 	while (stringindex < length)
 	{
-		const unsigned int fieldstart = stringindex; // save field start position (first character)
+		fieldstart = stringindex; // save field start position (first character)
 		while (stringindex < length && command[stringindex] != ';')
 			stringindex++; // reach end of field
 		if (command[stringindex - 1] == '\n')
@@ -1600,7 +1616,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 		g_argv[i - fieldstart] = 0; // terminate the string
 		stringindex++; // move the overall string index one step further to bypass the semicolon
 
-		unsigned int index = 0;
+		index = 0;
 		gBotGlobals.m_iFakeArgCount = 0; // let's now parse that command and count the different arguments
 
 		// count the number of arguments
@@ -1678,13 +1694,17 @@ void BotFunc_InitProfile(bot_profile_t* bpBotProfile)
 void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile)
 // Writes a profile onto file
 {
+	char* szTag;
+	char* szToWrite;
+	int* iToWrite;
+
 	int i = 0;
 
 	while (i <= 10)
 	{
-		const char* szTag = nullptr;
-		char* szToWrite = nullptr;
-		const int* iToWrite = nullptr;
+		szTag = nullptr;
+		szToWrite = nullptr;
+		iToWrite = nullptr;
 
 		switch (i)
 		{
@@ -1759,12 +1779,17 @@ void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 {
+	CClient* pClient;
+
 	char szBuffer[128];
 
-	unsigned int i;
+	int iLength;
+	int i;
 
 	char szTemp[64];
-	unsigned int j;
+	int j;
+
+	BOOL bPreTrain = false; // true when the bot needs to read pretraining file for megahal
 
 	// read bot profile with bots name etc on it.
 
@@ -1775,7 +1800,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 		if (szBuffer[0] == '#')
 			continue;
 
-		unsigned int iLength = strlen(szBuffer);
+		iLength = strlen(szBuffer);
 
 		if (szBuffer[iLength - 1] == '\n')
 			szBuffer[--iLength] = '\0';
@@ -1950,14 +1975,14 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 		}
 	}
 
-	const BOOL bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
+	bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
 	LoadHALBrainForPersonality(bpBotProfile, bPreTrain); // wake the bot's HAL brain up
 
 	// Also read bots rep with other players on the server
 
 	for (i = 0; i < MAX_PLAYERS; i++)
 	{
-		const CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
+		pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
 
 		if (pClient->IsUsed())
 		{
@@ -1970,14 +1995,17 @@ void ReadBotUsersConfig()
 // Read the allowed users to use bot commands
 {
 	char filename[256];
+	FILE* fp;
 
 	UTIL_BuildFileName(filename, BOT_USERS_FILE, nullptr);
 
-	FILE* fp = fopen(filename, "r");
+	fp = fopen(filename, "r");
 
 	if (fp != nullptr)
 	{
 		char buffer[256];
+		int length;
+		int i, j;
 
 		char szName[64];
 		char szPass[BOT_MAX_PASSWORD_LEN];
@@ -1993,7 +2021,7 @@ void ReadBotUsersConfig()
 
 			buffer[255] = 0;
 
-			unsigned int length = strlen(buffer);
+			length = strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;
@@ -2007,13 +2035,13 @@ void ReadBotUsersConfig()
 			if (length == 0) // nothing on line
 				continue;
 
-			unsigned int i = 0;
+			i = 0;
 
 			while (i < length && buffer[i] != '"')
 				i++;
 			i++;
 
-			int j = 0;
+			j = 0;
 
 			while (i < length && buffer[i] != '"' && j < 64)
 				szName[j++] = buffer[i++];
@@ -2076,15 +2104,24 @@ void ReadMapConfig()
 // and so the file is stored globally.
 // To be done properly:
 
+/*
+
+  TO DO:
+
+  Make config read whole file and enter commands in a queue for execution (faster??)
+
+  */
 {
 	char szTemp[256];
+
+	int iLen;
 
 	if (fgets(szTemp, 255, fpMapConfig) != nullptr)
 	{
 		if (*szTemp == '#')
 			return;
 
-		unsigned int iLen = strlen(szTemp);
+		iLen = strlen(szTemp);
 
 		if (iLen > 255)
 			szTemp[255] = 0;
@@ -2118,7 +2155,7 @@ void ReadMapConfig()
 	}
 }
 
-edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin) //TODO: Experimental [APG]RoboCop[CL]
+edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, Vector vOrigin) //TODO: Experimental [APG]RoboCop[CL]
 {
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
@@ -2133,7 +2170,7 @@ edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Ve
 			}
 		}
 	}
-	
+
 	return nullptr;
 }
 
@@ -2141,6 +2178,8 @@ edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Ve
 // Hack building
 edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser, BOOL bBuilt)
 {
+	edict_t* build = nullptr;//pfnCreateNamedEntity(MAKE_STRING(pCommBuildent));
+
 	edict_t* pSetgroundentity = nullptr;
 
 	if (iUser3 == AVH_USER3_RESTOWER)
@@ -2148,7 +2187,7 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 		// find nearest struct resource fountain
 		char* classname[1] = { "func_resource" };
 
-		edict_t* pResource = UTIL_FindNearestEntity(classname, 1, vOrigin, 200.0f, false);
+		edict_t* pResource = UTIL_FindNearestEntity(classname, 1, vOrigin, 200, false);
 
 		if (pResource)
 		{
@@ -2168,7 +2207,7 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 		}
 	}
 
-	edict_t* build = CREATE_NAMED_ENTITY(MAKE_STRING(szClassname));
+	build = CREATE_NAMED_ENTITY(MAKE_STRING(szClassname));
 
 	if (build && !FNullEnt(build))
 	{
@@ -2233,7 +2272,7 @@ CBotCam::CBotCam()
 	m_bTriedToSpawn = false;
 }
 
-BOOL CBotCam::IsWorking() const
+BOOL CBotCam::IsWorking()
 {
 	return m_pCameraEdict != nullptr && gBotGlobals.IsConfigSettingOn(BOT_CONFIG_ENABLE_BOTCAM);
 }
@@ -2261,7 +2300,7 @@ void CBotCam::Spawn()
 		m_pCameraEdict->v.movetype = MOVETYPE_FLY; //noclip
 		m_pCameraEdict->v.classname = MAKE_STRING("entity_botcam");
 		m_pCameraEdict->v.nextthink = gpGlobals->time;
-		m_pCameraEdict->v.renderamt = 0.0f;
+		m_pCameraEdict->v.renderamt = 0;
 		// /Redfox
 	}
 }
@@ -2269,6 +2308,7 @@ void CBotCam::Spawn()
 void CBotCam::Think()
 {
 	static BOOL bNotAlive;
+	Vector oldOrigin;
 
 	if (gBotGlobals.m_iNumBots == 0)
 		return;
@@ -2283,7 +2323,8 @@ void CBotCam::Think()
 
 		if (bNotAlive)
 		{
-			float fNearest = 0;
+			float fDistance;
+			float fNearest = 0.0f;
 
 			// think about next bot to view etc
 			m_fNextChangeBotTime = gpGlobals->time + RANDOM_FLOAT(7.5f, 10.0f);
@@ -2303,7 +2344,7 @@ void CBotCam::Think()
 				//if ( pOldBot )
 				//	fDistance = pBot->DistanceFrom(pOldBot->GetGunPosition());
 				//else
-				const float fDistance = pBot->DistanceFrom(m_pCameraEdict->v.origin);
+				fDistance = pBot->DistanceFrom(m_pCameraEdict->v.origin);
 
 				if (m_pCurrentBot == nullptr || fDistance < fNearest)
 				{
@@ -2376,11 +2417,11 @@ void CBotCam::Think()
 	if (!m_pCurrentBot || !m_iState)
 		return;
 
-	//const BOOL bSetAngle = true;
+	BOOL bSetAngle = true;
 
 	vBotOrigin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 
-	const Vector oldOrigin = m_pCameraEdict->v.origin;
+	oldOrigin = m_pCameraEdict->v.origin;//
 
 	//Vector vLookAt = vBotOrigin;
 
@@ -2415,7 +2456,7 @@ void CBotCam::Think()
 		if (tr.flFraction < 1.0f)
 			m_pCameraEdict->v.origin = tr.vecEndPos;
 	}
-		break;
+	break;
 	case BOTCAM_WAYPOINT:
 	{
 		if (m_pCurrentBot->m_iWaypointGoalIndex != -1)
@@ -2426,14 +2467,14 @@ void CBotCam::Think()
 		else
 			m_fNextChangeState = 0.0f;
 	}
-		break;
+	break;
 	case BOTCAM_ENEMY:
 	{
 		if (m_pCurrentBot->m_pEnemy)
 		{
 			Vector vComp = m_pCurrentBot->m_pEnemy->v.origin + m_pCurrentBot->m_pEnemy->v.view_ofs - vBotOrigin;
 
-			const float fLength = vComp.Length();
+			float fLength = vComp.Length();
 
 			vComp = vComp.Normalize();
 
@@ -2464,7 +2505,7 @@ void CBotCam::Think()
 		else
 			m_fNextChangeState = 0.0f;
 	}
-		break;
+	break;
 	case BOTCAM_FP:
 		if (m_pCurrentBot)
 		{
@@ -2483,12 +2524,12 @@ void CBotCam::Think()
 		break;
 	}
 
-	if (true)
+	if (bSetAngle)
 	{
 		Vector ideal = UTIL_VecToAngles(vBotOrigin - m_pCameraEdict->v.origin);
 		UTIL_FixAngles(&ideal);
 
-		float fTurnSpeed = std::fabs(180 + ideal.x - (180 + m_pCameraEdict->v.angles.x)) / 10;
+		float fTurnSpeed = fabs(180 + ideal.x - (180 + m_pCameraEdict->v.angles.x)) / 10;
 
 		//	ideal.x = -ideal.x;
 		BotFunc_ChangeAngles(&fTurnSpeed, &ideal.x, &m_pCameraEdict->v.v_angle.x, &m_pCameraEdict->v.angles.x);
@@ -2496,7 +2537,7 @@ void CBotCam::Think()
 		//	m_pCameraEdict->v.angles.x = -m_pCameraEdict->v.v_angle.x/3;
 		//	m_pCameraEdict->v.v_angle.x = -m_pCameraEdict->v.v_angle.x;
 
-		fTurnSpeed = std::fabs(180 + ideal.y - (180 + m_pCameraEdict->v.angles.y)) / 20;
+		fTurnSpeed = fabs(180 + ideal.y - (180 + m_pCameraEdict->v.angles.y)) / 20;
 		BotFunc_ChangeAngles(&fTurnSpeed, &ideal.y, &m_pCameraEdict->v.v_angle.y, &m_pCameraEdict->v.angles.y);
 
 		m_pCameraEdict->v.origin = m_pCameraEdict->v.origin - (m_pCameraEdict->v.origin - oldOrigin) * 0.5f;
@@ -2513,7 +2554,7 @@ void CBotCam::Think()
 	DispatchThink(m_pCameraEdict);
 }
 
-BOOL CBotCam::TuneIn(edict_t* pPlayer) const
+BOOL CBotCam::TuneIn(edict_t* pPlayer)
 {
 	if (gBotGlobals.m_iNumBots == 0)
 	{
@@ -2531,7 +2572,7 @@ BOOL CBotCam::TuneIn(edict_t* pPlayer) const
 	return true;
 }
 
-void CBotCam::TuneOff(const edict_t* pPlayer)
+void CBotCam::TuneOff(edict_t* pPlayer)
 {
 	//m_TunedIn[ENTINDEX(pPlayer)-1] = 0;
 	SET_VIEW(pPlayer, pPlayer);

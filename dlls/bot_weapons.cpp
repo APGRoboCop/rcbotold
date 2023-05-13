@@ -151,8 +151,8 @@ void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
 
 		if (m_pWeaponInfo)
 		{
-			const int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
-			const int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
+			int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
+			int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
 
 			if (iAmmoList && iAmmoIndex1 != -1)
 				m_iAmmo1 = &iAmmoList[iAmmoIndex1];
@@ -199,19 +199,22 @@ void CWeaponPresets::ReadPresets()
 {
 	weapon_preset_t sWeaponPreset;
 
+	FILE* fp;
+
 	char filename[512];
 
 	UTIL_BuildFileName(filename, BOT_WEAPON_PRESETS_FILE);
 
-	FILE* fp = fopen(filename, "r");
+	fp = fopen(filename, "r");
 
 	if (fp == nullptr)
 		return;
 
+	int iLength;
 	char buffer[256];
 
 	int iModId = 0;
-	int iWeaponId;
+	int iWeaponId = 0;
 	int iValue;
 
 	// bSkipMod will be true when the weapons are not for the current mod
@@ -225,7 +228,7 @@ void CWeaponPresets::ReadPresets()
 		if (buffer[0] == '#')
 			continue;
 
-		unsigned int iLength = strlen(buffer);
+		iLength = strlen(buffer);
 
 		if (iLength <= 0) // blank line...
 			continue;
@@ -335,7 +338,7 @@ void CWeaponPresets::ReadPresets()
 	fclose(fp);
 }
 
-BOOL CBotWeapon::HasWeapon(const edict_t* pEdict)
+BOOL CBotWeapon::HasWeapon(edict_t* pEdict)
 {
 	if (pEdict)
 	{
@@ -352,7 +355,7 @@ BOOL CBotWeapon::HasWeapon(const edict_t* pEdict)
 				{
 					edict_t* pWeapon = nullptr;
 
-					const char* szClassname = this->GetClassname();
+					char* szClassname = this->GetClassname();
 
 					if (szClassname == nullptr)
 						return false; // error
@@ -405,7 +408,9 @@ void GetNoWeaponArray(short int* Array)
 
 void GetArrayOfExplosives(short int* Array)
 {
-	for (int i = 0; i < MAX_WEAPONS; i++)
+	int i;
+
+	for (i = 0; i < MAX_WEAPONS; i++)
 	{
 		switch (i)
 		{
@@ -433,17 +438,18 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	CBotWeapon* pWeapon;
 	//CWeapon *pWeaponInfo;
 
-	const edict_t* pEdict = pBot->m_pEdict;
+	edict_t* pEdict = pBot->m_pEdict;
 
 	Vector vEnemyOrigin;
 	float fEnemyDist;
 
+	//TODO: This prevents bots from zapping themselves underwater with Lightning Gun? [APG]RoboCop[CL]
 	BOOL bEnemyIsElectrified = false;
 	BOOL bEnemyTooHigh = false;
-	const BOOL bUnderwater = pEdict->v.waterlevel == 3;
-	const BOOL bIsDMC = gBotGlobals.m_iCurrentMod == MOD_DMC;
+	BOOL bUnderwater = pEdict->v.waterlevel == 3;
+	BOOL bIsDMC = gBotGlobals.m_iCurrentMod == MOD_DMC;
 
-	const BOOL bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
+	BOOL bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
 	BOOL bWantToMelee = false;
 
 	short int iAllowedWeapons[MAX_WEAPONS];
@@ -523,8 +529,8 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		{
 			// want to melee true if needing to reload OR enemy within melee range
 			// AND random factor due to skill
-			const BOOL bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0f;
-			const BOOL bMaxRangeCheck = pEnemy && fEnemyDist < 512.0f;
+			BOOL bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0f;
+			BOOL bMaxRangeCheck = pEnemy && fEnemyDist < 512.0f;
 
 			bWantToMelee = (pBot->m_pCurrentWeapon->NeedToReload() && RANDOM_LONG(MIN_BOT_SKILL, MAX_BOT_SKILL) < pBot->
 				m_Profile.m_iSkill || bMeleeRangeCheck) && bMaxRangeCheck;
@@ -543,13 +549,29 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	{
 		switch (gBotGlobals.m_iCurrentMod)
 		{
-		/*case MOD_SVENCOOP:
-			if (FStrEq("func_breakable", STRING(pEnemy->v.classname)))
-			{
-				if (pEnemy->v.spawnflags & 512)
+			/*case MOD_SVENCOOP:
+				if (FStrEq("func_breakable", STRING(pEnemy->v.classname)))
 				{
+					if (pEnemy->v.spawnflags & 512)
+					{
+						GetNoWeaponArray(iAllowedWeapons);
+						GetArrayOfExplosives(iAllowedWeapons);//bExplosives = pEnemy->v.spawnflags & 512;
+
+						if (pBot->HasWeapon(VALVE_WEAPON_MP5))
+						{
+							CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(VALVE_WEAPON_MP5);
+
+							if (pWeapon->SecondaryAmmo() > 0)
+								iAllowedWeapons[VALVE_WEAPON_MP5] = 1;
+						}
+					}
+				}
+				else if (FStrEq("monster_gargantua", STRING(pEnemy->v.classname)))
+				{
+					// only use explosives & egon on garg
 					GetNoWeaponArray(iAllowedWeapons);
-					GetArrayOfExplosives(iAllowedWeapons);//bExplosives = pEnemy->v.spawnflags & 512;
+					GetArrayOfExplosives(iAllowedWeapons);
+					iAllowedWeapons[VALVE_WEAPON_EGON] = 1;
 
 					if (pBot->HasWeapon(VALVE_WEAPON_MP5))
 					{
@@ -559,23 +581,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 							iAllowedWeapons[VALVE_WEAPON_MP5] = 1;
 					}
 				}
-			}
-			else if (FStrEq("monster_gargantua", STRING(pEnemy->v.classname)))
-			{
-				// only use explosives & egon on garg
-				GetNoWeaponArray(iAllowedWeapons);
-				GetArrayOfExplosives(iAllowedWeapons);
-				iAllowedWeapons[VALVE_WEAPON_EGON] = 1;
-
-				if (pBot->HasWeapon(VALVE_WEAPON_MP5))
-				{
-					CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(VALVE_WEAPON_MP5);
-
-					if (pWeapon->SecondaryAmmo() > 0)
-						iAllowedWeapons[VALVE_WEAPON_MP5] = 1;
-				}
-			}
-			break;*/
+				break;*/
 		case MOD_NS:
 			if (pBot->IsMarine())
 			{
@@ -843,7 +849,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	return iBestMeleeWeaponId;*/
 }
 
-BOOL CBotWeapon::NeedToReload() const
+BOOL CBotWeapon::NeedToReload()
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -866,7 +872,7 @@ BOOL CBotWeapon::NeedToReload() const
 	return false;
 }
 
-BOOL CBotWeapon::CanShootPrimary(const edict_t* pEdict, float flFireDist, float flWallDist)
+BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist)
 {
 	if (m_pWeaponInfo == nullptr)
 		return true;
@@ -882,7 +888,7 @@ BOOL CBotWeapon::CanShootPrimary(const edict_t* pEdict, float flFireDist, float 
 	if (!m_pWeaponInfo->CanUsePrimary())
 		return false;
 
-	if (gBotGlobals.IsMod(MOD_HL_DM))
+	if (gBotGlobals.IsMod(MOD_GEARBOX))
 	{
 		if (GetID() == VALVE_WEAPON_RPG)
 		{
@@ -897,11 +903,12 @@ BOOL CBotWeapon::CanShootPrimary(const edict_t* pEdict, float flFireDist, float 
 	return true;
 }
 
-BOOL CBotWeapons::HasWeapon(edict_t* pEdict, const char* szClassname)
+BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname)
 {
+	int i;
 	const char* pClassname;
 
-	for (int i = 1; i < MAX_WEAPONS; i++)
+	for (i = 1; i < MAX_WEAPONS; i++)
 	{
 		if (HasWeapon(pEdict, i))
 		{

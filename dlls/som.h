@@ -46,25 +46,25 @@ public:
 
 	CSomNeuron(int iInp, int iX, int iY);
 
-	ga_value getX() const
+	ga_value getX()
 	{
 		return m_iX;
 	}
 
-	ga_value getY() const
+	ga_value getY()
 	{
 		return m_iY;
 	}
 
 	void update(std::vector<ga_value>* inputs, ga_value inf);
 
-	ga_value distance(std::vector <ga_value>* inputs) const;
+	ga_value distance(std::vector <ga_value>* inputs);
 
 	std::vector <ga_value>* weights();
 
-	void displayWeights() const;
+	void displayWeights();
 
-	ga_value neighbourDistance(CSomNeuron* other, ga_value fDistance) const;
+	ga_value neighbourDistance(CSomNeuron* other, ga_value fDistance);
 
 private:
 	std::vector<ga_value> fWeights;
@@ -81,19 +81,19 @@ public:
 
 	~CSom();
 
-	CSomNeuron* getBMU(std::vector <ga_value>* inputs) const;
+	CSomNeuron* getBMU(std::vector <ga_value>* inputs);
 
-	void updateAround(std::vector<ga_value>* inputs, CSomNeuron* bmu) const;
+	void updateAround(std::vector<ga_value>* inputs, CSomNeuron* bmu);
 
-	CSomNeuron* input(std::vector <std::vector <ga_value> >* inputs);
+	CSomNeuron* input(std::vector < std::vector <ga_value> >* inputs);
 
 	CSomNeuron* inputOne(std::vector < ga_value >* inputs);
 
 	void input(std::vector <std::vector <ga_value> >* inputs, int epochs);//TODO: not implemented [APG]RoboCop[CL]
 
-	void display() const;
+	void display();
 
-	unsigned int epochs() const
+	unsigned int epochs()
 	{
 		return m_iEpochs;
 	}

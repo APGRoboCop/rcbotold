@@ -34,7 +34,7 @@
 class Vector2D
 {
 public:
-	Vector2D() : x(0.0f), y(0.0f) { }
+	Vector2D() { }
 	Vector2D(float X, float Y) { x = X; y = Y; }
 	Vector2D operator+(const Vector2D& v)	const { return Vector2D(x + v.x, y + v.y); }
 	Vector2D operator-(const Vector2D& v)	const { return Vector2D(x - v.x, y - v.y); }
@@ -45,10 +45,10 @@ public:
 
 	Vector2D Normalize() const
 	{
-		//Vector2D vec2;
+		Vector2D vec2;
 
 		float flLen = Length();
-		if (flLen == 0)
+		if (flLen == 0.0f)
 		{
 			return Vector2D(0, 0);
 		}
@@ -72,7 +72,7 @@ class Vector						// same data-layout as engine's vec3_t,
 {								//		which is a vec_t[3]
 public:
 	// Construction/destruction
-	Vector(): x(0.0f), y(0.0f), z(0.0f)					{ }
+	Vector() { }
 	Vector(float X, float Y, float Z) { x = X; y = Y; z = Z; }
 	//inline Vector(double X, double Y, double Z)		{ x = (float)X; y = (float)Y; z = (float)Z;	}
 	//inline Vector(int X, int Y, int Z)				{ x = (float)X; y = (float)Y; z = (float)Z;	}
@@ -123,10 +123,7 @@ public:
 };
 inline Vector operator*(float fl, const Vector& v) { return v * fl; }
 inline float DotProduct(const Vector& a, const Vector& b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
-inline Vector CrossProduct(const Vector& a, const Vector& b)
-{
-	return Vector(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
-}
+inline Vector CrossProduct(const Vector& a, const Vector& b) { return Vector(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x); }
 inline float VecDistance(const Vector& a, const Vector& b) { return (b - a).Length(); }
 
 #endif

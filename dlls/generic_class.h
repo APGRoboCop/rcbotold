@@ -242,6 +242,8 @@ public:
 
 	void RemoveFront()
 	{
+		dataNode<T>* tempNode = m_Head;
+
 		if (m_Head == nullptr)
 		{
 			// just set tail to null incase
@@ -252,7 +254,7 @@ public:
 
 		try
 		{
-			dataNode<T>* tempNode = m_Head;
+			tempNode = m_Head;
 
 			if (m_Tail == m_Head)
 			{
@@ -347,6 +349,7 @@ public:
 	BOOL Remove(const T& pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
+		dataNode<T>* deleteNode = nullptr;
 
 		if (m_Head == nullptr)
 			return false;
@@ -375,7 +378,7 @@ public:
 		{
 			if (tempNode->m_Next->m_NodeData == pObj)
 			{
-				dataNode<T>* deleteNode = tempNode->m_Next;
+				deleteNode = tempNode->m_Next;
 
 				if (deleteNode == m_Tail)
 				{
@@ -402,6 +405,7 @@ public:
 	BOOL RemoveByPointer(const T* pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
+		dataNode<T>* deleteNode = nullptr;
 
 		if (m_Head == nullptr)
 			return false;
@@ -428,7 +432,7 @@ public:
 		{
 			if (&tempNode->m_Next->m_NodeData == pObj)
 			{
-				dataNode<T>* deleteNode = tempNode->m_Next;
+				deleteNode = tempNode->m_Next;
 
 				if (deleteNode == m_Tail)
 				{
@@ -549,6 +553,7 @@ public:
 	BOOL RemoveByPointer(const T* pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
+		dataNode<T>* deleteNode;
 
 		if (m_Head == nullptr)
 			return false;
@@ -566,7 +571,7 @@ public:
 		{
 			if (&tempNode->m_Next->m_NodeData == pObj)
 			{
-				dataNode<T>* deleteNode = tempNode->m_Next;
+				deleteNode = tempNode->m_Next;
 
 				tempNode->m_Next = tempNode->m_Next->m_Next;
 
@@ -588,6 +593,7 @@ public:
 	BOOL Remove(const T& pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
+		dataNode<T>* deleteNode;
 
 		if (m_Head == nullptr)
 			return false;
@@ -605,7 +611,7 @@ public:
 		{
 			if (tempNode->m_Next->m_NodeData == pObj)
 			{
-				dataNode<T>* deleteNode = tempNode->m_Next;
+				deleteNode = tempNode->m_Next;
 
 				tempNode->m_Next = tempNode->m_Next->m_Next;
 
@@ -625,9 +631,11 @@ public:
 
 	void Destroy()
 	{
+		dataNode<T>* tempNode;
+
 		while (m_Head)
 		{
-			dataNode<T>* tempNode = m_Head;
+			tempNode = m_Head;
 
 			m_Head = m_Head->m_Next;
 
@@ -763,6 +771,8 @@ public:
 
 	void SetSize(int iArrayMax)
 	{
+		int iSize;
+
 		assert(iArrayMax > 0);
 
 		if (iArrayMax <= 0)
@@ -770,9 +780,9 @@ public:
 
 		//iArrayMax ++;
 
-		const int iSize = sizeof(T) * iArrayMax;
+		iSize = sizeof(T) * iArrayMax;
 
-		m_pArray = static_cast<T*>(malloc(iSize));
+		m_pArray = (T*)malloc(iSize);
 
 		assert(m_pArray != NULL);
 
@@ -932,7 +942,7 @@ public:
 		this->Clear();
 	}
 
-	int Size() const
+	int Size()
 	{
 		return size;
 	}
@@ -1000,7 +1010,7 @@ public:
 		buffer = 0;
 	}
 
-	bool IsEmpty() const
+	bool IsEmpty()
 	{
 		return size == 0;
 	}
@@ -1063,7 +1073,7 @@ public:
 		return (buffer[iIndex]);
 	}
 
-	unsigned int getExistingIndex(T obj)
+	int getExistingIndex(T obj)
 	{
 		for (unsigned int i = 0; i < size; i++)
 		{

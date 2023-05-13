@@ -50,18 +50,19 @@ const float CGA::g_fMaxPerturbation = 0.3f;
 // POPULATION
 ////////////////////
 
-IIndividual* CPopulation::get(int iIndex) const
+IIndividual* CPopulation::get(int iIndex)
 {
 	return m_theIndividuals[iIndex];
 }
 
-IIndividual* CPopulation::getBestIndividual() const
+IIndividual* CPopulation::getBestIndividual()
 {
 	IIndividual* best = nullptr;
+	IIndividual* curr;
 
 	for (unsigned int i = 0; i < m_theIndividuals.size(); i++)
 	{
-		IIndividual* curr = m_theIndividuals[i];
+		curr = m_theIndividuals[i];
 
 		if (!best || curr->getFitness() > best->getFitness())
 			best = curr;
@@ -92,7 +93,7 @@ void CPopulation::clear()
 	m_theIndividuals.clear();
 }
 
-ga_value CPopulation::totalFitness() const
+ga_value CPopulation::totalFitness()
 {
 	float fTotalFitness = 0.0f;
 
@@ -104,11 +105,11 @@ ga_value CPopulation::totalFitness() const
 	return fTotalFitness;
 }
 
-void CPopulation::save(FILE* bfp) const
+void CPopulation::save(FILE* bfp)
 {
-	const unsigned int iSize = m_theIndividuals.size();
+	unsigned int iSize = m_theIndividuals.size();
 
-	const CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
+	CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
 
 	header.write(bfp);
 
@@ -125,7 +126,7 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 	if (feof(bfp))
 		return;
 
-	const CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
+	CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
 
 	if (!header.read(bfp, header))
 	{
@@ -156,14 +157,15 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 	}
 }
 
-ga_value CPopulation::bestFitness() const
+ga_value CPopulation::bestFitness()
 {
+	float fFitness = 0.0f;
 	BOOL gotBestFitness = false;
 	float fBestFitness = 0.0f;
 
 	for (unsigned int i = 0; i < size(); i++)
 	{
-		const float fFitness = m_theIndividuals[i]->getFitness();
+		fFitness = m_theIndividuals[i]->getFitness();
 
 		if (!gotBestFitness || fFitness > fBestFitness)
 		{
@@ -175,9 +177,9 @@ ga_value CPopulation::bestFitness() const
 	return fBestFitness;
 }
 
-ga_value CPopulation::averageFitness() const
+ga_value CPopulation::averageFitness()
 {
-	return totalFitness() / static_cast<float>(m_theIndividuals.size());
+	return totalFitness() / m_theIndividuals.size();
 }
 
 IIndividual* CPopulation::pick()
@@ -251,7 +253,7 @@ void CGA::loadTeam(char* szName, int iTeam, int chromosize)
 	}
 }
 
-void CGA::saveTeam(char* szName, int iTeam) const
+void CGA::saveTeam(char* szName, int iTeam)
 {
 	FILE* bfp = RCBOpenFile(szName, "wb", SAVETYPE_TEAM, iTeam);
 
@@ -285,7 +287,7 @@ void CGA :: saveBotGA ( char *szName, int iProfileId )
 }
 */
 
-void CGA::save(FILE* bfp) const
+void CGA::save(FILE* bfp)
 {
 	m_thePopulation.save(bfp);
 	m_theNewPopulation.save(bfp);
@@ -353,7 +355,7 @@ void CGA::freeGlobalMemory()
 	m_theSelectFunction = nullptr;
 }
 
-bool CGA::canPick() const
+bool CGA::canPick()
 {
 	return m_theNewPopulation.size() > 0;
 }
@@ -369,7 +371,7 @@ IIndividual* CGA::pick()
 
 IIndividual* CRouletteSelection::select(CPopulation* population)
 {
-	const ga_value fFitnessSlice = RANDOM_FLOAT(0, population->totalFitness());
+	ga_value fFitnessSlice = RANDOM_FLOAT(0, population->totalFitness());
 	ga_value fFitnessSoFar = 0.0f;
 
 	for (unsigned int i = 0; i < population->size(); i++)
@@ -388,7 +390,7 @@ IIndividual* CRouletteSelection::select(CPopulation* population)
 ///////////////
 // SAVING
 
-FILE* RCBOpenFile(char* file, const char* readtype, eGASaveType savedtype, int iId)
+FILE* RCBOpenFile(char* file, char* readtype, eGASaveType savedtype, int iId)
 {
 	char filename[256];
 	char tmpfilename[256];

@@ -395,13 +395,14 @@ class CWeaponPresets
 public:
 	void ReadPresets();
 
-	weapon_preset_t* GetPreset(short int iModId, int iWeaponId) const
+	weapon_preset_t* GetPreset(short int iModId, int iWeaponId)
 	{
 		dataStack<weapon_preset_t> tempStack = m_Presets;
+		weapon_preset_t* pPreset;
 
 		while (!tempStack.IsEmpty())
 		{
-			weapon_preset_t* pPreset = tempStack.ChoosePointerFromStack();
+			pPreset = tempStack.ChoosePointerFromStack();
 
 			if (pPreset->m_iId == iWeaponId &&
 				pPreset->m_iModId == iModId)
@@ -427,12 +428,14 @@ private:
 class CWeapon
 {
 public:
+	virtual ~CWeapon() = default;
+
 	CWeapon()
 	{
-		this->CWeapon::Init();
+		this->Init();
 	}
 
-	virtual void Init()
+	void Init()
 	{
 		m_iAmmoIndex1 = -1;
 		m_iAmmoIndex2 = -1;
@@ -462,7 +465,7 @@ public:
 		return true;
 	}
 
-	int MaxPrimaryAmmo() const
+	int MaxPrimaryAmmo()
 	{
 		return m_iPrimAmmoMax;
 	}
@@ -478,7 +481,7 @@ public:
 		return true;
 	}
 
-	BOOL IsRegistered() const
+	BOOL IsRegistered()
 	{
 		return m_bRegistered;
 	}
@@ -488,7 +491,7 @@ public:
 		return 0;
 	}
 
-	char* GetClassname() const
+	char* GetClassname()
 	{
 		return m_szClassname;
 	}
@@ -513,12 +516,12 @@ public:
 		return true;
 	}
 
-	int HudSlot() const
+	int HudSlot()
 	{
 		return m_iHudSlot;
 	}
 
-	int HudPosition() const
+	int HudPosition()
 	{
 		return m_iHudPosition;
 	}
@@ -576,76 +579,76 @@ public:
 
 	CWeaponPreset()
 	{
-		this->CWeaponPreset::Init();
+		this->Init();
 	}
 
-	CWeaponPreset(weapon_preset_t* p_preset)
+	CWeaponPreset(weapon_preset_t* pPreset)
 	{
-		m_bCanFireUnderWater = p_preset->m_bCanFireUnderWater;
+		m_bCanFireUnderWater = pPreset->m_bCanFireUnderWater;
 
-		m_bHasPrimaryFire = p_preset->m_bHasPrimaryFire;
-		m_bHasSecondaryFire = p_preset->m_bHasSecondaryFire;
+		m_bHasPrimaryFire = pPreset->m_bHasPrimaryFire;
+		m_bHasSecondaryFire = pPreset->m_bHasSecondaryFire;
 
-		m_fPrimMinRange = p_preset->m_fPrimMinRange;
-		m_fPrimMaxRange = p_preset->m_fPrimMaxRange;
+		m_fPrimMinRange = pPreset->m_fPrimMinRange;
+		m_fPrimMaxRange = pPreset->m_fPrimMaxRange;
 
-		m_fSecMinRange = p_preset->m_fSecMinRange;
-		m_fSecMaxRange = p_preset->m_fSecMaxRange;
+		m_fSecMinRange = pPreset->m_fSecMinRange;
+		m_fSecMaxRange = pPreset->m_fSecMaxRange;
 
-		m_bIsMelee = p_preset->m_bIsMelee;
+		m_bIsMelee = pPreset->m_bIsMelee;
 
 		//m_iModId;
-		m_iPriority = p_preset->m_iPriority;
+		m_iPriority = pPreset->m_iPriority;
 	}
 
-	void Init() override
+	void Init()
 	{
 		memset((void*)this, 0, sizeof(CWeaponPreset));
 	}
 
-	BOOL CanBeUsedUnderWater() override
+	BOOL CanBeUsedUnderWater()
 	{
 		return m_bCanFireUnderWater;
 	}
 
-	BOOL CanUsePrimary() override
+	BOOL CanUsePrimary()
 	{
 		return m_bHasPrimaryFire;
 	}
 
-	BOOL CanUseSecondary() override
+	BOOL CanUseSecondary()
 	{
 		return m_bHasSecondaryFire;
 	}
 
-	int GetPriority() override
+	int GetPriority()
 	{
 		return m_iPriority;
 	}
 
-	BOOL PrimaryInRange(float fRange) override
+	BOOL PrimaryInRange(float fRange)
 	{
 		return fRange >= m_fPrimMinRange &&
 			fRange <= m_fPrimMaxRange;
 	}
 
-	float PrimMaxRange() override
+	float PrimMaxRange()
 	{
 		return m_fPrimMinRange;
 	}
 
-	float PrimMinRange() override
+	float PrimMinRange()
 	{
 		return m_fPrimMaxRange;
 	}
 
-	BOOL SecondaryInRange(float fRange) override
+	BOOL SecondaryInRange(float fRange)
 	{
 		return fRange >= m_fSecMinRange &&
 			fRange <= m_fSecMaxRange;
 	}
 
-	BOOL IsMelee() override
+	BOOL IsMelee()
 	{
 		return m_bIsMelee == 1;
 	}
@@ -662,11 +665,13 @@ public:
 
 	~CWeapons()
 	{
-		for (int i = 0; i < MAX_WEAPONS; i++)
+		int i;
+
+		for (i = 0; i < MAX_WEAPONS; i++)
 		{
 			if (m_Weapons[i] != nullptr)
 			{
-				delete[] m_Weapons[i];
+				delete m_Weapons[i];
 				m_Weapons[i] = nullptr;
 			}
 		}
@@ -676,14 +681,16 @@ public:
 
 	void Init()
 	{
-		for (int i = 0; i < MAX_WEAPONS; i++)
+		int i;
+
+		for (i = 0; i < MAX_WEAPONS; i++)
 		{
 			m_Weapons[i] = nullptr;
 		}
 		//memset(m_Weapons,0,sizeof(CWeapon)*MAX_WEAPONS);
 	}
 
-	CWeapon* GetWeapon(int iId) const
+	CWeapon* GetWeapon(int iId)
 	{
 		if (iId >= 0 && iId < MAX_WEAPONS)
 		{
@@ -706,7 +713,7 @@ public:
 		return m_iId;
 	}
 
-	int HudSlot() const
+	int HudSlot()
 	{
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->HudSlot();
@@ -723,13 +730,13 @@ public:
 
 	void setHasWeapon(BOOL bVal);
 
-	BOOL LowOnAmmo() const
+	BOOL LowOnAmmo()
 	{
 		// less in reserve than current clip
 		return !IsMelee() && m_iAmmo1 && *m_iAmmo1 < m_iClip;
 	}
 
-	BOOL OutOfAmmo() const
+	BOOL OutOfAmmo()
 	{
 		if (m_iAmmo1)
 		{
@@ -739,7 +746,7 @@ public:
 		return false;
 	}
 
-	int PrimaryInRange(float fRange) const
+	int PrimaryInRange(float fRange)
 	{
 		if (m_pWeaponInfo->PrimaryInRange(fRange))
 			return 0;
@@ -753,21 +760,21 @@ public:
 		return 0;
 	}
 
-	float PrimMinRange() const
+	float PrimMinRange()
 	{
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->PrimMinRange();
 		return 0;
 	}
 
-	BOOL SecondaryInRange(float fRange) const
+	BOOL SecondaryInRange(float fRange)
 	{
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->SecondaryInRange(fRange);
 		return 1;
 	}
 
-	BOOL CanGetMorePrimaryAmmo() const
+	BOOL CanGetMorePrimaryAmmo()
 	{
 		switch (m_iId)
 		{
@@ -783,34 +790,34 @@ public:
 		return !IsMelee() && PrimaryAmmo() < m_pWeaponInfo->MaxPrimaryAmmo();
 	}
 
-	BOOL IsPrimary() const
+	BOOL IsPrimary()
 	{
 		assert(m_pWeaponInfo != NULL);
 
 		return m_pWeaponInfo->IsPrimary();
 	}
 
-	BOOL IsSecondary() const
+	BOOL IsSecondary()
 	{
 		assert(m_pWeaponInfo != NULL);
 
 		return m_pWeaponInfo->IsSecondary();
 	}
 
-	BOOL NeedToReload() const;
+	BOOL NeedToReload();
 
 	BOOL CanReload();
 
-	BOOL CanShootPrimary(const edict_t* pEdict, float flFireDist, float flWallDist);
+	BOOL CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist);
 
-	BOOL CanShootSecondary() const
+	BOOL CanShootSecondary()
 	{
-		const int iSecAmmo = SecondaryAmmo();
+		int iSecAmmo = SecondaryAmmo();
 
 		return iSecAmmo == -1 || iSecAmmo > 0;
 	}
 
-	int PrimaryAmmo() const
+	int PrimaryAmmo()
 	{
 		if (m_iAmmo1)
 			return *m_iAmmo1;
@@ -818,7 +825,7 @@ public:
 		return -1;
 	}
 
-	int SecondaryAmmo() const
+	int SecondaryAmmo()
 	{
 		if (m_iAmmo2)
 			return *m_iAmmo2;
@@ -826,7 +833,7 @@ public:
 		return -1;
 	}
 
-	BOOL HasWeapon(const edict_t* pEdict);
+	BOOL HasWeapon(edict_t* pEdict);
 
 	void RemoveWeapon()
 	{
@@ -838,7 +845,7 @@ public:
 		m_iClip = iClip;
 	}
 
-	char* GetClassname() const
+	char* GetClassname()
 	{
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->GetClassname();
@@ -846,14 +853,14 @@ public:
 			return nullptr;
 	}
 
-	BOOL IsMelee() const
+	BOOL IsMelee()
 	{
 		if (m_pWeaponInfo == nullptr)
 			return true;
 		return m_pWeaponInfo->IsMelee();
 	}
 
-	BOOL CanBeUsedUnderWater() const
+	BOOL CanBeUsedUnderWater()
 	{
 		if (m_pWeaponInfo == nullptr)
 			return true;
@@ -861,7 +868,7 @@ public:
 		return m_pWeaponInfo->CanBeUsedUnderWater();
 	}
 
-	int GetPriority() const
+	int GetPriority()
 	{
 		if (m_pWeaponInfo == nullptr)
 		{
@@ -887,12 +894,12 @@ public:
 		m_iReserve = iRes;
 	}
 
-	int getReserve() const
+	int getReserve()
 	{
 		return m_iReserve;
 	}
 
-	int getMaxClip() const
+	int getMaxClip()
 	{
 		return m_iMaxClip;
 	}
@@ -935,11 +942,13 @@ public:
 
 	void RemoveWeapons()
 	{
-		for (int i = 0; i < MAX_WEAPONS; i++)
+		int i;
+
+		for (i = 0; i < MAX_WEAPONS; i++)
 			this->RemoveWeapon(i);
 	}
 
-	BOOL HasWeapon(edict_t* pEdict, const char* szClassname);
+	BOOL HasWeapon(edict_t* pEdict, char* szClassname);
 
 	BOOL HasWeapon(edict_t* pEdict, int iId)
 	{
@@ -978,7 +987,9 @@ public:
 
 	int GetPrimaryWeaponId()
 	{
-		for (int i = 0; i < MAX_WEAPONS; i++)
+		int i;
+
+		for (i = 0; i < MAX_WEAPONS; i++)
 		{
 			if (!m_Weapons[i].HasWeapon(nullptr))
 				continue;
@@ -991,7 +1002,9 @@ public:
 
 	int GetSecondaryWeaponId()
 	{
-		for (int i = 0; i < MAX_WEAPONS; i++)
+		int i;
+
+		for (i = 0; i < MAX_WEAPONS; i++)
 		{
 			if (!m_Weapons[i].HasWeapon(nullptr))
 				continue;
@@ -1017,7 +1030,7 @@ private:
 class CompareBotWeapon
 {
 public:
-	bool operator()(CBotWeapon* a, CBotWeapon* b) const
+	bool operator()(CBotWeapon* a, CBotWeapon* b)
 	{
 		return a->GetPriority() < b->GetPriority();
 	}

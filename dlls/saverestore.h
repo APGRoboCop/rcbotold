@@ -21,9 +21,9 @@ class CBaseEntity;
 class CSaveRestoreBuffer
 {
 public:
-	CSaveRestoreBuffer( void );
+	CSaveRestoreBuffer();
 	CSaveRestoreBuffer( SAVERESTOREDATA *pdata );
-	~CSaveRestoreBuffer( void );
+	~CSaveRestoreBuffer();
 
 	int			EntityIndex( entvars_t *pevLookup );
 	int			EntityIndex( edict_t *pentLookup );
@@ -47,7 +47,7 @@ protected:
 class CSave : public CSaveRestoreBuffer
 {
 public:
-	CSave( SAVERESTOREDATA *pdata ) : CSaveRestoreBuffer( pdata ) {};
+	CSave( SAVERESTOREDATA *pdata ) : CSaveRestoreBuffer( pdata ) {}
 
 	void	WriteShort( const char *pname, const short *value, int count );
 	void	WriteInt( const char *pname, const int *value, int count );		// Save an int
@@ -82,24 +82,24 @@ typedef struct
 class CRestore : public CSaveRestoreBuffer
 {
 public:
-	CRestore( SAVERESTOREDATA *pdata ) : CSaveRestoreBuffer( pdata ) { m_global = 0; m_precache = true; }
+	CRestore( SAVERESTOREDATA *pdata ) : CSaveRestoreBuffer( pdata ) { m_global = 0; m_precache = 1; }
 
 	int		ReadEntVars( const char *pname, entvars_t *pev );		// entvars_t
 	int		ReadFields( const char *pname, void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCount );
 	int		ReadField( void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCount, int startField, int size, char *pName, void *pData );
-	int		ReadInt( void );
-	short	ReadShort( void );
+	int		ReadInt();
+	short	ReadShort();
 	int		ReadNamedInt( const char *pName );
 	char	*ReadNamedString( const char *pName );
-	int		Empty( void ) { return (m_pdata == nullptr) || ((m_pdata->pCurrentData-m_pdata->pBaseData)>=m_pdata->bufferSize); }
-	inline	void SetGlobalMode( int global ) { m_global = global; }
+	int		Empty() { return (m_pdata == nullptr) || ((m_pdata->pCurrentData-m_pdata->pBaseData)>=m_pdata->bufferSize); }
+	void	SetGlobalMode( int global ) { m_global = global; }
 	void	PrecacheMode( BOOL mode ) { m_precache = mode; }
 
 private:
-	char	*BufferPointer( void );
+	char	*BufferPointer();
 	void	BufferReadBytes( char *pOutput, int size );
 	void	BufferSkipBytes( int bytes );
-	int		BufferSkipZString( void );
+	int		BufferSkipZString();
 	int		BufferCheckZString( const char *string );
 
 	void	BufferReadHeader( HEADER *pheader );
@@ -143,8 +143,8 @@ class CGlobalState
 {
 public:
 					CGlobalState();
-	void			Reset( void );
-	void			ClearStates( void );
+	void			Reset();
+	void			ClearStates();
 	void			EntityAdd( string_t globalname, string_t mapName, GLOBALESTATE state );
 	void			EntitySetState( string_t globalname, GLOBALESTATE state );
 	void			EntityUpdate( string_t globalname, string_t mapname );
@@ -156,7 +156,7 @@ public:
 	static TYPEDESCRIPTION m_SaveData[];
 
 //#ifdef _DEBUG
-	void			DumpGlobals( void );
+	void			DumpGlobals();
 //#endif
 
 private:

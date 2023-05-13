@@ -82,7 +82,7 @@ extern "C" EXPORT void SaveWriteFields( SAVERESTOREDATA *pSaveData, const char *
 extern "C" EXPORT void SaveReadFields( SAVERESTOREDATA *pSaveData, const char *pname, void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCount );
 extern "C" EXPORT void SaveGlobalState( SAVERESTOREDATA *pSaveData );
 extern "C" EXPORT void RestoreGlobalState( SAVERESTOREDATA *pSaveData );
-extern "C" EXPORT void ResetGlobalState( void );
+extern "C" EXPORT void ResetGlobalState();
 
 typedef enum { USE_OFF = 0, USE_ON = 1, USE_SET = 2, USE_TOGGLE = 3 } USE_TYPE;
 
@@ -194,7 +194,7 @@ public:
 	virtual void	SetToggleState( int state ) {}
 	virtual void    StartSneaking() {}
 	virtual void    StopSneaking() {}
-	virtual BOOL	OnControls( entvars_t *onpev ) { return false; }
+	virtual BOOL	OnControls( entvars_t *pev ) { return false; }
 	virtual BOOL    IsSneaking() { return false; }
 	virtual BOOL	IsAlive() { return (pev->deadflag == DEAD_NO) && pev->health > 0; }
 	virtual BOOL	IsBSPModel() { return pev->solid == SOLID_BSP || pev->movetype == MOVETYPE_PUSHSTEP; }
@@ -226,13 +226,13 @@ public:
 	virtual void Blocked( CBaseEntity *pOther ) { if (m_pfnBlocked) (this->*m_pfnBlocked)( pOther ); }
 
 	// allow engine to allocate instance data
-    void *operator new( size_t stAllocateBlock, entvars_t *newpev )
+    void *operator new( size_t stAllocateBlock, entvars_t *pev )
 	{
-		return (void *)ALLOC_PRIVATE(ENT(newpev), stAllocateBlock);
+		return (void *)ALLOC_PRIVATE(ENT(pev), stAllocateBlock);
 	}
 
 	// don't use this.
-#if defined(_MSC_VER) && _MSC_VER >= 1200 // only build this code if MSVC++ 6.0 or higher
+#if _MSC_VER >= 1200 // only build this code if MSVC++ 6.0 or higher
 	void operator delete(void *pMem, entvars_t *pev)
 	{
 		pev->flags |= FL_KILLME;
@@ -248,8 +248,7 @@ public:
 	void EXPORT SUB_FadeOut ();
 	void EXPORT SUB_CallUseToggle() { this->Use( this, this, USE_TOGGLE, 0 ); }
 	int			ShouldToggle( USE_TYPE useType, BOOL currentState );
-	void		FireBullets( ULONG	cShots, Vector  vecSrc, Vector	vecDirShooting,	Vector	vecSpread, float flDistance, int iBulletType, int iTracerFreq = 4, int iDamage = 0, entvars_t *pevAttacker = nullptr  );
-	Vector		FireBulletsPlayer( ULONG	cShots, Vector  vecSrc, Vector	vecDirShooting,	Vector	vecSpread, float flDistance, int iBulletType, int iTracerFreq = 4, int iDamage = 0, entvars_t *pevAttacker = nullptr, int shared_rand = 0 );						 
+	void		FireBullets( ULONG	cShots, Vector  vecSrc, Vector	vecDirShooting,	Vector	vecSpread, float flDistance, int iBulletType, int iTracerFreq = 4, int iDamage = 0, entvars_t *pevAttacker = nullptr);
 
 	virtual CBaseEntity *Respawn() { return nullptr; }
 
@@ -266,7 +265,7 @@ public:
 		if ( !pent )
 			pent = ENT(0);
 		CBaseEntity *pEnt = (CBaseEntity *)GET_PRIVATE(pent); 
-		ASSERT(pEnt!=nullptr); 
+		ASSERT(pEnt!=NULL); 
 		return pEnt; 
 	}
 #else
@@ -279,8 +278,8 @@ public:
 	}
 #endif
 
-	static CBaseEntity *Instance( entvars_t *instpev ) { return Instance( ENT( instpev ) ); }
-	static CBaseEntity *Instance( int inst_eoffset) { return Instance( ENT( inst_eoffset) ); }
+	static CBaseEntity *Instance( entvars_t *pev ) { return Instance( ENT( pev ) ); }
+	static CBaseEntity *Instance( int eoffset) { return Instance( ENT( eoffset) ); }
 
 	CBaseMonster *GetMonsterPointer( entvars_t *pevMonster ) 
 	{ 
@@ -343,7 +342,7 @@ public:
 
 
 	//
-	static CBaseEntity *Create( char *szName, const Vector &vecOrigin, const Vector &vecAngles, edict_t *pentOwner = nullptr );
+	static CBaseEntity *Create( char *szName, const Vector &vecOrigin, const Vector &vecAngles, edict_t *pentOwner = nullptr);
 
 	virtual BOOL FBecomeProne() {return false;}
 	edict_t *edict() { return ENT( pev ); }
@@ -405,8 +404,8 @@ public:
 class CPointEntity : public CBaseEntity
 {
 public:
-	void	Spawn() override;
-	int	ObjectCaps() override { return CBaseEntity :: ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
+	void	Spawn();
+	virtual int	ObjectCaps() { return CBaseEntity :: ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
 private:
 };
 
@@ -439,14 +438,14 @@ void PlayLockSounds(entvars_t *pev, locksound_t *pls, int flocked, int fbutton);
 class CMultiSource : public CPointEntity
 {
 public:
-	void Spawn( ) override;
-	void KeyValue( KeyValueData *pkvd ) override;
-	void Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value ) override;
-	int	ObjectCaps() override { return (CPointEntity::ObjectCaps() | FCAP_MASTER); }
-	BOOL IsTriggered( CBaseEntity *pActivator ) override;
+	void Spawn( );
+	void KeyValue( KeyValueData *pkvd );
+	void Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
+	int	ObjectCaps() { return (CPointEntity::ObjectCaps() | FCAP_MASTER); }
+	BOOL IsTriggered( CBaseEntity *pActivator );
 	void EXPORT Register();
-	int		Save( CSave &save ) override;
-	int		Restore( CRestore &restore ) override;
+	virtual int		Save( CSave &save );
+	virtual int		Restore( CRestore &restore );
 
 	static	TYPEDESCRIPTION m_SaveData[];
 
@@ -466,9 +465,9 @@ public:
 	float		m_flDelay;
 	int			m_iszKillTarget;
 
-	void	KeyValue( KeyValueData* pkvd) override;
-	int		Save( CSave &save ) override;
-	int		Restore( CRestore &restore ) override;
+	virtual void	KeyValue( KeyValueData* pkvd);
+	virtual int		Save( CSave &save );
+	virtual int		Restore( CRestore &restore );
 	
 	static	TYPEDESCRIPTION m_SaveData[];
 	// common member functions
@@ -480,8 +479,8 @@ public:
 class CBaseAnimating : public CBaseDelay
 {
 public:
-	int		Save( CSave &save ) override;
-	int		Restore( CRestore &restore ) override;
+	virtual int		Save( CSave &save );
+	virtual int		Restore( CRestore &restore );
 
 	static	TYPEDESCRIPTION m_SaveData[];
 
@@ -498,7 +497,7 @@ public:
 	void InitBoneControllers ();
 	float SetBlending ( int iBlender, float flValue );
 	void GetBonePosition ( int iBone, Vector &origin, Vector &angles );
-	void GetAutomovement( Vector &origin, Vector &angles, float flInterval = 0.1 );
+	void GetAutomovement( Vector &origin, Vector &angles, float flInterval = 0.1f );
 	int  FindTransition( int iEndingSequence, int iGoalSequence, int *piDir );
 	void GetAttachment ( int iAttachment, Vector &origin, Vector &angles );
 	void SetBodygroup( int iGroup, int iValue );
@@ -523,7 +522,7 @@ public:
 class CBaseToggle : public CBaseAnimating
 {
 public:
-	void				KeyValue( KeyValueData *pkvd ) override;
+	void				KeyValue( KeyValueData *pkvd );
 
 	TOGGLE_STATE		m_toggle_state;
 	float				m_flActivateFinished;//like attack_finished, but for doors
@@ -547,13 +546,13 @@ public:
 
 	int					m_bitsDamageInflict;	// DMG_ damage type that the door or tigger does
 
-	int		Save( CSave &save ) override;
-	int		Restore( CRestore &restore ) override;
+	virtual int		Save( CSave &save );
+	virtual int		Restore( CRestore &restore );
 
 	static	TYPEDESCRIPTION m_SaveData[];
 
-	int		GetToggleState() override { return m_toggle_state; }
-	float	GetDelay() override { return m_flWait; }
+	virtual int		GetToggleState() { return m_toggle_state; }
+	virtual float	GetDelay() { return m_flWait; }
 
 	// common member functions
 	void LinearMove( Vector	vecDest, float flSpeed );
@@ -696,10 +695,10 @@ char *ButtonSound( int sound );				// get string of button sound number
 class CBaseButton : public CBaseToggle
 {
 public:
-	void Spawn() override;
-	void Precache() override;
+	void Spawn();
+	virtual void Precache();
 	void RotSpawn();
-	void KeyValue( KeyValueData* pkvd) override;
+	virtual void KeyValue( KeyValueData* pkvd);
 
 	void ButtonActivate( );
 	void SparkSoundCache();
@@ -711,16 +710,16 @@ public:
 	void EXPORT ButtonReturn();
 	void EXPORT ButtonBackHome();
 	void EXPORT ButtonUse ( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
-	int		TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType ) override;
-	int		Save( CSave &save ) override;
-	int		Restore( CRestore &restore ) override;
+	virtual int		TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType );
+	virtual int		Save( CSave &save );
+	virtual int		Restore( CRestore &restore );
 	
 	enum BUTTON_CODE { BUTTON_NOTHING, BUTTON_ACTIVATE, BUTTON_RETURN };
 	BUTTON_CODE	ButtonResponseToTouch();
 	
 	static	TYPEDESCRIPTION m_SaveData[];
 	// Buttons that don't take damage can be IMPULSE used
-	int	ObjectCaps() override { return (CBaseToggle:: ObjectCaps() & ~FCAP_ACROSS_TRANSITION) | (pev->takedamage?0:FCAP_IMPULSE_USE); }
+	virtual int	ObjectCaps() { return (CBaseToggle:: ObjectCaps() & ~FCAP_ACROSS_TRANSITION) | (pev->takedamage?0:FCAP_IMPULSE_USE); }
 
 	BOOL	m_fStayPushed;	// button stays pushed in until touched again?
 	BOOL	m_fRotating;		// a rotating button?  default is a sliding button.
@@ -788,9 +787,9 @@ typedef struct _SelAmmo
 class CWorld : public CBaseEntity
 {
 public:
-	void Spawn() override;
-	void Precache() override;
-	void KeyValue( KeyValueData *pkvd ) override;
+	void Spawn();
+	void Precache();
+	void KeyValue( KeyValueData *pkvd );
 };
 
 //
@@ -821,11 +820,11 @@ enum TANKBULLET
 class CFuncTank : public CBaseEntity
 {
 public:
-	void	Spawn() override;
-	void	Precache() override;
-	void	KeyValue( KeyValueData *pkvd ) override;
-	void	Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value ) override;
-	void	Think() override;
+	void	Spawn();
+	void	Precache();
+	void	KeyValue( KeyValueData *pkvd );
+	void	Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
+	void	Think();
 	void	TrackTarget();
 
 	virtual void Fire( const Vector &barrelEnd, const Vector &forward, entvars_t *pevAttacker );
@@ -838,10 +837,10 @@ public:
 	void	StopRotSound();
 
 	// Bmodels don't go across transitions
-	int	ObjectCaps() override { return CBaseEntity :: ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
+	virtual int	ObjectCaps() { return CBaseEntity :: ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
 
 	BOOL IsActive() { return (pev->spawnflags & SF_TANK_ACTIVE)?true:false; }
-	void TankActivate() { pev->spawnflags |= SF_TANK_ACTIVE; pev->nextthink = pev->ltime + 0.1; m_fireLast = 0; }
+	void TankActivate() { pev->spawnflags |= SF_TANK_ACTIVE; pev->nextthink = pev->ltime + 0.1f; m_fireLast = 0; }
 	void TankDeactivate() { pev->spawnflags &= ~SF_TANK_ACTIVE; m_fireLast = 0; StopRotSound(); }
 	BOOL CanFire() { return (gpGlobals->time - m_lastSightTime) < m_persist; }
 	BOOL		InRange( float range );
@@ -860,11 +859,11 @@ public:
 
 	void		AdjustAnglesForBarrel( Vector &angles, float distance );
 
-	int	Save( CSave &save ) override;
-	int	Restore( CRestore &restore ) override;
+	virtual int	Save( CSave &save );
+	virtual int	Restore( CRestore &restore );
 	static	TYPEDESCRIPTION m_SaveData[];
 
-	BOOL OnControls( entvars_t *pevTest ) override;
+	BOOL OnControls( entvars_t *pevTest );
 	BOOL StartControl( CBasePlayer* pController );
 	void StopControl();
 	void ControllerPostFrame();

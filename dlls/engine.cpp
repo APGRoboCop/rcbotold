@@ -105,11 +105,9 @@ int pfnPrecacheSound(char* s)
 }
 void pfnSetModel(edict_t* e, const char* m)
 {
-	if (debug_engine) {
-		fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetModel: edict=%x %s\n", reinterpret_cast<unsigned>(e), m);
-		fclose(fp);
-	}
+	if (debug_engine) { fp = fopen("bot.txt", "a");
+		fprintf(fp, "pfnSetModel: edict=%x %s\n", unsigned(e), m);
+		fclose(fp); }
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -138,11 +136,9 @@ int pfnModelFrames(int modelIndex)
 }
 void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 {
-	if (debug_engine) {
-		fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetSize: %x\n", reinterpret_cast<unsigned>(e));
-		fclose(fp);
-	}
+	if (debug_engine) { fp = fopen("bot.txt", "a");
+		fprintf(fp, "pfnSetSize: %x\n", unsigned(e));
+		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -153,10 +149,12 @@ void pfnChangeLevel(char* s1, char* s2)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a"); fprintf(fp, "pfnChangeLevel:\n"); fclose(fp); }
 
+	CBot* pBot;
+
 	// kick any bot off of the server after time/frag limit...
 	for (int index = 0; index < MAX_PLAYERS; index++)
 	{
-		CBot* pBot = &gBotGlobals.m_Bots[index];
+		pBot = &gBotGlobals.m_Bots[index];
 
 		if (pBot->m_bIsUsed)  // is this slot used?
 		{
@@ -318,7 +316,7 @@ void pfnRemoveEntity(edict_t* e)
 	if (debug_engine)
 	{
 		fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnRemoveEntity: %x\n", reinterpret_cast<unsigned>(e));
+		fprintf(fp, "pfnRemoveEntity: %x\n", unsigned(e));
 		if (e->v.model != 0)
 			fprintf(fp, " model=%s\n", STRING(e->v.model));
 		fclose(fp);
@@ -392,7 +390,12 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 {
 	if (entity != nullptr)
 	{
-		const Vector vOrigin = EntityOrigin(entity);
+		int i;
+		CBot* pBot;
+
+		Vector vOrigin;
+
+		vOrigin = EntityOrigin(entity);
 
 		eSoundType iSound = SOUND_UNKNOWN;
 
@@ -438,11 +441,13 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 			{
 			case MOD_NS:
 			{
+				//NS sounds like gorges / taunts/ radio etc
+				int sample_num = 0;
+
 				// Starts with "vox/" ?? (Do it manually...)
 				if (sample[0] == 'v' && sample[1] == 'o' &&
 					sample[2] == 'x' && sample[3] == '/')
 				{
-					int sample_num;
 					if (!strncmp(&sample[4], "ssay", 4)) // Marine Said Something
 					{
 						sample_num = atoi(&sample[8]);
@@ -495,11 +500,11 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 			}
 		}
 
-		const edict_t* pEntityOwner = entity->v.owner;
+		edict_t* pEntityOwner = entity->v.owner;
 
-		for (int i = 0; i < 32; i++)
+		for (i = 0; i < 32; i++)
 		{
-			CBot* pBot = &gBotGlobals.m_Bots[i];
+			pBot = &gBotGlobals.m_Bots[i];
 
 			if (pBot == nullptr)
 				continue;
@@ -732,7 +737,7 @@ void pfnWriteByte(int iValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeByte(iValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute(&iValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&iValue), gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -751,12 +756,12 @@ void pfnWriteChar(int iValue)
 		if (gBotGlobals.m_CurrentMessage)
 		{
 			if (gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage)//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
-				ALERT(at_console, "WRITE_CHAR(%c)\n", static_cast<char>(iValue));
+				ALERT(at_console, "WRITE_CHAR(%c)\n", (char)iValue);
 
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
-				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeChar(static_cast<char>(iValue));
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeChar((char)iValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute(&iValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&iValue), gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -780,7 +785,7 @@ void pfnWriteShort(int iValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeShort(iValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute(&iValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&iValue), gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -805,7 +810,7 @@ void pfnWriteLong(int iValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeLong(iValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute(&iValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&iValue), gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -830,7 +835,7 @@ void pfnWriteAngle(float flValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeAngle(flValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute(&flValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&flValue), gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -855,7 +860,7 @@ void pfnWriteCoord(float flValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeCoord(flValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute(&flValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&flValue), gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -905,7 +910,7 @@ void pfnWriteEntity(int iValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeEntity(INDEXENT(iValue));
 			else
-				gBotGlobals.m_CurrentMessage->execute(&iValue, gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&iValue), gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -1073,7 +1078,7 @@ void* pfnGetModelPtr(edict_t* pEdict)
 
 int pfnRegUserMsg(const char* pszName, int iSize)
 {
-	const int msg = 0;
+	int msg = 0;
 
 #ifdef RCBOT_META_BUILD
 
@@ -1315,7 +1320,7 @@ void pfnFadeClientVolume(const edict_t* pEdict, int fadePercent, int fadeOutSeco
 	(*g_engfuncs.pfnFadeClientVolume)(pEdict, fadePercent, fadeOutSeconds, holdTime, fadeInSeconds);
 #endif
 }
-void pfnSetClientMaxspeed(const edict_t* pEdict, float fNewMaxspeed)
+void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 {
 	// Is this player a bot?
 	CBot* pBot = UTIL_GetBotPointer(pEdict);
@@ -1325,11 +1330,9 @@ void pfnSetClientMaxspeed(const edict_t* pEdict, float fNewMaxspeed)
 		pBot->m_fMaxSpeed = fNewMaxspeed;
 	}
 
-	if (debug_engine) {
-		fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", reinterpret_cast<unsigned>(pEdict), fNewMaxspeed);
-		fclose(fp);
-	}
+	if (debug_engine) { fp = fopen("bot.txt", "a");
+		fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", unsigned(pEdict), fNewMaxspeed);
+		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1399,14 +1402,18 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 	{
 		if (pEdict)
 		{
-			const int iOldPlayerRepId = GetPlayerEdictRepId(pEdict);
+			CBot* pBot;
+			CBotReputation* pRep;
+			CBotReputations* pRepList;
+			int i;
+
+			int iOldPlayerRepId = GetPlayerEdictRepId(pEdict);
 
 			if (iOldPlayerRepId != -1) // otherwise : error...
 			{
-				CBotReputation* pRep;
-				for (int i = 0; i < MAX_PLAYERS; i++)
+				for (i = 0; i < MAX_PLAYERS; i++)
 				{
-					CBot* pBot = &gBotGlobals.m_Bots[i];
+					pBot = &gBotGlobals.m_Bots[i];
 
 					if (pBot && pBot->m_iRespawnState == RESPAWN_IDLE)
 					{
@@ -1415,13 +1422,13 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 							if (pBot->m_pEdict == pEdict)
 								continue;
 
-							CBotReputations* pRepList = &pBot->m_Profile.m_Rep;
+							pRepList = &pBot->m_Profile.m_Rep;
 
 							if ((pRep = pBot->m_Profile.m_Rep.GetRep(iOldPlayerRepId)) != nullptr)
 							{
 								// New name = value
 
-								const int iNewPlayerRepId = GetPlayerRepId(value);
+								int iNewPlayerRepId = GetPlayerRepId(value);
 
 								if (pBot->m_Profile.m_Rep.GetRep(iNewPlayerRepId) == nullptr)
 									pRepList->AddRep(iNewPlayerRepId, pRep->CurrentRep());
@@ -1435,7 +1442,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 				}
 			}
 
-			const int iFlags = pEdict->v.flags;
+			int iFlags = pEdict->v.flags;
 
 			if (iFlags & FL_CLIENT && !(iFlags & FL_FAKECLIENT))
 			{
@@ -1487,11 +1494,9 @@ int pfnGetPlayerUserId(edict_t* e)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) {
-			fp = fopen("bot.txt", "a");
-			fprintf(fp, "pfnGetPlayerUserId: %x\n", reinterpret_cast<unsigned>(e));
-			fclose(fp);
-		}
+		if (debug_engine) { fp = fopen("bot.txt", "a");
+			fprintf(fp, "pfnGetPlayerUserId: %x\n", unsigned(e));
+			fclose(fp); }
 	}
 
 #ifdef RCBOT_META_BUILD
@@ -1504,7 +1509,7 @@ int pfnGetPlayerUserId(edict_t* e)
 const char* pfnGetPlayerAuthId(edict_t* e)
 {
 	static const char* BOT_STEAM_ID = "BOT";
-	const BOOL bIsBot = UTIL_GetBotPointer(e) != nullptr;
+	BOOL bIsBot = UTIL_GetBotPointer(e) != nullptr;
 #ifdef RCBOT_META_BUILD
 
 	if (bIsBot)
@@ -1561,11 +1566,9 @@ unsigned int pfnGetPlayerWONId(edict_t* e)
 		}
 	}
 
-	if (debug_engine) {
-		fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnGetPlayerWONId: %x\n", reinterpret_cast<unsigned>(e));
-		fclose(fp);
-	}
+	if (debug_engine) { fp = fopen("bot.txt", "a");
+		fprintf(fp, "pfnGetPlayerWONId: %x\n", unsigned(e));
+		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1807,10 +1810,11 @@ const char* pfnCmd_Args()
 	// command we are holding here. Of course, real clients commands are still retrieved the
 	// normal way, by asking the engine.
 
+	extern char* g_argv;
+
 	// is this a bot issuing that client command ?
 	if (gBotGlobals.m_bIsFakeClientCommand)
 	{
-		extern char* g_argv;
 #ifdef RCBOT_META_BUILD
 		// is it a "say" or "say_team" client command ?
 		if (strncmp("say ", g_argv, 4) == 0)
@@ -1846,10 +1850,11 @@ const char* pfnCmd_Argv(int argc)
 	// DLL for a command we are holding here. Of course, real clients commands are still retrieved
 	// the normal way, by asking the engine.
 
+	extern char* g_argv;
+
 #ifdef RCBOT_META_BUILD
 	if (gBotGlobals.m_bIsFakeClientCommand)
 	{
-		extern char* g_argv;
 		RETURN_META_VALUE(MRES_SUPERCEDE, GetArg(g_argv, argc));
 	}
 	else
@@ -1875,7 +1880,7 @@ const char* GetArg(const char* command, int arg_number)
 	// either to the actual engine functions (when the caller is a real client), either on
 	// our function here, which does the same thing, when the caller is a bot.
 
-	int i, index = 0, arg_count = 0, fieldstart, fieldstop;
+	int length, i, index = 0, arg_count = 0, fieldstart, fieldstop;
 
 	static char arg[1024];
 
@@ -1885,7 +1890,7 @@ const char* GetArg(const char* command, int arg_number)
 	if (!command || !*command)
 		return nullptr;
 
-	const int length = strlen(command); // get length of command
+	length = strlen(command); // get length of command
 
 	// while we have not reached end of line
 	while (index < length && arg_count <= arg_number)

@@ -364,7 +364,7 @@ void InitMessage ( const char *message );
 				v_comp = EntityOrigin(pEntity) - v_origin;
 				pEntity->v.velocity = v_comp.Normalize() * v_original_vel.Length();
 
-				v_other = CrossProduct(v_comp.Normalize(),Vector(0,0,1));
+				//v_other = CrossProduct(v_comp.Normalize(),Vector(0,0,1));
 
 				//pEntity->v.velocity = CrossProduct(v_comp,v_other);
 			}
@@ -374,6 +374,8 @@ void InitMessage ( const char *message );
 	// Waypoints ON???
 	if (m_bWaypointOn && m_fWaypointDisplayTime < gpGlobals->time)
 	{
+		int n;
+
 		int iCurrentWaypoint;
 
 		edict_t* pPlayer;
@@ -403,7 +405,6 @@ void InitMessage ( const char *message );
 
 			if (iCurrentWaypoint != -1)
 			{
-				int n;
 				// check if path waypointing is on...
 
 				PATH* p;
@@ -881,7 +882,7 @@ void CPendingToolTips::Think(edict_t* pPlayer)
 	{
 		if (m_fNextTime < gpGlobals->time)
 		{
-			const eToolTip theTip = m_Tooltips.GetFrontInfo();
+			eToolTip theTip = m_Tooltips.GetFrontInfo();
 
 			gBotGlobals.SayToolTip(pPlayer, theTip);
 
@@ -929,7 +930,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 
 	while ( (i < MAX_PLAYERS) && m_Clients[i].IsUsed() )
 		i++;*/
-	const int i = ENTINDEX(pPlayer) - 1;
+	int i = ENTINDEX(pPlayer) - 1;
 
 	//	gBotGlobals.m_iNumClients ++;
 
@@ -946,7 +947,9 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 
 		pClient->m_fJoinServerTime = gpGlobals->time;
 
-		const int iPlayerRepId = GetPlayerRepId(STRING(pPlayer->v.netname));
+		int iPlayerRepId = GetPlayerRepId(STRING(pPlayer->v.netname));
+		int i;
+		CBot* pBot;
 
 		pClient->UpdatePlayerRepId(iPlayerRepId);
 
@@ -956,9 +959,9 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 				pClient->AutoWaypoint(1);
 		}
 
-		for (int i1 = 0; i1 < MAX_PLAYERS; i1++)
+		for (i = 0; i < MAX_PLAYERS; i++)
 		{
-			CBot* pBot = &gBotGlobals.m_Bots[i1];
+			pBot = &gBotGlobals.m_Bots[i];
 
 			if (!pBot)
 				continue;
@@ -972,7 +975,9 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 			pBot->m_Profile.m_Rep.AddLoadRep(pBot->m_Profile.m_iProfileId, iPlayerRepId);
 		}
 
-		const CAllowedPlayer* pUser = gBotGlobals.m_BotUsers.GetPlayer(pClient);
+		CAllowedPlayer* pUser;
+
+		pUser = gBotGlobals.m_BotUsers.GetPlayer(pClient);
 
 		if (pUser)
 		{
@@ -1020,9 +1025,12 @@ void CClients::ClientDisconnected(edict_t* pPlayer)
 
 CClient* CClients::GetClientByRepId(const int iRepId)
 {
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	int i;
+	CClient* pClient = nullptr;
+
+	for (i = 0; i < MAX_PLAYERS; i++)
 	{
-		CClient* pClient = &m_Clients[i];
+		pClient = &m_Clients[i];
 
 		if (pClient->IsUsed())
 		{
@@ -1036,7 +1044,9 @@ CClient* CClients::GetClientByRepId(const int iRepId)
 
 void CClients::ClientDisconnected(CClient* pClient)
 {
-	const int iPlayerRepId = pClient->GetPlayerRepId();
+	int iPlayerRepId = pClient->GetPlayerRepId();
+	int i;
+	CBot* pBot;
 
 	edict_t* pPlayer = pClient->GetPlayer();
 
@@ -1062,13 +1072,13 @@ void CClients::ClientDisconnected(CClient* pClient)
 	// give a few seconds before adding more bots.
 	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 8.0f;
 
-	const BOOL RemoveGreeting = iPlayerIndex != -1;
+	BOOL RemoveGreeting = iPlayerIndex != -1;
 
 	if (iPlayerRepId >= 0)
 	{
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (i = 0; i < MAX_PLAYERS; i++)
 		{
-			CBot* pBot = &gBotGlobals.m_Bots[i];
+			pBot = &gBotGlobals.m_Bots[i];
 
 			if (!pBot)
 				continue;
