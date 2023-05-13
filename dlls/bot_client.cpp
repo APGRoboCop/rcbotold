@@ -217,7 +217,7 @@ void BotClient_TS_State::execute(void* p, int iIndex)
 	switch (POINTER_VALUE(state))
 	{
 	case 0:
-		gBotGlobals.m_Bots[iIndex].m_iTS_State = (eTS_State) * static_cast<int*>(p);
+		gBotGlobals.m_Bots[iIndex].m_iTS_State = eTS_State(*static_cast<int*>(p));
 		break;
 	case 1:
 		break;
@@ -387,7 +387,7 @@ void BotClient_TS_DelObj::execute(void* p, int iIndex)
 	{
 		CBot* pBot;
 
-		int id = *static_cast<int*>(p);
+		const int id = *static_cast<int*>(p);
 
 		for (int i = 0; i < 32; i++)
 		{
@@ -1242,7 +1242,7 @@ void BotClient_Generic_TeamScore::execute(void* p, int iIndex)
 
 	if (gBotGlobals.m_iCurrentMessageState == 0)
 	{
-		char* team = POINTER_TO_STRING(p);
+		const char* team = POINTER_TO_STRING(p);
 
 		if (strcmp(team, "Blue") == 0)
 			iTeam = 0;
@@ -1265,7 +1265,7 @@ void BotClient_NS_HudText::execute(void* p, int iIndex)
 {
 	static short int state = 0;
 	int length = 0;
-	char* msg = nullptr;
+	const char* msg = nullptr;
 
 	if (p == nullptr /*|| (iIndex==-1) */)
 	{
@@ -1343,7 +1343,7 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 {
 	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
-	static AvHMessageID iImpulsemessage = (AvHMessageID)0;
+	static AvHMessageID iImpulsemessage = AvHMessageID(0);
 	static int iSlot = 0;
 	static int iCost = 0;
 	static int iRadius = 0;
@@ -1366,7 +1366,7 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 	switch (POINTER_VALUE(state))
 	{
 	case 0:
-		iImpulsemessage = (AvHMessageID)POINTER_TO_INT(p);
+		iImpulsemessage = AvHMessageID(POINTER_TO_INT(p));
 		break;
 	case 1:
 		iSlot = POINTER_TO_INT(p);
@@ -1382,11 +1382,11 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 		iRadius = POINTER_TO_INT(p);
 		break;
 	case 6:
-		CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, true, iRadius, iSlot);
+		const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, true, iRadius, iSlot);
 
 		if (pBot)
 		{
-			int team = pBot->GetTeam();
+			const int team = pBot->GetTeam();
 
 			if (team >= 0 && team < MAX_TEAMS)
 				gBotGlobals.m_TeamTechs[team].addTech(tech);
@@ -1493,7 +1493,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 
 		CBotTask OrderTaskToAdd = CBotTask(OrderTask, 1, pEntity, iEntityUser3, 0, vOrigin);
 
-		BOOL bHasOrder = !iOrderStatus;
+		const BOOL bHasOrder = !iOrderStatus;
 
 		while (!tempStack.IsEmpty())
 		{
@@ -1576,7 +1576,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 	{
 		if (POINTER_VALUE(state2) == 0)
 		{
-			iOrderType = (AvHOrderType)POINTER_TO_INT(p);
+			iOrderType = AvHOrderType(POINTER_TO_INT(p));
 		}
 		/*else if ( POINTER_VALUE(state2) == 1 )
 		{
@@ -1656,7 +1656,7 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 		// stuff in here to do when a bot is killed by/kills another player/bot
 		if (killer_index == victim_index || killer_index == -1)
 		{
-			edict_t* victim_edict = INDEXENT(victim_index);
+			const edict_t* victim_edict = INDEXENT(victim_index);
 			CBot* pBotVictim = UTIL_GetBotPointer(victim_edict);
 
 			if (pBotVictim)
@@ -1838,7 +1838,7 @@ void BotClient_Generic_WeaponList::execute(void* p, const int iIndex)
 		break;
 	case 8:
 	{
-		int iHackedId = iId;
+		const int iHackedId = iId;
 
 		//BotMessage(NULL,0,"Weapon ID: %d Classname: \"%s\"",iId,szClassname);
 
@@ -1951,7 +1951,7 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 
 		if (gBotGlobals.IsNS() && !gBotGlobals.IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL))
 		{
-			int enabled = POINTER_TO_INT(p);
+			const int enabled = POINTER_TO_INT(p);
 			pBot->m_Weapons.setHasWeapon(iId, enabled == 1);
 		}
 	default:
@@ -2084,7 +2084,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 		return;
 
 	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
-	int iHealth = POINTER_TO_INT(p);
+	const int iHealth = POINTER_TO_INT(p);
 
 	if (iHealth > pBot->m_fPrevHealth) // more health
 	{
@@ -2094,7 +2094,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 			{
 				edict_t* pSupplier = nullptr;
 				edict_t* pPlayer;
-				float nearest = 96.0f;
+				const float nearest = 96.0f;
 				float dist;
 				int i;
 

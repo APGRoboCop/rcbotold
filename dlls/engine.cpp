@@ -500,7 +500,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 			}
 		}
 
-		edict_t* pEntityOwner = entity->v.owner;
+		const edict_t* pEntityOwner = entity->v.owner;
 
 		for (i = 0; i < 32; i++)
 		{
@@ -737,7 +737,7 @@ void pfnWriteByte(int iValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeByte(iValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&iValue), gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(&iValue, gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -756,12 +756,12 @@ void pfnWriteChar(int iValue)
 		if (gBotGlobals.m_CurrentMessage)
 		{
 			if (gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage)//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
-				ALERT(at_console, "WRITE_CHAR(%c)\n", (char)iValue);
+				ALERT(at_console, "WRITE_CHAR(%c)\n", char(iValue));
 
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
-				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeChar((char)iValue);
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeChar(char(iValue));
 			else
-				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&iValue), gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(&iValue, gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -785,7 +785,7 @@ void pfnWriteShort(int iValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeShort(iValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&iValue), gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(&iValue, gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -810,7 +810,7 @@ void pfnWriteLong(int iValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeLong(iValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&iValue), gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(&iValue, gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -835,7 +835,7 @@ void pfnWriteAngle(float flValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeAngle(flValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&flValue), gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(&flValue, gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -860,7 +860,7 @@ void pfnWriteCoord(float flValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeCoord(flValue);
 			else
-				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&flValue), gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(&flValue, gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -910,7 +910,7 @@ void pfnWriteEntity(int iValue)
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
 				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeEntity(INDEXENT(iValue));
 			else
-				gBotGlobals.m_CurrentMessage->execute(static_cast<void*>(&iValue), gBotGlobals.m_iBotMsgIndex);
+				gBotGlobals.m_CurrentMessage->execute(&iValue, gBotGlobals.m_iBotMsgIndex);
 		}
 	}
 #ifdef RCBOT_META_BUILD
@@ -1407,7 +1407,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 			CBotReputations* pRepList;
 			int i;
 
-			int iOldPlayerRepId = GetPlayerEdictRepId(pEdict);
+			const int iOldPlayerRepId = GetPlayerEdictRepId(pEdict);
 
 			if (iOldPlayerRepId != -1) // otherwise : error...
 			{
@@ -1428,7 +1428,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 							{
 								// New name = value
 
-								int iNewPlayerRepId = GetPlayerRepId(value);
+								const int iNewPlayerRepId = GetPlayerRepId(value);
 
 								if (pBot->m_Profile.m_Rep.GetRep(iNewPlayerRepId) == nullptr)
 									pRepList->AddRep(iNewPlayerRepId, pRep->CurrentRep());
@@ -1442,7 +1442,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 				}
 			}
 
-			int iFlags = pEdict->v.flags;
+			const int iFlags = pEdict->v.flags;
 
 			if (iFlags & FL_CLIENT && !(iFlags & FL_FAKECLIENT))
 			{

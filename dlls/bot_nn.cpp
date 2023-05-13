@@ -191,7 +191,7 @@ void NNLayer::save(FILE* bfp)
 
 	fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_NN_LAYER, (int)iTemp);
+	CGenericHeader header = CGenericHeader(LEARNTYPE_NN_LAYER, int(iTemp));
 
 	header.write(bfp);
 
@@ -207,7 +207,7 @@ void NNLayer::load(FILE* bfp)
 
 	fread(&iTemp, sizeof(unsigned int), 1, bfp);
 
-	CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN_LAYER, iTemp);
+	const CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN_LAYER, iTemp);
 	CGenericHeader header2;
 
 	if (header2.read(bfp, header1))
@@ -228,7 +228,7 @@ void NN::load(FILE* bfp)
 
 	fread(&iTemp, sizeof(unsigned int), 1, bfp);
 
-	CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN, iTemp);
+	const CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN, iTemp);
 	CGenericHeader header2;
 
 	if (header2.read(bfp, header1))
@@ -245,7 +245,7 @@ void NN::save(FILE* bfp)
 	if (feof(bfp))
 		return;
 
-	unsigned int iTemp = m_Layers.size();
+	const unsigned int iTemp = m_Layers.size();
 
 	fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 

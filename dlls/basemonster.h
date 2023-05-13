@@ -640,7 +640,7 @@ public:
 	Vector				m_vecEnemyLKP;// last known position of enemy. (enemy's origin)
 
 
-	void KeyValue( KeyValueData *pkvd );
+	void KeyValue( KeyValueData *pkvd ) override;
 
 	void MakeIdealYaw( Vector vecTarget );
 	virtual float ChangeYaw ( int speed );
@@ -656,12 +656,12 @@ public:
 	virtual BOOL	ShouldFadeOnDeath();
 	BOOL FCheckAITrigger();// checks and, if necessary, fires the monster's trigger target. 
 	virtual int IRelationship ( CBaseEntity *pTarget );
-	virtual int TakeHealth( float flHealth, int bitsDamageType );
-	virtual int TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType);
+	int TakeHealth( float flHealth, int bitsDamageType ) override;
+	int TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType) override;
 	int			DeadTakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType );
 	float DamageForce( float damage );
-	virtual void Killed( entvars_t *pevAttacker, int iGib );
-	virtual void PainSound () { return; };
+	void Killed( entvars_t *pevAttacker, int iGib ) override;
+	virtual void PainSound () { return; }
 
 	void RadiusDamage(entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int iClassIgnore, int bitsDamageType );
 	void RadiusDamage(Vector vecSrc, entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int iClassIgnore, int bitsDamageType );
@@ -688,9 +688,9 @@ public:
 	CBaseEntity *CheckTraceHullAttack( float flDist, int iDamage, int iDmgType );
 	virtual BOOL FInViewCone ( CBaseEntity *pEntity );// see if pEntity is in monster's view cone
 	virtual BOOL FInViewCone ( Vector *pOrigin );// see if given location is in monster's view cone
-	void TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType);
+	void TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType) override;
 	void MakeDamageBloodDecal ( int cCount, float flNoise, TraceResult *ptr, const Vector &vecDir );
-	virtual BOOL	IsAlive() { return (pev->deadflag != DEAD_DEAD); }
+	BOOL	IsAlive() override { return (pev->deadflag != DEAD_DEAD); }
 
 };
 

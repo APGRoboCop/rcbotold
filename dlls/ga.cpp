@@ -107,7 +107,7 @@ ga_value CPopulation::totalFitness()
 
 void CPopulation::save(FILE* bfp)
 {
-	unsigned int iSize = m_theIndividuals.size();
+	const unsigned int iSize = m_theIndividuals.size();
 
 	CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
 
@@ -371,7 +371,7 @@ IIndividual* CGA::pick()
 
 IIndividual* CRouletteSelection::select(CPopulation* population)
 {
-	ga_value fFitnessSlice = RANDOM_FLOAT(0, population->totalFitness());
+	const ga_value fFitnessSlice = RANDOM_FLOAT(0, population->totalFitness());
 	ga_value fFitnessSoFar = 0.0f;
 
 	for (unsigned int i = 0; i < population->size(); i++)

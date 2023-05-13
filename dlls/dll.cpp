@@ -115,7 +115,7 @@ BOOL CAllowedPlayer::IsForClient(CClient* pClient)
 	if (*m_szName) //m_szName always true [APG]RoboCop[CL]
 		bSameName = pClient->HasPlayerName(m_szName);
 
-	edict_t* pEdict = pClient->GetPlayer();
+	const edict_t* pEdict = pClient->GetPlayer();
 
 	if (pEdict == nullptr)
 		return false;
@@ -273,7 +273,7 @@ void DispatchTouch(edict_t* pentTouched, edict_t* pentOther)
 	// only don't touch triggers if "no touch" is on the client.
 	if (pentTouched->v.solid == SOLID_TRIGGER)
 	{
-		CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pentOther);
+		const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pentOther);
 
 		if (pClient)
 		{
@@ -423,7 +423,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 {
 	if (gpGlobals->deathmatch)
 	{
-		int iIndex = ENTINDEX(pEntity) - 1;
+		const int iIndex = ENTINDEX(pEntity) - 1;
 
 		CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(iIndex);
 
@@ -461,7 +461,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 		{
 			if (gBotGlobals.m_iMinBots != -1)
 			{
-				int iNumPlayerCheck = UTIL_GetNumClients(true) + 1 + gBotGlobals.GetNumJoiningClients();
+				const int iNumPlayerCheck = UTIL_GetNumClients(true) + 1 + gBotGlobals.GetNumJoiningClients();
 
 				if (gBotGlobals.m_iNumBots > gBotGlobals.m_iMinBots && iNumPlayerCheck > gBotGlobals.m_iMaxBots)
 					// Can it kick a bot to free a slot?
@@ -502,9 +502,9 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 				}
 				else if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_RESERVE_BOT_SLOTS) && gBotGlobals.m_iNumBots < gBotGlobals.m_iMinBots)
 				{
-					int iNumPlayers = UTIL_GetNumClients(true) + 1;
-					int iBotsStillToJoin = gBotGlobals.m_iMinBots - gBotGlobals.m_iNumBots;
-					int iNewSlotsFree = gpGlobals->maxClients - iNumPlayers;
+					const int iNumPlayers = UTIL_GetNumClients(true) + 1;
+					const int iBotsStillToJoin = gBotGlobals.m_iMinBots - gBotGlobals.m_iNumBots;
+					const int iNewSlotsFree = gpGlobals->maxClients - iNumPlayers;
 					// dont allow player to connect as the number of bots
 					// have not been reached yet.
 
@@ -547,7 +547,7 @@ void ClientDisconnect(edict_t* pEntity)
 	// Is the player that is disconnecting an RCbot?
 	CBot* pBot = UTIL_GetBotPointer(pEntity);
 
-	int iIndex = ENTINDEX(pEntity) - 1;
+	const int iIndex = ENTINDEX(pEntity) - 1;
 
 	if (EntityIsCommander(pEntity))
 		gBotGlobals.SetCommander(nullptr);
@@ -631,8 +631,8 @@ void ClientDisconnect(edict_t* pEntity)
 				else
 					BotMessage(NULL,0,"Error: Couldn't Create Bot Profile!");*/
 
-		int iProfileId = pBot->m_Profile.m_iProfileId;
-		int iTeam = pBot->m_Profile.m_iFavTeam;
+		const int iProfileId = pBot->m_Profile.m_iProfileId;
+		const int iTeam = pBot->m_Profile.m_iFavTeam;
 
 		SaveHALBrainForPersonality(&pBot->m_Profile); // save this personality's HAL brain
 
@@ -831,12 +831,12 @@ void ClientCommand(edict_t* pEntity)
 		{
 			///////
 			// see if bot can learn its HAL brain from this person speaking
-			BOOL bSenderIsBot = UTIL_GetBotPointer(pEntity) != nullptr;
+			const BOOL bSenderIsBot = UTIL_GetBotPointer(pEntity) != nullptr;
 
 			if (!bSenderIsBot || gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHAT_REPLY_TO_BOTS))
 			{
 				// team only message?
-				int iTeamOnly = (int)bSayTeamMsg;
+				const int iTeamOnly = bSayTeamMsg;
 
 				char* szMessage = nullptr;
 				//				char *szTempArgument;
@@ -2155,7 +2155,7 @@ void ReadMapConfig()
 	}
 }
 
-edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, Vector vOrigin) //TODO: Experimental [APG]RoboCop[CL]
+edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin) //TODO: Experimental [APG]RoboCop[CL]
 {
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
@@ -2417,7 +2417,7 @@ void CBotCam::Think()
 	if (!m_pCurrentBot || !m_iState)
 		return;
 
-	BOOL bSetAngle = true;
+	const BOOL bSetAngle = true;
 
 	vBotOrigin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 
@@ -2474,7 +2474,7 @@ void CBotCam::Think()
 		{
 			Vector vComp = m_pCurrentBot->m_pEnemy->v.origin + m_pCurrentBot->m_pEnemy->v.view_ofs - vBotOrigin;
 
-			float fLength = vComp.Length();
+			const float fLength = vComp.Length();
 
 			vComp = vComp.Normalize();
 

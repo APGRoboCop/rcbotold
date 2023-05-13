@@ -606,49 +606,49 @@ public:
 		memset((void*)this, 0, sizeof(CWeaponPreset));
 	}
 
-	BOOL CanBeUsedUnderWater()
+	BOOL CanBeUsedUnderWater() override
 	{
 		return m_bCanFireUnderWater;
 	}
 
-	BOOL CanUsePrimary()
+	BOOL CanUsePrimary() override
 	{
 		return m_bHasPrimaryFire;
 	}
 
-	BOOL CanUseSecondary()
+	BOOL CanUseSecondary() override
 	{
 		return m_bHasSecondaryFire;
 	}
 
-	int GetPriority()
+	int GetPriority() override
 	{
 		return m_iPriority;
 	}
 
-	BOOL PrimaryInRange(float fRange)
+	BOOL PrimaryInRange(float fRange) override
 	{
 		return fRange >= m_fPrimMinRange &&
 			fRange <= m_fPrimMaxRange;
 	}
 
-	float PrimMaxRange()
+	float PrimMaxRange() override
 	{
 		return m_fPrimMinRange;
 	}
 
-	float PrimMinRange()
+	float PrimMinRange() override
 	{
 		return m_fPrimMaxRange;
 	}
 
-	BOOL SecondaryInRange(float fRange)
+	BOOL SecondaryInRange(float fRange) override
 	{
 		return fRange >= m_fSecMinRange &&
 			fRange <= m_fSecMaxRange;
 	}
 
-	BOOL IsMelee()
+	BOOL IsMelee() override
 	{
 		return m_bIsMelee == 1;
 	}

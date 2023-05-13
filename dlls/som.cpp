@@ -88,7 +88,7 @@ CSomNeuron* CSom::getBMU(std::vector <ga_value>* inputs)
 void CSom::updateAround(std::vector<ga_value>* inputs, CSomNeuron* bmu)
 {
 	ga_value dist;
-	ga_value nsiz = m_fNSize * m_fNSize;
+	const ga_value nsiz = m_fNSize * m_fNSize;
 
 	for (unsigned int i = 0; i < m_Neurons.size(); i++)
 	{
@@ -198,8 +198,8 @@ void CSomNeuron::displayWeights()
 
 ga_value CSomNeuron::neighbourDistance(CSomNeuron* other, ga_value fDistance)
 {
-	ga_value distx = getX() - other->getX();
-	ga_value disty = getY() - other->getY();
+	const ga_value distx = getX() - other->getX();
+	const ga_value disty = getY() - other->getY();
 
 	return distx * distx + disty * disty;
 }

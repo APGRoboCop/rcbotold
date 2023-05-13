@@ -76,8 +76,8 @@ void CBits::freeMemory()
 
 void CBits::setBit(const int iBit, const BOOL bSet)
 {
-	int iBitStart = iBit / 8;
-	int iBitOffset = iBit % 8;
+	const int iBitStart = iBit / 8;
+	const int iBitOffset = iBit % 8;
 
 	unsigned char* c = &m_cBits[iBitStart];
 
@@ -89,10 +89,10 @@ void CBits::setBit(const int iBit, const BOOL bSet)
 
 BOOL CBits::getBit(const int iBit)
 {
-	int iBitStart = iBit / 8;
-	int iBitOffset = iBit % 8;
+	const int iBitStart = iBit / 8;
+	const int iBitOffset = iBit % 8;
 
-	unsigned char* c = &m_cBits[iBitStart];
+	const unsigned char* c = &m_cBits[iBitStart];
 
 	return (*c & 1 << iBitOffset) == 1 << iBitOffset;
 }
@@ -148,7 +148,7 @@ void CBits::setup(const int iNumBits)
 // memory size
 int CBits::size()
 {
-	return Ceiling((float)m_iNumBits / 8);
+	return Ceiling(static_cast<float>(m_iNumBits) / 8);
 }
 
 void CBits::save(FILE* bfp)

@@ -246,7 +246,7 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	inline int THREAD_CREATE(THREAD_T *tid, void (*func)()) {
 		HANDLE ret;
 		// win32 returns NULL==failure, non-NULL==success
-		ret=CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE) func, nullptr, 0, tid);
+		ret=CreateThread(nullptr, 0, LPTHREAD_START_ROUTINE(func), nullptr, 0, tid);
 		if(ret==nullptr)
 			META_ERROR("Failure starting thread: %s", str_GetLastError());
 		return(ret==nullptr);

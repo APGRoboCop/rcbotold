@@ -40,7 +40,7 @@ public:
 
 	eCanDoStuff getBestAction()
 	{
-		float rand = RANDOM_FLOAT(0, getTotalUtility());
+		const float rand = RANDOM_FLOAT(0, getTotalUtility());
 
 		float total = 0.0f;
 

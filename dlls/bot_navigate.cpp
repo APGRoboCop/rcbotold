@@ -712,7 +712,7 @@ void BotTurnAtWall(CBot* pBot, TraceResult* tr)
 
 BOOL BotCantMoveForward(CBot* pBot, TraceResult* tr)
 {
-	edict_t* pEdict = pBot->m_pEdict;
+	const edict_t* pEdict = pBot->m_pEdict;
 
 	// use some TraceLines to determine if anything is blocking the current
 	// path of the bot.
@@ -769,7 +769,7 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 
 	TraceResult tr;
 	Vector v_jump, v_source, v_dest;
-	edict_t* pEdict = pBot->m_pEdict;
+	const edict_t* pEdict = pBot->m_pEdict;
 
 	// convert current view angle to vectors for TraceLine math...
 
@@ -878,7 +878,7 @@ BOOL BotCanDuckUnder(CBot* pBot)
 
 	TraceResult tr;
 	Vector v_duck, v_source, v_dest;
-	edict_t* pEdict = pBot->m_pEdict;
+	const edict_t* pEdict = pBot->m_pEdict;
 
 	// convert current view angle to vectors for TraceLine math...
 
@@ -974,7 +974,7 @@ BOOL BotCanDuckUnder(CBot* pBot)
 
 BOOL BotCheckWallOnLeft(CBot* pBot)
 {
-	edict_t* pEdict = pBot->m_pEdict;
+	const edict_t* pEdict = pBot->m_pEdict;
 	Vector v_src, v_left;
 	TraceResult tr;
 
@@ -1002,7 +1002,7 @@ BOOL BotCheckWallOnLeft(CBot* pBot)
 
 BOOL BotCheckWallOnRight(CBot* pBot)
 {
-	edict_t* pEdict = pBot->m_pEdict;
+	const edict_t* pEdict = pBot->m_pEdict;
 	Vector v_src, v_right;
 	TraceResult tr;
 
@@ -1814,20 +1814,20 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 	const float fFov = 105.0f;
 	int iStep = 0;
 
-	entvars_t* pev = &pBot->m_pEdict->v;
+	const entvars_t* pev = &pBot->m_pEdict->v;
 
 	float fStartAngle = pev->angles.y - fFov;
 	float fAngle;
 
-	int iMinStep = -60;
-	int iMaxStep = 60;
+	const int iMinStep = -60;
+	const int iMaxStep = 60;
 
 	float fMaxDistance = BOT_WAYPOINT_TOUCH_DIST * 2;
 	float fDistance;
 
 	dataUnconstArray<Vector> vPositions;
 
-	Vector vStart = pBot->GetGunPosition();
+	const Vector vStart = pBot->GetGunPosition();
 	Vector vEnd;
 	Vector vAngles;
 
@@ -1951,7 +1951,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 	return vPosition;
 }
 
-BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
+BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 {
 	TraceResult tr;
 
@@ -1960,7 +1960,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 	//if ( gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL) )
 	//	WaypointDrawBeam(gBotGlobals.m_Clients.GetClientByIndex(0)->GetPlayer(),vBotOrigin,vCheckOrigin,16,8,200,200,200,200,10);
 
-	Vector vComp = (vCheckToOrigin - vCheckOrigin).Normalize();
+	const Vector vComp = (vCheckToOrigin - vCheckOrigin).Normalize();
 
 	(*g_engfuncs.pfnTraceHull)(vCheckOrigin, vCheckOrigin + vComp * 4096.0f, ignore_monsters, point_hull, pBot->m_pEdict, &tr);
 
@@ -1976,10 +1976,10 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 				strncmp("func_plat", STRING(pHit->v.classname), 9) == 0 ||
 				strncmp("func_train", STRING(pHit->v.classname), 9) == 0)
 			{
-				char* szTargetname = const_cast<char*>(STRING(pHit->v.targetname));
+				const char* szTargetname = const_cast<char*>(STRING(pHit->v.targetname));
 
 				// a way to find out if this is a lift (big enough for the bot to walk on)
-				BOOL bIsLift = pHit->v.movedir.z &&
+				const BOOL bIsLift = pHit->v.movedir.z &&
 				(pHit->v.size.x > pBot->pev->size.z &&
 					pHit->v.size.y > pBot->pev->size.z);
 
@@ -1997,7 +1997,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 
 					pButton = BotFunc_FindNearestButton(pBot->pev->origin + pBot->pev->view_ofs, &pHit->v, &vButtonOrigin);
 
-					int iNewScheduleId = pBot->m_Tasks.GetNewScheduleId();
+					const int iNewScheduleId = pBot->m_Tasks.GetNewScheduleId();
 
 					if (pButton)
 					{
@@ -2084,10 +2084,10 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 						if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_LIFT))
 							// Not already using a lift?
 						{
-							float fRange = pHit->v.size.Length2D();
+							const float fRange = pHit->v.size.Length2D();
 
 							// get the lift button waypoint
-							int iWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, fRange, -1, W_FL_LIFT, &pBot->m_FailedGoals);
+							const int iWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, fRange, -1, W_FL_LIFT, &pBot->m_FailedGoals);
 
 							if (iWpt != -1)
 							{
@@ -2101,7 +2101,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin)
 								{
 									// if a button if found use this one
 
-									int iScheduleId = pBot->m_Tasks.GetNewScheduleId();
+									const int iScheduleId = pBot->m_Tasks.GetNewScheduleId();
 
 									// Bot was below the lift so wait for the lift to descend
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_ENTITY, iScheduleId, pHit));

@@ -71,7 +71,7 @@ BOOL CBotVisibles::isVisible(int iIndex)
 
 void CBotVisibles::setVisible(int iIndex, BOOL bVisible)
 {
-	BOOL bCurrentlyVisible = isVisible(iIndex);
+	const BOOL bCurrentlyVisible = isVisible(iIndex);
 
 	if (bCurrentlyVisible && !bVisible)
 		m_iVisibleList.Remove(iIndex);

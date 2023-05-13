@@ -188,28 +188,29 @@ public:
 	virtual void PreThink();
 	virtual void PostThink();
 	virtual Vector GetGunPosition();
-	virtual int TakeHealth(float flHealth, int bitsDamageType);
+	int TakeHealth(float flHealth, int bitsDamageType) override;
 	virtual void TraceAttack(entvars_t* pevAttacker, float flDamage, Vector vecDir, TraceResult* ptr, int bitsDamageType);
-	virtual int TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType);
-	virtual void Killed(entvars_t* pevAttacker, int iGib);
+	int TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType) override;
+	void Killed(entvars_t* pevAttacker, int iGib) override;
 	virtual Vector BodyTarget(const Vector& posSrc)
 
 	{
 		int pev;
 		return Center() + pev->view_ofs * RANDOM_FLOAT(0.5f, 1.1f);
-	};		// position to shoot at
+	} // position to shoot at
 
 	virtual void StartSneaking() { m_tSneaking = gpGlobals->time - 1; }
 	virtual void StopSneaking() { m_tSneaking = gpGlobals->time + 30; }
 	virtual BOOL IsSneaking() { return m_tSneaking <= gpGlobals->time; }
-	virtual BOOL IsAlive()
+
+	BOOL IsAlive() override
 
 	{
 		BOOL pev;
 		return pev->deadflag == DEAD_NO && pev->health > 0;
 	}
 
-	virtual BOOL ShouldFadeOnDeath() { return false; }
+	BOOL ShouldFadeOnDeath() override { return false; }
 	virtual	BOOL IsPlayer() { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
 
 	virtual BOOL IsNetClient() { return true; }		// Bots should return false for this, they can't receive NET messages

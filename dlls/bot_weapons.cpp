@@ -151,8 +151,8 @@ void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
 
 		if (m_pWeaponInfo)
 		{
-			int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
-			int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
+			const int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
+			const int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
 
 			if (iAmmoList && iAmmoIndex1 != -1)
 				m_iAmmo1 = &iAmmoList[iAmmoIndex1];
@@ -355,7 +355,7 @@ BOOL CBotWeapon::HasWeapon(edict_t* pEdict)
 				{
 					edict_t* pWeapon = nullptr;
 
-					char* szClassname = this->GetClassname();
+					const char* szClassname = this->GetClassname();
 
 					if (szClassname == nullptr)
 						return false; // error
@@ -446,10 +446,10 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	//TODO: This prevents bots from zapping themselves underwater with Lightning Gun? [APG]RoboCop[CL]
 	BOOL bEnemyIsElectrified = false;
 	BOOL bEnemyTooHigh = false;
-	BOOL bUnderwater = pEdict->v.waterlevel == 3;
-	BOOL bIsDMC = gBotGlobals.m_iCurrentMod == MOD_DMC;
+	const BOOL bUnderwater = pEdict->v.waterlevel == 3;
+	const BOOL bIsDMC = gBotGlobals.m_iCurrentMod == MOD_DMC;
 
-	BOOL bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
+	const BOOL bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
 	BOOL bWantToMelee = false;
 
 	short int iAllowedWeapons[MAX_WEAPONS];
@@ -529,8 +529,8 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		{
 			// want to melee true if needing to reload OR enemy within melee range
 			// AND random factor due to skill
-			BOOL bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0f;
-			BOOL bMaxRangeCheck = pEnemy && fEnemyDist < 512.0f;
+			const BOOL bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0f;
+			const BOOL bMaxRangeCheck = pEnemy && fEnemyDist < 512.0f;
 
 			bWantToMelee = (pBot->m_pCurrentWeapon->NeedToReload() && RANDOM_LONG(MIN_BOT_SKILL, MAX_BOT_SKILL) < pBot->
 				m_Profile.m_iSkill || bMeleeRangeCheck) && bMaxRangeCheck;

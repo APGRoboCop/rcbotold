@@ -70,12 +70,12 @@ public:
 		setupCommand("removebot", BOT_COMMAND_ACCESS_ADD_REMOVE_BOTS);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "removebot command");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CDebugBotCommand : public CBotCvar
@@ -86,7 +86,7 @@ public:
 		setupCommand("debug_bot", BOT_COMMAND_ACCESS_DEBUG, false);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "debug_bot command");
 		BotMessage(pEntity, 0, "=================");
@@ -96,7 +96,7 @@ public:
 		BotMessage(pEntity, 0, "\"debug_bot off\" stops showing bot info on screen");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CDebugEntCommand : public CBotCvar
@@ -107,7 +107,7 @@ public:
 		setupCommand("debug_ent", BOT_COMMAND_ACCESS_DEBUG, false);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "debug_ent command");
 		BotMessage(pEntity, 0, "=================");
@@ -117,7 +117,7 @@ public:
 		BotMessage(pEntity, 0, "\"debug_ent off\" stops showing info on screen");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CUsersCommand : public CBotCvar
@@ -128,7 +128,7 @@ public:
 		setupCommand("users", BOT_COMMAND_ACCESS_USERS, true);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "users command");
 		BotMessage(pEntity, 0, "=============");
@@ -140,7 +140,7 @@ public:
 		BotMessage(pEntity, 0, "showusers -- shows all allowed bot users");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CHelpCommand : public CBotCvar
@@ -151,7 +151,7 @@ public:
 		setupCommand("help", BOT_COMMAND_ACCESS_ALLOWED, true);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "help command");
 		BotMessage(pEntity, 0, "------------");
@@ -166,7 +166,7 @@ public:
 		BotMessage(pEntity, 0, "  (example: rcbot util killbot <bot name>)");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CAutoWaypointCommand : public CBotCvar
@@ -177,7 +177,7 @@ public:
 		setupCommand("autowaypoint", BOT_COMMAND_ACCESS_WAYPOINTING, true);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "auto_waypoint command");
 		BotMessage(pEntity, 0, "---------------------");
@@ -188,7 +188,7 @@ public:
 		BotMessage(pEntity, 0, "You must issue a player name if using a dedicated server");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CMenuSelectCommand : public CBotCvar
@@ -199,7 +199,7 @@ public:
 		setupCommand("menuselect", BOT_COMMAND_ACCESS_ALLOWED, false);
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CSetPassCommand : public CBotCvar
@@ -210,7 +210,7 @@ public:
 		setupCommand("set_pass", BOT_COMMAND_ACCESS_ALLOWED, false);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "set_pass command help");
 		BotMessage(pEntity, 0, "---------------------");
@@ -221,7 +221,7 @@ public:
 		BotMessage(pEntity, 0, "also case sensitive, they must match on list of users");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CWaypointMenuCommand : public CBotCvar
@@ -232,7 +232,7 @@ public:
 		setupCommand("waypoint_menu", BOT_COMMAND_ACCESS_WAYPOINTING, false);
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CBotMenuCommand : public CBotCvar
@@ -243,7 +243,7 @@ public:
 		setupCommand("bot_menu", BOT_COMMAND_ACCESS_ADD_REMOVE_BOTS, false);
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CUtilCommand : public CBotCvar
@@ -254,7 +254,7 @@ public:
 		setupCommand("util", BOT_COMMAND_ACCESS_UTIL, true);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "util command help");
 		BotMessage(pEntity, 0, "-----------------");
@@ -279,7 +279,7 @@ public:
 		BotMessage(pEntity, 0, "showreps : will print bots reputations (CAREFUL!! May overflow your client [bug?])\n");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CAddBotCommand : public CBotCvar
@@ -290,9 +290,9 @@ public:
 		setupCommand("addbot", BOT_COMMAND_ACCESS_ADD_REMOVE_BOTS, true);
 	}
 
-	void showHelp(edict_t* pEntity);
+	void showHelp(edict_t* pEntity) override;
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CWaypointCommand : public CBotCvar
@@ -303,9 +303,9 @@ public:
 		setupCommand("waypoint", BOT_COMMAND_ACCESS_WAYPOINTING, false);
 	}
 
-	void showHelp(edict_t* pEntity);
+	void showHelp(edict_t* pEntity) override;
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CBotCamCommand : public CBotCvar
@@ -316,7 +316,7 @@ public:
 		setupCommand("botcam", BOT_COMMAND_ACCESS_ALLOWED, false);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "bot cam command help");
 		BotMessage(pEntity, 0, "--------------------");
@@ -326,7 +326,7 @@ public:
 		BotMessage(pEntity, 0, "\"rcbot botcam off\" to stop viewing the bot cam");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CBotSquadCommand : public CBotCvar
@@ -337,7 +337,7 @@ public:
 		setupCommand("squad", BOT_COMMAND_ACCESS_ALLOWED, false);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "squad command help");
 		BotMessage(pEntity, 0, "------------------");
@@ -348,7 +348,7 @@ public:
 		BotMessage(pEntity, 0, "NOTE: I recommend using the \"rcbot squad_menu\" command instead");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CDebugCommand : public CBotCvar
@@ -359,7 +359,7 @@ public:
 		setupCommand("debug", BOT_COMMAND_ACCESS_DEBUG, true);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "debug command help");
 		BotMessage(pEntity, 0, "------------------");
@@ -377,7 +377,7 @@ public:
 		BotMessage(pEntity, 0, "\"see\"");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CSquadMenuCommand : public CBotCvar
@@ -388,7 +388,7 @@ public:
 		setupCommand("squad_menu", BOT_COMMAND_ACCESS_ALLOWED, false);
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CConfigCommand : public CBotCvar
@@ -399,7 +399,7 @@ public:
 		setupCommand("config", BOT_COMMAND_ACCESS_CONFIG, true);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "config command help");
 		BotMessage(pEntity, 0, "-------------------");
@@ -467,7 +467,7 @@ public:
 		"rcbot config u_structure"
 		"rcbot config u_refill"
 		*/
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 class CPathWaypointCommand : public CBotCvar
@@ -478,7 +478,7 @@ public:
 		setupCommand("pathwaypoint", BOT_COMMAND_ACCESS_WAYPOINTING, false);
 	}
 
-	void showHelp(edict_t* pEntity)
+	void showHelp(edict_t* pEntity) override
 	{
 		BotMessage(pEntity, 0, "pathwaypoint command help");
 		BotMessage(pEntity, 0, "-------------------------");
@@ -492,7 +492,7 @@ public:
 		BotMessage(pEntity, 0, "\"pathwaypoint disable\" disallows automatic path creation");
 	}
 
-	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
+	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
 #endif

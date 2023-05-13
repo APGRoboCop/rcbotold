@@ -94,9 +94,9 @@ public:
 		}
 	}
 
-	void getMaxMins(Vector vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk);
+	void getMaxMins(const Vector& vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk);
 
-	int GetCoverWaypoint(Vector vPlayerOrigin, Vector vCoverFrom, dataStack<int>* iIgnoreWpts);
+	int GetCoverWaypoint(const Vector& vPlayerOrigin, const Vector& vCoverFrom, dataStack<int>* iIgnoreWpts);
 
 	void FindNearestCoverWaypointInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, dataStack<int>* iIgnoreWpts, int iCoverFromWpt);
 
@@ -219,7 +219,7 @@ public:
 
 	//virtual Vector getOrigin () { return origin; }
 
-	WAYPOINT(int f, Vector vec) { flags = f; origin = vec; };
+	WAYPOINT(int f, const Vector& vec) { flags = f; origin = vec; }
 	WAYPOINT() { flags = 0; Vector(0, 0, 0); };
 };
 
@@ -503,7 +503,7 @@ class CWaypointVisibilityTable
 public:
 	CWaypointVisibilityTable()
 	{
-		int iSize = g_iMaxVisibilityByte;
+		const int iSize = g_iMaxVisibilityByte;
 		//create a heap...
 		m_VisTable = static_cast<unsigned char*>(malloc(iSize));
 
@@ -517,14 +517,14 @@ public:
 	BOOL GetVisibilityFromTo(int iFrom, int iTo)
 	{
 		// work out the position
-		int iPosition = iFrom * MAX_WAYPOINTS + iTo;
+		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
 
-		int iByte = (int)(iPosition / 8);
-		int iBit = iPosition % 8;
+		const int iByte = iPosition / 8;
+		const int iBit = iPosition % 8;
 
 		if (iByte < g_iMaxVisibilityByte)
 		{
-			unsigned char* ToReturn = m_VisTable + iByte;
+			const unsigned char* ToReturn = m_VisTable + iByte;
 
 			return (*ToReturn & 1 << iBit) > 0;
 		}
@@ -549,10 +549,10 @@ public:
 
 	void SetVisibilityFromTo(int iFrom, int iTo, BOOL bVisible)
 	{
-		int iPosition = iFrom * MAX_WAYPOINTS + iTo;
+		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
 
-		int iByte = (int)(iPosition / 8);
-		int iBit = iPosition % 8;
+		const int iByte = iPosition / 8;
+		const int iBit = iPosition % 8;
 
 		if (iByte < g_iMaxVisibilityByte)
 		{
@@ -581,17 +581,17 @@ private:
 // waypoint function prototypes...
 
 BOOL WaypointFlagsOnLadderOrFly(int iWaypointFlags);
-void WaypointDrawBeam(edict_t* pEntity, Vector start, Vector end, int width,
+void WaypointDrawBeam(edict_t* pEntity, const Vector& start, const Vector& end, int width,
 	int noise, int red, int green, int blue, int brightness, int speed);
 void WaypointInit();
 int  WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team);
 int  WaypointFindNearest(edict_t* pEntity, float range, int team);
-int  WaypointFindNearest(Vector v_src, edict_t* pEntity, float range, int team);
-int  WaypointFindNearestGoal(Vector v_src, edict_t* pEntity, float range, int team, int flags, dataStack<int>* iIgnoreWpts);
+int  WaypointFindNearest(const Vector& v_src, edict_t* pEntity, float range, int team);
+int  WaypointFindNearestGoal(const Vector& v_src, edict_t* pEntity, float range, int team, int flags, dataStack<int>* iIgnoreWpts);
 int WaypointFindRandomGoal(edict_t* pEntity, int team, dataStack<int>* iIgnoreWpts);
 int WaypointFindRandomGoal(edict_t* pEntity, int team, int flags, dataStack<int>* iIgnoreWpts);
-int WaypointFindRandomGoal(Vector v_src, edict_t* pEntity, float range, int team, int flags, dataStack<int>* iIgnoreWpts);
-int  WaypointFindNearestAiming(Vector v_origin);
+int WaypointFindRandomGoal(const Vector& v_src, edict_t* pEntity, float range, int team, int flags, dataStack<int>* iIgnoreWpts);
+int  WaypointFindNearestAiming(const Vector& v_origin);
 void WaypointAdd(CClient* pClient);
 void WaypointAddPath(short int add_index, short int path_index);
 void WaypointAddAiming(edict_t* pEntity);
@@ -612,9 +612,9 @@ Vector WaypointOrigin(int iWaypointIndex);
 int NearestWaypointToEdict(edict_t* pEdict, int iIgnoreWpt, dataStack<int>* iFailedWpts);
 int NearestWaypointToOrigin(const Vector& vOrigin, int iIgnoreWpt, dataStack<int>* iFailedWpts = nullptr);
 int WaypointFlags(int iWaypointIndex);
-int WaypointAddOrigin(Vector vOrigin, int iFlags, edict_t* pEntity, BOOL bDraw = true, BOOL bSound = true, BOOL bAutoSetFlagsForPlayer = true);
+int WaypointAddOrigin(const Vector& vOrigin, int iFlags, edict_t* pEntity, BOOL bDraw = true, BOOL bSound = true, BOOL bAutoSetFlagsForPlayer = true);
 void AutoWaypoint();
 Vector BotNavigate_ScanFOV(CBot* pBot);
-edict_t* PlayerNearVector(Vector vOrigin, float fRange);
-BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, Vector vCheckToOrigin);
+edict_t* PlayerNearVector(const Vector& vOrigin, float fRange);
+BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin);
 #endif // WAYPOINT_H

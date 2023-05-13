@@ -78,7 +78,7 @@ public:
 	NN()
 	{
 		m_iNumInputs = 0;
-	};
+	}
 
 	NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
 
@@ -115,7 +115,7 @@ public:
 
 	~NNGATrained();
 
-	virtual void train(std::vector<CNNTrainSet> trainingsets);
+	void train(std::vector<CNNTrainSet> trainingsets) override;
 private:
 	CGA* m_pGA;
 	IIndividual* m_pInd;
