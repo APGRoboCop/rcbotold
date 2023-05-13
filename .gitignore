@@ -301,3 +301,4 @@ build/*
 build_linux/*
 apg-load
 obj-windows/
+waypoints/*

@@ -435,7 +435,7 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float 
 
 		vWpt = WaypointOrigin(iIndex);
 
-		if (fabs(vWpt.z - vOrigin.z) <= 256.0)
+		if (fabs(vWpt.z - vOrigin.z) <= 256.0f)
 		{
 			pvs = ENGINE_SET_PVS(reinterpret_cast<float*>(&vWpt));
 
@@ -1961,7 +1961,7 @@ BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
 			nullptr, &tr);
 
 		// if waypoint is visible from current position (even behind head)...
-		if (tr.flFraction >= 1.0)
+		if (tr.flFraction >= 1.0f)
 		{
 			// check for special case of both waypoints being underwater...
 			if (POINT_CONTENTS(v_src) == CONTENTS_WATER &&

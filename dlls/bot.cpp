@@ -3421,10 +3421,10 @@ void CBot::Think()
 				if (m_fNextUseSayMessage < gpGlobals->time)
 				{
 					// Shout for medic if less than 50% health
-					if (pev->health < pev->max_health * 0.25)
+					if (pev->health < pev->max_health * 0.25f)
 					{
 						Impulse(10);
-						m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(18.0, 26.0);
+						m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(18.0f, 26.0f);
 
 						// check out commander, give him a tip
 
