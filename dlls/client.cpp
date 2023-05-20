@@ -1054,10 +1054,9 @@ void CClients::ClientDisconnected(CClient* pClient)
 
 	////////////////////
 	// squad leave fix
-	CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pPlayer);
 
 	// if leader of a squad, change the leader
-	if (pSquad)
+	if (CBotSquad* pSquad = gBotGlobals.m_Squads.FindSquadByLeader(pPlayer))
 	{
 		gBotGlobals.m_Squads.ChangeLeader(pSquad);
 	}

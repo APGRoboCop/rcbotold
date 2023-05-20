@@ -2225,7 +2225,7 @@ short FixedSigned16(float value, float scale)
 	if (output < -32768)
 		output = -32768;
 
-	return short(output);
+	return static_cast<short>(output);
 }
 
 /*
@@ -2515,7 +2515,7 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot)
 
 	for (iStep = iMinStep; iStep <= iMaxStep; iStep += 20)
 	{
-		fAngle = float(iStep);
+		fAngle = static_cast<float>(iStep);
 
 		vAngles = pBot->m_pEdict->v.v_angle;
 

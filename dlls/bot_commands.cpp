@@ -252,7 +252,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	else if (FStrEq("givetsweapon", arg1))
 	{
 		if (pEntity && arg2 && *arg2)
-			UTIL_makeTSweapon(pEntity, eTSWeaponID(atoi(arg2)));
+			UTIL_makeTSweapon(pEntity, static_cast<eTSWeaponID>(atoi(arg2)));
 	}
 	else if (FStrEq("numclients", arg1))
 	{
@@ -430,9 +430,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	{
 		if (pClient)
 		{
-			const Vector* p_vTeleport = pClient->GetTeleportVector();
-
-			if (p_vTeleport)
+			if (const Vector* p_vTeleport = pClient->GetTeleportVector())
 			{
 				edict_t* pTeleportEntity = UTIL_getEntityInFront(pEntity);
 
@@ -455,9 +453,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	}
 	else if (pClient && FStrEq("teleport", arg1))
 	{
-		const Vector* p_vTeleport = pClient->GetTeleportVector();
-
-		if (p_vTeleport)
+		if (const Vector* p_vTeleport = pClient->GetTeleportVector())
 		{
 			if (arg2 && *arg2)
 			{
@@ -746,9 +742,8 @@ eBotCvarState CDebugEntCommand::action(CClient* pClient, const char* arg1, const
 		if (pClient)
 		{
 			edict_t* pEntity = pClient->GetPlayer();
-			edict_t* pOther = UTIL_FacingEnt(pEntity, true);
 
-			if (pOther)
+			if (edict_t* pOther = UTIL_FacingEnt(pEntity, true))
 				pClient->m_pDebugEnt = pOther;
 			else
 				BotMessage(pClient->GetPlayer(), 0, "No entity found");
@@ -794,9 +789,7 @@ eBotCvarState CDebugBotCommand::action(CClient* pClient, const char* arg1, const
 		{
 			edict_t* pEntity = pClient->GetPlayer();
 
-			const edict_t* pOther = UTIL_FacingEnt(pEntity);
-
-			if (pOther)
+			if (const edict_t* pOther = UTIL_FacingEnt(pEntity))
 			{
 				pClient->m_iDebugBot = UTIL_GetBotIndex(pOther);
 
@@ -1017,14 +1010,14 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 		if (bSetting)
 			gBotGlobals.m_iMinBots = atoi(arg2);
 		else
-			fSetVal = static_cast<float>(gBotGlobals.m_iMinBots);
+			fSetVal = gBotGlobals.m_iMinBots;
 	}
 	else if (FStrEq("max_bots", arg1))
 	{
 		if (bSetting)
 			gBotGlobals.m_iMaxBots = atoi(arg2);
 		else
-			fSetVal = static_cast<float>(gBotGlobals.m_iMaxBots);
+			fSetVal = gBotGlobals.m_iMaxBots;
 	}
 	/*
 		m_fHiveImportance = 1.0f;
@@ -1080,14 +1073,14 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 		if (bSetting)
 			gBotGlobals.m_iBotChatPercent = atoi(arg2);
 		else
-			fSetVal = static_cast<float>(gBotGlobals.m_iBotChatPercent);
+			fSetVal = gBotGlobals.m_iBotChatPercent;
 	}
 	else if (FStrEq("chat_reply_percent", arg1))
 	{
 		if (bSetting)
 			gBotGlobals.m_iBotChatReplyPercent = atoi(arg2);
 		else
-			fSetVal = static_cast<float>(gBotGlobals.m_iBotChatReplyPercent);
+			fSetVal = gBotGlobals.m_iBotChatReplyPercent;
 	}
 	else if (FStrEq("wall_stick_tolerance", arg1))
 	{
@@ -1137,7 +1130,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 			}
 		}
 		else
-			fSetVal = static_cast<float>(gBotGlobals.m_iMaxPathRevs);
+			fSetVal = gBotGlobals.m_iMaxPathRevs;
 	}
 	else if (FStrEq("max_update_vision_revs", arg1))
 	{
@@ -1166,7 +1159,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 			}
 		}
 		else
-			fSetVal = static_cast<float>(gBotGlobals.m_iMaxVisUpdateRevs);
+			fSetVal = gBotGlobals.m_iMaxVisUpdateRevs;
 	}
 	else if (FStrEq("update_vision_time", arg1))
 	{
@@ -1290,9 +1283,7 @@ eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const
 	}
 	else if (FStrEq(arg1, "spread"))
 	{
-		const float fNewSpread = atof(arg2);
-
-		if (fNewSpread)
+		if (const float fNewSpread = atof(arg2))
 		{
 			theSquad->ChangeSpread(fNewSpread);
 
@@ -1392,9 +1383,7 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 
 	if (pPlayer)
 	{
-		CClient* pWantedClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer);
-
-		if (pWantedClient)
+		if (CClient* pWantedClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer))
 		{
 			const int state = atoi(arg2);
 
@@ -2194,9 +2183,7 @@ void RCBot_ServerCommand()
 		}
 		else
 		{
-			CClient* pListenServerClient = gBotGlobals.m_Clients.GetClientByEdict(gBotGlobals.m_pListenServerEdict);
-
-			if (pListenServerClient)
+			if (CClient* pListenServerClient = gBotGlobals.m_Clients.GetClientByEdict(gBotGlobals.m_pListenServerEdict))
 				iState = gBotGlobals.m_CurrentHandledCvar->action(pListenServerClient, arg1, arg2, arg3, arg4);
 			else
 			{
@@ -2209,7 +2196,7 @@ void RCBot_ServerCommand()
 	{
 		return;
 	}
-	else if (iState == BOT_CVAR_ERROR)
+	if (iState == BOT_CVAR_ERROR)
 	{
 		BotMessage(gBotGlobals.m_pListenServerEdict, 0, "The bot command %s returned an error!\n", pcmd);
 	}

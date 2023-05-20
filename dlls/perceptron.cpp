@@ -244,9 +244,7 @@ void CPerceptron::load(FILE* bfp)
 
 void CPerceptron::load(char* filename, int iProfileId)
 {
-	FILE* bfp = RCBOpenFile(filename, "rb", SAVETYPE_BOT, iProfileId);
-
-	if (bfp)
+	if (FILE* bfp = RCBOpenFile(filename, "rb", SAVETYPE_BOT, iProfileId))
 	{
 		load(bfp);
 		fclose(bfp);
@@ -255,9 +253,7 @@ void CPerceptron::load(char* filename, int iProfileId)
 
 void CPerceptron::save(char* filename, int iProfileId)
 {
-	FILE* bfp = RCBOpenFile(filename, "wb", SAVETYPE_BOT, iProfileId);
-
-	if (bfp)
+	if (FILE* bfp = RCBOpenFile(filename, "wb", SAVETYPE_BOT, iProfileId))
 	{
 		save(bfp);
 		fclose(bfp);

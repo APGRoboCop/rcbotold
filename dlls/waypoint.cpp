@@ -1217,7 +1217,7 @@ int WaypointFindNearestGoal(const Vector& v_src, edict_t* pEntity, const float r
                             dataStack<int>* iIgnoreWpts)
 {
 	int index, min_index;
-	int distance, min_distance;
+	float distance, min_distance;
 
 	//TraceResult tr;
 
@@ -1489,7 +1489,7 @@ int WaypointFindNearestAiming(const Vector& v_origin)
 {
 	int index;
 	int min_index = -1;
-	int min_distance = 9999.0f;
+	float min_distance = 9999.0f;
 	float distance;
 
 	if (num_waypoints < 1)
@@ -2509,7 +2509,7 @@ BOOL CWaypointVisibilityTable::SaveToFile()
 		return false;
 	}
 
-	fwrite(m_VisTable, sizeof(unsigned char), Ceiling(float(num_waypoints * num_waypoints) / 8), bfp);
+	fwrite(m_VisTable, sizeof(unsigned char), Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8), bfp);
 
 	fclose(bfp);
 
@@ -2545,7 +2545,7 @@ BOOL CWaypointVisibilityTable::ReadFromFile()
 	fseek(bfp, 0, SEEK_END); // seek at end
 
 	iSize = ftell(bfp); // get file size
-	iDesiredSize = Ceiling(float(num_waypoints * num_waypoints) / 8);
+	iDesiredSize = Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8);
 
 	// size not right, return false to re workout table
 	if (iSize != iDesiredSize)

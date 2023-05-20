@@ -282,16 +282,14 @@ public:
 	static CBaseEntity *Instance( int eoffset) { return Instance( ENT( eoffset) ); }
 
 	CBaseMonster *GetMonsterPointer( entvars_t *pevMonster ) 
-	{ 
-		CBaseEntity *pEntity = Instance( pevMonster );
-		if ( pEntity )
+	{
+		if ( CBaseEntity *pEntity = Instance( pevMonster ) )
 			return pEntity->MyMonsterPointer();
 		return nullptr;
 	}
 	CBaseMonster *GetMonsterPointer( edict_t *pentMonster ) 
-	{ 
-		CBaseEntity *pEntity = Instance( pentMonster );
-		if ( pEntity )
+	{
+		if ( CBaseEntity *pEntity = Instance( pentMonster ) )
 			return pEntity->MyMonsterPointer();
 		return nullptr;
 	}

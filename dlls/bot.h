@@ -6152,9 +6152,7 @@ public:
 			m_Techs.Add(tech);
 		else
 		{
-			CBotNSTech* pExist = m_Techs.getExisting(tech);
-
-			if (pExist)
+			if (CBotNSTech* pExist = m_Techs.getExisting(tech))
 			{
 				pExist->update(tech);
 			}

@@ -377,11 +377,11 @@ typedef struct
 	BOOL m_bHasPrimaryFire;
 	BOOL m_bHasSecondaryFire;
 
-	int m_fPrimMinRange;
-	int m_fPrimMaxRange;
+	float m_fPrimMinRange;
+	float m_fPrimMaxRange;
 
-	int m_fSecMinRange;
-	int m_fSecMaxRange;
+	float m_fSecMinRange;
+	float m_fSecMaxRange;
 
 	//TODO: Maybe add ammo count and to hold fire button? [APG]RoboCop[CL]
 	BOOL m_bIsMelee;
@@ -432,10 +432,10 @@ public:
 
 	CWeapon()
 	{
-		this->Init();
+		this->CWeapon::Init();
 	}
 
-	void Init()
+	virtual void Init()
 	{
 		m_iAmmoIndex1 = -1;
 		m_iAmmoIndex2 = -1;
@@ -566,11 +566,11 @@ public:
 	BOOL m_bHasPrimaryFire;
 	BOOL m_bHasSecondaryFire;
 
-	int m_fPrimMinRange;
-	int m_fPrimMaxRange;
+	float m_fPrimMinRange;
+	float m_fPrimMaxRange;
 
-	int m_fSecMinRange;
-	int m_fSecMaxRange;
+	float m_fSecMinRange;
+	float m_fSecMaxRange;
 
 	BOOL m_bIsMelee;
 
@@ -601,7 +601,7 @@ public:
 		m_iPriority = pPreset->m_iPriority;
 	}
 
-	void Init()
+	void Init() override
 	{
 		memset((void*)this, 0, sizeof(CWeaponPreset));
 	}
@@ -812,7 +812,7 @@ public:
 
 	BOOL CanShootSecondary()
 	{
-		int iSecAmmo = SecondaryAmmo();
+		const int iSecAmmo = SecondaryAmmo();
 
 		return iSecAmmo == -1 || iSecAmmo > 0;
 	}
@@ -912,7 +912,7 @@ public:
 
 private:
 	int m_iId;
-
+	
 	int m_iClip;
 
 	// Extra ammo for this weapon in (used for TS only right now)
@@ -932,7 +932,7 @@ private:
 class CBotWeapons
 {
 public:
-
+	
 	int GetBestWeaponId(CBot* pBot, edict_t* pEnemy);
 
 	void RemoveWeapon(int iId)
@@ -1024,7 +1024,7 @@ public:
 private:
 	CBotWeapon m_Weapons[MAX_WEAPONS];
 
-	int m_iAmmo[MAX_AMMO_SLOTS];
+	int m_iAmmo[MAX_AMMO_SLOTS] = { 0 };
 };
 
 class CompareBotWeapon

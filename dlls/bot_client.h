@@ -687,8 +687,8 @@ public:
 	void msg_init() override
 	{
 		m_ReceivedPlayers.clear();
-		m_iOrderType = AvHOrderType(0);
-		m_iOrderTargetType = AvHOrderTargetType(0);
+		m_iOrderType = static_cast<AvHOrderType>(0);
+		m_iOrderTargetType = static_cast<AvHOrderTargetType>(0);
 		iOrderStatus = 0;
 		iReceivers = 0;
 		iEntityUser3 = 0;
@@ -699,7 +699,7 @@ public:
 		if (!m_ReceivedPlayers.size())
 			m_ReceivedPlayers.emplace_back(INDEXENT(s));
 		else if (!m_iOrderType)
-			m_iOrderType = AvHOrderType(s);
+			m_iOrderType = static_cast<AvHOrderType>(s);
 		//else if ( m_iOrderType == )
 	}
 

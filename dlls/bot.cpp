@@ -606,7 +606,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 		// dont like this player much
 		if (m_Profile.m_Rep.GetClientRep(pClient) < BOT_MID_REP)
 		{
-			const int iRep = m_Profile.m_Rep.GetClientRep(pExtClient);
+			//const int iRep = m_Profile.m_Rep.GetClientRep(pExtClient);
 
 			if (BotFunc_IncreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), m_Profile.m_iSkill))
 			{
@@ -1691,7 +1691,7 @@ void CBot::SpawnInit(const BOOL bInit)
 
 		clearUsedTeleporters();
 
-		m_fChatMessageTime = gpGlobals->time + RANDOM_LONG(10, 20);
+		m_fChatMessageTime = gpGlobals->time + RANDOM_FLOAT(10, 20);//Use RANDOM_FLOAT instead? [APG]RoboCop[CL]
 
 		if (gBotGlobals.IsMod(MOD_BG))
 		{
@@ -3657,7 +3657,7 @@ void CBot::Think()
 		{
 			if (!m_Tasks.HasTask(BOT_TASK_TYPE_MESSAGE))
 			{
-				m_fChatMessageTime = gpGlobals->time + RANDOM_LONG(10, 20);
+				m_fChatMessageTime = gpGlobals->time + RANDOM_FLOAT(10, 20);//Use RANDOM_FLOAT instead? [APG]RoboCop[CL]
 
 				if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
 				{
@@ -9165,9 +9165,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (pEntity->v.iuser3 == AVH_USER3_BREAKABLE)
 		{
-			CBotWeapon* pBestWeapon = m_Weapons.GetWeapon(iBestWeaponId);
-
-			if (pBestWeapon)
+			if (CBotWeapon* pBestWeapon = m_Weapons.GetWeapon(iBestWeaponId))
 			{
 				if (pBestWeapon->IsMelee())
 				{
@@ -12829,7 +12827,7 @@ void CBot::DoTasks()
 
 			if (m_CurrentTask->TaskFloat() == 0.0f)
 			{
-				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_LONG(4.0f, 6.0f));
+				m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(4.0f, 6.0f));//Use RANDOM_FLOAT instead? [APG]RoboCop[CL]
 			}
 
 			CBot* pBot = UTIL_GetBotPointer(pBotEdict);
@@ -15349,7 +15347,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 					vLastEnemyPosition = m_vLastSeeEnemyPosition.GetVector();
 
 					m_pLastEnemy = m_pEnemy;
-					m_fSearchEnemyTime = gpGlobals->time + RANDOM_LONG(5, 10);
+					m_fSearchEnemyTime = gpGlobals->time + RANDOM_FLOAT(5, 10);//Use RANDOM_FLOAT instead? [APG]RoboCop[CL]
 
 					RememberPosition(vLastEnemyPosition, m_pEnemy, BOT_REMEMBER_LOST_ENEMY);
 					// used to check if enemy has just gone out of FOV

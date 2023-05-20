@@ -1070,9 +1070,7 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 				{
 					// Has a previous waypoint
 					// we can work out the path the bot tried to use.
-					PATH* pPath = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);
-
-					if (pPath)
+					if (PATH* pPath = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam))
 						pBot->m_stFailedPaths.AddFailedPath(pPath);
 				}
 			}
@@ -1191,17 +1189,13 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			{
 				//Clear this waypoint, get a new one and flush path info.
 
-				PATH* pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);
-
-				if (pFailed)
+				if (PATH* pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam))
 					pBot->m_stFailedPaths.AddFailedPath(pFailed);
 
 				pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, REACHABLE_RANGE, pBot->m_iLastFailedWaypoint, true, false, true);
 				iCurrWpt = pBot->m_iCurrentWaypointIndex;
 
-				CBotTask* pCurrentTask = pBot->m_Tasks.CurrentTask();
-
-				if (pCurrentTask)
+				if (CBotTask* pCurrentTask = pBot->m_Tasks.CurrentTask())
 				{
 					pCurrentTask->SetPathInfo(false);
 				}
@@ -1517,9 +1511,8 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_PUSH_PUSHABLE))
 			{
 				// get nearest pushable
-				edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512, false);
 
-				if (pPushable)
+				if (edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512, false))
 				{
 					// if its too far away from the waypoint push it to the waypoint
 					if (!UTIL_AcceptablePushableVector(pPushable, vWptOrigin))
@@ -1538,9 +1531,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		// Reached objective waypoint???
 		if (pBot->m_iWaypointGoalIndex == pBot->m_iCurrentWaypointIndex)
 		{
-			CBotTask* m_CurrentTask = pBot->m_Tasks.CurrentTask();
-
-			if (m_CurrentTask)
+			if (CBotTask* m_CurrentTask = pBot->m_Tasks.CurrentTask())
 			{
 				if (m_CurrentTask->Task() == BOT_TASK_FIND_PATH)
 				{
@@ -2024,9 +2015,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 
 							if (iWaitForLiftWpt != -1)
 							{
-								edict_t* pOtherButton = BotFunc_FindNearestButton(WaypointOrigin(iWaitForLiftWpt), &pHit->v);
-
-								if (pOtherButton)
+								if (edict_t* pOtherButton = BotFunc_FindNearestButton(WaypointOrigin(iWaitForLiftWpt), &pHit->v))
 								{
 									pBot->AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pOtherButton, 0, -1.0f));
 									pBot->AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pOtherButton, 0, 1.0f));

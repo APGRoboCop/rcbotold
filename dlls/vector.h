@@ -101,7 +101,7 @@ public:
 	Vector Normalize() const
 	{
 		float flLen = Length();
-		if (flLen == 0) return Vector(0, 0, 1); // ????
+		if (flLen == 0.0f) return Vector(0, 0, 1); // ????
 		flLen = 1 / flLen;
 		return Vector(x * flLen, y * flLen, z * flLen);
 	}

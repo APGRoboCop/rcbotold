@@ -683,7 +683,7 @@ void ClientKill(edict_t* pEntity)
 {
 	if (debug_engine) {
 		FILE* fp; fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientKill: %x\n", unsigned(pEntity));
+		fprintf(fp, "ClientKill: %x\n", reinterpret_cast<unsigned>(pEntity));
 		fclose(fp);
 	}
 
@@ -698,7 +698,7 @@ void ClientPutInServer(edict_t* pEntity)
 {
 	if (debug_engine) {
 		FILE* fp; fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientPutInServer: %x\n", unsigned(pEntity));
+		fprintf(fp, "ClientPutInServer: %x\n", reinterpret_cast<unsigned>(pEntity));
 		fclose(fp);
 	}
 
@@ -1090,7 +1090,7 @@ void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
 {
 	if (debug_engine) {
 		FILE* fp; fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", unsigned(pEntity), infobuffer);
+		fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", reinterpret_cast<unsigned>(pEntity), infobuffer);
 		fclose(fp);
 	}
 
@@ -1248,7 +1248,7 @@ void PlayerCustomization(edict_t* pEntity, customization_t* pCust)
 {
 	if (debug_engine) {
 		FILE* fp; fp = fopen("bot.txt", "a");
-		fprintf(fp, "PlayerCustomization: %x\n", unsigned(pEntity));
+		fprintf(fp, "PlayerCustomization: %x\n", reinterpret_cast<unsigned>(pEntity));
 		fclose(fp);
 	}
 
@@ -1432,7 +1432,7 @@ int InconsistentFile(const edict_t* player, const char* filename, char* disconne
 {
 	if (debug_engine) {
 		FILE* fp; fp = fopen("bot.txt", "a");
-		fprintf(fp, "InconsistentFile: %x filename=%s\n", unsigned(player), filename);
+		fprintf(fp, "InconsistentFile: %x filename=%s\n", reinterpret_cast<unsigned>(player), filename);
 		fclose(fp);
 	}
 
@@ -2187,9 +2187,7 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 		// find nearest struct resource fountain
 		char* classname[1] = { "func_resource" };
 
-		edict_t* pResource = UTIL_FindNearestEntity(classname, 1, vOrigin, 200, false);
-
-		if (pResource)
+		if (edict_t* pResource = UTIL_FindNearestEntity(classname, 1, vOrigin, 200.0f, false))
 		{
 			if (UTIL_IsResourceFountainUsed(pResource))
 			{

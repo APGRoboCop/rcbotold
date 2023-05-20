@@ -217,7 +217,7 @@ void BotClient_TS_State::execute(void* p, int iIndex)
 	switch (POINTER_VALUE(state))
 	{
 	case 0:
-		gBotGlobals.m_Bots[iIndex].m_iTS_State = eTS_State(*static_cast<int*>(p));
+		gBotGlobals.m_Bots[iIndex].m_iTS_State = static_cast<eTS_State>(*static_cast<int*>(p));
 		break;
 	case 1:
 		break;
@@ -528,9 +528,7 @@ void BotClient_BG_MakeMessage::execute(void* p, int iIndex)
 		// not a bot
 		if (pSender && UTIL_GetBotPointer(pSender) == nullptr)
 		{
-			CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender);
-
-			if (pClient)
+			if (CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender))
 			{
 				switch (POINTER_TO_INT(p))
 				{
@@ -1343,7 +1341,7 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 {
 	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
-	static AvHMessageID iImpulsemessage = AvHMessageID(0);
+	static AvHMessageID iImpulsemessage = static_cast<AvHMessageID>(0);
 	static int iSlot = 0;
 	static int iCost = 0;
 	static int iRadius = 0;
@@ -1366,7 +1364,7 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 	switch (POINTER_VALUE(state))
 	{
 	case 0:
-		iImpulsemessage = AvHMessageID(POINTER_TO_INT(p));
+		iImpulsemessage = static_cast<AvHMessageID>(POINTER_TO_INT(p));
 		break;
 	case 1:
 		iSlot = POINTER_TO_INT(p);
@@ -1576,7 +1574,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 	{
 		if (POINTER_VALUE(state2) == 0)
 		{
-			iOrderType = AvHOrderType(POINTER_TO_INT(p));
+			iOrderType = static_cast<AvHOrderType>(POINTER_TO_INT(p));
 		}
 		/*else if ( POINTER_VALUE(state2) == 1 )
 		{
@@ -1657,9 +1655,8 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 		if (killer_index == victim_index || killer_index == -1)
 		{
 			const edict_t* victim_edict = INDEXENT(victim_index);
-			CBot* pBotVictim = UTIL_GetBotPointer(victim_edict);
 
-			if (pBotVictim)
+			if (CBot* pBotVictim = UTIL_GetBotPointer(victim_edict))
 				pBotVictim->BotEvent(BOT_EVENT_KILL_SELF);
 
 			/*for ( i = 0; i < MAX_PLAYERS; i ++ )
@@ -2092,7 +2089,6 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 		{
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_ACCEPT_HEALTH))
 			{
-				edict_t* pSupplier = nullptr;
 				edict_t* pPlayer;
 				const float nearest = 96.0f;
 				float dist;
@@ -2124,7 +2120,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 					}
 				}
 
-				if (pSupplier)
+				if (edict_t* pSupplier = nullptr)
 				{
 					pBot->AddPriorityTask(CBotTask(BOT_TASK_ACCEPT_HEALTH, 0, pSupplier, 0, RANDOM_FLOAT(1.5, 2.5)));
 					pBot->m_bAcceptHealth = false;

@@ -72,6 +72,7 @@ elif builder.cxx.target.platform == 'windows':
     '/std:c++17',
 	'/arch:SSE2',
     '/fp:precise',
+	'/Qspectre',
 	'/EHsc'
   ]
   # Windows linker flags

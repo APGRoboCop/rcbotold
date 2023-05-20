@@ -297,25 +297,25 @@ void CWeaponPresets::ReadPresets()
 
 		if (sscanf(buffer, "primary_min_range=%d", &iValue) == 1)
 		{
-			sWeaponPreset.m_fPrimMaxRange = iValue;
+			sWeaponPreset.m_fPrimMaxRange = static_cast<float>(iValue);
 			continue;
 		}
 
 		if (sscanf(buffer, "primary_max_range=%d", &iValue) == 1)
 		{
-			sWeaponPreset.m_fPrimMaxRange = iValue;
+			sWeaponPreset.m_fPrimMaxRange = static_cast<float>(iValue);
 			continue;
 		}
 
 		if (sscanf(buffer, "secondary_min_range=%d", &iValue) == 1)
 		{
-			sWeaponPreset.m_fSecMinRange = iValue;
+			sWeaponPreset.m_fSecMinRange = static_cast<float>(iValue);
 			continue;
 		}
 
 		if (sscanf(buffer, "secondary_max_range=%d", &iValue) == 1)
 		{
-			sWeaponPreset.m_fSecMaxRange = iValue;
+			sWeaponPreset.m_fSecMaxRange = static_cast<float>(iValue);
 			continue;
 		}
 

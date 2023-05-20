@@ -131,7 +131,7 @@ void NN::getOutputs(std::vector<ga_value>* outputs)
 {
 	unsigned short int i;
 	unsigned short int j;
-	unsigned short int w = 0;
+	//unsigned short int w = 0;
 
 	outputs->clear();
 
@@ -191,7 +191,7 @@ void NNLayer::save(FILE* bfp)
 
 	fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_NN_LAYER, int(iTemp));
+	CGenericHeader header = CGenericHeader(LEARNTYPE_NN_LAYER, static_cast<int>(iTemp));
 
 	header.write(bfp);
 

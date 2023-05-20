@@ -137,7 +137,7 @@ int pfnModelFrames(int modelIndex)
 void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetSize: %x\n", unsigned(e));
+		fprintf(fp, "pfnSetSize: %x\n", reinterpret_cast<unsigned>(e));
 		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -316,7 +316,7 @@ void pfnRemoveEntity(edict_t* e)
 	if (debug_engine)
 	{
 		fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnRemoveEntity: %x\n", unsigned(e));
+		fprintf(fp, "pfnRemoveEntity: %x\n", reinterpret_cast<unsigned>(e));
 		if (e->v.model != 0)
 			fprintf(fp, " model=%s\n", STRING(e->v.model));
 		fclose(fp);
@@ -756,10 +756,10 @@ void pfnWriteChar(int iValue)
 		if (gBotGlobals.m_CurrentMessage)
 		{
 			if (gBotGlobals.m_pDebugMessage == gBotGlobals.m_CurrentMessage)//gBotGlobals.IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL) )
-				ALERT(at_console, "WRITE_CHAR(%c)\n", char(iValue));
+				ALERT(at_console, "WRITE_CHAR(%c)\n", static_cast<char>(iValue));
 
 			if (gBotGlobals.m_CurrentMessage->isStateMsg())
-				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeChar(char(iValue));
+				static_cast<CBotStatedNetMessage*>(gBotGlobals.m_CurrentMessage)->writeChar(static_cast<char>(iValue));
 			else
 				gBotGlobals.m_CurrentMessage->execute(&iValue, gBotGlobals.m_iBotMsgIndex);
 		}
@@ -1331,7 +1331,7 @@ void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 	}
 
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", unsigned(pEdict), fNewMaxspeed);
+		fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", reinterpret_cast<unsigned>(pEdict), fNewMaxspeed);
 		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1567,7 +1567,7 @@ unsigned int pfnGetPlayerWONId(edict_t* e)
 	}
 
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnGetPlayerWONId: %x\n", unsigned(e));
+		fprintf(fp, "pfnGetPlayerWONId: %x\n", reinterpret_cast<unsigned>(e));
 		fclose(fp); }
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);

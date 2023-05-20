@@ -459,7 +459,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 				return;
 			}
 
-			for (i = 0; i < int(replywords->size); ++i)
+			for (i = 0; i < static_cast<int>(replywords->size); ++i)
 				length += replywords->entry[i].length;
 
 			output_template = static_cast<char*>(realloc(output_template, sizeof(char) * length));
@@ -468,7 +468,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 
 			length = 0;
 
-			for (i = 0; i < int(replywords->size); ++i)
+			for (i = 0; i < static_cast<int>(replywords->size); ++i)
 				for (j = 0; j < replywords->entry[i].length; ++j)
 					output_template[length++] = replywords->entry[i].word[j];
 
@@ -493,7 +493,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 			return;
 		}
 
-		for (i = 0; i < int(replywords->size); ++i)
+		for (i = 0; i < static_cast<int>(replywords->size); ++i)
 			length += replywords->entry[i].length;
 
 		output_template = static_cast<char*>(realloc(output_template, sizeof(char) * length));
@@ -502,7 +502,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 
 		length = 0;
 
-		for (i = 0; i < int(replywords->size); ++i)
+		for (i = 0; i < static_cast<int>(replywords->size); ++i)
 			for (j = 0; j < replywords->entry[i].length; ++j)
 				output_template[length++] = replywords->entry[i].word[j];
 
@@ -715,7 +715,7 @@ void HAL_SaveDictionary(FILE* file, HAL_DICTIONARY* dictionary)
 	fwrite(&dictionary->size, sizeof(unsigned long), 1, file);
 
 	// save each word to the file
-	for (i = 0; i < int(dictionary->size); ++i)
+	for (i = 0; i < static_cast<int>(dictionary->size); ++i)
 	{
 		fwrite(&dictionary->entry[i].length, sizeof(unsigned char), 1, file);
 		for (j = 0; j < dictionary->entry[i].length; ++j)
@@ -997,7 +997,7 @@ void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words)
 	HAL_InitializeContext(model);
 	model->context[0] = model->forward;
 
-	for (i = 0; i < int(words->size); ++i)
+	for (i = 0; i < static_cast<int>(words->size); ++i)
 	{
 		// add the symbol to the model's dictionary if necessary, and update the model accordingly
 		symbol = HAL_AddWord(model->dictionary, words->entry[i]);
@@ -1103,7 +1103,7 @@ void HAL_MakeWords(char* input, HAL_DICTIONARY* words)
 			words->entry[words->size].word = input;
 			words->size++;
 
-			if (offset == int(strlen(input)))
+			if (offset == static_cast<int>(strlen(input)))
 				break;
 
 			input += offset;
@@ -1189,7 +1189,7 @@ BOOL HAL_BoundaryExists(char* string, int position)
 	if (position == 0)
 		return false;
 
-	if (position == int(strlen(string)))
+	if (position == static_cast<int>(strlen(string)))
 		return true;
 
 	if (string[position] == '\'' && isalpha(string[position - 1]) != 0
@@ -1222,7 +1222,7 @@ BOOL HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2)
 		return true; // if they haven't the same size, obviously they aren't the same
 
 	// for each word of the first dictionary...
-	for (i = 0; i < int(words1->size); ++i)
+	for (i = 0; i < static_cast<int>(words1->size); ++i)
 		if (HAL_CompareWords(words1->entry[i], words2->entry[i]) != 0)
 			return true; // compare it with the second and break at the first difference
 
@@ -1247,7 +1247,7 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words)
 	if (keys == nullptr)
 		keys = HAL_NewDictionary();
 
-	for (i = 0; i < (int)keys->size; ++i)
+	for (i = 0; i < static_cast<int>(keys->size); ++i)
 	{
 		//		if (keys->entry[i].word != NULL)
 		free(keys->entry[i].word);
@@ -1257,7 +1257,7 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words)
 
 	HAL_EmptyDictionary(keys);
 
-	for (i = 0; i < (int)words->size; ++i)
+	for (i = 0; i < static_cast<int>(words->size); ++i)
 	{
 		// find the symbol ID of the word. If it doesn't exist in the model, or if it begins
 		// with a non-alphanumeric character, or if it is in the exclusion array, then skip it
@@ -1276,7 +1276,7 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words)
 	}
 
 	if (keys->size > 0)
-		for (i = 0; i < (int)words->size; ++i)
+		for (i = 0; i < static_cast<int>(words->size); ++i)
 		{
 			c = 0;
 
@@ -1296,7 +1296,7 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words)
 
 int strpos(char* pos, char* start)
 {
-	return int(pos) - int(start);
+	return reinterpret_cast<int>(pos) - reinterpret_cast<int>(start);
 }
 
 void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int start, int end)
@@ -1620,7 +1620,7 @@ BOOL HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	int i;
 
 	// for each element of the dictionary, compare word with it...
-	for (i = 0; i < int(dictionary->size); ++i)
+	for (i = 0; i < static_cast<int>(dictionary->size); ++i)
 		if (HAL_CompareWords(dictionary->entry[i], word) == 0)
 			return true; // word was found
 
@@ -1656,7 +1656,7 @@ int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys)
 
 			i++;
 
-			if (i == int(keys->size))
+			if (i == static_cast<int>(keys->size))
 				i = 0;
 
 			if (i == stop)
@@ -2196,7 +2196,7 @@ void FreeHALBrain(bot_profile_t* pBotProfile)
 	// free every word in their global chat dictionary
 	if (pBotProfile->m_HAL->bot_model->dictionary)
 	{
-		for (int j = 0; j < int(pBotProfile->m_HAL->bot_model->dictionary->size); j++)
+		for (int j = 0; j < static_cast<int>(pBotProfile->m_HAL->bot_model->dictionary->size); j++)
 		{
 			//			if (pBotProfile->m_HAL->bot_model->dictionary->entry[j].word != NULL)
 			{
