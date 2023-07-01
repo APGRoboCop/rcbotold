@@ -1141,7 +1141,7 @@ public:
 	// this was added quite recently so ins't used a lot, even though it's quite neat.
 	void AddNewSchedule(eScheduleDesc iScheduleDescription, CBotTask* pTasks, int iNumTasks)
 	{
-		int iNewScheduleId = GetNewScheduleId();
+		const int iNewScheduleId = GetNewScheduleId();
 
 		int i;
 
@@ -1156,7 +1156,7 @@ public:
 
 	void RemoveTimedOutSchedules()
 	{
-		CBotTask* pCurrentTask = this->CurrentTask();
+		const CBotTask* pCurrentTask = this->CurrentTask();
 		int iSchedIgnore;
 		int iFailSchedule;
 
@@ -1494,9 +1494,9 @@ public:
 		if (pTask == nullptr)
 			return;
 
-		eBotTask iTask = pTask->Task();
-		BOOL bPathInfo = pTask->HasPath();
-		int iScheduleId = pTask->GetScheduleId();
+		const eBotTask iTask = pTask->Task();
+		const BOOL bPathInfo = pTask->HasPath();
+		const int iScheduleId = pTask->GetScheduleId();
 
 		// Current task will be at the top of
 		// the queue, so remove the first node.
@@ -4926,7 +4926,7 @@ public:
 
 	void AddPlayer(const char* szName, char* szPass, int iAccessLevel, char* szSteamId)
 	{
-		CAllowedPlayer PlayerToAdd = CAllowedPlayer(szName, szPass, iAccessLevel, szSteamId);
+		const CAllowedPlayer PlayerToAdd = CAllowedPlayer(szName, szPass, iAccessLevel, szSteamId);
 
 		// remove old one if it exists
 		m_AllowedPlayers.Remove(PlayerToAdd);
@@ -5274,7 +5274,7 @@ public:
 
 		while (!temp.IsEmpty())
 		{
-			CMasterEntity* m = temp.ChooseFromStack();
+			const CMasterEntity* m = temp.ChooseFromStack();
 
 			delete m;
 			m = nullptr;

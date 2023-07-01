@@ -273,7 +273,7 @@ public:
 	{ 
 		if ( !pent )
 			pent = ENT(0);
-		CBaseEntity *pEnt = (CBaseEntity *)GET_PRIVATE(pent); 
+		CBaseEntity *pEnt = static_cast<CBaseEntity*>(GET_PRIVATE(pent)); 
 		return pEnt; 
 	}
 #endif

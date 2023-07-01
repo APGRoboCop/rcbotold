@@ -8776,7 +8776,7 @@ void CBot::RunPlayerMove()
 	}*/
 
 	(*g_engfuncs.pfnRunPlayerMove)(m_pEdict, pev->angles, m_fMoveSpeed, m_fStrafeSpeed, m_fUpSpeed, pev->button,
-		pev->impulse, byte(m_iMsecVal));
+		pev->impulse, static_cast<byte>(m_iMsecVal));
 }
 
 void CBot::ThrowGrenade(edict_t* pEnemy, int preference, const BOOL bDontPrime)
@@ -11177,7 +11177,7 @@ int BotFunc_GetStructureForGorgeBuild(entvars_t* pGorge, entvars_t* pEntitypev)
 	int iMovs = 0;
 	int iSens = 0;
 
-	const AvHUser3 iBuildingType = AvHUser3(pEntitypev->iuser3);
+	const AvHUser3 iBuildingType = static_cast<AvHUser3>(pEntitypev->iuser3);
 
 	const Vector vOrigin = pEntitypev->origin;
 

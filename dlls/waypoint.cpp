@@ -1598,7 +1598,6 @@ int WaypointAddOrigin(Vector const& vOrigin, const int iFlags, edict_t* pEntity,
 	//********************************************************
 
 	edict_t* pEnt = nullptr;
-	char* szClassname = nullptr;
 
 	Vector vEntOrigin;
 
@@ -1613,7 +1612,7 @@ int WaypointAddOrigin(Vector const& vOrigin, const int iFlags, edict_t* pEntity,
 
 		if (tr.flFraction >= 1.0f || tr.pHit == pEnt)
 		{
-			szClassname = const_cast<char*>(STRING(pEnt->v.classname));
+			const char* szClassname = const_cast<char*>(STRING(pEnt->v.classname));
 
 			if (strncmp("ammo_", szClassname, 5) == 0)
 				new_waypoint->flags |= W_FL_AMMO;

@@ -1658,7 +1658,7 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 		WRITE_COORD(center.y);
 		WRITE_COORD(center.z);
 		WRITE_SHORT(gBotGlobals.m_sModelIndexFireball);
-		WRITE_BYTE(BYTE(byteMag)); // scale * 10
+		WRITE_BYTE(static_cast<BYTE>(byteMag)); // scale * 10
 		WRITE_BYTE(15); // framerate
 		WRITE_BYTE(TE_EXPLFLAG_NONE);
 		MESSAGE_END();

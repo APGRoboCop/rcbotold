@@ -1,4 +1,4 @@
-# AMBuild Configuration Script for EvoBot, written by Anonymous Player
+# AMBuild Configuration Script for RealBot, written by Anonymous Player
 # vim: set sts=4 ts=8 sw=4 tw=99 et:
 API_VERSION = '2.2.3'
 

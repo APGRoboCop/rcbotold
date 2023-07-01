@@ -106,7 +106,7 @@ int pfnPrecacheSound(char* s)
 void pfnSetModel(edict_t* e, const char* m)
 {
 	if (debug_engine) { fp = fopen("bot.txt", "a");
-		fprintf(fp, "pfnSetModel: edict=%x %s\n", unsigned(e), m);
+		fprintf(fp, "pfnSetModel: edict=%x %s\n", reinterpret_cast<unsigned>(e), m);
 		fclose(fp); }
 
 #ifdef RCBOT_META_BUILD
@@ -1495,7 +1495,7 @@ int pfnGetPlayerUserId(edict_t* e)
 	if (gpGlobals->deathmatch)
 	{
 		if (debug_engine) { fp = fopen("bot.txt", "a");
-			fprintf(fp, "pfnGetPlayerUserId: %x\n", unsigned(e));
+			fprintf(fp, "pfnGetPlayerUserId: %x\n", reinterpret_cast<unsigned>(e));
 			fclose(fp); }
 	}
 

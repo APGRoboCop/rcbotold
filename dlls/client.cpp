@@ -1069,7 +1069,7 @@ void CClients::ClientDisconnected(CClient* pClient)
 		gBotGlobals.m_pListenServerEdict = nullptr;
 
 	// give a few seconds before adding more bots.
-	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 8.0f;
+	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 10.0f;
 
 	const BOOL RemoveGreeting = iPlayerIndex != -1;
 
