@@ -134,11 +134,9 @@ void CBits::randomize()
 
 void CBits::setup(const int iNumBits)
 {
-	int iSize;
-
 	m_iNumBits = iNumBits;
 
-	iSize = size();
+	const int iSize = size();
 
 	m_cBits = new unsigned char[iSize];
 

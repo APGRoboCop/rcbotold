@@ -354,11 +354,10 @@ public:
 	void printReps(CBot* forBot, edict_t* pPrintTo)
 	{
 		dataStack<CBotReputation> tempStack = m_RepList;
-		CBotReputation* pRep;
 
 		while (!tempStack.IsEmpty())
 		{
-			pRep = tempStack.ChoosePointerFromStack();
+			CBotReputation* pRep = tempStack.ChoosePointerFromStack();
 
 			pRep->printRep(forBot, pPrintTo);
 		}
@@ -395,11 +394,10 @@ public:
 			return 0;
 
 		dataStack<CBotReputation> tempStack = m_RepList;
-		CBotReputation* pRep;
 
 		while (!tempStack.IsEmpty())
 		{
-			pRep = tempStack.ChoosePointerFromStack();
+			CBotReputation* pRep = tempStack.ChoosePointerFromStack();
 
 			// bug fixed... didn't add :-P
 			iTotal += pRep->CurrentRep();
@@ -412,9 +410,7 @@ public:
 	void AddRep(int iPlayerRepId, int iRep)
 		// Add a NEW Reputation WITH a reputation value
 	{
-		CBotReputation* l_Rep;
-
-		l_Rep = GetRep(iPlayerRepId);
+		const CBotReputation* l_Rep = GetRep(iPlayerRepId);
 
 		if (l_Rep == nullptr) // Don't want to add a duplicate
 			m_RepList.Push(CBotReputation(iPlayerRepId, iRep));
@@ -423,11 +419,10 @@ public:
 	CBotReputation* GetCreateRep(int iPlayerRepId)
 	{
 		dataStack<CBotReputation> tempStack = m_RepList;
-		CBotReputation* l_Rep;
 
 		while (!tempStack.IsEmpty())
 		{
-			l_Rep = tempStack.ChoosePointerFromStack();
+			CBotReputation* l_Rep = tempStack.ChoosePointerFromStack();
 
 			if (l_Rep->IsForPlayer(iPlayerRepId))
 			{
@@ -446,11 +441,10 @@ public:
 	CBotReputation* GetRep(int iPlayerRepId)
 	{
 		dataStack<CBotReputation> tempStack = m_RepList;
-		CBotReputation* l_Rep;
 
 		while (!tempStack.IsEmpty())
 		{
-			l_Rep = tempStack.ChoosePointerFromStack();
+			CBotReputation* l_Rep = tempStack.ChoosePointerFromStack();
 
 			if (l_Rep->IsForPlayer(iPlayerRepId))
 			{
@@ -475,7 +469,7 @@ public:
 
 		if (l_Rep)
 		{
-			int iNewRep = l_Rep->CurrentRep() + 1;
+			const int iNewRep = l_Rep->CurrentRep() + 1;
 
 			if (iNewRep > BOT_MAX_REP)
 				return;
@@ -499,7 +493,7 @@ public:
 
 		if (l_Rep)
 		{
-			int iNewRep = l_Rep->CurrentRep() - 1;
+			const int iNewRep = l_Rep->CurrentRep() - 1;
 
 			if (iNewRep < BOT_MIN_REP)
 				return;
@@ -1119,16 +1113,13 @@ public:
 
 	void SetTimeToCompleteSchedule(int iScheduleId, float fTime)
 	{
-		dataQueue<CBotTask> tempStack;
-		CBotTask* tempTask;
-
-		tempStack = m_Tasks;
+		dataQueue<CBotTask> tempStack = m_Tasks;
 
 		fTime += gpGlobals->time;
 
 		while (!tempStack.IsEmpty())
 		{
-			tempTask = tempStack.ChoosePointerFrom();
+			CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
 			if (tempTask->GetScheduleId() == iScheduleId)
 			{
@@ -1143,9 +1134,7 @@ public:
 	{
 		const int iNewScheduleId = GetNewScheduleId();
 
-		int i;
-
-		for (i = iNumTasks - 1; i >= 0; i--)
+		for (int i = iNumTasks - 1; i >= 0; i--)
 		{
 			pTasks[i].SetScheduleId(iNewScheduleId);
 			pTasks[i].ChangeScheduleDesc(iScheduleDescription);
@@ -1157,24 +1146,19 @@ public:
 	void RemoveTimedOutSchedules()
 	{
 		const CBotTask* pCurrentTask = this->CurrentTask();
-		int iSchedIgnore;
-		int iFailSchedule;
-
-		dataQueue<CBotTask> tempStack;
-		CBotTask* tempTask;
 
 		if (pCurrentTask == nullptr)
 			return;
 
-		iSchedIgnore = pCurrentTask->GetScheduleId();
+		const int iSchedIgnore = pCurrentTask->GetScheduleId();
 
-		tempStack = m_Tasks;
+		dataQueue<CBotTask> tempStack = m_Tasks;
 
 		while (!tempStack.IsEmpty())
 		{
-			tempTask = tempStack.ChoosePointerFrom();
+			CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
-			iFailSchedule = tempTask->GetScheduleId();
+			const int iFailSchedule = tempTask->GetScheduleId();
 
 			if (tempTask->TimedOut())
 			{
@@ -1193,14 +1177,11 @@ public:
 
 	void GiveSchedIdDescription(int iSchedId, eScheduleDesc iSchedDesc)
 	{
-		dataQueue<CBotTask> tempStack;
-		CBotTask* tempTask;
-
-		tempStack = m_Tasks;
+		dataQueue<CBotTask> tempStack = m_Tasks;
 
 		while (!tempStack.IsEmpty())
 		{
-			tempTask = tempStack.ChoosePointerFrom();
+			CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
 			if (tempTask->GetScheduleId() == iSchedId)
 			{
@@ -1217,14 +1198,11 @@ public:
 	// of the same tasks.
 	BOOL HasSchedule(eScheduleDesc iSchedDesc)
 	{
-		dataQueue<CBotTask> tempStack;
-		CBotTask* tempTask;
-
-		tempStack = m_Tasks;
+		dataQueue<CBotTask> tempStack = m_Tasks;
 
 		while (!tempStack.IsEmpty())
 		{
-			tempTask = tempStack.ChoosePointerFrom();
+			CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
 			if (tempTask->IsOfSchedule(iSchedDesc))
 			{
@@ -1271,21 +1249,17 @@ public:
 	{
 		dataQueue<CBotTask> tempStack = m_Tasks;
 
-		CBotTask* pTask;
-
-		int iScheduleId = 0;
-
 		while (!tempStack.IsEmpty())
 		{
 			try
 			{
-				pTask = tempStack.ChoosePointerFrom();
+				CBotTask* pTask = tempStack.ChoosePointerFrom();
 
 				if (*pTask == Task)
 				{
 					tempStack.Init();
 
-					iScheduleId = pTask->GetScheduleId();
+					const int iScheduleId = pTask->GetScheduleId();
 
 					m_Tasks.RemoveByPointer(pTask);
 
@@ -1309,19 +1283,15 @@ public:
 	{
 		dataQueue<CBotTask> tempStack = m_Tasks;
 
-		CBotTask* pTask;
-
-		int iScheduleId = 0;
-
 		while (!tempStack.IsEmpty())
 		{
-			pTask = tempStack.ChoosePointerFrom();
+			const CBotTask* pTask = tempStack.ChoosePointerFrom();
 
 			if (pTask->Task() == iTask)
 			{
 				tempStack.Init();
 
-				iScheduleId = pTask->GetScheduleId();
+				const int iScheduleId = pTask->GetScheduleId();
 
 				m_Tasks.RemoveByPointer(pTask);
 
@@ -1347,14 +1317,11 @@ public:
 
 	BOOL HasTask(eBotTask iTask)
 	{
-		dataQueue<CBotTask> tempStack;
-		CBotTask* tempTask;
-
-		tempStack = m_Tasks;
+		dataQueue<CBotTask> tempStack = m_Tasks;
 
 		while (!tempStack.IsEmpty())
 		{
-			tempTask = tempStack.ChoosePointerFrom();
+			const CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
 			if (tempTask->Task() == iTask)
 			{
@@ -1372,11 +1339,9 @@ public:
 	{
 		dataQueue<CBotTask> tempStack = m_Tasks;
 
-		CBotTask* pTask;
-
 		while (!tempStack.IsEmpty())
 		{
-			pTask = tempStack.ChoosePointerFrom();
+			const CBotTask* pTask = tempStack.ChoosePointerFrom();
 
 			if (pTask->Task() == iTask)
 			{
@@ -1423,12 +1388,11 @@ public:
 		int iScheduleId = 1;
 
 		dataQueue<CBotTask> tempStack = m_Tasks;
-		CBotTask* pTask;
 
 		// search through list to find a unique Id.
 		while (!tempStack.IsEmpty())
 		{
-			pTask = tempStack.ChoosePointerFrom();
+			const CBotTask* pTask = tempStack.ChoosePointerFrom();
 
 			if (iScheduleId == pTask->GetScheduleId())
 			{
@@ -1446,12 +1410,11 @@ public:
 		// Finish all tasks with ScheduleId as its schedule
 	{
 		dataQueue<CBotTask> tempStack = m_Tasks;
-		CBotTask* pTask;
 		BOOL bRemoved = false;
 
 		while (!tempStack.IsEmpty())
 		{
-			pTask = tempStack.ChoosePointerFrom();
+			const CBotTask* pTask = tempStack.ChoosePointerFrom();
 
 			if (pTask->GetScheduleId() == iScheduleId)
 			{
@@ -1469,12 +1432,11 @@ public:
 	BOOL FinishSchedule(eScheduleDesc iSchedDesc)
 	{
 		dataQueue<CBotTask> tempStack = m_Tasks;
-		CBotTask* pTask;
 		BOOL bRemoved = false;
 
 		while (!tempStack.IsEmpty())
 		{
-			pTask = tempStack.ChoosePointerFrom();
+			CBotTask* pTask = tempStack.ChoosePointerFrom();
 
 			if (pTask->IsOfSchedule(iSchedDesc))
 			{
@@ -1531,7 +1493,6 @@ public:
 		// Altered bot's path info
 
 		dataQueue<CBotTask> tempStack = m_Tasks;
-		CBotTask* pPrevTask;
 
 		// will increment head, we've already set that to bPathFound
 		if (tempStack.IsEmpty())
@@ -1541,7 +1502,7 @@ public:
 		{
 			while (!tempStack.IsEmpty())
 			{
-				pPrevTask = tempStack.ChoosePointerFrom();
+				CBotTask* pPrevTask = tempStack.ChoosePointerFrom();
 
 				if (pPrevTask)
 				{
@@ -1666,11 +1627,10 @@ public:
 		// violate path, make it unavailable.
 	{
 		dataStack<CBotFailedPath> tempStack = m_FailedPaths;
-		CBotFailedPath* pFailedPath;
 
 		while (!tempStack.IsEmpty())
 		{
-			pFailedPath = tempStack.ChoosePointerFromStack();
+			CBotFailedPath* pFailedPath = tempStack.ChoosePointerFromStack();
 
 			if (pFailedPath->IsForPath(pPath))
 			{
@@ -1690,13 +1650,12 @@ public:
 		// Clear paths that have been checked and dealt with in path finding
 	{
 		dataStack<CBotFailedPath> tempStack = m_FailedPaths;
-		CBotFailedPath* pFailedPath;
 
 		BOOL bRemoved = false;
 
 		while (!tempStack.IsEmpty())
 		{
-			pFailedPath = tempStack.ChoosePointerFromStack();
+			const CBotFailedPath* pFailedPath = tempStack.ChoosePointerFromStack();
 
 			if (pFailedPath->IsViolated())
 			{
@@ -1717,11 +1676,10 @@ public:
 	void AddFailedPath(PATH* pPath)
 	{
 		dataStack<CBotFailedPath> tempStack = m_FailedPaths;
-		CBotFailedPath* pFailedPath;
 
 		while (!tempStack.IsEmpty())
 		{
-			pFailedPath = tempStack.ChoosePointerFromStack();
+			const CBotFailedPath* pFailedPath = tempStack.ChoosePointerFromStack();
 
 			if (pFailedPath->IsForPath(pPath))
 			{
@@ -1987,7 +1945,7 @@ public:
 
 		CRememberPosition* e = m_Positions.getExisting(newPosition);
 
-		int index = m_Positions.getExistingIndex(newPosition);
+		const int index = m_Positions.getExistingIndex(newPosition);
 
 		if (index != -1)
 			m_Positions.RemoveByIndex(index);
@@ -2064,10 +2022,9 @@ public:
 
 	void removePosition(edict_t* pEntity)
 	{
-		int i;
 		//		int j;
 
-		for (i = 0; i < m_Positions.Size(); i++)
+		for (int i = 0; i < m_Positions.Size(); i++)
 		{
 			if (m_Positions[i].isEntity(pEntity))//|| (m_Positions[i].getVector() == vOrigin))
 			{
@@ -2118,11 +2075,10 @@ public:
 	{
 		CRememberPosition* nearest = nullptr;
 		float fNearest = 0;
-		float fDistance = 0;
 
 		for (int i = 0; i < m_Positions.Size(); i++)
 		{
-			fDistance = (m_Positions[i].getVector() - vOrigin).Length() + (m_Positions[i].getVector() - vFrom).Length();
+			const float fDistance = (m_Positions[i].getVector() - vOrigin).Length() + (m_Positions[i].getVector() - vFrom).Length();
 
 			if (!nearest || fDistance < fNearest)
 			{
@@ -2351,14 +2307,11 @@ public:
 
 	void removeMember(edict_t* pMember)
 	{
-		dataStack<MyEHandle> tempStack;
-		MyEHandle* temp;
-
-		tempStack = m_theSquad;
+		dataStack<MyEHandle> tempStack = m_theSquad;
 
 		while (!tempStack.IsEmpty())
 		{
-			temp = tempStack.ChoosePointerFromStack();
+			const MyEHandle* temp = tempStack.ChoosePointerFromStack();
 
 			if (temp->Get() == pMember)
 			{
@@ -2388,10 +2341,9 @@ public:
 
 	int numMembers()
 	{
-		dataStack<MyEHandle> tempStack;
 		int num = 0;
 
-		tempStack = m_theSquad;
+		dataStack<MyEHandle> tempStack = m_theSquad;
 
 		while (!tempStack.IsEmpty())
 		{
@@ -2405,14 +2357,11 @@ public:
 
 	BOOL IsMember(edict_t* pEdict)
 	{
-		dataStack<MyEHandle> tempStack;
-		MyEHandle temp;
-
-		tempStack = m_theSquad;
+		dataStack<MyEHandle> tempStack = m_theSquad;
 
 		while (!tempStack.IsEmpty())
 		{
-			temp = tempStack.ChooseFromStack();
+			MyEHandle temp = tempStack.ChooseFromStack();
 
 			if (temp.Get() == pEdict)
 			{
@@ -2656,7 +2605,7 @@ class CLearnedHeader
 public:
 	CLearnedHeader(int iId);
 
-	BOOL operator == (CLearnedHeader other);
+	BOOL operator == (const CLearnedHeader& other);
 	BOOL operator != (CLearnedHeader const other)
 	{
 		return !(*this == other);
@@ -2673,12 +2622,11 @@ public:
 
 	void FreeMemory()
 	{
-		CBotSquad* pSquad;
 		dataStack<CBotSquad*> tempStack = m_theSquads;
 
 		while (!tempStack.IsEmpty())
 		{
-			pSquad = tempStack.ChooseFromStack();
+			const CBotSquad* pSquad = tempStack.ChooseFromStack();
 
 			//			if (pSquad)
 			delete pSquad;
@@ -2709,12 +2657,11 @@ public:
 
 	CBotSquad* FindSquadByLeader(edict_t* pLeader)
 	{
-		CBotSquad* pSquad;
 		dataStack<CBotSquad*> tempStack = m_theSquads;
 
 		while (!tempStack.IsEmpty())
 		{
-			pSquad = tempStack.ChooseFromStack();
+			CBotSquad* pSquad = tempStack.ChooseFromStack();
 
 			if (pSquad->IsLeader(pLeader))
 			{
@@ -2730,10 +2677,9 @@ public:
 
 	void UpdateAngles()
 	{
-		CBotSquad* pSquad;
 		dataStack<CBotSquad*> tempStack = m_theSquads;
 
-		pSquad = nullptr;
+		CBotSquad* pSquad = nullptr;
 
 		while (!tempStack.IsEmpty())
 		{
@@ -3564,12 +3510,8 @@ public:
 		// get waypoint AFTER current waypoint,
 		// return current if no next one.
 	{
-		dataStack<int> tempStack;
-
-		int iNextWaypoint;
-
-		tempStack = m_stBotPaths;
-		iNextWaypoint = m_iCurrentWaypointIndex;
+		dataStack<int> tempStack = m_stBotPaths;
+		int iNextWaypoint = m_iCurrentWaypointIndex;
 
 		while (!tempStack.IsEmpty() && iNextWaypoint == m_iCurrentWaypointIndex)
 		{
@@ -3956,7 +3898,7 @@ public:
 	// that the bot doesn't want to avoid.
 	BOOL CanAvoid(edict_t* pEntity, float fDistanceToEntity, float fAvoidDistance);
 
-	void ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
+	static void ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
 
 	BOOL IsOnLadder()
 	{
@@ -4297,26 +4239,19 @@ public:
 
 	CStoredStrings()
 	{
-		int i;
-
-		for (i = 0; i < STRING_HASHES; i++)
+		for (int i = 0; i < STRING_HASHES; i++)
 			szStringsHead[i].Init();
 	}
 
 	void FreeStrings()
 	{
-		int i;
-
-		dataStack<char*> s_tempStack;
-		void* pFree;
-
-		for (i = 0; i < STRING_HASHES; i++)
+		for (int i = 0; i < STRING_HASHES; i++)
 		{
-			s_tempStack = szStringsHead[i];
+			dataStack<char*> s_tempStack = szStringsHead[i];
 
 			while (!s_tempStack.IsEmpty())
 			{
-				pFree = static_cast<void*>(s_tempStack.ChooseFromStack());
+				void* pFree = static_cast<void*>(s_tempStack.ChooseFromStack());
 
 				if (pFree)
 				{
@@ -4336,9 +4271,7 @@ public:
 		if (iHashNum < 0)
 			iHashNum = -iHashNum;
 
-		int iHashValue = iHashNum % STRING_HASHES;
-		char* l_RetString;
-		char* szNewString = nullptr;
+		const int iHashValue = iHashNum % STRING_HASHES;
 
 		assert(iHashValue >= 0);
 		assert(iHashValue < STRING_HASHES);
@@ -4350,7 +4283,7 @@ public:
 
 		while (!s_tempStack.IsEmpty())
 		{
-			l_RetString = s_tempStack.ChooseFromStack();
+			char* l_RetString = s_tempStack.ChooseFromStack();
 
 			if (strcmpi(l_RetString, szString) == 0)
 			{
@@ -4367,7 +4300,7 @@ public:
 
 		//BotFunc_StringCopy(szNewString,szString);
 
-		szNewString = static_cast<char*>(malloc(sizeof(char) * strlen(szString) + 1));
+		char* szNewString = static_cast<char*>(malloc(sizeof(char) * strlen(szString) + 1));
 		strcpy(szNewString, szString);
 
 		szStringsHead[iHashValue].Push(szNewString);
@@ -4735,9 +4668,7 @@ public:
 
 	edict_t* FindClient(const char* szPlayerName)
 	{
-		int i = 0;
-
-		for (i = 0; i < MAX_PLAYERS; i++)
+		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
 			if (m_Clients[i].IsUsed())
 			{
@@ -4804,9 +4735,7 @@ public:
 
 	void FreeGlobalMemory()
 	{
-		int i;
-
-		for (i = 0; i < MAX_PLAYERS; i++)
+		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
 			this->m_Clients[i].FreeGlobalMemory();
 		}
@@ -4914,11 +4843,10 @@ public:
 	void ShowUsers(edict_t* pEntity)
 	{
 		dataStack<CAllowedPlayer> tempStack = m_AllowedPlayers;
-		CAllowedPlayer* pPlayer;
 
 		while (!tempStack.IsEmpty())
 		{
-			pPlayer = tempStack.ChoosePointerFromStack();
+			CAllowedPlayer* pPlayer = tempStack.ChoosePointerFromStack();
 
 			pPlayer->ShowUser(pEntity);
 		}
@@ -4943,11 +4871,10 @@ public:
 	CAllowedPlayer* GetPlayer(CClient* pClient)
 	{
 		dataStack<CAllowedPlayer> tempStack = m_AllowedPlayers;
-		CAllowedPlayer* Player;
 
 		while (!tempStack.IsEmpty())
 		{
-			Player = tempStack.ChoosePointerFromStack();
+			CAllowedPlayer* Player = tempStack.ChoosePointerFromStack();
 
 			if (Player->IsForClient(pClient))
 			{
@@ -5173,15 +5100,11 @@ public:
 	// of the given mod folder
 	CModInfo* GetModInfo(const char* szModFolder)
 	{
-		dataStack<CModInfo> tempStack;
-
-		CModInfo* pInfo;
-
-		tempStack = m_Mods;
+		dataStack<CModInfo> tempStack = m_Mods;
 
 		while (!tempStack.IsEmpty())
 		{
-			pInfo = tempStack.ChoosePointerFromStack();
+			CModInfo* pInfo = tempStack.ChoosePointerFromStack();
 
 			if (pInfo->IsForMod(szModFolder))
 			{
@@ -5268,9 +5191,7 @@ class CMasterEntities
 public:
 	void FreeLocalMemory()
 	{
-		dataStack<CMasterEntity*> temp;
-
-		temp = m_Masters;
+		dataStack<CMasterEntity*> temp = m_Masters;
 
 		while (!temp.IsEmpty())
 		{
@@ -5290,9 +5211,7 @@ public:
 
 	eMasterType EntityCanFire(edict_t* pEntity, edict_t* pActivator)
 	{
-		CMasterEntity* pMaster;
-
-		pMaster = GetMaster(pEntity);
+		CMasterEntity* pMaster = GetMaster(pEntity);
 
 		if (pMaster)
 			return pMaster->CanFire(pActivator);
@@ -5302,9 +5221,7 @@ public:
 
 	edict_t* GetButtonForEntity(edict_t* pEntity, Vector const& vOrigin)
 	{
-		CMasterEntity* pMaster;
-
-		pMaster = GetMaster(pEntity);
+		CMasterEntity* pMaster = GetMaster(pEntity);
 
 		if (pMaster)
 			return pMaster->FindButton(vOrigin);
@@ -5316,14 +5233,11 @@ private:
 
 	CMasterEntity* GetMaster(edict_t* pEntity)
 	{
-		dataStack<CMasterEntity*> tempStack;
-		CMasterEntity* pMaster;
-
-		tempStack = m_Masters;
+		dataStack<CMasterEntity*> tempStack = m_Masters;
 
 		while (!tempStack.IsEmpty())
 		{
-			pMaster = tempStack.ChooseFromStack();
+			CMasterEntity* pMaster = tempStack.ChooseFromStack();
 
 			if (pMaster->IsForEntity(pEntity))
 			{
@@ -5431,7 +5345,7 @@ public:
 
 	void AddStructure(edict_t* pStructure, int iHashVal)
 	{
-		int iIndex = iHashVal % ALIEN_STRUCT_HASH_MAX;
+		const int iIndex = iHashVal % ALIEN_STRUCT_HASH_MAX;
 
 		if (!m_Structures[iIndex].IsMember(pStructure))
 			m_Structures[iIndex].Push(CStructure(pStructure));
@@ -5439,33 +5353,24 @@ public:
 
 	void FreeLocalMemory()
 	{
-		int i;
-
-		for (i = 0; i < ALIEN_STRUCT_HASH_MAX; i++)
+		for (int i = 0; i < ALIEN_STRUCT_HASH_MAX; i++)
 			m_Structures[i].Destroy();
 	}
 
 	// keep checking hurt structures
 	edict_t* Tick(int* iBestPriority)
 	{
-		dataStack<CStructure> tempStack;
-
-		CStructure* pStructure;
-
-		int iStructure = 0;
 		int iPriority = 0;
-
-		int i;
 
 		edict_t* pUnderAttackStruct = nullptr;
 
-		for (i = 0; i < ALIEN_STRUCT_HASH_MAX; i++)
+		for (int i = 0; i < ALIEN_STRUCT_HASH_MAX; i++)
 		{
-			tempStack = m_Structures[i];
+			dataStack<CStructure> tempStack = m_Structures[i];
 
 			while (!tempStack.IsEmpty())
 			{
-				pStructure = tempStack.ChoosePointerFromStack();
+				CStructure* pStructure = tempStack.ChoosePointerFromStack();
 
 				if (pStructure->IsValid())
 				{
@@ -5473,7 +5378,7 @@ public:
 
 					if (pStructure->IsUnderAttack())
 					{
-						iStructure = pStructure->GetStructureType();
+						const int iStructure = pStructure->GetStructureType();
 
 						switch (iStructure)
 						{
@@ -5902,11 +5807,10 @@ public:
 	BOOL getFlagInfo(edict_t* pFlag, int* group, int* goal, int* team)
 	{
 		dataStack<CTFCGoal> tempStack = m_Flags;
-		CTFCGoal* pGotFlag;
 
 		while (!tempStack.IsEmpty())
 		{
-			pGotFlag = tempStack.ChoosePointerFromStack();
+			CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
 
 			if (pGotFlag->isEdict(pFlag))
 			{
@@ -5926,11 +5830,10 @@ public:
 	edict_t* getRandomHeldFlagByTeam(int team)
 	{
 		dataStack<CTFCGoal> tempStack = m_Flags;
-		CTFCGoal* pGotFlag;
 
 		while (!tempStack.IsEmpty())
 		{
-			pGotFlag = tempStack.ChoosePointerFromStack();
+			CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
 
 			edict_t* pFlag = pGotFlag->edict();
 
@@ -5947,13 +5850,12 @@ public:
 	BOOL playerHasFlag(edict_t* pPlayer)
 	{
 		dataStack<CTFCGoal> tempStack = m_Flags;
-		CTFCGoal* pGotFlag;
 
 		while (!tempStack.IsEmpty())
 		{
-			pGotFlag = tempStack.ChoosePointerFromStack();
+			CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
 
-			edict_t* pFlag = pGotFlag->edict();
+			const edict_t* pFlag = pGotFlag->edict();
 
 			if (pFlag->v.owner == pPlayer)
 			{
@@ -6146,7 +6048,7 @@ private:
 class CBotNSTechs
 {
 public:
-	void addTech(CBotNSTech tech)
+	void addTech(const CBotNSTech& tech)
 	{
 		if (!m_Techs.IsMember(tech))
 			m_Techs.Add(tech);
@@ -6187,12 +6089,9 @@ public:
 
 	CBot* otherBotAtWaypoint(CBot* pBot, int iWpt)
 	{
-		int i = 0;
-		CBot* pOtherBot;
-
-		for (i = 0; i < MAX_PLAYERS; i++)
+		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			pOtherBot = &m_Bots[i];
+			CBot* pOtherBot = &m_Bots[i];
 
 			if (pOtherBot == pBot)
 				continue;
@@ -6209,13 +6108,9 @@ public:
 
 	void printBotBoredom(edict_t* pEdictTo)
 	{
-		int i;
-
-		CBot* pBot;
-
-		for (i = 0; i < MAX_PLAYERS; i++)
+		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			pBot = &m_Bots[i];
+			CBot* pBot = &m_Bots[i];
 
 			if (pBot->IsUsed())
 			{
@@ -6277,12 +6172,9 @@ public:
 	// can sometimes be buggy because of HL's clientDisconnect
 	int GetNumJoiningClients()
 	{
-		int i;
-		int iNum;
+		int iNum = 0;
 
-		iNum = 0;
-
-		for (i = 0; i < MAX_PLAYERS; i++)
+		for (int i = 0; i < MAX_PLAYERS; i++)
 			iNum += m_iJoiningClients[i];
 
 		return iNum;

@@ -107,24 +107,18 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 	// is bot chat allowed AND this message is not from this bot itself ?
 	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHATTING) && pSender != pBot->m_pEdict)
 	{
-		int iNameLength;
-		char* szName;
-
-		iNameLength = strlen(pBot->m_szBotName);
-		szName = new char[sizeof(char) * (iNameLength + 1)];
+		const int iNameLength = strlen(pBot->m_szBotName);
+		char* szName = new char[sizeof(char) * (iNameLength + 1)];
 		RemoveNameTags(pBot->m_szBotName, szName);
 		szName[iNameLength] = 0;
 
 		//int i,j;
 
-		BOOL bNameInMsg = false;
-		char* szNamePos;
-
 		strlow(szMsg);
 		strlow(szName);
 
-		szNamePos = strstr(szMsg, szName);
-		bNameInMsg = szNamePos != nullptr;
+		const char* szNamePos = strstr(szMsg, szName);
+		const BOOL bNameInMsg = szNamePos != nullptr;
 
 		const int iSenderNameLength = strlen(STRING(pSender->v.netname));
 		char* szSenderName = new char[sizeof(char) * (iSenderNameLength + 1)];
@@ -146,11 +140,8 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		// break the new message into an array of words
 		HAL_MakeWords(szMsg, pBot->m_Profile.m_HAL->input_words);
 
-		int iRep;
-		CClient* pClient;
-
-		pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender);
-		iRep = pBot->m_Profile.m_Rep.GetClientRep(pClient);
+		CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender);
+		const int iRep = pBot->m_Profile.m_Rep.GetClientRep(pClient);
 
 		// does the bot feel concerned ? (more chances of replying if its name appears)
 		// if real mode is on, then bot chat is affected by bots rep with sender
@@ -198,13 +189,11 @@ void HumanizeString(char* string)
 	int n = 0;
 	int rand;
 
-	char temp;
-
 	while (i < length)
 	{
 		if (i + 1 < length && RANDOM_LONG(0, 100) < swap_percent)
 		{
-			temp = string[i];
+			const char temp = string[i];
 
 			string[i] = string[i + 1];
 
@@ -252,19 +241,13 @@ void RemoveNameTags(const char* in_string, char* out_string)
 
 	out_string[0] = 0;
 
-	int length;
-
-	char current_char;
-
-	char tag_start;
 	int tag_size = 0;
 	bool space_allowed = false;
-	bool inside_tag;
 
 	if (in_string == nullptr)
 		return;
 
-	length = strlen(in_string);
+	const int length = strlen(in_string);
 
 	if (length > 127)
 	{
@@ -274,11 +257,11 @@ void RemoveNameTags(const char* in_string, char* out_string)
 		return;
 	}
 
-	inside_tag = false;
+	bool inside_tag = false;
 
 	while (i < length)
 	{
-		current_char = 0;
+		char current_char = 0;
 
 		if (inside_tag)
 		{
@@ -321,7 +304,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 		else if (in_string[i] == '(' || in_string[i] == '[' || in_string[i] == '{')
 		{
 			inside_tag = true;
-			tag_start = in_string[i];
+			char tag_start = in_string[i];
 			tag_size = 0;
 			i++;
 			continue;
@@ -415,9 +398,8 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 	// vaguely be construed as containing a reply to whatever is in the input string.
 	// Create an array of keywords from the words in the user's input...
 
-	HAL_DICTIONARY* keywords, * replywords;
 	static char* output_template = nullptr;
-	int tries_count, last_entry, last_character, length = 1;
+	int tries_count, length = 1;
 	int i, j;
 
 	if (output_template == nullptr)
@@ -430,11 +412,11 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 
 	output_template[0] = 0; // first reset the reply string
 
-	keywords = BotHALMakeKeywords(pBot, pBot->m_Profile.m_HAL->input_words);
-	replywords = BotHALBuildReplyDictionary(pBot, keywords);
+	HAL_DICTIONARY* keywords = BotHALMakeKeywords(pBot, pBot->m_Profile.m_HAL->input_words);
+	HAL_DICTIONARY* replywords = BotHALBuildReplyDictionary(pBot, keywords);
 
-	last_entry = pBot->m_Profile.m_HAL->input_words->size - 1;
-	last_character = pBot->m_Profile.m_HAL->input_words->entry[last_entry].length - 1;
+	const int last_entry = pBot->m_Profile.m_HAL->input_words->size - 1;
+	const int last_character = pBot->m_Profile.m_HAL->input_words->entry[last_entry].length - 1;
 
 	// was it a question (i.e. was the last word in the general chat record a question mark ?)
 	if (pBot->m_Profile.m_HAL->input_words->entry[last_entry].word[last_character] == '?')
@@ -523,11 +505,10 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	// without adding it again.
 
 	int i;
-	int position;
 	BOOL found;
 
 	// if the word's already in the dictionary, there is no need to add it
-	position = HAL_SearchDictionary(dictionary, word, &found);
+	const int position = HAL_SearchDictionary(dictionary, word, &found);
 	if (found)
 		return dictionary->index[position];
 
@@ -579,11 +560,6 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 	// search the dictionary for the specified word, returning its position in the index if
 	// found, or the position where it should be inserted otherwise
 
-	int imin;
-	int imax;
-	int middle;
-	int compar;
-
 	// if the dictionary is empty, then obviously the word won't be found
 	if (dictionary->size == 0)
 	{
@@ -592,8 +568,8 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 	}
 
 	// initialize the lower and upper bounds of the search
-	imin = 0;
-	imax = dictionary->size - 1;
+	int imin = 0;
+	int imax = dictionary->size - 1;
 
 	//BOOL bDone = false;
 	//int iFound = 0;
@@ -604,8 +580,8 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 	{
 		// see whether the middle element of the search space is greater than, equal to, or
 		// less than the element being searched for.
-		middle = (imin + imax) / 2;
-		compar = HAL_CompareWords(word, dictionary->entry[dictionary->index[middle]]);
+		const int middle = (imin + imax) / 2;
+		const int compar = HAL_CompareWords(word, dictionary->entry[dictionary->index[middle]]);
 
 		// if equal then we have found the element. Otherwise halve the search space accordingly
 		if (compar == 0)
@@ -655,14 +631,11 @@ int HAL_CompareWords(HAL_STRING word1, HAL_STRING word2)
 	// this function compares two words, and return an integer indicating whether the first
 	// word is less than, equal to or greater than the second word
 
-	int i;
-	int bound;
-
 	try
 	{
-		bound = min(word1.length, word2.length);
+		const int bound = min(word1.length, word2.length);
 
-		for (i = 0; i < bound; ++i)
+		for (int i = 0; i < bound; ++i)
 			if (toupper(word1.word[i]) != toupper(word2.word[i]))
 				return toupper(word1.word[i]) - toupper(word2.word[i]);
 	}
@@ -693,9 +666,7 @@ HAL_DICTIONARY* HAL_NewDictionary()
 {
 	// this function allocates room for a new dictionary
 
-	HAL_DICTIONARY* dictionary = nullptr;
-
-	dictionary = static_cast<HAL_DICTIONARY*>(malloc(sizeof(HAL_DICTIONARY)));
+	HAL_DICTIONARY* dictionary = static_cast<HAL_DICTIONARY*>(malloc(sizeof(HAL_DICTIONARY)));
 	if (dictionary == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_NewDictionary() unable to allocate dictionary\n");
 
@@ -710,15 +681,13 @@ void HAL_SaveDictionary(FILE* file, HAL_DICTIONARY* dictionary)
 {
 	// this function saves a dictionary to the specified file
 
-	int i, j;
-
 	fwrite(&dictionary->size, sizeof(unsigned long), 1, file);
 
 	// save each word to the file
-	for (i = 0; i < static_cast<int>(dictionary->size); ++i)
+	for (int i = 0; i < static_cast<int>(dictionary->size); ++i)
 	{
 		fwrite(&dictionary->entry[i].length, sizeof(unsigned char), 1, file);
-		for (j = 0; j < dictionary->entry[i].length; ++j)
+		for (int j = 0; j < dictionary->entry[i].length; ++j)
 			fwrite(&dictionary->entry[i].word[j], sizeof(char), 1, file);
 	}
 }
@@ -727,7 +696,6 @@ void HAL_LoadDictionary(FILE* file, HAL_DICTIONARY* dictionary)
 {
 	// this function loads a dictionary from the specified file
 
-	int i;
 	int size;
 	HAL_STRING word;
 
@@ -737,7 +705,7 @@ void HAL_LoadDictionary(FILE* file, HAL_DICTIONARY* dictionary)
 	fread(&size, sizeof(unsigned long), 1, file);
 
 	// load each dictionary word from the file
-	for (i = 0; i < size; ++i)
+	for (int i = 0; i < size; ++i)
 	{
 		fread(&word.length, sizeof(unsigned char), 1, file);
 
@@ -765,10 +733,8 @@ HAL_TREE* HAL_NewNode()
 {
 	// allocate a new node for the n-gram tree, and initialise its contents to sensible values
 
-	HAL_TREE* node = nullptr;
-
 	// allocate memory for the new node
-	node = static_cast<HAL_TREE*>(malloc(sizeof(HAL_TREE)));
+	HAL_TREE* node = static_cast<HAL_TREE*>(malloc(sizeof(HAL_TREE)));
 	if (node == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_NewNode() unable to allocate node\n");
 
@@ -786,9 +752,7 @@ HAL_MODEL* HAL_NewModel(int order)
 {
 	// this function creates and initializes a new ngram model
 
-	HAL_MODEL* model = nullptr;
-
-	model = static_cast<HAL_MODEL*>(malloc(sizeof(HAL_MODEL)));
+	HAL_MODEL* model = static_cast<HAL_MODEL*>(malloc(sizeof(HAL_MODEL)));
 	if (model == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_NewModel() unable to allocate model\n");
 
@@ -810,10 +774,8 @@ void HAL_UpdateModel(HAL_MODEL* model, int symbol)
 {
 	// this function uppdates the model with the specified symbol
 
-	int i;
-
 	// update all of the models in the current context with the specified symbol
-	for (i = model->order + 1; i > 0; --i)
+	for (int i = model->order + 1; i > 0; --i)
 		if (model->context[i - 1] != nullptr)
 			model->context[i] = HAL_AddSymbol(model->context[i - 1], static_cast<unsigned short>(symbol));
 
@@ -824,9 +786,7 @@ void HAL_UpdateContext(HAL_MODEL* model, int symbol)
 {
 	// this function updates the context of the model without adding the symbol
 
-	int i;
-
-	for (i = model->order + 1; i > 0; --i)
+	for (int i = model->order + 1; i > 0; --i)
 		if (model->context[i - 1] != nullptr)
 			model->context[i] = HAL_FindSymbol(model->context[i - 1], symbol);
 }
@@ -836,10 +796,8 @@ HAL_TREE* HAL_AddSymbol(HAL_TREE* tree, unsigned short symbol)
 	// this function updates the statistics of the specified tree with the specified symbol,
 	// which may mean growing the tree if the symbol hasn't been seen in this context before
 
-	HAL_TREE* node = nullptr;
-
 	// search for the symbol in the subtree of the tree node
-	node = HAL_FindSymbolAdd(tree, symbol);
+	HAL_TREE* node = HAL_FindSymbolAdd(tree, symbol);
 
 	// increment the symbol counts
 	if (node->count < 65535)
@@ -855,12 +813,11 @@ HAL_TREE* HAL_FindSymbol(HAL_TREE* node, int symbol)
 {
 	// this function returns a pointer to the child node, if one exists, which contains symbol
 
-	int i;
 	HAL_TREE* found = nullptr;
 	BOOL found_symbol = false;
 
 	// perform a binary search for the symbol
-	i = HAL_SearchNode(node, symbol, &found_symbol);
+	const int i = HAL_SearchNode(node, symbol, &found_symbol);
 	if (found_symbol)
 		found = node->tree[i];
 
@@ -872,13 +829,12 @@ HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, int symbol)
 	// this function is conceptually similar to HAL_FindSymbol, apart from the fact that if the
 	// symbol is not found, a new node is automatically allocated and added to the tree
 
-	int i;
 	HAL_TREE* found = nullptr;
 	BOOL found_symbol = false;
 
 	// perform a binary search for the symbol. If the symbol isn't found, attach a new sub-node
 	// to the tree node so that it remains sorted.
-	i = HAL_SearchNode(node, symbol, &found_symbol);
+	const int i = HAL_SearchNode(node, symbol, &found_symbol);
 
 	if (found_symbol)
 		found = node->tree[i];
@@ -896,8 +852,6 @@ void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position)
 {
 	// this function attachs a new child node to the sub-tree of the tree specified
 
-	int i;
-
 	// allocate room for one more child node, which may mean allocating the sub-tree from scratch
 	if (tree->tree == nullptr)
 		tree->tree = static_cast<HAL_TREE**>(malloc(sizeof(HAL_TREE*) * (tree->branch + 1)));
@@ -910,7 +864,7 @@ void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position)
 		BotMessage(nullptr, 1, "HAL: HAL_AddNode() unable to reallocate subtree\n");
 
 	// shuffle nodes down so that we can insert new node at subtree index given by position
-	for (i = tree->branch; i > position; --i)
+	for (int i = tree->branch; i > position; --i)
 		tree->tree[i] = tree->tree[i - 1];
 
 	// add the new node to the sub-tree
@@ -924,11 +878,6 @@ int HAL_SearchNode(HAL_TREE* node, int symbol, BOOL* found_symbol)
 	// given node. Return the position of the child node in the subtree if the symbol was found,
 	// or the position where it should be inserted to keep the subtree sorted if it wasn't
 
-	int imin;
-	int imax;
-	int middle;
-	int compar;
-
 	// handle the special case where the subtree is empty
 	if (node->branch == 0)
 	{
@@ -937,13 +886,13 @@ int HAL_SearchNode(HAL_TREE* node, int symbol, BOOL* found_symbol)
 	}
 
 	// perform a binary search on the subtree
-	imin = 0;
-	imax = node->branch - 1;
+	int imin = 0;
+	int imax = node->branch - 1;
 
 	while (true)
 	{
-		middle = (imin + imax) / 2;
-		compar = symbol - node->tree[middle]->symbol;
+		const int middle = (imin + imax) / 2;
+		const int compar = symbol - node->tree[middle]->symbol;
 
 		if (compar == 0)
 		{
@@ -977,9 +926,7 @@ void HAL_InitializeContext(HAL_MODEL* model)
 {
 	// this function sets the context of the model to a default value
 
-	int i;
-
-	for (i = 0; i <= model->order; ++i)
+	for (int i = 0; i <= model->order; ++i)
 		model->context[i] = nullptr; // reset all the context elements
 }
 
@@ -1028,8 +975,6 @@ void HAL_SaveTree(FILE* file, HAL_TREE* node)
 {
 	// this function saves a tree structure to the specified file
 
-	int i;
-
 	if (node)
 	{
 		fwrite(&node->symbol, sizeof(unsigned short), 1, file);
@@ -1037,7 +982,7 @@ void HAL_SaveTree(FILE* file, HAL_TREE* node)
 		fwrite(&node->count, sizeof(unsigned short), 1, file);
 		fwrite(&node->branch, sizeof(unsigned short), 1, file);
 
-		for (i = 0; i < node->branch; ++i)
+		for (int i = 0; i < node->branch; ++i)
 			HAL_SaveTree(file, node->tree[i]);
 	}
 }
@@ -1045,8 +990,6 @@ void HAL_SaveTree(FILE* file, HAL_TREE* node)
 void HAL_LoadTree(FILE* file, HAL_TREE* node)
 {
 	// this function loads a tree structure from the specified file
-
-	int i;
 
 	fread(&node->symbol, sizeof(unsigned short), 1, file);
 	fread(&node->usage, sizeof(unsigned long), 1, file);
@@ -1060,7 +1003,7 @@ void HAL_LoadTree(FILE* file, HAL_TREE* node)
 	if (node->tree == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_LoadTree() unable to allocate subtree\n");
 
-	for (i = 0; i < node->branch; ++i)
+	for (int i = 0; i < node->branch; ++i)
 	{
 		node->tree[i] = HAL_NewNode();
 		HAL_LoadTree(file, node->tree[i]);
@@ -1071,14 +1014,13 @@ void HAL_MakeWords(char* input, HAL_DICTIONARY* words)
 {
 	// this function breaks a string into an array of words
 	int offset = 0;
-	int iLen;
 
 	if (!input || !*input)
 		return; // if void, return
 
 	// re-written
 
-	iLen = strlen(input);
+	int iLen = strlen(input);
 
 	// clear the entries in the dictionary
 	HAL_EmptyDictionary(words);
@@ -1216,13 +1158,11 @@ BOOL HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2)
 {
 	// this function returns true if the dictionaries are NOT the same or false if not
 
-	int i;
-
 	if (words1->size != words2->size)
 		return true; // if they haven't the same size, obviously they aren't the same
 
 	// for each word of the first dictionary...
-	for (i = 0; i < static_cast<int>(words1->size); ++i)
+	for (int i = 0; i < static_cast<int>(words1->size); ++i)
 		if (HAL_CompareWords(words1->entry[i], words2->entry[i]) != 0)
 			return true; // compare it with the second and break at the first difference
 
@@ -1329,12 +1269,10 @@ void BotHALAddKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
 {
 	// this function adds a word to the keyword dictionary
 
-	int symbol;
-
 	if (!pBot || !pBot->IsUsed())
 		return; // reliability check
 
-	symbol = HAL_FindWord(pBot->m_Profile.m_HAL->bot_model->dictionary, word);
+	int symbol = HAL_FindWord(pBot->m_Profile.m_HAL->bot_model->dictionary, word);
 
 	if (symbol == 0)
 		return; // if void, return
@@ -1443,12 +1381,10 @@ void BotHALAddAuxiliaryKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word
 {
 	// this function adds an auxilliary keyword to the keyword dictionary
 
-	int symbol;
-
 	if (!pBot || !pBot->IsUsed())
 		return; // reliability check
 
-	symbol = HAL_FindWord(pBot->m_Profile.m_HAL->bot_model->dictionary, word);
+	int symbol = HAL_FindWord(pBot->m_Profile.m_HAL->bot_model->dictionary, word);
 
 	if (symbol == 0)
 		return; // if void, return
@@ -1573,7 +1509,6 @@ int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 
 	const HAL_TREE* node = nullptr;
 	int i;
-	int count;
 	int symbol = 0;
 
 	if (!pBot || !pBot->IsUsed())
@@ -1589,7 +1524,7 @@ int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 
 	// choose a symbol at random from this context
 	i = RANDOM_LONG(0, node->branch - 1);
-	count = RANDOM_LONG(0, node->usage - 1);
+	int count = RANDOM_LONG(0, node->usage - 1);
 
 	while (count >= 0)
 	{
@@ -1617,10 +1552,8 @@ BOOL HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word)
 {
 	// here's a silly brute-force searcher for the reply string
 
-	int i;
-
 	// for each element of the dictionary, compare word with it...
-	for (i = 0; i < static_cast<int>(dictionary->size); ++i)
+	for (int i = 0; i < static_cast<int>(dictionary->size); ++i)
 		if (HAL_CompareWords(dictionary->entry[i], word) == 0)
 			return true; // word was found
 
@@ -1631,9 +1564,7 @@ int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys)
 {
 	// this function seeds the reply by guaranteeing that it contains a keyword, if one exists
 
-	int i;
 	int symbol;
-	int stop;
 
 	// be aware of the special case where the tree is empty
 	if (pBot->m_Profile.m_HAL->bot_model->context[0]->branch == 0)
@@ -1643,8 +1574,8 @@ int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys)
 
 	if (keys->size > 0)
 	{
-		i = RANDOM_LONG(0, keys->size - 1);
-		stop = i;
+		int i = RANDOM_LONG(0, keys->size - 1);
+		const int stop = i;
 
 		while (true)
 		{
@@ -1719,18 +1650,14 @@ HAL_SWAP* HAL_InitializeSwap(char* filename)
 {
 	// this function reads a swap structure from a file.
 
-	HAL_SWAP* list;
-	FILE* fp;
 	char buffer[1024];
-	char* from;
-	char* to;
 
-	list = HAL_NewSwap();
+	HAL_SWAP* list = HAL_NewSwap();
 
 	if (filename == nullptr)
 		return list;
 
-	fp = fopen(filename, "r");
+	FILE* fp = fopen(filename, "r");
 	if (fp == nullptr)
 		return list;
 
@@ -1742,8 +1669,8 @@ HAL_SWAP* HAL_InitializeSwap(char* filename)
 		if (buffer[0] == '#' || buffer[0] == '\n')
 			continue;
 
-		from = strtok(buffer, "\t");
-		to = strtok(nullptr, "\t\n#");
+		char* from = strtok(buffer, "\t");
+		char* to = strtok(nullptr, "\t\n#");
 
 		HAL_AddSwap(list, from, to);
 	}
@@ -1756,18 +1683,15 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 {
 	// this function reads a dictionary from a file
 
-	HAL_DICTIONARY* list;
-	FILE* fp;
 	HAL_STRING word;
-	char* string;
 	char buffer[1024];
 
-	list = HAL_NewDictionary();
+	HAL_DICTIONARY* list = HAL_NewDictionary();
 
 	if (filename == nullptr)
 		return list;
 
-	fp = fopen(filename, "r");
+	FILE* fp = fopen(filename, "r");
 	if (fp == nullptr)
 		return list;
 
@@ -1779,7 +1703,7 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 		if (buffer[0] == '#' || buffer[0] == '\n')
 			continue;
 
-		string = strtok(buffer, "\t\n#");
+		const char* string = strtok(buffer, "\t\n#");
 
 		if (string != nullptr && strlen(string) > 0)
 		{
@@ -1874,14 +1798,12 @@ void HAL_FreeTree(HAL_TREE* tree)
 {
 	// this function frees the memory space used by a model tree
 
-	int i;
-
 	if (tree == nullptr)
 		return; // reliability check
 
 	if (tree->tree != nullptr)
 	{
-		for (i = 0; i < tree->branch; ++i)
+		for (int i = 0; i < tree->branch; ++i)
 			HAL_FreeTree(tree->tree[i]);
 
 		free(tree->tree);
@@ -1897,13 +1819,11 @@ void HAL_FreeSwap(HAL_SWAP* swap)
 {
 	// this function frees the memory space used in a swap structure
 
-	int i;
-
 	if (swap == nullptr)
 		return; // if already freed, return
 
 	// for each element of the swap structure...
-	for (i = 0; i < swap->size; ++i)
+	for (int i = 0; i < swap->size; ++i)
 	{
 		//		if (swap->from[i].word != NULL)
 		free(swap->from[i].word); // free the "from" word
@@ -1937,7 +1857,6 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 {
 	// this function prepares a HAL personality
 
-	FILE* fp;
 	char ban_filename[256];
 	char aux_filename[256];
 	char swp_filename[256];
@@ -2018,7 +1937,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	pBotProfile->m_HAL->swappable_keywords = HAL_InitializeSwap(swp_filename);
 
 	// check if the brain exists, try to open it
-	fp = fopen(brn_filename, "rb");
+	FILE* fp = fopen(brn_filename, "rb");
 	if (fp != nullptr)
 	{
 		fseek(fp, 0, SEEK_SET); // seek at start of file
@@ -2056,7 +1975,6 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 {
 	// this function loads a HAL brain
 
-	FILE* fp;
 	char filename[512];
 	char file[256];
 	char cookie[8];
@@ -2074,7 +1992,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 	UTIL_BuildFileName(filename, "botprofiles", file);
 
 	// check if the brain exists, try to open it
-	fp = fopen(filename, "rb");
+	FILE* fp = fopen(filename, "rb");
 	if (fp == nullptr)
 	{
 		//delete szName;
@@ -2133,7 +2051,6 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 		if (fp != nullptr)
 		{
 			char szBuffer[256];
-			int iLen;
 
 			while (fgets(szBuffer, 255, fp) != nullptr)
 			{
@@ -2144,7 +2061,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 				if (!szBuffer[0])
 					continue; // nothing on this line
 
-				iLen = strlen(szBuffer);
+				const int iLen = strlen(szBuffer);
 
 				if (szBuffer[iLen - 1] == '\n')
 					szBuffer[iLen - 1] = 0;
@@ -2164,7 +2081,6 @@ void SaveHALBrainForPersonality(bot_profile_t* pBotProfile)
 {
 	// this function saves the current state to a HAL brain file
 
-	FILE* fp;
 	char file[256];
 	char filename[256];
 
@@ -2172,7 +2088,7 @@ void SaveHALBrainForPersonality(bot_profile_t* pBotProfile)
 
 	UTIL_BuildFileName(filename, "botprofiles", file);
 
-	fp = fopen(filename, "wb");
+	FILE* fp = fopen(filename, "wb");
 	if (fp == nullptr)
 	{
 		BotMessage(nullptr, 0, "Unable to save profile %d's HAL brain to %s\n", pBotProfile->m_iProfileId, filename);

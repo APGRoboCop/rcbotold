@@ -244,9 +244,8 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	typedef	DWORD 		THREAD_T;
 	// returns 0==success, non-zero==failure
 	inline int THREAD_CREATE(THREAD_T *tid, void (*func)()) {
-		HANDLE ret;
 		// win32 returns NULL==failure, non-NULL==success
-		ret=CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(func), nullptr, 0, tid);
+		const HANDLE ret = CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(func), nullptr, 0, tid);
 		if(ret==nullptr)
 			META_ERROR("Failure starting thread: %s", str_GetLastError());
 		return(ret==nullptr);
@@ -353,9 +352,8 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 			return(0);
 	}
 	inline int COND_WAIT(COND_T *cond, MUTEX_T *mutex) {
-		DWORD ret;
 		LeaveCriticalSection(mutex);
-		ret=WaitForSingleObject(*cond, INFINITE);
+		const DWORD ret = WaitForSingleObject(*cond, INFINITE);
 		EnterCriticalSection(mutex);
 		// returns WAIT_OBJECT_0 if object was signaled; other return
 		// values indicate errors.
@@ -367,8 +365,7 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 		}
 	}
 	inline int COND_SIGNAL(COND_T *cond) {
-		BOOL ret;
-		ret=SetEvent(*cond);
+		const BOOL ret = SetEvent(*cond);
 		// returns zero on failure
 		if(ret==0) {
 			META_ERROR("cond_signal failed: %s", str_GetLastError());
@@ -391,10 +388,8 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 #define normalize_pathname(a)
 #elif defined(_WIN32)
 inline void normalize_pathname(char *path) {
-	char *cp;
-
 	META_DEBUG(8, ("normalize: %s", path));
-	for(cp=path; *cp; cp++) {
+	for(char* cp = path; *cp; cp++) {
 		if(isupper(*cp)) *cp=tolower(*cp);
 		if(*cp=='\\') *cp='/';
 	}
@@ -421,8 +416,7 @@ inline int is_absolute_path(const char *path) {
 // Buffer pointed to by resolved_name is assumed to be able to store a
 // string of PATH_MAX length.
 inline char *realpath(const char *file_name, char *resolved_name) {
-	int ret;
-	ret=GetFullPathName(file_name, PATH_MAX, resolved_name, nullptr);
+	const int ret = GetFullPathName(file_name, PATH_MAX, resolved_name, nullptr);
 	if(ret > PATH_MAX) {
 		errno=ENAMETOOLONG;
 		return(nullptr);

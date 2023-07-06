@@ -65,20 +65,17 @@ NN::NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int 
 
 void NN::setWeights(std::vector<ga_value>* weights)
 {
-	unsigned short int i;
-	unsigned short int j;
-	unsigned short int k;
 	unsigned short int w = 0;
 
-	for (i = 0; i < m_Layers.size(); i++)
+	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
 		NNLayer* l = m_Layers[i];
 
-		for (j = 0; j < l->numNeurons(); j++)
+		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			CPerceptron* n = l->getNeuron(j);
 
-			for (k = 0; k < n->numWeights(); k++)
+			for (unsigned short int k = 0; k < n->numWeights(); k++)
 			{
 				n->setWeight(k, (*weights)[w++]);
 			}
@@ -88,19 +85,15 @@ void NN::setWeights(std::vector<ga_value>* weights)
 
 void NN::getWeights(std::vector<ga_value>* weights)
 {
-	unsigned short int i;
-	unsigned short int j;
-	unsigned short int k;
-
-	for (i = 0; i < m_Layers.size(); i++)
+	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
 		NNLayer* l = m_Layers[i];
 
-		for (j = 0; j < l->numNeurons(); j++)
+		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			CPerceptron* n = l->getNeuron(j);
 
-			for (k = 0; k < n->numWeights(); k++)
+			for (unsigned short int k = 0; k < n->numWeights(); k++)
 			{
 				weights->emplace_back(n->getWeight(k));
 			}
@@ -110,15 +103,13 @@ void NN::getWeights(std::vector<ga_value>* weights)
 
 void NN::trainOutputs(std::vector<ga_value>* wanted_outputs)
 {
-	unsigned short int i;
-	unsigned short int j;
 	unsigned short int w = 0;
 
-	for (i = 0; i < m_Layers.size(); i++)
+	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
 		NNLayer* l = m_Layers[i];
 
-		for (j = 0; j < l->numNeurons(); j++)
+		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			CPerceptron* n = l->getNeuron(j);
 
@@ -129,17 +120,15 @@ void NN::trainOutputs(std::vector<ga_value>* wanted_outputs)
 
 void NN::getOutputs(std::vector<ga_value>* outputs)
 {
-	unsigned short int i;
-	unsigned short int j;
 	//unsigned short int w = 0;
 
 	outputs->clear();
 
-	for (i = 0; i < m_Layers.size(); i++)
+	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
 		NNLayer* l = m_Layers[i];
 
-		for (j = 0; j < l->numNeurons(); j++)
+		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			CPerceptron* n = l->getNeuron(j);
 
@@ -151,7 +140,6 @@ void NN::getOutputs(std::vector<ga_value>* outputs)
 void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs)
 {
 	unsigned short int i;
-	unsigned short int j;
 
 	std::vector<ga_value> newoutputs;
 
@@ -166,7 +154,7 @@ void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs
 
 		newoutputs.clear();
 
-		for (j = 0; j < l->numNeurons(); j++)
+		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			CPerceptron* n = l->getNeuron(j);
 
@@ -261,14 +249,11 @@ void NN::save(FILE* bfp)
 
 void NN::randomize()
 {
-	unsigned short int i;
-	unsigned short int j;
-
-	for (i = 0; i < m_Layers.size(); i++)
+	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
 		NNLayer* l = m_Layers[i];
 
-		for (j = 0; j < l->numNeurons(); j++)
+		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			l->getNeuron(j)->randomize();
 		}
@@ -277,14 +262,11 @@ void NN::randomize()
 
 void NN::freeMemory()
 {
-	unsigned short int i;
-	unsigned short int j;
-
-	for (i = 0; i < m_Layers.size(); i++)
+	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
 		NNLayer* l = m_Layers[i];
 
-		for (j = 0; j < l->numNeurons(); j++)
+		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			l->freeMemory();
 		}
@@ -298,9 +280,7 @@ void NN::freeMemory()
 
 void NNLayer::freeMemory()
 {
-	unsigned short int i;
-
-	for (i = 0; i < m_Neurons.size(); i++)
+	for (unsigned short int i = 0; i < m_Neurons.size(); i++)
 	{
 		delete m_Neurons[i];
 		m_Neurons[i] = nullptr;
@@ -367,9 +347,7 @@ void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
 
 		for (unsigned int j = 0; j < outputs.size(); j++)
 		{
-			ga_value fError;
-
-			fError = outputs[j] - trainingsets[i].outputs[j];
+			const ga_value fError = outputs[j] - trainingsets[i].outputs[j];
 
 			fTotalError += fError * fError;
 			iNum++;

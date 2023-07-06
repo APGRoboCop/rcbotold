@@ -58,11 +58,10 @@ IIndividual* CPopulation::get(int iIndex)
 IIndividual* CPopulation::getBestIndividual()
 {
 	IIndividual* best = nullptr;
-	IIndividual* curr;
 
 	for (unsigned int i = 0; i < m_theIndividuals.size(); i++)
 	{
-		curr = m_theIndividuals[i];
+		IIndividual* curr = m_theIndividuals[i];
 
 		if (!best || curr->getFitness() > best->getFitness())
 			best = curr;
@@ -159,13 +158,12 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 
 ga_value CPopulation::bestFitness()
 {
-	float fFitness = 0.0f;
 	BOOL gotBestFitness = false;
 	float fBestFitness = 0.0f;
 
 	for (unsigned int i = 0; i < size(); i++)
 	{
-		fFitness = m_theIndividuals[i]->getFitness();
+		const float fFitness = m_theIndividuals[i]->getFitness();
 
 		if (!gotBestFitness || fFitness > fBestFitness)
 		{
