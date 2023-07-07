@@ -374,8 +374,6 @@ void InitMessage ( const char *message );
 	// Waypoints ON???
 	if (m_bWaypointOn && m_fWaypointDisplayTime < gpGlobals->time)
 	{
-		int n;
-
 		int iCurrentWaypoint;
 
 		edict_t* pPlayer;
@@ -405,6 +403,7 @@ void InitMessage ( const char *message );
 
 			if (iCurrentWaypoint != -1)
 			{
+				int n;
 				// check if path waypointing is on...
 
 				PATH* p;
@@ -973,9 +972,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 			pBot->m_Profile.m_Rep.AddLoadRep(pBot->m_Profile.m_iProfileId, iPlayerRepId);
 		}
 
-		CAllowedPlayer* pUser = gBotGlobals.m_BotUsers.GetPlayer(pClient);
-
-		if (pUser)
+		if (CAllowedPlayer* pUser = gBotGlobals.m_BotUsers.GetPlayer(pClient))
 		{
 			pUser->GiveClientAccess(pClient);
 			BotMessage(pPlayer, 0, "You have been authenticated");
@@ -1002,14 +999,12 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 
 void CClients::ClientDisconnected(edict_t* pPlayer)
 {
-	CClient* pClient = GetClientByEdict(pPlayer);
-
 	//	gBotGlobals.m_iNumClients --;
 	//	gBotGlobals.m_iJoiningClients --;
 
 		//BotMessage(NULL,0,"Client left, number of clients = %d",UTIL_GetNumClients());
 
-	if (pClient)
+	if (CClient* pClient = GetClientByEdict(pPlayer))
 	{
 		ClientDisconnected(pClient);
 	}

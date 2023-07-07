@@ -63,7 +63,7 @@ NN::NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int 
 	m_Layers.emplace_back(new NNLayer(iNumOutputs, iNumNeuronsPerHiddenLayer));
 }
 
-void NN::setWeights(std::vector<ga_value>* weights)
+void NN::setWeights(std::vector<ga_value>* weights) const
 {
 	unsigned short int w = 0;
 
@@ -83,7 +83,7 @@ void NN::setWeights(std::vector<ga_value>* weights)
 	}
 }
 
-void NN::getWeights(std::vector<ga_value>* weights)
+void NN::getWeights(std::vector<ga_value>* weights) const
 {
 	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
@@ -101,7 +101,7 @@ void NN::getWeights(std::vector<ga_value>* weights)
 	}
 }
 
-void NN::trainOutputs(std::vector<ga_value>* wanted_outputs)
+void NN::trainOutputs(std::vector<ga_value>* wanted_outputs) const
 {
 	unsigned short int w = 0;
 
@@ -118,7 +118,7 @@ void NN::trainOutputs(std::vector<ga_value>* wanted_outputs)
 	}
 }
 
-void NN::getOutputs(std::vector<ga_value>* outputs)
+void NN::getOutputs(std::vector<ga_value>* outputs) const
 {
 	//unsigned short int w = 0;
 
@@ -137,7 +137,7 @@ void NN::getOutputs(std::vector<ga_value>* outputs)
 	}
 }
 
-void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs)
+void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs) const
 {
 	unsigned short int i;
 
@@ -171,7 +171,7 @@ void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs
 	}
 }
 
-void NNLayer::save(FILE* bfp)
+void NNLayer::save(FILE* bfp) const
 {
 	unsigned int iTemp;
 
@@ -228,7 +228,7 @@ void NN::load(FILE* bfp)
 	}
 }
 
-void NN::save(FILE* bfp)
+void NN::save(FILE* bfp) const
 {
 	if (feof(bfp))
 		return;
@@ -247,7 +247,7 @@ void NN::save(FILE* bfp)
 	}
 }
 
-void NN::randomize()
+void NN::randomize() const
 {
 	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{

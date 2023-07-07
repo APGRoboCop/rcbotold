@@ -74,7 +74,7 @@ void CBits::freeMemory()
 	m_iNumBits = 0;
 }
 
-void CBits::setBit(const int iBit, const BOOL bSet)
+void CBits::setBit(const int iBit, const BOOL bSet) const
 {
 	const int iBitStart = iBit / 8;
 	const int iBitOffset = iBit % 8;
@@ -87,7 +87,7 @@ void CBits::setBit(const int iBit, const BOOL bSet)
 		*c &= ~(1 << iBitOffset);
 }
 
-BOOL CBits::getBit(const int iBit)
+BOOL CBits::getBit(const int iBit) const
 {
 	const int iBitStart = iBit / 8;
 	const int iBitOffset = iBit % 8;
@@ -124,7 +124,7 @@ void CBits::load(FILE* bfp)
 	fread(&m_cBits, size(), 1, bfp);
 }
 
-void CBits::randomize()
+void CBits::randomize() const
 {
 	for (int i = 0; i < m_iNumBits; i++)
 	{
@@ -144,12 +144,12 @@ void CBits::setup(const int iNumBits)
 }
 
 // memory size
-int CBits::size()
+int CBits::size() const
 {
 	return Ceiling(static_cast<float>(m_iNumBits) / 8);
 }
 
-void CBits::save(FILE* bfp)
+void CBits::save(FILE* bfp) const
 {
 	CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
@@ -166,7 +166,7 @@ void CBits::copy(CBits* otherBits)
 	memcpy(m_cBits, otherBits->getBits(), size());
 }
 
-void CBits::clear()
+void CBits::clear() const
 {
 	memset(m_cBits, 0, size());
 }

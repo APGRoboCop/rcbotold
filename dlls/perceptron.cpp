@@ -137,12 +137,12 @@ ga_value CPerceptron::execute()
 	return m_output;
 }
 
-BOOL CPerceptron::fired()
+BOOL CPerceptron::fired() const
 {
 	return m_output >= 0.5f;
 }
 
-ga_value CPerceptron::getOutput()
+ga_value CPerceptron::getOutput() const
 {
 	return m_output;
 }
@@ -160,7 +160,7 @@ void CPerceptron::train(ga_value expectedOutput)
 	}
 }
 
-void CPerceptron::save(FILE* bfp)
+void CPerceptron::save(FILE* bfp) const
 {
 	unsigned int iTemp;
 	unsigned int i;

@@ -15,13 +15,13 @@ include_paths = [
 # Compiler setup
 builder.cxx.defines += [
     'HAVE_STDINT_H',
-	'RCBOT_META_BUILD'
+    'RCBOT_META_BUILD'
   ]
 
 if builder.cxx.like('gcc'):
   builder.cxx.defines += [
-	'stricmp=strcasecmp',
-	'strcmpi=strcasecmp'
+    'stricmp=strcasecmp',
+    'strcmpi=strcasecmp'
   ]
   
   builder.cxx.c_only_flags += ['-std=gnu99']
@@ -32,8 +32,8 @@ if builder.cxx.target.platform == 'linux':
   # Linux compiler C flags
   builder.cxx.cflags += [
     '-pipe',
-	'-fPIC',
-	'-msse2',
+    '-fPIC',
+    '-msse2',
     '-fno-strict-aliasing',
     '-Wall',
     '-Werror',
@@ -70,24 +70,24 @@ elif builder.cxx.target.platform == 'windows':
   # Windows compiler C++ flags
   builder.cxx.cxxflags += [
     '/std:c++17',
-	'/arch:SSE2',
+    '/arch:SSE2',
     '/fp:precise',
-	'/Qspectre',
-	'/EHsc'
+    '/Qspectre',
+    '/EHsc'
   ]
   # Windows linker flags
   builder.cxx.linkflags += [
     '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
-	'kernel32.lib',
-	'user32.lib',
-	'gdi32.lib',
-	'winspool.lib',
-	'comdlg32.lib',
-	'advapi32.lib',
-	'shell32.lib',
-	'ole32.lib',
-	'oleaut32.lib',
-	'uuid.lib',
+    'kernel32.lib',
+    'user32.lib',
+    'gdi32.lib',
+    'winspool.lib',
+    'comdlg32.lib',
+    'advapi32.lib',
+    'shell32.lib',
+    'ole32.lib',
+    'oleaut32.lib',
+    'uuid.lib',
     '/SECTION:.data,RW',
     '/MACHINE:X86'
   ]

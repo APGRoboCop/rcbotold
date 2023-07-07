@@ -267,9 +267,7 @@ void DispatchTouch(edict_t* pentTouched, edict_t* pentOther)
 	// only don't touch triggers if "no touch" is on the client.
 	if (pentTouched->v.solid == SOLID_TRIGGER)
 	{
-		const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pentOther);
-
-		if (pClient)
+		if (const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pentOther))
 		{
 			if (pClient->m_bNoTouch)
 			{
@@ -460,16 +458,13 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 				if (gBotGlobals.m_iNumBots > gBotGlobals.m_iMinBots && iNumPlayerCheck > gBotGlobals.m_iMaxBots)
 					// Can it kick a bot to free a slot?
 				{
-					char cmd[80];
-
 					for (int i = 0; i < MAX_PLAYERS; i++)
 					{
-						CBot* pBot = &gBotGlobals.m_Bots[i];
-
-						if (pBot)  // is this slot used?
+						if (CBot* pBot = &gBotGlobals.m_Bots[i])  // is this slot used?
 						{
 							if (pBot->IsUsed())
 							{
+								char cmd[80];
 								//int iUserId;
 
 								//iUserId = (*g_engfuncs.pfnGetPlayerUserId)(pBot->m_pEdict);
@@ -2239,7 +2234,7 @@ CBotCam::CBotCam()
 	m_bTriedToSpawn = false;
 }
 
-BOOL CBotCam::IsWorking()
+BOOL CBotCam::IsWorking() const
 {
 	return m_pCameraEdict != nullptr && gBotGlobals.IsConfigSettingOn(BOT_CONFIG_ENABLE_BOTCAM);
 }
@@ -2519,7 +2514,7 @@ void CBotCam::Think()
 	DispatchThink(m_pCameraEdict);
 }
 
-BOOL CBotCam::TuneIn(edict_t* pPlayer)
+BOOL CBotCam::TuneIn(edict_t* pPlayer) const
 {
 	if (gBotGlobals.m_iNumBots == 0)
 	{

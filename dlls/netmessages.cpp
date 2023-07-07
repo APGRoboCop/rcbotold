@@ -85,13 +85,11 @@ BOOL CBotNetMessage::IsMessage(const int iMessage)
 
 void CBotNetMessages::execute(int iMessage, void* p, int i)
 {
-	CBotNetMessage* pMsg = GetMessage(iMessage, nullptr);
-
-	if (pMsg)
+	if (CBotNetMessage* pMsg = GetMessage(iMessage, nullptr))
 		pMsg->execute(p, i);
 }
 
-CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName)
+CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName) const
 {
 	dataStack<CBotNetMessage*> l_tempStack = m_NetMessages;
 

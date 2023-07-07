@@ -281,13 +281,13 @@ public:
 	static CBaseEntity *Instance( entvars_t *pev ) { return Instance( ENT( pev ) ); }
 	static CBaseEntity *Instance( int eoffset) { return Instance( ENT( eoffset) ); }
 
-	CBaseMonster *GetMonsterPointer( entvars_t *pevMonster ) 
+	CBaseMonster *GetMonsterPointer( entvars_t *pevMonster ) const
 	{
 		if ( CBaseEntity *pEntity = Instance( pevMonster ) )
 			return pEntity->MyMonsterPointer();
 		return nullptr;
 	}
-	CBaseMonster *GetMonsterPointer( edict_t *pentMonster ) 
+	CBaseMonster *GetMonsterPointer( edict_t *pentMonster ) const
 	{
 		if ( CBaseEntity *pEntity = Instance( pentMonster ) )
 			return pEntity->MyMonsterPointer();
@@ -343,9 +343,9 @@ public:
 	static CBaseEntity *Create( char *szName, const Vector &vecOrigin, const Vector &vecAngles, edict_t *pentOwner = nullptr);
 
 	virtual BOOL FBecomeProne() {return false;}
-	edict_t *edict() { return ENT( pev ); }
-	EOFFSET eoffset( ) { return OFFSET( pev ); }
-	int	  entindex( ) { return ENTINDEX( edict() ); }
+	edict_t *edict() const { return ENT( pev ); }
+	EOFFSET eoffset( ) const { return OFFSET( pev ); }
+	int	  entindex( ) const { return ENTINDEX( edict() ); }
 
 	virtual Vector Center( ) { return (pev->absmax + pev->absmin) * 0.5; } // center point of entity
 	virtual Vector EyePosition( ) { return pev->origin + pev->view_ofs; } // position of eyes
@@ -837,10 +837,10 @@ public:
 	// Bmodels don't go across transitions
 	int	ObjectCaps() override { return CBaseEntity :: ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
 
-	BOOL IsActive() { return (pev->spawnflags & SF_TANK_ACTIVE)?true:false; }
+	BOOL IsActive() const { return (pev->spawnflags & SF_TANK_ACTIVE)?true:false; }
 	void TankActivate() { pev->spawnflags |= SF_TANK_ACTIVE; pev->nextthink = pev->ltime + 0.1f; m_fireLast = 0; }
 	void TankDeactivate() { pev->spawnflags &= ~SF_TANK_ACTIVE; m_fireLast = 0; StopRotSound(); }
-	BOOL CanFire() { return (gpGlobals->time - m_lastSightTime) < m_persist; }
+	BOOL CanFire() const { return (gpGlobals->time - m_lastSightTime) < m_persist; }
 	BOOL		InRange( float range );
 
 	// Acquire a target.  pPlayer is a player in the PVS
@@ -848,7 +848,7 @@ public:
 
 	void		TankTrace( const Vector &vecStart, const Vector &vecForward, const Vector &vecSpread, TraceResult &tr );
 
-	Vector		BarrelPosition()
+	Vector		BarrelPosition() const
 	{
 		Vector forward, right, up;
 		UTIL_MakeVectorsPrivate( pev->angles, forward, right, up );

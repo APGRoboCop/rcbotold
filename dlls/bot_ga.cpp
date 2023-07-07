@@ -103,7 +103,7 @@ void CBotGAValues::mutate()
 	}
 }
 
-float CBotGAValues::get(int iIndex) //Unstable? [APG]RoboCop[CL]
+float CBotGAValues::get(int iIndex) const //Unstable? [APG]RoboCop[CL]
 {
 	return m_theValues[iIndex];
 }
@@ -226,12 +226,12 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 // bits
 //----------------------
 
-unsigned int CBitsGAValues::size()
+unsigned int CBitsGAValues::size() const
 {
 	return m_theBits->size();
 }
 
-void CBitsGAValues::convert(int* iBits)
+void CBitsGAValues::convert(int* iBits) const
 {
 	for (unsigned int i = 0; i < size(); i++)
 	{
@@ -318,12 +318,12 @@ IIndividual* CBitsGAValues::copy()
 //void setBits ( CBits values );
 //void getBits ( CBits *values );
 
-BOOL CBitsGAValues::get(const int iIndex)
+BOOL CBitsGAValues::get(const int iIndex) const
 {
 	return m_theBits->getBit(iIndex);
 }
 
-void CBitsGAValues::set(const int iIndex, const BOOL bSet)
+void CBitsGAValues::set(const int iIndex, const BOOL bSet) const
 {
 	m_theBits->setBit(iIndex, bSet);
 }
@@ -333,7 +333,7 @@ void CBitsGAValues::clear()
 	m_theBits->clear();
 }
 
-inline void CBitsGAValues::random()
+inline void CBitsGAValues::random() const
 {
 	m_theBits->randomize();
 }

@@ -452,9 +452,7 @@ void CBotGlobals::StartFrame()
 			}
 			int iBuildingPriority = 0;
 
-			const edict_t* pBuildingUnderAttack = m_HiveMind.Tick(&iBuildingPriority);
-
-			if (pBuildingUnderAttack)
+			if (const edict_t* pBuildingUnderAttack = m_HiveMind.Tick(&iBuildingPriority))
 			{
 				CBotTask m_NewSchedule[3] = { CBotTask(BOT_TASK_FIND_PATH,0, nullptr,-1,0,pBuildingUnderAttack->v.origin),
 											 CBotTask(BOT_TASK_SEARCH_FOR_ENEMY),
@@ -715,9 +713,7 @@ void CBotGlobals::StartFrame()
 										}
 										else if (!(pBot->pev->weapons & 1 << j) && bHasWeapon)
 										{
-											CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(j);
-
-											if (pWeapon)
+											if (CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(j))
 												pWeapon->setHasWeapon(false);
 
 											pBot->m_Weapons.RemoveWeapon(j);
@@ -1432,9 +1428,7 @@ void CBotGlobals::ReadConfig()
 
 	UTIL_BuildFileName(filename, "bot_config.ini", nullptr);
 
-	FILE* fp = fopen(filename, "r");
-
-	if (fp)
+	if (FILE* fp = fopen(filename, "r"))
 	{
 		char cmd_line[64];
 		char arg1[64];
@@ -1742,7 +1736,7 @@ void CBotGlobals::FreeLocalMemory()
 		this->m_TeamTechs[i].freeMemory();
 }
 
-void CBotGlobals::ReadThingsToBuild()
+void CBotGlobals::ReadThingsToBuild() const
 {
 	char filename[512];
 	char szbuffer[256];

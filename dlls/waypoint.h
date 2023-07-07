@@ -94,26 +94,26 @@ public:
 		}
 	}
 
-	void getMaxMins(const Vector& vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk);
+	void getMaxMins(const Vector& vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk) const;
 
-	int GetCoverWaypoint(const Vector& vPlayerOrigin, const Vector& vCoverFrom, dataStack<int>* iIgnoreWpts);
+	int GetCoverWaypoint(const Vector& vPlayerOrigin, const Vector& vCoverFrom, dataStack<int>* iIgnoreWpts) const;
 
-	void FindNearestCoverWaypointInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, dataStack<int>* iIgnoreWpts, int iCoverFromWpt);
+	void FindNearestCoverWaypointInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, dataStack<int>* iIgnoreWpts, int iCoverFromWpt) const;
 
 	void AddWptLocation(int iIndex, const float* fOrigin);
 
-	void FindNearestInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, int iIgnoreWpt, BOOL bGetVisible = true, BOOL bGetUnreachable = false, BOOL bIsBot = false, dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = false);
+	void FindNearestInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, int iIgnoreWpt, BOOL bGetVisible = true, BOOL bGetUnreachable = false, BOOL bIsBot = false, dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = false) const;
 
-	void DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float fDist);
+	void DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float fDist) const;
 
 	void DeleteWptLocation(int iIndex, const float* fOrigin);
 
 	//TODO: This is redefined with a diff perimeter [APG]RoboCop[CL]
-	int NearestWaypoint(const Vector& vOrigin, float fDist, int iIgnoreWpt, BOOL bGetVisible = true, BOOL bGetUnreachable = false, BOOL bIsBot = false, dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = false);
+	int NearestWaypoint(const Vector& vOrigin, float fDist, int iIgnoreWpt, BOOL bGetVisible = true, BOOL bGetUnreachable = false, BOOL bIsBot = false, dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = false) const;
 
-	void FillWaypointsInBucket(int i, int j, int k, const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = nullptr);
+	void FillWaypointsInBucket(int i, int j, int k, const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = nullptr) const;
 
-	void FillNearbyWaypoints(const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = nullptr);
+	void FillNearbyWaypoints(const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = nullptr) const;
 
 private:
 
@@ -310,27 +310,27 @@ public:
 		memset(m_iConvertTo, 0, sizeof(int) * MAX_BITS);
 	}
 
-	char* getName()
+	char* getName() const
 	{
 		return m_szName;
 	}
 
-	char* getFolder()
+	char* getFolder() const
 	{
 		return m_szFolder;
 	}
 
-	char* getExtension()
+	char* getExtension() const
 	{
 		return m_szExtension;
 	}
 
-	char* getHeader()
+	char* getHeader() const
 	{
 		return m_szHeader;
 	}
 
-	WAYPOINT convert(WAYPOINT* thisWaypoint)
+	WAYPOINT convert(WAYPOINT* thisWaypoint) const
 	{
 		WAYPOINT convertedWpt;
 
@@ -349,7 +349,7 @@ public:
 		return convertedWpt;
 	}
 
-	int getVersion()
+	int getVersion() const
 	{
 		return m_iVersion;
 	}
@@ -510,11 +510,11 @@ public:
 		memset(m_VisTable, 0, iSize);
 	}
 
-	BOOL SaveToFile();
+	BOOL SaveToFile() const;
 
-	BOOL ReadFromFile();
+	BOOL ReadFromFile() const;
 
-	BOOL GetVisibilityFromTo(int iFrom, int iTo)
+	BOOL GetVisibilityFromTo(int iFrom, int iTo) const
 	{
 		// work out the position
 		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
@@ -532,7 +532,7 @@ public:
 		return false;
 	}
 
-	void ClearVisibilityTable()
+	void ClearVisibilityTable() const
 	{
 		if (m_VisTable)
 			memset(m_VisTable, 0, g_iMaxVisibilityByte);
@@ -547,7 +547,7 @@ public:
 		}
 	}
 
-	void SetVisibilityFromTo(int iFrom, int iTo, BOOL bVisible)
+	void SetVisibilityFromTo(int iFrom, int iTo, BOOL bVisible) const
 	{
 		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
 

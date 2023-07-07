@@ -668,16 +668,20 @@ public:
 
 	void	SetConditions( int iConditions ) { m_afConditions |= iConditions; }
 	void	ClearConditions( int iConditions ) { m_afConditions &= ~iConditions; }
-	BOOL HasConditions( int iConditions ) { if ( m_afConditions & iConditions ) return true; return false; }
-	BOOL HasAllConditions( int iConditions ) { if ( (m_afConditions & iConditions) == iConditions ) return true; return false; }
+	BOOL HasConditions( int iConditions ) const
+	{ if ( m_afConditions & iConditions ) return true; return false; }
+	BOOL HasAllConditions( int iConditions ) const
+	{ if ( (m_afConditions & iConditions) == iConditions ) return true; return false; }
 
 	void	Remember( int iMemory ) { m_afMemory |= iMemory; }
 	void	Forget( int iMemory ) { m_afMemory &= ~iMemory; }
-	BOOL HasMemory( int iMemory ) { if ( m_afMemory & iMemory ) return true; return false; }
-	BOOL HasAllMemories( int iMemory ) { if ( (m_afMemory & iMemory) == iMemory ) return true; return false; }
+	BOOL HasMemory( int iMemory ) const
+	{ if ( m_afMemory & iMemory ) return true; return false; }
+	BOOL HasAllMemories( int iMemory ) const
+	{ if ( (m_afMemory & iMemory) == iMemory ) return true; return false; }
 
 	// This will stop animation until you call ResetSequenceInfo() at some point in the future
-	void StopAnimation() { pev->framerate = 0; }
+	void StopAnimation() const { pev->framerate = 0; }
 
 	virtual void ReportAIState();
 	virtual void MonsterInitDead();	// Call after animation/pose is set up

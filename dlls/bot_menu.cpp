@@ -293,7 +293,7 @@ CBotMenu::CBotMenu(const char* szCaption)
 	m_szCaption = gBotGlobals.m_Strings.GetString(szCaption);
 }
 
-void CBotMenu::DestroyMenu()
+void CBotMenu::DestroyMenu() const
 {
 	for (int i = 0; i < 10; i++)
 	{
@@ -360,7 +360,7 @@ CBotMenuItem::CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CCli
 	m_pMenuFunction = pMenuFunction;
 }
 
-void CBotMenuItem::Activate(CClient* pClient)
+void CBotMenuItem::Activate(CClient* pClient) const
 {
 	if (m_pNextMenu != nullptr)
 	{

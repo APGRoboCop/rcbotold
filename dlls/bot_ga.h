@@ -65,7 +65,7 @@ public:
 	void setVector(const std::vector<ga_value>& values);
 	void getVector(std::vector<ga_value>* values);
 
-	float get(int iIndex);
+	float get(int iIndex) const;
 
 	void set(int iIndex, ga_value fVal);
 
@@ -163,7 +163,7 @@ public:
 		return p;
 	}
 
-	int get() { return m_Value; }
+	int get() const { return m_Value; }
 	void set(int value) { m_Value = value; }
 private:
 	int m_Value;
@@ -181,7 +181,7 @@ public:
 	//void saveForBot ( char *file, int iProfile );
 
 	//~CBotGAValues();
-	void convert(int* iBits);
+	void convert(int* iBits) const;
 	CBitsGAValues(CBits* bits);
 
 	// crossover with other individual
@@ -194,20 +194,20 @@ public:
 	// sub classes return their class with own values
 	IIndividual* copy() override;
 
-	unsigned int size();
+	unsigned int size() const;
 
 	//void setBits ( CBits values );
 	//void getBits ( CBits *values );
 
-	BOOL get(int iIndex);
+	BOOL get(int iIndex) const;
 
-	void set(int iIndex, BOOL bSet);
+	void set(int iIndex, BOOL bSet) const;
 
 	void clear() override;
 
-	inline void random();
+	inline void random() const;
 
-	CBits* returnBits() { return m_theBits; }
+	CBits* returnBits() const { return m_theBits; }
 
 	void freeMemory();
 

@@ -932,7 +932,7 @@ public:
 		this->Clear();
 	}
 
-	int Size()
+	int Size() const
 	{
 		return size;
 	}
@@ -1000,7 +1000,7 @@ public:
 		buffer = 0;
 	}
 
-	bool IsEmpty()
+	bool IsEmpty() const
 	{
 		return size == 0;
 	}

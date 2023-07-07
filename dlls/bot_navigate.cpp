@@ -74,7 +74,7 @@ AStarNode::AStarNode()
 	m_iWaypoint = -1;
 }
 
-BOOL AStarNode::heuristicSet()
+BOOL AStarNode::heuristicSet() const
 {
 	return (flags & FL_ASTAR_HEURISTIC) == FL_ASTAR_HEURISTIC;
 }
@@ -89,17 +89,17 @@ void AStarNode::setHeuristic(const float botDist, const float goalDist, const BO
 	flags |= FL_ASTAR_HEURISTIC;
 }
 
-BOOL AStarNode::hasParent()
+BOOL AStarNode::hasParent() const
 {
 	return (flags & FL_ASTAR_PARENT) == FL_ASTAR_PARENT;
 }
 
-BOOL AStarNode::isOpen()
+BOOL AStarNode::isOpen() const
 {
 	return (flags & FL_ASTAR_OPEN) == FL_ASTAR_OPEN;
 }
 
-BOOL AStarNode::isClosed()
+BOOL AStarNode::isClosed() const
 {
 	return (flags & FL_ASTAR_CLOSED) == FL_ASTAR_CLOSED;
 }
@@ -124,12 +124,12 @@ void AStarNode::open()
 	flags |= FL_ASTAR_OPEN;
 }
 
-float AStarNode::getHeuristic()
+float AStarNode::getHeuristic() const
 {
 	return m_fHeuristic;
 }
 
-short int AStarNode::getParent()
+short int AStarNode::getParent() const
 {
 	return m_iParent;
 }
@@ -140,18 +140,18 @@ void AStarNode::setParent(const int iWpt)
 	flags |= FL_ASTAR_PARENT;
 }
 
-bool AStarNode::precedes(AStarNode* b)
+bool AStarNode::precedes(AStarNode* b) const
 {
 	// lowest cost first
 	return m_fCost + getHeuristic() < b->m_fCost + b->getHeuristic();
 }
 
-bool AStarNode::operator()(AStarNode* a, AStarNode* b)
+bool AStarNode::operator()(AStarNode* a, AStarNode* b) const
 {
 	return a < b;
 }
 
-bool AStarNode::operator<(AStarNode* b)
+bool AStarNode::operator<(AStarNode* b) const
 {
 	return precedes(b);
 }

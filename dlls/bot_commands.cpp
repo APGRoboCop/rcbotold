@@ -210,9 +210,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 			{
 				if (pPlayer->v.flags & FL_FAKECLIENT)
 				{
-					CBot* pBot = UTIL_GetBotPointer(pPlayer);
-
-					if (pBot)
+					if (CBot* pBot = UTIL_GetBotPointer(pPlayer))
 					{
 						pBot->printBoredoms(pEntity);
 					}
@@ -264,10 +262,9 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	{
 		Vector colour = Vector(255, 255, 255);
 
-		char msg[256];
-
 		if (arg2 && *arg2)
 		{
+			char msg[256]; //char needs to be const? [APG]RoboCop[CL]
 			strncpy(msg, arg2, 255);
 			msg[255] = 0;
 
@@ -352,9 +349,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 			{
 				if (pPlayer->v.flags & FL_FAKECLIENT)
 				{
-					CBot* pBot = UTIL_GetBotPointer(pPlayer);
-
-					if (pBot)
+					if (CBot* pBot = UTIL_GetBotPointer(pPlayer))
 					{
 						pBot->m_Profile.m_Rep.printReps(pBot, pEntity);
 					}
@@ -372,9 +367,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 			{
 				if (pPlayer->v.flags & FL_FAKECLIENT)
 				{
-					CBot* pBot = UTIL_GetBotPointer(pPlayer);
-
-					if (pBot)
+					if (CBot* pBot = UTIL_GetBotPointer(pPlayer))
 					{
 						pBot->m_bKill = true;
 
@@ -1658,7 +1651,6 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		// Gather a list of id's in use...
 
 		dataStack<int> l_IdsInUse;
-		dataUnconstArray<int> CanUseIds;
 
 		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
@@ -1672,11 +1664,9 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		//if ( !arg1valid && !arg2valid && !arg3valid )
 		//{
-		char szBotProfilePath[128];
 
 		char filename[512];
 		UTIL_BuildFileName(filename, BOT_PROFILES_FILE);
-		FILE* fp1 = fopen(filename, "r");
 		/*
 		if ( fp1 )
 		{
@@ -1724,8 +1714,10 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 						fclose(fp1);
 						}
 		*/
-		if (fp1)
+		if (FILE* fp1 = fopen(filename, "r"))
 		{
+			char szBotProfilePath[128];
+			dataUnconstArray<int> CanUseIds;
 			while (!feof(fp1) && !pProfileToOpen)
 			{
 				// pickup a string first (safer)
@@ -1756,9 +1748,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 				UTIL_BuildFileName(szBotProfilePath, "botprofiles", szBotProfile);
 
-				FILE* fp2 = fopen(szBotProfilePath, "r");
-
-				if (fp2)
+				if (FILE* fp2 = fopen(szBotProfilePath, "r"))
 				{
 					CanUseIds.Add(iBotProfile);
 

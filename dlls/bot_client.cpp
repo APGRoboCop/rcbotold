@@ -430,7 +430,6 @@ void BotClient_TS_WeaponInfo::execute(void* p, int iIndex)
 		return;
 	}
 	//from tsxmod
-	static int wpn;
 	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 	switch (gBotGlobals.m_iCurrentMessageState)
 	{
@@ -449,6 +448,7 @@ void BotClient_TS_WeaponInfo::execute(void* p, int iIndex)
 		break;
 	case 3:
 	{
+		static int wpn;
 		int mode = *static_cast<int*>(p);
 
 		gBotGlobals.m_Weapons.AddWeapon(id, "tsweapon", ammo, ammo, 0, 0, 0, 0, 0);
@@ -587,7 +587,6 @@ void BotClient_BG_MakeMessage::execute(void* p, int iIndex)
 
 void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 {
-	CBot* pBot;
 	short int* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	/*typedef enum
@@ -622,8 +621,9 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 		break;
 
 	case 1:
-	{
-		// not a MSG_ALL message
+		{
+			CBot* pBot;
+			// not a MSG_ALL message
 		//if ( iIndex != -1 )
 		//{
 		if (iIndex != -1)
@@ -1476,9 +1476,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 		{
 			const int iReceiverIndex = tempStack.ChooseFromStack();
 
-			CBot* pBot = UTIL_GetBotPointer(INDEXENT(iReceiverIndex));
-
-			if (pBot)
+			if (CBot* pBot = UTIL_GetBotPointer(INDEXENT(iReceiverIndex)))
 			{
 				// Flush current tasks
 				pBot->ClearTasks();
@@ -1774,7 +1772,6 @@ void BotClient_Generic_WeaponList::execute(void* p, const int iIndex)
 	static int iSlot;
 	static int iPosition;
 	static int iId;
-	static int iFlags;
 
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -1809,6 +1806,7 @@ void BotClient_Generic_WeaponList::execute(void* p, const int iIndex)
 		break;
 	case 8:
 	{
+		static int iFlags;
 		const int iHackedId = iId;
 
 		//BotMessage(NULL,0,"Weapon ID: %d Classname: \"%s\"",iId,szClassname);

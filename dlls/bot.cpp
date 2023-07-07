@@ -1950,7 +1950,7 @@ void CBot::SpawnInit(const BOOL bInit)
 	m_fIdealMoveSpeed = m_fMaxSpeed;
 }
 
-int CBot::GetTeam()
+int CBot::GetTeam() const
 {
 	return UTIL_GetTeam(m_pEdict);
 }
@@ -2277,7 +2277,6 @@ const char* BotFunc_GetRandomPlayerName(CBot* pBot, const int iState)
 BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, const int max_len)
 {
 	// keep a big string to make sure everything fits
-	static char temp[1024];
 	int len = strlen(string) + 1;
 
 	// store before and after strings, well put these in the final string
@@ -2290,6 +2289,7 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 	// Keep searching for a point in the string
 	while ((ptr = strstr(ptr, fill_point)) != nullptr)
 	{
+		static char temp[1024];
 		// found a point
 		char* before = static_cast<char*>(malloc(sizeof(char) * len));
 		char* after = static_cast<char*>(malloc(sizeof(char) * len));
@@ -3397,9 +3397,7 @@ void CBot::Think()
 
 						// check out commander, give him a tip
 
-						CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pCommander);
-
-						if (pClient)
+						if (CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pCommander))
 							pClient->AddNewToolTip(BOT_TOOL_TIP_COMMANDER_HEALTH);
 					}
 				}
@@ -4047,8 +4045,6 @@ void CBot::LookForNewTasks()
 
 	//tempStack = m_stBotVisibles;
 
-	BOOL bCanBuildNearby;
-
 	int iToBuild = 0;
 
 	/////////////////////////////////////
@@ -4057,6 +4053,7 @@ void CBot::LookForNewTasks()
 
 	while ((pEntity = m_pVisibles->nextVisible()) != nullptr)
 	{
+		BOOL bCanBuildNearby;
 		if (pEntity == m_pEdict)
 			continue;
 
@@ -5571,9 +5568,8 @@ void CBot::LookForNewTasks()
 						else
 						{
 							// find a random hive
-							edict_t* pHive = BotFunc_FindRandomEntity("team_hive");
 
-							if (pHive)
+							if (edict_t* pHive = BotFunc_FindRandomEntity("team_hive"))
 							{
 								int iWpt = WaypointLocations.NearestWaypoint(EntityOrigin(pHive), REACHABLE_RANGE, -1, false);
 
@@ -8406,8 +8402,6 @@ BOOL CBot::CanPickup(edict_t* pPickup)
 
 BOOL CBot::Touch(edict_t* pentTouched)
 {
-	BOOL bIsMoving = false;
-
 	entvars_t* pentTouchedpev = &pentTouched->v;
 
 	char* szClassname = const_cast<char*>(STRING(pentTouched->v.classname));
@@ -8488,6 +8482,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 
 	if (pentTouched->v.solid != SOLID_TRIGGER)
 	{
+		BOOL bIsMoving = false;
 		const BOOL bIsDoor = strncmp(szClassname, "func_door", 9) == 0 || strncmp(szClassname, "func_plat", 9) == 0;
 
 		if (bIsDoor)
@@ -8506,9 +8501,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 				// traceline spammage
 				if (WaypointOrigin(m_iCurrentWaypointIndex).z > GetGunPosition().z + MAX_JUMP_HEIGHT || !FVisible(m_vMoveToVector))
 				{
-					edict_t* pBestTarget = BotFunc_FindNearestButton(pev->origin, &pentTouched->v);
-
-					if (pBestTarget)
+					if (edict_t* pBestTarget = BotFunc_FindNearestButton(pev->origin, &pentTouched->v))
 					{
 						const int iNewScheduleId = m_Tasks.GetNewScheduleId();
 
@@ -8537,9 +8530,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 						{
 							char* szClassnames[3] = { "func_button","button_target","func_rot_button" };
 
-							edict_t* pButton = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, true);
-
-							if (pButton)
+							if (edict_t* pButton = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, true))
 							{
 								const int iScheduleId = m_Tasks.GetNewScheduleId();
 
@@ -8755,7 +8746,7 @@ void CBot::ThrowGrenade(edict_t* pEnemy, int preference, const BOOL bDontPrime)
 	}
 }
 
-BOOL CBot::ThrowingGrenade()
+BOOL CBot::ThrowingGrenade() const
 {
 	return m_iGrenadeHolding && m_fGrenadePrimeTime > gpGlobals->time;
 }
@@ -8853,18 +8844,15 @@ edict_t* CBot::FindEnemy()
 
 				CBotReputation* pRep = nullptr;
 
-				int iRep = 5;
-
 				if (pEnemypev->flags & FL_CLIENT)
 				{
-					const CClient* pEnemyClient = gBotGlobals.m_Clients.GetClientByEdict(pEntity);
-
-					if (pEnemyClient)
+					if (const CClient* pEnemyClient = gBotGlobals.m_Clients.GetClientByEdict(pEntity))
 					{
 						pRep = this->m_Profile.m_Rep.GetRep(pEnemyClient->GetPlayerRepId());
 
 						if (pRep)
 						{
+							int iRep = 5;
 							iRep = pRep->CurrentRep();
 
 							// add higher priority depending on bad reputation
@@ -9165,9 +9153,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (pEntity->v.flags & FL_CLIENT)
 		{
-			const float team = /*gBotGlobals.isMapType(NON_TFC_TS_TEAMPLAY) ||*/ gBotGlobals.m_bTeamPlay;
-
-			if (team)
+			if (const float team = /*gBotGlobals.isMapType(NON_TFC_TS_TEAMPLAY) ||*/ gBotGlobals.m_bTeamPlay)
 			{
 				char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
 				char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
@@ -9813,7 +9799,7 @@ void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...)
 
 ///////////////////////////////////////////////////////////////////////////
 // BOT TASK EQUAL OPERATOR...
-BOOL CBotTask::operator == (const CBotTask& Task)
+BOOL CBotTask::operator == (const CBotTask& Task) const
 {
 	return m_Task == Task.Task() &&
 		m_iInfo == Task.TaskInt() &&
@@ -10089,11 +10075,9 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, entvars_t* pDoor, Vect
 	return pBestTarget;
 }
 
-BOOL CBot::SentryNeedsRepaired()
+BOOL CBot::SentryNeedsRepaired() const
 {
-	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict);
-
-	if (pClient)
+	if (CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict))
 	{
 		const edict_t* pSentry = pClient->getTFCSentry();
 
@@ -10249,7 +10233,7 @@ int BotFunc_GetBitSetOf(const int iId)
 	return weapon_index;
 }
 
-BOOL CBot::HasWeapon(const int iWeapon)
+BOOL CBot::HasWeapon(const int iWeapon) const
 {
 	//	if ( gBotGlobals.IsMod(MOD_DMC) )
 	//		return ((m_iBotWeapons) & (1<<(iWeapon-1))) != 0;
@@ -10387,9 +10371,7 @@ CBotSquad* CBotSquads::AddSquadMember(edict_t* pLeader, edict_t* pMember)
 	if (UTIL_GetTeam(pLeader) != UTIL_GetTeam(pMember))
 		return nullptr;
 
-	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pLeader);
-
-	if (pClient)
+	if (CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pLeader))
 	{
 		pClient->AddNewToolTip(BOT_TOOL_TIP_SQUAD_HELP);
 	}
@@ -10618,19 +10600,13 @@ void CBot :: BotOnLadder ()
 }
 */
 
-eMasterType CMasterEntity::CanFire(edict_t* pActivator)
+eMasterType CMasterEntity::CanFire(edict_t* pActivator) const
 {
-	edict_t* pMaster = FIND_ENTITY_BY_TARGETNAME(nullptr, m_szMasterName);
-
-	if (pMaster)
+	if (edict_t* pMaster = FIND_ENTITY_BY_TARGETNAME(nullptr, m_szMasterName))
 	{
-		CBaseEntity* pentMaster = static_cast<CBaseEntity*>(GET_PRIVATE(pMaster));
-
-		if (pentMaster)
+		if (CBaseEntity* pentMaster = static_cast<CBaseEntity*>(GET_PRIVATE(pMaster)))
 		{
-			CBaseEntity* pentActivator = static_cast<CBaseEntity*>(GET_PRIVATE(pActivator));
-
-			if (pentActivator)
+			if (CBaseEntity* pentActivator = static_cast<CBaseEntity*>(GET_PRIVATE(pActivator)))
 			{
 				if (!pentMaster->IsTriggered(pentActivator))
 					return MASTER_NOT_TRIGGERED;
@@ -11064,9 +11040,7 @@ int BotFunc_GetStructureForGorgeBuild(entvars_t* pGorge, entvars_t* pEntitypev)
 	if (fRange > MAX_BUILD_RANGE)
 		return 0;
 
-	const BOOL bCanBuildNearby = BotFunc_GetStructuresToBuildForEntity(iBuildingType, &iDefs, &iOffs, &iSens, &iMovs);
-
-	if (bCanBuildNearby)
+	if (const BOOL bCanBuildNearby = BotFunc_GetStructuresToBuildForEntity(iBuildingType, &iDefs, &iOffs, &iSens, &iMovs))
 	{
 		if (pEntitypev->iuser3 == AVH_USER3_HIVE && UTIL_CanBuildHive(pEntitypev))
 		{
@@ -16476,7 +16450,7 @@ void CBot::CheckStuck()
 	/////////////////////////
 }
 
-void CBotReputation::printRep(CBot* forBot, edict_t* pPrintTo)
+void CBotReputation::printRep(CBot* forBot, edict_t* pPrintTo) const
 {
 	const CClient* pClient = gBotGlobals.m_Clients.GetClientByRepId(m_iPlayerRepId);
 	const char* szName = STRING(pClient->GetPlayer()->v.netname);
@@ -16532,7 +16506,7 @@ void CBot::UseTank(edict_t* pTank)
 	m_Tasks.GiveSchedIdDescription(iSchedId, BOT_SCHED_USE_TANK);
 }
 
-BOOL CBot::IsUsingTank()
+BOOL CBot::IsUsingTank() const
 {
 	if (m_pTank)
 	{

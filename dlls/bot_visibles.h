@@ -55,7 +55,7 @@ class CBotVisibles
 public:
 	CBotVisibles();
 
-	BOOL isVisible(int iIndex);
+	BOOL isVisible(int iIndex) const;
 
 	void setVisible(int iIndex, BOOL bVisible);
 

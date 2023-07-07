@@ -162,9 +162,7 @@ void CBotReputations::SaveAllRep(const int iBotProfile)
 
 	while (!tempStack.IsEmpty())
 	{
-		CBotReputation* pRep = tempStack.ChoosePointerFromStack();
-
-		if (pRep)
+		if (CBotReputation* pRep = tempStack.ChoosePointerFromStack())
 		{
 			WriteToFile(iBotProfile, pRep);
 		}
@@ -326,9 +324,7 @@ int GetPlayerEdictRepId(edict_t* pEdict)
 	if (pEdict == nullptr)
 		return -1;
 
-	const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEdict);
-
-	if (pClient)
+	if (const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEdict))
 		return pClient->GetPlayerRepId();
 
 	return -1;

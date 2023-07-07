@@ -1316,9 +1316,8 @@ void pfnFadeClientVolume(const edict_t* pEdict, int fadePercent, int fadeOutSeco
 void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 {
 	// Is this player a bot?
-	CBot* pBot = UTIL_GetBotPointer(pEdict);
 
-	if (pBot)
+	if (CBot* pBot = UTIL_GetBotPointer(pEdict))
 	{
 		pBot->m_fMaxSpeed = fNewMaxspeed;
 	}
@@ -1395,12 +1394,11 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 	{
 		if (pEdict)
 		{
-			CBotReputation* pRep;
-
 			const int iOldPlayerRepId = GetPlayerEdictRepId(pEdict);
 
 			if (iOldPlayerRepId != -1) // otherwise : error...
 			{
+				CBotReputation* pRep;
 				for (int i = 0; i < MAX_PLAYERS; i++)
 				{
 					CBot* pBot = &gBotGlobals.m_Bots[i];
@@ -1436,9 +1434,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 
 			if (iFlags & FL_CLIENT && !(iFlags & FL_FAKECLIENT))
 			{
-				CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEdict);
-
-				if (pClient)
+				if (CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEdict))
 				{
 					pClient->m_bRecheckAuth = true;
 				}

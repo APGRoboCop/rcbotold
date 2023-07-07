@@ -50,12 +50,12 @@ const float CGA::g_fMaxPerturbation = 0.3f;
 // POPULATION
 ////////////////////
 
-IIndividual* CPopulation::get(int iIndex)
+IIndividual* CPopulation::get(int iIndex) const
 {
 	return m_theIndividuals[iIndex];
 }
 
-IIndividual* CPopulation::getBestIndividual()
+IIndividual* CPopulation::getBestIndividual() const
 {
 	IIndividual* best = nullptr;
 
@@ -104,7 +104,7 @@ ga_value CPopulation::totalFitness()
 	return fTotalFitness;
 }
 
-void CPopulation::save(FILE* bfp)
+void CPopulation::save(FILE* bfp) const
 {
 	const unsigned int iSize = m_theIndividuals.size();
 
