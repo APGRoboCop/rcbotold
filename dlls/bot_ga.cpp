@@ -176,7 +176,7 @@ void CBotGAValues::save(FILE* bfp)
 {
 	const unsigned int iSize = m_theValues.size();
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, m_theValues.size());
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, m_theValues.size());
 
 	header.write(bfp);
 
@@ -273,9 +273,9 @@ void CBitsGAValues::crossOver(IIndividual* other)
 {
 	const unsigned int iNumBits = m_theBits->numBits();
 	const unsigned int iCrossoverPoint = static_cast<unsigned int>(RANDOM_LONG(0, iNumBits));
-	CBits* tempBits = new CBits(iNumBits);
+	const CBits* tempBits = new CBits(iNumBits);
 
-	CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
+	const CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
 
 	unsigned int i;
 

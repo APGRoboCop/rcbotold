@@ -151,7 +151,7 @@ int CBits::size() const
 
 void CBits::save(FILE* bfp) const
 {
-	CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
+	const CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
 	checkHeader.write(bfp);
 

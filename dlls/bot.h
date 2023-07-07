@@ -357,7 +357,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CBotReputation* pRep = tempStack.ChoosePointerFromStack();
+			const CBotReputation* pRep = tempStack.ChoosePointerFromStack();
 
 			pRep->printRep(forBot, pPrintTo);
 		}
@@ -397,7 +397,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CBotReputation* pRep = tempStack.ChoosePointerFromStack();
+			const CBotReputation* pRep = tempStack.ChoosePointerFromStack();
 
 			// bug fixed... didn't add :-P
 			iTotal += pRep->CurrentRep();
@@ -465,9 +465,7 @@ public:
 		if (iPlayerRepId == -1)
 			return;
 
-		CBotReputation* l_Rep = GetRep(iPlayerRepId);
-
-		if (l_Rep)
+		if (CBotReputation* l_Rep = GetRep(iPlayerRepId))
 		{
 			const int iNewRep = l_Rep->CurrentRep() + 1;
 
@@ -489,9 +487,7 @@ public:
 		if (iPlayerRepId == -1)
 			return;
 
-		CBotReputation* l_Rep = GetRep(iPlayerRepId);
-
-		if (l_Rep)
+		if (CBotReputation* l_Rep = GetRep(iPlayerRepId))
 		{
 			const int iNewRep = l_Rep->CurrentRep() - 1;
 
@@ -1156,7 +1152,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CBotTask* tempTask = tempStack.ChoosePointerFrom();
+			const CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
 			const int iFailSchedule = tempTask->GetScheduleId();
 
@@ -1202,7 +1198,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CBotTask* tempTask = tempStack.ChoosePointerFrom();
+			const CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
 			if (tempTask->IsOfSchedule(iSchedDesc))
 			{
@@ -1253,7 +1249,7 @@ public:
 		{
 			try
 			{
-				CBotTask* pTask = tempStack.ChoosePointerFrom();
+				const CBotTask* pTask = tempStack.ChoosePointerFrom();
 
 				if (*pTask == Task)
 				{
@@ -1436,7 +1432,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CBotTask* pTask = tempStack.ChoosePointerFrom();
+			const CBotTask* pTask = tempStack.ChoosePointerFrom();
 
 			if (pTask->IsOfSchedule(iSchedDesc))
 			{
@@ -1502,9 +1498,7 @@ public:
 		{
 			while (!tempStack.IsEmpty())
 			{
-				CBotTask* pPrevTask = tempStack.ChoosePointerFrom();
-
-				if (pPrevTask)
+				if (CBotTask* pPrevTask = tempStack.ChoosePointerFrom())
 				{
 					// Changed path info to false for these tasks
 					pPrevTask->SetPathInfo(false);
@@ -2605,7 +2599,7 @@ class CLearnedHeader
 public:
 	CLearnedHeader(int iId);
 
-	BOOL operator == (const CLearnedHeader& other);
+	BOOL operator == (const CLearnedHeader& other) const;
 	BOOL operator != (CLearnedHeader const other)
 	{
 		return !(*this == other);
@@ -2924,7 +2918,7 @@ private:
 
 	// --------------------------------
 
-	void loadLearnedData();
+	void loadLearnedData() const;
 
 	// current time for reacting to situations
 	float m_fReactionTime;
@@ -3072,7 +3066,7 @@ public:
 	float m_fLastBulletFired;
 	dataUnconstArray<TSObjective> m_TSObjectives;
 
-	void saveLearnedData();
+	void saveLearnedData() const;
 	void touchedWpt();
 	void gotStuck();
 
@@ -3159,9 +3153,9 @@ public:
 			m_iBoredom--;
 	}
 
-	BOOL WantToLeaveGame();
+	BOOL WantToLeaveGame() const;
 
-	BOOL WantToFindEnemy();
+	BOOL WantToFindEnemy() const;
 
 	void PlayerDead(edict_t* pPlayer)
 	{
@@ -3240,11 +3234,11 @@ public:
 		m_pSentry.Set(pEdict);
 	}*/
 
-	BOOL builtTeleporterEntrance();
+	BOOL builtTeleporterEntrance() const;
 
 	BOOL builtTeleporterExit();
 
-	edict_t* getTeleporterExit();
+	edict_t* getTeleporterExit() const;
 
 	/*void TeleportEntranceDestroyed ()
 	{
@@ -3791,7 +3785,7 @@ public:
 	// do NOT call within bot functions
 	void FreeLocalMemory();
 
-	int GetLadderDir(BOOL bCheckWaypoint = false);
+	int GetLadderDir(BOOL bCheckWaypoint = false) const;
 
 	BOOL NotStartedGame();
 
@@ -3839,17 +3833,17 @@ public:
 
 	/////////////////////////////////////
 	// VISIBLES
-	BOOL IsInVisibleList(edict_t* pEntity);
+	BOOL IsInVisibleList(edict_t* pEntity) const;
 
 	BOOL HasUpgraded(int iUpgrade);
 
 	BOOL FVisible(edict_t* pEntity);
 
-	BOOL FVisible(const Vector& vecOrigin);
+	BOOL FVisible(const Vector& vecOrigin) const;
 
 	BOOL FInViewCone(Vector* pOrigin);
 
-	float DotProductFromOrigin(Vector* pOrigin);
+	float DotProductFromOrigin(Vector* pOrigin) const;
 
 	Vector GetGunPosition() const
 	{
@@ -3984,7 +3978,7 @@ public:
 	BOOL     WantToFollowEnemy(edict_t* pEnemy);
 
 	// returns true when bot is facing the ideal aim position
-	BOOL	 FacingIdeal();
+	BOOL	 FacingIdeal() const;
 
 	// returns true if bot can pickup the entity pPickup
 	BOOL     CanPickup(edict_t* pPickup);
@@ -4019,13 +4013,13 @@ public:
 	void     EnemyFound(edict_t* pEnemy);
 
 	// returns true if bot knows where the enemy went
-	BOOL     HasSeenEnemy(edict_t* pEnemy);
+	BOOL     HasSeenEnemy(edict_t* pEnemy) const;
 
 	// get bots vector to aim at for shooting the enemy
 	Vector   GetAimVector(edict_t* pBotEnemy);
 
 	// get the distance from vector vec
-	float    DistanceFrom(const Vector& vec, BOOL twoD = false);
+	float    DistanceFrom(const Vector& vec, BOOL twoD = false) const;
 
 	// set up tasks so bot runs from the origin
 	void	 RunForCover(const Vector& vOrigin, BOOL bDoItNow = false, int iScheduleId = 0);
@@ -4252,9 +4246,7 @@ public:
 
 			while (!s_tempStack.IsEmpty())
 			{
-				void* pFree = static_cast<void*>(s_tempStack.ChooseFromStack());
-
-				if (pFree)
+				if (void* pFree = s_tempStack.ChooseFromStack())
 				{
 					free(pFree);
 					pFree = nullptr;
@@ -5019,7 +5011,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CBotCvar* pCommand = tempStack.ChooseFromStack();
+			const CBotCvar* pCommand = tempStack.ChooseFromStack();
 
 			BotMessage(pEdict, 0, "\"%s\"", pCommand->GetCommandName());
 		}
@@ -5212,9 +5204,7 @@ public:
 
 	eMasterType EntityCanFire(edict_t* pEntity, edict_t* pActivator) const
 	{
-		CMasterEntity* pMaster = GetMaster(pEntity);
-
-		if (pMaster)
+		if (CMasterEntity* pMaster = GetMaster(pEntity))
 			return pMaster->CanFire(pActivator);
 
 		return MASTER_NONE;
@@ -5222,9 +5212,7 @@ public:
 
 	edict_t* GetButtonForEntity(edict_t* pEntity, Vector const& vOrigin) const
 	{
-		CMasterEntity* pMaster = GetMaster(pEntity);
-
-		if (pMaster)
+		if (CMasterEntity* pMaster = GetMaster(pEntity))
 			return pMaster->FindButton(vOrigin);
 
 		return nullptr;
@@ -5379,9 +5367,7 @@ public:
 
 					if (pStructure->IsUnderAttack())
 					{
-						const int iStructure = pStructure->GetStructureType();
-
-						switch (iStructure)
+						switch (const int iStructure = pStructure->GetStructureType())
 						{
 							// Different priorities for different structures under attack
 							// this will determine how many aliens will rush to the structure
@@ -5782,7 +5768,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
+			const CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
 
 			if (pGotFlag->isEdict(pFlag))
 			{
@@ -5811,7 +5797,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
+			const CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
 
 			if (pGotFlag->isEdict(pFlag))
 			{
@@ -5834,7 +5820,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
+			const CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
 
 			edict_t* pFlag = pGotFlag->edict();
 
@@ -5854,7 +5840,7 @@ public:
 
 		while (!tempStack.IsEmpty())
 		{
-			CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
+			const CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
 
 			const edict_t* pFlag = pGotFlag->edict();
 
@@ -6111,7 +6097,7 @@ public:
 	{
 		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
-			CBot* pBot = &m_Bots[i];
+			const CBot* pBot = &m_Bots[i];
 
 			if (pBot->IsUsed())
 			{

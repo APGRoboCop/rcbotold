@@ -972,7 +972,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 			pBot->m_Profile.m_Rep.AddLoadRep(pBot->m_Profile.m_iProfileId, iPlayerRepId);
 		}
 
-		if (CAllowedPlayer* pUser = gBotGlobals.m_BotUsers.GetPlayer(pClient))
+		if (const CAllowedPlayer* pUser = gBotGlobals.m_BotUsers.GetPlayer(pClient))
 		{
 			pUser->GiveClientAccess(pClient);
 			BotMessage(pPlayer, 0, "You have been authenticated");

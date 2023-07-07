@@ -1342,7 +1342,7 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 	  WRITE_BYTE(7) // ?? 6
 		*/
 
-	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
+	const CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 
 	if (p == nullptr || iIndex == -1)
 		return;

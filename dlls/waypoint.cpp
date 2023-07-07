@@ -421,7 +421,7 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float 
 
 		vWpt = WaypointOrigin(iIndex);
 
-		if (fabs(vWpt.z - vOrigin.z) <= 256.0f)
+		if (std::fabs(vWpt.z - vOrigin.z) <= 256.0f)
 		{
 			pvs = ENGINE_SET_PVS(reinterpret_cast<float*>(&vWpt));
 

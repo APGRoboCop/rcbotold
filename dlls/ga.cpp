@@ -108,7 +108,7 @@ void CPopulation::save(FILE* bfp) const
 {
 	const unsigned int iSize = m_theIndividuals.size();
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
 
 	header.write(bfp);
 

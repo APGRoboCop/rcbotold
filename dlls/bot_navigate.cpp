@@ -684,10 +684,10 @@ void BotTurnAtWall(CBot* pBot, TraceResult* tr)
 	// D1 and D2 are the difference (in degrees) between the bot's current
 	// angle and Y1 or Y2 (respectively).
 
-	float D1 = fabs(Y - Y1);
-	if (D1 > 179) D1 = fabs(D1 - 360);
-	float D2 = fabs(Y - Y2);
-	if (D2 > 179) D2 = fabs(D2 - 360);
+	float D1 = std::fabs(Y - Y1);
+	if (D1 > 179) D1 = std::fabs(D1 - 360);
+	float D2 = std::fabs(Y - Y2);
+	if (D2 > 179) D2 = std::fabs(D2 - 360);
 
 	// If difference 1 (D1) is more than difference 2 (D2) then the bot will
 	// have to turn LESS if it heads in direction Y1 otherwise, head in
@@ -1429,7 +1429,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		if (fDistance < 32.0f)
 			bTouchedWpt = true;
 	}
-	else if (pBot->DistanceFrom(vWptOrigin, true) < BOT_WAYPOINT_TOUCH_DIST && fabs(vWptOrigin.z - vBotOrigin.z) <= pBot->pev->size.z)
+	else if (pBot->DistanceFrom(vWptOrigin, true) < BOT_WAYPOINT_TOUCH_DIST && std::fabs(vWptOrigin.z - vBotOrigin.z) <= pBot->pev->size.z)
 	{
 		bTouchedWpt = true;
 	}

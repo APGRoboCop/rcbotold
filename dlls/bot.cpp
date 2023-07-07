@@ -465,7 +465,7 @@ float CBot::CommanderProbability(eCommanderHappen happen, vector<comm_evid_t*> e
 	}
 }*/
 
-BOOL CBot::FacingIdeal()
+BOOL CBot::FacingIdeal() const
 {
 	// looking within "2.0" degrees of target?
 	return std::fabs(UTIL_AngleDiff(pev->ideal_yaw, pev->v_angle.y)) < 2.0f &&
@@ -478,7 +478,7 @@ float BotFunc_DistanceBetweenEdicts(edict_t* pEdict1, edict_t* pEdict2)
 	return (pEdict1->v.origin - pEdict2->v.origin).Length();
 }
 
-BOOL CBot::IsInVisibleList(edict_t* pEntity)
+BOOL CBot::IsInVisibleList(edict_t* pEntity) const
 {
 	return m_pVisibles->isVisible(ENTINDEX(pEntity));
 }
@@ -746,7 +746,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 				{
 					if (m_pKillerEdict != m_pEdict)
 					{
-						if (CBotReputation* pRep = m_Profile.m_Rep.GetRep(pKillerClient->GetPlayerRepId()))
+						if (const CBotReputation* pRep = m_Profile.m_Rep.GetRep(pKillerClient->GetPlayerRepId()))
 						{
 							const int iRep = pRep->CurrentRep();
 
@@ -1009,7 +1009,7 @@ void CBot::EnemyFound(edict_t* pEnemy)
 	}
 }
 
-BOOL CBot::HasSeenEnemy(edict_t* pEnemy)
+BOOL CBot::HasSeenEnemy(edict_t* pEnemy) const
 // returns if we have seen this enemy
 {
 	return m_pLastEnemy == pEnemy;
@@ -1046,14 +1046,14 @@ CLearnedHeader::CLearnedHeader(const int iId)
 	iProfileId = iId;
 }
 
-BOOL CLearnedHeader :: operator == (CLearnedHeader const& other)
+BOOL CLearnedHeader :: operator == (CLearnedHeader const& other) const
 {
 	return !strcmp(szBotVersion, other.szBotVersion) &&
 		iProfileId == other.iProfileId &&
 		iDataVersion == other.iDataVersion;
 }
 
-void CBot::loadLearnedData()
+void CBot::loadLearnedData() const
 {
 	char tmp_filename[64];
 	char filename[256];
@@ -1123,7 +1123,7 @@ void CBot::loadLearnedData()
 	fclose(bfp);
 }
 
-void CBot::saveLearnedData()
+void CBot::saveLearnedData() const
 {
 	char tmp_filename[64];
 	char filename[256];
@@ -1333,7 +1333,7 @@ void CBot::FreeLocalMemory()
 	}
 }
 
-BOOL CBot::WantToLeaveGame()
+BOOL CBot::WantToLeaveGame() const
 {
 	/*
 
@@ -2361,7 +2361,7 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 	return true; // no point found (nothing to add) return true (string can be used)
 }
 
-BOOL CBot::builtTeleporterEntrance()
+BOOL CBot::builtTeleporterEntrance() const
 {
 	edict_t* pent = nullptr;
 
@@ -2379,7 +2379,7 @@ BOOL CBot::builtTeleporterExit()
 	return getTeleporterExit() != nullptr;
 }
 
-edict_t* CBot::getTeleporterExit()
+edict_t* CBot::getTeleporterExit() const
 {
 	edict_t* pent = nullptr;
 
@@ -2392,7 +2392,7 @@ edict_t* CBot::getTeleporterExit()
 	return pent;
 }
 
-int CBot::GetLadderDir(const BOOL bCheckWaypoint)
+int CBot::GetLadderDir(const BOOL bCheckWaypoint) const
 // Get ladder dir, simply find if the bot
 // wants to go up or down..
 //return -1 (down), 0 (jump off), 1 (up)
@@ -3737,7 +3737,7 @@ void CBot::Think()
 	return;
 }
 
-BOOL CBot::WantToFindEnemy()
+BOOL CBot::WantToFindEnemy() const
 {
 	if (gBotGlobals.IsMod(MOD_TS))
 		return !gBotGlobals.IsConfigSettingOn(BOT_CONFIG_DONT_SHOOT);
@@ -3826,7 +3826,7 @@ public:
 		m_result = result;
 	}
 
-	float Utility()
+	float Utility() const
 	{
 		float fUtility = 1.0f;
 
@@ -3845,7 +3845,7 @@ public:
 		return fUtility;
 	}
 
-	float ResultProbability(eAlienMaskEvidence evd)
+	float ResultProbability(eAlienMaskEvidence evd) const
 	{
 		float fProbability = 1.0f;
 
@@ -6785,7 +6785,7 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 	return vEnemyOrigin + m_vOffsetVector;
 }
 
-float CBot::DistanceFrom(const Vector& vOrigin, const BOOL twoD)
+float CBot::DistanceFrom(const Vector& vOrigin, const BOOL twoD) const
 {
 	// get distance from origin
 
@@ -6872,7 +6872,7 @@ BOOL CBot::FVisible(edict_t* pEntity)
 	return false;
 }
 
-BOOL CBot::FVisible(const Vector& vecOrigin)
+BOOL CBot::FVisible(const Vector& vecOrigin) const
 {
 	// see if vector is visible, simple traceline ..
 	TraceResult tr;
@@ -6893,7 +6893,7 @@ BOOL CBot::FInViewCone(Vector* pOrigin)
 	return DotProductFromOrigin(pOrigin) > 0.5f; // 60 degree field of view
 }
 
-float CBot::DotProductFromOrigin(Vector* pOrigin)
+float CBot::DotProductFromOrigin(Vector* pOrigin) const
 {
 	static Vector vecLOS;
 	static float flDot;
@@ -7752,14 +7752,14 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 	// change angles smoothly
 
 	//temp = 1/1+exp(-fabs((pev->ideal_yaw+180.0f)-(pev->v_angle.y+180.0f))/180);
-	float temp = fabs(pev->ideal_yaw + 180.0f - (pev->v_angle.y + 180.0f));
+	float temp = std::fabs(pev->ideal_yaw + 180.0f - (pev->v_angle.y + 180.0f));
 
 	fTurnSpeed = temp / m_fTurnSpeed;//fabs((pev->ideal_yaw+180.0f)-(pev->v_angle.y+180.0f))/20;//m_fTurnSpeed;
 	// change yaw
 	ChangeAngles(&fTurnSpeed, &pev->ideal_yaw, &pev->v_angle.y, &pev->angles.y); // 5 degrees
 
 	//temp = 1/1+exp(-fabs((pev->idealpitch+180.0f)-(pev->v_angle.x+180.0f))/180);
-	temp = fabs(pev->idealpitch + 180.0f - (pev->v_angle.x + 180.0f));
+	temp = std::fabs(pev->idealpitch + 180.0f - (pev->v_angle.x + 180.0f));
 
 	// set by ChangeAngles... remove this functionality soon...
 	fTurnSpeed = temp / m_fTurnSpeed;
@@ -7842,8 +7842,13 @@ void CBot::touchedWpt()
 	}
 }
 
-void CBot::gotStuck()
+void CBot::gotStuck()//TODO: Experimental [APG]RoboCop[CL]
 {
+	// if stuck, go back to previous wpt
+	if (m_iCurrentWaypointIndex > 0)
+		m_iCurrentWaypointIndex--;
+	
+	m_bNotFollowingWaypoint = true;
 }
 
 void CBot::WorkMoveDirection()
@@ -9074,7 +9079,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (pEntity->v.iuser3 == AVH_USER3_BREAKABLE)
 		{
-			if (CBotWeapon* pBestWeapon = m_Weapons.GetWeapon(iBestWeaponId))
+			if (const CBotWeapon* pBestWeapon = m_Weapons.GetWeapon(iBestWeaponId))
 			{
 				if (pBestWeapon->IsMelee())
 				{
@@ -9657,7 +9662,7 @@ void BotPrintTalkMessage(char* fmt, ...)
 
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
-		CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
+		const CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
 
 		if (!pClient->IsUsed())
 			continue;
@@ -9695,7 +9700,7 @@ void BotFile_Write(char* string)
 	{
 		char time_str[512];
 		const time_t ltime = time(nullptr);
-		const struct tm* today = localtime(&ltime);
+		const tm* today = localtime(&ltime);
 
 		strftime(time_str, sizeof time_str, "%m/%d/%Y %H:%M:%S", today);
 
@@ -10077,7 +10082,7 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, entvars_t* pDoor, Vect
 
 BOOL CBot::SentryNeedsRepaired() const
 {
-	if (CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict))
+	if (const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict))
 	{
 		const edict_t* pSentry = pClient->getTFCSentry();
 
@@ -10922,7 +10927,7 @@ edict_t* BotFunc_FindRandomEntity(char* szClassname)
 
 BOOL BotFunc_GetStructuresToBuildForEntity(AvHUser3 iBuildingType, int* iDefs, int* iOffs, int* iSens, int* iMovs)
 {
-	CThingToBuild* theThingsToBuild = nullptr;
+	const CThingToBuild* theThingsToBuild = nullptr;
 
 	switch (iBuildingType)
 	{
@@ -11309,7 +11314,7 @@ void CBot::RepairSentry(int iNewScheduleId)
 
 edict_t* CBot::getSentry()
 {
-	if (CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict))
+	if (const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict))
 		return pClient->getTFCSentry();
 
 	return nullptr;
@@ -15679,7 +15684,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 					if (fDistance2d < 24)
 					{
-						float fzComp = fabs(vEntityOrigin.z - pev->origin.z);
+						float fzComp = std::fabs(vEntityOrigin.z - pev->origin.z);
 
 						if (fzComp > MAX_JUMP_HEIGHT)
 						{

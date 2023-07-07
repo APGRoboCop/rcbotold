@@ -443,7 +443,7 @@ int CBotReputations::GetClientRep(CClient* pClient)
 	if (iRepId == -1)
 		return BOT_MID_REP;
 
-	CBotReputation* pRep = this->GetRep(iRepId);
+	const CBotReputation* pRep = this->GetRep(iRepId);
 
 	if (pRep == nullptr)
 	{

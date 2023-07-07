@@ -165,7 +165,7 @@ void CPerceptron::save(FILE* bfp) const
 	unsigned int iTemp;
 	unsigned int i;
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
 
 	header.write(bfp);
 

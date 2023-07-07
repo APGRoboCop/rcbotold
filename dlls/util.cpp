@@ -1019,7 +1019,7 @@ int UTIL_GetBotIndex(const edict_t* pEdict)
 
 	for (int index = 0; index < MAX_PLAYERS; index++)
 	{
-		CBot* pBot = &gBotGlobals.m_Bots[index];
+		const CBot* pBot = &gBotGlobals.m_Bots[index];
 
 		if (!pBot)
 			continue;
@@ -1225,7 +1225,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 		{
 			if (pResourceTower->v.origin.x == pFuncResource->v.origin.x &&
 				pResourceTower->v.origin.y == pFuncResource->v.origin.y &&
-				fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1.0f)
+				std::fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1.0f)
 			{
 				return true;
 			}
@@ -1246,7 +1246,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 		{
 			if (pResourceTower->v.origin.x == pFuncResource->v.origin.x &&
 				pResourceTower->v.origin.y == pFuncResource->v.origin.y &&
-				fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1.0f)
+				std::fabs(pResourceTower->v.origin.x - pFuncResource->v.origin.x) <= 1.0f)
 			{
 				return true;
 			}
@@ -2069,7 +2069,7 @@ void UTIL_BotHudMessageAll(const hudtextparms_t& textparms, const char* pMessage
 {
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
-		CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
+		const CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
 
 		if (pClient && pClient->IsUsed())
 		{

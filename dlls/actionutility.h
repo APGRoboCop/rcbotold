@@ -38,7 +38,7 @@ public:
 		m_Utilities.emplace_back(action, static_cast<float>(CanDo) * utility);
 	}
 
-	eCanDoStuff getBestAction()
+	eCanDoStuff getBestAction() const
 	{
 		const float rand = RANDOM_FLOAT(0, getTotalUtility());
 

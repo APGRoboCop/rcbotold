@@ -460,7 +460,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 				{
 					for (int i = 0; i < MAX_PLAYERS; i++)
 					{
-						if (CBot* pBot = &gBotGlobals.m_Bots[i])  // is this slot used?
+						if (const CBot* pBot = &gBotGlobals.m_Bots[i])  // is this slot used?
 						{
 							if (pBot->IsUsed())
 							{
@@ -1951,7 +1951,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 	for (i = 0; i < MAX_PLAYERS; i++)
 	{
-		CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
+		const CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(i);
 
 		if (pClient->IsUsed())
 		{
@@ -2489,7 +2489,7 @@ void CBotCam::Think()
 		Vector ideal = UTIL_VecToAngles(vBotOrigin - m_pCameraEdict->v.origin);
 		UTIL_FixAngles(&ideal);
 
-		float fTurnSpeed = fabs(180 + ideal.x - (180 + m_pCameraEdict->v.angles.x)) / 10;
+		float fTurnSpeed = std::fabs(180 + ideal.x - (180 + m_pCameraEdict->v.angles.x)) / 10;
 
 		//	ideal.x = -ideal.x;
 		BotFunc_ChangeAngles(&fTurnSpeed, &ideal.x, &m_pCameraEdict->v.v_angle.x, &m_pCameraEdict->v.angles.x);
@@ -2497,7 +2497,7 @@ void CBotCam::Think()
 		//	m_pCameraEdict->v.angles.x = -m_pCameraEdict->v.v_angle.x/3;
 		//	m_pCameraEdict->v.v_angle.x = -m_pCameraEdict->v.v_angle.x;
 
-		fTurnSpeed = fabs(180 + ideal.y - (180 + m_pCameraEdict->v.angles.y)) / 20;
+		fTurnSpeed = std::fabs(180 + ideal.y - (180 + m_pCameraEdict->v.angles.y)) / 20;
 		BotFunc_ChangeAngles(&fTurnSpeed, &ideal.y, &m_pCameraEdict->v.v_angle.y, &m_pCameraEdict->v.angles.y);
 
 		m_pCameraEdict->v.origin = m_pCameraEdict->v.origin - (m_pCameraEdict->v.origin - oldOrigin) * 0.5f;

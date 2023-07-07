@@ -69,7 +69,7 @@ void NN::setWeights(std::vector<ga_value>* weights) const
 
 	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
-		NNLayer* l = m_Layers[i];
+		const NNLayer* l = m_Layers[i];
 
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
@@ -87,11 +87,11 @@ void NN::getWeights(std::vector<ga_value>* weights) const
 {
 	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
-		NNLayer* l = m_Layers[i];
+		const NNLayer* l = m_Layers[i];
 
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
-			CPerceptron* n = l->getNeuron(j);
+			const CPerceptron* n = l->getNeuron(j);
 
 			for (unsigned short int k = 0; k < n->numWeights(); k++)
 			{
@@ -107,7 +107,7 @@ void NN::trainOutputs(std::vector<ga_value>* wanted_outputs) const
 
 	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
-		NNLayer* l = m_Layers[i];
+		const NNLayer* l = m_Layers[i];
 
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
@@ -126,11 +126,11 @@ void NN::getOutputs(std::vector<ga_value>* outputs) const
 
 	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
-		NNLayer* l = m_Layers[i];
+		const NNLayer* l = m_Layers[i];
 
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
-			CPerceptron* n = l->getNeuron(j);
+			const CPerceptron* n = l->getNeuron(j);
 
 			outputs->emplace_back(n->getOutput());
 		}
@@ -150,7 +150,7 @@ void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs
 
 	for (i = 0; i < m_Layers.size(); i++)
 	{
-		NNLayer* l = m_Layers[i];
+		const NNLayer* l = m_Layers[i];
 
 		newoutputs.clear();
 
@@ -179,7 +179,7 @@ void NNLayer::save(FILE* bfp) const
 
 	fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_NN_LAYER, static_cast<int>(iTemp));
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_NN_LAYER, static_cast<int>(iTemp));
 
 	header.write(bfp);
 
@@ -237,7 +237,7 @@ void NN::save(FILE* bfp) const
 
 	fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_NN, iTemp);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_NN, iTemp);
 
 	header.write(bfp);
 
@@ -251,7 +251,7 @@ void NN::randomize() const
 {
 	for (unsigned short int i = 0; i < m_Layers.size(); i++)
 	{
-		NNLayer* l = m_Layers[i];
+		const NNLayer* l = m_Layers[i];
 
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
