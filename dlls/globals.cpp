@@ -604,7 +604,7 @@ void CBotGlobals::StartFrame()
 						BotFunc_AddBot(nullptr, nullptr, nullptr, nullptr, nullptr);
 
 						m_bBotCanRejoin = false;
-						m_fBotRejoinTime = gpGlobals->time + 10.0f;
+						m_fBotRejoinTime = gpGlobals->time + 12.0f;
 
 						bAddBot = false;
 					}
