@@ -27,7 +27,7 @@ V 1.51-beta3
 * changed: Increased the bot's flexability
 * changed: Reduced redundant coding
 * changed: Reverted basemonster.h that was modified for Sven Coop
-* changed: The bot add or spawn delay for 5-7 seconds to prevent crashes
+* changed: The bot add or spawn delay for 10-12 seconds to prevent crashes
 * changed: Increasing bot's viewing angle to detect enemies better
 * changed: Reduced further Sven Co-op and TFC support
 * changed: Converted some doubles into floats
@@ -35,9 +35,7 @@ V 1.51-beta3
 * TODO: To allow Skulk Aliens to bite and attack properly
 * TODO: To find out why the Welcome Message from util.cpp isn't displaying
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
-* TODO: To learn properly on avoiding taking too much falling damage and die in lava pits - add AvoidEntity for "func_lava" in bot_navigate.cpp ?
 * TODO: To fix that NS Squad Joining Bug or enhance it
-* TODO: To allow bots to use and climb ladders properly
 
 V 1.5-final
 ---------
