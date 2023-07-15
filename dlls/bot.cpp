@@ -892,7 +892,7 @@ BOOL BotFunc_DecreaseRep(const int iRep, float fInfo, const float fSkill)
 	if (iRep == -1)
 		return false;
 
-	if (const BOOL bUseDist = fInfo >= 0)
+	if (fInfo >= 0)
 	{
 		const float iSkill = fSkill / MAX_BOT_SKILL;
 
@@ -1955,7 +1955,22 @@ int CBot::GetTeam() const
 	return UTIL_GetTeam(m_pEdict);
 }
 
-void CBot::BotChat(const eBotChatType iChatType, edict_t* pChatEdict, const BOOL bSayNow)
+/*BOOL CBot::EvolveInto(int species)
+{
+	return UTIL_EvolveInto(m_pEdict, species);
+}*/
+
+short CBot::SpeciesOnTeam(int species) const //TODO: Experimental [APG]RoboCop[CL]
+{
+	return UTIL_SpeciesOnTeam(species, GetTeam());
+}
+
+/*short CBot::EvolvedSpeciesOnTeam(int species)
+{
+	return UTIL_EvolvedSpeciesOnTeam(species, GetTeam());
+}*/
+
+void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, BOOL bSayNow)
 // pChatEdict will be NULL if not directly talking to someone
 {
 	CClient* pClient = nullptr;
@@ -2196,6 +2211,23 @@ void CBot::BotChat(const eBotChatType iChatType, edict_t* pChatEdict, const BOOL
 		else
 			AddTask(CBotTask(BOT_TASK_TYPE_MESSAGE, 0, nullptr, iTeamOnly));
 	}
+}
+
+BOOL CBot::BotCanUseBuiltStructure(edict_t* structure) const //TODO: Experimental [APG]RoboCop[CL]
+{
+	if (FNullEnt(structure))
+		return false;
+
+	if (structure->v.owner == nullptr)
+		return false;
+
+	if (structure->v.owner != m_pEdict)
+		return false;
+
+	if (structure->v.health <= 0)
+		return false;
+
+	return true;
 }
 
 const char* BotFunc_GetRandomPlayerName(CBot* pBot, const int iState)
@@ -6795,7 +6827,31 @@ float CBot::DistanceFrom(const Vector& vOrigin, const BOOL twoD) const
 	return (vOrigin - GetGunPosition()).Length();
 }
 
-float CBot::DistanceFromEdict(edict_t* pEntity)
+edict_t* CBot::BotCheckForWeldables() //TODO: Experimental [APG]RoboCop[CL]
+{
+	// check for weldables
+
+	edict_t* pWeldable = nullptr;
+
+	// find the nearest weldable
+	while ((pWeldable = UTIL_FindEntityByClassname(pWeldable, "func_weldable")) != nullptr)
+	{
+		if (pWeldable->v.health > 0 && pWeldable->v.health < pWeldable->v.max_health)
+		{
+			if (FVisible(pWeldable))
+			{
+				if (DistanceFromEdict(pWeldable) < 100)
+				{
+					return pWeldable;
+				}
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+float CBot::DistanceFromEdict(edict_t* pEntity) const
 {
 	// edict distance this time
 	return DistanceFrom(EntityOrigin(pEntity));
@@ -16631,6 +16687,17 @@ BOOL CBot::hasWeb()
 BOOL CBot::isInAnimate(edict_t* pEntity)
 {
 	return (pEntity->v.flags & (FL_WORLDBRUSH | FL_DORMANT | FL_KILLME)) > 0;
+}
+
+BOOL CBot::isFriendly(edict_t* pEntity) const
+{
+	if (pEntity->v.team == m_pEdict->v.team)
+		return true;
+
+	if (pEntity->v.team == 0 && pEntity->v.health > 0)
+		return true;
+
+	return false;
 }
 
 void CBot::clearEnemyCosts()
