@@ -477,7 +477,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 
 								SERVER_COMMAND(cmd);  // kick the bot using kick name //(kick #id)
 
-								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 12.0f;
+								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 10.0f;
 								gBotGlobals.m_bBotCanRejoin = false;
 
 								break;
@@ -2101,8 +2101,8 @@ void ReadMapConfig()
 		{
 			// dont add bots for another while...
 			// Added more delay to prevent possible "Tried to write to uninitialized sizebuf_t" crashes - [APG]RoboCop[CL]
-			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 12.0f;
-			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 12.0f;
+			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 10.0f;
+			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 10.0f;
 		}
 
 		// Does the command in the text file

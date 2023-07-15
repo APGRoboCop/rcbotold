@@ -1757,7 +1757,7 @@ public:
 		m_iFlags = 0;
 	}
 private:
-	int m_iFlags;
+	int m_iFlags = 0;
 };
 
 #define BOT_REMEMBER_POSITION			0
@@ -1937,7 +1937,7 @@ public:
 		newPosition.setFlags(flags);
 		newPosition.setVisibleOrigin(vVisibleOrigin);
 
-		CRememberPosition* e = m_Positions.getExisting(newPosition);
+		m_Positions.getExisting(newPosition);
 
 		const int index = m_Positions.getExistingIndex(newPosition);
 
@@ -3123,7 +3123,7 @@ public:
 
 	BOOL isInAnimate(edict_t* pEntity);
 
-	BOOL isFriendly(edict_t* pEntity);
+	BOOL isFriendly(edict_t* pEntity) const;
 
 	CBotSquad* getSquad() const
 	{
@@ -4036,14 +4036,14 @@ public:
 	// BUTTONS - END
 
 	BOOL     EvolveInto(int species);
-	short int SpeciesOnTeam(int species);
+	short int SpeciesOnTeam(int species) const;
 	short int EvolvedSpeciesOnTeam(int species);
 
-	void	 BotChat(eBotChatType iChatType, edict_t* pInfo = nullptr, BOOL bSayNow = false);
+	void	 BotChat(eBotChatType iChatType, edict_t* pChatEdict = nullptr, BOOL bSayNow = false);
 
-	BOOL     BotCanUseBuiltStructure(edict_t* structure);
+	BOOL     BotCanUseBuiltStructure(edict_t* structure) const;
 	edict_t* BotCheckForWeldables();
-	float    DistanceFromEdict(edict_t* pEntity);
+	float    DistanceFromEdict(edict_t* pEntity) const;
 
 	//edict_t *NearestStructure		( int structure_type );
 
@@ -4213,8 +4213,18 @@ public:
 	void SayMessage(const char* message, edict_t* pPlayer);
 	void SayMessage(const char* message, const Vector& colour1, const Vector& colour2, edict_t* pPlayer);
 	void Initialise();
-	void SetColour1(Vector const& colours, int alpha) { m_textParms.r1 = static_cast<int>(colours.x), m_textParms.g1 = static_cast<int>(colours.y), m_textParms.b1 = static_cast<int>(colours.z); m_textParms.a1 = alpha; }
-	void SetColour2(Vector const& colours, int alpha) { m_textParms.r2 = static_cast<int>(colours.x), m_textParms.g2 = static_cast<int>(colours.y), m_textParms.b2 = static_cast<int>(colours.z); m_textParms.a2 = alpha; }
+	void SetColour1(Vector const& colours, int alpha)
+	{
+		m_textParms.r1 = static_cast<byte>(colours.x), m_textParms.g1 = static_cast<byte>(colours.y), m_textParms.b1 =
+			static_cast<byte>(colours.z);
+		m_textParms.a1 = static_cast<byte>(alpha);
+	}
+	void SetColour2(Vector const& colours, int alpha)
+	{
+		m_textParms.r2 = static_cast<byte>(colours.x), m_textParms.g2 = static_cast<byte>(colours.y), m_textParms.b2 =
+			static_cast<byte>(colours.z);
+		m_textParms.a2 = static_cast<byte>(alpha);
+	}
 	void InitMessage(const char* message);
 
 private:
@@ -6025,7 +6035,7 @@ public:
 	}
 
 private:
-	short int m_iCost;
+	int m_iCost;
 	short int m_iSlot;
 	short int m_iRad;
 	BOOL m_bAvailable;
@@ -6309,9 +6319,9 @@ public:
 		//m_iNumClients = 0;
 
 		m_fMapInitTime = 0.0f;
-		m_fBotRejoinTime = 0.0f;
+		m_fBotRejoinTime = 3.0f;
 
-		m_fUpdateLadderTime = -1;
+		m_fUpdateLadderTime = -1.0f;
 
 		m_szModFolder = nullptr;
 
@@ -6385,7 +6395,7 @@ public:
 
 		m_bTeamPlay = true;
 		m_fNextJoinTeam = 0.0f;
-		m_fAutoWaypointCheckTime = 0.0f;
+		m_fAutoWaypointCheckTime = 0.5f;
 		m_fAutoBuildTime = 0.0f;
 		m_bAutoBuilt = false;
 		m_bHasDefTech = false;
@@ -6394,28 +6404,29 @@ public:
 		m_fWallStickTol = 0.0f;
 
 		m_bNetMessageStarted = false;
-		m_iMinBots = 0;
-		m_iMaxBots = 0;
+		m_iMinBots = -1;
+		m_iMaxBots = -1;
 
-		m_iMaxVisUpdateRevs = 0;
-		m_fHiveImportance = 0.0f;
-		m_fResTowerImportance = 0.0f;
-		m_fHealingImportance = 0.0f;
-		m_fStructureBuildingImportance = 0.0f;
-		m_fRefillStructureImportance = 0.0f;
-		m_fBotStuckSpeed = 0.0f;
-		m_fUpdateLadderTime = 0.0f; m_fUpdateVisTime = 0.0f;
+		m_iMaxVisUpdateRevs = 200;
+		m_fHiveImportance = 1.0f;
+		m_fResTowerImportance = 0.7f;
+		m_fHealingImportance = 0.75f;
+		m_fStructureBuildingImportance = 0.4f;
+		m_fRefillStructureImportance = 0.5f;
+		m_fBotStuckSpeed = 7.0f;
+		m_fUpdateLadderTime = -1.0f;
+		m_fUpdateVisTime = 0.0f;
 		m_szModFolder = nullptr;
 		m_iDebugLevels = 0;
 
 		m_pMarineStart = nullptr;
 		m_fReadConfigTime = 0.0f;
 		m_iBotChatPercent = 0;
-		m_iBotChatReplyPercent = 0;
-		m_iBotMsgIndex = 0;
+		m_iBotChatReplyPercent = 33;
+		m_iBotMsgIndex = -1;
 		m_iCurrentMessageState = 0;
 		m_iCurrentMessageState2 = 0;
-		m_iMaxPathRevs = 0;
+		m_iMaxPathRevs = 200;
 
 		m_pMessageEntity = nullptr;
 		m_ThingsToBuild = nullptr;
@@ -6426,7 +6437,7 @@ public:
 		m_bIsFakeClientCommand = 0;
 		m_iFakeArgCount = 0;
 		m_iForceTeam = 0;
-		m_fGorgeAmount = 0.0f;
+		m_fGorgeAmount = 0.4f;
 		m_pListenServerEdict = nullptr;
 		m_iWaypointTexture = 0;
 
@@ -6434,7 +6445,7 @@ public:
 		m_fClientUpdateTime = 0.0f;
 		m_bBotCanRejoin = false;
 		m_fMapInitTime = 0.0f;
-		m_fBotRejoinTime = 0.0f;
+		m_fBotRejoinTime = 3.0f;
 		m_iNumBots = 0;
 
 		m_bCanUpgradeDef = false;
@@ -6442,7 +6453,7 @@ public:
 		m_bCanUpgradeMov = false;
 
 		m_iCurrentMod = 0;
-		m_fTurnSpeed = 0.0f;
+		m_fTurnSpeed = 15.0f;
 		m_bCombatMap = false;
 
 		prevBackPackInvalid = 0;
