@@ -438,7 +438,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	Vector vEnemyOrigin;
 	float fEnemyDist;
 
-	//TODO: This prevents bots from zapping themselves underwater with Lightning Gun? [APG]RoboCop[CL]
+	//TODO: This prevents bots from zapping themselves underwater with Lightning Gun in DMC? [APG]RoboCop[CL]
 	BOOL bEnemyIsElectrified = false;
 	BOOL bEnemyTooHigh = false;
 	const BOOL bUnderwater = pEdict->v.waterlevel == 3;

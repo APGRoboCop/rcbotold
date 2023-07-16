@@ -10720,10 +10720,9 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 	weights.clear();
 	inputs.clear();
 
-	return dec_followEnemy->fired();
-	//TODO: To allow this to be reachable [APG]RoboCop[CL]
-	/*
-	if ( pEnemy == NULL )
+	//return dec_followEnemy->fired(); //Not required? [APG]RoboCop[CL]	
+
+	if ( pEnemy == nullptr )
 		return false;
 
 	switch ( gBotGlobals.m_iCurrentMod )
@@ -10735,16 +10734,16 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 
 		return true;
 		break;
-	case MOD_TFC:
+	/*case MOD_TFC:
 		// focus on capturing the flag only
 		if ( m_bHasFlag )
 			return false;
-		break;
+		break;*/
 	case MOD_DMC:
 		if ( DMC_HasInvisibility() || DMC_HasInvulnerability() )
 			return true;
 		break;
-	case MOD_SVENCOOP:
+	/*case MOD_SVENCOOP:
 		{
 			float fEnemySize;
 
@@ -10759,10 +10758,10 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 				return true; // yeah why not try to finish it off
 
 			return false;
-		}
+		}*/
 	}
 
-	return (pev->health > (pev->max_health * 0.3f));*/
+	return pev->health > pev->max_health * 0.3f;
 }
 
 edict_t* CMasterEntity::FindButton(const Vector& vOrigin)
