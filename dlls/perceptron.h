@@ -126,7 +126,7 @@ public:
 	void load(FILE* bfp);
 
 	void load(char* filename, int iProfileId);
-	void save(char* filename, int iProfileId);
+	void save(char* filename, int iProfileId) const;
 
 private:
 

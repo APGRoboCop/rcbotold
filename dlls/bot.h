@@ -4804,7 +4804,7 @@ public:
 		return FStrEq(m_szPass, szPass);//((unsigned int)m_iWonid == (unsigned int)iWonId);
 	}
 
-	BOOL IsForClient(CClient* pClient);
+	BOOL IsForClient(CClient* pClient) const;
 
 	void GiveClientAccess(CClient* pClient) const
 	{
@@ -5214,7 +5214,7 @@ public:
 
 	eMasterType EntityCanFire(edict_t* pEntity, edict_t* pActivator) const
 	{
-		if (CMasterEntity* pMaster = GetMaster(pEntity))
+		if (const CMasterEntity* pMaster = GetMaster(pEntity))
 			return pMaster->CanFire(pActivator);
 
 		return MASTER_NONE;

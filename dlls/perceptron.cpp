@@ -251,7 +251,7 @@ void CPerceptron::load(char* filename, int iProfileId)
 	}
 }
 
-void CPerceptron::save(char* filename, int iProfileId)
+void CPerceptron::save(char* filename, int iProfileId) const
 {
 	if (FILE* bfp = RCBOpenFile(filename, "wb", SAVETYPE_BOT, iProfileId))
 	{

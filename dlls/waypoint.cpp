@@ -2375,7 +2375,7 @@ WAYPOINT& WAYPOINTS :: operator [] (const int index)
 	}
 }
 
-void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints)
+void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints) const
 {
 	TraceResult tr;
 

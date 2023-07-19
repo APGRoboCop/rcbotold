@@ -565,7 +565,7 @@ public:
 		}
 	}
 
-	void WorkOutVisibilityTable(int iNumWaypoints);
+	void WorkOutVisibilityTable(int iNumWaypoints) const;
 
 private:
 

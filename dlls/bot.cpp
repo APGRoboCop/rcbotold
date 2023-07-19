@@ -1962,7 +1962,8 @@ int CBot::GetTeam() const
 
 short CBot::SpeciesOnTeam(int species) const //TODO: Experimental [APG]RoboCop[CL]
 {
-	return UTIL_SpeciesOnTeam(species, GetTeam());
+	const int team = GetTeam();
+	return UTIL_SpeciesOnTeam(species, team);
 }
 
 /*short CBot::EvolvedSpeciesOnTeam(int species)
@@ -4529,7 +4530,7 @@ void CBot::LookForNewTasks()
 			AddPriorityTask(CBotTask(BOT_TASK_USE,iNewScheduleId,pNearestCommandStation,0,0,EntityOrigin(pNearestCommandStation)));
 			AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH,iNewScheduleId,pNearestCommandStation));
 		}*/
-			// Nothing else to do...?
+		// Nothing else to do...?
 			else if (gBotGlobals.GetCommander())// a commander is in the console
 			{
 				if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_WAIT_FOR_ORDERS))
@@ -5657,7 +5658,7 @@ void CBot::LookForNewTasks()
 				if (m_Tasks.NoTasksLeft())
 				{
 					// Can I make a squad..?
-					BOOL bCanMakeSquad = !gBotGlobals.IsConfigSettingOn(BOT_CONFIG_DISABLE_BOT_SQUADS) && (m_fLookForSquadTime < gpGlobals->time&&
+					BOOL bCanMakeSquad = !gBotGlobals.IsConfigSettingOn(BOT_CONFIG_DISABLE_BOT_SQUADS) && (m_fLookForSquadTime < gpGlobals->time &&
 						//gBotGlobals.m_iCurrentMod != MOD_SVENCOOP &&
 						gBotGlobals.m_iCurrentMod != MOD_RC &&
 						gBotGlobals.m_iCurrentMod != MOD_RC2 &&
@@ -7291,7 +7292,7 @@ void CBot::WorkViewAngles()
 			}
 
 			Vector vRandom = Vector(RANDOM_FLOAT(0.0f, 128.0f) - 64.0f, RANDOM_FLOAT(0.0f, 128.0f) - 64.0f,
-			                        RANDOM_FLOAT(0.0f, 128.0f) - 64.0f);
+				RANDOM_FLOAT(0.0f, 128.0f) - 64.0f);
 			vRandom = vRandom.Normalize();
 			vRandom = vRandom * 64;
 
@@ -7903,11 +7904,11 @@ void CBot::gotStuck()//TODO: Experimental [APG]RoboCop[CL]
 	// if stuck, go back to previous wpt
 	if (m_iCurrentWaypointIndex > 0)
 		m_iCurrentWaypointIndex--;
-	
+
 	m_bNotFollowingWaypoint = true;
 }
 
-void CBot::WorkMoveDirection()
+	void CBot::WorkMoveDirection()
 {
 	// Move Direction Related To View Direction!!!
 
@@ -10722,43 +10723,43 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 
 	//return dec_followEnemy->fired(); //Not required? [APG]RoboCop[CL]	
 
-	if ( pEnemy == nullptr )
+	if (pEnemy == nullptr)
 		return false;
 
-	switch ( gBotGlobals.m_iCurrentMod )
+	switch (gBotGlobals.m_iCurrentMod)
 	{
 	case MOD_NS:
 		// always follow enemy in NS except gorge
-		if ( IsGorge() )
+		if (IsGorge())
 			return false;
 
 		return true;
 		break;
-	/*case MOD_TFC:
-		// focus on capturing the flag only
-		if ( m_bHasFlag )
-			return false;
-		break;*/
+		/*case MOD_TFC:
+			// focus on capturing the flag only
+			if ( m_bHasFlag )
+				return false;
+			break;*/
 	case MOD_DMC:
-		if ( DMC_HasInvisibility() || DMC_HasInvulnerability() )
+		if (DMC_HasInvisibility() || DMC_HasInvulnerability())
 			return true;
 		break;
-	/*case MOD_SVENCOOP:
-		{
-			float fEnemySize;
+		/*case MOD_SVENCOOP:
+			{
+				float fEnemySize;
 
-			// Got 'lots' of health then Yes
-			if ( pev->health > (pev->max_health * 0.3) )
-				return true;
+				// Got 'lots' of health then Yes
+				if ( pev->health > (pev->max_health * 0.3) )
+					return true;
 
-			fEnemySize = pEnemy->v.size.Length();
+				fEnemySize = pEnemy->v.size.Length();
 
-			// Enemy a lot smaller than me? !!
-			if ( fEnemySize <= (pev->size.Length()*0.75) )
-				return true; // yeah why not try to finish it off
+				// Enemy a lot smaller than me? !!
+				if ( fEnemySize <= (pev->size.Length()*0.75) )
+					return true; // yeah why not try to finish it off
 
-			return false;
-		}*/
+				return false;
+			}*/
 	}
 
 	return pev->health > pev->max_health * 0.3f;
@@ -12386,14 +12387,14 @@ void CBot::DoTasks()
 			if (fDistTeleporterSrc > 50 || pev->groundentity != pSourceTeleporter)
 			{
 				if (fDistTeleporterDest < fDistTeleporterSrc)
-				//{
-					//if (gBotGlobals.IsMod(MOD_TFC))
-					//	usedTeleporter(pSourceTeleporter);
+					//{
+						//if (gBotGlobals.IsMod(MOD_TFC))
+						//	usedTeleporter(pSourceTeleporter);
 
-					//bDone = true;
-					//break;
-				//}
-				//else
+						//bDone = true;
+						//break;
+					//}
+					//else
 				{
 					if (gBotGlobals.IsNS())
 					{
@@ -12982,8 +12983,8 @@ void CBot::DoTasks()
 					}
 					else
 						TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr,
-						                     VALVE_WEAPON_HANDGRENADE, 0.0f, Vector(0, 0, 0),
-						                     m_CurrentTask->TimeToComplete());
+							VALVE_WEAPON_HANDGRENADE, 0.0f, Vector(0, 0, 0),
+							m_CurrentTask->TimeToComplete());
 
 					m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_VECTOR;
 				}

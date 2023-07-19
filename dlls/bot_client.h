@@ -180,7 +180,7 @@ public:
 		m_NetMessages.Push(pMessage);
 	}
 
-	void execute(int iMessage, void* p, int i);
+	void execute(int iMessage, void* p, int i) const;
 
 	//void *GetFunction ( int iMessage );
 

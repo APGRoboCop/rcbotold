@@ -29,7 +29,7 @@
 #endif
 inline void MESSAGE_BEGIN( int msg_dest, int msg_type, const float *pOrigin, entvars_t *ent );  // implementation later in this file
 
-extern globalvars_t				*gpGlobals;
+extern globalvars_t	*gpGlobals;
 
 // Use this instead of ALLOC_STRING on constant strings
 #define STRING(offset)		(const char *)(gpGlobals->pStringBase + (int)(offset))

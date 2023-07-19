@@ -102,7 +102,7 @@ void UpdateClientData(const edict_s* ent, int sendweapons, clientdata_s* cd);
 //
 // Allowed players
 // checks if this item is for a client
-BOOL CAllowedPlayer::IsForClient(CClient* pClient)
+BOOL CAllowedPlayer::IsForClient(CClient* pClient) const
 {
 	BOOL bSameName = false;
 
@@ -2121,7 +2121,7 @@ void ReadMapConfig()
 
 edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin) //TODO: Experimental [APG]RoboCop[CL]
 {
-	for (int i = 1; i <= gpGlobals->maxClients; i++)
+	for (int i = 0; i <= gpGlobals->maxClients; i++)
 	{
 		edict_t* pPlayer = INDEXENT(i);
 
@@ -2137,10 +2137,9 @@ edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Ve
 
 	return nullptr;
 }
-
-//
-// Hack building
-edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser, BOOL bBuilt)
+	//
+	// Hack building
+	edict_t * BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t * pEntityUser, BOOL bBuilt)
 {
 	//pfnCreateNamedEntity(MAKE_STRING(pCommBuildent));
 
