@@ -34,7 +34,7 @@
 class Vector2D
 {
 public:
-	Vector2D() { }
+	Vector2D() = default;
 	Vector2D(float X, float Y) { x = X; y = Y; }
 	Vector2D operator+(const Vector2D& v)	const { return Vector2D(x + v.x, y + v.y); }
 	Vector2D operator-(const Vector2D& v)	const { return Vector2D(x - v.x, y - v.y); }
@@ -72,7 +72,7 @@ class Vector						// same data-layout as engine's vec3_t,
 {								//		which is a vec_t[3]
 public:
 	// Construction/destruction
-	Vector() { }
+	Vector() = default;
 	Vector(float X, float Y, float Z) { x = X; y = Y; z = Z; }
 	//inline Vector(double X, double Y, double Z)		{ x = (float)X; y = (float)Y; z = (float)Z;	}
 	//inline Vector(int X, int Y, int Z)				{ x = (float)X; y = (float)Y; z = (float)Z;	}

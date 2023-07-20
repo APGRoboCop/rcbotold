@@ -155,9 +155,11 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 	{
 		int index = -1;
 
-		if (debug_engine) { fp = fopen("bot.txt", "a");
+		if (debug_engine) {
+			fp = fopen("bot.txt", "a");
 			fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
-			fclose(fp); }
+			fclose(fp);
+		}
 
 		m_CurrentMessage = nullptr;
 		m_iCurrentMessageState = 0;
@@ -375,23 +377,23 @@ void CBotGlobals::StartFrame()
 				m_bAutoBuilt = true;
 			}
 
-			for ( iIndex = 0; iIndex < BOT_MAX_HIVES; iIndex ++ )
+			for (iIndex = 0; iIndex < BOT_MAX_HIVES; iIndex++)
 			{
 				const hive_info_t* pHiveInfo = &m_Hives[iIndex];
 
 				// mTechnology wont work :(
 				//mTechnology = pHiveInfo->mTechnology;
 
-				if ( IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL) ) //Needed for ENSL? [APG]RoboCop[CL]
+				if (IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL)) //Needed for ENSL? [APG]RoboCop[CL]
 				{
-					if ( pHiveInfo->pHive && (pHiveInfo->pHive->v.fuser1 > 0) )
+					if (pHiveInfo->pHive && (pHiveInfo->pHive->v.fuser1 > 0))
 					{
 						iNumHivesUp++;
 					}
 				}
 				else
 				{
-					if ( pHiveInfo->pHive && (pHiveInfo->pHive->v.fuser2 > 0) )
+					if (pHiveInfo->pHive && (pHiveInfo->pHive->v.fuser2 > 0))
 					{
 						iNumHivesUp++;
 					}
@@ -1181,7 +1183,7 @@ void CBotGlobals::MapInit()
 
 	/*if (IsMod(MOD_TFC))
 	{
-		
+
 
 		  TFC_MAP_UNKNOWN,		// unknown map type
 		  TFC_MAP_CTF,			// normal capture the flag (flag in enemy base) e.g. 2fort
@@ -1190,7 +1192,7 @@ void CBotGlobals::MapInit()
 		  TFC_MAP_CTF_BASE		// capture the flag (flag in your base) e.g. epicenter
 		  TFC_MAP_FLAG_MULTIPLE,  // take many flags capture all of them, e.g. flagrun
 		  TFC_MAP_CAPTURE_FLAG_MULTIPLE,  // capture many points e.g. cz2
-		  TFC_MAP_VIP // hunted type map 
+		  TFC_MAP_VIP // hunted type map
 
 			// default
 		setMapType(TFC_MAP_CTF);

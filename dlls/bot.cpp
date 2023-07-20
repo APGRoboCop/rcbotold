@@ -2638,7 +2638,7 @@ void CBot::StartGame()
 				gBotGlobals.m_pCombatGA[m_iCombatTeam].addToPopulation(m_pCombatBits->copy());
 				m_fCombatFitness = 0.0f;
 
-				if (m_pCombatBits)
+				if (m_pCombatBits != nullptr)// using != nullptr removed crash? [APG]RoboCop[CL]
 				{
 					delete m_pCombatBits;
 					m_pCombatBits = nullptr;
@@ -7908,7 +7908,7 @@ void CBot::gotStuck()//TODO: Experimental [APG]RoboCop[CL]
 	m_bNotFollowingWaypoint = true;
 }
 
-	void CBot::WorkMoveDirection()
+void CBot::WorkMoveDirection()
 {
 	// Move Direction Related To View Direction!!!
 
@@ -8957,6 +8957,10 @@ edict_t* CBot::FindEnemy()
 						!(pEntity->v.button & (IN_ATTACK | IN_ATTACK2)))
 					{
 						pEntity->v.button |= IN_ATTACK2;
+						m_bEagle_secondary_state = false;
+					}
+					else
+					{
 						m_bEagle_secondary_state = false;
 					}
 					break;
@@ -10241,10 +10245,10 @@ void CBot::AddVisitedResourceTower(edict_t* pEdict)
 	}
 
 	if (iMax > MAX_REMEMBER_POSITIONS)
-	{
-		m_pVisitedFuncResources[RANDOM_LONG(0, MAX_REMEMBER_POSITIONS - 1)];//TODO: unused [APG]RoboCop[CL]
-	}
-	else
+		//{
+		//	m_pVisitedFuncResources[RANDOM_LONG(0, MAX_REMEMBER_POSITIONS - 1)];//TODO: unused [APG]RoboCop[CL]
+		//}
+		//else
 	{
 		m_pVisitedFuncResources[m_iVisitedFuncResources++] = pEdict;
 	}
@@ -12766,7 +12770,8 @@ void CBot::DoTasks()
 			break;
 		case BOT_TASK_ALIEN_UPGRADE:
 		{
-			switch (int iDesiredUpgrade = m_CurrentTask->TaskInt())
+			int iDesiredUpgrade = m_CurrentTask->TaskInt();
+			switch (iDesiredUpgrade)
 			{
 			case BOT_UPGRADE_DEF:
 				// TODO: allow bots to choose upgrades depending on how well they did with them.

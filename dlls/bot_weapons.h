@@ -599,10 +599,10 @@ public:
 		//m_iModId;
 		m_iPriority = pPreset->m_iPriority;
 	}
-
-	void Init() override
+	
+	void Init() override//replaced memset with std::fill_n [APG]RoboCop[CL]
 	{
-		memset((void*)this, 0, sizeof(CWeaponPreset));
+		std::fill_n(reinterpret_cast<char*>(this), sizeof(CWeaponPreset), 0);
 	}
 
 	BOOL CanBeUsedUnderWater() override
@@ -907,7 +907,7 @@ public:
 
 private:
 	int m_iId;
-	
+
 	int m_iClip;
 
 	// Extra ammo for this weapon in (used for TS only right now)
@@ -927,7 +927,7 @@ private:
 class CBotWeapons
 {
 public:
-	
+
 	int GetBestWeaponId(CBot* pBot, edict_t* pEnemy);
 
 	void RemoveWeapon(int iId)
