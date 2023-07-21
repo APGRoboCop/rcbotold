@@ -6199,8 +6199,8 @@ public:
 		memset(m_iJoiningClients, 0, sizeof(int) * MAX_PLAYERS);
 
 		memset(m_iTeamScores, 0, sizeof(int) * MAX_TEAMS);
-		m_szWelcomeMessage = nullptr;
-		m_bIsNs3final = true;
+		//m_szWelcomeMessage = nullptr;
+		//m_bIsNs3final = true;
 
 		setDefaults();
 
@@ -6733,12 +6733,12 @@ public:
 		return false;
 	}*/
 
-	void changeWelcomeMessage ( char *message )
+	/*void changeWelcomeMessage ( char *message )
 		{
 			if ( m_szWelcomeMessage )
 				free(m_szWelcomeMessage);
 			m_szWelcomeMessage = strdup(message);
-		}
+		}*/
 	
 	void buildFileName(const char* in_filename, char* out_filename)
 	{
@@ -6786,7 +6786,7 @@ private:
 
 	dataUnconstArray<int> m_iValidGoals[MAX_TEAMS];
 
-	char *m_szWelcomeMessage;
+	//char *m_szWelcomeMessage;
 };
 
 /*

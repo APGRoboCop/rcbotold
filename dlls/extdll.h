@@ -24,7 +24,7 @@
 #define DEBUG 1
 #endif
 
-#ifndef __linux__
+#ifdef _WIN32
 // Silence certain warnings
 #pragma warning(disable : 4244)		// int or float down-conversion
 #pragma warning(disable : 4305)		// int or float data truncation
@@ -45,7 +45,7 @@
 #include <cstdlib>
 #include <cmath>
 
-#else
+#elif __linux__
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
