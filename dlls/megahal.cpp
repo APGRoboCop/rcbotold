@@ -193,7 +193,7 @@ void HumanizeString(char* string)
 	{
 		if (i + 1 < length && RANDOM_LONG(0, 100) < swap_percent)
 		{
-			const char temp = string[i];
+			char temp = string[i];
 
 			string[i] = string[i + 1];
 

@@ -162,7 +162,7 @@ void CBits::save(FILE* bfp) const
 
 void CBits::copy(CBits* otherBits)
 {
-	m_iNumBits = numBits();
+	m_iNumBits = otherBits->numBits();
 	memcpy(m_cBits, otherBits->getBits(), size());
 }
 

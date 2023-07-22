@@ -143,6 +143,7 @@ public:
 class CBaseEntity 
 {
 public:
+	virtual ~CBaseEntity() = default;
 	// Constructor.  Set engine to use C/C++ callback functions
 	// pointers to engine data
 	entvars_t *pev;		// Don't need to save/restore this pointer, the engine resets it

@@ -300,10 +300,10 @@ void InitMessage ( const char *message );
 					UTIL_PlaySound(m_pPlayer, "scientist/hello2");
 					break;
 				case 2:
-					UTIL_PlaySound(m_pPlayer, "scientist/hellofreeman");
+					UTIL_PlaySound(m_pPlayer, "scientist/greetings");
 					break;
 				case 3:
-					UTIL_PlaySound(m_pPlayer, "scientist/hellofromlab");
+					UTIL_PlaySound(m_pPlayer, "scientist/greetings2");
 					break;
 				case 4:
 					UTIL_PlaySound(m_pPlayer, "scientist/hellothere");

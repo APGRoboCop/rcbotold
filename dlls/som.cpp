@@ -151,6 +151,8 @@ CSomNeuron :: ~CSomNeuron()
 
 CSomNeuron::CSomNeuron()
 {
+	m_iX = 0;
+	m_iY = 0;
 	return;
 }
 

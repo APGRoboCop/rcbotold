@@ -663,8 +663,8 @@ private:
 class MyEHandle
 {
 private:
-	int m_iSerialNumber;
-	edict_t* m_pEdict;
+	int m_iSerialNumber = 0;
+	edict_t* m_pEdict = nullptr;
 public:
 	edict_t* Get() const
 	{
@@ -2724,7 +2724,7 @@ public:
 		m_szName = name;
 	}
 	/*guurk*/
-	bool operator ==(TSObjective& comp) const
+	int operator ==(TSObjective& comp) const
 	{
 		return m_iId;
 	}

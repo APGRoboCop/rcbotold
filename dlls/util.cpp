@@ -370,9 +370,9 @@ void UTIL_MakeVectors(const Vector& vecAngles)
 void strlow(char* str)
 // lower a string to make it lower case.
 {
-	const int len = strlen(str);
+	const size_t len = strlen(str);
 
-	for (int i = 0; i < len; i++)
+	for (unsigned int i = 0; i < len; i++)
 	{
 		str[i] = tolower(str[i]);
 	}
@@ -381,9 +381,9 @@ void strlow(char* str)
 void strhigh(char* str)
 // higher a string to make it upper case.
 {
-	const int len = strlen(str);
+	const size_t len = strlen(str);
 
-	for (int i = 0; i < len; i++)
+	for (unsigned int i = 0; i < len; i++)
 	{
 		str[i] = toupper(str[i]);
 	}
@@ -402,7 +402,7 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 			if (!pent->free)
 			{
 				// 'strlen' function called too many times inside loop [APG]RoboCop[CL]
-				const int length = strlen(name);
+				const size_t length = strlen(name);
 
 				char arg_lwr[80];
 				char pent_lwr[80];
@@ -757,8 +757,8 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 	else
 		sprintf(text, "%c%s: ", 2, STRING(pEntity->v.netname));
 
-	const int j = sizeof text - 2 - strlen(text);  // -2 for /n and null terminator
-	if (static_cast<int>(strlen(message)) > j)
+	const unsigned int j = sizeof text - 2 - strlen(text);  // -2 for /n and null terminator
+	if (strlen(message) > j)
 		message[j] = 0;
 
 	strcat(text, message);
@@ -1078,7 +1078,7 @@ float UTIL_EntityAnglesToVector2D(entvars_t* pev, const Vector* pOrigin) // For 
 
 	const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-	return static_cast<float>(acos(flDot) / 3.141592654 * 180);
+	return static_cast<float>(acos(flDot) / M_PI * 180);
 }
 
 float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin) // For 3d Movement (e.g. swimming)
@@ -1212,7 +1212,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 {
 	edict_t* pResourceTower = nullptr;
 
-	Vector vOrigin;
+	//Vector vOrigin;
 
 	while ((pResourceTower = UTIL_FindEntityByClassname(pResourceTower, "alienresourcetower")) != nullptr)
 	{

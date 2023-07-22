@@ -245,7 +245,7 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 	// returns 0==success, non-zero==failure
 	inline int THREAD_CREATE(THREAD_T *tid, void (*func)()) {
 		// win32 returns NULL==failure, non-NULL==success
-		const HANDLE ret = CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(func), nullptr, 0, tid);
+		const HANDLE ret = CreateThread(nullptr, 0, LPTHREAD_START_ROUTINE(func), nullptr, 0, tid);
 		if(ret==nullptr)
 			META_ERROR("Failure starting thread: %s", str_GetLastError());
 		return(ret==nullptr);
