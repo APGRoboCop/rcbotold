@@ -2216,13 +2216,10 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, BOOL bSayNow)
 
 BOOL CBot::BotCanUseBuiltStructure(edict_t* structure) const //TODO: Experimental [APG]RoboCop[CL]
 {
-	if (FNullEnt(structure))
+	if (structure == nullptr || FNullEnt(structure))
 		return false;
 
-	if (structure->v.owner == nullptr)
-		return false;
-
-	if (structure->v.owner != m_pEdict)
+	if (structure->v.owner == nullptr || structure->v.owner != m_pEdict)
 		return false;
 
 	if (structure->v.health <= 0)
@@ -2230,6 +2227,7 @@ BOOL CBot::BotCanUseBuiltStructure(edict_t* structure) const //TODO: Experimenta
 
 	return true;
 }
+
 
 const char* BotFunc_GetRandomPlayerName(CBot* pBot, const int iState)
 // Get a random playername, depending on iState...
@@ -6847,7 +6845,8 @@ edict_t* CBot::BotCheckForWeldables() //TODO: Experimental [APG]RoboCop[CL]
 		{
 			if (FVisible(pWeldable))
 			{
-				if (DistanceFromEdict(pWeldable) < 100)
+				const float distance = DistanceFromEdict(pWeldable);
+				if (distance < 100.0f)
 				{
 					return pWeldable;
 				}
@@ -6855,7 +6854,7 @@ edict_t* CBot::BotCheckForWeldables() //TODO: Experimental [APG]RoboCop[CL]
 		}
 	}
 
-	return nullptr;
+	return nullptr; // No weldable found
 }
 
 float CBot::DistanceFromEdict(edict_t* pEntity) const
@@ -7739,15 +7738,16 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 		if (bCanClimb && m_CurrentLookTask == BOT_LOOK_TASK_NEXT_WAYPOINT)
 		{
 			const int iLadderDir = GetLadderDir(); // Ladder Direction
-			//TODO: increase speed for when climbing ladders [APG]RoboCop[CL]
-			if (iLadderDir == 1)// && ((vAngles.x < 0)||(vAngles.x > 60)))
+
+			// TODO: Experimental [APG]RoboCop[CL]
+			if (iLadderDir == 1)
 				vAngles.x = 45; // Angle of Elevation
-			else if (iLadderDir == -1)// && ((vAngles.x > 0)||(vAngles.x < -60)) )
+			else if (iLadderDir == -1)
 				vAngles.x = -45; // Angle of Depression
 
 			SetLadderAngles(vAngles);
 			bUsePitch = true;
-			m_fTurnSpeed = MAX_JUMP_HEIGHT;
+			m_fTurnSpeed = MAX_JUMP_HEIGHT; // Not clear what MAX_JUMP_HEIGHT is; you might need to replace it with an appropriate value
 		}
 		else if (LadderAnglesSet())
 			UnSetLadderAngleAndMovement();
@@ -7909,8 +7909,9 @@ void CBot::gotStuck()//TODO: Experimental [APG]RoboCop[CL]
 {
 	// if stuck, go back to previous wpt
 	if (m_iCurrentWaypointIndex > 0)
+	{
 		m_iCurrentWaypointIndex--;
-
+	}
 	m_bNotFollowingWaypoint = true;
 }
 

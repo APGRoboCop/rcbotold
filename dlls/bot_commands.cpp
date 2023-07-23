@@ -1474,8 +1474,10 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 
 		if (arg2 && *arg2)
 		{
-			if (FStrEq(arg2, "wb"))
-				theConverter = new CWhichbotConvert(); //GravebotConvert(); //TODO: Allow Gravebot waypoints conversion [APG]RoboCop[CL]
+			if (FStrEq(arg2, "wb") && gBotGlobals.IsMod(MOD_NS))
+				theConverter = new CWhichbotConvert();
+			else if (gBotGlobals.IsMod(MOD_SI))
+				theConverter = new CGravebotConvert(); //TODO: Allow Gravebot waypoints conversion [APG]RoboCop[CL]
 		}
 
 		if (WaypointSave(false, theConverter))

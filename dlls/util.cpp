@@ -874,9 +874,9 @@ int UTIL_GetTeam(edict_t* pEntity)
 		char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
 
 		char model[64];
-
 		strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
 
+		// Check if the map name starts with "tm_"
 		if (strncmp("tm_", STRING(gpGlobals->mapname), 3) == 0)
 		{
 			if (FStrEq(model, "merc"))
@@ -893,11 +893,11 @@ int UTIL_GetTeam(edict_t* pEntity)
 
 			int team = 0;
 
-			if (sofar == nullptr)
-				team = -1; //TODO: team not assigned [APG]RoboCop[CL]
+			if (pos == nullptr)
+				team = -1; // Model not found in team list, team not assigned
 			else
 			{
-				// count ";"s
+				// count ";"s to determine the team index
 				while (sofar < pos)
 				{
 					if (*sofar == ';')
@@ -906,9 +906,11 @@ int UTIL_GetTeam(edict_t* pEntity)
 					sofar = sofar + 1;
 				}
 			}
+
+			return team; // Return the determined team index
 		}
 
-		return -1;
+		return -1; // Default return value if no specific team was assigned or detected
 	}
 	case MOD_BG:
 		return pEntity->v.team;

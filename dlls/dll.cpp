@@ -2121,25 +2121,28 @@ void ReadMapConfig()
 
 edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin) //TODO: Experimental [APG]RoboCop[CL]
 {
-	for (int i = 0; i <= gpGlobals->maxClients; i++)
+	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
 		edict_t* pPlayer = INDEXENT(i);
 
-		if (pPlayer && !pPlayer->free && pPlayer->v.iuser3 == iUser3)
+		if (!pPlayer)
+			continue;
+
+		if (pPlayer->free)
+			continue;
+
+		if (pPlayer->v.iuser3 == iUser3 && strcmp(STRING(pPlayer->v.classname), szClassname) == 0)
 		{
-			if (strcmp(STRING(pPlayer->v.classname), szClassname) == 0)
-			{
-				pPlayer->v.origin = vOrigin;
-				return pPlayer;
-			}
+			pPlayer->v.origin = vOrigin;
+			return pPlayer;
 		}
 	}
 
 	return nullptr;
 }
-	//
-	// Hack building
-	edict_t * BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t * pEntityUser, BOOL bBuilt)
+//
+// Hack building
+edict_t * BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t * pEntityUser, BOOL bBuilt)
 {
 	//pfnCreateNamedEntity(MAKE_STRING(pCommBuildent));
 

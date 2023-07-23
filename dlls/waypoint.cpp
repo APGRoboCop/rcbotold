@@ -438,6 +438,7 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float 
 
 #define WPT_CONVERT_FROM_HPBBOT 1
 #define WPT_CONVERT_FROM_WHICHBOT 2
+#define WPT_CONVERT_FROM_GRAVEBOT 3
 
 BOOL WaypointLoad(edict_t* pEntity)
 {
@@ -480,6 +481,8 @@ BOOL WaypointLoad(edict_t* pEntity)
 
 		if (gBotGlobals.IsMod(MOD_NS))
 			iConvertFrom = WPT_CONVERT_FROM_WHICHBOT;
+		else if (gBotGlobals.IsMod(MOD_SI))
+			iConvertFrom = WPT_CONVERT_FROM_GRAVEBOT;
 		else
 			iConvertFrom = WPT_CONVERT_FROM_HPBBOT;
 	}
