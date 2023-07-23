@@ -473,18 +473,32 @@ BOOL WaypointLoad(edict_t* pEntity)
 		// try loading a .wpt file
 		const int iLen = strlen(filename);
 
-		filename[iLen - 1] = 't';
-		filename[iLen - 2] = 'p';
-		filename[iLen - 3] = 'w';
-
 		bfp = fopen(filename, "rb");
 
 		if (gBotGlobals.IsMod(MOD_NS))
+		{
 			iConvertFrom = WPT_CONVERT_FROM_WHICHBOT;
+		
+			filename[iLen - 1] = 't';
+			filename[iLen - 2] = 'p';
+			filename[iLen - 3] = 'w';
+		}
 		else if (gBotGlobals.IsMod(MOD_SI))
+		{
 			iConvertFrom = WPT_CONVERT_FROM_GRAVEBOT;
+			
+			filename[iLen - 1] = 'w';
+			filename[iLen - 2] = 'b';
+			filename[iLen - 3] = 'g';
+		}
 		else
+		{
 			iConvertFrom = WPT_CONVERT_FROM_HPBBOT;
+
+			filename[iLen - 1] = 't';
+			filename[iLen - 2] = 'p';
+			filename[iLen - 3] = 'w';
+		}
 	}
 
 	// if file exists, read the waypoint structure from it
