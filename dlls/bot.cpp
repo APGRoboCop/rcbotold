@@ -5666,8 +5666,10 @@ void CBot::LookForNewTasks()
 						gBotGlobals.m_iCurrentMod != MOD_RC &&
 						gBotGlobals.m_iCurrentMod != MOD_RC2 &&
 						gBotGlobals.m_iCurrentMod != MOD_BUMPERCARS &&
+						gBotGlobals.m_iCurrentMod != MOD_NS &&
 						gBotGlobals.m_iCurrentMod != MOD_DMC &&
 						gBotGlobals.m_iCurrentMod != MOD_SI &&
+						gBotGlobals.m_iCurrentMod != MOD_TS &&
 						gBotGlobals.m_iCurrentMod != MOD_WW &&
 						gBotGlobals.m_iCurrentMod != MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 					//gBotGlobals.m_iCurrentMod != MOD_TFC

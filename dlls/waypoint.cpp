@@ -527,7 +527,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 			{
 				WaypointInit();  // remove any existing waypoints
 
-				for (i = 0; i < header.number_of_waypoints; i++)
+				for (int i = 0; i < header.number_of_waypoints; i++)
 				{
 					fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
 
@@ -543,6 +543,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 
 					if (iConvertFrom == WPT_CONVERT_FROM_HPBBOT)
 					{
+						// TODO: Add conversion code here
 					}
 
 					num_waypoints++;
@@ -554,7 +555,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 					// read the number of paths from this node...
 					fread(&num, sizeof num, 1, bfp);
 
-					for (i = 0; i < num; i++)
+					for (int i = 0; i < num; i++)
 					{
 						fread(&path_index, sizeof path_index, 1, bfp);
 

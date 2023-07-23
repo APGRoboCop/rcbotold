@@ -380,7 +380,7 @@ public:
 	eBotCvarState action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4) override;
 };
 
-class CSquadMenuCommand : public CBotCvar //TODO: broken [APG]RoboCop[CL]
+class CSquadMenuCommand : public CBotCvar
 {
 public:
 	CSquadMenuCommand()

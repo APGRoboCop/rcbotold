@@ -35,9 +35,9 @@ V 1.51-beta3
 * changed  Welcome Message modernised and is now displaying properly
 * changed: Converted some doubles into floats
 * changed: Added returns for NS CAlienAction 
+* changed: NS Squad Menu repaired and should hopefully work
 * TODO: To allow Skulk Aliens to bite and attack properly
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
-* TODO: To fix that NS Squad Joining Bug or enhance it
 
 V 1.5-final
 ---------
