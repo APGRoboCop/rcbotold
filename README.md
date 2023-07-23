@@ -7,11 +7,13 @@ Supported Mods
 
 - Bumpercars
 - Battlegrounds
-- Rocket Crowbar
 - Deathmatch Classic
 - Opposing Force (CTF)
 - Natural Selection
+- Rocket Crowbar
+- Science and Industry
 - The Specialists
+- Wizard Wars
 
 RCBot versions
 --------------
@@ -21,7 +23,7 @@ V 1.51-beta3
 
 * added: Enhanced performance
 * added: AMBuild compiling support
-* added: Opposing Force CTF Support
+* added: Opposing Force CTF, S&I and WizWars Support
 * added: C++17 Support 
 * added: Strafing combat to evade from being easy target bots
 * changed: Increased the bot's flexability
@@ -30,10 +32,10 @@ V 1.51-beta3
 * changed: The bot add or spawn delay for 10-12 seconds to prevent crashes
 * changed: Increasing bot's viewing angle to detect enemies better
 * changed: Reduced further Sven Co-op and TFC support
+* changed  Welcome Message modernised and is displaying properly
 * changed: Converted some doubles into floats
 * changed: Added returns for NS CAlienAction 
 * TODO: To allow Skulk Aliens to bite and attack properly
-* TODO: To find out why the Welcome Message from util.cpp isn't displaying
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
 * TODO: To fix that NS Squad Joining Bug or enhance it
 

@@ -478,7 +478,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 		if (gBotGlobals.IsMod(MOD_NS))
 		{
 			iConvertFrom = WPT_CONVERT_FROM_WHICHBOT;
-		
+
 			filename[iLen - 1] = 't';
 			filename[iLen - 2] = 'p';
 			filename[iLen - 3] = 'w';
@@ -486,7 +486,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 		else if (gBotGlobals.IsMod(MOD_SI))
 		{
 			iConvertFrom = WPT_CONVERT_FROM_GRAVEBOT;
-			
+
 			filename[iLen - 1] = 'w';
 			filename[iLen - 2] = 'b';
 			filename[iLen - 3] = 'g';

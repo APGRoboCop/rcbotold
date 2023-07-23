@@ -942,6 +942,8 @@ int UTIL_GetTeam(edict_t* pEntity)
 		return pEntity->v.team - 1;
 	case MOD_SVENCOOP:
 		return -1;*/
+	case MOD_SI: //TODO: Science and Industry support [APG]RoboCop[CL]
+		return pEntity->v.team - 1;
 	case MOD_WW: //TODO: Unannotated fall-through [APG]RoboCop[CL]
 		return pEntity->v.team - 1;
 	default:
@@ -2172,7 +2174,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 //
 {
 	static HudText hudmessage = HudText(true);
-	static const char* tooltips[BOT_LANG_MAX][BOT_TOOL_TIP_MAX] = //char* needs to be const? [APG]RoboCop[CL]
+	static const char* tooltips[BOT_LANG_MAX][BOT_TOOL_TIP_MAX] =
 	{
 		//---------------------------------------------------------------------------------------------------------------------<MAX
 		{"Welcome %n\nUse the command \"rcbot addbot\" to add a bot\nor use the bot menu (\"rcbot bot_menu\")",
@@ -2192,33 +2194,30 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 		}
 	};
 
-	// check it tooltips are on
+	// check if tooltips are on
 	// check if array positions are in bounds
-	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) && gBotGlobals.IsConfigSettingOn(iLang < BOT_LANG_MAX) && iTooltip < BOT_TOOL_TIP_MAX)
+	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) &&
+		iLang < BOT_LANG_MAX && iTooltip < BOT_TOOL_TIP_MAX)
 	{
 		char final_message[1024];
 
-		sprintf(final_message, "%s %s", BOT_DBG_MSG_TAG, tooltips[iLang][iTooltip]);
+		// Using snprintf instead of sprintf to prevent buffer overflows
+		snprintf(final_message, sizeof(final_message), "%s %s", BOT_DBG_MSG_TAG, tooltips[iLang][iTooltip]);
 
 		// name in message
 		if (strstr(final_message, "%n") != nullptr)
 		{
-			const char* szName = const_cast<char*>(STRING(pEntity->v.netname));
-			const int iLen = strlen(szName);
-			char* szNewName = static_cast<char*>(malloc(sizeof(char) * (iLen + 1)));
+			const char* szName = STRING(pEntity->v.netname);
+			int iLen = strlen(szName);
+			char* szNewName = static_cast<char*>(malloc(iLen + 1)); // No need to multiply by sizeof(char)
 
 			RemoveNameTags(szName, szNewName);
 
-			BotFunc_FillString(final_message, "%n", szNewName, 1024);
+			BotFunc_FillString(final_message, "%n", szNewName, sizeof(final_message));
 
 			free(szNewName);
 			szNewName = nullptr;
 		}
-
-		//if ( strstr(final_message,"%v") != NULL )
-		//{
-		//BotFunc_FillString(final_message,"%v",BOT_VER,1024);
-		//}
 
 		hudmessage.SayMessage(final_message, pEntity);
 	}

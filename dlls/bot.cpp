@@ -1962,8 +1962,7 @@ int CBot::GetTeam() const
 
 short CBot::SpeciesOnTeam(int species) const //TODO: Experimental [APG]RoboCop[CL]
 {
-	const int team = GetTeam();
-	return UTIL_SpeciesOnTeam(species, team);
+	return UTIL_SpeciesOnTeam(species, GetTeam());
 }
 
 /*short CBot::EvolvedSpeciesOnTeam(int species)
@@ -7915,7 +7914,7 @@ void CBot::gotStuck()//TODO: Experimental [APG]RoboCop[CL]
 	m_bNotFollowingWaypoint = true;
 }
 
-void CBot::WorkMoveDirection()
+	void CBot::WorkMoveDirection()
 {
 	// Move Direction Related To View Direction!!!
 
