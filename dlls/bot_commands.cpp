@@ -704,7 +704,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 	return BOT_CVAR_ACCESSED;
 }
 
-eBotCvarState CSquadMenuCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
+eBotCvarState CSquadMenuCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)//TODO: broken [APG]RoboCop[CL]
 {
 	if (pClient == nullptr)
 	{

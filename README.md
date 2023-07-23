@@ -32,7 +32,7 @@ V 1.51-beta3
 * changed: The bot add or spawn delay for 10-12 seconds to prevent crashes
 * changed: Increasing bot's viewing angle to detect enemies better
 * changed: Reduced further Sven Co-op and TFC support
-* changed  Welcome Message modernised and is displaying properly
+* changed  Welcome Message modernised and is now displaying properly
 * changed: Converted some doubles into floats
 * changed: Added returns for NS CAlienAction 
 * TODO: To allow Skulk Aliens to bite and attack properly
