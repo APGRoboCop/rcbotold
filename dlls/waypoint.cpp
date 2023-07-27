@@ -209,9 +209,9 @@ void CWaypointLocations::DeleteWptLocation(const int iIndex, const float* fOrigi
 void CWaypointLocations::FindNearestCoverWaypointInBucket(const int i, const int j, const int k, const Vector& vOrigin,
 	float* pfMinDist, int* piIndex, dataStack<int>* iIgnoreWpts,
 	const int iCoverFromWpt) const
-// Search for the nearest waypoint : I.e.
-	// Find the waypoint that is closest to vOrigin from the distance pfMinDist
-	// And set the piIndex to the waypoint index if closer.
+	// Search for the nearest waypoint : I.e.
+		// Find the waypoint that is closest to vOrigin from the distance pfMinDist
+		// And set the piIndex to the waypoint index if closer.
 {
 	dataStack <int> tempStack = m_iLocations[i][j][k];
 
@@ -261,9 +261,9 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 	float* pfMinDist, int* piIndex, const int iIgnoreWpt,
 	const BOOL bGetVisible, const BOOL bGetUnReachable, const BOOL bIsBot,
 	dataStack<int>* iFailedWpts, const BOOL bNearestAimingOnly) const
-// Search for the nearest waypoint : I.e.
-	// Find the waypoint that is closest to vOrigin from the distance pfMinDist
-	// And set the piIndex to the waypoint index if closer.
+	// Search for the nearest waypoint : I.e.
+		// Find the waypoint that is closest to vOrigin from the distance pfMinDist
+		// And set the piIndex to the waypoint index if closer.
 {
 	dataStack <int> tempStack = m_iLocations[i][j][k];
 
@@ -473,6 +473,25 @@ BOOL WaypointLoad(edict_t* pEntity)
 		// try loading a .wpt file
 		const int iLen = strlen(filename);
 
+		filename[iLen - 1] = 't';
+		filename[iLen - 2] = 'p';
+		filename[iLen - 3] = 'w';
+
+		bfp = fopen(filename, "rb");
+
+		if (gBotGlobals.IsMod(MOD_NS))
+			iConvertFrom = WPT_CONVERT_FROM_WHICHBOT;
+		else
+			iConvertFrom = WPT_CONVERT_FROM_HPBBOT;
+	}
+
+	BOOL bWorkOutVisibility = true;
+
+	/*if (bfp == nullptr) //TODO: to allow GraveBot waypoints to be loaded and converted properly [APG]RoboCop[CL]
+	{
+		// try loading a .wpt file
+		const int iLen = strlen(filename);
+
 		bfp = fopen(filename, "rb");
 
 		if (gBotGlobals.IsMod(MOD_NS))
@@ -499,7 +518,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 			filename[iLen - 2] = 'p';
 			filename[iLen - 3] = 'w';
 		}
-	}
+	}*/
 
 	// if file exists, read the waypoint structure from it
 	if (bfp != nullptr)
@@ -1049,6 +1068,7 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 // initial call. subsequent calls will return other paths if they exist.)
 int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, const int team)
 {
+	int index;
 	int count = 0;
 
 	if (*pPath == nullptr)
@@ -1071,7 +1091,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 			if ((*pPath)->index[*path_index] != -1)  // found a path?
 			{
 				// save the return value
-				const int index = (*pPath)->index[*path_index];
+				index = (*pPath)->index[*path_index];
 
 				// skip this path if next waypoint is team specific and NOT this team
 				if (team != -1 && waypoints[index].flags & W_FL_TEAM_SPECIFIC &&
@@ -1198,7 +1218,7 @@ int WaypointFindNearest(const Vector& v_src, edict_t* pEntity, const float range
 // find the goal nearest to the source position (v_src) matching the "flags"
 // bits and return the index of that waypoint...
 int WaypointFindNearestGoal(const Vector& v_src, edict_t* pEntity, const float range, const int team, const int flags,
-                            dataStack<int>* iIgnoreWpts)
+	dataStack<int>* iIgnoreWpts)
 {
 	//TraceResult tr;
 
@@ -1392,7 +1412,7 @@ int WaypointFindRandomGoal(edict_t* pEntity, const int team, dataStack<int>* iIg
 // find a random goal within a range of a position (v_src) matching the
 // "flags" bits and return the index of that waypoint...
 int WaypointFindRandomGoal(const Vector& v_src, edict_t* pEntity, const float range, const int team, const int flags,
-                           dataStack<int>* iIgnoreWpts)
+	dataStack<int>* iIgnoreWpts)
 {
 	int index;
 	int indexes[50];

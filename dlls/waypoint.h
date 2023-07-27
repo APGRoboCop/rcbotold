@@ -419,7 +419,7 @@ public:
 
 	}
 };
-class CGravebotConvert : public CWaypointConversion
+class CGravebotConvert : public CWaypointConversion //TODO: to make sure that it converts correctly [APG]RoboCop[CL]
 {
 public:
 	CGravebotConvert()
