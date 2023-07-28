@@ -1061,8 +1061,7 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 				{
 					// Has a previous waypoint
 					// we can work out the path the bot tried to use.
-					PATH* pPath = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);
-
+					if (PATH* pPath = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam))
 						pBot->m_stFailedPaths.AddFailedPath(pPath);
 				}
 			}
@@ -1181,17 +1180,13 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			{
 				//Clear this waypoint, get a new one and flush path info.
 
-				PATH* pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);
-
-				if (pFailed)
+				if (PATH* pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam))
 					pBot->m_stFailedPaths.AddFailedPath(pFailed);
 
 				pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, REACHABLE_RANGE, pBot->m_iLastFailedWaypoint, true, false, true);
 				iCurrWpt = pBot->m_iCurrentWaypointIndex;
 
-				CBotTask* pCurrentTask = pBot->m_Tasks.CurrentTask();
-
-				if (pCurrentTask)
+				if (CBotTask* pCurrentTask = pBot->m_Tasks.CurrentTask())
 				{
 					pCurrentTask->SetPathInfo(false);
 				}

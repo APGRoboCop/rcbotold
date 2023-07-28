@@ -2132,17 +2132,17 @@ edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Ve
 			continue;
 
 		if (pPlayer->v.iuser3 == iUser3 && strcmp(STRING(pPlayer->v.classname), szClassname) == 0)
-		{
-			pPlayer->v.origin = vOrigin;
-			return pPlayer;
+			{
+				pPlayer->v.origin = vOrigin;
+				return pPlayer;
+			}
 		}
-	}
 
 	return nullptr;
 }
-//
-// Hack building
-edict_t * BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t * pEntityUser, BOOL bBuilt)
+	//
+	// Hack building
+	edict_t * BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t * pEntityUser, BOOL bBuilt)
 {
 	//pfnCreateNamedEntity(MAKE_STRING(pCommBuildent));
 

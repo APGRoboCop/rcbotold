@@ -1921,6 +1921,8 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 			const int enabled = POINTER_TO_INT(p);
 			pBot->m_Weapons.setHasWeapon(iId, enabled == 1);
 		}
+	default:
+		break;
 	}
 
 	POINTER_INCREMENT_VALUE(state);

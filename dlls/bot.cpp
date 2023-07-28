@@ -2958,7 +2958,7 @@ void CBot::Think()
 
 	//	try
 	//	{
-	m_fCombatFitness = pev->frags / static_cast<float>(m_iNumDeaths);
+	m_fCombatFitness = pev->frags / m_iNumDeaths;
 
 	// Not alive anymore
 	if (!IsAlive())
@@ -2973,13 +2973,6 @@ void CBot::Think()
 		if (!feigned)
 		{
 			if (m_bNeedToInit)
-			{
-				m_bNeedToInit = false; //TODO: Experimental [APG]RoboCop[CL]
-				m_fSpawnTime = gpGlobals->time;
-				m_iNumFragsSinceDeath = pev->frags;
-				m_iPrevTeamScore = gBotGlobals.m_iTeamScores[GetTeam()];
-			}
-			else
 			{
 				m_iNumDeaths++;
 				m_fSurvivalTime = gpGlobals->time - m_fSpawnTime;
@@ -3514,7 +3507,8 @@ void CBot::Think()
 			}
 		}
 	}
-	break;
+	default:
+		break;
 	}
 
 	///////////////////////////////////
@@ -7916,7 +7910,7 @@ void CBot::gotStuck()//TODO: Experimental [APG]RoboCop[CL]
 	m_bNotFollowingWaypoint = true;
 }
 
-	void CBot::WorkMoveDirection()
+void CBot::WorkMoveDirection()
 {
 	// Move Direction Related To View Direction!!!
 
@@ -12240,7 +12234,7 @@ void CBot::DoTasks()
 				{
 					if (IsInVisibleList(pSound))
 					{
-						//Vector vOrigin;
+						Vector vOrigin;
 						Vector vSrc;
 						TraceResult tr;
 

@@ -416,34 +416,6 @@ public:
 		setConvertBit(9, W_FL_LIFT);
 		setConvertBit(18, W_FL_JUMP);
 		setConvertBit(31, W_FL_DELETED);
-
-	}
-};
-class CGravebotConvert : public CWaypointConversion //TODO: to make sure that it converts correctly [APG]RoboCop[CL]
-{
-public:
-	CGravebotConvert()
-	{
-		setName("Gravebot");
-		setExtension("gbw");
-		setHeader("[Grave]");
-		setVersion(4);
-		setFolder("maps");
-
-		setConvertBit(0, 1 << 0);
-		setConvertBit(1, 1 << 1);
-		setConvertBit(2, 1 << 2);
-		setConvertBit(3, W_FL_CROUCH);
-		setConvertBit(4, W_FL_LADDER);
-		setConvertBit(5, W_FL_WAIT_FOR_LIFT);
-		setConvertBit(6, W_FL_DOOR);
-		setConvertBit(7, W_FL_HEALTH);
-		setConvertBit(8, W_FL_ARMOR);
-		setConvertBit(9, W_FL_AMMO);
-		setConvertBit(18, W_FL_JUMP);
-		setConvertBit(9, W_FL_LIFT);
-		setConvertBit(18, W_FL_JUMP);
-		setConvertBit(31, W_FL_DELETED);
 		/*
 		#define W_FL_TEAM        ((1<<0) + (1<<1))  // allow for 4 teams (0-3)
 		#define W_FL_TEAM_SPECIFIC (1<<2)  // waypoint only for specified team
@@ -457,11 +429,9 @@ public:
 		#define W_FL_JUMP        (1<<18) // must jump to reach this waypoint
 		W_FL_LIFT #define W_FL_LIFT_SWITCH (1<<21) // press this switch to activate the nearby lift
 		W_FL_CHECK_FOR_LIFT #define W_FL_LIFT_WAIT (1 << 22) // wait at this waypoint for the lift to move
-		#define W_FL_DELETED     (1<<31) // used by waypoint allocation code
-	*/
+		#define W_FL_DELETED     (1<<31) // used by waypoint allocation code*/
 	}
 };
-
 /*
 class CWhichbotConvert : public CWaypointConversion
 {

@@ -80,7 +80,7 @@
 extern char* g_argv;
 extern CBotGlobals gBotGlobals;
 
-char* name_in_msg = "%n";
+const char* name_in_msg = "%n";
 
 /* anonym001 */
 #ifndef min
@@ -193,7 +193,7 @@ void HumanizeString(char* string)
 	{
 		if (i + 1 < length && RANDOM_LONG(0, 100) < swap_percent)
 		{
-			char temp = string[i];
+			const char temp = string[i];
 
 			string[i] = string[i + 1];
 

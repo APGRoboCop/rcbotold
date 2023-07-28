@@ -370,9 +370,9 @@ void UTIL_MakeVectors(const Vector& vecAngles)
 void strlow(char* str)
 // lower a string to make it lower case.
 {
-	const size_t len = strlen(str);
+	const int len = strlen(str);
 
-	for (unsigned int i = 0; i < len; i++)
+	for (int i = 0; i < len; i++)
 	{
 		str[i] = tolower(str[i]);
 	}
@@ -381,9 +381,9 @@ void strlow(char* str)
 void strhigh(char* str)
 // higher a string to make it upper case.
 {
-	const size_t len = strlen(str);
+	const int len = strlen(str);
 
-	for (unsigned int i = 0; i < len; i++)
+	for (int i = 0; i < len; i++)
 	{
 		str[i] = toupper(str[i]);
 	}
@@ -402,7 +402,7 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 			if (!pent->free)
 			{
 				// 'strlen' function called too many times inside loop [APG]RoboCop[CL]
-				const size_t length = strlen(name);
+				const int length = strlen(name);
 
 				char arg_lwr[80];
 				char pent_lwr[80];
@@ -757,8 +757,8 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 	else
 		sprintf(text, "%c%s: ", 2, STRING(pEntity->v.netname));
 
-	const unsigned int j = sizeof text - 2 - strlen(text);  // -2 for /n and null terminator
-	if (strlen(message) > j)
+	const int j = sizeof text - 2 - strlen(text);  // -2 for /n and null terminator
+	if (static_cast<int>(strlen(message)) > j)
 		message[j] = 0;
 
 	strcat(text, message);
@@ -874,6 +874,7 @@ int UTIL_GetTeam(edict_t* pEntity)
 		char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
 
 		char model[64];
+
 		strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
 
 		// Check if the map name starts with "tm_"
@@ -1216,7 +1217,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 {
 	edict_t* pResourceTower = nullptr;
 
-	//Vector vOrigin;
+	Vector vOrigin;
 
 	while ((pResourceTower = UTIL_FindEntityByClassname(pResourceTower, "alienresourcetower")) != nullptr)
 	{

@@ -79,7 +79,7 @@ public:
 	int size() const;
 
 private:
-	unsigned int m_iNumBits;
+	int m_iNumBits;
 	unsigned char* m_cBits;
 	int m_iSize; // bits' mem size
 };
