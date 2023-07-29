@@ -8262,15 +8262,15 @@ void CBot::WorkMoveDirection()
 	}
 
 	// work out direction (speed on forward and side)
-	float flMove = 0.0;
-	float flSide = 0.0;
+	float flMove = 0.0f;
+	float flSide = 0.0f;
 
 	UTIL_FixFloatAngle(&fAngle);
 
 	// botmans code! (me maths suxorz...sorta)
-	const float radians = fAngle * 3.141592f / 180.f; // degrees to radians
-	flMove = cos(radians);
-	flSide = sin(radians);
+	const float radians = fAngle * 3.141592f / 180.0f; // degrees to radians
+	flMove = std::cos(radians);
+	flSide = std::sin(radians);
 	//
 
 	/* // <-- add extra slash to uncomment this code

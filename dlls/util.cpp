@@ -611,7 +611,7 @@ float UTIL_AngleBetweenVectors(Vector const& vec1, Vector const& vec2)
 	const double vec1Dotvec2 = vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
 	const double veclengths = vec1.Length() * vec2.Length();
 
-	return acos(vec1Dotvec2 / veclengths) * (180 / M_PI);
+	return (std::acos(vec1Dotvec2 / veclengths)) * (180.0 / M_PI);
 }
 
 float UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector const& vOrigin)
@@ -1083,7 +1083,7 @@ float UTIL_EntityAnglesToVector2D(entvars_t* pev, const Vector* pOrigin) // For 
 
 	const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-	return static_cast<float>(acos(flDot) / M_PI * 180);
+	return std::acos(flDot) / 3.141592f * 180.0f;
 }
 
 float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin) // For 3d Movement (e.g. swimming)
@@ -1095,7 +1095,7 @@ float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin) // For 
 
 	const float flDot = DotProduct(vecLOS, gpGlobals->v_forward);
 
-	return acos(flDot) / 3.141592f * 180.0f;
+	return std::acos(flDot) / 3.141592f * 180.0f;
 }
 
 int UTIL_ClassOnTeam(int iClass, int iTeam)

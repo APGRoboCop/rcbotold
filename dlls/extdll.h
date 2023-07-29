@@ -46,11 +46,11 @@
 #include <cmath>
 
 #elif __linux__
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
 #include <ctype.h>
 #include <limits.h>
 

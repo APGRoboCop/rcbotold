@@ -92,9 +92,9 @@ extern CBotGlobals gBotGlobals;
 
 void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk) const
 {
-	const int iLoc = abs(static_cast<int>(vOrigin.x + 4096.0f) / 256);
-	const int jLoc = abs(static_cast<int>(vOrigin.y + 4096.0f) / 256);
-	const int kLoc = abs(static_cast<int>(vOrigin.z + 4096.0f) / 256);
+	const int iLoc = std::abs(static_cast<int>(vOrigin.x + 4096.0f) / 256);
+	const int jLoc = std::abs(static_cast<int>(vOrigin.y + 4096.0f) / 256);
+	const int kLoc = std::abs(static_cast<int>(vOrigin.z + 4096.0f) / 256);
 
 	// get current area
 	mini = iLoc - 1;
@@ -188,9 +188,9 @@ void CWaypointLocations::AddWptLocation(const int iIndex, const float* fOrigin)
 {
 	// Add a waypoint with index and at origin (for quick insertion in the list)
 	//
-	const int i = abs(static_cast<int>(fOrigin[0] + 4096.0f) / 256);
-	const int j = abs(static_cast<int>(fOrigin[1] + 4096.0f) / 256);
-	const int k = abs(static_cast<int>(fOrigin[2] + 4096.0f) / 256);
+	const int i = std::abs(static_cast<int>(fOrigin[0] + 4096.0f) / 256);
+	const int j = std::abs(static_cast<int>(fOrigin[1] + 4096.0f) / 256);
+	const int k = std::abs(static_cast<int>(fOrigin[2] + 4096.0f) / 256);
 
 	m_iLocations[i][j][k].Push(iIndex);
 }
@@ -199,9 +199,9 @@ void CWaypointLocations::DeleteWptLocation(const int iIndex, const float* fOrigi
 // Delete the waypoint index at the origin (for finding it quickly in the list)
 //
 {
-	const int i = abs(static_cast<int>(fOrigin[0] + 4096.0f) / 256);
-	const int j = abs(static_cast<int>(fOrigin[1] + 4096.0f) / 256);
-	const int k = abs(static_cast<int>(fOrigin[2] + 4096.0f) / 256);
+	const int i = std::abs(static_cast<int>(fOrigin[0] + 4096.0f) / 256);
+	const int j = std::abs(static_cast<int>(fOrigin[1] + 4096.0f) / 256);
+	const int k = std::abs(static_cast<int>(fOrigin[2] + 4096.0f) / 256);
 
 	m_iLocations[i][j][k].Remove(iIndex);
 }

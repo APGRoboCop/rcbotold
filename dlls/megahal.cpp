@@ -83,12 +83,12 @@ extern CBotGlobals gBotGlobals;
 const char* name_in_msg = "%n";
 
 /* anonym001 */
-#ifndef min
+/*#ifndef min
 #define min(x,y) (((x) <= (y)) ? (x) : (y))
 #endif
 #ifndef max
 #define max(x,y) (((x) >= (y)) ? (x) : (y))
-#endif
+#endif*/
 
 #ifdef _WIN32
 #define strdup _strdup
@@ -633,7 +633,7 @@ int HAL_CompareWords(HAL_STRING word1, HAL_STRING word2)
 
 	try
 	{
-		const int bound = min(word1.length, word2.length);
+		const int bound = static_cast<int>(std::fmin(word1.length, word2.length));
 
 		for (int i = 0; i < bound; ++i)
 			if (toupper(word1.word[i]) != toupper(word2.word[i]))
@@ -1459,7 +1459,7 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 	// re-create the context of the model from the current reply dictionary so that we can
 	// generate backwards to reach the beginning of the string.
 	if (replies->size > 0)
-		for (i = min(replies->size - 1, pBot->m_Profile.m_HAL->bot_model->order); i >= 0; --i)
+		for (i = static_cast<int>(std::fmin(replies->size - 1, pBot->m_Profile.m_HAL->bot_model->order)); i >= 0; --i)
 		{
 			symbol = HAL_FindWord(pBot->m_Profile.m_HAL->bot_model->dictionary, replies->entry[i]);
 			HAL_UpdateContext(pBot->m_Profile.m_HAL->bot_model, symbol);

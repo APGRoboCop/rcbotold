@@ -116,7 +116,7 @@ public:
 		return Vec2;
 	}
 
-	float Length2D() const { return sqrt(x * x + y * y); }
+	float Length2D() const { return std::sqrt(x * x + y * y); }
 
 	// Members
 	vec_t x, y, z;
