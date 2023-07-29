@@ -421,7 +421,9 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	{
 		if (pClient)
 		{
-			if (const Vector* p_vTeleport = pClient->GetTeleportVector())
+			const Vector* p_vTeleport = pClient->GetTeleportVector();
+
+			if (p_vTeleport)
 			{
 				edict_t* pTeleportEntity = UTIL_getEntityInFront(pEntity);
 
@@ -444,7 +446,9 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	}
 	else if (pClient && FStrEq("teleport", arg1))
 	{
-		if (const Vector* p_vTeleport = pClient->GetTeleportVector())
+		const Vector* p_vTeleport = pClient->GetTeleportVector();
+
+		if (p_vTeleport)
 		{
 			if (arg2 && *arg2)
 			{
@@ -728,8 +732,9 @@ eBotCvarState CDebugEntCommand::action(CClient* pClient, const char* arg1, const
 		if (pClient)
 		{
 			edict_t* pEntity = pClient->GetPlayer();
+			edict_t* pOther = UTIL_FacingEnt(pEntity, true);
 
-			if (edict_t* pOther = UTIL_FacingEnt(pEntity, true))
+			if (pOther)
 				pClient->m_pDebugEnt = pOther;
 			else
 				BotMessage(pClient->GetPlayer(), 0, "No entity found");
@@ -775,7 +780,9 @@ eBotCvarState CDebugBotCommand::action(CClient* pClient, const char* arg1, const
 		{
 			edict_t* pEntity = pClient->GetPlayer();
 
-			if (const edict_t* pOther = UTIL_FacingEnt(pEntity))
+			const edict_t* pOther = UTIL_FacingEnt(pEntity);
+
+			if (pOther)
 			{
 				pClient->m_iDebugBot = UTIL_GetBotIndex(pOther);
 
@@ -1260,7 +1267,9 @@ eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const
 	}
 	else if (FStrEq(arg1, "spread"))
 	{
-		if (const float fNewSpread = atof(arg2))
+		const float fNewSpread = atof(arg2);
+
+		if (fNewSpread)
 		{
 			theSquad->ChangeSpread(fNewSpread);
 
@@ -1360,7 +1369,9 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 
 	if (pPlayer)
 	{
-		if (CClient* pWantedClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer))
+		CClient* pWantedClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer);
+
+		if (pWantedClient)
 		{
 			const int state = atoi(arg2);
 
@@ -2147,7 +2158,9 @@ void RCBot_ServerCommand()
 		}
 		else
 		{
-			if (CClient* pListenServerClient = gBotGlobals.m_Clients.GetClientByEdict(gBotGlobals.m_pListenServerEdict))
+			CClient* pListenServerClient = gBotGlobals.m_Clients.GetClientByEdict(gBotGlobals.m_pListenServerEdict);
+
+			if (pListenServerClient)
 				iState = gBotGlobals.m_CurrentHandledCvar->action(pListenServerClient, arg1, arg2, arg3, arg4);
 			else
 			{

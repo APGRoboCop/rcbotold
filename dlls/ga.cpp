@@ -242,7 +242,9 @@ void CGA::addToPopulation(IIndividual* individual)
 
 void CGA::loadTeam(char* szName, int iTeam, int chromosize)
 {
-	if (FILE* bfp = RCBOpenFile(szName, "rb", SAVETYPE_TEAM, iTeam))
+	FILE* bfp = RCBOpenFile(szName, "rb", SAVETYPE_TEAM, iTeam);
+
+	if (bfp)
 	{
 		load(bfp, chromosize);
 		fclose(bfp);
@@ -251,7 +253,9 @@ void CGA::loadTeam(char* szName, int iTeam, int chromosize)
 
 void CGA::saveTeam(char* szName, int iTeam)
 {
-	if (FILE* bfp = RCBOpenFile(szName, "wb", SAVETYPE_TEAM, iTeam))
+	FILE* bfp = RCBOpenFile(szName, "wb", SAVETYPE_TEAM, iTeam);
+
+	if (bfp)
 	{
 		save(bfp);
 		fclose(bfp);

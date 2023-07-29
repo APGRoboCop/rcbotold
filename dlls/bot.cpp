@@ -715,7 +715,9 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			// as it can dodge areas where it died next time.
 			if (m_iCurrentWaypointIndex != -1 && m_iPrevWaypointIndex != -1)
 			{
-				if (PATH* pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, GetTeam()))
+				PATH* pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, GetTeam());
+
+				if (pPath)
 					m_stFailedPaths.AddFailedPath(pPath);
 			}
 		}
@@ -736,7 +738,9 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
 				BotChat(BOT_CHAT_KILLED, pInfo);
 
-			if (const CClient* pKillerClient = gBotGlobals.m_Clients.GetClientByEdict(m_pKillerEdict))
+			const CClient* pKillerClient = gBotGlobals.m_Clients.GetClientByEdict(m_pKillerEdict);
+
+			if (pKillerClient)
 			{
 				if (m_pKillerEdict->v.team != 0 && m_pKillerEdict->v.team == pev->team)
 				{
@@ -746,7 +750,9 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 				{
 					if (m_pKillerEdict != m_pEdict)
 					{
-						if (const CBotReputation* pRep = m_Profile.m_Rep.GetRep(pKillerClient->GetPlayerRepId()))
+						CBotReputation* pRep = m_Profile.m_Rep.GetRep(pKillerClient->GetPlayerRepId());
+
+						if (pRep)
 						{
 							const int iRep = pRep->CurrentRep();
 
@@ -4545,7 +4551,9 @@ void CBot::LookForNewTasks()
 
 							m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(8.0f, 12.0f);
 
-							if (CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(gBotGlobals.GetCommander()))
+							CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(gBotGlobals.GetCommander());
+
+							if (pClient)
 							{
 								pClient->AddNewToolTip(BOT_TOOL_TIP_COMMANDER_MARINE_ORDER);
 							}
@@ -4806,7 +4814,9 @@ void CBot::LookForNewTasks()
 					{
 						if (UTIL_GetNumHives() < 3)
 						{
-							if (edict_t* pHive = UTIL_GetRandomUnbuiltHive())
+							edict_t* pHive = UTIL_GetRandomUnbuiltHive();
+
+							if (pHive)
 							{
 								AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pHive));
 								AddTask(CBotTask(BOT_TASK_WAIT_FOR_RESOURCES, iNewScheduleId, pHive, NS_HIVE_RESOURCES));
@@ -4819,7 +4829,9 @@ void CBot::LookForNewTasks()
 					}
 					else// if ( (action == BOT_CAN_BUILD_RESOURCE) || (iRand == 2) )
 					{
-						if (edict_t* pFuncResource = UTIL_FindRandomUnusedFuncResource(this))
+						edict_t* pFuncResource = UTIL_FindRandomUnusedFuncResource(this);
+
+						if (pFuncResource)
 						{
 							AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pFuncResource));
 							AddTask(CBotTask(BOT_TASK_WAIT_FOR_RESOURCES, iNewScheduleId, pFuncResource, NS_RESOURCE_TOWER_RESOURCES));
@@ -9142,7 +9154,9 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (pEntity->v.iuser3 == AVH_USER3_BREAKABLE)
 		{
-			if (const CBotWeapon* pBestWeapon = m_Weapons.GetWeapon(iBestWeaponId))
+			CBotWeapon* pBestWeapon = m_Weapons.GetWeapon(iBestWeaponId);
+
+			if (pBestWeapon)
 			{
 				if (pBestWeapon->IsMelee())
 				{
@@ -10888,7 +10902,9 @@ edict_t* CBot::PlayerStandingOnMe()
 
 edict_t* CBot::StandingOnPlayer()
 {
-	if (edict_t* pStandingOn = pev->groundentity)
+	edict_t* pStandingOn = pev->groundentity;
+
+	if (pStandingOn)
 	{
 		if (pStandingOn->v.flags & FL_CLIENT)
 			return pStandingOn;
@@ -10931,7 +10947,9 @@ void CBotSquad::ReturnAllToFormation()
 
 		if (pMember->v.flags & FL_FAKECLIENT)
 		{
-			if (CBot* pBot = UTIL_GetBotPointer(pMember))
+			CBot* pBot = UTIL_GetBotPointer(pMember);
+
+			if (pBot)
 			{
 				pBot->m_Tasks.FlushTasks();
 				pBot->AddPriorityTask(CBotTask(BOT_TASK_FOLLOW_LEADER, pBot->m_Tasks.GetNewScheduleId()));
@@ -11376,7 +11394,9 @@ void CBot::RepairSentry(int iNewScheduleId)
 
 edict_t* CBot::getSentry()
 {
-	if (const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict))
+	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict);
+
+	if (pClient)
 		return pClient->getTFCSentry();
 
 	return nullptr;
@@ -13080,6 +13100,8 @@ void CBot::DoTasks()
 					// has changed by looking at PrevWaypointGoalIndex
 					// and work out a new path.
 
+					BOOL bFindPath = true;
+
 					// Don't want to keep doing this each frame
 					m_fFindPathTime = gpGlobals->time + 0.5f;
 
@@ -13215,7 +13237,7 @@ void CBot::DoTasks()
 						}
 					}*/
 
-					if (BOOL bFindPath = true)
+					if (bFindPath)
 					{
 						if (m_CurrentTask->TaskVector() == Vector(0, 0, 0))
 							m_CurrentTask->SetVector(WaypointOrigin(m_iWaypointGoalIndex));
@@ -14502,7 +14524,9 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 				if (IsUsingTank())
 				{
-					if (edict_t* pUsingTank = GetUsingTank())
+					edict_t* pUsingTank = GetUsingTank();
+
+					if (pUsingTank)
 					{
 						// just shoot if using tank
 						if (RANDOM_LONG(0, 100))
@@ -15045,7 +15069,9 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 					}
 					else if (!m_pCurrentWeapon->CanShootPrimary(m_pEdict, fEnemyDist, m_fDistanceFromWall))
 					{
-						if (int iWeaponId = m_Weapons.GetBestWeaponId(this, m_pEnemy))
+						int iWeaponId = m_Weapons.GetBestWeaponId(this, m_pEnemy);
+
+						if (iWeaponId)
 						{
 							m_CurrentTask->SetInt(m_Weapons.GetBestWeaponId(this, m_pEnemy));
 							bChangeWeapon = true;
@@ -15122,6 +15148,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 					}else */
 
 					int iFirePercent = 75;
+					BOOL bAttack = true;
 
 					if (gBotGlobals.IsMod(MOD_DMC))
 					{
@@ -15226,7 +15253,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 							//	{
 							//m_fNextAttackTime = gpGlobals->time + m_fReactionTime;
 
-							if (BOOL bAttack = true)
+							if (bAttack)
 							{
 								PrimaryAttack();
 
@@ -16431,9 +16458,10 @@ void CBot::CheckStuck()
 				if (m_bFailPath)
 				{
 					// found the path
+					PATH* pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, m_iTeam);
 
 					// add it to failed paths
-					if (PATH* pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, m_iTeam))
+					if (pPath)
 						m_stFailedPaths.AddFailedPath(pPath);
 				}
 			}

@@ -522,7 +522,9 @@ void BotClient_BG_MakeMessage::execute(void* p, int iIndex)
 		// not a bot
 		if (pSender && UTIL_GetBotPointer(pSender) == nullptr)
 		{
-			if (CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender))
+			CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender);
+
+			if (pClient)
 			{
 				switch (POINTER_TO_INT(p))
 				{
@@ -1631,7 +1633,9 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 		{
 			const edict_t* victim_edict = INDEXENT(victim_index);
 
-			if (CBot* pBotVictim = UTIL_GetBotPointer(victim_edict))
+			CBot* pBotVictim = UTIL_GetBotPointer(victim_edict);
+
+			if (pBotVictim)
 				pBotVictim->BotEvent(BOT_EVENT_KILL_SELF);
 
 			/*for ( i = 0; i < MAX_PLAYERS; i ++ )
@@ -2053,6 +2057,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 		{
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_ACCEPT_HEALTH))
 			{
+				edict_t* pSupplier = nullptr;
 				const float nearest = 96.0f;
 
 				for (int i = 1; i <= gpGlobals->maxClients; i++)
@@ -2081,7 +2086,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 					}
 				}
 
-				if (edict_t* pSupplier = nullptr)
+				if (pSupplier)
 				{
 					pBot->AddPriorityTask(CBotTask(BOT_TASK_ACCEPT_HEALTH, 0, pSupplier, 0, RANDOM_FLOAT(1.5, 2.5)));
 					pBot->m_bAcceptHealth = false;

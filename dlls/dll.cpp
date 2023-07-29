@@ -2153,7 +2153,9 @@ edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Ve
 		// find nearest struct resource fountain
 		char* classname[1] = { "func_resource" };
 
-		if (edict_t* pResource = UTIL_FindNearestEntity(classname, 1, vOrigin, 200.0f, false))
+		edict_t* pResource = UTIL_FindNearestEntity(classname, 1, vOrigin, 200, false);
+
+		if (pResource)
 		{
 			if (UTIL_IsResourceFountainUsed(pResource))
 			{

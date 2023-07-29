@@ -1524,7 +1524,9 @@ void CBotGlobals::saveLearnedData()
 		sprintf(tmpFilename, "team%d.rld", i);
 		UTIL_BuildFileName(szFilename, tmpFilename);
 
-		if (FILE* bfp = fopen(szFilename, "wb"))
+		FILE* bfp = fopen(szFilename, "wb");
+
+		if (bfp)
 		{
 			fwrite(&header, sizeof(CLearnedHeader), 1, bfp);
 			this->m_enemyCostGAsForTeam[i].save(bfp);
@@ -1589,8 +1591,10 @@ void CBotGlobals::loadLearnedData()
 
 		sprintf(tmpFilename, "team%d.rld", i);
 		UTIL_BuildFileName(szFilename, tmpFilename);
+		
+		FILE* bfp = fopen(szFilename, "rb");
 
-		if (FILE* bfp = fopen(szFilename, "rb"))
+		if (bfp)
 		{
 			fread(&header, sizeof(CLearnedHeader), 1, bfp);
 

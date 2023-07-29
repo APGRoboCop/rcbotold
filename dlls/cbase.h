@@ -284,13 +284,15 @@ public:
 
 	CBaseMonster *GetMonsterPointer( entvars_t *pevMonster ) const
 	{
-		if ( CBaseEntity *pEntity = Instance( pevMonster ) )
+		CBaseEntity* pEntity = Instance(pevMonster);
+		if (pEntity)
 			return pEntity->MyMonsterPointer();
 		return nullptr;
 	}
 	CBaseMonster *GetMonsterPointer( edict_t *pentMonster ) const
 	{
-		if ( CBaseEntity *pEntity = Instance( pentMonster ) )
+		CBaseEntity* pEntity = Instance(pentMonster);
+		if (pEntity)
 			return pEntity->MyMonsterPointer();
 		return nullptr;
 	}
