@@ -41,7 +41,7 @@ public:
 	Vector2D operator*(float fl)				const { return Vector2D(x * fl, y * fl); }
 	Vector2D operator/(float fl)				const { return Vector2D(x / fl, y / fl); }
 
-	float Length()						const { return pow(x * x + y * y, 0.5f); }//sqrt(x*x + y*y);		}
+	float Length()						const { return std::pow(x * x + y * y, 0.5f); }//sqrt(x*x + y*y);		}
 
 	Vector2D Normalize() const
 	{
@@ -95,7 +95,7 @@ public:
 
 	// Methods
 	void CopyToArray(float* rgfl) const { rgfl[0] = x, rgfl[1] = y, rgfl[2] = z; }
-	float Length() const { return pow(x * x + y * y + z * z, 0.5f); }//sqrt(x*x + y*y + z*z); }
+	float Length() const { return std::pow(x * x + y * y + z * z, 0.5f); }//sqrt(x*x + y*y + z*z); }
 	operator float* () { return &x; } // Vectors will now automatically convert to float * when needed
 	operator const float* () const { return &x; } // Vectors will now automatically convert to float * when needed
 	Vector Normalize() const

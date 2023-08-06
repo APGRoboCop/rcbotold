@@ -661,7 +661,7 @@ void AutoWaypoint ()
 }
 */
 
-FILE* CWaypointConversion::openWaypoint()
+FILE* CWaypointConversion::openWaypoint() const
 {
 	char szFilename[512];
 

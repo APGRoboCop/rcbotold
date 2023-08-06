@@ -2209,7 +2209,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 		if (strstr(final_message, "%n") != nullptr)
 		{
 			const char* szName = STRING(pEntity->v.netname);
-			int iLen = strlen(szName);
+			const int iLen = strlen(szName);
 			char* szNewName = static_cast<char*>(malloc(iLen + 1)); // No need to multiply by sizeof(char)
 
 			RemoveNameTags(szName, szNewName);

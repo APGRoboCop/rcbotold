@@ -292,7 +292,7 @@ public:
 		m_iVersion = iVer;
 	}
 
-	FILE* openWaypoint();
+	FILE* openWaypoint() const;
 
 	void setConvertBit(int iBit, int iFlag)
 	{

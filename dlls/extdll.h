@@ -19,6 +19,12 @@
 // Global header file for extension DLLs
 //
 
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
+#include <cstdarg>
+
 // Allow "DEBUG" in addition to default "_DEBUG"
 #ifdef _DEBUG
 #define DEBUG 1
@@ -40,17 +46,7 @@
 #define NOIME
 #include <Windows.h>
 
-// Misc C-runtime library headers
-#include <cstdio>
-#include <cstdlib>
-#include <cmath>
-
 #elif __linux__
-#include <cstdarg>
-#include <cstdio>
-#include <cstdlib>
-#include <cmath>
-#include <cstring>
 #include <ctype.h>
 #include <limits.h>
 
