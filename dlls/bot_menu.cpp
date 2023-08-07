@@ -304,7 +304,7 @@ void CBotMenu::DestroyMenu() const
 
 void CBotMenu::InitMenu()
 {
-	memset(m_Menus, 0, sizeof(CBotMenuItem*) * 10);
+	std::memset(m_Menus, 0, sizeof(CBotMenuItem*) * 10);
 	//m_iExitItem = -1;
 }
 
@@ -394,7 +394,7 @@ void CBotMenu::Render(CClient* pClient)
 
 	pClient->m_pMenu = this;
 
-	sprintf(szMenuText, "%s\n-----\nOptions:\n", m_szCaption);
+	std::sprintf(szMenuText, "%s\n-----\nOptions:\n", m_szCaption);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -406,11 +406,11 @@ void CBotMenu::Render(CClient* pClient)
 				iSlots |= 1 << (i - 1);
 
 			if (m_Menus[i]->HasNextMenu())
-				sprintf(szMenuItemText, "%d. %s...\n", i, m_Menus[i]->GetCaption());
+				std::sprintf(szMenuItemText, "%d. %s...\n", i, m_Menus[i]->GetCaption());
 			else
-				sprintf(szMenuItemText, "%d. %s\n", i, m_Menus[i]->GetCaption());
+				std::sprintf(szMenuItemText, "%d. %s\n", i, m_Menus[i]->GetCaption());
 
-			strcat(szMenuText, szMenuItemText);
+			std::strcat(szMenuText, szMenuItemText);
 		}
 	}
 
@@ -987,7 +987,7 @@ void BotMenu_Func_Squad_RemoveAllBotSquads(CClient* pClient)
 		}
 	}
 
-	sprintf(msg, "%s %d bot squads removed\n", BOT_DBG_MSG_TAG, iCount);
+	std::sprintf(msg, "%s %d bot squads removed\n", BOT_DBG_MSG_TAG, iCount);
 	ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, msg);
 }
 

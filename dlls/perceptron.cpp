@@ -46,7 +46,7 @@ ga_value CPerceptron::m_fDefaultBias = 1.0f;
 
 ga_value CSigmoidTransfer::transfer(ga_value netInput)
 {
-	return 1 / (1 + exp(-netInput));
+	return 1 / (1 + std::exp(-netInput));
 }
 
 CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, float fLearnRate)
@@ -160,7 +160,7 @@ void CPerceptron::train(ga_value expectedOutput)
 	}
 }
 
-void CPerceptron::save(FILE* bfp) const
+void CPerceptron::save(std::FILE* bfp) const
 {
 	unsigned int iTemp;
 	unsigned int i;
@@ -169,32 +169,32 @@ void CPerceptron::save(FILE* bfp) const
 
 	header.write(bfp);
 
-	fwrite(&m_iInputs, sizeof(unsigned int), 1, bfp);
-	fwrite(&m_Bias, sizeof(ga_value), 1, bfp);
-	fwrite(&m_LearnRate, sizeof(ga_value), 1, bfp);
+	std::fwrite(&m_iInputs, sizeof(unsigned int), 1, bfp);
+	std::fwrite(&m_Bias, sizeof(ga_value), 1, bfp);
+	std::fwrite(&m_LearnRate, sizeof(ga_value), 1, bfp);
 
 	iTemp = m_inputs.size();
 
-	fwrite(&iTemp, sizeof(int), 1, bfp);
+	std::fwrite(&iTemp, sizeof(int), 1, bfp);
 	for (i = 0; i < iTemp; i++)
-		fwrite(&m_inputs[i], sizeof(ga_value), 1, bfp);
+		std::fwrite(&m_inputs[i], sizeof(ga_value), 1, bfp);
 
 	iTemp = m_weights.size();
 
-	fwrite(&iTemp, sizeof(int), 1, bfp);
+	std::fwrite(&iTemp, sizeof(int), 1, bfp);
 	for (i = 0; i < iTemp; i++)
-		fwrite(&m_weights[i], sizeof(ga_value), 1, bfp);
+		std::fwrite(&m_weights[i], sizeof(ga_value), 1, bfp);
 
-	fwrite(&m_output, sizeof(ga_value), 1, bfp);
-	fwrite(&m_bTrained, sizeof(BOOL), 1, bfp);
+	std::fwrite(&m_output, sizeof(ga_value), 1, bfp);
+	std::fwrite(&m_bTrained, sizeof(BOOL), 1, bfp);
 }
 
-void CPerceptron::load(FILE* bfp)
+void CPerceptron::load(std::FILE* bfp)
 {
 	unsigned int iTemp;
 	unsigned int i;
 
-	if (feof(bfp))
+	if (std::feof(bfp))
 		return;
 
 	CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
@@ -205,61 +205,61 @@ void CPerceptron::load(FILE* bfp)
 		return;
 	}
 
-	fread(&m_iInputs, sizeof(unsigned int), 1, bfp);
-	fread(&m_Bias, sizeof(ga_value), 1, bfp);
-	fread(&m_LearnRate, sizeof(ga_value), 1, bfp);
+	std::fread(&m_iInputs, sizeof(unsigned int), 1, bfp);
+	std::fread(&m_Bias, sizeof(ga_value), 1, bfp);
+	std::fread(&m_LearnRate, sizeof(ga_value), 1, bfp);
 
 	// inputs
 	m_inputs.clear();
-	fread(&iTemp, sizeof(int), 1, bfp);
+	std::fread(&iTemp, sizeof(int), 1, bfp);
 	for (i = 0; i < iTemp; i++)
 	{
 		ga_value fVal;
 
 		// reliability check
-		if (feof(bfp))
+		if (std::feof(bfp))
 			return;
 
-		fread(&fVal, sizeof(ga_value), 1, bfp);
+		std::fread(&fVal, sizeof(ga_value), 1, bfp);
 		m_inputs.emplace_back(fVal);
 	}
 
 	m_weights.clear();
-	fread(&iTemp, sizeof(unsigned int), 1, bfp);
+	std::fread(&iTemp, sizeof(unsigned int), 1, bfp);
 	for (i = 0; i < iTemp; i++)
 	{
 		ga_value fVal;
 
 		// reliability check
-		if (feof(bfp))
+		if (std::feof(bfp))
 			return;
 
-		fread(&fVal, sizeof(ga_value), 1, bfp);
+		std::fread(&fVal, sizeof(ga_value), 1, bfp);
 		m_weights.emplace_back(fVal);
 	}
 
-	fread(&m_output, sizeof(ga_value), 1, bfp);
-	fread(&m_bTrained, sizeof(BOOL), 1, bfp);
+	std::fread(&m_output, sizeof(ga_value), 1, bfp);
+	std::fread(&m_bTrained, sizeof(BOOL), 1, bfp);
 }
 
 void CPerceptron::load(char* filename, int iProfileId)
 {
-	FILE* bfp = RCBOpenFile(filename, "rb", SAVETYPE_BOT, iProfileId);
+	std::FILE* bfp = RCBOpenFile(filename, "rb", SAVETYPE_BOT, iProfileId);
 
 	if (bfp)
 	{
 		load(bfp);
-		fclose(bfp);
+		std::fclose(bfp);
 	}
 }
 
 void CPerceptron::save(char* filename, int iProfileId) const
 {
-	FILE* bfp = RCBOpenFile(filename, "wb", SAVETYPE_BOT, iProfileId);
+	std::FILE* bfp = RCBOpenFile(filename, "wb", SAVETYPE_BOT, iProfileId);
 
 	if (bfp)
 	{
 		save(bfp);
-		fclose(bfp);
+		std::fclose(bfp);
 	}
 }

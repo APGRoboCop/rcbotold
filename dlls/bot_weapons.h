@@ -453,7 +453,7 @@ public:
 
 		m_iId = 0;
 
-		//memset(this,0,sizeof(CWeapon));
+		//std::memset(this,0,sizeof(CWeapon));
 	}
 
 	void SetWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int iSecAmmoMax, int iHudSlot, int iHudPosition, int iFlags, int iAmmoIndex1, int iAmmoIndex2);
@@ -530,9 +530,9 @@ public:
 		return m_iAmmoIndex1 == -1;
 	}
 
-	BOOL IsPrimary();
+	BOOL IsPrimary() const;
 
-	BOOL IsSecondary();
+	BOOL IsSecondary() const;
 
 	int m_iAmmoIndex1;
 	int m_iAmmoIndex2;
@@ -682,7 +682,7 @@ public:
 		{
 			m_Weapons[i] = nullptr;
 		}
-		//memset(m_Weapons,0,sizeof(CWeapon)*MAX_WEAPONS);
+		//std::memset(m_Weapons,0,sizeof(CWeapon)*MAX_WEAPONS);
 	}
 
 	CWeapon* GetWeapon(int iId) const
@@ -718,7 +718,7 @@ public:
 
 	CBotWeapon()
 	{
-		memset(this, 0, sizeof(CBotWeapon));
+		std::memset(this, 0, sizeof(CBotWeapon));
 	}
 
 	void SetWeapon(int iId, int* iAmmoList);
@@ -801,9 +801,9 @@ public:
 
 	BOOL NeedToReload() const;
 
-	BOOL CanReload();
+	BOOL CanReload() const;
 
-	BOOL CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist);
+	BOOL CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const;
 
 	BOOL CanShootSecondary() const
 	{
@@ -828,7 +828,7 @@ public:
 		return -1;
 	}
 
-	BOOL HasWeapon(edict_t* pEdict);
+	BOOL HasWeapon(edict_t* pEdict) const;
 
 	void RemoveWeapon()
 	{

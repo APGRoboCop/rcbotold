@@ -42,8 +42,8 @@ class CBotGAValues : public IIndividual
 public:
 	CBotGAValues();
 
-	void load(FILE* bfp, int req_size) override;
-	void save(FILE* bfp) override;
+	void load(std::FILE* bfp, int req_size) override;
+	void save(std::FILE* bfp) override;
 
 	//void loadForBot ( char *file, int iProfile );
 	//void saveForBot ( char *file, int iProfile );
@@ -92,27 +92,27 @@ public:
 		m_Value = val;
 	}
 
-	void load(FILE* bfp, int req_size) override
+	void load(std::FILE* bfp, int req_size) override
 	{
 		int check;
 
-		fread(&check, sizeof(int), 1, bfp);
+		std::fread(&check, sizeof(int), 1, bfp);
 
 		if (check == 1)
-			fread(&m_Value, sizeof(int), 1, bfp);
+			std::fread(&m_Value, sizeof(int), 1, bfp);
 		else
 		{
-			fread(&check, sizeof(int), 1, bfp);
+			std::fread(&check, sizeof(int), 1, bfp);
 			//m_Value = RANDOM_LONG(0, 4294967295); // Too long? [APG]RoboCop[CL]
 			m_Value = RANDOM_LONG(0, 429496729);
 		}
 	}
 
-	void save(FILE* bfp) override
+	void save(std::FILE* bfp) override
 	{
 		const int iSiz = 1;
-		fwrite(&iSiz, sizeof(int), 1, bfp);
-		fwrite(&m_Value, sizeof(int), 1, bfp);
+		std::fwrite(&iSiz, sizeof(int), 1, bfp);
+		std::fwrite(&m_Value, sizeof(int), 1, bfp);
 	}
 
 	// crossover with other individual
@@ -174,8 +174,8 @@ class CBitsGAValues : public IIndividual
 public:
 	CBitsGAValues(unsigned int iNumBits);
 
-	void load(FILE* bfp, int req_size) override;
-	void save(FILE* bfp) override;
+	void load(std::FILE* bfp, int req_size) override;
+	void save(std::FILE* bfp) override;
 
 	//void loadForBot ( char *file, int iProfile );
 	//void saveForBot ( char *file, int iProfile );

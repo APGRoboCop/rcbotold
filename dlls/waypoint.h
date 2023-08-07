@@ -292,7 +292,7 @@ public:
 		m_iVersion = iVer;
 	}
 
-	FILE* openWaypoint() const;
+	std::FILE* openWaypoint() const;
 
 	void setConvertBit(int iBit, int iFlag)
 	{
@@ -307,7 +307,7 @@ public:
 		m_szHeader = nullptr;
 		m_iVersion = 0;
 
-		memset(m_iConvertTo, 0, sizeof(int) * MAX_BITS);
+		std::memset(m_iConvertTo, 0, sizeof(int) * MAX_BITS);
 	}
 
 	char* getName() const
@@ -334,7 +334,7 @@ public:
 	{
 		WAYPOINT convertedWpt;
 
-		memset(&convertedWpt, 0, sizeof(WAYPOINT));
+		std::memset(&convertedWpt, 0, sizeof(WAYPOINT));
 
 		for (int i = 0; i < MAX_BITS; i++)
 		{
@@ -507,7 +507,7 @@ public:
 		//create a heap...
 		m_VisTable = static_cast<unsigned char*>(malloc(iSize));
 
-		memset(m_VisTable, 0, iSize);
+		std::memset(m_VisTable, 0, iSize);
 	}
 
 	BOOL SaveToFile() const;
@@ -535,7 +535,7 @@ public:
 	void ClearVisibilityTable() const
 	{
 		if (m_VisTable)
-			memset(m_VisTable, 0, g_iMaxVisibilityByte);
+			std::memset(m_VisTable, 0, g_iMaxVisibilityByte);
 	}
 
 	void FreeVisibilityTable()

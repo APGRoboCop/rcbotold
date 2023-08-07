@@ -95,7 +95,7 @@ void CSom::updateAround(std::vector<ga_value>* inputs, CSomNeuron* bmu) const
 
 		if ((dist = bmu->neighbourDistance(current, nsiz)) <= nsiz)
 		{
-			bmu->update(inputs, exp(-dist / (2 * nsiz)));
+			bmu->update(inputs, std::exp(-dist / (2 * nsiz)));
 		}
 	}
 }
@@ -122,7 +122,7 @@ void CSom::input(std::vector<std::vector<ga_value>>* inputs, int epochs)//TODO: 
 	}
 
 	// Get the number of input vectors and the length of each input vector
-	size_t numInputVectors = inputs->size();
+	const size_t numInputVectors = inputs->size();
 	size_t inputVectorLength = (*inputs)[0].size();
 
 	// Initialize the self-organizing map with random initial weights
@@ -153,13 +153,13 @@ CSomNeuron* CSom::input(std::vector <std::vector <ga_value> >* inputs)
 
 void CSom::display() const
 {
-	//printf("\nDisplaying...\n");
+	//std::printf("\nDisplaying...\n");
 
 	for (unsigned int i = 0; i < m_Neurons.size(); i++)
 	{
-		//printf("%d -- ",i);
+		//std::printf("%d -- ",i);
 		m_Neurons[i]->displayWeights();
-		//printf("\n");
+		//std::printf("\n");
 	}
 }
 
@@ -219,7 +219,7 @@ void CSomNeuron::displayWeights() const
 {
 	for (unsigned int i = 0; i < fWeights.size(); i++)
 	{
-		printf("%0.4f,", fWeights[i]);
+		std::printf("%0.4f,", fWeights[i]);
 	}
 }
 

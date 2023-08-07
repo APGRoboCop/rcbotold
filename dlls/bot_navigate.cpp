@@ -62,7 +62,7 @@
 #include <vector>
 #include <algorithm>
 
-static FILE* fp;
+static std::FILE* fp;
 
 extern WAYPOINTS waypoints;//[MAX_WAYPOINTS];
 extern CWaypointLocations WaypointLocations;
@@ -70,7 +70,7 @@ extern CBotGlobals gBotGlobals;
 
 AStarNode::AStarNode()
 {
-	memset(this, 0, sizeof(AStarNode));
+	std::memset(this, 0, sizeof(AStarNode));
 	m_iWaypoint = -1;
 }
 
@@ -221,7 +221,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 				//
 				//sOpenList->Destroy();
 
-		memset(aPathsFound, 0, sizeof(AStarNode) * MAX_WAYPOINTS);
+		std::memset(aPathsFound, 0, sizeof(AStarNode) * MAX_WAYPOINTS);
 
 		//	for ( i = 0; i < MAX_WAYPOINTS; i ++ )
 			//	aPathsFound[i].m_iParent = -1;
@@ -398,7 +398,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 					while ((pent = UTIL_FindEntityInSphere(pent, WaypointOrigin(iSuccNode), 64)) != nullptr)
 					{
-						if (!strcmp("trigger_hurt", STRING(pent->v.classname)))
+						if (!std::strcmp("trigger_hurt", STRING(pent->v.classname)))
 						{
 							if (!(pent->v.spawnflags & 8) && pent->v.solid == SOLID_TRIGGER)
 							{
@@ -461,7 +461,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 						if (!tr.pHit)
 							continue; // hit something we can't check
-						if (strcmp(szClassname, "worldspawn") == 0)
+						if (std::strcmp(szClassname, "worldspawn") == 0)
 							continue; // hit a wall that can't be opened
 
 						pentArea = static_cast<CBaseEntity*>(GET_PRIVATE(tr.pHit));
@@ -1182,7 +1182,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			{
 				//Clear this waypoint, get a new one and flush path info.
 
-				PATH* pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);
+				PATH* pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);//TODO: triggers crash? [APG]RoboCopCL]
 
 				if (pFailed)
 					pBot->m_stFailedPaths.AddFailedPath(pFailed);
@@ -1652,7 +1652,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 			while ( (pTank = UTIL_FindEntityInSphere(pTank,vWptOrigin,120.0)) != NULL )
 			{
-				if ( strcmp(STRING(pTank->v.classname),"func_tank_controls") )
+				if ( std::strcmp(STRING(pTank->v.classname),"func_tank_controls") )
 					break;
 			}
 
@@ -1703,13 +1703,13 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	return true;
 }
 
-PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam)
+PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam)
 {
 	PATH* pPath = nullptr;
 	int iPathIndex = 0;
 	int iIndex;
 
-	while ((iIndex = WaypointFindPath(&pPath, &iPathIndex, iFrom, iTeam)) != -1)
+	while ((iIndex = WaypointFindPath(&pPath, &iPathIndex, iFrom, iTeam)) != -1)//TODO: triggers crash? [APG]RoboCopCL]
 	{
 		if (iIndex == iTo)
 		{
@@ -1735,7 +1735,7 @@ PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam
 		return;
 	}
 
-	fp = fopen("ns\\titles.txt","r");
+	fp = std::fopen("ns\\titles.txt","r");
 
 	if ( fp == NULL )
 	{
@@ -1748,18 +1748,18 @@ PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam
 
 	BOOL found = false;
 
-	while ( fgets(buffer, 255, fp) != NULL)
+	while ( std::fgets(buffer, 255, fp) != NULL)
 	{
 		buffer[255] = 0;
 
-		buffer_len = strlen(buffer);
+		buffer_len = std::strlen(buffer);
 
 		if ( buffer[buffer_len-1] == '\n' )
 			buffer[--buffer_len] = 0;
 
 		if ( found == false )
 		{
-			if ( strcmp(szLocationName,buffer) == 0 )
+			if ( std::strcmp(szLocationName,buffer) == 0 )
 				found = true;
 		}
 		else
@@ -1779,12 +1779,12 @@ PATH* BotNavigate_FindPathFromTo(const int iFrom, const int iTo, const int iTeam
 		GiveName(szLocationName);
 	}
 
-	fclose(fp);
+	std::fclose(fp);
 }
 
 void CLocation :: GiveName ( const char *szLocationName )
 {
-	m_szLocationName = (char*)malloc((sizeof(char)*strlen(szLocationName))+1);
+	m_szLocationName = (char*)malloc((sizeof(char)*std::strlen(szLocationName))+1);
 
 	if ( m_szLocationName == NULL )
 	{
@@ -1792,7 +1792,7 @@ void CLocation :: GiveName ( const char *szLocationName )
 		return;
 	}
 
-	strcpy(m_szLocationName,szLocationName);
+	std::strcpy(m_szLocationName,szLocationName);
 }*/
 
 Vector BotNavigate_ScanFOV(CBot* pBot)
@@ -1960,10 +1960,10 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 	{
 		if (pHit && pHit->v.targetname)
 		{
-			if (strcmp("func_seethroughdoor", STRING(pHit->v.classname)) == 0 ||
-				strncmp("func_door", STRING(pHit->v.classname), 9) == 0 ||
-				strncmp("func_plat", STRING(pHit->v.classname), 9) == 0 ||
-				strncmp("func_train", STRING(pHit->v.classname), 9) == 0)
+			if (std::strcmp("func_seethroughdoor", STRING(pHit->v.classname)) == 0 ||
+				std::strncmp("func_door", STRING(pHit->v.classname), 9) == 0 ||
+				std::strncmp("func_plat", STRING(pHit->v.classname), 9) == 0 ||
+				std::strncmp("func_train", STRING(pHit->v.classname), 9) == 0)
 			{
 				const char* szTargetname = const_cast<char*>(STRING(pHit->v.targetname));
 

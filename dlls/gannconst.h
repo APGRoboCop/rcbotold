@@ -43,8 +43,8 @@ class ILearnInfo
 {
 public:
 	virtual ~ILearnInfo() = default;
-	virtual void load(FILE* bfp, int req_size) = 0;
-	virtual void save(FILE* bfp) = 0;
+	virtual void load(std::FILE* bfp, int req_size) = 0;
+	virtual void save(std::FILE* bfp) = 0;
 };
 
 class CGenericHeader
@@ -57,7 +57,7 @@ public:
 
 	CGenericHeader(int iType, int iSize)
 	{
-		sprintf(m_szHeader, "t-%d-s-%d", iType, iSize);
+		std::sprintf(m_szHeader, "t-%d-s-%d", iType, iSize);
 	}
 
 	const char* getHeader() const
@@ -67,19 +67,19 @@ public:
 
 	BOOL operator == (CGenericHeader other) const
 	{
-		return strcmp(m_szHeader, other.getHeader()) == 0;
+		return std::strcmp(m_szHeader, other.getHeader()) == 0;
 	}
 
-	void write(FILE* bfp) const
+	void write(std::FILE* bfp) const
 	{
-		fwrite(this, sizeof(CGenericHeader), 1, bfp);
+		std::fwrite(this, sizeof(CGenericHeader), 1, bfp);
 	}
 
-	BOOL read(FILE* bfp, CGenericHeader const compare)
+	BOOL read(std::FILE* bfp, CGenericHeader const compare)
 	{
 		CGenericHeader read;
 
-		fread(&read, sizeof(CGenericHeader), 1, bfp);
+		std::fread(&read, sizeof(CGenericHeader), 1, bfp);
 
 		return read == compare;
 	}

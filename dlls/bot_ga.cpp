@@ -157,7 +157,7 @@ void CBotGAValues :: loadForBot ( char *file, int iProfile )
 	if ( bfp )
 	{
 		load(bfp);
-		fclose(bfp);
+		std::fclose(bfp);
 	}
 }
 
@@ -168,11 +168,11 @@ void CBotGAValues :: saveForBot ( char *file, int iProfile )
 	if ( bfp )
 	{
 		save(bfp);
-		fclose(bfp);
+		std::fclose(bfp);
 	}
 }*/
 
-void CBotGAValues::save(FILE* bfp)
+void CBotGAValues::save(std::FILE* bfp)
 {
 	const unsigned int iSize = m_theValues.size();
 
@@ -180,22 +180,22 @@ void CBotGAValues::save(FILE* bfp)
 
 	header.write(bfp);
 
-	fwrite(&iSize, sizeof(unsigned int), 1, bfp);
+	std::fwrite(&iSize, sizeof(unsigned int), 1, bfp);
 
 	for (unsigned int i = 0; i < iSize; i++)
 	{
-		fwrite(&m_theValues[i], sizeof(ga_value), 1, bfp);
+		std::fwrite(&m_theValues[i], sizeof(ga_value), 1, bfp);
 	}
 
-	fwrite(&m_fFitness, sizeof(ga_value), 1, bfp);
+	std::fwrite(&m_fFitness, sizeof(ga_value), 1, bfp);
 }
 
-void CBotGAValues::load(FILE* bfp, const int req_size)
+void CBotGAValues::load(std::FILE* bfp, const int req_size)
 {
 	unsigned int iSize;
 	ga_value fRead;
 
-	if (feof(bfp))
+	if (std::feof(bfp))
 		return;
 
 	CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, req_size);
@@ -208,19 +208,19 @@ void CBotGAValues::load(FILE* bfp, const int req_size)
 
 	m_theValues.clear();
 
-	fread(&iSize, sizeof(unsigned int), 1, bfp);
+	std::fread(&iSize, sizeof(unsigned int), 1, bfp);
 
 	for (unsigned int i = 0; i < iSize; i++)
 	{
 		// reliability check
-		if (feof(bfp))
+		if (std::feof(bfp))
 			return;
 
-		fread(&fRead, sizeof(ga_value), 1, bfp);
+		std::fread(&fRead, sizeof(ga_value), 1, bfp);
 		m_theValues.emplace_back(fRead);
 	}
 
-	fread(&m_fFitness, sizeof(ga_value), 1, bfp);
+	std::fread(&m_fFitness, sizeof(ga_value), 1, bfp);
 }
 //----------------------
 // bits
@@ -245,13 +245,13 @@ CBitsGAValues::CBitsGAValues(const unsigned int iNumBits)
 	m_theBits = new CBits(iNumBits);
 }
 
-void CBitsGAValues::load(FILE* bfp, int req_size)
+void CBitsGAValues::load(std::FILE* bfp, int req_size)
 {
 	// TODO : header
 	m_theBits->load(bfp);
 }
 
-void CBitsGAValues::save(FILE* bfp)
+void CBitsGAValues::save(std::FILE* bfp)
 {
 	// TODO : header
 	m_theBits->save(bfp);

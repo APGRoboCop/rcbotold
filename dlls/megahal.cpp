@@ -107,7 +107,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 	// is bot chat allowed AND this message is not from this bot itself ?
 	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHATTING) && pSender != pBot->m_pEdict)
 	{
-		const int iNameLength = strlen(pBot->m_szBotName);
+		const int iNameLength = std::strlen(pBot->m_szBotName);
 		char* szName = new char[sizeof(char) * (iNameLength + 1)];
 		RemoveNameTags(pBot->m_szBotName, szName);
 		szName[iNameLength] = 0;
@@ -117,10 +117,10 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		strlow(szMsg);
 		strlow(szName);
 
-		const char* szNamePos = strstr(szMsg, szName);
+		const char* szNamePos = std::strstr(szMsg, szName);
 		const BOOL bNameInMsg = szNamePos != nullptr;
 
-		const int iSenderNameLength = strlen(STRING(pSender->v.netname));
+		const int iSenderNameLength = std::strlen(STRING(pSender->v.netname));
 		char* szSenderName = new char[sizeof(char) * (iSenderNameLength + 1)];
 		RemoveNameTags(STRING(pSender->v.netname), szSenderName);
 		szSenderName[iSenderNameLength] = 0;
@@ -129,12 +129,12 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		{
 			i = 0;
 
-			strstr(szNamePos,szName);
+			std::strstr(szNamePos,szName);
 		}*/
 
 		if (bNameInMsg)
 		{
-			BotFunc_FillString(szMsg, szName, name_in_msg, strlen(szMsg));
+			BotFunc_FillString(szMsg, szName, name_in_msg, std::strlen(szMsg));
 		}
 
 		// break the new message into an array of words
@@ -158,7 +158,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 
 			BotFunc_FillString(szReplyMsg, name_in_msg, szSenderName, BOT_CHAT_MESSAGE_LENGTH);
 
-			if (strcmp(szReplyMsg, szMsg) != 0) // not the exact same message? :-p
+			if (std::strcmp(szReplyMsg, szMsg) != 0) // not the exact same message? :-p
 				strlow(szReplyMsg); // convert the output string to lowercase
 			else
 				szReplyMsg[0] = 0;
@@ -184,7 +184,7 @@ void HumanizeString(char* string)
 	const int capitalise_percent = 1;
 	const int lower_percent = 2;
 
-	int length = strlen(string);
+	int length = std::strlen(string);
 	int i = 0;
 	int n = 0;
 	int rand;
@@ -247,7 +247,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 	if (in_string == nullptr)
 		return;
 
-	const int length = strlen(in_string);
+	const int length = std::strlen(in_string);
 
 	if (length > 127)
 	{
@@ -371,7 +371,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 	}
 
 	if (out_string[0] == 0)
-		strcpy(out_string, in_string);
+		std::strcpy(out_string, in_string);
 
 	strlow(out_string);
 	/*
@@ -459,7 +459,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 			else
 				output_template[length] = 0; // terminate the string
 
-			strcpy(output, output_template); // then copy the answer
+			std::strcpy(output, output_template); // then copy the answer
 			return;
 		}
 	}
@@ -493,7 +493,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 		else
 			output_template[length] = 0; // terminate the string
 
-		strcpy(output, output_template); // then copy the answer
+		std::strcpy(output, output_template); // then copy the answer
 		return;
 	}
 }
@@ -677,22 +677,22 @@ HAL_DICTIONARY* HAL_NewDictionary()
 	return dictionary;
 }
 
-void HAL_SaveDictionary(FILE* file, HAL_DICTIONARY* dictionary)
+void HAL_SaveDictionary(std::FILE* file, HAL_DICTIONARY* dictionary)
 {
 	// this function saves a dictionary to the specified file
 
-	fwrite(&dictionary->size, sizeof(unsigned long), 1, file);
+	std::fwrite(&dictionary->size, sizeof(unsigned long), 1, file);
 
 	// save each word to the file
 	for (int i = 0; i < static_cast<int>(dictionary->size); ++i)
 	{
-		fwrite(&dictionary->entry[i].length, sizeof(unsigned char), 1, file);
+		std::fwrite(&dictionary->entry[i].length, sizeof(unsigned char), 1, file);
 		for (int j = 0; j < dictionary->entry[i].length; ++j)
-			fwrite(&dictionary->entry[i].word[j], sizeof(char), 1, file);
+			std::fwrite(&dictionary->entry[i].word[j], sizeof(char), 1, file);
 	}
 }
 
-void HAL_LoadDictionary(FILE* file, HAL_DICTIONARY* dictionary)
+void HAL_LoadDictionary(std::FILE* file, HAL_DICTIONARY* dictionary)
 {
 	// this function loads a dictionary from the specified file
 
@@ -702,12 +702,12 @@ void HAL_LoadDictionary(FILE* file, HAL_DICTIONARY* dictionary)
 	if (file == nullptr)
 		return;
 
-	fread(&size, sizeof(unsigned long), 1, file);
+	std::fread(&size, sizeof(unsigned long), 1, file);
 
 	// load each dictionary word from the file
 	for (int i = 0; i < size; ++i)
 	{
-		fread(&word.length, sizeof(unsigned char), 1, file);
+		std::fread(&word.length, sizeof(unsigned char), 1, file);
 
 		word.word = static_cast<char*>(malloc(sizeof(char) * (word.length + 1)));
 
@@ -715,7 +715,7 @@ void HAL_LoadDictionary(FILE* file, HAL_DICTIONARY* dictionary)
 			BotMessage(nullptr, 1, "HAL: HAL_LoadDictionary() unable to allocate word\n");
 
 		//for (j = 0; j < word.length; ++j)
-		fread(word.word, sizeof(char), word.length, file);
+		std::fread(word.word, sizeof(char), word.length, file);
 
 		word.word[word.length] = 0;
 		//word.word[word.length] = 0;
@@ -971,30 +971,30 @@ void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words)
 	return;
 }
 
-void HAL_SaveTree(FILE* file, HAL_TREE* node)
+void HAL_SaveTree(std::FILE* file, HAL_TREE* node)
 {
 	// this function saves a tree structure to the specified file
 
 	if (node)
 	{
-		fwrite(&node->symbol, sizeof(unsigned short), 1, file);
-		fwrite(&node->usage, sizeof(unsigned long), 1, file);
-		fwrite(&node->count, sizeof(unsigned short), 1, file);
-		fwrite(&node->branch, sizeof(unsigned short), 1, file);
+		std::fwrite(&node->symbol, sizeof(unsigned short), 1, file);
+		std::fwrite(&node->usage, sizeof(unsigned long), 1, file);
+		std::fwrite(&node->count, sizeof(unsigned short), 1, file);
+		std::fwrite(&node->branch, sizeof(unsigned short), 1, file);
 
 		for (int i = 0; i < node->branch; ++i)
 			HAL_SaveTree(file, node->tree[i]);
 	}
 }
 
-void HAL_LoadTree(FILE* file, HAL_TREE* node)
+void HAL_LoadTree(std::FILE* file, HAL_TREE* node)
 {
 	// this function loads a tree structure from the specified file
 
-	fread(&node->symbol, sizeof(unsigned short), 1, file);
-	fread(&node->usage, sizeof(unsigned long), 1, file);
-	fread(&node->count, sizeof(unsigned short), 1, file);
-	fread(&node->branch, sizeof(unsigned short), 1, file);
+	std::fread(&node->symbol, sizeof(unsigned short), 1, file);
+	std::fread(&node->usage, sizeof(unsigned long), 1, file);
+	std::fread(&node->count, sizeof(unsigned short), 1, file);
+	std::fread(&node->branch, sizeof(unsigned short), 1, file);
 
 	if (node->branch == 0)
 		return; // reliability check
@@ -1020,7 +1020,7 @@ void HAL_MakeWords(char* input, HAL_DICTIONARY* words)
 
 	// re-written
 
-	int iLen = strlen(input);
+	int iLen = std::strlen(input);
 
 	// clear the entries in the dictionary
 	HAL_EmptyDictionary(words);
@@ -1045,7 +1045,7 @@ void HAL_MakeWords(char* input, HAL_DICTIONARY* words)
 			words->entry[words->size].word = input;
 			words->size++;
 
-			if (offset == static_cast<int>(strlen(input)))
+			if (offset == static_cast<int>(std::strlen(input)))
 				break;
 
 			input += offset;
@@ -1080,7 +1080,7 @@ void HAL_MakeWords (char *input, HAL_DICTIONARY *words)
 
    // re-written
 
-   iLen = strlen(input);
+   iLen = std::strlen(input);
    iStart = 0;
    iEnd = 0;
 
@@ -1106,7 +1106,7 @@ void HAL_MakeWords (char *input, HAL_DICTIONARY *words)
 		   // copy word into string szNewWord
 		   // word starts from position iStart until iEnd
 		   // (goes on for iNewWordLength)
-		   strncpy(szNewWord,&input[iStart],iNewWordLength);
+		   std::strncpy(szNewWord,&input[iStart],iNewWordLength);
 		   szNewWord[iNewWordLength] = 0;
 
 		   // update new word store
@@ -1131,7 +1131,7 @@ BOOL HAL_BoundaryExists(char* string, int position)
 	if (position == 0)
 		return false;
 
-	if (position == static_cast<int>(strlen(string)))
+	if (position == static_cast<int>(std::strlen(string)))
 		return true;
 
 	if (string[position] == '\'' && isalpha(string[position - 1]) != 0
@@ -1246,13 +1246,13 @@ void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int st
 	char* before = static_cast<char*>(malloc(size));
 	char* after = static_cast<char*>(malloc(size));
 
-	memset(before, 0, size);
-	memset(after, 0, size);
+	std::memset(before, 0, size);
+	std::memset(after, 0, size);
 
-	strncpy(before, string, start);
-	strncpy(after, &string[end], maxstring - end);
+	std::strncpy(before, string, start);
+	std::strncpy(after, &string[end], maxstring - end);
 
-	sprintf(string, "%s%s%s", before, fill, after);
+	std::sprintf(string, "%s%s%s", before, fill, after);
 
 	//	if (before != NULL)
 	free(before);
@@ -1295,7 +1295,7 @@ void BotHALAddKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
 
 			RemoveNameTags(pBot->m_szBotName,pName);
 
-			len = strlen(pName)+3;
+			len = std::strlen(pName)+3;
 
 			char *pCheck = new char[len];
 
@@ -1311,16 +1311,16 @@ void BotHALAddKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
 
 				theword = word.word;
 
-				sprintf(pCheck,"%s",pName);
+				std::sprintf(pCheck,"%s",pName);
 
 				strlow(pCheck);
 
-				namelen = strlen(pName);
-				wordlen = strlen(theword);
+				namelen = std::strlen(pName);
+				wordlen = std::strlen(theword);
 
 				strsearch = theword;
 
-				while ( (strsearch = strstr(strsearch,pCheck)) != NULL )
+				while ( (strsearch = std::strstr(strsearch,pCheck)) != NULL )
 				{
 					start = strpos(strsearch,theword);
 					end = (int)start+namelen;
@@ -1348,13 +1348,13 @@ void BotHALAddKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
 				}
 
 				// name match, don't use name as keyword?
-				if ( strstr(word.word,pCheck) != NULL )
+				if ( std::strstr(word.word,pCheck) != NULL )
 				{
 					free(pCheck);
 					pCheck = NULL;
 					return;
 				}
-				else if ( strncmp(word.word,&pCheck[1],len-2) == 0 )
+				else if ( std::strncmp(word.word,&pCheck[1],len-2) == 0 )
 				{
 					free(pCheck);
 					pCheck = NULL;
@@ -1639,9 +1639,9 @@ void HAL_AddSwap(HAL_SWAP* list, char* s, char* d)
 	if (list->to == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_AddSwap() unable to reallocate to\n");
 
-	list->from[list->size].length = static_cast<unsigned char>(strlen(s));
+	list->from[list->size].length = static_cast<unsigned char>(std::strlen(s));
 	list->from[list->size].word = strdup(s);
-	list->to[list->size].length = static_cast<unsigned char>(strlen(d));
+	list->to[list->size].length = static_cast<unsigned char>(std::strlen(d));
 	list->to[list->size].word = strdup(d);
 	list->size++;
 }
@@ -1657,25 +1657,25 @@ HAL_SWAP* HAL_InitializeSwap(char* filename)
 	if (filename == nullptr)
 		return list;
 
-	FILE* fp = fopen(filename, "r");
+	std::FILE* fp = std::fopen(filename, "r");
 	if (fp == nullptr)
 		return list;
 
-	while (!feof(fp))
+	while (!std::feof(fp))
 	{
-		if (fgets(buffer, 1024, fp) == nullptr)
+		if (std::fgets(buffer, 1024, fp) == nullptr)
 			break;
 
 		if (buffer[0] == '#' || buffer[0] == '\n')
 			continue;
 
-		char* from = strtok(buffer, "\t");
-		char* to = strtok(nullptr, "\t\n#");
+		char* from = std::strtok(buffer, "\t");
+		char* to = std::strtok(nullptr, "\t\n#");
 
 		HAL_AddSwap(list, from, to);
 	}
 
-	fclose(fp);
+	std::fclose(fp);
 	return list;
 }
 
@@ -1691,29 +1691,29 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 	if (filename == nullptr)
 		return list;
 
-	FILE* fp = fopen(filename, "r");
+	std::FILE* fp = std::fopen(filename, "r");
 	if (fp == nullptr)
 		return list;
 
-	while (!feof(fp))
+	while (!std::feof(fp))
 	{
-		if (fgets(buffer, 1024, fp) == nullptr)
+		if (std::fgets(buffer, 1024, fp) == nullptr)
 			break;
 
 		if (buffer[0] == '#' || buffer[0] == '\n')
 			continue;
 
-		const char* string = strtok(buffer, "\t\n#");
+		const char* string = std::strtok(buffer, "\t\n#");
 
-		if (string != nullptr && strlen(string) > 0)
+		if (string != nullptr && std::strlen(string) > 0)
 		{
-			word.length = static_cast<unsigned char>(strlen(string));
+			word.length = static_cast<unsigned char>(std::strlen(string));
 			word.word = strdup(buffer); // strdup - duplicates string
 			HAL_AddWord(list, word);
 		}
 	}
 
-	fclose(fp);
+	std::fclose(fp);
 	return list;
 }
 
@@ -1890,7 +1890,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 
 	char brn_file[256];
 
-	sprintf(brn_file, "%d_hal.brn", pBotProfile->m_iProfileId);
+	std::sprintf(brn_file, "%d_hal.brn", pBotProfile->m_iProfileId);
 	UTIL_BuildFileName(brn_filename, BOT_PROFILES_FOLDER, brn_file);
 
 	//#ifdef __linux__
@@ -1902,33 +1902,33 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	//#endif
 
 	if (pBotProfile->m_szHAL_BanFile)
-		strcat(ban_filename, pBotProfile->m_szHAL_BanFile);
+		std::strcat(ban_filename, pBotProfile->m_szHAL_BanFile);
 	else
 	{
 		char szFilename[16];
 
-		sprintf(szFilename, "%d_hal.ban", pBotProfile->m_iProfileId);
-		strcat(ban_filename, szFilename);
+		std::sprintf(szFilename, "%d_hal.ban", pBotProfile->m_iProfileId);
+		std::strcat(ban_filename, szFilename);
 	}
 
 	if (pBotProfile->m_szHAL_AuxFile)
-		strcat(aux_filename, pBotProfile->m_szHAL_AuxFile);
+		std::strcat(aux_filename, pBotProfile->m_szHAL_AuxFile);
 	else
 	{
 		char szFilename[16];
 
-		sprintf(szFilename, "%d_hal.aux", pBotProfile->m_iProfileId);
-		strcat(aux_filename, szFilename);
+		std::sprintf(szFilename, "%d_hal.aux", pBotProfile->m_iProfileId);
+		std::strcat(aux_filename, szFilename);
 	}
 
 	if (pBotProfile->m_szHAL_SwapFile)
-		strcat(swp_filename, pBotProfile->m_szHAL_SwapFile);
+		std::strcat(swp_filename, pBotProfile->m_szHAL_SwapFile);
 	else
 	{
 		char szFilename[16];
 
-		sprintf(szFilename, "%d_hal.swp", pBotProfile->m_iProfileId);
-		strcat(swp_filename, szFilename);
+		std::sprintf(szFilename, "%d_hal.swp", pBotProfile->m_iProfileId);
+		std::strcat(swp_filename, szFilename);
 	}
 
 	// read dictionaries containing banned keywords, auxiliary keywords and swap keywords
@@ -1937,15 +1937,15 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	pBotProfile->m_HAL->swappable_keywords = HAL_InitializeSwap(swp_filename);
 
 	// check if the brain exists, try to open it
-	FILE* fp = fopen(brn_filename, "rb");
+	std::FILE* fp = std::fopen(brn_filename, "rb");
 	if (fp != nullptr)
 	{
-		fseek(fp, 0, SEEK_SET); // seek at start of file
-		fread(cookie, sizeof"RCBOTHAL", 1, fp); // read the brain signature
-		fclose(fp); // close the brain (we just wanted the signature)
+		std::fseek(fp, 0, SEEK_SET); // seek at start of file
+		std::fread(cookie, sizeof"RCBOTHAL", 1, fp); // read the brain signature
+		std::fclose(fp); // close the brain (we just wanted the signature)
 
 		// check for brain file validity
-		if (strcmp(cookie, "RCBOTHAL") == 0)
+		if (std::strcmp(cookie, "RCBOTHAL") == 0)
 			return false; // ok, brain is valid
 	}
 
@@ -1954,19 +1954,19 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	BotMessage(nullptr, 0, "inferring a new HAL brain to profile (%d)", pBotProfile->m_iProfileId);
 
 	// create the new brain (i.e, save a void one in the brain file)
-	fp = fopen(brn_filename, "wb");
+	fp = std::fopen(brn_filename, "wb");
 
 	if (fp == nullptr)
 	{
 		BotMessage(nullptr, 1, "PrepareHALBrainForPersonality(): writing permissions not allowed on profile (%d) HAL brain!", pBotProfile->m_iProfileId);
 	}
 
-	fwrite("RCBOTHAL", sizeof"RCBOTHAL", 1, fp);
-	fwrite(&pBotProfile->m_HAL->bot_model->order, sizeof(unsigned char), 1, fp);
+	std::fwrite("RCBOTHAL", sizeof"RCBOTHAL", 1, fp);
+	std::fwrite(&pBotProfile->m_HAL->bot_model->order, sizeof(unsigned char), 1, fp);
 	HAL_SaveTree(fp, pBotProfile->m_HAL->bot_model->forward);
 	HAL_SaveTree(fp, pBotProfile->m_HAL->bot_model->backward);
 	HAL_SaveDictionary(fp, pBotProfile->m_HAL->bot_model->dictionary);
-	fclose(fp); // everything is saved, close the file
+	std::fclose(fp); // everything is saved, close the file
 
 	return true; // ok, now it is guarantee that this personality has an associated brain
 }
@@ -1982,17 +1982,17 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 	//int iNameLength;
 	//char *szName;
 
-	//iNameLength = strlen(pBotProfile->m_szBotName);
+	//iNameLength = std::strlen(pBotProfile->m_szBotName);
 	//szName = new char [ sizeof(char) * (iNameLength + 1) ];
 	//RemoveNameTags(pBotProfile->m_szBotName,szName);
 	//szName[iNameLength] = 0;
 
-	sprintf(file, "%d_hal.brn", pBotProfile->m_iProfileId);
+	std::sprintf(file, "%d_hal.brn", pBotProfile->m_iProfileId);
 
 	UTIL_BuildFileName(filename, "botprofiles", file);
 
 	// check if the brain exists, try to open it
-	FILE* fp = fopen(filename, "rb");
+	std::FILE* fp = std::fopen(filename, "rb");
 	if (fp == nullptr)
 	{
 		//delete szName;
@@ -2001,24 +2001,24 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 	}
 
 	// check for brain file validity
-	fread(cookie, sizeof"RCBOTHAL", 1, fp); // read the brain signature
+	std::fread(cookie, sizeof"RCBOTHAL", 1, fp); // read the brain signature
 
-	if (strcmp(cookie, "RCBOTHAL") != 0)
+	if (std::strcmp(cookie, "RCBOTHAL") != 0)
 	{
 		// delete szName;
 		BotMessage(nullptr, 0, "LoadHALBrainForPersonality(): %s's HAL brain damaged!", pBotProfile->m_szBotName); // bad brain
 		BotMessage(nullptr, 2, "damaged bot file, delete %s/%d.brn file", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId); // bad brain
-		fclose(fp); // close file
+		std::fclose(fp); // close file
 		return true; // there was an error, return true
 	}
 
 	BotMessage(nullptr, 0, "HAL : restoring brain to %s\n", pBotProfile->m_szBotName);
 
-	fread(&pBotProfile->m_HAL->bot_model->order, 1, 1, fp);
+	std::fread(&pBotProfile->m_HAL->bot_model->order, 1, 1, fp);
 	HAL_LoadTree(fp, pBotProfile->m_HAL->bot_model->forward);
 	HAL_LoadTree(fp, pBotProfile->m_HAL->bot_model->backward);
 	HAL_LoadDictionary(fp, pBotProfile->m_HAL->bot_model->dictionary);
-	fclose(fp);
+	std::fclose(fp);
 
 	pBotProfile->m_HAL->input_words = HAL_NewDictionary(); // create the global chat dictionary
 
@@ -2034,25 +2034,25 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 
 		if (pBotProfile->m_szHAL_PreTrainFile)
 		{
-			strcat(trn_filename, "/");
-			strcat(trn_filename, pBotProfile->m_szHAL_PreTrainFile);
+			std::strcat(trn_filename, "/");
+			std::strcat(trn_filename, pBotProfile->m_szHAL_PreTrainFile);
 		}
 		else
 		{
 			char szFilename[16];
 
-			sprintf(szFilename, "%d_hal.trn", pBotProfile->m_iProfileId);
-			strcat(trn_filename, szFilename);
+			std::sprintf(szFilename, "%d_hal.trn", pBotProfile->m_iProfileId);
+			std::strcat(trn_filename, szFilename);
 		}
 
 		// see if there is a training file
-		fp = fopen(trn_filename, "r");
+		fp = std::fopen(trn_filename, "r");
 
 		if (fp != nullptr)
 		{
 			char szBuffer[256];
 
-			while (fgets(szBuffer, 255, fp) != nullptr)
+			while (std::fgets(szBuffer, 255, fp) != nullptr)
 			{
 				szBuffer[255] = 0;
 
@@ -2061,7 +2061,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 				if (!szBuffer[0])
 					continue; // nothing on this line
 
-				const int iLen = strlen(szBuffer);
+				const int iLen = std::strlen(szBuffer);
 
 				if (szBuffer[iLen - 1] == '\n')
 					szBuffer[iLen - 1] = 0;
@@ -2070,7 +2070,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 				HAL_Learn(pBotProfile->m_HAL->bot_model, pBotProfile->m_HAL->input_words);
 			}
 
-			fclose(fp);
+			std::fclose(fp);
 		}
 	}
 
@@ -2084,11 +2084,11 @@ void SaveHALBrainForPersonality(bot_profile_t* pBotProfile)
 	char file[256];
 	char filename[256];
 
-	sprintf(file, "%d_hal.brn", pBotProfile->m_iProfileId);
+	std::sprintf(file, "%d_hal.brn", pBotProfile->m_iProfileId);
 
 	UTIL_BuildFileName(filename, "botprofiles", file);
 
-	FILE* fp = fopen(filename, "wb");
+	std::FILE* fp = std::fopen(filename, "wb");
 	if (fp == nullptr)
 	{
 		BotMessage(nullptr, 0, "Unable to save profile %d's HAL brain to %s\n", pBotProfile->m_iProfileId, filename);
@@ -2096,13 +2096,13 @@ void SaveHALBrainForPersonality(bot_profile_t* pBotProfile)
 	}
 
 	// dump the HAL brain to disk
-	fwrite("RCBOTHAL", sizeof"RCBOTHAL", 1, fp);
-	fwrite(&pBotProfile->m_HAL->bot_model->order, sizeof(unsigned char), 1, fp);
+	std::fwrite("RCBOTHAL", sizeof"RCBOTHAL", 1, fp);
+	std::fwrite(&pBotProfile->m_HAL->bot_model->order, sizeof(unsigned char), 1, fp);
 	HAL_SaveTree(fp, pBotProfile->m_HAL->bot_model->forward);
 	HAL_SaveTree(fp, pBotProfile->m_HAL->bot_model->backward);
 	HAL_SaveDictionary(fp, pBotProfile->m_HAL->bot_model->dictionary);
 
-	fclose(fp);
+	std::fclose(fp);
 }
 
 void FreeHALBrain(bot_profile_t* pBotProfile)

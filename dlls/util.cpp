@@ -88,14 +88,14 @@ BOOL UTIL_TankUsed(edict_t* pTank)
 
 BOOL UTIL_EntityHasClassname(edict_t* pEntity, char* classname)
 {
-	return strcmp(STRING(pEntity->v.classname), classname) == 0;
+	return std::strcmp(STRING(pEntity->v.classname), classname) == 0;
 }
 
 BOOL UTIL_IsGrenadeRocket(edict_t* pEntity)
 {
 	const char* szClassname = STRING(pEntity->v.classname);
 
-	return strstr(szClassname, "grenade") != nullptr || strstr(szClassname, "rpg_rocket") != nullptr;
+	return std::strstr(szClassname, "grenade") != nullptr || std::strstr(szClassname, "rpg_rocket") != nullptr;
 }
 // from old RCBot
 void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency, float duration, float radius)
@@ -370,7 +370,7 @@ void UTIL_MakeVectors(const Vector& vecAngles)
 void strlow(char* str)
 // lower a string to make it lower case.
 {
-	const int len = strlen(str);
+	const int len = std::strlen(str);
 
 	for (int i = 0; i < len; i++)
 	{
@@ -381,7 +381,7 @@ void strlow(char* str)
 void strhigh(char* str)
 // higher a string to make it upper case.
 {
-	const int len = strlen(str);
+	const int len = std::strlen(str);
 
 	for (int i = 0; i < len; i++)
 	{
@@ -402,18 +402,18 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 			if (!pent->free)
 			{
 				// 'strlen' function called too many times inside loop [APG]RoboCop[CL]
-				const int length = strlen(name);
+				const int length = std::strlen(name);
 
 				char arg_lwr[80];
 				char pent_lwr[80];
 
-				strcpy(arg_lwr, name);
-				strcpy(pent_lwr, STRING(pent->v.netname));
+				std::strcpy(arg_lwr, name);
+				std::strcpy(pent_lwr, STRING(pent->v.netname));
 
 				strlow(arg_lwr);
 				strlow(pent_lwr);
 
-				if (strncmp(arg_lwr, pent_lwr, length) == 0)
+				if (std::strncmp(arg_lwr, pent_lwr, length) == 0)
 				{
 					return pent;
 				}
@@ -753,16 +753,16 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 
 	// turn on color set 2  (color on,  no sound)
 	if (teamonly)
-		sprintf(text, "%c(TEAM) %s: ", 2, STRING(pEntity->v.netname));
+		std::sprintf(text, "%c(TEAM) %s: ", 2, STRING(pEntity->v.netname));
 	else
-		sprintf(text, "%c%s: ", 2, STRING(pEntity->v.netname));
+		std::sprintf(text, "%c%s: ", 2, STRING(pEntity->v.netname));
 
-	const int j = sizeof text - 2 - strlen(text);  // -2 for /n and null terminator
-	if (static_cast<int>(strlen(message)) > j)
+	const int j = sizeof text - 2 - std::strlen(text);  // -2 for /n and null terminator
+	if (static_cast<int>(std::strlen(message)) > j)
 		message[j] = 0;
 
-	strcat(text, message);
-	strcat(text, "\n");
+	std::strcat(text, message);
+	std::strcat(text, "\n");
 
 	// loop through all players
 	// Start with the first player.
@@ -875,10 +875,10 @@ int UTIL_GetTeam(edict_t* pEntity)
 
 		char model[64];
 
-		strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
+		std::strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
 
 		// Check if the map name starts with "tm_"
-		if (strncmp("tm_", STRING(gpGlobals->mapname), 3) == 0)
+		if (std::strncmp("tm_", STRING(gpGlobals->mapname), 3) == 0)
 		{
 			if (FStrEq(model, "merc"))
 				return 0;
@@ -889,7 +889,7 @@ int UTIL_GetTeam(edict_t* pEntity)
 		{
 			const char* teamlist = CVAR_GET_STRING("mp_teamlist");
 
-			const char* pos = strstr(teamlist, model);
+			const char* pos = std::strstr(teamlist, model);
 			char* sofar = const_cast<char*>(teamlist);
 
 			int team = 0;
@@ -923,15 +923,15 @@ int UTIL_GetTeam(edict_t* pEntity)
 		{
 			char model_name[32];
 			char* infobuffer = GET_INFOKEYBUFFER(pEntity);
-			strcpy(model_name, INFOKEY_VALUE(infobuffer, "model"));
+			std::strcpy(model_name, INFOKEY_VALUE(infobuffer, "model"));
 
-			if (!strcmp(model_name, "ctf_barney") || !strcmp(model_name, "cl_suit") || !strcmp(model_name, "ctf_gina") ||
-				!strcmp(model_name, "ctf_gordon") || !strcmp(model_name, "otis") || !strcmp(model_name, "ctf_scientist"))
+			if (!std::strcmp(model_name, "ctf_barney") || !std::strcmp(model_name, "cl_suit") || !std::strcmp(model_name, "ctf_gina") ||
+				!std::strcmp(model_name, "ctf_gordon") || !std::strcmp(model_name, "otis") || !std::strcmp(model_name, "ctf_scientist"))
 			{
 				return TEAM_BLACK_MESA;
 			}
-			else if (!strcmp(model_name, "beret") || !strcmp(model_name, "drill") || !strcmp(model_name, "grunt") ||
-				!strcmp(model_name, "recruit") || !strcmp(model_name, "shephard") || !strcmp(model_name, "tower"))
+			else if (!std::strcmp(model_name, "beret") || !std::strcmp(model_name, "drill") || !std::strcmp(model_name, "grunt") ||
+				!std::strcmp(model_name, "recruit") || !std::strcmp(model_name, "shephard") || !std::strcmp(model_name, "tower"))
 			{
 				return TEAM_OPPOSING_FORCE;
 			}
@@ -1013,7 +1013,7 @@ int UTIL_GetClass(edict_t* pEntity)
 	char model_name[32];
 
 	char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-	strcpy(model_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
+	std::strcpy(model_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
 
 	return 0;
 }
@@ -1548,7 +1548,7 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 		char			buf[128];
 
 		edict_t *pExplosion = CREATE_NAMED_ENTITY(MAKE_STRING("env_explosion"));
-		sprintf( buf, "%3d", magnitude );
+		std::sprintf( buf, "%3d", magnitude );
 		kvd.szKeyName = "iMagnitude";
 		kvd.szValue = buf;
 
@@ -1569,7 +1569,7 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 		char			buf[128];
 
 		CBaseEntity *pExplosion = CreateEnt( "env_explosion", center, angles, pOwner );
-		sprintf( buf, "%3d", magnitude );
+		std::sprintf( buf, "%3d", magnitude );
 		kvd.szKeyName = "iMagnitude";
 		kvd.szValue = buf;
 		pExplosion->KeyValue( &kvd );
@@ -1790,7 +1790,7 @@ BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid)
 
 	KeyValueData key;
 
-	sprintf(keyvalue, "%d", weaponid);
+	std::sprintf(keyvalue, "%d", weaponid);
 
 	key.szClassName = "ts_groundweapon";
 	key.szKeyName = keyname;
@@ -1859,28 +1859,28 @@ BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid)
 void UTIL_BuildFileName(char* filename, char* arg1, char* arg2)
 {
 	// Build file name will set up the directory for the filename
-	strcpy(filename, gBotGlobals.botFolder());
+	std::strcpy(filename, gBotGlobals.botFolder());
 #ifndef __linux__
-	strcat(filename, "\\");
+	std::strcat(filename, "\\");
 #else
-	strcat(filename, "/");
+	std::strcat(filename, "/");
 #endif
 
 	if (arg1 && *arg1 && arg2 && *arg2)
 	{
-		strcat(filename, arg1);
+		std::strcat(filename, arg1);
 
 #ifndef __linux__
-		strcat(filename, "\\");
+		std::strcat(filename, "\\");
 #else
-		strcat(filename, "/");
+		std::strcat(filename, "/");
 #endif
 
-		strcat(filename, arg2);
+		std::strcat(filename, arg2);
 	}
 	else if (arg1 && *arg1)
 	{
-		strcat(filename, arg1);
+		std::strcat(filename, arg1);
 	}
 }
 
@@ -1978,7 +1978,7 @@ void UTIL_PlaySound(edict_t* pPlayer, const char* szSound)
 	if (pPlayer->v.flags & FL_FAKECLIENT)
 		return;
 
-	sprintf(szCommand, "play %s\n", szSound);
+	std::sprintf(szCommand, "play %s\n", szSound);
 
 	CLIENT_COMMAND(pPlayer, szCommand);
 }
@@ -2030,11 +2030,11 @@ void HudText::SayMessage(const char* message, edict_t* pPlayer)
 
 void HudText::InitMessage(const char* message)
 {
-	strncpy(m_sMessage, message, HUD_TEXT_LENGTH - 1);
+	std::strncpy(m_sMessage, message, HUD_TEXT_LENGTH - 1);
 
 	m_sMessage[HUD_TEXT_LENGTH - 1] = 0;
 
-	const unsigned int length = strlen(m_sMessage);
+	const unsigned int length = std::strlen(m_sMessage);
 
 	unsigned int i = 0;
 
@@ -2113,14 +2113,14 @@ void UTIL_BotHudMessage(edict_t* pEntity, const hudtextparms_t& textparms, const
 	if (textparms.effect == 2)
 		WRITE_SHORT(FixedUnsigned16(textparms.fxTime, 1 << 8));
 
-	if (strlen(pMessage) < 512)
+	if (std::strlen(pMessage) < 512)
 	{
 		WRITE_STRING(pMessage);
 	}
 	else
 	{
 		char tmp[512];
-		strncpy(tmp, pMessage, 511);
+		std::strncpy(tmp, pMessage, 511);
 		tmp[511] = 0;
 		WRITE_STRING(tmp);
 	}
@@ -2206,10 +2206,10 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 		snprintf(final_message, sizeof(final_message), "%s %s", BOT_DBG_MSG_TAG, tooltips[iLang][iTooltip]);
 
 		// name in message
-		if (strstr(final_message, "%n") != nullptr)
+		if (std::strstr(final_message, "%n") != nullptr)
 		{
 			const char* szName = STRING(pEntity->v.netname);
-			const int iLen = strlen(szName);
+			const int iLen = std::strlen(szName);
 			char* szNewName = static_cast<char*>(malloc(iLen + 1)); // No need to multiply by sizeof(char)
 
 			RemoveNameTags(szName, szNewName);
@@ -2315,7 +2315,7 @@ BOOL UTIL_IsButton(edict_t* pButton)
 
 	const char* szClassname = const_cast<char*>(STRING(pButton->v.classname));
 
-	return strncmp(szClassname, "func_", 5) == 0;
+	return std::strncmp(szClassname, "func_", 5) == 0;
 }
 
 edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, const Vector& vOrigin, float fRange, BOOL bVisible, edict_t* pIgnore)

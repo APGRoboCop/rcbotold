@@ -171,13 +171,13 @@ void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs
 	}
 }
 
-void NNLayer::save(FILE* bfp) const
+void NNLayer::save(std::FILE* bfp) const
 {
 	unsigned int iTemp;
 
 	iTemp = m_Neurons.size();
 
-	fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
+	std::fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 
 	const CGenericHeader header = CGenericHeader(LEARNTYPE_NN_LAYER, static_cast<int>(iTemp));
 
@@ -189,11 +189,11 @@ void NNLayer::save(FILE* bfp) const
 	}
 }
 
-void NNLayer::load(FILE* bfp)
+void NNLayer::load(std::FILE* bfp)
 {
 	unsigned int iTemp;
 
-	fread(&iTemp, sizeof(unsigned int), 1, bfp);
+	std::fread(&iTemp, sizeof(unsigned int), 1, bfp);
 
 	const CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN_LAYER, iTemp);
 	CGenericHeader header2;
@@ -207,14 +207,14 @@ void NNLayer::load(FILE* bfp)
 	}
 }
 
-void NN::load(FILE* bfp)
+void NN::load(std::FILE* bfp)
 {
-	if (feof(bfp))
+	if (std::feof(bfp))
 		return;
 
 	unsigned int iTemp;
 
-	fread(&iTemp, sizeof(unsigned int), 1, bfp);
+	std::fread(&iTemp, sizeof(unsigned int), 1, bfp);
 
 	const CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN, iTemp);
 	CGenericHeader header2;
@@ -228,14 +228,14 @@ void NN::load(FILE* bfp)
 	}
 }
 
-void NN::save(FILE* bfp) const
+void NN::save(std::FILE* bfp) const
 {
-	if (feof(bfp))
+	if (std::feof(bfp))
 		return;
 
 	const unsigned int iTemp = m_Layers.size();
 
-	fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
+	std::fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 
 	const CGenericHeader header = CGenericHeader(LEARNTYPE_NN, iTemp);
 

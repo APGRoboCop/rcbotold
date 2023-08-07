@@ -84,9 +84,9 @@ const char* CModInfo::GetDllFileName(const char* szFolder)
 {
 	char szFilename[256];
 #ifdef __linux__
-	sprintf(szFilename, "%s/dlls/%s.so", szFolder, m_szDllFile);
+	std::sprintf(szFilename, "%s/dlls/%s.so", szFolder, m_szDllFile);
 #else
-	sprintf(szFilename, "%s\\dlls\\%s.dll", szFolder, m_szDllFile);
+	std::sprintf(szFilename, "%s\\dlls\\%s.dll", szFolder, m_szDllFile);
 #endif
 	//store it globally instead of locally
 	return gBotGlobals.m_Strings.GetString(szFilename);
@@ -136,8 +136,8 @@ extern "C" DLLEXPORT void GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, g
 	const char* game_dll_filename;
 
 	// get the engine functions from the engine...
-	memset(&g_engfuncs, 0, sizeof(enginefuncs_t));
-	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
+	std::memset(&g_engfuncs, 0, sizeof(enginefuncs_t));
+	std::memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
 	gpGlobals = pGlobals;
 
 	gBotGlobals.Init();

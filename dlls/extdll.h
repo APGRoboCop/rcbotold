@@ -24,6 +24,7 @@
 #include <cmath>
 #include <cstring>
 #include <cstdarg>
+#include <string>
 
 // Allow "DEBUG" in addition to default "_DEBUG"
 #ifdef _DEBUG
@@ -73,7 +74,7 @@
 #undef max
 #undef min
 
-#define itoa(a,b,c) sprintf(b, "%d", a)
+#define itoa(a,b,c) std::sprintf(b, "%d", a)
 
 typedef unsigned char BYTE;
 #endif

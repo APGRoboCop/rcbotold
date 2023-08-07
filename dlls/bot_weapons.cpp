@@ -97,7 +97,7 @@ void CWeapon::SetWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int 
 	m_bRegistered = true;
 }
 
-BOOL CBotWeapon::CanReload()
+BOOL CBotWeapon::CanReload() const
 {
 	if (IsMelee())
 		return false;
@@ -110,7 +110,7 @@ BOOL CBotWeapon::CanReload()
 	return false;
 }
 
-BOOL CWeapon::IsPrimary()
+BOOL CWeapon::IsPrimary() const
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -121,7 +121,7 @@ BOOL CWeapon::IsPrimary()
 	}
 }
 
-BOOL CWeapon::IsSecondary()
+BOOL CWeapon::IsSecondary() const
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -203,7 +203,7 @@ void CWeaponPresets::ReadPresets()
 
 	UTIL_BuildFileName(filename, BOT_WEAPON_PRESETS_FILE);
 
-	FILE* fp = fopen(filename, "r");
+	std::FILE* fp = std::fopen(filename, "r");
 
 	if (fp == nullptr)
 		return;
@@ -218,14 +218,14 @@ void CWeaponPresets::ReadPresets()
 	// and do not need to be loaded
 	BOOL bSkipMod = false;
 
-	memset(&sWeaponPreset, 0, sizeof(weapon_preset_t));
+	std::memset(&sWeaponPreset, 0, sizeof(weapon_preset_t));
 
-	while (fgets(buffer, 255, fp) != nullptr)
+	while (std::fgets(buffer, 255, fp) != nullptr)
 	{
 		if (buffer[0] == '#')
 			continue;
 
-		int iLength = strlen(buffer);
+		int iLength = std::strlen(buffer);
 
 		if (iLength <= 0) // blank line...
 			continue;
@@ -248,7 +248,7 @@ void CWeaponPresets::ReadPresets()
 			continue;
 #endif
 
-		if (sscanf(buffer, "[mod_id=%d]", &iValue) == 1)
+		if (std::sscanf(buffer, "[mod_id=%d]", &iValue) == 1)
 		{
 			bSkipMod = iValue != gBotGlobals.m_iCurrentMod;
 
@@ -261,81 +261,81 @@ void CWeaponPresets::ReadPresets()
 		if (bSkipMod)
 			continue;
 
-		if (sscanf(buffer, "[weapon_id=%d]", &iValue) == 1)
+		if (std::sscanf(buffer, "[weapon_id=%d]", &iValue) == 1)
 		{
 			iWeaponId = iValue;
 
-			memset(&sWeaponPreset, 0, sizeof(weapon_preset_t));
+			std::memset(&sWeaponPreset, 0, sizeof(weapon_preset_t));
 
 			sWeaponPreset.m_iId = iWeaponId;
 			sWeaponPreset.m_iModId = static_cast<short int>(iModId);
 			continue;
 		}
 
-		if (sscanf(buffer, "underwater=%d", &iValue) == 1)
+		if (std::sscanf(buffer, "underwater=%d", &iValue) == 1)
 		{
 			sWeaponPreset.m_bCanFireUnderWater = iValue;
 
 			continue;
 		}
 
-		if (sscanf(buffer, "primaryfire=%d", &iValue) == 1)
+		if (std::sscanf(buffer, "primaryfire=%d", &iValue) == 1)
 		{
 			sWeaponPreset.m_bHasPrimaryFire = iValue;
 
 			continue;
 		}
 
-		if (sscanf(buffer, "secondaryfire=%d", &iValue) == 1)
+		if (std::sscanf(buffer, "secondaryfire=%d", &iValue) == 1)
 		{
 			sWeaponPreset.m_bHasSecondaryFire = iValue;
 			continue;
 		}
 
-		if (sscanf(buffer, "primary_min_range=%d", &iValue) == 1)
+		if (std::sscanf(buffer, "primary_min_range=%d", &iValue) == 1)
 		{
 			sWeaponPreset.m_fPrimMaxRange = static_cast<float>(iValue);
 			continue;
 		}
 
-		if (sscanf(buffer, "primary_max_range=%d", &iValue) == 1)
+		if (std::sscanf(buffer, "primary_max_range=%d", &iValue) == 1)
 		{
 			sWeaponPreset.m_fPrimMaxRange = static_cast<float>(iValue);
 			continue;
 		}
 
-		if (sscanf(buffer, "secondary_min_range=%d", &iValue) == 1)
+		if (std::sscanf(buffer, "secondary_min_range=%d", &iValue) == 1)
 		{
 			sWeaponPreset.m_fSecMinRange = static_cast<float>(iValue);
 			continue;
 		}
 
-		if (sscanf(buffer, "secondary_max_range=%d", &iValue) == 1)
+		if (std::sscanf(buffer, "secondary_max_range=%d", &iValue) == 1)
 		{
 			sWeaponPreset.m_fSecMaxRange = static_cast<float>(iValue);
 			continue;
 		}
 
-		if (sscanf(buffer, "is_melee=%d", &iValue) == 1)
+		if (std::sscanf(buffer, "is_melee=%d", &iValue) == 1)
 		{
 			sWeaponPreset.m_bIsMelee = iValue;
 			continue;
 		}
 
-		if (sscanf(buffer, "priority=%d", &iValue) == 1)
+		if (std::sscanf(buffer, "priority=%d", &iValue) == 1)
 		{
 			sWeaponPreset.m_iPriority = iValue;
 			continue;
 		}
 
-		if (strcmp(buffer, "[/weapon]") == 0)
+		if (std::strcmp(buffer, "[/weapon]") == 0)
 			m_Presets.Push(sWeaponPreset);
 	}
 
-	fclose(fp);
+	std::fclose(fp);
 }
 
-BOOL CBotWeapon::HasWeapon(edict_t* pEdict)
+BOOL CBotWeapon::HasWeapon(edict_t* pEdict) const
 {
 	if (pEdict)
 	{
@@ -400,7 +400,7 @@ BOOL CBotWeapon::HasWeapon(edict_t* pEdict)
 // available...
 void GetNoWeaponArray(short int* Array)
 {
-	memset(Array, 0, sizeof(short int) * MAX_WEAPONS);
+	std::memset(Array, 0, sizeof(short int) * MAX_WEAPONS);
 }
 
 void GetArrayOfExplosives(short int* Array)
@@ -718,13 +718,13 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 				continue;
 		}
 
-		if (pWeapon->NeedToReload())
+		if (pWeapon->NeedToReload())//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
 		{
 			Weapons.push(pWeapon);//.Add(i);
 			continue;
 		}
 
-		if (pWeapon->OutOfAmmo())
+		if (pWeapon->OutOfAmmo())//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
 			continue;
 
 		Weapons.push(pWeapon);//.Add(i);
@@ -867,7 +867,7 @@ BOOL CBotWeapon::NeedToReload() const
 	return false;
 }
 
-BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist)
+BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const
 {
 	if (m_pWeaponInfo == nullptr)
 		return true;
@@ -875,7 +875,7 @@ BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWall
 	if (gBotGlobals.m_iCurrentMod == MOD_DMC)
 		return this->PrimaryAmmo() > 0;
 
-	if (this->OutOfAmmo())
+	if (this->OutOfAmmo())//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
 		return false;
 	if (pEdict->v.waterlevel == 3 && CanBeUsedUnderWater() == false)
 		return false;

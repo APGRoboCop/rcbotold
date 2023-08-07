@@ -134,7 +134,7 @@ public:
 	CBotMenu()
 	{
 		this->InitMenu();
-		//memset(m_Menus,0,sizeof(CBotMenuItem)*10);
+		//std::memset(m_Menus,0,sizeof(CBotMenuItem)*10);
 	}
 
 	void DestroyMenu() const;

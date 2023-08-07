@@ -66,7 +66,7 @@ public:
 		// crossover with other individual
 		virtual void crossOver ( IIndividual *other )
 		{
-			memset(other,this,sizeof(CPerceptron));
+			std::memset(other,this,sizeof(CPerceptron));
 			other->clear();
 		}
 
@@ -82,7 +82,7 @@ public:
 
 	CPerceptron(unsigned int iInputs, ITransfer* transferFunction = nullptr, float fLearnRate = 0.0f);
 
-	CPerceptron(FILE* bfp)
+	CPerceptron(std::FILE* bfp)
 	{
 		load(bfp);
 	}
@@ -122,8 +122,8 @@ public:
 
 	void setTrained() { m_bTrained = true; }
 
-	void save(FILE* bfp) const;
-	void load(FILE* bfp);
+	void save(std::FILE* bfp) const;
+	void load(std::FILE* bfp);
 
 	void load(char* filename, int iProfileId);
 	void save(char* filename, int iProfileId) const;

@@ -94,7 +94,7 @@ extern CWaypointLocations WaypointLocations;
 
 cvar_t bot_ver_cvar = { BOT_VER_CVAR,BOT_VER,FCVAR_SERVER };
 
-FILE* fpMapConfig = nullptr;
+std::FILE* fpMapConfig = nullptr;
 
 void UpdateClientData(const edict_s* ent, int sendweapons, clientdata_s* cd);
 
@@ -184,14 +184,14 @@ int DispatchSpawn(edict_t* pent)
 
 		if (debug_engine)
 		{
-			FILE* fp = fopen("bot.txt", "a");
-			fprintf(fp, "DispatchSpawn: %p %s\n", pent, pClassname);
+			std::FILE* fp = std::fopen("bot.txt", "a");
+			std::fprintf(fp, "DispatchSpawn: %p %s\n", pent, pClassname);
 			if (pent->v.model != 0)
-				fprintf(fp, " model=%s\n", STRING(pent->v.model));
-			fclose(fp);
+				std::fprintf(fp, " model=%s\n", STRING(pent->v.model));
+			std::fclose(fp);
 		}
 
-		if (strcmp(pClassname, "worldspawn") == 0)
+		if (std::strcmp(pClassname, "worldspawn") == 0)
 		{
 			// do level initialization stuff here...
 			gBotGlobals.MapInit();
@@ -205,7 +205,7 @@ int DispatchSpawn(edict_t* pent)
 		{
 			if (!gBotGlobals.m_pMarineStart)
 			{
-				if (strcmp(STRING(pent->v.classname), "team_command") == 0)
+				if (std::strcmp(STRING(pent->v.classname), "team_command") == 0)
 				{
 					gBotGlobals.m_pMarineStart = pent;
 
@@ -426,14 +426,14 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 			pClient->Init();
 		}
 
-		if (debug_engine) { FILE* fp = fopen("bot.txt", "a"); fprintf(fp, "ClientConnect: pent=%p name=%s\n", pEntity, pszName); fclose(fp); }
+		if (debug_engine) { std::FILE* fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "ClientConnect: pent=%p name=%s\n", pEntity, pszName); std::fclose(fp); }
 
 		if (!IS_DEDICATED_SERVER())
 		{
 			if (gBotGlobals.m_pListenServerEdict == nullptr)
 			{
 				// check if this client is the listen server client
-				if (strcmp(pszAddress, "loopback") == 0)
+				if (std::strcmp(pszAddress, "loopback") == 0)
 				{
 					// save the edict of the listen server client...
 					gBotGlobals.m_pListenServerEdict = pEntity;
@@ -449,7 +449,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 			}
 		}
 
-		if (strcmp(pszAddress, "127.0.0.1") != 0) // not a bot connecting
+		if (std::strcmp(pszAddress, "127.0.0.1") != 0) // not a bot connecting
 		{
 			if (gBotGlobals.m_iMinBots != -1)
 			{
@@ -471,9 +471,9 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 
 								BotMessage(nullptr, 0, "Kicking a bot from server to free a slot...");
 
-								//sprintf(cmd, "kick #%d\n", iUserId);
+								//std::sprintf(cmd, "kick #%d\n", iUserId);
 								// kick [# userid] doesnt work on linux ??
-								sprintf(cmd, "kick \"%s\"\n", pBot->m_szBotName);
+								std::sprintf(cmd, "kick \"%s\"\n", pBot->m_szBotName);
 
 								SERVER_COMMAND(cmd);  // kick the bot using kick name //(kick #id)
 
@@ -506,7 +506,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 					{
 						BotMessage(nullptr, 0, "Rejecting real player from joining as min_bots has not been reached yet...");
 
-						strcpy(szRejectReason, "\nMaximum public slots reached (some slots are reserved)");
+						std::strcpy(szRejectReason, "\nMaximum public slots reached (some slots are reserved)");
 
 #ifdef RCBOT_META_BUILD
 						RETURN_META_VALUE(MRES_SUPERCEDE, 0);
@@ -557,20 +557,20 @@ void ClientDisconnect(edict_t* pEntity)
 
 					UTIL_BuildFileName(szFilename,BOT_PROFILES_FILE,NULL);
 
-					fp = fopen(szFilename,"r");
+					fp = std::fopen(szFilename,"r");
 
 					if ( fp )
 					{
 						int iCurrentId = 0;
 
-						while ( !feof(fp) )
+						while ( !std::feof(fp) )
 						{
-							fscanf(fp,"%d\n",&iCurrentId);
+							std::fscanf(fp,"%d\n",&iCurrentId);
 
 							s_iProfiles.Push(iCurrentId);
 						}
 
-						fclose(fp);
+						std::fclose(fp);
 					}
 
 					while ( iNewProfile <= MAX_BOT_ID )
@@ -583,12 +583,12 @@ void ClientDisconnect(edict_t* pEntity)
 
 					if ( iNewProfile <= MAX_BOT_ID )
 					{
-						fp = fopen(szFilename,"a"); // Open the "botprofiles.ini" add this profile to the list
+						fp = std::fopen(szFilename,"a"); // Open the "botprofiles.ini" add this profile to the list
 
 						if ( fp )
 						{
-							fprintf(fp,"%d\n",iNewProfile);
-							fclose(fp);
+							std::fprintf(fp,"%d\n",iNewProfile);
+							std::fclose(fp);
 						}
 						else
 							BotMessage(NULL,0,"Error creating bot profile!");
@@ -601,17 +601,17 @@ void ClientDisconnect(edict_t* pEntity)
 				{
 					char szBotProfile[8];
 
-					sprintf(szBotProfile,"%d.ini",iNewProfile);
+					std::sprintf(szBotProfile,"%d.ini",iNewProfile);
 
 					UTIL_BuildFileName(szFilename,"botprofiles",szBotProfile);
 
-					fp = fopen(szFilename,"w");
+					fp = std::fopen(szFilename,"w");
 
 					if ( fp )
 					{
 						BotFunc_WriteProfile(fp,&pBot->m_Profile);
 
-						fclose(fp);
+						std::fclose(fp);
 					}
 				}
 				else
@@ -668,9 +668,9 @@ void ClientDisconnect(edict_t* pEntity)
 void ClientKill(edict_t* pEntity)
 {
 	if (debug_engine) {
-		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientKill: %x\n", reinterpret_cast<unsigned>(pEntity));
-		fclose(fp);
+		std::FILE* fp = std::fopen("bot.txt", "a");
+		std::fprintf(fp, "ClientKill: %x\n", reinterpret_cast<unsigned>(pEntity));
+		std::fclose(fp);
 	}
 
 #ifdef RCBOT_META_BUILD
@@ -683,9 +683,9 @@ void ClientKill(edict_t* pEntity)
 void ClientPutInServer(edict_t* pEntity)
 {
 	if (debug_engine) {
-		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientPutInServer: %x\n", reinterpret_cast<unsigned>(pEntity));
-		fclose(fp);
+		std::FILE* fp = std::fopen("bot.txt", "a");
+		std::fprintf(fp, "ClientPutInServer: %x\n", reinterpret_cast<unsigned>(pEntity));
+		std::fclose(fp);
 	}
 
 	gBotGlobals.m_Clients.ClientConnected(pEntity);
@@ -801,8 +801,8 @@ void ClientCommand(edict_t* pEntity)
 		if (bSayTeamMsg)
 		{
 			// player wants to lead squad?
-			if (strncmp(arg1, "form", 4) == 0 &&
-				(strncmp(&arg1[4], " up", 3) == 0 || strncmp(arg2, "up", 2) == 0))
+			if (std::strncmp(arg1, "form", 4) == 0 &&
+				(std::strncmp(&arg1[4], " up", 3) == 0 || std::strncmp(arg2, "up", 2) == 0))
 			{
 				// loop through bots in team
 				BotFunc_MakeSquad(pClient);
@@ -858,7 +858,7 @@ void ClientCommand(edict_t* pEntity)
 							continue;
 						}
 
-						iLenSoFar += strlen(szArgument) + 1;
+						iLenSoFar += std::strlen(szArgument) + 1;
 
 						// read a string already
 						if (szMessage)
@@ -885,14 +885,14 @@ void ClientCommand(edict_t* pEntity)
 							}
 							if (bIsQuote || bWasQuote)
 							{
-								sprintf(szMessage, "%s%s", szTemp, szArgument);
+								std::sprintf(szMessage, "%s%s", szTemp, szArgument);
 
 								bWasQuote = !bWasQuote;
 							}
 							else
 							{
 								// take space into count (thats what is seperating these words)
-								sprintf(szMessage, "%s %s", szTemp, szArgument);
+								std::sprintf(szMessage, "%s %s", szTemp, szArgument);
 							}
 
 							free(szTemp);
@@ -900,7 +900,7 @@ void ClientCommand(edict_t* pEntity)
 						}
 						else
 						{
-							strcat(szMessage, szArgument);
+							std::strcat(szMessage, szArgument);
 						}
 						szMessage[iLenSoFar] = 0;
 
@@ -1053,7 +1053,7 @@ void ClientCommand(edict_t* pEntity)
 #endif
 	}
 
-	if (pcmd[0] != 0 && strstr(pcmd, "addbot") != nullptr)
+	if (pcmd[0] != 0 && std::strstr(pcmd, "addbot") != nullptr)
 	{
 		BotMessage(pEntity, 0, "Tip: If you want to add an RCBOT use the command \"rcbot addbot\"\n");
 	}
@@ -1068,9 +1068,9 @@ void ClientCommand(edict_t* pEntity)
 void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
 {
 	if (debug_engine) {
-		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", reinterpret_cast<unsigned>(pEntity), infobuffer);
-		fclose(fp);
+		std::FILE* fp = std::fopen("bot.txt", "a");
+		std::fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", reinterpret_cast<unsigned>(pEntity), infobuffer);
+		std::fclose(fp);
 	}
 
 #ifdef RCBOT_META_BUILD
@@ -1082,7 +1082,7 @@ void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
 
 void ServerActivate(edict_t* pEdictList, int edictCount, int clientMax)
 {
-	memset(gBotGlobals.m_iJoiningClients, 0, sizeof(int) * MAX_PLAYERS);
+	std::memset(gBotGlobals.m_iJoiningClients, 0, sizeof(int) * MAX_PLAYERS);
 
 	//	gBotGlobals.m_iJoiningClients = 0;
 #ifdef RCBOT_META_BUILD
@@ -1223,9 +1223,9 @@ const char* GetGameDescription()
 void PlayerCustomization(edict_t* pEntity, customization_t* pCust)
 {
 	if (debug_engine) {
-		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "PlayerCustomization: %x\n", reinterpret_cast<unsigned>(pEntity));
-		fclose(fp);
+		std::FILE* fp = std::fopen("bot.txt", "a");
+		std::fprintf(fp, "PlayerCustomization: %x\n", reinterpret_cast<unsigned>(pEntity));
+		std::fclose(fp);
 	}
 
 #ifdef RCBOT_META_BUILD
@@ -1266,7 +1266,7 @@ void Sys_Error(const char* error_string)
 {
 	char szError[1024];
 
-	sprintf(szError, "System Error: \"%s\"\n", error_string);
+	std::sprintf(szError, "System Error: \"%s\"\n", error_string);
 	szError[1023] = 0;
 
 	BotFile_Write(szError);
@@ -1407,9 +1407,9 @@ void CreateInstancedBaselines()
 int InconsistentFile(const edict_t* player, const char* filename, char* disconnect_message)
 {
 	if (debug_engine) {
-		FILE* fp = fopen("bot.txt", "a");
-		fprintf(fp, "InconsistentFile: %x filename=%s\n", reinterpret_cast<unsigned>(player), filename);
-		fclose(fp);
+		std::FILE* fp = std::fopen("bot.txt", "a");
+		std::fprintf(fp, "InconsistentFile: %x filename=%s\n", reinterpret_cast<unsigned>(player), filename);
+		std::fclose(fp);
 	}
 
 #ifdef RCBOT_META_BUILD
@@ -1506,7 +1506,7 @@ extern "C" EXPORT int GetEntityAPI(DLL_FUNCTIONS * pFunctionTable, int interface
 		return false;
 
 	// pass engine callback function table to engine...
-	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
+	std::memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
 
 	// pass other DLLs engine callbacks to function table...
 	if (!(*other_GetEntityAPI)(&other_gFunctionTable, INTERFACE_VERSION))
@@ -1575,7 +1575,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	}
 
 	gBotGlobals.m_bIsFakeClientCommand = true; // set the "fakeclient command" flag
-	const int length = strlen(command); // get the total length of the command string
+	const int length = std::strlen(command); // get the total length of the command string
 
 	// process all individual commands (separated by a semicolon) one each a time
 	while (stringindex < length)
@@ -1667,7 +1667,7 @@ void BotFunc_InitProfile(bot_profile_t* bpBotProfile)
 	bpBotProfile->m_Rep.Destroy();
 }
 
-void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile)
+void BotFunc_WriteProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 // Writes a profile onto file
 {
 	int i = 0;
@@ -1735,12 +1735,12 @@ void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile)
 		}
 
 		if (szToWrite)
-			fprintf(fp, "%s\"%s\"\n", szTag, szToWrite);
+			std::fprintf(fp, "%s\"%s\"\n", szTag, szToWrite);
 		else if (iToWrite)
-			fprintf(fp, "%s%d\n", szTag, *iToWrite);
+			std::fprintf(fp, "%s%d\n", szTag, *iToWrite);
 		else
 		{
-			fprintf(fp, "%s", szTag);
+			std::fprintf(fp, "%s", szTag);
 		}
 	}
 
@@ -1749,7 +1749,7 @@ void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile)
 	SaveHALBrainForPersonality(bpBotProfile);
 }
 
-void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
+void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 {
 	char szBuffer[128];
 
@@ -1762,19 +1762,19 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 	// read bot profile with bots name etc on it.
 
-	while (fgets(szBuffer, 127, fp))
+	while (std::fgets(szBuffer, 127, fp))
 	{
 		szBuffer[127] = '\0';
 
 		if (szBuffer[0] == '#')
 			continue;
 
-		int iLength = strlen(szBuffer);
+		int iLength = std::strlen(szBuffer);
 
 		if (szBuffer[iLength - 1] == '\n')
 			szBuffer[--iLength] = '\0';
 
-		if (strncmp(szBuffer, "name=", 5) == 0)
+		if (std::strncmp(szBuffer, "name=", 5) == 0)
 		{
 			j = 0;
 			i = 6;
@@ -1786,11 +1786,11 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 			bpBotProfile->m_szBotName = gBotGlobals.m_Strings.GetString(szTemp);
 		}
-		else if (strncmp(szBuffer, "class=", 6) == 0)
+		else if (std::strncmp(szBuffer, "class=", 6) == 0)
 		{
 			bpBotProfile->m_iClass = atoi(&szBuffer[6]);
 		}
-		else if (strncmp(szBuffer, "model=", 6) == 0)
+		else if (std::strncmp(szBuffer, "model=", 6) == 0)
 		{
 			j = 0;
 			i = 6;
@@ -1802,15 +1802,15 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 			bpBotProfile->m_szModel = gBotGlobals.m_Strings.GetString(szTemp);
 		}
-		else if (strncmp(szBuffer, "favmod=", 7) == 0)
+		else if (std::strncmp(szBuffer, "favmod=", 7) == 0)
 		{
 			bpBotProfile->m_iFavMod = atoi(&szBuffer[7]);
 		}
-		else if (strncmp(szBuffer, "favteam=", 8) == 0)
+		else if (std::strncmp(szBuffer, "favteam=", 8) == 0)
 		{
 			bpBotProfile->m_iFavTeam = atoi(&szBuffer[8]);
 		}
-		else if (strncmp(szBuffer, "favmap=", 7) == 0)
+		else if (std::strncmp(szBuffer, "favmap=", 7) == 0)
 		{
 			j = 0;
 			i = 8;
@@ -1822,11 +1822,11 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 			bpBotProfile->m_szFavMap = gBotGlobals.m_Strings.GetString(szTemp);
 		}
-		else if (strncmp(szBuffer, "skill=", 6) == 0)
+		else if (std::strncmp(szBuffer, "skill=", 6) == 0)
 		{
 			bpBotProfile->m_iSkill = atoi(&szBuffer[6]);
 		}
-		else if (strncmp(szBuffer, "spray=", 6) == 0)
+		else if (std::strncmp(szBuffer, "spray=", 6) == 0)
 		{
 			j = 0;
 			i = 7;
@@ -1838,29 +1838,29 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 			bpBotProfile->m_szSpray = gBotGlobals.m_Strings.GetString(szTemp);
 		}
-		else if (strncmp(szBuffer, "gorge_percent=", 14) == 0)
+		else if (std::strncmp(szBuffer, "gorge_percent=", 14) == 0)
 		{
 			bpBotProfile->m_GorgePercent = atoi(&szBuffer[14]);
 		}
-		else if (strncmp(szBuffer, "lerk_percent=", 13) == 0)
+		else if (std::strncmp(szBuffer, "lerk_percent=", 13) == 0)
 		{
 			bpBotProfile->m_LerkPercent = atoi(&szBuffer[13]);
 		}
-		else if (strncmp(szBuffer, "fade_percent=", 13) == 0)
+		else if (std::strncmp(szBuffer, "fade_percent=", 13) == 0)
 		{
 			bpBotProfile->m_FadePercent = atoi(&szBuffer[13]);
 		}
-		else if (strncmp(szBuffer, "onos_percent=", 13) == 0)
+		else if (std::strncmp(szBuffer, "onos_percent=", 13) == 0)
 		{
 			bpBotProfile->m_OnosPercent = atoi(&szBuffer[13]);
 		}
-		else if (strncmp(szBuffer, "aim_speed=", 10) == 0)
+		else if (std::strncmp(szBuffer, "aim_speed=", 10) == 0)
 			bpBotProfile->m_fAimSpeed = atof(&szBuffer[10]);
-		else if (strncmp(szBuffer, "aim_skill=", 10) == 0)
+		else if (std::strncmp(szBuffer, "aim_skill=", 10) == 0)
 			bpBotProfile->m_fAimSkill = atof(&szBuffer[10]);
-		else if (strncmp(szBuffer, "aim_time=", 9) == 0)
+		else if (std::strncmp(szBuffer, "aim_time=", 9) == 0)
 			bpBotProfile->m_fAimTime = atof(&szBuffer[9]);
-		else if (strncmp(szBuffer, "bottomcolor=", 12) == 0)
+		else if (std::strncmp(szBuffer, "bottomcolor=", 12) == 0)
 		{
 			bpBotProfile->m_iBottomColour = atoi(&szBuffer[12]);
 
@@ -1869,7 +1869,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 			if (bpBotProfile->m_iBottomColour > 255)
 				bpBotProfile->m_iBottomColour = 255;
 		}
-		else if (strncmp(szBuffer, "topcolor=", 9) == 0)
+		else if (std::strncmp(szBuffer, "topcolor=", 9) == 0)
 		{
 			bpBotProfile->m_iTopColour = atoi(&szBuffer[9]);
 
@@ -1878,11 +1878,11 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 			if (bpBotProfile->m_iTopColour > 255)
 				bpBotProfile->m_iTopColour = 255;
 		}
-		else if (strncmp(szBuffer, "numgames=", 9) == 0)
+		else if (std::strncmp(szBuffer, "numgames=", 9) == 0)
 		{
 			bpBotProfile->m_iNumGames = atoi(&szBuffer[9]);
 		}
-		else if (strncmp(szBuffer, "hal_pretrain_file=", 18) == 0)
+		else if (std::strncmp(szBuffer, "hal_pretrain_file=", 18) == 0)
 		{
 			j = 0;
 			i = 19;
@@ -1894,7 +1894,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 			bpBotProfile->m_szHAL_PreTrainFile = gBotGlobals.m_Strings.GetString(szTemp);
 		}
-		else if (strncmp(szBuffer, "hal_aux_file=", 13) == 0)
+		else if (std::strncmp(szBuffer, "hal_aux_file=", 13) == 0)
 		{
 			j = 0;
 			i = 14;
@@ -1906,7 +1906,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 			bpBotProfile->m_szHAL_AuxFile = gBotGlobals.m_Strings.GetString(szTemp);
 		}
-		else if (strncmp(szBuffer, "hal_ban_file=", 13) == 0)
+		else if (std::strncmp(szBuffer, "hal_ban_file=", 13) == 0)
 		{
 			j = 0;
 			i = 14;
@@ -1918,7 +1918,7 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 			bpBotProfile->m_szHAL_BanFile = gBotGlobals.m_Strings.GetString(szTemp);
 		}
-		else if (strncmp(szBuffer, "hal_swap_file=", 14) == 0)
+		else if (std::strncmp(szBuffer, "hal_swap_file=", 14) == 0)
 		{
 			j = 0;
 			i = 15;
@@ -1930,15 +1930,15 @@ void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile)
 
 			bpBotProfile->m_szHAL_SwapFile = gBotGlobals.m_Strings.GetString(szTemp);
 		}
-		else if (strncmp(szBuffer, "max_path_revs=", 14) == 0)
+		else if (std::strncmp(szBuffer, "max_path_revs=", 14) == 0)
 		{
 			bpBotProfile->m_iPathRevs = atoi(&szBuffer[14]);
 		}
-		else if (strncmp(szBuffer, "max_update_vision_revs=", 23) == 0)
+		else if (std::strncmp(szBuffer, "max_update_vision_revs=", 23) == 0)
 		{
 			bpBotProfile->m_iVisionRevs = atoi(&szBuffer[23]);
 		}
-		else if (strncmp(szBuffer, "update_vision_time=", 19) == 0)
+		else if (std::strncmp(szBuffer, "update_vision_time=", 19) == 0)
 		{
 			bpBotProfile->m_fVisionTime = atof(&szBuffer[19]);
 		}
@@ -1967,7 +1967,7 @@ void ReadBotUsersConfig()
 
 	UTIL_BuildFileName(filename, BOT_USERS_FILE, nullptr);
 
-	FILE* fp = fopen(filename, "r");
+	std::FILE* fp = std::fopen(filename, "r");
 
 	if (fp != nullptr)
 	{
@@ -1981,13 +1981,13 @@ void ReadBotUsersConfig()
 		int line = 0;
 		int users = 0;
 
-		while (fgets(buffer, 255, fp) != nullptr)
+		while (std::fgets(buffer, 255, fp) != nullptr)
 		{
 			line++;
 
 			buffer[255] = 0;
 
-			int length = strlen(buffer);
+			int length = std::strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;
@@ -2055,7 +2055,7 @@ void ReadBotUsersConfig()
 
 		BotMessage(nullptr, 0, "%d users added to list of RCBot users", users);
 
-		fclose(fp);
+		std::fclose(fp);
 	}
 	else
 		BotMessage(nullptr, 0, "!!! Cannot find bot_users.ini !!!! (trying to look in %s - not found) permissions are bad or rcbot is not installed properly", filename);
@@ -2080,12 +2080,12 @@ void ReadMapConfig()
 {
 	char szTemp[256];
 
-	if (fgets(szTemp, 255, fpMapConfig) != nullptr)
+	if (std::fgets(szTemp, 255, fpMapConfig) != nullptr)
 	{
 		if (*szTemp == '#')
 			return;
 
-		int iLen = strlen(szTemp);
+		int iLen = std::strlen(szTemp);
 
 		if (iLen > 255)
 			szTemp[255] = 0;
@@ -2097,7 +2097,7 @@ void ReadMapConfig()
 		if (iLen == 0)
 			return;
 
-		if (strncmp(szTemp, "rcbot addbot", 12) == 0)
+		if (std::strncmp(szTemp, "rcbot addbot", 12) == 0)
 		{
 			// dont add bots for another while...
 			// Added more delay to prevent possible "Tried to write to uninitialized sizebuf_t" crashes - [APG]RoboCop[CL]
@@ -2114,7 +2114,7 @@ void ReadMapConfig()
 	}
 	else
 	{
-		fclose(fpMapConfig);
+		std::fclose(fpMapConfig);
 		fpMapConfig = nullptr;
 	}
 }
@@ -2131,7 +2131,7 @@ edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Ve
 		if (pPlayer->free)
 			continue;
 
-		if (pPlayer->v.iuser3 == iUser3 && strcmp(STRING(pPlayer->v.classname), szClassname) == 0)
+		if (pPlayer->v.iuser3 == iUser3 && std::strcmp(STRING(pPlayer->v.classname), szClassname) == 0)
 			{
 				pPlayer->v.origin = vOrigin;
 				return pPlayer;
@@ -2624,7 +2624,7 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS* pFunctionTable, int* interfaceVersi
 
 	// gFunctionTable defined in dll.cpp
 	// copy the whole table for metamod to know which functions we are using here
-	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
+	std::memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
 
 	return true; // alright
 }

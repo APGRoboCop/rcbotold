@@ -60,9 +60,9 @@ public:
 
 	void freeMemory();
 
-	void load(FILE* bfp);
+	void load(std::FILE* bfp);
 
-	void save(FILE* bfp) const;
+	void save(std::FILE* bfp) const;
 
 	void setup(int iNumBits);
 

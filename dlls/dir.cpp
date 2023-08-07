@@ -81,7 +81,7 @@ HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec)
 			}
 		}
 
-		strcpy(dirname, pFindFileData.cFileName);
+		std::strcpy(dirname, pFindFileData.cFileName);
 
 		return hFile;
 	}
@@ -107,7 +107,7 @@ HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec)
 			}
 		}
 
-		strcpy(dirname, pFindFileData.cFileName);
+		std::strcpy(dirname, pFindFileData.cFileName);
 
 		return hFile;
 	}
@@ -139,15 +139,15 @@ DIR* FindDirectory(DIR* directory, char* dirname, char* dirspec)
 			return NULL;
 		}
 
-		strcpy(pathname, dirspec);
-		strcat(pathname, "/");
-		strcat(pathname, dirent->d_name);
+		std::strcpy(pathname, dirspec);
+		std::strcat(pathname, "/");
+		std::strcat(pathname, dirent->d_name);
 
 		if (stat(pathname, &stat_str) == 0)
 		{
 			if (stat_str.st_mode & S_IFDIR)
 			{
-				strcpy(dirname, dirent->d_name);
+				std::strcpy(dirname, dirent->d_name);
 				return directory;
 			}
 		}

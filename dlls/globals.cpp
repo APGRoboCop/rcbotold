@@ -74,18 +74,18 @@ extern CWaypointLocations WaypointLocations;
 
 extern int debug_engine;
 
-extern FILE* fpMapConfig;
-static FILE* fp;
+extern std::FILE* fpMapConfig;
+static std::FILE* fp;
 /*
 void ReadRCBotFolder ( void )
 {
-	FILE *fp = fopen("rcbot.ini","r");
+	FILE *fp = std::fopen("rcbot.ini","r");
 
 	char rcbot_folder[256];
 
 	if ( fp )
 	{
-		while ( !feof(fp) && !(fscanf(fp,"rcbot_folder=\"%s\"\n",rcbot_folder) == 1) )
+		while ( !std::feof(fp) && !(std::fscanf(fp,"rcbot_folder=\"%s\"\n",rcbot_folder) == 1) )
 		{
 			;
 		}
@@ -98,9 +98,9 @@ void CBotGlobals::ReadBotFolder()
 
 	BotMessage(nullptr, 0, "Reading Bot Folder");
 
-	sprintf(filename, "%s/rcbot_folder.ini", m_szModFolder);
+	std::sprintf(filename, "%s/rcbot_folder.ini", m_szModFolder);
 
-	FILE* fp = fopen(filename, "r");
+	std::FILE* fp = std::fopen(filename, "r");
 
 	char rcbot_folder[256];
 
@@ -108,18 +108,18 @@ void CBotGlobals::ReadBotFolder()
 
 	if (fp)
 	{
-		if (fscanf(fp, "%s\n", rcbot_folder) == 1)
+		if (std::fscanf(fp, "%s\n", rcbot_folder) == 1)
 		{
-			strncpy(m_szBotFolder, rcbot_folder, 255);
+			std::strncpy(m_szBotFolder, rcbot_folder, 255);
 			m_szBotFolder[255] = 0;
 		}
 
 		BotMessage(nullptr, 0, "Found Bot Folder file : %s", m_szBotFolder);
-		fclose(fp);
+		std::fclose(fp);
 	}
 	else
 	{
-		strcpy(m_szBotFolder, "rcbot");
+		std::strcpy(m_szBotFolder, "rcbot");
 		BotMessage(nullptr, 0, "Bot Folder File not found! using default (half-life/rcbot)");
 	}
 }
@@ -156,9 +156,9 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 		int index = -1;
 
 		if (debug_engine) {
-			fp = fopen("bot.txt", "a");
-			fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
-			fclose(fp);
+			fp = std::fopen("bot.txt", "a");
+			std::fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
+			std::fclose(fp);
 		}
 
 		m_CurrentMessage = nullptr;
@@ -643,8 +643,8 @@ void CBotGlobals::StartFrame()
 
 					//iUserId = (*g_engfuncs.pfnGetPlayerUserId)(pBot->m_pEdict);
 
-					sprintf(cmd, "kick \"%s\"\n", pBot->m_szBotName);
-					//sprintf(cmd,"kick #%d\n",iUserId);
+					std::sprintf(cmd, "kick \"%s\"\n", pBot->m_szBotName);
+					//std::sprintf(cmd,"kick #%d\n",iUserId);
 
 					SERVER_COMMAND(cmd);
 
@@ -750,7 +750,7 @@ void CBotGlobals::StartFrame()
 						//try
 						//{
 						// Make the bot run it's thinking procedure
-						pBot->Think();
+						pBot->Think();//TODO: triggers crash? [APG]RoboCopCL]
 						//}
 
 						//catch (...)
@@ -965,7 +965,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 			char *cname = (char*)STRING(pentKeyvalue->v.classname);
 			// weapons
 
-			if ( strstr(cname,"weapon") != NULL )
+			if ( std::strstr(cname,"weapon") != NULL )
 			{
 				// test
 				ALERT(at_console,"test");
@@ -1014,31 +1014,31 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 
 		if (pentKeyvalue == m_pTFCDetect)
 		{
-			if (strcmp(pkvd->szKeyName, "ammo_medikit") == 0)  // max BLUE players
+			if (std::strcmp(pkvd->szKeyName, "ammo_medikit") == 0)  // max BLUE players
 				max_team_players[0] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "ammo_detpack") == 0)  // max RED players
+			else if (std::strcmp(pkvd->szKeyName, "ammo_detpack") == 0)  // max RED players
 				max_team_players[1] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_medikit") == 0)  // max YELLOW players
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_medikit") == 0)  // max YELLOW players
 				max_team_players[2] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_detpack") == 0)  // max GREEN players
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_detpack") == 0)  // max GREEN players
 				max_team_players[3] = atoi(pkvd->szValue);
 
-			else if (strcmp(pkvd->szKeyName, "maxammo_shells") == 0)  // BLUE class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_shells") == 0)  // BLUE class limits
 				team_class_limits[0] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_nails") == 0)  // RED class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_nails") == 0)  // RED class limits
 				team_class_limits[1] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_rockets") == 0)  // YELLOW class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_rockets") == 0)  // YELLOW class limits
 				team_class_limits[2] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_cells") == 0)  // GREEN class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_cells") == 0)  // GREEN class limits
 				team_class_limits[3] = atoi(pkvd->szValue);
 
-			else if (strcmp(pkvd->szKeyName, "team1_allies") == 0)  // BLUE allies
+			else if (std::strcmp(pkvd->szKeyName, "team1_allies") == 0)  // BLUE allies
 				team_allies[0] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "team2_allies") == 0)  // RED allies
+			else if (std::strcmp(pkvd->szKeyName, "team2_allies") == 0)  // RED allies
 				team_allies[1] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "team3_allies") == 0)  // YELLOW allies
+			else if (std::strcmp(pkvd->szKeyName, "team3_allies") == 0)  // YELLOW allies
 				team_allies[2] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "team4_allies") == 0)  // GREEN allies
+			else if (std::strcmp(pkvd->szKeyName, "team4_allies") == 0)  // GREEN allies
 				team_allies[3] = atoi(pkvd->szValue);
 		}
 		else if (m_pTFCDetect == nullptr)
@@ -1053,22 +1053,22 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 
 		if (m_currFlag && m_currFlag->isEdict(pentKeyvalue))
 		{
-			if (strcmp(pkvd->szKeyName, "team_no") == 0)
+			if (std::strcmp(pkvd->szKeyName, "team_no") == 0)
 				m_currFlag->setTeam(atoi(pkvd->szValue));
 			else if (strcmpi(pkvd->szKeyName, "mdl") == 0)
 			{
 				prevFlagInvalid = false;
 			}
-			else if (strcmp(pkvd->szKeyName, "goal_no") == 0)
+			else if (std::strcmp(pkvd->szKeyName, "goal_no") == 0)
 				m_currFlag->setGoal(atoi(pkvd->szValue)); // Goal number of flag for cap point
-			else if (strcmp(pkvd->szKeyName, "group_no") == 0)
+			else if (std::strcmp(pkvd->szKeyName, "group_no") == 0)
 				m_currFlag->setGroup(atoi(pkvd->szValue)); // Goal number of flag for cap point
 		}
-		else if (!strcmp(pkvd->szKeyName, "classname"))
+		else if (!std::strcmp(pkvd->szKeyName, "classname"))
 		{
-			if (!strcmp("item_tfgoal", pkvd->szValue) ||
-				!strcmp("info_tfgoal_timer", pkvd->szValue) ||
-				(!strcmp("i_t_g", pkvd->szValue)))
+			if (!std::strcmp("item_tfgoal", pkvd->szValue) ||
+				!std::strcmp("info_tfgoal_timer", pkvd->szValue) ||
+				(!std::strcmp("i_t_g", pkvd->szValue)))
 			{
 				if (m_currFlag && prevFlagInvalid)
 				{
@@ -1080,10 +1080,10 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 			}
 		}
 
-		if (strcmp(pkvd->szKeyName, "classname") == 0 &&
-			strcmp(pkvd->szValue, "info_tfgoal") == 0 ||
-			strcmp(pkvd->szKeyName, "classname") == 0 &&
-			strcmp(pkvd->szValue, "i_t_g") == 0)
+		if (std::strcmp(pkvd->szKeyName, "classname") == 0 &&
+			std::strcmp(pkvd->szValue, "info_tfgoal") == 0 ||
+			std::strcmp(pkvd->szKeyName, "classname") == 0 &&
+			std::strcmp(pkvd->szValue, "i_t_g") == 0)
 		{
 			if (m_currBackPack && prevBackPackInvalid)
 			{
@@ -1096,24 +1096,24 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 		}
 		else if (m_currBackPack && m_currBackPack->isEdict(pentKeyvalue))
 		{
-			if (strcmp(pkvd->szKeyName, "team_no") == 0)
+			if (std::strcmp(pkvd->szKeyName, "team_no") == 0)
 				m_currBackPack->setTeam(atoi(pkvd->szValue));
-			else if (strcmp(pkvd->szKeyName, "armorvalue") == 0)
+			else if (std::strcmp(pkvd->szKeyName, "armorvalue") == 0)
 				m_currBackPack->setArmor(atoi(pkvd->szValue));
-			else if (strcmp(pkvd->szKeyName, "health") == 0)
+			else if (std::strcmp(pkvd->szKeyName, "health") == 0)
 				m_currBackPack->setHealth(atoi(pkvd->szValue));
-			else if (strcmp(pkvd->szKeyName, "ammo_nails") == 0 ||
-				strcmp(pkvd->szKeyName, "ammo_rockets") == 0 ||
-				strcmp(pkvd->szKeyName, "ammo_shells") == 0)
+			else if (std::strcmp(pkvd->szKeyName, "ammo_nails") == 0 ||
+				std::strcmp(pkvd->szKeyName, "ammo_rockets") == 0 ||
+				std::strcmp(pkvd->szKeyName, "ammo_shells") == 0)
 			{
 				m_currBackPack->setAmmo(atoi(pkvd->szValue));
 			}
-			else if (strcmp(pkvd->szKeyName, "ammo_cells") == 0)
+			else if (std::strcmp(pkvd->szKeyName, "ammo_cells") == 0)
 				m_currBackPack->setCells(atoi(pkvd->szValue));
 
 			// Has a model in the game (visible)
-			if (strcmp(pkvd->szKeyName, "mdl") == 0) &&
-				(strcmp(pkvd->szValue, "models/backpack.mdl") == 0))
+			if (std::strcmp(pkvd->szKeyName, "mdl") == 0) &&
+				(std::strcmp(pkvd->szValue, "models/backpack.mdl") == 0))
 			{
 				prevBackPackInvalid = false;
 			}
@@ -1131,9 +1131,9 @@ void CBotGlobals::MapInit()
 		m_Bots[i].FreeLocalMemory();
 	}
 
-	memset(&m_Squads, 0, sizeof(CBotSquads));
-	memset(m_iJoiningClients, 0, sizeof(int) * MAX_PLAYERS);
-	memset(m_iTeamScores, 0, sizeof(int) * MAX_TEAMS);
+	std::memset(&m_Squads, 0, sizeof(CBotSquads));
+	std::memset(m_iJoiningClients, 0, sizeof(int) * MAX_PLAYERS);
+	std::memset(m_iTeamScores, 0, sizeof(int) * MAX_TEAMS);
 	m_pDebugMessage = nullptr;
 	//m_pTFCDetect = nullptr;
 	//m_pTFCGoal = nullptr;
@@ -1161,7 +1161,7 @@ void CBotGlobals::MapInit()
 	m_bCanUpgradeSens = false;
 	m_bCanUpgradeMov = false;
 
-	memset(m_Hives, 0, sizeof(hive_info_t) * BOT_MAX_HIVES);
+	std::memset(m_Hives, 0, sizeof(hive_info_t) * BOT_MAX_HIVES);
 	//m_iNumHivesAdded = 0;
 
 	m_fClientUpdateTime = 0.0f;
@@ -1224,7 +1224,7 @@ void CBotGlobals::MapInit()
 	}
 	else */if (IsMod(MOD_TS))
 	{
-		if (strncmp(mapname, "tm_", 3) == 0)
+		if (std::strncmp(mapname, "tm_", 3) == 0)
 		{
 			//setMapType(NON_TFC_TS_TEAMPLAY);
 			m_bTeamPlay = true;
@@ -1232,7 +1232,7 @@ void CBotGlobals::MapInit()
 	}
 	else if (IsMod(MOD_GEARBOX))
 	{
-		if (strncmp(mapname, "op4ctf_", 3) == 0)
+		if (std::strncmp(mapname, "op4ctf_", 3) == 0)
 		{
 			//setMapType(NON_TFC_TS_TEAMPLAY);
 			m_bTeamPlay = true;
@@ -1260,7 +1260,7 @@ void CBotGlobals::MapInit()
 	m_fAutoBuildTime = 0.0f;
 	m_bAutoBuilt = false;
 
-	memset(m_Hives, 0, sizeof(hive_info_t) * BOT_MAX_HIVES);
+	std::memset(m_Hives, 0, sizeof(hive_info_t) * BOT_MAX_HIVES);
 	//	m_iNumHivesAdded = 0;
 
 	m_iWaypointTexture = PRECACHE_MODEL("sprites/lgtning.spr");
@@ -1275,18 +1275,18 @@ void CBotGlobals::MapInit()
 	m_bCanUpgradeSens = false;
 	m_bCanUpgradeMov = false;
 
-	m_bCombatMap = strncmp("co_", STRING(gpGlobals->mapname), 3) == 0;
+	m_bCombatMap = std::strncmp("co_", STRING(gpGlobals->mapname), 3) == 0;
 
 #ifdef __linux__
-	sprintf(szTemp, "map_configs/%s/%s.cfg", m_szModFolder, STRING(gpGlobals->mapname));
+	std::sprintf(szTemp, "map_configs/%s/%s.cfg", m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	sprintf(szTemp, "map_configs\\%s\\%s.cfg", m_szModFolder, STRING(gpGlobals->mapname));
+	std::sprintf(szTemp, "map_configs\\%s\\%s.cfg", m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	char filename[512];
 
 	UTIL_BuildFileName(filename, szTemp);
 
-	fpMapConfig = fopen(filename, "r");
+	fpMapConfig = std::fopen(filename, "r");
 
 	if (fpMapConfig == nullptr)
 		BotMessage(nullptr, 0, "No map specific config file found (%s)", filename);
@@ -1313,9 +1313,9 @@ const char* CBotGlobals::GetModInfo()
 
 	int pos = 0;
 
-	if (strchr(game_dir, '/') != nullptr)
+	if (std::strchr(game_dir, '/') != nullptr)
 	{
-		pos = strlen(game_dir) - 1;
+		pos = std::strlen(game_dir) - 1;
 
 		// scan backwards till first directory separator...
 		while (pos && game_dir[pos] != '/')
@@ -1370,28 +1370,28 @@ void CBotGlobals::LoadBotModels()
 #endif
 
 	// find the directory name of the currently running MOD...
-	strcpy(path, m_szModFolder);
+	std::strcpy(path, m_szModFolder);
 
 #ifdef __linux__
-	strcat(path, "/models/player");
+	std::strcat(path, "/models/player");
 #else
-	strcat(path, "\\models\\player");
+	std::strcat(path, "\\models\\player");
 #endif
 
 	if (stat(path, &stat_str) != 0)
 	{
 		// use the valve/models/player directory if no MOD models/player
 #ifdef __linux__
-		strcpy(path, "valve/models/player");
+		std::strcpy(path, "valve/models/player");
 #else
-		strcpy(path, "valve\\models\\player");
+		std::strcpy(path, "valve\\models\\player");
 #endif
 	}
 
-	strcpy(search_path, path);
+	std::strcpy(search_path, path);
 
 #ifndef __linux__
-	strcat(search_path, "/*");
+	std::strcat(search_path, "/*");
 #endif
 
 	m_uaBotModels.Init();
@@ -1404,16 +1404,16 @@ void CBotGlobals::LoadBotModels()
 	{
 		// don't want to get stuck looking in the same directory again and again (".")
 		// don't wan't to search parent directories ("..")
-		if (strcmp(dirname, ".") == 0 || strcmp(dirname, "..") == 0)
+		if (std::strcmp(dirname, ".") == 0 || std::strcmp(dirname, "..") == 0)
 			continue;
 
 		// looking for .mdl file inside a folder of same name
-		strcpy(filename, path);
-		strcat(filename, "/");
-		strcat(filename, dirname);
-		strcat(filename, "/");
-		strcat(filename, dirname);
-		strcat(filename, ".mdl");
+		std::strcpy(filename, path);
+		std::strcat(filename, "/");
+		std::strcat(filename, dirname);
+		std::strcat(filename, "/");
+		std::strcat(filename, dirname);
+		std::strcat(filename, ".mdl");
 
 		// seeing if file exists (if foldername = model name)
 		if (stat(filename, &stat_str) == 0)
@@ -1430,7 +1430,7 @@ void CBotGlobals::ReadConfig()
 
 	UTIL_BuildFileName(filename, "bot_config.ini", nullptr);
 
-	if (FILE* fp = fopen(filename, "r"))
+	if (std::FILE* fp = std::fopen(filename, "r"))
 	{
 		char cmd_line[64];
 		char arg1[64];
@@ -1439,11 +1439,11 @@ void CBotGlobals::ReadConfig()
 		char arg4[64];
 		char buffer[256];
 
-		while (fgets(buffer, 127, fp) != nullptr)
+		while (std::fgets(buffer, 127, fp) != nullptr)
 		{
 			int i = 0;
 
-			int length = strlen(buffer);
+			int length = std::strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;
@@ -1506,7 +1506,7 @@ void CBotGlobals::ReadConfig()
 				BotMessage(nullptr, 0, "Error with config, unknown command : %s", cmd_line);
 		}
 
-		fclose(fp);
+		std::fclose(fp);
 	}
 	else
 		BotMessage(nullptr, 0, "Error: could not find bot config file (%s)", filename);
@@ -1521,57 +1521,57 @@ void CBotGlobals::saveLearnedData()
 	{
 		CLearnedHeader header = CLearnedHeader(i);
 
-		sprintf(tmpFilename, "team%d.rld", i);
+		std::sprintf(tmpFilename, "team%d.rld", i);
 		UTIL_BuildFileName(szFilename, tmpFilename);
 
-		FILE* bfp = fopen(szFilename, "wb");
+		std::FILE* bfp = std::fopen(szFilename, "wb");
 
 		if (bfp)
 		{
-			fwrite(&header, sizeof(CLearnedHeader), 1, bfp);
+			std::fwrite(&header, sizeof(CLearnedHeader), 1, bfp);
 			this->m_enemyCostGAsForTeam[i].save(bfp);
-			fclose(bfp);
+			std::fclose(bfp);
 		}
 
 		//this->m_enemyCostGAsForTeam[i].freeLocalMemory();
 //		this->m_TFCspiesForTeam[i].freeLocalMemory();
 	}
 
-	sprintf(tmpFilename, "tsweaps.rld");
+	std::sprintf(tmpFilename, "tsweaps.rld");
 	UTIL_BuildFileName(szFilename, tmpFilename);
 
-	FILE* bfp = fopen(szFilename, "wb");
+	std::FILE* bfp = std::fopen(szFilename, "wb");
 
 	if (bfp)
 	{
 		this->m_TSWeaponChoices.save(bfp);
-		fclose(bfp);
+		std::fclose(bfp);
 	}
 
 	//this->m_TSWeaponChoices.freeLocalMemory();
 
 	if (IsNS() && IsCombatMap())
 	{
-		sprintf(tmpFilename, "combat0.rld");
+		std::sprintf(tmpFilename, "combat0.rld");
 		UTIL_BuildFileName(szFilename, tmpFilename);
 
-		bfp = fopen(szFilename, "wb");
+		bfp = std::fopen(szFilename, "wb");
 
 		if (bfp)
 		{
 			this->m_pCombatGA[0].save(bfp);
-			fclose(bfp);
+			std::fclose(bfp);
 		}
 
-		sprintf(tmpFilename, "combat1.rld");
+		std::sprintf(tmpFilename, "combat1.rld");
 		UTIL_BuildFileName(szFilename, tmpFilename);
 
-		bfp = fopen(szFilename, "wb");
+		bfp = std::fopen(szFilename, "wb");
 
 		if (bfp)
 		{
 			this->m_pCombatGA[1].save(bfp);
-			fclose(bfp);
+			std::fclose(bfp);
 		}
 
 		//this->m_pCombatGA[0].freeLocalMemory();
@@ -1589,57 +1589,57 @@ void CBotGlobals::loadLearnedData()
 		CLearnedHeader header = CLearnedHeader(i);
 		const CLearnedHeader checkheader = CLearnedHeader(i);
 
-		sprintf(tmpFilename, "team%d.rld", i);
+		std::sprintf(tmpFilename, "team%d.rld", i);
 		UTIL_BuildFileName(szFilename, tmpFilename);
 		
-		FILE* bfp = fopen(szFilename, "rb");
+		std::FILE* bfp = std::fopen(szFilename, "rb");
 
 		if (bfp)
 		{
-			fread(&header, sizeof(CLearnedHeader), 1, bfp);
+			std::fread(&header, sizeof(CLearnedHeader), 1, bfp);
 
 			if (header == checkheader)
 				this->m_enemyCostGAsForTeam[i].load(bfp, 16);
 			else
 				BotMessage(nullptr, 0, "Team's learned data for %s header mismatch", tmpFilename);
 
-			fclose(bfp);
+			std::fclose(bfp);
 		}
 	}
 
-	sprintf(tmpFilename, "tsweaps.rld");
+	std::sprintf(tmpFilename, "tsweaps.rld");
 	UTIL_BuildFileName(szFilename, tmpFilename);
 
-	FILE* bfp = fopen(szFilename, "rb");
+	std::FILE* bfp = std::fopen(szFilename, "rb");
 
 	if (bfp)
 	{
 		this->m_TSWeaponChoices.load(bfp, 16);
-		fclose(bfp);
+		std::fclose(bfp);
 	}
 
 	if (IsNS())
 	{
-		sprintf(tmpFilename, "combat0.rld");
+		std::sprintf(tmpFilename, "combat0.rld");
 		UTIL_BuildFileName(szFilename, tmpFilename);
-		bfp = fopen(szFilename, "rb");
+		bfp = std::fopen(szFilename, "rb");
 
 		if (bfp)
 		{
 			this->m_pCombatGA[0].setPopType(TYPE_INTGAVALS);
 			this->m_pCombatGA[0].load(bfp, 16);
-			fclose(bfp);
+			std::fclose(bfp);
 		}
 
-		sprintf(tmpFilename, "combat1.rld");
+		std::sprintf(tmpFilename, "combat1.rld");
 		UTIL_BuildFileName(szFilename, tmpFilename);
-		bfp = fopen(szFilename, "rb");
+		bfp = std::fopen(szFilename, "rb");
 
 		if (bfp)
 		{
 			this->m_pCombatGA[1].setPopType(TYPE_INTGAVALS);
 			this->m_pCombatGA[1].load(bfp, 16);
-			fclose(bfp);
+			std::fclose(bfp);
 		}
 	}
 }
@@ -1751,9 +1751,9 @@ void CBotGlobals::ReadThingsToBuild() const
 	int iBuilding = 0;
 
 	UTIL_BuildFileName(filename, "things_to_build.ini", nullptr);
-	//	sprintf(szbuffer,"%sthings_to_build.ini",RCBOT_FOLDER);
+	//	std::sprintf(szbuffer,"%sthings_to_build.ini",RCBOT_FOLDER);
 
-	FILE* fp = fopen(filename, "r");
+	std::FILE* fp = std::fopen(filename, "r");
 
 	int iNum;
 	int iPriority;
@@ -1762,14 +1762,14 @@ void CBotGlobals::ReadThingsToBuild() const
 	{
 		m_ThingsToBuild->Clear();
 
-		while (fgets(szbuffer, 255, fp) != nullptr)
+		while (std::fgets(szbuffer, 255, fp) != nullptr)
 		{
 			szbuffer[255] = 0;
 
 			if (szbuffer[0] == '#')
 				continue; // comment
 
-			int ilen = strlen(szbuffer);
+			int ilen = std::strlen(szbuffer);
 
 			if (ilen == 0)
 				continue;
@@ -1789,17 +1789,17 @@ void CBotGlobals::ReadThingsToBuild() const
 					szline[j++] = szbuffer[i++];
 				szline[j] = 0;
 
-				if (strcmp(szline, "hive") == 0)
+				if (std::strcmp(szline, "hive") == 0)
 					iBuilding = AVH_USER3_HIVE;
-				else if (strcmp(szline, "alienrestower") == 0)
+				else if (std::strcmp(szline, "alienrestower") == 0)
 					iBuilding = AVH_USER3_ALIENRESTOWER;
-				else if (strcmp(szline, "off") == 0)
+				else if (std::strcmp(szline, "off") == 0)
 					iBuilding = AVH_USER3_OFFENSE_CHAMBER;
-				else if (strcmp(szline, "def") == 0)
+				else if (std::strcmp(szline, "def") == 0)
 					iBuilding = AVH_USER3_DEFENSE_CHAMBER;
-				else if (strcmp(szline, "mov") == 0)
+				else if (std::strcmp(szline, "mov") == 0)
 					iBuilding = AVH_USER3_MOVEMENT_CHAMBER;
-				else if (strcmp(szline, "sen") == 0)
+				else if (std::strcmp(szline, "sen") == 0)
 					iBuilding = AVH_USER3_SENSORY_CHAMBER;
 
 				continue;
@@ -1832,19 +1832,19 @@ void CBotGlobals::ReadThingsToBuild() const
 
 				if (theThingsToBuild)
 				{
-					if (sscanf(szbuffer, "offs=%d,priority=%d", &iNum, &iPriority) == 2)
+					if (std::sscanf(szbuffer, "offs=%d,priority=%d", &iNum, &iPriority) == 2)
 						theThingsToBuild->m_iOffs = CStructToBuild(iNum, iPriority);
-					else if (sscanf(szbuffer, "defs=%d,priority=%d", &iNum, &iPriority) == 2)
+					else if (std::sscanf(szbuffer, "defs=%d,priority=%d", &iNum, &iPriority) == 2)
 						theThingsToBuild->m_iDefs = CStructToBuild(iNum, iPriority);
-					else if (sscanf(szbuffer, "movs=%d,priority=%d", &iNum, &iPriority) == 2)
+					else if (std::sscanf(szbuffer, "movs=%d,priority=%d", &iNum, &iPriority) == 2)
 						theThingsToBuild->m_iMovs = CStructToBuild(iNum, iPriority);
-					else if (sscanf(szbuffer, "sens=%d,priority=%d", &iNum, &iPriority) == 2)
+					else if (std::sscanf(szbuffer, "sens=%d,priority=%d", &iNum, &iPriority) == 2)
 						theThingsToBuild->m_iSens = CStructToBuild(iNum, iPriority);
 				}
 			}
 		}
 
-		fclose(fp);
+		std::fclose(fp);
 	}
 	else
 		BotMessage(nullptr, 0, "Error: could not find NS aliens build file (%s)", filename);
@@ -1923,7 +1923,7 @@ void CBotGlobals::FreeGlobalMemory()
 	this->m_pCombatGA[1].freeLocalMemory();
 
 	// nullify everything
-	memset(this, 0, sizeof(CBotGlobals));
+	std::memset(this, 0, sizeof(CBotGlobals));
 }
 
 void CBotGlobals::SetupBotChat()
@@ -1932,7 +1932,7 @@ void CBotGlobals::SetupBotChat()
 
 	UTIL_BuildFileName(filename, BOT_CHAT_FILE, nullptr);
 
-	FILE* fp = fopen(filename, "r");
+	std::FILE* fp = std::fopen(filename, "r");
 
 	if (fp == nullptr)
 	{
@@ -1972,12 +1972,12 @@ void CBotGlobals::SetupBotChat()
 
 	m_BotChat.m_Help.Init();
 
-	while (fgets(buffer, 255, fp) != nullptr)
+	while (std::fgets(buffer, 255, fp) != nullptr)
 	{
 		if (buffer[0] == '#')
 			continue;
 
-		int iLength = strlen(buffer);
+		int iLength = std::strlen(buffer);
 
 		if (buffer[iLength - 1] == '\n')
 		{
@@ -2036,5 +2036,5 @@ void CBotGlobals::SetupBotChat()
 		}
 	}
 
-	fclose(fp);
+	std::fclose(fp);
 }

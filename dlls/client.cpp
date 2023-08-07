@@ -118,10 +118,10 @@ void InitMessage ( const char *message );
 				CBotTask* pTask;
 
 				if ((pTask = pBot->currentTask()) == nullptr)
-					sprintf(message, "Debugging Bot: \"%s\"\nNo Tasks\nWaypoint: %d, Goal: %d", pBot->m_szBotName, pBot->m_iCurrentWaypointIndex, pBot->m_iWaypointGoalIndex);
+					std::sprintf(message, "Debugging Bot: \"%s\"\nNo Tasks\nWaypoint: %d, Goal: %d", pBot->m_szBotName, pBot->m_iCurrentWaypointIndex, pBot->m_iWaypointGoalIndex);
 				else
 				{
-					sprintf(message, "Debugging Bot: \"%s\"\nTask: %s\n int: %d\n float: %0.2f\nSchedule: %s\nPrev Task:%s\nPrev Failed:%s\nWaypoint: %d, Goal: %d\nLook task: %s",
+					std::sprintf(message, "Debugging Bot: \"%s\"\nTask: %s\n int: %d\n float: %0.2f\nSchedule: %s\nPrev Task:%s\nPrev Failed:%s\nWaypoint: %d, Goal: %d\nLook task: %s",
 						pBot->m_szBotName, pTask->getTaskDescription(), pTask->TaskInt(), pTask->TaskFloat(),
 						pTask->getScheduleDescription(),
 						CBotTask::_getTaskDescription(pBot->m_iLastBotTask),
@@ -162,7 +162,7 @@ void InitMessage ( const char *message );
 		*/
 		char message[1024];
 
-		sprintf(message, "name %s, flags %d\nhealth %0.1f, max_health %0.2f, armorvalue %0.2f\niuser1 %d, iuser2 %d\niuser3 %d, iuser4 %d\nfuser1 %0.2f, fuser2 %0.2f\nfuser3 %0.2f, fuser4 %0.2f\nvuser1 (%0.2f,%0.2f,%0.2f), vuser2 (%0.2f,%0.2f,%0.2f)\nvuser3 (%0.2f,%0.2f,%0.2f), vuser4 (%0.2f,%0.2f,%0.2f)",
+		std::sprintf(message, "name %s, flags %d\nhealth %0.1f, max_health %0.2f, armorvalue %0.2f\niuser1 %d, iuser2 %d\niuser3 %d, iuser4 %d\nfuser1 %0.2f, fuser2 %0.2f\nfuser3 %0.2f, fuser4 %0.2f\nvuser1 (%0.2f,%0.2f,%0.2f), vuser2 (%0.2f,%0.2f,%0.2f)\nvuser3 (%0.2f,%0.2f,%0.2f), vuser4 (%0.2f,%0.2f,%0.2f)",
 			STRING(m_pDebugEnt->v.classname), m_pDebugEnt->v.flags,
 			m_pDebugEnt->v.health, m_pDebugEnt->v.max_health, m_pDebugEnt->v.armorvalue,
 			m_pDebugEnt->v.iuser1, m_pDebugEnt->v.iuser2,
@@ -852,7 +852,7 @@ void CClient::FreeGlobalMemory()
 	m_vTeleportVector = nullptr;
 	m_Tooltips.Clear();
 
-	memset(this, 0, sizeof(CClient));
+	std::memset(this, 0, sizeof(CClient));
 }
 
 void CClient::AddNewToolTip(const eToolTip iToolTip)
@@ -900,7 +900,7 @@ void CClient::setSteamID()
 
 		if (steamid && *steamid)
 		{
-			strncpy(m_szSteamId, steamid, STEAM_ID_LEN - 1);
+			std::strncpy(m_szSteamId, steamid, STEAM_ID_LEN - 1);
 			m_szSteamId[STEAM_ID_LEN - 1] = 0;
 		}
 	}

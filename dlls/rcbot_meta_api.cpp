@@ -319,7 +319,7 @@ C_DLLEXPORT int Meta_Query(char* interfaceVersion, plugin_info_t** plinfo, mutil
 	*plinfo = &Plugin_info;
 
 	// check for interface version compatibility
-	if (strcmp(interfaceVersion, Plugin_info.ifvers) != 0)
+	if (std::strcmp(interfaceVersion, Plugin_info.ifvers) != 0)
 	{
 		int mmajor = 0, mminor = 0, pmajor = 0, pminor = 0;
 
@@ -327,8 +327,8 @@ C_DLLEXPORT int Meta_Query(char* interfaceVersion, plugin_info_t** plinfo, mutil
 		LOG_MESSAGE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, interfaceVersion, Plugin_info.name, Plugin_info.ifvers);
 
 		// if plugin has later interface version, it's incompatible (update metamod)
-		sscanf(interfaceVersion, "%d:%d", &mmajor, &mminor);
-		sscanf(META_INTERFACE_VERSION, "%d:%d", &pmajor, &pminor);
+		std::sscanf(interfaceVersion, "%d:%d", &mmajor, &mminor);
+		std::sscanf(META_INTERFACE_VERSION, "%d:%d", &pmajor, &pminor);
 
 		if (pmajor > mmajor || pmajor == mmajor && pminor > mminor)
 		{
@@ -370,7 +370,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS* pFunctionTable, m
 
 	// keep track of the pointers to engine function tables metamod gives us
 	gpMetaGlobals = pMGlobals;
-	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
+	std::memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
 	gpGamedllFuncs = pGamedllFuncs;
 
 	// print a message to notify about plugin attaching
@@ -544,7 +544,7 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* inte
 	//gBotGlobals.GameInit();
 
 	// copy the whole table for metamod to know which functions we are using here
-	memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
+	std::memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
 
 	return true; // alright
 }
@@ -555,7 +555,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
 //extern "C" DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals )
 //#endif
 {
-	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
+	std::memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
 	gpGlobals = pGlobals;
 
 	g_argv = static_cast<char*>(malloc(1024));

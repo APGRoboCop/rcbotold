@@ -209,15 +209,15 @@ void CWaypointLocations::DeleteWptLocation(const int iIndex, const float* fOrigi
 void CWaypointLocations::FindNearestCoverWaypointInBucket(const int i, const int j, const int k, const Vector& vOrigin,
 	float* pfMinDist, int* piIndex, dataStack<int>* iIgnoreWpts,
 	const int iCoverFromWpt) const
-// Search for the nearest waypoint : I.e.
-	// Find the waypoint that is closest to vOrigin from the distance pfMinDist
-	// And set the piIndex to the waypoint index if closer.
+	// Search for the nearest waypoint : I.e.
+		// Find the waypoint that is closest to vOrigin from the distance pfMinDist
+		// And set the piIndex to the waypoint index if closer.
 {
 	dataStack <int> tempStack = m_iLocations[i][j][k];
 
 	float fDist;
 
-	memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
+	std::memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
 
 	if (iIgnoreWpts)
 	{
@@ -261,9 +261,9 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 	float* pfMinDist, int* piIndex, const int iIgnoreWpt,
 	const BOOL bGetVisible, const BOOL bGetUnReachable, const BOOL bIsBot,
 	dataStack<int>* iFailedWpts, const BOOL bNearestAimingOnly) const
-// Search for the nearest waypoint : I.e.
-	// Find the waypoint that is closest to vOrigin from the distance pfMinDist
-	// And set the piIndex to the waypoint index if closer.
+	// Search for the nearest waypoint : I.e.
+		// Find the waypoint that is closest to vOrigin from the distance pfMinDist
+		// And set the piIndex to the waypoint index if closer.
 {
 	dataStack <int> tempStack = m_iLocations[i][j][k];
 
@@ -273,16 +273,16 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 
 	if (!bNearestAimingOnly)
 	{
-		memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
+		std::memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
 
 		if (iFailedWpts)
 		{
-			dataStack<int> tempStack = *iFailedWpts;
+			dataStack<int> temp_stack = *iFailedWpts;
 			int iWpt;
 
-			while (!tempStack.IsEmpty())
+			while (!temp_stack.IsEmpty())
 			{
-				if ((iWpt = tempStack.ChooseFromStack()) != -1)
+				if ((iWpt = temp_stack.ChooseFromStack()) != -1)
 					g_iFailedWaypoints[iWpt] = 1;
 			}
 		}
@@ -455,28 +455,28 @@ BOOL WaypointLoad(edict_t* pEntity)
 	num_waypoints = 0;
 
 #ifdef __linux__
-	sprintf(file, "waypoints/%s/%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	std::sprintf(file, "waypoints/%s/%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	sprintf(file, "waypoints\\%s\\%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	std::sprintf(file, "waypoints\\%s\\%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	UTIL_BuildFileName(filename, file);
 
 	if (IS_DEDICATED_SERVER())
-		printf("loading waypoint file: %s\n", filename);
+		std::printf("loading waypoint file: %s\n", filename);
 
-	FILE* bfp = fopen(filename, "rb");
+	std::FILE* bfp = std::fopen(filename, "rb");
 
 	// If .rcw file doesnt exist
 	if (bfp == nullptr)
 	{
 		// try loading a .wpt file
-		const int iLen = strlen(filename);
+		const int iLen = std::strlen(filename);
 
 		filename[iLen - 1] = 't';
 		filename[iLen - 2] = 'p';
 		filename[iLen - 3] = 'w';
 
-		bfp = fopen(filename, "rb");
+		bfp = std::fopen(filename, "rb");
 
 		if (gBotGlobals.IsMod(MOD_NS))
 			iConvertFrom = WPT_CONVERT_FROM_WHICHBOT;
@@ -487,32 +487,32 @@ BOOL WaypointLoad(edict_t* pEntity)
 	// if file exists, read the waypoint structure from it
 	if (bfp != nullptr)
 	{
-		fread(&header, sizeof header, 1, bfp);
+		std::fread(&header, sizeof header, 1, bfp);
 
 		header.filetype[7] = 0;
 
 		BOOL bWorkOutVisibility = (header.waypoint_file_flags & W_FILE_FL_READ_VISIBILITY) == W_FILE_FL_READ_VISIBILITY;
 
-		if (strcmp(header.filetype, "RCBot") == 0 || strcmp(header.filetype, "HPB_bot") == 0)
+		if (std::strcmp(header.filetype, "RCBot") == 0 || std::strcmp(header.filetype, "HPB_bot") == 0)
 		{
 			if (header.waypoint_file_version != WAYPOINT_VERSION)
 			{
 				if (pEntity)
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible RCBot waypoint file version!\nWaypoints not loaded!\n");
 
-				fclose(bfp);
+				std::fclose(bfp);
 				return false;
 			}
 
 			header.mapname[31] = 0;
 
-			if (strcmp(header.mapname, STRING(gpGlobals->mapname)) == 0)
+			if (std::strcmp(header.mapname, STRING(gpGlobals->mapname)) == 0)
 			{
 				WaypointInit();  // remove any existing waypoints
 
 				for (i = 0; i < header.number_of_waypoints; i++)
 				{
-					fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
+					std::fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
 
 					if (waypoints[i].origin.x > 4096.0f || waypoints[i].origin.y > 4096.0f || waypoints[i].origin.z > 4096.0f)
 					{
@@ -535,11 +535,11 @@ BOOL WaypointLoad(edict_t* pEntity)
 				for (int index = 0; index < num_waypoints; index++)
 				{
 					// read the number of paths from this node...
-					fread(&num, sizeof num, 1, bfp);
+					std::fread(&num, sizeof num, 1, bfp);
 
 					for (i = 0; i < num; i++)
 					{
-						fread(&path_index, sizeof path_index, 1, bfp);
+						std::fread(&path_index, sizeof path_index, 1, bfp);
 
 						WaypointAddPath(index, path_index);
 					}
@@ -551,11 +551,11 @@ BOOL WaypointLoad(edict_t* pEntity)
 			{
 				if (pEntity)
 				{
-					sprintf(msg, "%s RCBot waypoints are not for this map!\n", filename);
+					std::sprintf(msg, "%s RCBot waypoints are not for this map!\n", filename);
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 				}
 
-				fclose(bfp);
+				std::fclose(bfp);
 				return false;
 			}
 		}
@@ -563,15 +563,15 @@ BOOL WaypointLoad(edict_t* pEntity)
 		{
 			if (pEntity)
 			{
-				sprintf(msg, "%s is not a RCBot compatible waypoint file!\n", filename);
+				std::sprintf(msg, "%s is not a RCBot compatible waypoint file!\n", filename);
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
 
-			fclose(bfp);
+			std::fclose(bfp);
 			return false;
 		}
 
-		fclose(bfp);
+		std::fclose(bfp);
 
 		if (!bWorkOutVisibility)
 		{
@@ -661,16 +661,16 @@ void AutoWaypoint ()
 }
 */
 
-FILE* CWaypointConversion::openWaypoint() const
+std::FILE* CWaypointConversion::openWaypoint() const
 {
 	char szFilename[512];
 
 #ifndef __linux__
-	sprintf(szFilename, "%s\\%s\\%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
+	std::sprintf(szFilename, "%s\\%s\\%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
 #else
-	sprintf(szFilename, "%s/%s/%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
+	std::sprintf(szFilename, "%s/%s/%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
 #endif
-	return fopen(szFilename, "wb");
+	return std::fopen(szFilename, "wb");
 }
 
 /////////////////////////////
@@ -686,12 +686,12 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 
 	if (theConverter != nullptr)
 	{
-		strcpy(header.filetype, theConverter->getHeader());
+		std::strcpy(header.filetype, theConverter->getHeader());
 		header.waypoint_file_version = theConverter->getVersion();
 	}
 	else
 	{
-		strcpy(header.filetype, "RCBot");
+		std::strcpy(header.filetype, "RCBot");
 
 		header.waypoint_file_version = WAYPOINT_VERSION;
 
@@ -703,11 +703,11 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 
 	header.number_of_waypoints = num_waypoints;
 
-	memset(header.mapname, 0, sizeof header.mapname);
-	strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
+	std::memset(header.mapname, 0, sizeof header.mapname);
+	std::strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
 	header.mapname[31] = 0;
 
-	FILE* bfp = nullptr;
+	std::FILE* bfp = nullptr;
 
 	if (theConverter != nullptr)
 	{
@@ -716,28 +716,28 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	else
 	{
 #ifdef __linux__
-		sprintf(file, "waypoints/%s/%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+		std::sprintf(file, "waypoints/%s/%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-		sprintf(file, "waypoints\\%s\\%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+		std::sprintf(file, "waypoints\\%s\\%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 		UTIL_BuildFileName(filename, file);
 
-		bfp = fopen(filename, "wb"); // wb = write binary
+		bfp = std::fopen(filename, "wb"); // wb = write binary
 	}
 
 	if (bfp == nullptr)
 	{
 		/*	   char folder[512];
 
-			   sprintf(folder,"rcbot/waypoints/%s",gBotGlobals.m_szModFolder);
+			   std::sprintf(folder,"rcbot/waypoints/%s",gBotGlobals.m_szModFolder);
 
 			   if ( !mkdir(folder) )
 			   {
-				   sprintf(folder,"rcbot/waypoints");
+				   std::sprintf(folder,"rcbot/waypoints");
 
 				   if ( !mkdir(folder) )
 				   {
-					   sprintf(folder,"rcbot",gBotGlobals.m_szModFolder);
+					   std::sprintf(folder,"rcbot",gBotGlobals.m_szModFolder);
 
 					   if ( !mkdir(folder) )
 					   {
@@ -755,7 +755,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 		return false;
 	}
 
-	/*bfp = fopen(filename, "wb");
+	/*bfp = std::fopen(filename, "wb");
 
 	if ( bfp == NULL )
 	{
@@ -763,7 +763,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	}*/
 
 	// write the waypoint header to the file...
-	fwrite(&header, sizeof header, 1, bfp);
+	std::fwrite(&header, sizeof header, 1, bfp);
 
 	if (theConverter != nullptr) // write converted waypoints
 	{
@@ -773,7 +773,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 		{
 			convertedWpt = theConverter->convert(&waypoints[index]);
 
-			fwrite(&convertedWpt, sizeof waypoints[0], 1, bfp);
+			std::fwrite(&convertedWpt, sizeof waypoints[0], 1, bfp);
 		}
 	}
 	else
@@ -781,7 +781,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 		// write the waypoint data to the file...
 		for (index = 0; index < num_waypoints; index++)
 		{
-			fwrite(&waypoints[index], sizeof waypoints[0], 1, bfp);
+			std::fwrite(&waypoints[index], sizeof waypoints[0], 1, bfp);
 		}
 	}
 
@@ -808,7 +808,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 			p = p->next;  // go to next node in linked list
 		}
 
-		fwrite(&num, sizeof num, 1, bfp);  // write the count
+		std::fwrite(&num, sizeof num, 1, bfp);  // write the count
 
 		// now write out each path index...
 
@@ -821,7 +821,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 			while (i < MAX_PATH_INDEX)
 			{
 				if (p->index[i] != -1)  // save path node if it's used
-					fwrite(&p->index[i], sizeof p->index[0], 1, bfp);
+					std::fwrite(&p->index[i], sizeof p->index[0], 1, bfp);
 
 				i++;
 			}
@@ -830,7 +830,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 		}
 	}
 
-	fclose(bfp);
+	std::fclose(bfp);
 
 	if (theConverter == nullptr)
 		WaypointVisibility.SaveToFile();
@@ -838,15 +838,15 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	return true;
 }
 
-static FILE* fp;
+static std::FILE* fp;
 
 void WaypointDebug()
 {
 	//int y = 1, x = 1;
 
-	fp = fopen("bot.txt", "a");
-	fprintf(fp, "WaypointDebug: LINKED LIST ERROR!!!\n");
-	fclose(fp);
+	fp = std::fopen("bot.txt", "a");
+	std::fprintf(fp, "WaypointDebug: LINKED LIST ERROR!!!\n");
+	std::fclose(fp);
 
 	//x = x - 1;  // x is zero
 	//y = y / x;  // cause an divide by zero exception
@@ -996,7 +996,6 @@ void WaypointDeletePath(const short int del_index)
 
 // delete a path from a waypoint (path_index) to another waypoint
 // (del_index)...
-//TODO: Duplicate? [APG]RoboCopCL]
 void WaypointDeletePath(const short int path_index, const short int del_index)
 {
 	int count = 0;
@@ -1029,7 +1028,7 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 
 // find a path from the current waypoint. (pPath MUST be NULL on the
 // initial call. subsequent calls will return other paths if they exist.)
-int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, const int team)
+int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team)
 {
 	int count = 0;
 
@@ -1043,20 +1042,23 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 	{
 		*path_index = 0;
 
-		*pPath = (*pPath)->next;  // go to next node in linked list
+		if (*pPath)
+		{
+			*pPath = (*pPath)->next;  // go to the next node in the linked list
+		}
 	}
 
 	while (*pPath != nullptr)
 	{
 		while (*path_index < MAX_PATH_INDEX)
 		{
-			if ((*pPath)->index[*path_index] != -1)  // found a path?
+			if ((*pPath)->index[*path_index] != -1)  // found a path? TODO: triggers crash? [APG]RoboCopCL]
 			{
 				// save the return value
 				const int index = (*pPath)->index[*path_index];
 
 				// skip this path if next waypoint is team specific and NOT this team
-				if (team != -1 && waypoints[index].flags & W_FL_TEAM_SPECIFIC &&
+				if (team != -1 && (waypoints[index].flags & W_FL_TEAM_SPECIFIC) &&
 					(waypoints[index].flags & W_FL_TEAM) != team)
 				{
 					(*path_index)++;
@@ -1074,15 +1076,19 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 
 		*path_index = 0;
 
-		*pPath = (*pPath)->next;  // go to next node in linked list
+		if (*pPath)
+		{
+			*pPath = (*pPath)->next;  // go to the next node in the linked list
 
 #ifdef _DEBUG
-		count++;
-		if (count > 100) WaypointDebug();
+			count++;
+			if (count > 100)
+				WaypointDebug();
 #endif
+		}
 	}
 
-	return -1;
+		return -1;
 }
 
 // find the nearest waypoint to the player and return the index
@@ -1180,7 +1186,7 @@ int WaypointFindNearest(const Vector& v_src, edict_t* pEntity, const float range
 // find the goal nearest to the source position (v_src) matching the "flags"
 // bits and return the index of that waypoint...
 int WaypointFindNearestGoal(const Vector& v_src, edict_t* pEntity, const float range, const int team, const int flags,
-                            dataStack<int>* iIgnoreWpts)
+	dataStack<int>* iIgnoreWpts)
 {
 	//TraceResult tr;
 
@@ -1193,7 +1199,7 @@ int WaypointFindNearestGoal(const Vector& v_src, edict_t* pEntity, const float r
 	float min_distance = 99999.0f;
 
 	// use bytes 0 or 1
-	memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
+	std::memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
 
 	if (iIgnoreWpts)
 	{
@@ -1258,7 +1264,7 @@ int WaypointFindRandomGoal(edict_t* pEntity, const int team, const int flags, da
 	if (num_waypoints < 1)
 		return -1;
 
-	memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
+	std::memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
 
 	if (iIgnoreWpts)
 	{
@@ -1322,7 +1328,7 @@ int WaypointFindRandomGoal(edict_t* pEntity, const int team, dataStack<int>* iIg
 	if (num_waypoints < 1)
 		return -1;
 
-	memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
+	std::memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
 
 	if (iIgnoreWpts)
 	{
@@ -1374,7 +1380,7 @@ int WaypointFindRandomGoal(edict_t* pEntity, const int team, dataStack<int>* iIg
 // find a random goal within a range of a position (v_src) matching the
 // "flags" bits and return the index of that waypoint...
 int WaypointFindRandomGoal(const Vector& v_src, edict_t* pEntity, const float range, const int team, const int flags,
-                           dataStack<int>* iIgnoreWpts)
+	dataStack<int>* iIgnoreWpts)
 {
 	int index;
 	int indexes[50];
@@ -1385,7 +1391,7 @@ int WaypointFindRandomGoal(const Vector& v_src, edict_t* pEntity, const float ra
 
 	// find all the waypoints with the matching flags...
 
-	memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
+	std::memset(g_iFailedWaypoints, 0, sizeof(unsigned char) * MAX_WAYPOINTS);
 
 	if (iIgnoreWpts)
 	{
@@ -1560,17 +1566,17 @@ int WaypointAddOrigin(Vector const& vOrigin, const int iFlags, edict_t* pEntity,
 		{
 			const char* szClassname = const_cast<char*>(STRING(pEnt->v.classname));
 
-			if (strncmp("ammo_", szClassname, 5) == 0)
+			if (std::strncmp("ammo_", szClassname, 5) == 0)
 				new_waypoint->flags |= W_FL_AMMO;
-			else if (strncmp("weapon_", szClassname, 7) == 0)
+			else if (std::strncmp("weapon_", szClassname, 7) == 0)
 				new_waypoint->flags |= W_FL_WEAPON;
-			else if (strncmp("item_health", szClassname, 11) == 0 || strcmp("func_healthcharger", szClassname) == 0)
+			else if (std::strncmp("item_health", szClassname, 11) == 0 || std::strcmp("func_healthcharger", szClassname) == 0)
 				new_waypoint->flags |= W_FL_HEALTH;
-			else if (strncmp("item_armor", szClassname, 10) == 0)
+			else if (std::strncmp("item_armor", szClassname, 10) == 0)
 				new_waypoint->flags |= W_FL_ARMOR;
-			else if (strcmp("item_battery", szClassname) == 0)
+			else if (std::strcmp("item_battery", szClassname) == 0)
 				new_waypoint->flags |= W_FL_ARMOR;
-			else if (strcmp("func_recharge", szClassname) == 0)
+			else if (std::strcmp("func_recharge", szClassname) == 0)
 				new_waypoint->flags |= W_FL_ARMOR;
 		}
 	}
@@ -2035,7 +2041,7 @@ void WaypointPrintInfo(edict_t* pEntity)
 	if (index == -1)
 		return;
 
-	sprintf(msg, "Waypoint %d of %d total\n", index, num_waypoints);
+	std::sprintf(msg, "Waypoint %d of %d total\n", index, num_waypoints);
 	ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 
 	const int flags = waypoints[index].flags;
@@ -2415,16 +2421,16 @@ BOOL CWaypointVisibilityTable::SaveToFile() const
 	char file[256];
 
 #ifdef __linux__
-	sprintf(file, "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	std::sprintf(file, "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	sprintf(file, "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	std::sprintf(file, "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	UTIL_BuildFileName(filename, file);
 
 	if (IS_DEDICATED_SERVER())
-		printf("loading waypoint file: %s\n", filename);
+		std::printf("loading waypoint file: %s\n", filename);
 
-	FILE* bfp = fopen(filename, "wb"); // binary file write
+	std::FILE* bfp = std::fopen(filename, "wb"); // binary file write
 
 	if (bfp == nullptr)
 	{
@@ -2432,9 +2438,9 @@ BOOL CWaypointVisibilityTable::SaveToFile() const
 		return false;
 	}
 
-	fwrite(m_VisTable, sizeof(unsigned char), Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8), bfp);
+	std::fwrite(m_VisTable, sizeof(unsigned char), Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8), bfp);
 
-	fclose(bfp);
+	std::fclose(bfp);
 
 	return true;
 }
@@ -2448,16 +2454,16 @@ BOOL CWaypointVisibilityTable::ReadFromFile() const
 
 	// get the folder right.
 #ifdef __linux__
-	sprintf(file, "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	std::sprintf(file, "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	sprintf(file, "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	std::sprintf(file, "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	UTIL_BuildFileName(filename, file);
 
 	if (IS_DEDICATED_SERVER())
-		printf("loading waypoint file: %s\n", filename);
+		std::printf("loading waypoint file: %s\n", filename);
 
-	FILE* bfp = fopen(filename, "rb"); // binary file write
+	std::FILE* bfp = std::fopen(filename, "rb"); // binary file write
 
 	if (bfp == nullptr)
 	{
@@ -2465,27 +2471,27 @@ BOOL CWaypointVisibilityTable::ReadFromFile() const
 		return false;
 	}
 
-	fseek(bfp, 0, SEEK_END); // seek at end
+	std::fseek(bfp, 0, SEEK_END); // seek at end
 
-	iSize = ftell(bfp); // get file size
+	iSize = std::ftell(bfp); // get file size
 	iDesiredSize = Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8);
 
 	// size not right, return false to re workout table
 	if (iSize != iDesiredSize)
 	{
-		fclose(bfp);
+		std::fclose(bfp);
 		return false;
 	}
 
-	fseek(bfp, 0, SEEK_SET); // seek at start
+	std::fseek(bfp, 0, SEEK_SET); // seek at start
 
 	// clear table
-	memset(m_VisTable, 0, sizeof g_iMaxVisibilityByte);
+	std::memset(m_VisTable, 0, sizeof g_iMaxVisibilityByte);
 
 	// read vis table
-	fread(m_VisTable, sizeof(unsigned char), iDesiredSize, bfp);
+	std::fread(m_VisTable, sizeof(unsigned char), iDesiredSize, bfp);
 
-	fclose(bfp);
+	std::fclose(bfp);
 
 	return true;
 }

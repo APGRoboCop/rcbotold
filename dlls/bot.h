@@ -458,7 +458,7 @@ public:
 		return nullptr;
 	}
 
-	int GetClientRep(CClient* pClient);
+	int GetClientRep(CClient* pClient) const;
 
 	void IncreaseRep(int iPlayerRepId) const
 	{
@@ -712,7 +712,7 @@ class CBotTask
 public:
 	CBotTask()
 	{
-		memset(this, 0, sizeof(CBotTask));
+		std::memset(this, 0, sizeof(CBotTask));
 	}
 
 	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = nullptr, int iInfo = 0, float fInfo = 0.0f,
@@ -1331,7 +1331,7 @@ public:
 	}
 
 	// get a actual task  from a task type
-	void GetTask(eBotTask iTask, CBotTask* GotTask)
+	void GetTask(eBotTask iTask, CBotTask* GotTask) const
 	{
 		dataQueue<CBotTask> tempStack = m_Tasks;
 
@@ -1704,7 +1704,7 @@ public:
 
 	CTypeVector()
 	{
-		memset(this, 0, sizeof(CTypeVector<T>));
+		std::memset(this, 0, sizeof(CTypeVector<T>));
 	}
 
 	void SetVector(const Vector& vVec)
@@ -1772,7 +1772,7 @@ public:
 
 	CRememberPosition()
 	{
-		memset(this, 0, sizeof(CRememberPosition));
+		std::memset(this, 0, sizeof(CRememberPosition));
 	}
 
 	CRememberPosition(const Vector& vOrigin, edict_t* pEntity)
@@ -1824,7 +1824,7 @@ public:
 		return m_vVisibleOrigin;
 	}
 
-	BOOL operator == (CRememberPosition other) const
+	BOOL operator == (const CRememberPosition& other) const
 	{
 		return other.getEntity() == getEntity();
 	}
@@ -1847,7 +1847,7 @@ public:
 
 	void Init()
 	{
-		memset(this, 0, sizeof(CRememberedPositions));
+		std::memset(this, 0, sizeof(CRememberedPositions));
 
 		//		m_iOldest = -1;
 			//	m_iNewest = -1;
@@ -2055,7 +2055,7 @@ public:
 		return nullptr;
 	}
 
-	BOOL gotPosition()
+	BOOL gotPosition() const
 	{
 		return !m_Positions.IsEmpty();
 	}
@@ -2263,17 +2263,17 @@ public:
 		switch (m_CombatType)
 		{
 		case COMBAT_STEALTH:
-			strcpy(szCombatType, "STEALTH");
+			std::strcpy(szCombatType, "STEALTH");
 			break;
 		case COMBAT_PRONE:
-			strcpy(szCombatType, "PRONE");
+			std::strcpy(szCombatType, "PRONE");
 			break;
 		case COMBAT_CROUCH:
-			strcpy(szCombatType, "CROUCH");
+			std::strcpy(szCombatType, "CROUCH");
 			break;
 		case COMBAT_NONE:
 		case COMBAT_COMBAT:
-			strcpy(szCombatType, "NORMAL");
+			std::strcpy(szCombatType, "NORMAL");
 			break;
 		}
 
@@ -2408,7 +2408,7 @@ public:
 		return 0;
 	}
 
-	Vector GetFormationVector(edict_t* pEdict);
+	Vector GetFormationVector(edict_t* pEdict) const;
 
 	void UpdateAngles()
 	{
@@ -2440,12 +2440,12 @@ private:
 public:
 	CTFCBackpack()
 	{
-		memset(this, 0, sizeof(CTFCBackpack));
+		std::memset(this, 0, sizeof(CTFCBackpack));
 	}
 
 	CTFCBackpack(edict_t* pEdict)
 	{
-		memset(this, 0, sizeof(CTFCBackpack));
+		std::memset(this, 0, sizeof(CTFCBackpack));
 
 		m_pEdict = pEdict;
 	}
@@ -2600,7 +2600,7 @@ public:
 	CLearnedHeader(int iId);
 
 	BOOL operator == (const CLearnedHeader& other) const;
-	BOOL operator != (CLearnedHeader const other)
+	BOOL operator != (CLearnedHeader const other) const
 	{
 		return !(*this == other);
 	}
@@ -3236,7 +3236,7 @@ public:
 
 	BOOL builtTeleporterEntrance() const;
 
-	BOOL builtTeleporterExit();
+	BOOL builtTeleporterExit() const;
 
 	edict_t* getTeleporterExit() const;
 
@@ -3314,14 +3314,14 @@ public:
 	// temporary storage to later pick up weapons needed
 	void SetWeaponsNeeded(short int* iArray)
 	{
-		memcpy(m_iWeaponsNeeded, iArray, sizeof(short int) * MAX_WEAPONS);
+		std::memcpy(m_iWeaponsNeeded, iArray, sizeof(short int) * MAX_WEAPONS);
 	}
 
 	// returns player standing on the bot
-	edict_t* PlayerStandingOnMe();
+	edict_t* PlayerStandingOnMe() const;
 
 	// returns player bot is standing on
-	edict_t* StandingOnPlayer();
+	edict_t* StandingOnPlayer() const;
 
 	// store buttons while on ladder in case of think time clearing buttons
 	void SetLadderMovement(int iButtons)
@@ -3387,7 +3387,7 @@ public:
 
 	// Returns true when already visited resource tower
 	// (already added to list of those visited)
-	BOOL HasVisitedResourceTower(edict_t* pEdict);
+	BOOL HasVisitedResourceTower(edict_t* pEdict) const;
 
 	// add resource tower to a list of those visited so
 	// gorge doesn't go back to ones we've been to already
@@ -3835,13 +3835,13 @@ public:
 	// VISIBLES
 	BOOL IsInVisibleList(edict_t* pEntity) const;
 
-	BOOL HasUpgraded(int iUpgrade);
+	BOOL HasUpgraded(int iUpgrade) const;
 
 	BOOL FVisible(edict_t* pEntity);
 
 	BOOL FVisible(const Vector& vecOrigin) const;
 
-	BOOL FInViewCone(Vector* pOrigin);
+	BOOL FInViewCone(Vector* pOrigin) const;
 
 	float DotProductFromOrigin(Vector* pOrigin) const;
 
@@ -3891,7 +3891,7 @@ public:
 
 	// Returns true if pEntity isn't an entity
 	// that the bot doesn't want to avoid.
-	BOOL CanAvoid(edict_t* pEntity, float fDistanceToEntity, float fAvoidDistance);
+	BOOL CanAvoid(edict_t* pEntity, float fDistanceToEntity, float fAvoidDistance) const;
 
 	static void ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
 
@@ -3920,7 +3920,7 @@ public:
 	// returns bots ideal climb situation (e.g. flying, climbing, wall-sticking)
 	eClimbType GetClimbType();
 
-	BOOL     PrimaryAttack();
+	BOOL     PrimaryAttack() const;
 
 	BOOL     SecondaryAttack() const
 	{
@@ -4050,23 +4050,23 @@ public:
 	//////////////////
 	// NS Stuff
 
-	BOOL     IsInReadyRoom();
+	BOOL     IsInReadyRoom() const;
 
 	float NS_AmountOfEnergy() const
 	{
 		return pev->fuser3 / 10.0f;
 	}
 
-	BOOL     IsCommander();
-	BOOL     IsMarine();
+	BOOL     IsCommander() const;
+	BOOL     IsMarine() const;
 
-	BOOL     IsGestating();
-	BOOL     IsAlien();
-	BOOL     IsSkulk();
-	BOOL     IsGorge();
-	BOOL     IsLerk();
-	BOOL     IsFade();
-	BOOL     IsOnos();
+	BOOL     IsGestating() const;
+	BOOL     IsAlien() const;
+	BOOL     IsSkulk() const;
+	BOOL     IsGorge() const;
+	BOOL     IsLerk() const;
+	BOOL     IsFade() const;
+	BOOL     IsOnos() const;
 	/////////////////
 	// location stuff
 	//void     GetLocation             ( void );
@@ -4093,8 +4093,8 @@ public:
 	// returns true when bot thinks it is low on ammunition on its current weapon.
 	BOOL     LowOnAmmo(); //TODO: Not implimented yet and required for TS and Op4CTF [APG]RoboCop[CL]
 
-	BOOL     HasJetPack() { return IsMarine() && (pev->iuser4 & MASK_UPGRADE_7) == MASK_UPGRADE_7; }
-	BOOL     HasUser4Mask(int iBits) { return (pev->iuser4 & iBits) == iBits; }
+	BOOL     HasJetPack() const { return IsMarine() && (pev->iuser4 & MASK_UPGRADE_7) == MASK_UPGRADE_7; }
+	BOOL     HasUser4Mask(int iBits) const { return (pev->iuser4 & iBits) == iBits; }
 
 	/* Commander stuff */
 
@@ -4303,8 +4303,8 @@ public:
 
 		//BotFunc_StringCopy(szNewString,szString);
 
-		char* szNewString = static_cast<char*>(malloc(sizeof(char) * strlen(szString) + 1));
-		strcpy(szNewString, szString);
+		char* szNewString = static_cast<char*>(malloc(sizeof(char) * std::strlen(szString) + 1));
+		std::strcpy(szNewString, szString);
 
 		szStringsHead[iHashValue].Push(szNewString);
 
@@ -4365,7 +4365,7 @@ public:
 
 	void Init()
 	{
-		memset(this, 0, sizeof(CClient));
+		std::memset(this, 0, sizeof(CClient));
 
 		m_iCurrentWaypoint = -1;
 		m_iPlayerId = -1;
@@ -4423,7 +4423,7 @@ public:
 		if (szPlayerName == const_cast<char*>(STRING(m_pPlayer->v.netname)))
 			return true;
 
-		return strcmp(szPlayerName, STRING(m_pPlayer->v.netname)) == 0;
+		return std::strcmp(szPlayerName, STRING(m_pPlayer->v.netname)) == 0;
 	}
 
 	unsigned int GetWonId() const
@@ -4506,7 +4506,7 @@ public:
 	// player sets password for access
 	void SetPass(const char* szPass)
 	{
-		strncpy(m_szPass, szPass, BOT_MAX_PASSWORD_LEN - 1);
+		std::strncpy(m_szPass, szPass, BOT_MAX_PASSWORD_LEN - 1);
 		m_szPass[BOT_MAX_PASSWORD_LEN - 1] = 0;
 
 		m_bRecheckAuth = true;
@@ -4665,7 +4665,7 @@ class CClients
 public:
 	CClients()
 	{
-		memset(m_Clients, 0, sizeof(CClient) * 32);
+		std::memset(m_Clients, 0, sizeof(CClient) * 32);
 		//m_Clients.SetSize(32);
 	}
 
@@ -4761,15 +4761,15 @@ public:
 	// initializer
 	CAllowedPlayer()
 	{
-		memset(this, 0, sizeof(CAllowedPlayer));
+		std::memset(this, 0, sizeof(CAllowedPlayer));
 	}
 
 	CAllowedPlayer(const char* szName, char* szPass, int iAccessLevel, char* szSteamId)
 	{
-		strcpy(m_szName, szName);
-		strncpy(m_szPass, szPass, BOT_MAX_PASSWORD_LEN - 1);
+		std::strcpy(m_szName, szName);
+		std::strncpy(m_szPass, szPass, BOT_MAX_PASSWORD_LEN - 1);
 		m_szPass[BOT_MAX_PASSWORD_LEN - 1] = 0;
-		strncpy(m_szSteamId, szSteamId, STEAM_ID_LEN - 1);
+		std::strncpy(m_szSteamId, szSteamId, STEAM_ID_LEN - 1);
 		m_szSteamId[STEAM_ID_LEN - 1] = 0;
 		m_iAccessLevel = iAccessLevel;
 	}
@@ -4783,7 +4783,7 @@ public:
 	{
 		// gotta take care if no steam id is mentioned, could be WON we are playing
 		if (steamID && *steamID && *m_szSteamId) //m_szSteamId always true [APG]RoboCop[CL]
-			return strcmp(m_szSteamId, steamID) == 0;
+			return std::strcmp(m_szSteamId, steamID) == 0;
 
 		return false;
 	}
@@ -4796,7 +4796,7 @@ public:
 
 	BOOL IsForName(const char* szName) const
 	{
-		return strcmp(szName, m_szName) == 0;
+		return std::strcmp(szName, m_szName) == 0;
 	}
 
 	BOOL IsForPass(const char* szPass /*const unsigned int iWonId*/) const
@@ -4840,7 +4840,7 @@ public:
 
 	CAllowedPlayers()
 	{
-		memset(this, 0, sizeof(CAllowedPlayers));
+		std::memset(this, 0, sizeof(CAllowedPlayers));
 	}
 
 	void ShowUsers(edict_t* pEntity) const
@@ -4947,7 +4947,7 @@ public:
 			return true; // Same pointers, same string
 
 		// other wise do a string compare
-		return strcmp(szCvarName, m_szCvarName) == 0;
+		return std::strcmp(szCvarName, m_szCvarName) == 0;
 	}
 
 	virtual void showHelp(edict_t* pEntity)
@@ -5061,8 +5061,8 @@ public:
 
 	CModInfo(const char* szModFolder, const char* szDllFile, int iModId)
 	{
-		strcpy(m_szModFolder, szModFolder);
-		strcpy(m_szDllFile, szDllFile);
+		std::strcpy(m_szModFolder, szModFolder);
+		std::strcpy(m_szDllFile, szDllFile);
 		m_iModId = iModId;
 	}
 
@@ -5163,8 +5163,8 @@ public:
 	CMasterEntity(edict_t* pEntity, char* szMasterName)
 	{
 		m_pEntity = pEntity;
-		m_szMasterName = new char[strlen(szMasterName) + 1];
-		strcpy(m_szMasterName, szMasterName);
+		m_szMasterName = new char[std::strlen(szMasterName) + 1];
+		std::strcpy(m_szMasterName, szMasterName);
 	}
 
 	~CMasterEntity()
@@ -5181,7 +5181,7 @@ public:
 
 	eMasterType CanFire(edict_t* pActivator) const;
 
-	edict_t* FindButton(const Vector& vOrigin);
+	edict_t* FindButton(const Vector& vOrigin) const;
 
 private:
 	char* m_szMasterName;
@@ -5522,7 +5522,7 @@ public:
 
 	void Clear()
 	{
-		memset(this, 0, sizeof(CThingsToBuild));
+		std::memset(this, 0, sizeof(CThingsToBuild));
 	}
 
 	CThingToBuild m_forHive;
@@ -5598,7 +5598,7 @@ public:
 
 	void init()
 	{
-		memset(this, 0, sizeof(CTFCGoal));
+		std::memset(this, 0, sizeof(CTFCGoal));
 	}
 
 	CTFCGoal()
@@ -5679,7 +5679,7 @@ private:
 public:
 	void init ()
 	{
-		memset(this,0,sizeof(CTFCFlag));
+		std::memset(this,0,sizeof(CTFCFlag));
 	}
 
 	CTFCFlag()
@@ -5874,7 +5874,7 @@ public:
 
 	void init ()
 	{
-		memset(this,0,sizeof(CTFCCapturePoint));
+		std::memset(this,0,sizeof(CTFCCapturePoint));
 	}
 
 	CTFCCapturePoint()
@@ -6103,7 +6103,7 @@ public:
 	void saveLearnedData();
 	void loadLearnedData();
 
-	void printBotBoredom(edict_t* pEdictTo)
+	void printBotBoredom(edict_t* pEdictTo) const
 	{
 		for (int i = 0; i < MAX_PLAYERS; i++)
 		{
@@ -6195,10 +6195,10 @@ public:
 	void Init()
 		// init, happens very first thing. nearly.
 	{
-		memset(&m_Squads, 0, sizeof(CBotSquads));
-		memset(m_iJoiningClients, 0, sizeof(int) * MAX_PLAYERS);
+		std::memset(&m_Squads, 0, sizeof(CBotSquads));
+		std::memset(m_iJoiningClients, 0, sizeof(int) * MAX_PLAYERS);
 
-		memset(m_iTeamScores, 0, sizeof(int) * MAX_TEAMS);
+		std::memset(m_iTeamScores, 0, sizeof(int) * MAX_TEAMS);
 		//m_szWelcomeMessage = nullptr;
 		//m_bIsNs3final = true;
 
@@ -6350,7 +6350,7 @@ public:
 		m_bCanUpgradeSens = false;
 		m_bCanUpgradeMov = false;
 
-		memset(m_Hives, 0, sizeof(hive_info_t) * BOT_MAX_HIVES);
+		std::memset(m_Hives, 0, sizeof(hive_info_t) * BOT_MAX_HIVES);
 		//m_iNumHivesAdded = 0;
 
 		m_fClientUpdateTime = 0.0f;
@@ -6742,7 +6742,7 @@ public:
 	
 	void buildFileName(const char* in_filename, char* out_filename)
 	{
-		sprintf(out_filename, "%s%s", m_szBotFolder, in_filename);
+		std::sprintf(out_filename, "%s%s", m_szBotFolder, in_filename);
 	}
 
 	const char* botFolder() const
@@ -6814,8 +6814,8 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...);
 // (depend on structures defined above)
 
 void BotFunc_InitProfile(bot_profile_t* bpBotProfile);
-void BotFunc_ReadProfile(FILE* fp, bot_profile_t* bpBotProfile);
-void BotFunc_WriteProfile(FILE* fp, bot_profile_t* bpBotProfile);
+void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile);
+void BotFunc_WriteProfile(std::FILE* fp, bot_profile_t* bpBotProfile);
 CBot* UTIL_GetBotPointer(const edict_t* pEdict);
 
 BOOL BotFunc_EntityIsMoving(entvars_t* pev);

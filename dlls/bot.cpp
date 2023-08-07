@@ -851,7 +851,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 					if (!m_pEnemy)
 						bAdd = true;
 					// if shooting a breakable...
-					else if (strcmp("func_breakable", STRING(m_pEnemy->v.classname)) == 0)
+					else if (std::strcmp("func_breakable", STRING(m_pEnemy->v.classname)) == 0)
 						bAdd = true;
 				}
 			}
@@ -961,7 +961,7 @@ void CBot::EnemyFound(edict_t* pEnemy)
 
 	m_fInvestigateSoundTime = gpGlobals->time + 2.0f;
 
-	//if (strstr(STRING(pEnemy->v.classname), "osprey"))
+	//if (std::strstr(STRING(pEnemy->v.classname), "osprey"))
 	//	UpdateCondition(BOT_CONDITION_ENEMY_IS_OSPREY);
 	//else
 	//	RemoveCondition(BOT_CONDITION_ENEMY_IS_OSPREY);
@@ -1038,14 +1038,14 @@ void CBot::ReplyToMessage(char* szMessage, edict_t* pSender, const int iTeamOnly
 	// got a reply?
 	if (m_TempMessage[0])
 	{
-		strcpy(m_szChatString, m_TempMessage);
+		std::strcpy(m_szChatString, m_TempMessage);
 		AddPriorityTask(CBotTask(BOT_TASK_TYPE_MESSAGE, 0, pSender, iTeamOnly));
 	}
 }
 
 CLearnedHeader::CLearnedHeader(const int iId)
 {
-	strncpy(this->szBotVersion, BOT_VER, 31);
+	std::strncpy(this->szBotVersion, BOT_VER, 31);
 	szBotVersion[31] = 0;
 
 	iDataVersion = LEARNED_FILE_VER;
@@ -1054,7 +1054,7 @@ CLearnedHeader::CLearnedHeader(const int iId)
 
 BOOL CLearnedHeader :: operator == (CLearnedHeader const& other) const
 {
-	return !strcmp(szBotVersion, other.szBotVersion) &&
+	return !std::strcmp(szBotVersion, other.szBotVersion) &&
 		iProfileId == other.iProfileId &&
 		iDataVersion == other.iDataVersion;
 }
@@ -1064,11 +1064,11 @@ void CBot::loadLearnedData() const
 	char tmp_filename[64];
 	char filename[256];
 
-	sprintf(tmp_filename, "%d.rld", m_Profile.m_iProfileId);
+	std::sprintf(tmp_filename, "%d.rld", m_Profile.m_iProfileId);
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmp_filename);
 
-	FILE* bfp = fopen(filename, "rb");//Possible Memory Leak? [APG]RoboCop[CL]
+	std::FILE* bfp = std::fopen(filename, "rb");//Possible Memory Leak? [APG]RoboCop[CL]
 
 	if (bfp == nullptr)
 		return;
@@ -1076,7 +1076,7 @@ void CBot::loadLearnedData() const
 	CLearnedHeader header = CLearnedHeader(m_Profile.m_iProfileId);
 	CLearnedHeader checkheader = CLearnedHeader(m_Profile.m_iProfileId);
 
-	fread(&header, sizeof(CLearnedHeader), 1, bfp);
+	std::fread(&header, sizeof(CLearnedHeader), 1, bfp);
 
 	if (checkheader != header)
 	{
@@ -1084,9 +1084,9 @@ void CBot::loadLearnedData() const
 		return;
 	}
 
-	if (feof(bfp))
+	if (std::feof(bfp))
 	{
-		fclose(bfp);
+		std::fclose(bfp);
 		return;
 	}
 	// add new to the end plz!!!
@@ -1126,7 +1126,7 @@ void CBot::loadLearnedData() const
 	//if ( dec_firepercent != NULL )
 	//	dec_firepercent->load(bfp);
 
-	fclose(bfp);
+	std::fclose(bfp);
 }
 
 void CBot::saveLearnedData() const
@@ -1134,18 +1134,18 @@ void CBot::saveLearnedData() const
 	char tmp_filename[64];
 	char filename[256];
 
-	sprintf(tmp_filename, "%d.rld", m_Profile.m_iProfileId);
+	std::sprintf(tmp_filename, "%d.rld", m_Profile.m_iProfileId);
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmp_filename);
 
-	FILE* bfp = fopen(filename, "wb");
+	std::FILE* bfp = std::fopen(filename, "wb");
 
 	if (bfp == nullptr)
 		return;
 
 	const CLearnedHeader header = CLearnedHeader(m_Profile.m_iProfileId);
 
-	fwrite(&header, sizeof(CLearnedHeader), 1, bfp);
+	std::fwrite(&header, sizeof(CLearnedHeader), 1, bfp);
 
 	// MUST BE IN SAME ORDER AS LOADING!
 	if (m_GASurvival != nullptr)
@@ -1183,7 +1183,7 @@ void CBot::saveLearnedData() const
 	//	if ( dec_firepercent != NULL )
 		//	dec_firepercent->save(bfp);
 
-	fclose(bfp);
+	std::fclose(bfp);
 }
 
 void CBot::FreeLocalMemory()
@@ -1360,7 +1360,7 @@ BOOL CBot::WantToLeaveGame() const
 void CBot::Init()
 // Initialise everything required.
 {
-	memset(this, 0, sizeof(CBot));
+	std::memset(this, 0, sizeof(CBot));
 
 	m_iBoredom = 127;
 
@@ -2107,11 +2107,11 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, BOOL bSayNow)
 	if (pChatStr == nullptr)
 		return;
 
-	strncpy(m_szChatString, pChatStr, BOT_CHAT_MESSAGE_LENGTH - 1);
+	std::strncpy(m_szChatString, pChatStr, BOT_CHAT_MESSAGE_LENGTH - 1);
 	m_szChatString[BOT_CHAT_MESSAGE_LENGTH - 1] = 0;
 
 	// fill in talking player
-	if (strstr(m_szChatString, "%n"))
+	if (std::strstr(m_szChatString, "%n"))
 	{
 		if (pChatEdict == nullptr)
 			return;
@@ -2126,7 +2126,7 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, BOOL bSayNow)
 	}
 
 	// fill in a random player name
-	if (strstr(m_szChatString, "%r"))
+	if (std::strstr(m_szChatString, "%r"))
 	{
 		const char* szPlayerName;
 
@@ -2144,7 +2144,7 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, BOOL bSayNow)
 	}
 
 	// fill in a player name I like
-	if (strstr(m_szChatString, "%g"))
+	if (std::strstr(m_szChatString, "%g"))
 	{
 		const char* szPlayerName;
 
@@ -2162,7 +2162,7 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, BOOL bSayNow)
 	}
 
 	// fill in a player name I don't like
-	if (strstr(m_szChatString, "%b"))
+	if (std::strstr(m_szChatString, "%b"))
 	{
 		const char* szPlayerName;
 
@@ -2180,7 +2180,7 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, BOOL bSayNow)
 	}
 
 	// fill in a random enemy's name
-	if (strstr(m_szChatString, "%e"))
+	if (std::strstr(m_szChatString, "%e"))
 	{
 		const char* szPlayerName;
 
@@ -2204,7 +2204,7 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, BOOL bSayNow)
 	if (m_szChatString[0])
 	{
 		// shouldn't happen anyway after adding max len to FillString
-		/*if ( strlen(m_szChatString) > (BOT_CHAT_MESSAGE_LENGTH-1) )
+		/*if ( std::strlen(m_szChatString) > (BOT_CHAT_MESSAGE_LENGTH-1) )
 		{
 			m_szChatString[BOT_CHAT_MESSAGE_LENGTH-1] = 0;
 
@@ -2313,7 +2313,7 @@ const char* BotFunc_GetRandomPlayerName(CBot* pBot, const int iState)
 BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, const int max_len)
 {
 	// keep a big string to make sure everything fits
-	int len = strlen(string) + 1;
+	int len = std::strlen(string) + 1;
 
 	// store before and after strings, well put these in the final string
 
@@ -2323,7 +2323,7 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 	char* ptr = string;
 
 	// Keep searching for a point in the string
-	while ((ptr = strstr(ptr, fill_point)) != nullptr)
+	while ((ptr = std::strstr(ptr, fill_point)) != nullptr)
 	{
 		static char temp[1024];
 		// found a point
@@ -2331,28 +2331,28 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		char* after = static_cast<char*>(malloc(sizeof(char) * len));
 
 		// initialize them to empty (don't need to null terminate at the right point)
-		memset(before, 0, len);
-		memset(after, 0, len);
+		std::memset(before, 0, len);
+		std::memset(after, 0, len);
 
 		const int start = reinterpret_cast<int>(ptr) - reinterpret_cast<int>(string);
-		strncpy(before, string, start);
+		std::strncpy(before, string, start);
 
 		// always null terminate the last possible character
 		string[start] = 0;
 
 		// 'strlen' function called too many times inside loop [APG]RoboCop[CL]
-		const int end = start + strlen(fill_point);
-		strncpy(after, &string[end], len - end);
+		const int end = start + std::strlen(fill_point);
+		std::strncpy(after, &string[end], len - end);
 		after[len - end] = 0;
 
 		// fill in new string and..
 		// update len (string size may have INCREASED
 		// if by more than 2* normal string size, could have overwritten
 		// some precious memory!)
-		len = sprintf(temp, "%s%s%s", before, fill_with, after);
+		len = std::sprintf(temp, "%s%s%s", before, fill_with, after);
 
 		// fill string now with maximum length for string
-		strncpy(string, temp, max_len - 1);
+		std::strncpy(string, temp, max_len - 1);
 		string[max_len - 1] = 0;
 
 		// MUST reset ptr incase new ptr is outside the string (if
@@ -2371,7 +2371,7 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		after = nullptr;
 		/*
 
-				int len = strlen(ptr+2);
+				int len = std::strlen(ptr+2);
 
 				temp = NULL;
 
@@ -2379,16 +2379,16 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 				{
 					// allocate the string size, will use less space and wont crash if too big :p
 					temp = (char*)malloc(len + 1);
-					strcpy(temp,ptr+2);
+					std::strcpy(temp,ptr+2);
 				}
 
 				string[(int)ptr - (int)&string[0]] = 0;
 
-				strcat(string,fill_with);
+				std::strcat(string,fill_with);
 
 				if ( temp )
 				{
-					strcat(string,temp);
+					std::strcat(string,temp);
 					free(temp);
 				}
 		*/
@@ -2410,7 +2410,7 @@ BOOL CBot::builtTeleporterEntrance() const
 	return false;
 }
 
-BOOL CBot::builtTeleporterExit()
+BOOL CBot::builtTeleporterExit() const
 {
 	return getTeleporterExit() != nullptr;
 }
@@ -2778,7 +2778,7 @@ void CBot::StartGame()
 		m_bStartedGame = true;
 		return;
 	case MOD_WW:
-		//sprintf(c_class, "%d", pBot->bot_class);
+		//std::sprintf(c_class, "%d", pBot->bot_class);
 		//FakeClientCommand(m_pEdict, "classmenu", RANDOM_LONG(1, 9), nullptr);
 		//FakeClientCommand(m_pEdict, "menuselect 1");
 		FakeClientCommand(m_pEdict, "teammenu 5");
@@ -3340,7 +3340,7 @@ void CBot::Think()
 					BOOL is_grenade = UTIL_IsGrenadeRocket(m_pAvoidEntity);
 
 					// run for cover from grenades and exploding robo grunts
-					if (is_grenade || m_pAvoidEntity->v.deadflag != DEAD_NO && strcmp(szClassname, "monster_robogrunt") == 0)
+					if (is_grenade || m_pAvoidEntity->v.deadflag != DEAD_NO && std::strcmp(szClassname, "monster_robogrunt") == 0)
 					{
 						// say "take cover" message
 						FakeClientCommand(m_pEdict, "grenade");
@@ -3445,7 +3445,7 @@ void CBot::Think()
 				char *szClassname = (char*)STRING(m_pAvoidEntity->v.classname);
 
 				// run for cover from grenades and exploding robo grunts
-				if ( strcmp(szClassname,"sporegunprojectile") )
+				if ( std::strcmp(szClassname,"sporegunprojectile") )
 				{
 					// say "take cover" message
 					FakeClientCommand(m_pEdict,"grenade");
@@ -3538,12 +3538,12 @@ void CBot::Think()
 			if (tr.pHit)
 			{
 				// waypoint through a door I can walk through
-				if (strcmp(STRING(tr.pHit->v.classname), "worldspawn"))
+				if (std::strcmp(STRING(tr.pHit->v.classname), "worldspawn"))
 					// not worldspawn
 				{
 					if (BotFunc_EntityIsMoving(&tr.pHit->v))
 						bRemove = false;
-					else if (strncmp(STRING(tr.pHit->v.classname), "func_door", 8) == 0)
+					else if (std::strncmp(STRING(tr.pHit->v.classname), "func_door", 8) == 0)
 						bRemove = false;
 				}
 			}
@@ -3629,7 +3629,7 @@ void CBot::Think()
 
 		if (m_fUpdateWaypointTime < gpGlobals->time)
 		{
-			if (!BotNavigate_UpdateWaypoint(this))
+			if (!BotNavigate_UpdateWaypoint(this))//TODO: triggers crash? [APG]RoboCopCL]
 			{
 				//StopMoving();
 				m_fUpdateWaypointTime = gpGlobals->time + 0.5f;
@@ -4141,7 +4141,7 @@ void CBot::LookForNewTasks()
 
 				if (m_fUseButtonTime < gpGlobals->time && (!pNearestButton || fNearestButtonDist < fDistance))
 				{
-					if (strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 || strstr(szClassname, "button") != NULL)
+					if (std::strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 || std::strstr(szClassname, "button") != NULL)
 					{
 						fNearestButtonDist = fDistance;
 						pNearestButton = pEntity;
@@ -4200,7 +4200,7 @@ void CBot::LookForNewTasks()
 				{
 					if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
 					{
-						if (strcmp(szClassname, "func_recharge") == 0)
+						if (std::strcmp(szClassname, "func_recharge") == 0)
 						{
 							fNearestHEVchargerDist = fDistance;
 							pNearestHEVcharger = pEntity;
@@ -4210,7 +4210,7 @@ void CBot::LookForNewTasks()
 
 					if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
 					{
-						if (strcmp(szClassname, "func_healthcharger") == 0)
+						if (std::strcmp(szClassname, "func_healthcharger") == 0)
 						{
 							fNearestHealthchargerDist = fDistance;
 							pNearestHealthcharger = pEntity;
@@ -4220,7 +4220,7 @@ void CBot::LookForNewTasks()
 
 					if (m_fUseButtonTime < gpGlobals->time && (!pNearestButton || fNearestButtonDist < fDistance))
 					{
-						if (strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 || strstr(szClassname, "button") != NULL)
+						if (std::strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 || std::strstr(szClassname, "button") != NULL)
 						{
 							fNearestButtonDist = fDistance;
 							pNearestButton = pEntity;
@@ -4274,7 +4274,7 @@ void CBot::LookForNewTasks()
 			{
 				if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
 				{
-					if (strcmp(szClassname, "func_recharge") == 0)
+					if (std::strcmp(szClassname, "func_recharge") == 0)
 					{
 						fNearestHEVchargerDist = fDistance;
 						pNearestHEVcharger = pEntity;
@@ -4284,7 +4284,7 @@ void CBot::LookForNewTasks()
 
 				if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
 				{
-					if (strcmp(szClassname, "func_healthcharger") == 0)
+					if (std::strcmp(szClassname, "func_healthcharger") == 0)
 					{
 						fNearestHealthchargerDist = fDistance;
 						pNearestHealthcharger = pEntity;
@@ -4294,7 +4294,7 @@ void CBot::LookForNewTasks()
 
 				if (m_fUseButtonTime < gpGlobals->time && (!pNearestButton || fNearestButtonDist < fDistance))
 				{
-					if (strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 || strstr(szClassname, "button") != nullptr)
+					if (std::strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 || std::strstr(szClassname, "button") != nullptr)
 					{
 						fNearestButtonDist = fDistance;
 						pNearestButton = pEntity;
@@ -4452,9 +4452,9 @@ void CBot::LookForNewTasks()
 
 					while ((pUse = UTIL_FindEntityInSphere(pUse, WaypointOrigin(iWpt), 100)) != nullptr)
 					{
-						if (strcmp("ts_hack", STRING(pUse->v.classname)) == 0)
+						if (std::strcmp("ts_hack", STRING(pUse->v.classname)) == 0)
 							break;
-						else if (strcmp("ts_bomb", STRING(pUse->v.classname)) == 0)
+						else if (std::strcmp("ts_bomb", STRING(pUse->v.classname)) == 0)
 							break;
 					}
 
@@ -5174,7 +5174,7 @@ void CBot::LookForNewTasks()
 				{
 					AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestButton));
 
-					if (strncmp(STRING(pNearestButton->v.classname), "momentary", 9))
+					if (std::strncmp(STRING(pNearestButton->v.classname), "momentary", 9))
 						AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestButton));
 					else
 						AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestButton, 0, RANDOM_FLOAT(10.0, 15.0)));
@@ -6184,7 +6184,7 @@ BOOL CBot::UpdateVisibles()
 					m_Tasks.SetTimeToCompleteSchedule(iScheduleId, RANDOM_FLOAT(15.0, 30.0));
 				}
 			}
-			else if (!m_bHasFlag && strcmp(STRING(pEntity->v.classname), "building_teleporter") == 0 && !m_Tasks.HasTask(BOT_TASK_USE_TELEPORTER))
+			else if (!m_bHasFlag && std::strcmp(STRING(pEntity->v.classname), "building_teleporter") == 0 && !m_Tasks.HasTask(BOT_TASK_USE_TELEPORTER))
 			{
 				if (pEntity->v.iuser1 == 1 && pEntity->v.euser1)
 				{
@@ -6460,7 +6460,7 @@ BOOL CBot::UpdateVisibles()
 	return bFinished;
 }
 
-BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float fAvoidDistance)
+BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float fAvoidDistance) const
 // return
 {
 	char* szClassname;
@@ -6508,11 +6508,11 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 				//BOOL bAvoid = true;
 
 				// NOT a weapon or ammo (strncmp will return -1 or 1)... save time!
-		if (strncmp(szClassname, "weapon_", 7) != 0 &&
-			strncmp(szClassname, "ammo_", 5) != 0)
+		if (std::strncmp(szClassname, "weapon_", 7) != 0 &&
+			std::strncmp(szClassname, "ammo_", 5) != 0)
 		{
 			// oh crap, a grenade!
-			if (UTIL_IsGrenadeRocket(pEntity))//strstr(szClassname,"grenade") != NULL )
+			if (UTIL_IsGrenadeRocket(pEntity))//std::strstr(szClassname,"grenade") != NULL )
 			{
 				if (fDistanceToEntity > 512.0f)
 					return false;
@@ -6537,7 +6537,7 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 //	}
 
 	// NOT a weapon or ammo (strncmp will return -1 or 1)
-		if (strncmp(szClassname, "rpg_rocket", 10) != 0)
+		if (std::strncmp(szClassname, "rpg_rocket", 10) != 0)
 		{
 			if (BotFunc_EntityIsMoving(&pEntity->v))
 			{
@@ -6580,11 +6580,11 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 	case MOD_BUMPERCARS:
 	{
 		// hurts and crashes.. TRY to avoid them
-		if (strncmp("trigger_", szClassname, 8) == 0)
+		if (std::strncmp("trigger_", szClassname, 8) == 0)
 		{
-			if (strcmp("crash", &szClassname[8]) == 0)
+			if (std::strcmp("crash", &szClassname[8]) == 0)
 				return true;
-			else if (strcmp("hurt", &szClassname[8]) == 0)
+			else if (std::strcmp("hurt", &szClassname[8]) == 0)
 				return true;
 		}
 	}
@@ -6592,7 +6592,7 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 	case MOD_TS:
 		/*case MOD_TFC:
 		{
-			if (UTIL_IsGrenadeRocket(pEntity))//strstr(szClassname,"grenade") )
+			if (UTIL_IsGrenadeRocket(pEntity))//std::strstr(szClassname,"grenade") )
 				return true;
 		}
 		break;*/
@@ -6607,7 +6607,7 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 	if (pEntity->v.solid == SOLID_TRIGGER)
 		return false;
 
-	if (strncmp(szClassname, "func_door", 9) == 0)
+	if (std::strncmp(szClassname, "func_door", 9) == 0)
 		return false; // we want to walk INTO doors
 
 	if (pEntity->v.flags & FL_WORLDBRUSH)
@@ -6951,7 +6951,7 @@ BOOL CBot::FVisible(const Vector& vecOrigin) const
 	return tr.flFraction >= 1.0f;
 }
 
-BOOL CBot::FInViewCone(Vector* pOrigin)
+BOOL CBot::FInViewCone(Vector* pOrigin) const
 {
 	//if (gBotGlobals.IsMod(MOD_SVENCOOP))
 	//{
@@ -8399,7 +8399,7 @@ BOOL CBot::CanPickup(edict_t* pPickup)
 		}
 		break;
 	case MOD_BUMPERCARS:
-		if (strcmp("item_powerup", STRING(pPickup->v.netname)) == 0)
+		if (std::strcmp("item_powerup", STRING(pPickup->v.netname)) == 0)
 			return true;
 		break;
 		/*case MOD_TFC:
@@ -8411,7 +8411,7 @@ BOOL CBot::CanPickup(edict_t* pPickup)
 				if (FStrEq(szClassname, "weaponbox"))
 					return true;
 			}
-			if (strncmp(szClassname, "item_armor", 10) == 0)
+			if (std::strncmp(szClassname, "item_armor", 10) == 0)
 			{
 				if (pev->armorvalue < UTIL_TFC_getMaxArmor(m_pEdict))
 					return true;
@@ -8429,12 +8429,12 @@ BOOL CBot::CanPickup(edict_t* pPickup)
 			char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
 
 			// i can pick up weapons...
-			if (strncmp(szClassname, "weapon_", 7) == 0)
+			if (std::strncmp(szClassname, "weapon_", 7) == 0)
 			{
 				if (!m_Weapons.HasWeapon(m_pEdict, szClassname))
 					return true;
 			}
-			else if (strncmp(szClassname, "item_", 5) == 0)
+			else if (std::strncmp(szClassname, "item_", 5) == 0)
 			{
 				if (FStrEq(&szClassname[5], "healthkit"))
 					return pev->health < pev->max_health;
@@ -8454,7 +8454,7 @@ BOOL CBot::CanPickup(edict_t* pPickup)
 		const char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
 
 		// quad damage etc..
-		if (strncmp(szClassname, "item_artifact", 13) == 0)
+		if (std::strncmp(szClassname, "item_artifact", 13) == 0)
 			return true;
 	}
 	break;
@@ -8463,9 +8463,9 @@ BOOL CBot::CanPickup(edict_t* pPickup)
 		const char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
 
 		// quad damage etc..
-		if (strncmp(szClassname, "ts_powerup", 11) == 0)
+		if (std::strncmp(szClassname, "ts_powerup", 11) == 0)
 			return true;
-		else if (strcmp(szClassname, "ts_groundweapon") == 0)
+		else if (std::strcmp(szClassname, "ts_groundweapon") == 0)
 			return true;
 	}
 	break;
@@ -8507,11 +8507,11 @@ BOOL CBot::Touch(edict_t* pentTouched)
 	if (pentTouched->v.solid == SOLID_TRIGGER)
 	{
 		// update our long jump state so we know we have it
-		if (strcmp(szClassname, "item_longjump") == 0)
+		if (std::strcmp(szClassname, "item_longjump") == 0)
 			m_bHasLongJump = true;
-		else if (!m_bHasFlag && strcmp(szClassname, "item_tfgoal") == 0)
+		else if (!m_bHasFlag && std::strcmp(szClassname, "item_tfgoal") == 0)
 			m_bHasFlag = true;
-		else if (!m_bHasFlag && strcmp(szClassname, "item_ctfflag") == 0)
+		else if (!m_bHasFlag && std::strcmp(szClassname, "item_ctfflag") == 0)
 			m_bHasFlag = true;
 		{
 #ifdef RCBOT_META_BUILD
@@ -8559,7 +8559,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 	if (pentTouched->v.solid != SOLID_TRIGGER)
 	{
 		BOOL bIsMoving = false;
-		const BOOL bIsDoor = strncmp(szClassname, "func_door", 9) == 0 || strncmp(szClassname, "func_plat", 9) == 0;
+		const BOOL bIsDoor = std::strncmp(szClassname, "func_door", 9) == 0 || std::strncmp(szClassname, "func_plat", 9) == 0;
 
 		if (bIsDoor)
 		{
@@ -8683,7 +8683,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 	}
 
 	// touching a hurt that hurst me (doesnt give health...)
-	/*if ( (strcmp(szClassname,"trigger_hurt") == 0) && (pentTouched->v.dmg > 0) && (!m_pEnemy))
+	/*if ( (std::strcmp(szClassname,"trigger_hurt") == 0) && (pentTouched->v.dmg > 0) && (!m_pEnemy))
 	{
 		m_pAvoidEntity = pentTouched; // avoid it...
 	}*/
@@ -8941,7 +8941,7 @@ edict_t* CBot::FindEnemy()
 
 				const char* szClassname = const_cast<char*>(STRING(pEnemypev->classname));
 
-				if (strcmp("func_breakable", szClassname) == 0)
+				if (std::strcmp("func_breakable", szClassname) == 0)
 				{
 					// breakables are less priority than enemy monsters/players etc.
 					iPriority = 5;
@@ -9225,7 +9225,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 		if (!EntityIsAlive(pEntity))
 			return false;
 
-		if (pEntity->v.flags & FL_MONSTER && !strcmp("monster_human_grunt", STRING(pEntity->v.classname)))
+		if (pEntity->v.flags & FL_MONSTER && !std::strcmp("monster_human_grunt", STRING(pEntity->v.classname)))
 			return true;
 
 		return pEntity->v.flags & FL_CLIENT;
@@ -9242,10 +9242,10 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 				char model1[64];
 				char model2[64];
 
-				strcpy(model1, g_engfuncs.pfnInfoKeyValue(infobuffer1, "model"));
-				strcpy(model2, g_engfuncs.pfnInfoKeyValue(infobuffer2, "model"));
+				std::strcpy(model1, g_engfuncs.pfnInfoKeyValue(infobuffer1, "model"));
+				std::strcpy(model2, g_engfuncs.pfnInfoKeyValue(infobuffer2, "model"));
 
-				return strcmp(model1, model2) != 0;
+				return std::strcmp(model1, model2) != 0;
 			}
 
 			return true;
@@ -9254,7 +9254,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 		{
 			const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-			if (strcmp(szClassname, "func_breakable") == 0)
+			if (std::strcmp(szClassname, "func_breakable") == 0)
 			{
 				edict_t* pPlayer = nullptr;
 				const Vector origin = EntityOrigin(pEntity);
@@ -9368,15 +9368,15 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
 			//char* infobuffer = GET_INFOKEYBUFFER(pEntity);
-			//strcpy(szClassname, INFOKEY_VALUE(infobuffer, "model"));
+			//std::strcpy(szClassname, INFOKEY_VALUE(infobuffer, "model"));
 
-			if (!strcmp(szClassname, "ctf_barney") || !strcmp(szClassname, "cl_suit") || !strcmp(szClassname, "ctf_gina") ||
-				!strcmp(szClassname, "ctf_gordon") || !strcmp(szClassname, "otis") || !strcmp(szClassname, "ctf_scientist"))
+			if (!std::strcmp(szClassname, "ctf_barney") || !std::strcmp(szClassname, "cl_suit") || !std::strcmp(szClassname, "ctf_gina") ||
+				!std::strcmp(szClassname, "ctf_gordon") || !std::strcmp(szClassname, "otis") || !std::strcmp(szClassname, "ctf_scientist"))
 			{
 				return TEAM_BLACK_MESA;
 			}
-			else if (!strcmp(szClassname, "beret") || !strcmp(szClassname, "drill") || !strcmp(szClassname, "grunt") ||
-				!strcmp(szClassname, "recruit") || !strcmp(szClassname, "shephard") || !strcmp(szClassname, "tower"))
+			else if (!std::strcmp(szClassname, "beret") || !std::strcmp(szClassname, "drill") || !std::strcmp(szClassname, "grunt") ||
+				!std::strcmp(szClassname, "recruit") || !std::strcmp(szClassname, "shephard") || !std::strcmp(szClassname, "tower"))
 			{
 				return TEAM_OPPOSING_FORCE;
 			}
@@ -9389,7 +9389,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 	{
 		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-		if (strcmp(szClassname, "func_breakable") == 0)
+		if (std::strcmp(szClassname, "func_breakable") == 0)
 		{
 			return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
 		}
@@ -9416,7 +9416,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 		// bot cant see next waypoint, breakable could be blocking it
 		if (!HasCondition(BOT_CONDITION_SEE_NEXT_WAYPOINT))
 		{
-			if (strcmp(szClassname, "func_breakable") == 0)
+			if (std::strcmp(szClassname, "func_breakable") == 0)
 			{
 				return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
 			}
@@ -9490,7 +9490,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 			return true;
 		}
-		else if (strcmp(szClassname, "func_breakable") == 0)
+		else if (std::strcmp(szClassname, "func_breakable") == 0)
 		{
 			return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
 
@@ -9511,7 +9511,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 				}
 			}
 		}
-		else if (strcmp(szClassname, "func_button") == 0)
+		else if (std::strcmp(szClassname, "func_button") == 0)
 		{
 			if (m_fNextShootButton < gpGlobals->time)
 			{
@@ -9583,8 +9583,8 @@ void BotFunc_StringCopy(char *szCopyTo, const char *szCopyFrom)
 // Copy a string to an uninitialised string pointer
 // First initialise pointer, then copy.
 {
-	szCopyTo = (char*)malloc((sizeof(char)*strlen(szCopyFrom))+1);
-	strcpy(szCopyTo,szCopyFrom);
+	szCopyTo = (char*)malloc((sizeof(char)*std::strlen(szCopyFrom))+1);
+	std::strcpy(szCopyTo,szCopyFrom);
 }
 */
 
@@ -9687,39 +9687,39 @@ void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, char* fmt, 
 	{
 	case BOT_DEBUG_TOUCH_LEVEL:
 		// Bot touched object
-		sprintf(szDebugMsg, "%s:TOUCH]=>", BOT_DEBUG_TAG);
+		std::sprintf(szDebugMsg, "%s:TOUCH]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_THINK_LEVEL:
 		// Bot thinks
-		sprintf(szDebugMsg, "%s:THINK]=>", BOT_DEBUG_TAG);
+		std::sprintf(szDebugMsg, "%s:THINK]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_HEAR_LEVEL:
 		// Bot hears a sound
-		sprintf(szDebugMsg, "%s:HEAR]=>", BOT_DEBUG_TAG);
+		std::sprintf(szDebugMsg, "%s:HEAR]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_MESSAGE_LEVEL:
 		// Bot recieves net message
-		sprintf(szDebugMsg, "%s:MESSAGE]=>", BOT_DEBUG_TAG);
+		std::sprintf(szDebugMsg, "%s:MESSAGE]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_BLOCK_LEVEL:
 		// Bot blocks object
-		sprintf(szDebugMsg, "%s:BLOCK]=>", BOT_DEBUG_TAG);
+		std::sprintf(szDebugMsg, "%s:BLOCK]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_MOVE_LEVEL:
 		// Bot moves somewhere
-		sprintf(szDebugMsg, "%s:MOVE]=>", BOT_DEBUG_TAG);
+		std::sprintf(szDebugMsg, "%s:MOVE]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_AIM_LEVEL:
 		// Bot aims at something
-		sprintf(szDebugMsg, "%s:AIM]=>", BOT_DEBUG_TAG);
+		std::sprintf(szDebugMsg, "%s:AIM]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_NAV_LEVEL:
 		// Bot touches/finds waypoints
-		sprintf(szDebugMsg, "%s:NAV]=>", BOT_DEBUG_TAG);
+		std::sprintf(szDebugMsg, "%s:NAV]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_SEE_LEVEL:
 		// Bot touches/finds waypoints
-		sprintf(szDebugMsg, "%s:SEE]=>", BOT_DEBUG_TAG);
+		std::sprintf(szDebugMsg, "%s:SEE]=>", BOT_DEBUG_TAG);
 		break;
 	}
 
@@ -9771,7 +9771,7 @@ void BotPrintTalkMessageOne(edict_t* pClient, char* fmt, ...)
 
 void BotFile_Write(char* string)
 {
-	FILE* fp = fopen(BOT_CRASHLOG_FILE, "a");
+	std::FILE* fp = std::fopen(BOT_CRASHLOG_FILE, "a");
 
 	if (fp)
 	{
@@ -9781,10 +9781,10 @@ void BotFile_Write(char* string)
 
 		strftime(time_str, sizeof time_str, "%m/%d/%Y %H:%M:%S", today);
 
-		fprintf(fp, "%s => ", time_str);
-		fprintf(fp, "%s\n", string);
+		std::fprintf(fp, "%s => ", time_str);
+		std::fprintf(fp, "%s\n", string);
 
-		fclose(fp);
+		std::fclose(fp);
 	}
 }
 
@@ -9801,7 +9801,7 @@ void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...)
 	{
 		if (IS_DEDICATED_SERVER())
 		{
-			printf("%s%s Message : %s\n", BOT_DBG_MSG_TAG, STRING(pEntity->v.netname), string);
+			std::printf("%s%s Message : %s\n", BOT_DBG_MSG_TAG, STRING(pEntity->v.netname), string);
 		}
 
 		if (!gBotGlobals.m_bNetMessageStarted)
@@ -9862,8 +9862,8 @@ void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...)
 			if ( IS_DEDICATED_SERVER() )
 			{
 			//	g_engfuncs.pfnServerPrint( string );
-			printf("%s",BOT_DBG_MSG_TAG);
-				printf("%s",string);
+			std::printf("%s",BOT_DBG_MSG_TAG);
+				std::printf("%s",string);
 			}
 			else
 			{
@@ -9873,7 +9873,7 @@ void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...)
 		}
 
 		/*if ( IS_DEDICATED_SERVER() )
-			printf("\n");
+			std::printf("\n");
 		else
 			ALERT(at_console,"\n");*/
 	}
@@ -9925,7 +9925,7 @@ BOOL EntityIsWeldable(edict_t* pEntity)
 		return pEntity->v.velocity.Length() < 1 && EntityIsAlive(pEntity) && pEntity->v.armorvalue < UTIL_NS_GetMaxArmour(pEntity);
 	}
 
-	if (strcmp("team_webstrand", STRING(pEntity->v.classname)) == 0)
+	if (std::strcmp("team_webstrand", STRING(pEntity->v.classname)) == 0)
 		return true;
 
 	return false;
@@ -10173,7 +10173,7 @@ BOOL CBot::SentryNeedsRepaired() const
 	return false;
 }
 
-BOOL CBot::HasUpgraded(int iUpgrade)
+BOOL CBot::HasUpgraded(int iUpgrade) const
 {
 	// returns true if this alien bot in NS has upgraded to a specific trait yet
 	switch (iUpgrade)
@@ -10235,7 +10235,7 @@ void CBot::JumpAndDuck()
 //------------------------
 // HasVisitedResourceTower
 // AddVisitedResourceTower.
-BOOL CBot::HasVisitedResourceTower(edict_t* pEdict)
+BOOL CBot::HasVisitedResourceTower(edict_t* pEdict) const
 {
 	const int iMax = m_iVisitedFuncResources;
 
@@ -10349,7 +10349,7 @@ void CBotSquads::ChangeLeader(CBotSquad* theSquad)
 	}
 }
 
-Vector CBotSquad::GetFormationVector(edict_t* pEdict)
+Vector CBotSquad::GetFormationVector(edict_t* pEdict) const
 {
 	Vector vBase;
 	// vBase = first : offset from leader origin without taking into consideration spread and position
@@ -10458,7 +10458,7 @@ CBotSquad* CBotSquads::AddSquadMember(edict_t* pLeader, edict_t* pMember)
 		pClient->AddNewToolTip(BOT_TOOL_TIP_SQUAD_HELP);
 	}
 
-	sprintf(msg, "%s %s has joined your squad", BOT_DBG_MSG_TAG, STRING(pMember->v.netname));
+	std::sprintf(msg, "%s %s has joined your squad", BOT_DBG_MSG_TAG, STRING(pMember->v.netname));
 	ClientPrint(pLeader, HUD_PRINTTALK, msg);
 
 	while (!tempStack.IsEmpty())
@@ -10570,7 +10570,7 @@ void CBot :: BotOnLadder ()
 
 			if (tr.flFraction < 1.0f)  // hit something?
 			{
-				if (strcmp("func_wall", STRING(tr.pHit->v.classname)) == 0)
+				if (std::strcmp("func_wall", STRING(tr.pHit->v.classname)) == 0)
 				{
 					// square up to the wall...
 					view_angles = UTIL_VecToAngles(tr.vecPlaneNormal);
@@ -10609,7 +10609,7 @@ void CBot :: BotOnLadder ()
 
 				if (tr.flFraction < 1.0f)  // hit something?
 				{
-					if (strcmp("func_wall", STRING(tr.pHit->v.classname)) == 0)
+					if (std::strcmp("func_wall", STRING(tr.pHit->v.classname)) == 0)
 					{
 						// square up to the wall...
 						view_angles = UTIL_VecToAngles(tr.vecPlaneNormal);
@@ -10785,7 +10785,7 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 	return pev->health > pev->max_health * 0.3f;
 }
 
-edict_t* CMasterEntity::FindButton(const Vector& vOrigin)
+edict_t* CMasterEntity::FindButton(const Vector& vOrigin) const
 {
 	edict_t* pButton = nullptr;
 	const edict_t* pStart = nullptr;
@@ -10881,7 +10881,7 @@ edict_t* CMasterEntity::FindButton(const Vector& vOrigin)
 	return pNearest;
 }
 
-edict_t* CBot::PlayerStandingOnMe()
+edict_t* CBot::PlayerStandingOnMe() const
 {
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
@@ -10900,7 +10900,7 @@ edict_t* CBot::PlayerStandingOnMe()
 	return nullptr;
 }
 
-edict_t* CBot::StandingOnPlayer()
+edict_t* CBot::StandingOnPlayer() const
 {
 	edict_t* pStandingOn = pev->groundentity;
 
@@ -11280,16 +11280,16 @@ void CBot::RunForCover(Vector const& vOrigin, const BOOL bDoItNow, int iSchedule
 }
 
 ///-------- NS Stuff -----------
-BOOL CBot::IsInReadyRoom() { return gBotGlobals.IsNS() && GetTeam() == TEAM_NONE; }
-BOOL CBot::IsCommander() { return gBotGlobals.IsNS() && EntityIsCommander(m_pEdict); }
-BOOL CBot::IsMarine() { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_MARINE_PLAYER; }
-BOOL CBot::IsGestating() { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_EMBRYO; }
-BOOL CBot::IsAlien() { return gBotGlobals.IsNS() && GetTeam() == TEAM_ALIEN; }
-BOOL CBot::IsSkulk() { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_PLAYER1; }
-BOOL CBot::IsGorge() { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_PLAYER2; }
-BOOL CBot::IsLerk() { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_PLAYER3; }
-BOOL CBot::IsFade() { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_PLAYER4; }
-BOOL CBot::IsOnos() { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_PLAYER5; }
+BOOL CBot::IsInReadyRoom() const { return gBotGlobals.IsNS() && GetTeam() == TEAM_NONE; }
+BOOL CBot::IsCommander() const { return gBotGlobals.IsNS() && EntityIsCommander(m_pEdict); }
+BOOL CBot::IsMarine() const { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_MARINE_PLAYER; }
+BOOL CBot::IsGestating() const { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_EMBRYO; }
+BOOL CBot::IsAlien() const { return gBotGlobals.IsNS() && GetTeam() == TEAM_ALIEN; }
+BOOL CBot::IsSkulk() const { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_PLAYER1; }
+BOOL CBot::IsGorge() const { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_PLAYER2; }
+BOOL CBot::IsLerk() const { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_PLAYER3; }
+BOOL CBot::IsFade() const { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_PLAYER4; }
+BOOL CBot::IsOnos() const { return gBotGlobals.IsNS() && pev->iuser3 == AVH_USER3_ALIEN_PLAYER5; }
 
 /*void CBot::NeedMetal(const BOOL flush, const BOOL priority, const int iSched)
 {
@@ -11425,12 +11425,12 @@ edict_t* CBot::getSentry()
 	int color_bot, color_player;
 
 	infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
-	strcpy(color, g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor"));
-	sscanf(color, "%d", &color_bot);
+	std::strcpy(color, g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor"));
+	std::sscanf(color, "%d", &color_bot);
 
 	infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pSpy);
-	strcpy(color, g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor"));
-	sscanf(color, "%d", &color_player);
+	std::strcpy(color, g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor"));
+	std::sscanf(color, "%d", &color_player);
 
 	if ((color_bot == 140 || color_bot == 148 || color_bot == 150 || color_bot == 153) &&
 		(color_player == 140 || color_player == 148 || color_player == 150 || color_player == 153))
@@ -12114,17 +12114,17 @@ void CBot::DoTasks()
 					continue;
 				if (pLift == m_pEdict)
 					continue;
-				if (strncmp("func_door", STRING(pLift->v.classname), 9) == 0)
+				if (std::strncmp("func_door", STRING(pLift->v.classname), 9) == 0)
 				{
 					bDone = true;
 					break;
 				}
-				if (strncmp("func_plat", STRING(pLift->v.classname), 9) == 0)
+				if (std::strncmp("func_plat", STRING(pLift->v.classname), 9) == 0)
 				{
 					bDone = true;
 					break;
 				}
-				if (strncmp("func_train", STRING(pLift->v.classname), 10) == 0)
+				if (std::strncmp("func_train", STRING(pLift->v.classname), 10) == 0)
 				{
 					bDone = true;
 					break;
@@ -12938,7 +12938,7 @@ void CBot::DoTasks()
 			{
 				if (m_szChatString[0])
 				{
-					float fTimeToComplete = static_cast<float>(strlen(m_szChatString)) / BOT_CHAT_TYPE_SPEED_SEC;
+					float fTimeToComplete = static_cast<float>(std::strlen(m_szChatString)) / BOT_CHAT_TYPE_SPEED_SEC;
 
 					m_CurrentTask->SetFloat(gpGlobals->time + fTimeToComplete);
 				}
@@ -15600,7 +15600,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 			m_CurrentTask->SetVector(m_vMoveToVector + Vector(0, 0, pev->size.z / 2));
 
-			bDone = DistanceFrom(m_vMoveToVector, true) < pow(pev->size.x + pev->size.y, 0.5f) && m_vMoveToVector.z < pev->origin.z;
+			bDone = DistanceFrom(m_vMoveToVector, true) < std::pow(pev->size.x + pev->size.y, 0.5f) && m_vMoveToVector.z < pev->origin.z;
 
 			//if ( RANDOM_LONG(0,50) )
 			PrimaryAttack();
@@ -15734,7 +15734,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 				if (fUseTime > gpGlobals->time)
 				{
 					// if its moving (momentary) keep holding it.
-					if (!strncmp(STRING(pToUse->v.classname), "momentary", 9))// !BotFunc_EntityIsMoving(&pToUse->v) )
+					if (!std::strncmp(STRING(pToUse->v.classname), "momentary", 9))// !BotFunc_EntityIsMoving(&pToUse->v) )
 					{
 						bDone = true;
 
@@ -15968,9 +15968,9 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 						while ((pTank = UTIL_FindEntityInSphere(pTank, pev->origin, 72)) != nullptr)
 						{
-							if (strcmp("func_tank", STRING(pTank->v.classname)) == 0 ||
-								strcmp("func_tankmortar", STRING(pTank->v.classname)) == 0 ||
-								strcmp("func_tankrocket", STRING(pTank->v.classname)) == 0)
+							if (std::strcmp("func_tank", STRING(pTank->v.classname)) == 0 ||
+								std::strcmp("func_tankmortar", STRING(pTank->v.classname)) == 0 ||
+								std::strcmp("func_tankrocket", STRING(pTank->v.classname)) == 0)
 							{
 								break;
 							}
@@ -16253,7 +16253,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 	}
 }
 
-BOOL CBot::PrimaryAttack()
+BOOL CBot::PrimaryAttack() const
 {
 	/*if ( HasCondition(BOT_CONDITION_CANT_SHOOT) )
 	{
@@ -16606,7 +16606,7 @@ BOOL CBot::IsUsingTank() const
 {
 	if (m_pTank)
 	{
-		if (strcmp(STRING(m_pTank->v.netname), STRING(m_pEdict->v.netname)) == 0)
+		if (std::strcmp(STRING(m_pTank->v.netname), STRING(m_pEdict->v.netname)) == 0)
 		{
 			return true;
 		}
@@ -16635,7 +16635,7 @@ void CBot::workEnemyCosts(edict_t* pEntity, const Vector& vOrigin, const float f
 	{
 		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 		// grenade
-		if (pEntity->v.deadflag != DEAD_NO && strcmp(szClassname, "monster_robogrunt") == 0 ||
+		if (pEntity->v.deadflag != DEAD_NO && std::strcmp(szClassname, "monster_robogrunt") == 0 ||
 			UTIL_IsGrenadeRocket(pEntity))
 			enemyState = 3;
 		else if (EntityIsAlive(pEntity))
@@ -16737,7 +16737,7 @@ BOOL CBot::isFriendly(edict_t* pEntity) const
 
 void CBot::clearEnemyCosts()
 {
-	memset(fRangeCosts, 0, sizeof(float) * (BOT_COST_BUCKETS * BOT_COST_BUCKETS));
+	std::memset(fRangeCosts, 0, sizeof(float) * (BOT_COST_BUCKETS * BOT_COST_BUCKETS));
 	m_fLowestEnemyCost = 99999.0f;
 	m_vLowestEnemyCostVec = pev->origin;
 }

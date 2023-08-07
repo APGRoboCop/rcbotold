@@ -92,7 +92,7 @@ void CPopulation::clear()
 	m_theIndividuals.clear();
 }
 
-ga_value CPopulation::totalFitness()
+ga_value CPopulation::totalFitness() const
 {
 	float fTotalFitness = 0.0f;
 
@@ -104,7 +104,7 @@ ga_value CPopulation::totalFitness()
 	return fTotalFitness;
 }
 
-void CPopulation::save(FILE* bfp) const
+void CPopulation::save(std::FILE* bfp) const
 {
 	const unsigned int iSize = m_theIndividuals.size();
 
@@ -112,17 +112,17 @@ void CPopulation::save(FILE* bfp) const
 
 	header.write(bfp);
 
-	fwrite(&iSize, sizeof(int), 1, bfp);
+	std::fwrite(&iSize, sizeof(int), 1, bfp);
 
 	for (unsigned int i = 0; i < iSize; i++)
 		m_theIndividuals[i]->save(bfp);
 }
 
-void CPopulation::load(FILE* bfp, int chromosize, int type)
+void CPopulation::load(std::FILE* bfp, int chromosize, int type)
 {
 	unsigned int iSize;
 
-	if (feof(bfp))
+	if (std::feof(bfp))
 		return;
 
 	CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
@@ -133,7 +133,7 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 		return;
 	}
 
-	fread(&iSize, sizeof(int), 1, bfp);
+	std::fread(&iSize, sizeof(int), 1, bfp);
 
 	IIndividual* pVals;
 
@@ -142,7 +142,7 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 	for (unsigned int i = 0; i < iSize; i++)
 	{
 		// reliability check
-		if (feof(bfp))
+		if (std::feof(bfp))
 			return;
 
 		if (type == TYPE_BOTGAVALS)
@@ -156,7 +156,7 @@ void CPopulation::load(FILE* bfp, int chromosize, int type)
 	}
 }
 
-ga_value CPopulation::bestFitness()
+ga_value CPopulation::bestFitness() const
 {
 	BOOL gotBestFitness = false;
 	float fBestFitness = 0.0f;
@@ -242,23 +242,23 @@ void CGA::addToPopulation(IIndividual* individual)
 
 void CGA::loadTeam(char* szName, int iTeam, int chromosize)
 {
-	FILE* bfp = RCBOpenFile(szName, "rb", SAVETYPE_TEAM, iTeam);
+	std::FILE* bfp = RCBOpenFile(szName, "rb", SAVETYPE_TEAM, iTeam);
 
 	if (bfp)
 	{
 		load(bfp, chromosize);
-		fclose(bfp);
+		std::fclose(bfp);
 	}
 }
 
 void CGA::saveTeam(char* szName, int iTeam)
 {
-	FILE* bfp = RCBOpenFile(szName, "wb", SAVETYPE_TEAM, iTeam);
+	std::FILE* bfp = RCBOpenFile(szName, "wb", SAVETYPE_TEAM, iTeam);
 
 	if (bfp)
 	{
 		save(bfp);
-		fclose(bfp);
+		std::fclose(bfp);
 	}
 }
 /*
@@ -269,7 +269,7 @@ void CGA :: loadBotGA ( char *szName, int iProfileId )
 	if ( bfp )
 	{
 		load(bfp);
-		fclose(bfp);
+		std::fclose(bfp);
 	}
 }
 
@@ -280,18 +280,18 @@ void CGA :: saveBotGA ( char *szName, int iProfileId )
 	if ( bfp )
 	{
 		save(bfp);
-		fclose(bfp);
+		std::fclose(bfp);
 	}
 }
 */
 
-void CGA::save(FILE* bfp)
+void CGA::save(std::FILE* bfp) const
 {
 	m_thePopulation.save(bfp);
 	m_theNewPopulation.save(bfp);
 }
 
-void CGA::load(FILE* bfp, int chromosize)
+void CGA::load(std::FILE* bfp, int chromosize)
 {
 	m_thePopulation.load(bfp, chromosize, m_iPopType);
 	m_theNewPopulation.load(bfp, chromosize, m_iPopType);
@@ -353,7 +353,7 @@ void CGA::freeGlobalMemory()
 	m_theSelectFunction = nullptr;
 }
 
-bool CGA::canPick()
+bool CGA::canPick() const
 {
 	return m_theNewPopulation.size() > 0;
 }
@@ -388,19 +388,19 @@ IIndividual* CRouletteSelection::select(CPopulation* population)
 ///////////////
 // SAVING
 
-FILE* RCBOpenFile(char* file, char* readtype, eGASaveType savedtype, int iId)
+std::FILE* RCBOpenFile(char* file, char* readtype, eGASaveType savedtype, int iId)
 {
 	char filename[256];
 	char tmpfilename[256];
 
 	if (savedtype == SAVETYPE_BOT)
-		sprintf(tmpfilename, "%dp%s.rce", iId, file); // iId = profileid
+		std::sprintf(tmpfilename, "%dp%s.rce", iId, file); // iId = profileid
 	else if (savedtype == SAVETYPE_TEAM)
-		sprintf(tmpfilename, "%dt%s.rce", iId, file);	// iId = team id
+		std::sprintf(tmpfilename, "%dt%s.rce", iId, file);	// iId = team id
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmpfilename);
 
-	FILE* bfp = fopen(filename, readtype);
+	std::FILE* bfp = std::fopen(filename, readtype);
 
 	return bfp;
 }

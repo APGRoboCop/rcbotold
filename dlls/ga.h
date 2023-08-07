@@ -49,8 +49,8 @@ public:
 	ga_value getFitness() const { return m_fFitness; }
 	void setFitness(float fVal) { m_fFitness = fVal; }
 
-	virtual void load(FILE* bfp, int req_size) = 0;
-	virtual void save(FILE* bfp) = 0;
+	virtual void load(std::FILE* bfp, int req_size) = 0;
+	virtual void save(std::FILE* bfp) = 0;
 
 	// crossover with other individual
 	virtual void crossOver(IIndividual* other) = 0;
@@ -89,15 +89,15 @@ public:
 
 	IIndividual* getBestIndividual() const;
 
-	ga_value totalFitness();
+	ga_value totalFitness() const;
 
-	ga_value bestFitness();
+	ga_value bestFitness() const;
 
 	ga_value averageFitness();
 
-	void load(FILE* bfp, int chromosize, int type = TYPE_BOTGAVALS);
+	void load(std::FILE* bfp, int chromosize, int type = TYPE_BOTGAVALS);
 
-	void save(FILE* bfp) const;
+	void save(std::FILE* bfp) const;
 
 	// returns individual
 	IIndividual* pick();
@@ -156,13 +156,13 @@ public:
 	void addToPopulation(IIndividual* individual);
 
 	// can get an individual off new population
-	bool canPick();
+	bool canPick() const;
 
 	IIndividual* pick();
 
-	void load(FILE* bfp, int chromosize);
+	void load(std::FILE* bfp, int chromosize);
 
-	void save(FILE* bfp);
+	void save(std::FILE* bfp) const;
 
 	void loadTeam(char* szName, int iTeam, int chromosize);
 	void saveTeam(char* szName, int iTeam);
@@ -193,6 +193,6 @@ private:
 	IIndividual* m_bestIndividual;
 };
 
-FILE* RCBOpenFile(char* file, char* readtype, eGASaveType savedtype, int iId);
+std::FILE* RCBOpenFile(char* file, char* readtype, eGASaveType savedtype, int iId);
 
 #endif

@@ -778,7 +778,7 @@ public:
 
 		if (m_pArray)
 		{
-			memset(m_pArray, 0, iSize);
+			std::memset(m_pArray, 0, iSize);
 
 			m_iArrayMax = iArrayMax;
 		}
@@ -869,7 +869,7 @@ class dataUnconstArray
 			{
 				T *temp = new T[m_iArrayMax+1];
 
-				memcpy(temp,m_pArray,sizeof(T)*m_iArrayMax);
+				std::memcpy(temp,m_pArray,sizeof(T)*m_iArrayMax);
 
 				temp[m_iArrayMax] = pObj;
 				m_iArrayMax++;

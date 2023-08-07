@@ -37,7 +37,7 @@
 #ifndef OSDEP_H
 #define OSDEP_H
 
-#include <string.h>			// strerror()
+#include <cstring>			// std::strerror()
 #include <ctype.h>			// isupper, tolower
 #include <errno.h>			// errno
 
@@ -230,12 +230,12 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 		int ret;
 		ret=pthread_create(tid, NULL, (void *(*)(void*)) func, NULL);
 		if(ret != 0) {
-			META_ERROR("Failure starting thread: %s", strerror(ret));
+			META_ERROR("Failure starting thread: %s", std::strerror(ret));
 			return(ret);
 		}
 		ret=pthread_detach(*tid);
 		if(ret != 0)
-			META_ERROR("Failure detaching thread: %s", strerror(ret));
+			META_ERROR("Failure detaching thread: %s", std::strerror(ret));
 		return(ret);
 	}
 #elif defined(_WIN32)
@@ -261,21 +261,21 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 		int ret;
 		ret=pthread_mutex_init(mutex, NULL);
 		if(ret!=THREAD_OK)
-			META_ERROR("mutex_init failed: %s", strerror(ret));
+			META_ERROR("mutex_init failed: %s", std::strerror(ret));
 		return(ret);
 	}
 	inline int MUTEX_LOCK(MUTEX_T *mutex) {
 		int ret;
 		ret=pthread_mutex_lock(mutex);
 		if(ret!=THREAD_OK)
-			META_ERROR("mutex_lock failed: %s", strerror(ret));
+			META_ERROR("mutex_lock failed: %s", std::strerror(ret));
 		return(ret);
 	}
 	inline int MUTEX_UNLOCK(MUTEX_T *mutex) {
 		int ret;
 		ret=pthread_mutex_unlock(mutex);
 		if(ret!=THREAD_OK)
-			META_ERROR("mutex_unlock failed: %s", strerror(ret));
+			META_ERROR("mutex_unlock failed: %s", std::strerror(ret));
 		return(ret);
 	}
 #elif defined(_WIN32)
@@ -306,21 +306,21 @@ mBOOL os_safe_call(REG_CMD_FN pfn);
 		int ret;
 		ret=pthread_cond_init(cond, NULL);
 		if(ret!=THREAD_OK)
-			META_ERROR("cond_init failed: %s", strerror(ret));
+			META_ERROR("cond_init failed: %s", std::strerror(ret));
 		return(ret);
 	}
 	inline int COND_WAIT(COND_T *cond, MUTEX_T *mutex) {
 		int ret;
 		ret=pthread_cond_wait(cond, mutex);
 		if(ret!=THREAD_OK)
-			META_ERROR("cond_wait failed: %s", strerror(ret));
+			META_ERROR("cond_wait failed: %s", std::strerror(ret));
 		return(ret);
 	}
 	inline int COND_SIGNAL(COND_T *cond) {
 		int ret;
 		ret=pthread_cond_signal(cond);
 		if(ret!=THREAD_OK)
-			META_ERROR("cond_signal failed: %s", strerror(ret));
+			META_ERROR("cond_signal failed: %s", std::strerror(ret));
 		return(ret);
 	}
 #elif defined(_WIN32)
@@ -434,7 +434,7 @@ inline char *realpath(const char *file_name, char *resolved_name) {
 // on errno.  For win32, it's based on GetLastError.
 inline const char *str_os_error() {
 #ifdef linux
-	return(strerror(errno));
+	return(std::strerror(errno));
 #elif defined(_WIN32)
 	return(str_GetLastError());
 #endif /* _WIN32 */

@@ -49,7 +49,7 @@ public:
 class NNLayer
 {
 public:
-	NNLayer(FILE* bfp)
+	NNLayer(std::FILE* bfp)
 	{
 		load(bfp);
 	}
@@ -62,9 +62,9 @@ public:
 
 	void freeMemory();
 
-	void save(FILE* bfp) const;
+	void save(std::FILE* bfp) const;
 
-	void load(FILE* bfp);
+	void load(std::FILE* bfp);
 private:
 	std::vector<CPerceptron*> m_Neurons;
 };
@@ -96,9 +96,9 @@ public:
 	void getOutputs(std::vector<ga_value>* outputs) const;
 	void trainOutputs(std::vector<ga_value>* wanted_outputs) const;
 
-	void load(FILE* bfp);
+	void load(std::FILE* bfp);
 
-	void save(FILE* bfp) const;
+	void save(std::FILE* bfp) const;
 
 	virtual void train(std::vector<CNNTrainSet> trainingsets)
 	{

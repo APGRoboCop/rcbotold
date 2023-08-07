@@ -97,10 +97,10 @@ void BotSayAudio(CBot* pBot);
 void BotTalk(CBot* pBot, char* sound_path);
 
 void FreeHALBrain(struct bot_profile_s* pBotProfile);
-void HAL_LoadTree(FILE* file, HAL_TREE* node);
-void HAL_LoadDictionary(FILE* file, HAL_DICTIONARY* dictionary);
-void HAL_SaveTree(FILE* file, HAL_TREE* node);
-void HAL_SaveDictionary(FILE* file, HAL_DICTIONARY* dictionary);
+void HAL_LoadTree(std::FILE* file, HAL_TREE* node);
+void HAL_LoadDictionary(std::FILE* file, HAL_DICTIONARY* dictionary);
+void HAL_SaveTree(std::FILE* file, HAL_TREE* node);
+void HAL_SaveDictionary(std::FILE* file, HAL_DICTIONARY* dictionary);
 void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words);
 unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word);
 int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find);

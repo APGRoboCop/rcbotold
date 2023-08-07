@@ -180,11 +180,11 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 
 	BOOL bFound = false;
 
-	sprintf(repfile, "%d.rcr", iBotProfile);
+	std::sprintf(repfile, "%d.rcr", iBotProfile);
 
 	UTIL_BuildFileName(filename, "botprofiles", repfile);
 
-	FILE* fp = fopen(filename, "rb"); // open the file in ascii read/write mode
+	std::FILE* fp = std::fopen(filename, "rb"); // open the file in ascii read/write mode
 
 	if (fp == nullptr)
 	{
@@ -195,8 +195,8 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 		return;
 	}
 
-	fseek(fp, 0, SEEK_END); // move pos to end of file
-	const long   fPos = ftell(fp);  // get length of file
+	std::fseek(fp, 0, SEEK_END); // move pos to end of file
+	const long   fPos = std::ftell(fp);  // get length of file
 
 	// do some error checking - verify the file is not corrupt
 	if (fPos % sizeof(CBotReputation) != 0) return;
@@ -204,11 +204,11 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 	// get the count of items in the file
 	long   count = fPos / sizeof(CBotReputation);
 
-	fseek(fp, 0, SEEK_SET); // move pos back to beginning
+	std::fseek(fp, 0, SEEK_SET); // move pos back to beginning
 
-	while (bFound == false && !feof(fp) && count > 0)
+	while (bFound == false && !std::feof(fp) && count > 0)
 	{
-		fread(&Rep, sizeof(CBotReputation), 1, fp);
+		std::fread(&Rep, sizeof(CBotReputation), 1, fp);
 
 		// is for the player input into function (player id)?
 		if (Rep.IsForPlayer(iPlayerRepId))
@@ -220,7 +220,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 		count--;
 	}
 
-	fclose(fp);
+	std::fclose(fp);
 
 	if (bFound == false)
 	{
@@ -245,15 +245,15 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 	if (pRep == nullptr) // error
 		return;
 
-	sprintf(repfile, "%d.rcr", iBotProfile);
+	std::sprintf(repfile, "%d.rcr", iBotProfile);
 
 	UTIL_BuildFileName(filename, "botprofiles", repfile);
 
-	FILE* fp = fopen(filename, "rb+"); // open the file in ascii read/write mode
+	std::FILE* fp = std::fopen(filename, "rb+"); // open the file in ascii read/write mode
 
 	if (fp == nullptr)
 	{
-		fp = fopen(filename, "wb");
+		fp = std::fopen(filename, "wb");
 
 		if (fp == nullptr)
 		{
@@ -261,14 +261,14 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 			return;
 		}
 
-		fwrite(pRep, sizeof(CBotReputation), 1, fp);
-		fclose(fp);
+		std::fwrite(pRep, sizeof(CBotReputation), 1, fp);
+		std::fclose(fp);
 
 		return;
 	}
 
-	fseek(fp, 0, SEEK_END); // move pos to end of file
-	long   fPos = ftell(fp);  // get length of file
+	std::fseek(fp, 0, SEEK_END); // move pos to end of file
+	long   fPos = std::ftell(fp);  // get length of file
 
 	// do some error checking - verify the file is not corrupt
 	if (fPos % sizeof(CBotReputation) != 0) return;
@@ -276,33 +276,33 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 	// get the count of items in the file
 	long   count = fPos / sizeof(CBotReputation);
 
-	fseek(fp, 0, SEEK_SET); // move pos back to beginning
+	std::fseek(fp, 0, SEEK_SET); // move pos back to beginning
 
-	while (bChanged == false && !feof(fp) && count > 0)
+	while (bChanged == false && !std::feof(fp) && count > 0)
 	{
-		fread(&Rep, sizeof(CBotReputation), 1, fp);
+		std::fread(&Rep, sizeof(CBotReputation), 1, fp);
 
 		if (Rep == *pRep)
 		{
-			fPos = ftell(fp);   // get the current position
+			fPos = std::ftell(fp);   // get the current position
 			// move marker back to start of this record
-			fseek(fp, 0 - sizeof(CBotReputation), SEEK_CUR);
-			fwrite(pRep, sizeof(CBotReputation), 1, fp);
+			std::fseek(fp, 0 - sizeof(CBotReputation), SEEK_CUR);
+			std::fwrite(pRep, sizeof(CBotReputation), 1, fp);
 			fflush(fp);
 			// now reset the marker to same as before we
 			// deleted this record so that everything continues
 			// as normal
-			fseek(fp, fPos, SEEK_SET);
+			std::fseek(fp, fPos, SEEK_SET);
 
 			bChanged = true;
 		}
 		count--;
 	}
-	fclose(fp);
+	std::fclose(fp);
 
 	if (bChanged == false)
 	{
-		fp = fopen(filename, "ab"); // append binary
+		fp = std::fopen(filename, "ab"); // append binary
 
 		if (fp == nullptr)
 		{
@@ -311,9 +311,9 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 		}
 		else
 		{
-			fwrite(pRep, sizeof(CBotReputation), 1, fp);
+			std::fwrite(pRep, sizeof(CBotReputation), 1, fp);
 
-			fclose(fp);
+			std::fclose(fp);
 		}
 	}
 }
@@ -343,18 +343,18 @@ int GetPlayerRepId(const char* szPlayerName)
 	char filename[512];
 	UTIL_BuildFileName(filename, BOT_PLAYER_ID_FILE);
 
-	FILE* fp = fopen(filename, "r");
+	std::FILE* fp = std::fopen(filename, "r");
 
 	if (fp == nullptr)
 	{
-		fp = fopen(filename, "w");
+		fp = std::fopen(filename, "w");
 
 		if (fp != nullptr)
 		{
-			fprintf(fp, "%s", BOT_PLAYER_ID_FILE_HEADER);
-			fprintf(fp, "\"%s\"\n", szPlayerName);
+			std::fprintf(fp, "%s", BOT_PLAYER_ID_FILE_HEADER);
+			std::fprintf(fp, "\"%s\"\n", szPlayerName);
 
-			fclose(fp);
+			std::fclose(fp);
 
 			return 0;
 		}
@@ -371,12 +371,12 @@ int GetPlayerRepId(const char* szPlayerName)
 		char playername[64];
 		int iId = 0;
 
-		while (fgets(buffer, 127, fp))
+		while (std::fgets(buffer, 127, fp))
 		{
 			if (buffer[0] == '#') // comment
 				continue;
 
-			int length = strlen(buffer);
+			int length = std::strlen(buffer);
 
 			if (length == 0)
 				continue; // nothing on this line
@@ -402,25 +402,25 @@ int GetPlayerRepId(const char* szPlayerName)
 			if (iPlayerChar < 64)
 				playername[iPlayerChar] = 0;
 
-			//sscanf(buffer,"\"%s\"",playername);
+			//std::sscanf(buffer,"\"%s\"",playername);
 
-			if (strcmp(playername, szPlayerName) == 0)
+			if (std::strcmp(playername, szPlayerName) == 0)
 			{
-				fclose(fp);
+				std::fclose(fp);
 				return iId;
 			}
 
 			iId++;
 		}
 
-		fclose(fp);
+		std::fclose(fp);
 
-		fp = fopen(filename, "a");
+		fp = std::fopen(filename, "a");
 
 		if (fp != nullptr)
 		{
-			fprintf(fp, "\"%s\"\n", szPlayerName);
-			fclose(fp);
+			std::fprintf(fp, "\"%s\"\n", szPlayerName);
+			std::fclose(fp);
 
 			return iId;
 		}
@@ -430,7 +430,7 @@ int GetPlayerRepId(const char* szPlayerName)
 	return -1;
 }
 
-int CBotReputations::GetClientRep(CClient* pClient)
+int CBotReputations::GetClientRep(CClient* pClient) const
 {
 	if (pClient == nullptr)
 	{

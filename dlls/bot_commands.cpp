@@ -106,7 +106,7 @@ eBotCvarState CMenuSelectCommand::action(CClient* pClient, const char* arg1, con
 	if (!*arg1)
 		return BOT_CVAR_ERROR;
 
-	const int iMenu = atoi(arg1);
+	const int iMenu = std::stoi(arg1);
 
 	if (iMenu < 10)
 	{
@@ -265,7 +265,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		if (arg2 && *arg2)
 		{
 			char msg[256]; //char needs to be const? [APG]RoboCop[CL]
-			strncpy(msg, arg2, 255);
+			std::strncpy(msg, arg2, 255);
 			msg[255] = 0;
 
 			BotFunc_FillString(msg, "^", "\n", 255);
@@ -578,14 +578,14 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 
 		//FILE *fp;
 
-		//fp = fopen("botlog.txt","a");
+		//fp = std::fopen("botlog.txt","a");
 
 		while ((pEnt = UTIL_FindEntityInSphere(pEnt, pEntity->v.origin, range)) != nullptr)
 		{
 			BotMessage(pEntity, 0, "Found: id: %d, classname:%s distance:%0.2f iuser3:%d pclass:%d\niuser1 %d, iuser2 %d, iuser4 %d, euser1 0x%x, euser2 0x%x", ENTINDEX(pEnt), STRING(pEnt->v.classname), (EntityOrigin(pEnt) - pEntity->v.origin).Length(), pEnt->v.iuser3, pEnt->v.playerclass, pEnt->v.iuser1, pEnt->v.iuser2, pEnt->v.iuser4, pEnt->v.euser1, pEnt->v.euser2);
 		}
 
-		//fclose(fp);
+		//std::fclose(fp);
 	}
 
 	return BOT_CVAR_ACCESSED;
@@ -1300,7 +1300,7 @@ eBotCvarState CPathWaypointCommand::action(CClient* pClient, const char* arg1, c
 		pClient->m_bWaypointPathsOn = false;
 		BotMessage(pClient->GetPlayer(), 0, "Waypoints paths are not being shown");
 	}
-	else if (strncmp(arg1, "create", 6) == 0)
+	else if (std::strncmp(arg1, "create", 6) == 0)
 	{
 		pClient->m_bWaypointPathsOn = true;
 
@@ -1313,7 +1313,7 @@ eBotCvarState CPathWaypointCommand::action(CClient* pClient, const char* arg1, c
 			WaypointCreatePath(pClient, 2);
 		}
 	}
-	else if (strncmp(arg1, "remove", 6) == 0)
+	else if (std::strncmp(arg1, "remove", 6) == 0)
 	{
 		pClient->m_bWaypointPathsOn = true;
 
@@ -1588,7 +1588,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		return BOT_CVAR_ERROR;
 	}
 
-	FILE* pProfileToOpen = nullptr;
+	std::FILE* pProfileToOpen = nullptr;
 	char szBotProfile[10]; // Store integer value of bot profile in string as filename
 	int iBotProfile = -1; // Store integer value of bot profile
 
@@ -1681,10 +1681,10 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		/*
 		if ( fp1 )
 		{
-		while ( !feof(fp1) && !pProfileToOpen )
+		while ( !std::feof(fp1) && !pProfileToOpen )
 		{
 		// pickup a string first (safer)
-		fscanf(fp1,"%s\n",szBotProfile);
+		std::fscanf(fp1,"%s\n",szBotProfile);
 
 		  // use atoi to get the integer value
 		  // it will be 0 if it is invalid
@@ -1707,11 +1707,11 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 				// Got the profile number
 				// now setup a string to hold the filename to the .ini
 				// file for this profile
-				strcat(szBotProfile,".ini");
+				std::strcat(szBotProfile,".ini");
 
 				  UTIL_BuildFileName(szBotProfilePath,"botprofiles",szBotProfile);
 
-					fp2 = fopen(szBotProfilePath,"r");
+					fp2 = std::fopen(szBotProfilePath,"r");
 
 					  if ( fp2 )
 					  {
@@ -1722,17 +1722,17 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 					  BotMessage(pEntity,0,"Error: Bot Profile : %d.ini Expected, Profile Not Found",iBotProfile);
 					  }
 
-						fclose(fp1);
+						std::fclose(fp1);
 						}
 		*/
-		if (FILE* fp1 = fopen(filename, "r"))
+		if (std::FILE* fp1 = std::fopen(filename, "r"))
 		{
 			char szBotProfilePath[128];
 			dataUnconstArray<int> CanUseIds;
-			while (!feof(fp1) && !pProfileToOpen)
+			while (!std::feof(fp1) && !pProfileToOpen)
 			{
 				// pickup a string first (safer)
-				fscanf(fp1, "%s\n", szBotProfile);
+				std::fscanf(fp1, "%s\n", szBotProfile);
 
 				// use atoi to get the integer value
 				// it will be 0 if it is invalid
@@ -1755,31 +1755,31 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 				// Got the profile number
 				// now setup a string to hold the filename to the .ini
 				// file for this profile
-				strcat(szBotProfile, ".ini");
+				std::strcat(szBotProfile, ".ini");
 
 				UTIL_BuildFileName(szBotProfilePath, "botprofiles", szBotProfile);
 
-				if (FILE* fp2 = fopen(szBotProfilePath, "r"))
+				if (std::FILE* fp2 = std::fopen(szBotProfilePath, "r"))
 				{
 					CanUseIds.Add(iBotProfile);
 
-					fclose(fp2);
+					std::fclose(fp2);
 				}
 				else
 					BotMessage(pEntity, 0, "Error: Bot Profile : %d.ini Expected, Profile Not Found", iBotProfile);
 			}
 
-			fclose(fp1);
+			std::fclose(fp1);
 
 			if (!CanUseIds.IsEmpty())
 			{
 				iBotProfile = CanUseIds.Random();
 
-				sprintf(szBotProfile, "%d.ini", iBotProfile);
+				std::sprintf(szBotProfile, "%d.ini", iBotProfile);
 
 				UTIL_BuildFileName(szBotProfilePath, "botprofiles", szBotProfile);
 
-				pProfileToOpen = fopen(szBotProfilePath, "r");
+				pProfileToOpen = std::fopen(szBotProfilePath, "r");
 
 				CanUseIds.Clear();
 			}
@@ -1808,11 +1808,11 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		iTeam = pBot->m_Profile.m_iFavTeam;
 		iClass = pBot->m_Profile.m_iClass;
 
-		sprintf(szBotProfile, "%d.ini", iBotProfile);
+		std::sprintf(szBotProfile, "%d.ini", iBotProfile);
 
 		UTIL_BuildFileName(szProfileToOpen, "botprofiles", szBotProfile);
 
-		pProfileToOpen = fopen(szProfileToOpen, "r");
+		pProfileToOpen = std::fopen(szProfileToOpen, "r");
 	}
 
 	if (pProfileToOpen && iBotProfile != -1)
@@ -1820,7 +1820,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		BotFunc_InitProfile(&gBotGlobals.m_Bots[iBotIndex].m_Profile);
 		gBotGlobals.m_Bots[iBotIndex].m_Profile.m_iProfileId = iBotProfile;
 		BotFunc_ReadProfile(pProfileToOpen, &gBotGlobals.m_Bots[iBotIndex].m_Profile);
-		fclose(pProfileToOpen);
+		std::fclose(pProfileToOpen);
 
 		if (iTeam != -1)
 			gBotGlobals.m_Bots[iBotIndex].m_Profile.m_iFavTeam = iTeam;
@@ -1882,7 +1882,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		int i = 0;
 		int j = 0;
 
-		const int len = strlen(teamlist);
+		const int len = std::strlen(teamlist);
 
 		while (i < len)
 		{
@@ -1910,11 +1910,11 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		if (gBotGlobals.m_iForceTeam > 0)
 		{
 			if (gBotGlobals.m_iForceTeam <= teams.Size())
-				strcpy(newteam, teams.ReturnValueFromIndex(gBotGlobals.m_iForceTeam - 1));
+				std::strcpy(newteam, teams.ReturnValueFromIndex(gBotGlobals.m_iForceTeam - 1));
 		}
 
 		if (newteam[0] == 0)
-			strcpy(newteam, teams.Random());
+			std::strcpy(newteam, teams.Random());
 
 		for (i = 0; i < teams.Size(); i++)
 			free(teams.ReturnValueFromIndex(i));
@@ -1959,9 +1959,9 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 	char szColour[5];
 
-	sprintf(szColour, "%d", pBot->m_Profile.m_iTopColour);
+	std::sprintf(szColour, "%d", pBot->m_Profile.m_iTopColour);
 	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "topcolor", szColour);
-	sprintf(szColour, "%d", pBot->m_Profile.m_iBottomColour);
+	std::sprintf(szColour, "%d", pBot->m_Profile.m_iBottomColour);
 	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "bottomcolor", szColour);
 
 #ifdef RCBOT_META_BUILD

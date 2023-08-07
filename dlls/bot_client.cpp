@@ -742,7 +742,7 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 	{
 		// begin- foxbot
 		char builder[255];
-		strcpy(builder, static_cast<char*>(p));
+		std::strcpy(builder, static_cast<char*>(p));
 		// end
 
 		edict_t* pent = gBotGlobals.m_Clients.FindClient(builder);
@@ -832,21 +832,21 @@ void BotClient_Generic_SayText::execute(void* p, int iIndex)
 
 			if ( szMsg && *szMsg )
 			{
-				szMsg = strstr(szMsg,pName);
+				szMsg = std::strstr(szMsg,pName);
 
 				if ( szMsg && *szMsg )
 				{
 					// skip name
-					szMsg = szMsg + strlen(pName);
+					szMsg = szMsg + std::strlen(pName);
 
-					szMsg = strstr(szMsg,": ");
+					szMsg = std::strstr(szMsg,": ");
 
 					if ( szMsg && *szMsg )
 					{
 						// skip colon
 						szMsg = szMsg + 2;
 
-						iLen = strlen(szMsg);
+						iLen = std::strlen(szMsg);
 
 						if ( szMsg[iLen-1] == '\n' )
 							szMsg[iLen-1] = 0;
@@ -896,9 +896,9 @@ void BotClient_Generic_VGUIMenu::execute(void* p, const int iIndex)
 
 		if ( fp )
 		{
-			fprintf(fp,"\n new Vgui menu : index = %d",iIndex);
+			std::fprintf(fp,"\n new Vgui menu : index = %d",iIndex);
 
-			fclose(fp);
+			std::fclose(fp);
 		}
 
 	#endif
@@ -1233,13 +1233,13 @@ void BotClient_Generic_TeamScore::execute(void* p, int iIndex)
 	{
 		const char* team = POINTER_TO_STRING(p);
 
-		if (strcmp(team, "Blue") == 0)
+		if (std::strcmp(team, "Blue") == 0)
 			iTeam = 0;
-		else if (strcmp(team, "Red") == 0)
+		else if (std::strcmp(team, "Red") == 0)
 			iTeam = 1;
-		else if (strcmp(team, "Green") == 0)
+		else if (std::strcmp(team, "Green") == 0)
 			iTeam = 2;
-		else if (strcmp(team, "Yellow") == 0)
+		else if (std::strcmp(team, "Yellow") == 0)
 			iTeam = 3;
 	}
 	else if (gBotGlobals.m_iCurrentMessageState == 1)
@@ -1267,7 +1267,7 @@ void BotClient_NS_HudText::execute(void* p, int iIndex)
 
 		if (msg)
 		{
-			const int length = strlen(msg);
+			const int length = std::strlen(msg);
 
 			// If a team has won (used to say "one" duhhh), round is over
 			if (!strcmpi(&msg[length - 3], "Won"))

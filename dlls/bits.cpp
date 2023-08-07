@@ -97,7 +97,7 @@ BOOL CBits::getBit(const int iBit) const
 	return (*c & 1 << iBitOffset) == 1 << iBitOffset;
 }
 
-void CBits::load(FILE* bfp)
+void CBits::load(std::FILE* bfp)
 {
 	CGenericHeader header = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
@@ -109,7 +109,7 @@ void CBits::load(FILE* bfp)
 
 	int iNumBits;
 
-	fread(&iNumBits, sizeof(unsigned int), 1, bfp);
+	std::fread(&iNumBits, sizeof(unsigned int), 1, bfp);
 
 	m_iNumBits = iNumBits;
 
@@ -121,7 +121,7 @@ void CBits::load(FILE* bfp)
 
 	setup(m_iNumBits);
 
-	fread(&m_cBits, size(), 1, bfp);
+	std::fread(&m_cBits, size(), 1, bfp);
 }
 
 void CBits::randomize() const
@@ -140,7 +140,7 @@ void CBits::setup(const int iNumBits)
 
 	m_cBits = new unsigned char[iSize];
 
-	memset(m_cBits, 0, iSize);
+	std::memset(m_cBits, 0, iSize);
 }
 
 // memory size
@@ -149,24 +149,24 @@ int CBits::size() const
 	return Ceiling(static_cast<float>(m_iNumBits) / 8);
 }
 
-void CBits::save(FILE* bfp) const
+void CBits::save(std::FILE* bfp) const
 {
 	const CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
 	checkHeader.write(bfp);
 
-	fwrite(&m_iNumBits, sizeof(unsigned int), 1, bfp);
+	std::fwrite(&m_iNumBits, sizeof(unsigned int), 1, bfp);
 
-	fwrite(&m_cBits, size(), 1, bfp);
+	std::fwrite(&m_cBits, size(), 1, bfp);
 }
 
 void CBits::copy(CBits* otherBits)
 {
 	m_iNumBits = numBits();
-	memcpy(m_cBits, otherBits->getBits(), size());
+	std::memcpy(m_cBits, otherBits->getBits(), size());
 }
 
 void CBits::clear() const
 {
-	memset(m_cBits, 0, size());
+	std::memset(m_cBits, 0, size());
 }

@@ -134,7 +134,7 @@ public:
 
 	BOOL IsMessageName(const char* szMessage) const
 	{
-		return strcmp(m_szMessageName, szMessage) == 0;
+		return std::strcmp(m_szMessageName, szMessage) == 0;
 	}
 
 	void UpdateMsgId(int iMessage)
