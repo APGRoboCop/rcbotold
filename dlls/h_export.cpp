@@ -174,7 +174,7 @@ extern "C" DLLEXPORT void GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, g
 	g_argv = (char*)GlobalLock(h_global_argv);
 #else
 	//g_argv = (char *)h_global_argv;
-	g_argv = (char*)malloc(1024); // allocate space for the bots' client commands argv field
+	g_argv = (char*)std::malloc(1024); // allocate space for the bots' client commands argv field
 #endif
 
 	other_GetEntityAPI = (GETENTITYAPI)GetProcAddress(h_Library, "GetEntityAPI");

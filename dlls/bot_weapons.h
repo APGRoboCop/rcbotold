@@ -978,7 +978,7 @@ public:
 		return nullptr;
 	}
 
-	int GetPrimaryWeaponId()
+	int GetPrimaryWeaponId() const
 	{
 		for (int i = 0; i < MAX_WEAPONS; i++)
 		{
@@ -991,7 +991,7 @@ public:
 		return 0;
 	}
 
-	int GetSecondaryWeaponId()
+	int GetSecondaryWeaponId() const
 	{
 		for (int i = 0; i < MAX_WEAPONS; i++)
 		{

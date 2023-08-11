@@ -443,7 +443,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 				{
 					if (!std::strncmp(&sample[4], "ssay", 4)) // Marine Said Something
 					{
-						sample_num = atoi(&sample[8]);
+						sample_num = std::stoi(&sample[8]);
 
 						if (sample_num > 10 && sample_num < 20)
 							iSound = SOUND_FOLLOW;
@@ -466,7 +466,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 					}
 					else if (!std::strncmp(&sample[4], "asay", 4)) // Alien Sound?
 					{
-						sample_num = atoi(&sample[8]);
+						sample_num = std::stoi(&sample[8]);
 
 						if (sample_num < 20)
 							iSound = SOUND_UNKNOWN;

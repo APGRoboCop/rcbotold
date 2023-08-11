@@ -847,7 +847,7 @@ void InitMessage ( const char *message );
 void CClient::FreeGlobalMemory()
 {
 	//	if (m_vTeleportVector)
-	free(m_vTeleportVector);
+	std::free(m_vTeleportVector);
 
 	m_vTeleportVector = nullptr;
 	m_Tooltips.Clear();

@@ -868,7 +868,7 @@ void WaypointFree()
 			while (p)  // free the linked list
 			{
 				PATH* p_next = p->next;  // save the link to next
-				free(p);
+				std::free(p);
 				p = p_next;
 
 #ifdef _DEBUG
@@ -939,7 +939,7 @@ void WaypointAddPath(const short int add_index, const short int path_index)
 #endif
 	}
 
-	p = static_cast<PATH*>(malloc(sizeof(PATH)));
+	p = static_cast<PATH*>(std::malloc(sizeof(PATH)));
 
 	if (p == nullptr)
 	{
@@ -1751,7 +1751,7 @@ void WaypointDelete(CClient* pClient)
 		while (p)  // free the linked list
 		{
 			PATH* p_next = p->next;  // save the link to next
-			free(p);
+			std::free(p);
 			p = p_next;
 
 #ifdef _DEBUG
@@ -2341,7 +2341,7 @@ Vector WaypointOrigin(const int iWaypointIndex)
 	if (iWaypointIndex < 0)
 	{
 		BotMessage(nullptr, 0, "Caution: WaypointOrigin() received invalid waypoint index!");
-		return Vector(0, 0, 0);
+		return {0, 0, 0};
 	}
 
 	return waypoints[iWaypointIndex].origin;

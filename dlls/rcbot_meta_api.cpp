@@ -558,7 +558,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
 	std::memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
 	gpGlobals = pGlobals;
 
-	g_argv = static_cast<char*>(malloc(1024));
+	g_argv = static_cast<char*>(std::malloc(1024));
 }
 
 #endif

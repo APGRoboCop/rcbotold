@@ -265,7 +265,7 @@ public:
 	{ 
 		if ( !pent )
 			pent = ENT(0);
-		CBaseEntity *pEnt = (CBaseEntity *)GET_PRIVATE(pent); 
+		CBaseEntity *pEnt = static_cast<CBaseEntity*>(GET_PRIVATE(pent)); 
 		ASSERT(pEnt!=NULL); 
 		return pEnt; 
 	}
@@ -303,33 +303,33 @@ public:
 	void FunctionCheck( void *pFunction, char *name ) 
 	{ 
 #ifndef __linux__
-		if (pFunction && !NAME_FOR_FUNCTION((unsigned long)(pFunction)) )
-			ALERT( at_error, "No EXPORT: %s:%s (%08lx)\n", STRING(pev->classname), name, (unsigned long)pFunction );
+		if (pFunction && !NAME_FOR_FUNCTION(reinterpret_cast<unsigned long>(pFunction)) )
+			ALERT( at_error, "No EXPORT: %s:%s (%08lx)\n", STRING(pev->classname), name, reinterpret_cast<unsigned long>(pFunction) );
 #endif // __linux__
 	}
 
 	BASEPTR	ThinkSet( BASEPTR func, char *name ) 
 	{ 
 		m_pfnThink = func; 
-		FunctionCheck( (void *)*((int *)((char *)this + ( offsetof(CBaseEntity,m_pfnThink)))), name ); 
+		FunctionCheck( reinterpret_cast<void*>(*reinterpret_cast<int*>(reinterpret_cast<char*>(this) + (offsetof(CBaseEntity, m_pfnThink)))), name ); 
 		return func;
 	}
 	ENTITYFUNCPTR TouchSet( ENTITYFUNCPTR func, char *name ) 
 	{ 
 		m_pfnTouch = func; 
-		FunctionCheck( (void *)*((int *)((char *)this + ( offsetof(CBaseEntity,m_pfnTouch)))), name ); 
+		FunctionCheck( reinterpret_cast<void*>(*reinterpret_cast<int*>(reinterpret_cast<char*>(this) + (offsetof(CBaseEntity, m_pfnTouch)))), name ); 
 		return func;
 	}
 	USEPTR	UseSet( USEPTR func, char *name ) 
 	{ 
 		m_pfnUse = func; 
-		FunctionCheck( (void *)*((int *)((char *)this + ( offsetof(CBaseEntity,m_pfnUse)))), name ); 
+		FunctionCheck( reinterpret_cast<void*>(*reinterpret_cast<int*>(reinterpret_cast<char*>(this) + (offsetof(CBaseEntity, m_pfnUse)))), name ); 
 		return func;
 	}
 	ENTITYFUNCPTR	BlockedSet( ENTITYFUNCPTR func, char *name ) 
 	{ 
 		m_pfnBlocked = func; 
-		FunctionCheck( (void *)*((int *)((char *)this + ( offsetof(CBaseEntity,m_pfnBlocked)))), name ); 
+		FunctionCheck( reinterpret_cast<void*>(*reinterpret_cast<int*>(reinterpret_cast<char*>(this) + (offsetof(CBaseEntity, m_pfnBlocked)))), name ); 
 		return func;
 	}
 

@@ -629,7 +629,7 @@ typedef enum {
 
 ////////////////////////////////////////////////////////////////
 // BOT AI COMPONENTS
-// Ideas: [Lars Lidén] : Valve
+// Ideas: [Lars Liden] : Valve
 
 ///////////////////
 // DEFINITIONS

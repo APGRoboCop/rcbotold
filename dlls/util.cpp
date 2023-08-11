@@ -348,7 +348,7 @@ Vector UTIL_VecToAngles(const Vector& vec)
 {
 	float rgflVecOut[3];
 	VEC_TO_ANGLES(vec, rgflVecOut);
-	return Vector(rgflVecOut);
+	return {rgflVecOut};
 }
 
 // Overloaded to add IGNORE_GLASS
@@ -611,7 +611,7 @@ float UTIL_AngleBetweenVectors(Vector const& vec1, Vector const& vec2)
 	const double vec1Dotvec2 = vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
 	const double veclengths = vec1.Length() * vec2.Length();
 
-	return (std::acos(vec1Dotvec2 / veclengths)) * (180.0 / M_PI);
+	return std::acos(vec1Dotvec2 / veclengths) * (180.0 / M_PI);
 }
 
 float UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector const& vOrigin)
@@ -1604,7 +1604,7 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 		WRITE_BYTE(TE_EXPLFLAG_NONE);
 		MESSAGE_END();
 
-		float mag = magnitude * 4;
+		int mag = magnitude * 4;
 
 		if (doDamage)
 		{
@@ -1915,7 +1915,7 @@ void UTIL_LogPrintf(char* fmt, ...)
 	static char    string[1024];
 
 	va_start(argptr, fmt);
-	vsprintf(string, fmt, argptr);
+	std::vsprintf(string, fmt, argptr);
 	va_end(argptr);
 
 	// Print to server console
@@ -2210,13 +2210,13 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 		{
 			const char* szName = STRING(pEntity->v.netname);
 			const int iLen = std::strlen(szName);
-			char* szNewName = static_cast<char*>(malloc(iLen + 1)); // No need to multiply by sizeof(char)
+			char* szNewName = static_cast<char*>(std::malloc(iLen + 1)); // No need to multiply by sizeof(char)
 
 			RemoveNameTags(szName, szNewName);
 
 			BotFunc_FillString(final_message, "%n", szNewName, sizeof(final_message));
 
-			free(szNewName);
+			std::free(szNewName);
 			szNewName = nullptr;
 		}
 

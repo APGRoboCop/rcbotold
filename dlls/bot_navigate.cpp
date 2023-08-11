@@ -1784,7 +1784,7 @@ PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam)
 
 void CLocation :: GiveName ( const char *szLocationName )
 {
-	m_szLocationName = (char*)malloc((sizeof(char)*std::strlen(szLocationName))+1);
+	m_szLocationName = (char*)std::malloc((sizeof(char)*std::strlen(szLocationName))+1);
 
 	if ( m_szLocationName == NULL )
 	{

@@ -326,7 +326,7 @@ public:
 
 		if ( m_Tail == m_Head )
 		{
-			free(m_Tail);
+			std::free(m_Tail);
 
 			m_Head = NULL;
 			m_Tail = NULL;
@@ -338,7 +338,7 @@ public:
 
 			probeNode->m_Next = NULL;
 
-			free(m_Tail);
+			std::free(m_Tail);
 
 			m_Tail = probeNode;
 		}
@@ -751,7 +751,7 @@ public:
 
 	void Clear()
 	{
-		free(m_pArray);
+		std::free(m_pArray);
 		this->Init();
 	}
 
@@ -772,7 +772,7 @@ public:
 
 		const int iSize = sizeof(T) * iArrayMax;
 
-		m_pArray = (T*)malloc(iSize);
+		m_pArray = (T*)std::malloc(iSize);
 
 		assert(m_pArray != NULL);
 
@@ -861,7 +861,7 @@ class dataUnconstArray
 		{
 			if ( m_pArray == NULL )
 			{
-				m_pArray = new T;//(T*)malloc(sizeof(T));
+				m_pArray = new T;//(T*)std::malloc(sizeof(T));
 				m_pArray[0] = pObj;
 				m_iArrayMax = 1;
 			}

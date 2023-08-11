@@ -256,13 +256,13 @@ public:
 	void FreeMemory()
 	{
 		if (getName())
-			free(getName());
+			std::free(getName());
 		if (getFolder())
-			free(getFolder());
+			std::free(getFolder());
 		if (getExtension())
-			free(getExtension());
+			std::free(getExtension());
 		if (getHeader())
-			free(getHeader());
+			std::free(getHeader());
 
 		init();
 	}
@@ -505,7 +505,7 @@ public:
 	{
 		const int iSize = g_iMaxVisibilityByte;
 		//create a heap...
-		m_VisTable = static_cast<unsigned char*>(malloc(iSize));
+		m_VisTable = static_cast<unsigned char*>(std::malloc(iSize));
 
 		std::memset(m_VisTable, 0, iSize);
 	}
@@ -542,7 +542,7 @@ public:
 	{
 		if (m_VisTable != nullptr)
 		{
-			free(m_VisTable);
+			std::free(m_VisTable);
 			m_VisTable = nullptr;
 		}
 	}

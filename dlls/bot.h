@@ -543,7 +543,7 @@ public:
 	{
 		if ( m_szLocationName)
 		{
-			free(m_szLocationName);
+			std::free(m_szLocationName);
 		}
 
 		this->Init();
@@ -1718,7 +1718,7 @@ public:
 
 	Vector GetVector() const
 	{
-		return Vector(static_cast<float>(m_x), static_cast<float>(m_y), static_cast<float>(m_z));
+		return {static_cast<float>(m_x), static_cast<float>(m_y), static_cast<float>(m_z)};
 	}
 
 	BOOL IsVectorSet() const
@@ -3075,7 +3075,7 @@ public:
 		return m_bHasFlag && m_pFlag;
 	}
 
-	edict_t* getSentry();
+	edict_t* getSentry() const;
 
 	BOOL CanBuild(edict_t* pEdict, int* metal = nullptr);
 
@@ -3855,7 +3855,7 @@ public:
 		return pev->deadflag == DEAD_NO && pev->health > 0;
 	}
 
-	BOOL     SwitchWeapon(int iId);
+	BOOL     SwitchWeapon(byte iId);
 
 	BOOL     IsCurrentWeapon(int iId) const
 	{
@@ -4258,7 +4258,7 @@ public:
 			{
 				if (void* pFree = s_tempStack.ChooseFromStack())
 				{
-					free(pFree);
+					std::free(pFree);
 					pFree = nullptr;
 				}
 			}
@@ -4303,7 +4303,7 @@ public:
 
 		//BotFunc_StringCopy(szNewString,szString);
 
-		char* szNewString = static_cast<char*>(malloc(sizeof(char) * std::strlen(szString) + 1));
+		char* szNewString = static_cast<char*>(std::malloc(sizeof(char) * std::strlen(szString) + 1));
 		std::strcpy(szNewString, szString);
 
 		szStringsHead[iHashValue].Push(szNewString);
@@ -5222,7 +5222,7 @@ public:
 
 	edict_t* GetButtonForEntity(edict_t* pEntity, Vector const& vOrigin) const
 	{
-		if (CMasterEntity* pMaster = GetMaster(pEntity))
+		if (const CMasterEntity* pMaster = GetMaster(pEntity))
 			return pMaster->FindButton(vOrigin);
 
 		return nullptr;
@@ -6736,7 +6736,7 @@ public:
 	/*void changeWelcomeMessage ( char *message )
 		{
 			if ( m_szWelcomeMessage )
-				free(m_szWelcomeMessage);
+				std::free(m_szWelcomeMessage);
 			m_szWelcomeMessage = strdup(message);
 		}*/
 	

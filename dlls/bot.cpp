@@ -98,7 +98,7 @@ void safefree(void** p)
 		return;
 	if (!*p)
 		return;
-	free(*p);
+	std::free(*p);
 
 	// nullify freed pointer
 	*p = nullptr;
@@ -750,7 +750,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 				{
 					if (m_pKillerEdict != m_pEdict)
 					{
-						CBotReputation* pRep = m_Profile.m_Rep.GetRep(pKillerClient->GetPlayerRepId());
+						const CBotReputation* pRep = m_Profile.m_Rep.GetRep(pKillerClient->GetPlayerRepId());
 
 						if (pRep)
 						{
@@ -863,7 +863,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 
 		if (gBotGlobals.IsNS() && IsGorge())
 		{
-			CBotWeapon* pBileBomb = m_Weapons.GetWeapon(NS_WEAPON_BILEBOMB);
+			const CBotWeapon* pBileBomb = m_Weapons.GetWeapon(NS_WEAPON_BILEBOMB);
 
 			if (!pBileBomb->HasWeapon(m_pEdict))
 			{
@@ -1074,7 +1074,7 @@ void CBot::loadLearnedData() const
 		return;
 
 	CLearnedHeader header = CLearnedHeader(m_Profile.m_iProfileId);
-	CLearnedHeader checkheader = CLearnedHeader(m_Profile.m_iProfileId);
+	const CLearnedHeader checkheader = CLearnedHeader(m_Profile.m_iProfileId);
 
 	std::fread(&header, sizeof(CLearnedHeader), 1, bfp);
 
@@ -1333,7 +1333,7 @@ void CBot::FreeLocalMemory()
 		FreeHALBrain(&m_Profile);
 
 		//		if (m_Profile.m_HAL != NULL)
-		free(m_Profile.m_HAL);
+		std::free(m_Profile.m_HAL);
 
 		m_Profile.m_HAL = nullptr;
 	}
@@ -2327,8 +2327,8 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 	{
 		static char temp[1024];
 		// found a point
-		char* before = static_cast<char*>(malloc(sizeof(char) * len));
-		char* after = static_cast<char*>(malloc(sizeof(char) * len));
+		char* before = static_cast<char*>(std::malloc(sizeof(char) * len));
+		char* after = static_cast<char*>(std::malloc(sizeof(char) * len));
 
 		// initialize them to empty (don't need to null terminate at the right point)
 		std::memset(before, 0, len);
@@ -2361,12 +2361,12 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 
 		// free memory used
 //		if (before != NULL)
-		free(before);
+		std::free(before);
 
 		before = nullptr;
 
 		//		if (after != NULL)
-		free(after);
+		std::free(after);
 
 		after = nullptr;
 		/*
@@ -2378,7 +2378,7 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 				if ( len > 0 )
 				{
 					// allocate the string size, will use less space and wont crash if too big :p
-					temp = (char*)malloc(len + 1);
+					temp = (char*)std::malloc(len + 1);
 					std::strcpy(temp,ptr+2);
 				}
 
@@ -2389,7 +2389,7 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 				if ( temp )
 				{
 					std::strcat(string,temp);
-					free(temp);
+					std::free(temp);
 				}
 		*/
 	}
@@ -3538,7 +3538,7 @@ void CBot::Think()
 			if (tr.pHit)
 			{
 				// waypoint through a door I can walk through
-				if (std::strcmp(STRING(tr.pHit->v.classname), "worldspawn"))
+				if (std::strcmp(STRING(tr.pHit->v.classname), "worldspawn") != 0)
 					// not worldspawn
 				{
 					if (BotFunc_EntityIsMoving(&tr.pHit->v))
@@ -6982,7 +6982,7 @@ float CBot::DotProductFromOrigin(Vector* pOrigin) const
 // cannot update enemy damage or heavy damage conditions etc.
 void CBot::UpdateConditions()
 {
-	int iWpn;
+	//int iWpn;
 
 	//////////////////
 	// Squad conditions - do every time a bot thinks...
@@ -7006,7 +7006,7 @@ void CBot::UpdateConditions()
 	RemoveCondition(BOT_CONDITION_TASK_EDICT_NA);
 	RemoveCondition(BOT_CONDITION_HAS_WEAPON);
 
-	if ((iWpn = m_Weapons.GetBestWeaponId(this, nullptr)) > 0)
+	if (m_Weapons.GetBestWeaponId(this, nullptr) > 0)
 	{
 		//m_pBestWeaponId = m_Weapons.GetWeapon(iWpn);
 
@@ -7066,7 +7066,7 @@ void CBot::UpdateConditions()
 }
 
 // changes the bot's weapon
-BOOL CBot::SwitchWeapon(const int iId)
+BOOL CBot::SwitchWeapon(byte iId)
 {
 	// already using this weapon?
 	// nothing to do
@@ -9154,7 +9154,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (pEntity->v.iuser3 == AVH_USER3_BREAKABLE)
 		{
-			CBotWeapon* pBestWeapon = m_Weapons.GetWeapon(iBestWeaponId);
+			const CBotWeapon* pBestWeapon = m_Weapons.GetWeapon(iBestWeaponId);
 
 			if (pBestWeapon)
 			{
@@ -9235,10 +9235,10 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (pEntity->v.flags & FL_CLIENT)
 		{
-			if (const float team = /*gBotGlobals.isMapType(NON_TFC_TS_TEAMPLAY) ||*/ gBotGlobals.m_bTeamPlay)
+			if (gBotGlobals.m_bTeamPlay)
 			{
-				char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-				char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
+				char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
+				char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
 				char model1[64];
 				char model2[64];
 
@@ -9583,7 +9583,7 @@ void BotFunc_StringCopy(char *szCopyTo, const char *szCopyFrom)
 // Copy a string to an uninitialised string pointer
 // First initialise pointer, then copy.
 {
-	szCopyTo = (char*)malloc((sizeof(char)*std::strlen(szCopyFrom))+1);
+	szCopyTo = (char*)std::malloc((sizeof(char)*std::strlen(szCopyFrom))+1);
 	std::strcpy(szCopyTo,szCopyFrom);
 }
 */
@@ -9650,7 +9650,7 @@ void BugMessage(edict_t* pEntity, char* fmt, ...)
 	static char string[1024];
 
 	va_start(argptr, fmt);
-	vsprintf(string, fmt, argptr);
+	std::vsprintf(string, fmt, argptr);
 	va_end(argptr);
 
 	BotMessage(pEntity, 0, "%s%s%s%s", "BUG: ", string, " Report bugs to : ", BOT_AUTHOR);
@@ -9680,7 +9680,7 @@ void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, char* fmt, 
 	char szDebugMsg[32];
 
 	va_start(argptr, fmt);
-	vsprintf(string, fmt, argptr);
+	std::vsprintf(string, fmt, argptr);
 	va_end(argptr);
 
 	switch (iDebugLevel)
@@ -9776,10 +9776,10 @@ void BotFile_Write(char* string)
 	if (fp)
 	{
 		char time_str[512];
-		const time_t ltime = time(nullptr);
-		const tm* today = localtime(&ltime);
+		const time_t ltime = std::time(nullptr);
+		const tm* today = std::localtime(&ltime);
 
-		strftime(time_str, sizeof time_str, "%m/%d/%Y %H:%M:%S", today);
+		std::strftime(time_str, sizeof time_str, "%m/%d/%Y %H:%M:%S", today);
 
 		std::fprintf(fp, "%s => ", time_str);
 		std::fprintf(fp, "%s\n", string);
@@ -9794,7 +9794,7 @@ void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...)
 	static char string[1024];
 
 	va_start(argptr, fmt);
-	vsprintf(string, fmt, argptr);
+	std::vsprintf(string, fmt, argptr);
 	va_end(argptr);
 
 	if (pEntity != nullptr)
@@ -9832,7 +9832,7 @@ void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...)
 #ifndef __linux__
 				MessageBox(nullptr, string, "RCBot Error", MB_OK);
 #endif
-				exit(0);
+				std::exit(0);
 			}
 			break;
 			case 2:
@@ -9846,7 +9846,7 @@ void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...)
 #ifndef __linux__
 				MessageBox(nullptr, string, "RCBot Error", MB_OK);
 #endif
-				exit(0);
+				std::exit(0);
 
 				break;
 			default:
@@ -11392,9 +11392,9 @@ void CBot::RepairSentry(int iNewScheduleId)
 	}
 }*/
 
-edict_t* CBot::getSentry()
+edict_t* CBot::getSentry() const
 {
-	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict);
+	const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(m_pEdict);
 
 	if (pClient)
 		return pClient->getTFCSentry();

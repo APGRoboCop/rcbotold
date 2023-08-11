@@ -52,6 +52,7 @@
 #include <limits.h>
 
 #define MAX_PATH PATH_MAX
+
 #ifdef __CYGWIN__
 #define ULONG unsigned long
 #else
@@ -63,7 +64,7 @@
 //Fix for GCC 7 - [APG]RoboCop[CL]
 #include <algorithm>
 
-#ifndef max
+/*#ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif
 
@@ -72,7 +73,7 @@
 #endif
 
 #undef max
-#undef min
+#undef min*/
 
 #define itoa(a,b,c) std::sprintf(b, "%d", a)
 

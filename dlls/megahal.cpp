@@ -404,7 +404,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 
 	if (output_template == nullptr)
 	{
-		output_template = static_cast<char*>(malloc(sizeof(char)));
+		output_template = static_cast<char*>(std::malloc(sizeof(char)));
 
 		if (output_template == nullptr)
 			BotMessage(nullptr, 1, "HAL: BotHALGenerateReply() unable to allocate output\n");
@@ -444,7 +444,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 			for (i = 0; i < static_cast<int>(replywords->size); ++i)
 				length += replywords->entry[i].length;
 
-			output_template = static_cast<char*>(realloc(output_template, sizeof(char) * length));
+			output_template = static_cast<char*>(std::realloc(output_template, sizeof(char) * length));
 			if (output_template == nullptr)
 				BotMessage(nullptr, 1, "HAL: HAL_MakeOutput() unable to reallocate output\n");
 
@@ -478,7 +478,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 		for (i = 0; i < static_cast<int>(replywords->size); ++i)
 			length += replywords->entry[i].length;
 
-		output_template = static_cast<char*>(realloc(output_template, sizeof(char) * length));
+		output_template = static_cast<char*>(std::realloc(output_template, sizeof(char) * length));
 		if (output_template == nullptr)
 			BotMessage(nullptr, 1, "HAL: HAL_MakeOutput() unable to reallocate output\n");
 
@@ -517,9 +517,9 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 
 	// allocate one more entry for the word index
 	if (dictionary->index == nullptr)
-		dictionary->index = static_cast<unsigned short*>(malloc(sizeof(unsigned short) * dictionary->size));
+		dictionary->index = static_cast<unsigned short*>(std::malloc(sizeof(unsigned short) * dictionary->size));
 	else
-		dictionary->index = static_cast<unsigned short*>(realloc(dictionary->index,
+		dictionary->index = static_cast<unsigned short*>(std::realloc(dictionary->index,
 			sizeof(unsigned short) * dictionary->size));
 
 	if (dictionary->index == nullptr)
@@ -527,9 +527,9 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 
 	// allocate one more entry for the word array
 	if (dictionary->entry == nullptr)
-		dictionary->entry = static_cast<HAL_STRING*>(malloc(sizeof(HAL_STRING) * dictionary->size));
+		dictionary->entry = static_cast<HAL_STRING*>(std::malloc(sizeof(HAL_STRING) * dictionary->size));
 	else
-		dictionary->entry = static_cast<HAL_STRING*>(realloc(dictionary->entry,
+		dictionary->entry = static_cast<HAL_STRING*>(std::realloc(dictionary->entry,
 			sizeof(HAL_STRING) * dictionary->size));
 
 	if (dictionary->entry == nullptr)
@@ -537,7 +537,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 
 	// copy the new word into the word array
 	dictionary->entry[dictionary->size - 1].length = word.length;
-	dictionary->entry[dictionary->size - 1].word = static_cast<char*>(malloc(sizeof(char) * (word.length + 1)));
+	dictionary->entry[dictionary->size - 1].word = static_cast<char*>(std::malloc(sizeof(char) * (word.length + 1)));
 	if (dictionary->entry[dictionary->size - 1].word == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_AddWord() unable to allocate the word\n");
 
@@ -666,7 +666,7 @@ HAL_DICTIONARY* HAL_NewDictionary()
 {
 	// this function allocates room for a new dictionary
 
-	HAL_DICTIONARY* dictionary = static_cast<HAL_DICTIONARY*>(malloc(sizeof(HAL_DICTIONARY)));
+	HAL_DICTIONARY* dictionary = static_cast<HAL_DICTIONARY*>(std::malloc(sizeof(HAL_DICTIONARY)));
 	if (dictionary == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_NewDictionary() unable to allocate dictionary\n");
 
@@ -709,7 +709,7 @@ void HAL_LoadDictionary(std::FILE* file, HAL_DICTIONARY* dictionary)
 	{
 		std::fread(&word.length, sizeof(unsigned char), 1, file);
 
-		word.word = static_cast<char*>(malloc(sizeof(char) * (word.length + 1)));
+		word.word = static_cast<char*>(std::malloc(sizeof(char) * (word.length + 1)));
 
 		if (word.word == nullptr)
 			BotMessage(nullptr, 1, "HAL: HAL_LoadDictionary() unable to allocate word\n");
@@ -723,7 +723,7 @@ void HAL_LoadDictionary(std::FILE* file, HAL_DICTIONARY* dictionary)
 		HAL_AddWord(dictionary, word);
 
 		if (word.word != nullptr)
-			free(word.word);
+			std::free(word.word);
 
 		word.word = nullptr;
 	}
@@ -734,7 +734,7 @@ HAL_TREE* HAL_NewNode()
 	// allocate a new node for the n-gram tree, and initialise its contents to sensible values
 
 	// allocate memory for the new node
-	HAL_TREE* node = static_cast<HAL_TREE*>(malloc(sizeof(HAL_TREE)));
+	HAL_TREE* node = static_cast<HAL_TREE*>(std::malloc(sizeof(HAL_TREE)));
 	if (node == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_NewNode() unable to allocate node\n");
 
@@ -752,14 +752,14 @@ HAL_MODEL* HAL_NewModel(int order)
 {
 	// this function creates and initializes a new ngram model
 
-	HAL_MODEL* model = static_cast<HAL_MODEL*>(malloc(sizeof(HAL_MODEL)));
+	HAL_MODEL* model = static_cast<HAL_MODEL*>(std::malloc(sizeof(HAL_MODEL)));
 	if (model == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_NewModel() unable to allocate model\n");
 
 	model->order = static_cast<unsigned char>(order);
 	model->forward = HAL_NewNode();
 	model->backward = HAL_NewNode();
-	model->context = static_cast<HAL_TREE**>(malloc(sizeof(HAL_TREE*) * (order + 2)));
+	model->context = static_cast<HAL_TREE**>(std::malloc(sizeof(HAL_TREE*) * (order + 2)));
 	if (model->context == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_NewModel() unable to allocate context array\n");
 
@@ -854,10 +854,10 @@ void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position)
 
 	// allocate room for one more child node, which may mean allocating the sub-tree from scratch
 	if (tree->tree == nullptr)
-		tree->tree = static_cast<HAL_TREE**>(malloc(sizeof(HAL_TREE*) * (tree->branch + 1)));
+		tree->tree = static_cast<HAL_TREE**>(std::malloc(sizeof(HAL_TREE*) * (tree->branch + 1)));
 	else
 	{
-		tree->tree = static_cast<HAL_TREE**>(realloc(tree->tree, sizeof(HAL_TREE*) * (tree->branch + 1)));
+		tree->tree = static_cast<HAL_TREE**>(std::realloc(tree->tree, sizeof(HAL_TREE*) * (tree->branch + 1)));
 	}
 
 	if (tree->tree == nullptr)
@@ -999,7 +999,7 @@ void HAL_LoadTree(std::FILE* file, HAL_TREE* node)
 	if (node->branch == 0)
 		return; // reliability check
 
-	node->tree = static_cast<HAL_TREE**>(malloc(sizeof(HAL_TREE*) * node->branch));
+	node->tree = static_cast<HAL_TREE**>(std::malloc(sizeof(HAL_TREE*) * node->branch));
 	if (node->tree == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_LoadTree() unable to allocate subtree\n");
 
@@ -1034,9 +1034,9 @@ void HAL_MakeWords(char* input, HAL_DICTIONARY* words)
 		{
 			// add the word to the dictionary
 			if (words->entry == nullptr)
-				words->entry = static_cast<HAL_STRING*>(malloc((words->size + 1) * sizeof(HAL_STRING)));
+				words->entry = static_cast<HAL_STRING*>(std::malloc((words->size + 1) * sizeof(HAL_STRING)));
 			else
-				words->entry = static_cast<HAL_STRING*>(realloc(words->entry, (words->size + 1) * sizeof(HAL_STRING)));
+				words->entry = static_cast<HAL_STRING*>(std::realloc(words->entry, (words->size + 1) * sizeof(HAL_STRING)));
 
 			if (words->entry == nullptr)
 				BotMessage(nullptr, 1, "HAL_MakeWords() unable to reallocate dictionary\n");
@@ -1101,7 +1101,7 @@ void HAL_MakeWords (char *input, HAL_DICTIONARY *words)
 		   // work out new word length for new string
 		   iNewWordLength = iEnd - iStart;
 
-		   szNewWord = (char*)malloc(sizeof(char)*(iNewWordLength+1));
+		   szNewWord = (char*)std::malloc(sizeof(char)*(iNewWordLength+1));
 
 		   // copy word into string szNewWord
 		   // word starts from position iStart until iEnd
@@ -1190,7 +1190,7 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words)
 	for (i = 0; i < static_cast<int>(keys->size); ++i)
 	{
 		//		if (keys->entry[i].word != NULL)
-		free(keys->entry[i].word);
+		std::free(keys->entry[i].word);
 
 		keys->entry[i].word = nullptr;
 	}
@@ -1243,8 +1243,8 @@ void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int st
 {
 	const int size = sizeof(char) * (maxstring + 1);
 
-	char* before = static_cast<char*>(malloc(size));
-	char* after = static_cast<char*>(malloc(size));
+	char* before = static_cast<char*>(std::malloc(size));
+	char* after = static_cast<char*>(std::malloc(size));
 
 	std::memset(before, 0, size);
 	std::memset(after, 0, size);
@@ -1255,12 +1255,12 @@ void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int st
 	std::sprintf(string, "%s%s%s", before, fill, after);
 
 	//	if (before != NULL)
-	free(before);
+	std::free(before);
 
 	before = nullptr;
 
 	//	if (after != NULL)
-	free(after);
+	std::free(after);
 
 	after = nullptr;
 }
@@ -1350,20 +1350,20 @@ void BotHALAddKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
 				// name match, don't use name as keyword?
 				if ( std::strstr(word.word,pCheck) != NULL )
 				{
-					free(pCheck);
+					std::free(pCheck);
 					pCheck = NULL;
 					return;
 				}
 				else if ( std::strncmp(word.word,&pCheck[1],len-2) == 0 )
 				{
-					free(pCheck);
+					std::free(pCheck);
 					pCheck = NULL;
 					return;
 				}
-				free(pCheck);
+				std::free(pCheck);
 				pCheck = NULL;
 			}
-			free(pName);
+			std::free(pName);
 			pName = NULL;
 		}
 	}
@@ -1437,9 +1437,9 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 
 		// append the symbol to the reply dictionary
 		if (replies->entry == nullptr)
-			replies->entry = static_cast<HAL_STRING*>(malloc((replies->size + 1) * sizeof(HAL_STRING)));
+			replies->entry = static_cast<HAL_STRING*>(std::malloc((replies->size + 1) * sizeof(HAL_STRING)));
 		else
-			replies->entry = static_cast<HAL_STRING*>(realloc(replies->entry, (replies->size + 1) * sizeof(HAL_STRING)));
+			replies->entry = static_cast<HAL_STRING*>(std::realloc(replies->entry, (replies->size + 1) * sizeof(HAL_STRING)));
 
 		if (replies->entry == nullptr)
 			BotMessage(nullptr, 1, "HAL: BotHALBuildReplyDictionary() unable to reallocate dictionary\n");
@@ -1475,9 +1475,9 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 
 		// prepend the symbol to the reply dictionary
 		if (replies->entry == nullptr)
-			replies->entry = static_cast<HAL_STRING*>(malloc((replies->size + 1) * sizeof(HAL_STRING)));
+			replies->entry = static_cast<HAL_STRING*>(std::malloc((replies->size + 1) * sizeof(HAL_STRING)));
 		else
-			replies->entry = static_cast<HAL_STRING*>(realloc(replies->entry, (replies->size + 1) * sizeof(HAL_STRING)));
+			replies->entry = static_cast<HAL_STRING*>(std::realloc(replies->entry, (replies->size + 1) * sizeof(HAL_STRING)));
 
 		if (replies->entry == nullptr)
 			BotMessage(nullptr, 1, "HAL: BotHALBuildReplyDictionary() unable to reallocate dictionary\n");
@@ -1602,7 +1602,7 @@ HAL_SWAP* HAL_NewSwap()
 {
 	// allocate a new swap structure.
 
-	HAL_SWAP* list = static_cast<HAL_SWAP*>(malloc(sizeof(HAL_SWAP)));
+	HAL_SWAP* list = static_cast<HAL_SWAP*>(std::malloc(sizeof(HAL_SWAP)));
 	if (list == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_NewSwap() unable to allocate swap\n");
 
@@ -1619,23 +1619,23 @@ void HAL_AddSwap(HAL_SWAP* list, char* s, char* d)
 
 	if (list->from == nullptr)
 	{
-		list->from = static_cast<HAL_STRING*>(malloc(sizeof(HAL_STRING)));
+		list->from = static_cast<HAL_STRING*>(std::malloc(sizeof(HAL_STRING)));
 		if (list->from == nullptr)
 			BotMessage(nullptr, 1, "HAL: HAL_AddSwap() unable to allocate list->from\n");
 	}
 
 	if (list->to == nullptr)
 	{
-		list->to = static_cast<HAL_STRING*>(malloc(sizeof(HAL_STRING)));
+		list->to = static_cast<HAL_STRING*>(std::malloc(sizeof(HAL_STRING)));
 		if (list->to == nullptr)
 			BotMessage(nullptr, 1, "HAL: HAL_AddSwap() unable to allocate list->to\n");
 	}
 
-	list->from = static_cast<HAL_STRING*>(realloc(list->from, sizeof(HAL_STRING) * (list->size + 1)));
+	list->from = static_cast<HAL_STRING*>(std::realloc(list->from, sizeof(HAL_STRING) * (list->size + 1)));
 	if (list->from == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_AddSwap() unable to reallocate from\n");
 
-	list->to = static_cast<HAL_STRING*>(realloc(list->to, sizeof(HAL_STRING) * (list->size + 1)));
+	list->to = static_cast<HAL_STRING*>(std::realloc(list->to, sizeof(HAL_STRING) * (list->size + 1)));
 	if (list->to == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_AddSwap() unable to reallocate to\n");
 
@@ -1729,7 +1729,7 @@ void HAL_EmptyDictionary(HAL_DICTIONARY* dictionary)
 	{
 		try
 		{
-			free(dictionary->entry);
+			std::free(dictionary->entry);
 		}
 
 		catch (...)
@@ -1744,7 +1744,7 @@ void HAL_EmptyDictionary(HAL_DICTIONARY* dictionary)
 	{
 		try
 		{
-			free(dictionary->index);
+			std::free(dictionary->index);
 		}
 
 		catch (...)
@@ -1776,20 +1776,20 @@ void HAL_FreeModel(HAL_MODEL* model)
 	model->backward = nullptr;
 
 	//	if (model->context != NULL)
-	free(model->context);
+	std::free(model->context);
 
 	model->context = nullptr;
 
 	if (model->dictionary != nullptr)
 	{
 		HAL_EmptyDictionary(model->dictionary);
-		free(model->dictionary);
+		std::free(model->dictionary);
 	}
 
 	model->dictionary = nullptr;
 
 	//	if (model != NULL)
-	free(model);
+	std::free(model);
 
 	model = nullptr;
 }
@@ -1806,11 +1806,11 @@ void HAL_FreeTree(HAL_TREE* tree)
 		for (int i = 0; i < tree->branch; ++i)
 			HAL_FreeTree(tree->tree[i]);
 
-		free(tree->tree);
+		std::free(tree->tree);
 		tree->tree = nullptr;
 	}
 
-	free(tree);
+	std::free(tree);
 
 	tree = nullptr;
 }
@@ -1826,29 +1826,29 @@ void HAL_FreeSwap(HAL_SWAP* swap)
 	for (int i = 0; i < swap->size; ++i)
 	{
 		//		if (swap->from[i].word != NULL)
-		free(swap->from[i].word); // free the "from" word
+		std::free(swap->from[i].word); // free the "from" word
 
 		swap->from[i].word = nullptr;
 
 		// free TO
 
 //		if (swap->to[i].word != NULL)
-		free(swap->to[i].word); // free the "to" word
+		std::free(swap->to[i].word); // free the "to" word
 
 		swap->to[i].word = nullptr;
 	}
 
 	//	if (swap->from != NULL)
-	free(swap->from); // free the "from" array
+	std::free(swap->from); // free the "from" array
 
 	swap->from = nullptr;
 
 	//	if (swap->to != NULL)
-	free(swap->to); // free the "to" array
+	std::free(swap->to); // free the "to" array
 
 	swap->to = nullptr;
 
-	free(swap); // free the swap structure itself
+	std::free(swap); // free the swap structure itself
 	swap = nullptr;
 }
 
@@ -1864,7 +1864,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 
 	char cookie[32];
 
-	pBotProfile->m_HAL = static_cast<HAL_bot_t*>(malloc(sizeof(HAL_bot_t)));
+	pBotProfile->m_HAL = static_cast<HAL_bot_t*>(std::malloc(sizeof(HAL_bot_t)));
 	pBotProfile->m_HAL->auxiliary_keywords = nullptr;
 	pBotProfile->m_HAL->banned_keywords = nullptr;
 	pBotProfile->m_HAL->bot_model = nullptr;
@@ -2116,7 +2116,7 @@ void FreeHALBrain(bot_profile_t* pBotProfile)
 		{
 			//			if (pBotProfile->m_HAL->bot_model->dictionary->entry[j].word != NULL)
 			{
-				free(pBotProfile->m_HAL->bot_model->dictionary->entry[j].word); // free the word
+				std::free(pBotProfile->m_HAL->bot_model->dictionary->entry[j].word); // free the word
 			}
 
 			pBotProfile->m_HAL->bot_model->dictionary->entry[j].word = nullptr; // and fools the pointer
@@ -2125,7 +2125,7 @@ void FreeHALBrain(bot_profile_t* pBotProfile)
 		HAL_EmptyDictionary(pBotProfile->m_HAL->bot_model->dictionary); // empty that dictionary itself
 
 		//		if (pBotProfile->m_HAL->bot_model->dictionary != NULL)
-		free(pBotProfile->m_HAL->bot_model->dictionary); // now frees the dictionary
+		std::free(pBotProfile->m_HAL->bot_model->dictionary); // now frees the dictionary
 
 		pBotProfile->m_HAL->bot_model->dictionary = nullptr; // and fools the pointer
 	}

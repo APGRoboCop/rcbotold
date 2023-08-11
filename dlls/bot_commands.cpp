@@ -101,12 +101,12 @@ eBotCvarState CMenuSelectCommand::action(CClient* pClient, const char* arg1, con
 		return BOT_CVAR_CONTINUE; // no menu, continue
 	}
 
-	if (!arg1)
+	if (arg1 == nullptr)
 		return BOT_CVAR_ERROR;
-	if (!*arg1)
+	if (arg1[0] == '\0')
 		return BOT_CVAR_ERROR;
 
-	const int iMenu = atoi(arg1);
+	const int iMenu = std::stoi(arg1);
 
 	if (iMenu < 10)
 	{
@@ -196,7 +196,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	{
 		if ( pEntity && (arg2 && *arg2) )
 		{
-			GiveTSWeapon(pEntity,atoi(arg2));
+			GiveTSWeapon(pEntity,std::stoi(arg2));
 		}
 	}
 	else */
@@ -231,7 +231,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 				int iWpt = -1;
 
 				if (arg3 && *arg3)
-					iWpt = atoi(arg3);
+					iWpt = std::stoi(arg3);
 				else
 					iWpt = WaypointLocations.NearestWaypoint(pClient->GetPlayer()->v.origin, 100, -1);
 
@@ -248,7 +248,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	else if (FStrEq("givetsweapon", arg1))
 	{
 		if (pEntity && arg2 && *arg2)
-			UTIL_makeTSweapon(pEntity, static_cast<eTSWeaponID>(atoi(arg2)));
+			UTIL_makeTSweapon(pEntity, static_cast<eTSWeaponID>(std::stoi(arg2)));
 	}
 	else if (FStrEq("numclients", arg1))
 	{
@@ -312,10 +312,10 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		bool dodamage = true;
 
 		if (arg2 != nullptr && *arg2 != 0)
-			magnitude = atoi(arg2);
+			magnitude = std::stoi(arg2);
 		if (arg3 != nullptr && *arg3 != 0)
 		{
-			int temp = atoi(arg3);
+			int temp = std::stoi(arg3);
 
 			if (temp > 0)
 				dodamage = false;
@@ -574,7 +574,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		float range = 100.0f;
 
 		if (arg2 && *arg2)
-			range = atof(arg2);
+			range = std::stof(arg2);
 
 		//FILE *fp;
 
@@ -636,7 +636,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 			{
 				CClient* pPlayerClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer);
 
-				const int iLev = atoi(arg3);
+				const int iLev = std::stoi(arg3);
 
 				gBotGlobals.m_BotUsers.AddPlayer(STRING(pPlayer->v.netname), "***", iLev, pPlayerClient->steamID());
 
@@ -666,7 +666,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 				pPlayer = UTIL_FindPlayerByTruncName(arg2);
 			else
 			{
-				pPlayer = UTIL_GetPlayerByPlayerId(atoi(&arg2[1]));
+				pPlayer = UTIL_GetPlayerByPlayerId(std::stoi(&arg2[1]));
 			}
 
 			if (pPlayer)
@@ -749,7 +749,7 @@ eBotCvarState CRemoveBotCommand::action(CClient* pClient, const char* arg1, cons
 	int iTeam = -1;
 
 	if (arg1 && *arg1)
-		iTeam = atoi(arg1);
+		iTeam = std::stoi(arg1);
 
 	BotFunc_KickBotFromTeam(iTeam);
 
@@ -855,7 +855,7 @@ eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const ch
 
 	if (iDebugLevel)
 	{
-		if (atoi(arg2) > 0)
+		if (std::stoi(arg2) > 0)
 		{
 			BotMessage(nullptr, 0, "debugging \"%s\" is now ON", arg1);
 			gBotGlobals.m_iDebugLevels |= iDebugLevel;
@@ -894,7 +894,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	const BOOL bSetting = arg2 && *arg2; // is player setting the value or wanting details?
 	float fSetVal = 0.0f;
 
-	const int iState = atoi(arg2);
+	const int iState = std::stoi(arg2);
 	int iConfig = 0;
 
 	BOOL bSuccess = true;
@@ -955,7 +955,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 		if (arg2 && *arg2)
 		{
-			const float fspeed = atof(arg2);
+			const float fspeed = std::stof(arg2);
 
 			if (fspeed > 0)
 			{
@@ -971,7 +971,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	else if (FStrEq("force_team", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_iForceTeam = atoi(arg2);
+			gBotGlobals.m_iForceTeam = std::stoi(arg2);
 		else
 		{
 			fSetVal = static_cast<float>(gBotGlobals.m_iForceTeam);
@@ -980,35 +980,35 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	/*else if (FStrEq("tfc_map_type", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.setMapType(static_cast<eTFCMapType>(atoi(arg2)));
+			gBotGlobals.setMapType(static_cast<eTFCMapType>(std::stoi(arg2)));
 		else
 			fSetVal = static_cast<float>(gBotGlobals.getMapType());
 	}*/
 	else if (FStrEq("bot_stuck_speed", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fBotStuckSpeed = atof(arg2);
+			gBotGlobals.m_fBotStuckSpeed = std::stof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fBotStuckSpeed;
 	}
 	else if (FStrEq("update_ladder_time", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fUpdateLadderTime = atof(arg2);
+			gBotGlobals.m_fUpdateLadderTime = std::stof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fUpdateLadderTime;
 	}
 	else if (FStrEq("min_bots", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_iMinBots = atoi(arg2);
+			gBotGlobals.m_iMinBots = std::stoi(arg2);
 		else
 			fSetVal = gBotGlobals.m_iMinBots;
 	}
 	else if (FStrEq("max_bots", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_iMaxBots = atoi(arg2);
+			gBotGlobals.m_iMaxBots = std::stoi(arg2);
 		else
 			fSetVal = gBotGlobals.m_iMaxBots;
 	}
@@ -1022,77 +1022,77 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	else if (FStrEq("u_hive", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fHiveImportance = atof(arg2);
+			gBotGlobals.m_fHiveImportance = std::stof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fHiveImportance;
 	}
 	else if (FStrEq("u_restower", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fResTowerImportance = atof(arg2);
+			gBotGlobals.m_fResTowerImportance = std::stof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fResTowerImportance;
 	}
 	else if (FStrEq("u_healing", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fHealingImportance = atof(arg2);
+			gBotGlobals.m_fHealingImportance = std::stof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fHealingImportance;
 	}
 	else if (FStrEq("u_structure", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fStructureBuildingImportance = atof(arg2);
+			gBotGlobals.m_fStructureBuildingImportance = std::stof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fStructureBuildingImportance;
 	}
 	else if (FStrEq("u_refill", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fRefillStructureImportance = atof(arg2);
+			gBotGlobals.m_fRefillStructureImportance = std::stof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fRefillStructureImportance;
 	}
 	else if (FStrEq("gorge_amount", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fGorgeAmount = atof(arg2);
+			gBotGlobals.m_fGorgeAmount = std::stof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fGorgeAmount;
 	}
 	else if (FStrEq("chat_percent", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_iBotChatPercent = atoi(arg2);
+			gBotGlobals.m_iBotChatPercent = std::stoi(arg2);
 		else
 			fSetVal = gBotGlobals.m_iBotChatPercent;
 	}
 	else if (FStrEq("chat_reply_percent", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_iBotChatReplyPercent = atoi(arg2);
+			gBotGlobals.m_iBotChatReplyPercent = std::stoi(arg2);
 		else
 			fSetVal = gBotGlobals.m_iBotChatReplyPercent;
 	}
 	else if (FStrEq("wall_stick_tolerance", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fWallStickTol = atof(arg2);
+			gBotGlobals.m_fWallStickTol = std::stof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fGorgeAmount;
 	}
 	/*else if ( FStrEq("lerk_hold_time",arg1) )
 	{
 		if ( bSetting )
-			gBotGlobals.m_fLerkHoldTime = atof(arg2);
+			gBotGlobals.m_fLerkHoldTime = std::stof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fLerkHoldTime;
 	}
 	else if ( FStrEq("lerk_flap_time",arg1) )
 	{
 		if ( bSetting )
-			gBotGlobals.m_fLerkFlapTime = atof(arg2);
+			gBotGlobals.m_fLerkFlapTime = std::stof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fLerkFlapTime;
 	}*/
@@ -1100,7 +1100,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (bSetting)
 		{
-			const int iRevs = atoi(arg2);
+			const int iRevs = std::stoi(arg2);
 
 			bSuccess = iRevs > 0;
 
@@ -1127,7 +1127,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (bSetting)
 		{
-			const int iRevs = atoi(arg2);
+			const int iRevs = std::stoi(arg2);
 
 			bSuccess = iRevs > 0;
 
@@ -1154,7 +1154,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (bSetting)
 		{
-			const float fTime = atof(arg2);
+			const float fTime = std::stof(arg2);
 
 			bSuccess = fTime >= 0;
 
@@ -1267,7 +1267,7 @@ eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const
 	}
 	else if (FStrEq(arg1, "spread"))
 	{
-		const float fNewSpread = atof(arg2);
+		const float fNewSpread = std::stof(arg2);
 
 		if (fNewSpread)
 		{
@@ -1373,7 +1373,7 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 
 		if (pWantedClient)
 		{
-			const int state = atoi(arg2);
+			const int state = std::stoi(arg2);
 
 			if (arg2 && *arg2)
 				pWantedClient->AutoWaypoint(state);
@@ -1523,7 +1523,7 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 	{
 		if (arg2 && *arg2)
 		{
-			const int iWpt = atoi(arg2);
+			const int iWpt = std::stoi(arg2);
 
 			SET_ORIGIN(pClient->GetPlayer(), WaypointOrigin(iWpt));
 		}
@@ -1616,7 +1616,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 	if (arg1valid)
 	{
-		iTeam = atoi(arg1);
+		iTeam = std::stoi(arg1);
 
 		if (iTeam <= 0 || iTeam > 5)
 			iTeam = 5;
@@ -1625,7 +1625,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	}
 	if (arg2valid)
 	{
-		iClass = atoi(arg2);
+		iClass = std::stoi(arg2);
 
 		if (iClass < 0 /*|| iClass > TFC_MAX_CLASSES*/)
 			iClass = RANDOM_LONG(0, 9);
@@ -1647,7 +1647,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 			if ( arg3valid )
 			{
-			iSkill = atoi(arg3);
+			iSkill = std::stoi(arg3);
 
 			  if ( iSkill < MIN_BOT_SKILL )
 			  iSkill = MIN_BOT_SKILL;
@@ -1690,7 +1690,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		  // it will be 0 if it is invalid
 		  // thus ,if iBotProfile = 0 then
 		  // the profile will be ignored
-		  iBotProfile = atoi(szBotProfile);
+		  iBotProfile = std::stoi(szBotProfile);
 
 			if ( !iBotProfile )
 			{
@@ -1738,7 +1738,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 				// it will be 0 if it is invalid
 				// thus ,if iBotProfile = 0 then
 				// the profile will be ignored
-				iBotProfile = atoi(szBotProfile);
+				iBotProfile = std::stoi(szBotProfile);
 
 				if (!iBotProfile)
 				{
@@ -1917,7 +1917,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 			std::strcpy(newteam, teams.Random());
 
 		for (i = 0; i < teams.Size(); i++)
-			free(teams.ReturnValueFromIndex(i));
+			std::free(teams.ReturnValueFromIndex(i));
 
 		teams.Clear();
 
