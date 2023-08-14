@@ -54,6 +54,8 @@
 #ifndef __BOT_H__
 #define __BOT_H__
 
+#include <optional>
+
 #include "generic_class.h"
 #include "bot_const.h"
 #include "bot_menu.h"
@@ -3981,7 +3983,7 @@ public:
 	BOOL	 FacingIdeal() const;
 
 	// returns true if bot can pickup the entity pPickup
-	BOOL     CanPickup(edict_t* pPickup);
+	BOOL     CanPickup(edict_t* pPickup) const;
 
 	// bot hears a sound type from a specific origin vector
 	void     HearSound(eSoundType iSound, const Vector& vOrigin, edict_t* pEdict);
@@ -6319,7 +6321,7 @@ public:
 		//m_iNumClients = 0;
 
 		m_fMapInitTime = 0.0f;
-		m_fBotRejoinTime = 3.0f;
+		m_fBotRejoinTime = 6.0f;
 
 		m_fUpdateLadderTime = -1.0f;
 
@@ -6445,7 +6447,7 @@ public:
 		m_fClientUpdateTime = 0.0f;
 		m_bBotCanRejoin = false;
 		m_fMapInitTime = 0.0f;
-		m_fBotRejoinTime = 3.0f;
+		m_fBotRejoinTime = 6.0f;
 		m_iNumBots = 0;
 
 		m_bCanUpgradeDef = false;
@@ -6901,7 +6903,7 @@ BOOL BotFunc_BreakableIsEnemy(edict_t* pBreakable, edict_t* pEdict);
 int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue);
 int BotNavigate_FindNextWaypoint(CBot* pBot);
 BOOL BotNavigate_UpdateWaypoint(CBot* pBot);
-PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam);
+std::optional<PATH*> BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam);
 
 BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid);
 #endif // BOT_H

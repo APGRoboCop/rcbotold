@@ -1150,7 +1150,7 @@ void CBotGlobals::MapInit()
 	m_bNetMessageStarted = false;
 	m_CurrentHandledCvar = nullptr;
 	m_fMapInitTime = 0.0f;
-	m_fBotRejoinTime = 3.0f;
+	m_fBotRejoinTime = 6.0f;
 	m_pCommander.Set(nullptr);
 
 	m_bHasDefTech = false;

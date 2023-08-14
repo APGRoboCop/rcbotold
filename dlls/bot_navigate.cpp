@@ -61,6 +61,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <optional>
 
 static std::FILE* fp;
 
@@ -162,7 +163,7 @@ bool CompareAStarNode(AStarNode* a, AStarNode* b)
 int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 {
 	dataStack<int> sTempList;
-	dataUnconstArray<AStarNode*> *sOpenList;
+	dataUnconstArray<AStarNode*>* sOpenList;
 	//std::priority_queue<AStarNode*, std::vector<AStarNode*>, CompareAStarNode>* sOpenList;
 
 	AStarNode* aPathsFound;
@@ -1059,12 +1060,13 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 
 				if (pBot->m_iPrevWaypointIndex != -1)
 				{
+					//TODO: Experimental [APG]RoboCop[CL]
 					// Has a previous waypoint
 					// we can work out the path the bot tried to use.
-					PATH* pPath = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);
+					const std::optional<PATH*> pPath = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);
 
 					if (pPath)
-						pBot->m_stFailedPaths.AddFailedPath(pPath);
+						pBot->m_stFailedPaths.AddFailedPath(pPath.value());
 				}
 			}
 			else if (!pBot->m_stBotPaths.IsEmpty())
@@ -1181,11 +1183,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			if (pBot->m_fLastSeeWaypoint && pBot->m_fLastSeeWaypoint + fMaxWaypointSeeTime <= gpGlobals->time)
 			{
 				//Clear this waypoint, get a new one and flush path info.
-
-				PATH* pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);//TODO: triggers crash? [APG]RoboCopCL]
+				//TODO: Experimental [APG]RoboCop[CL]
+				std::optional<PATH*> pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);//TODO: triggers crash? [APG]RoboCopCL]
 
 				if (pFailed)
-					pBot->m_stFailedPaths.AddFailedPath(pFailed);
+					pBot->m_stFailedPaths.AddFailedPath(pFailed.value());
 
 				pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, REACHABLE_RANGE, pBot->m_iLastFailedWaypoint, true, false, true);
 				iCurrWpt = pBot->m_iCurrentWaypointIndex;
@@ -1703,11 +1705,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	return true;
 }
 
-PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam)
+std::optional<PATH*> BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam) //Experimental [APG]RoboCop[CL]
 {
-	PATH* pPath = nullptr;
-	int iPathIndex = 0;
-	int iIndex;
+    PATH* pPath = nullptr;
+    int iPathIndex = 0;
+    int iIndex;
 
 	while ((iIndex = WaypointFindPath(&pPath, &iPathIndex, iFrom, iTeam)) != -1)//TODO: triggers crash? [APG]RoboCopCL]
 	{
@@ -1715,92 +1717,93 @@ PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam)
 		{
 			return pPath;
 		}
+		iFrom = iIndex; // Update iFrom unconditionally
 	}
 
-	return nullptr;
+	return std::nullopt; // Return std::nullopt instead of nullptr
 }
 
-/*CLocation :: CLocation (const char *szLocationName,edict_t *pEntity)
-{
-	FILE *fp;
-	//char filename[256];
-
-	this->Init();
-
-	m_pEntity = pEntity;
-
-	if ( szLocationName == NULL )
+	/*CLocation :: CLocation (const char *szLocationName,edict_t *pEntity)
 	{
-		BotMessage(NULL,0,"Warning: CLocation() Received NULL Location");
-		return;
-	}
+		FILE *fp;
+		//char filename[256];
 
-	fp = std::fopen("ns\\titles.txt","r");
+		this->Init();
 
-	if ( fp == NULL )
-	{
-		GiveName(szLocationName);
-		return;
-	}
+		m_pEntity = pEntity;
 
-	char buffer[256];
-	int buffer_len;
+		if ( szLocationName == NULL )
+		{
+			BotMessage(NULL,0,"Warning: CLocation() Received NULL Location");
+			return;
+		}
 
-	BOOL found = false;
+		fp = std::fopen("ns\\titles.txt","r");
 
-	while ( std::fgets(buffer, 255, fp) != NULL)
-	{
-		buffer[255] = 0;
+		if ( fp == NULL )
+		{
+			GiveName(szLocationName);
+			return;
+		}
 
-		buffer_len = std::strlen(buffer);
+		char buffer[256];
+		int buffer_len;
 
-		if ( buffer[buffer_len-1] == '\n' )
-			buffer[--buffer_len] = 0;
+		BOOL found = false;
+
+		while ( std::fgets(buffer, 255, fp) != NULL)
+		{
+			buffer[255] = 0;
+
+			buffer_len = std::strlen(buffer);
+
+			if ( buffer[buffer_len-1] == '\n' )
+				buffer[--buffer_len] = 0;
+
+			if ( found == false )
+			{
+				if ( std::strcmp(szLocationName,buffer) == 0 )
+					found = true;
+			}
+			else
+			{
+				if ( buffer[0] == '{' )
+					continue;
+				else
+				{
+					GiveName(buffer);
+					break;
+				}
+			}
+		}
 
 		if ( found == false )
 		{
-			if ( std::strcmp(szLocationName,buffer) == 0 )
-				found = true;
+			GiveName(szLocationName);
 		}
-		else
+
+		std::fclose(fp);
+	}
+
+	void CLocation :: GiveName ( const char *szLocationName )
+	{
+		m_szLocationName = (char*)std::malloc((sizeof(char)*std::strlen(szLocationName))+1);
+
+		if ( m_szLocationName == NULL )
 		{
-			if ( buffer[0] == '{' )
-				continue;
-			else
-			{
-				GiveName(buffer);
-				break;
-			}
+			BotMessage(NULL,0,"Can't Allocate Memory For Location Name : %s",szLocationName);
+			return;
 		}
-	}
 
-	if ( found == false )
-	{
-		GiveName(szLocationName);
-	}
+		std::strcpy(m_szLocationName,szLocationName);
+	}*/
 
-	std::fclose(fp);
-}
+	Vector BotNavigate_ScanFOV(CBot * pBot)
+	// Called when bot can't find a nearby waypoint
+	// instead fire tracelines in FOV and move to the furthest
+	// point it can find
 
-void CLocation :: GiveName ( const char *szLocationName )
-{
-	m_szLocationName = (char*)std::malloc((sizeof(char)*std::strlen(szLocationName))+1);
-
-	if ( m_szLocationName == NULL )
-	{
-		BotMessage(NULL,0,"Can't Allocate Memory For Location Name : %s",szLocationName);
-		return;
-	}
-
-	std::strcpy(m_szLocationName,szLocationName);
-}*/
-
-Vector BotNavigate_ScanFOV(CBot* pBot)
-// Called when bot can't find a nearby waypoint
-// instead fire tracelines in FOV and move to the furthest
-// point it can find
-
-// Thanks PM's racc bot source for some info pointers. (racc.bots-united.com)
+	// Thanks PM's racc bot source for some info pointers. (racc.bots-united.com)
 {
 	const float fFov = 105.0f;
 	int iStep = 0;
@@ -1969,8 +1972,8 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 
 				// a way to find out if this is a lift (big enough for the bot to walk on)
 				const BOOL bIsLift = pHit->v.movedir.z &&
-				(pHit->v.size.x > pBot->pev->size.z &&
-					pHit->v.size.y > pBot->pev->size.z);
+					(pHit->v.size.x > pBot->pev->size.z &&
+						pHit->v.size.y > pBot->pev->size.z);
 
 				if (BotFunc_EntityIsMoving(&pHit->v))
 				{
@@ -2004,7 +2007,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 						if (bIsLift)
 						{
 							int iWaitForLiftWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, REACHABLE_RANGE,
-							                                              pBot->m_iTeam, W_FL_LIFT, &pBot->m_FailedGoals);
+								pBot->m_iTeam, W_FL_LIFT, &pBot->m_FailedGoals);
 
 							if (iWaitForLiftWpt == -1)
 								iWaitForLiftWpt = pBot->m_iPrevWaypointIndex;

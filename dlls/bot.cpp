@@ -715,10 +715,11 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			// as it can dodge areas where it died next time.
 			if (m_iCurrentWaypointIndex != -1 && m_iPrevWaypointIndex != -1)
 			{
-				PATH* pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, GetTeam());
+				//TODO: Experimental [APG]RoboCop[CL]
+				const std::optional<PATH*> pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, GetTeam());
 
 				if (pPath)
-					m_stFailedPaths.AddFailedPath(pPath);
+					m_stFailedPaths.AddFailedPath(pPath.value());
 			}
 		}
 
@@ -6829,7 +6830,7 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 	return vEnemyOrigin + m_vOffsetVector;
 }
 
-float CBot::DistanceFrom(const Vector& vOrigin, const BOOL twoD) const
+float CBot::DistanceFrom(const Vector& vOrigin, BOOL twoD) const
 {
 	// get distance from origin
 
@@ -8374,7 +8375,7 @@ void CBot::WorkMoveDirection()
 	}
 }
 
-BOOL CBot::CanPickup(edict_t* pPickup)
+BOOL CBot::CanPickup(edict_t* pPickup) const
 {
 	// if entity can be picked up by player return true,
 	if (pPickup == nullptr)
@@ -16457,12 +16458,13 @@ void CBot::CheckStuck()
 
 				if (m_bFailPath)
 				{
+					//TODO: Experimental [APG]RoboCop[CL]
 					// found the path
-					PATH* pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, m_iTeam);
+					const std::optional<PATH*> pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, m_iTeam);
 
 					// add it to failed paths
 					if (pPath)
-						m_stFailedPaths.AddFailedPath(pPath);
+						m_stFailedPaths.AddFailedPath(pPath.value());
 				}
 			}
 
