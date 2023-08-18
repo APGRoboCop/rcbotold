@@ -110,7 +110,7 @@ public:
 
 	void save(std::FILE* bfp) override
 	{
-		const int iSiz = 1;
+		constexpr int iSiz = 1;
 		std::fwrite(&iSiz, sizeof(int), 1, bfp);
 		std::fwrite(&m_Value, sizeof(int), 1, bfp);
 	}

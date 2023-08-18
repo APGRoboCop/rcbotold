@@ -15,6 +15,8 @@
 //
 // Misc utility code
 //
+#ifndef UTIL_H
+#define UTIL_H
 
 #ifdef _WIN32
 #include <windef.h>
@@ -110,7 +112,7 @@ inline edict_t *ENT(EOFFSET eoffset)			{ return (*g_engfuncs.pfnPEntityOfEntOffs
 inline EOFFSET OFFSET(EOFFSET eoffset)			{ return eoffset; }
 inline EOFFSET OFFSET(const edict_t *pent)	
 { 
-#if _DEBUG
+#ifdef _DEBUG
 	if ( !pent )
 		ALERT( at_error, "Bad ent in OFFSET()\n" );
 #endif
@@ -118,7 +120,7 @@ inline EOFFSET OFFSET(const edict_t *pent)
 }
 inline EOFFSET OFFSET(entvars_t *pev)				
 { 
-#if _DEBUG
+#ifdef _DEBUG
 	if ( !pev )
 		ALERT( at_error, "Bad pev in OFFSET()\n" );
 #endif
@@ -553,3 +555,4 @@ int UTIL_SharedRandomLong( unsigned int seed, int low, int high );
 float UTIL_SharedRandomFloat( unsigned int seed, float low, float high );
 
 float UTIL_WeaponTimeBase();
+#endif // UTIL_H

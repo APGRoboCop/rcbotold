@@ -66,7 +66,7 @@ public:
 
 	void setup(int iNumBits);
 
-	unsigned int numBits() const { return m_iNumBits; }
+	int numBits() const { return m_iNumBits; }
 
 	void copy(CBits* otherBits);
 

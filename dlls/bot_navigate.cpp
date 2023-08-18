@@ -1805,15 +1805,15 @@ std::optional<PATH*> BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam) /
 
 	// Thanks PM's racc bot source for some info pointers. (racc.bots-united.com)
 {
-	const float fFov = 105.0f;
-	int iStep = 0;
+	constexpr float fFov = 105.0f;
+	int iStep;
 
 	const entvars_t* pev = &pBot->m_pEdict->v;
 
 	float fStartAngle = pev->angles.y - fFov;
 
-	const int iMinStep = -60;
-	const int iMaxStep = 60;
+	constexpr int iMinStep = -60;
+	constexpr int iMaxStep = 60;
 
 	float fMaxDistance = BOT_WAYPOINT_TOUCH_DIST * 2;
 	float fDistance;

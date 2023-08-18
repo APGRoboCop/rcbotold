@@ -179,10 +179,10 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 // from old rcbot
 void HumanizeString(char* string)
 {
-	const int drop_percent = 1;
-	const int swap_percent = 1;
-	const int capitalise_percent = 1;
-	const int lower_percent = 2;
+	constexpr int drop_percent = 1;
+	constexpr int swap_percent = 1;
+	constexpr int capitalise_percent = 1;
+	constexpr int lower_percent = 2;
 
 	int length = std::strlen(string);
 	int i = 0;
@@ -655,8 +655,8 @@ void HAL_InitializeDictionary(HAL_DICTIONARY* dictionary)
 {
 	// this function adds dummy words to the dictionary
 
-	const HAL_STRING word = { 7, "<ERROR>" };
-	const HAL_STRING end = { 5, "<FIN>" };
+	constexpr HAL_STRING word = { 7, "<ERROR>" };
+	constexpr HAL_STRING end = { 5, "<FIN>" };
 
 	(void)HAL_AddWord(dictionary, word);
 	(void)HAL_AddWord(dictionary, end);

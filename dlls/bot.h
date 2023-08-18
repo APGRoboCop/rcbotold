@@ -3908,7 +3908,7 @@ public:
 	}
 
 	// if bot can fly, this will return true
-	BOOL CanFly()
+	BOOL CanFly() const
 	{
 		return IsMarine() && HasJetPack() || IsLerk();
 	}
@@ -3920,7 +3920,7 @@ public:
 	}
 
 	// returns bots ideal climb situation (e.g. flying, climbing, wall-sticking)
-	eClimbType GetClimbType();
+	eClimbType GetClimbType() const;
 
 	BOOL     PrimaryAttack() const;
 

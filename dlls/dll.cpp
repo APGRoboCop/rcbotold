@@ -2381,7 +2381,7 @@ void CBotCam::Think()
 	if (!m_pCurrentBot || !m_iState)
 		return;
 
-	const BOOL bSetAngle = true;
+	constexpr BOOL bSetAngle = true;
 
 	vBotOrigin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 

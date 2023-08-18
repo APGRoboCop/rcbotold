@@ -106,7 +106,7 @@ void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj,
 	mink = kLoc - 1;
 	maxk = kLoc + 1;
 
-	const int iMaxLoc = MAX_WPT_LOCATIONS - 1;
+	constexpr int iMaxLoc = MAX_WPT_LOCATIONS - 1;
 
 	if (mini < 0)
 		mini = 0;
@@ -707,7 +707,8 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	std::strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
 	header.mapname[31] = 0;
 
-	std::FILE* bfp = nullptr;
+	std::FILE* bfp;
+	bfp = nullptr;
 
 	if (theConverter != nullptr)
 	{
@@ -833,7 +834,7 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	std::fclose(bfp);
 
 	if (theConverter == nullptr)
-		WaypointVisibility.SaveToFile();
+		return WaypointVisibility.SaveToFile();
 
 	return true;
 }
@@ -1030,15 +1031,15 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 // initial call. subsequent calls will return other paths if they exist.)
 int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team)
 {
-	int count = 0;
+    int count = 0;
 
-	if (*pPath == nullptr)
-	{
-		*pPath = paths[waypoint_index];
-		*path_index = 0;
-	}
+    if (*pPath == nullptr)
+    {
+        *pPath = paths[waypoint_index];
+        *path_index = 0;
+    }
 
-	if (*path_index == MAX_PATH_INDEX)
+	/*if (*path_index == MAX_PATH_INDEX)
 	{
 		*path_index = 0;
 
@@ -1046,13 +1047,13 @@ int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team
 		{
 			*pPath = (*pPath)->next;  // go to the next node in the linked list
 		}
-	}
+	}*/
 
 	while (*pPath != nullptr)
 	{
 		while (*path_index < MAX_PATH_INDEX)
 		{
-			if ((*pPath)->index[*path_index] != -1)  // found a path? TODO: triggers crash? [APG]RoboCopCL]
+			if (*pPath != nullptr && (*pPath)->index[*path_index] != -1)  // found a path? TODO: triggers crash? [APG]RoboCopCL]
 			{
 				// save the return value
 				const int index = (*pPath)->index[*path_index];
@@ -1088,7 +1089,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team
 		}
 	}
 
-		return -1;
+	return -1;
 }
 
 // find the nearest waypoint to the player and return the index

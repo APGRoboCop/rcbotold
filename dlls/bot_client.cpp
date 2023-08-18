@@ -2058,7 +2058,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_ACCEPT_HEALTH))
 			{
 				edict_t* pSupplier = nullptr;
-				const float nearest = 96.0f;
+				constexpr float nearest = 96.0f;
 
 				for (int i = 1; i <= gpGlobals->maxClients; i++)
 				{

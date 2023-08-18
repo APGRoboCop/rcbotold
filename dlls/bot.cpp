@@ -2314,7 +2314,7 @@ const char* BotFunc_GetRandomPlayerName(CBot* pBot, const int iState)
 BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, const int max_len)
 {
 	// keep a big string to make sure everything fits
-	int len = std::strlen(string) + 1;
+	size_t len = std::strlen(string) + 1;
 
 	// store before and after strings, well put these in the final string
 
@@ -2342,7 +2342,7 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		string[start] = 0;
 
 		// 'strlen' function called too many times inside loop [APG]RoboCop[CL]
-		const int end = start + std::strlen(fill_point);
+		const size_t end = start + std::strlen(fill_point);
 		std::strncpy(after, &string[end], len - end);
 		after[len - end] = 0;
 
@@ -2801,7 +2801,7 @@ void CBot::StartGame()
 	}
 }
 
-eClimbType CBot::GetClimbType()
+eClimbType CBot::GetClimbType() const
 // return a type of climbing or flying info
 // if it is not BOT_CLIMB_NONE then the bot is
 // trying to climb or fly
@@ -2970,7 +2970,7 @@ void CBot::Think()
 	// Not alive anymore
 	if (!IsAlive())
 	{
-		const BOOL feigned = false;
+		constexpr BOOL feigned = false;
 
 		/*if (gBotGlobals.IsMod(MOD_TFC))
 		{
@@ -16626,7 +16626,7 @@ void CBot::workEnemyCosts(edict_t* pEntity, const Vector& vOrigin, const float f
 		return;
 
 	Vector lowest;
-	const int mid = BOT_COST_BUCKETS / 2;
+	constexpr int mid = BOT_COST_BUCKETS / 2;
 	int enemyState = 0;
 
 	if (isInAnimate(pEntity))

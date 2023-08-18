@@ -339,7 +339,7 @@ void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
 	std::vector<ga_value> outputs;
 
 	ga_value fTotalError = 0;
-	unsigned int iNum = 0;
+	ga_value iNum = 0;
 
 	for (unsigned int i = 0; i < trainingsets.size(); i++)
 	{

@@ -245,12 +245,12 @@ private:
 class CWaypointConversion
 {
 private:
-	int m_iConvertTo[MAX_BITS]; // e.g. jump, crouch etc
-	char* m_szName;
-	char* m_szFolder;
-	char* m_szExtension;
-	char* m_szHeader;
-	int m_iVersion;
+	int m_iConvertTo[MAX_BITS] = {}; // e.g. jump, crouch etc
+	char* m_szName = nullptr;
+	char* m_szFolder = nullptr;
+	char* m_szExtension = nullptr;
+	char* m_szHeader = nullptr;
+	int m_iVersion = 0;
 public:
 
 	void FreeMemory()
@@ -496,14 +496,14 @@ public:
 };*/
 ///////////////////////
 
-const int g_iMaxVisibilityByte = MAX_WAYPOINTS * MAX_WAYPOINTS / 8;
+constexpr int g_iMaxVisibilityByte = MAX_WAYPOINTS * MAX_WAYPOINTS / 8;
 
 class CWaypointVisibilityTable
 {
 public:
 	CWaypointVisibilityTable()
 	{
-		const int iSize = g_iMaxVisibilityByte;
+		constexpr int iSize = g_iMaxVisibilityByte;
 		//create a heap...
 		m_VisTable = static_cast<unsigned char*>(std::malloc(iSize));
 
