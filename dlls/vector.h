@@ -36,10 +36,10 @@ class Vector2D
 public:
 	Vector2D() = default;
 	Vector2D(float X, float Y) { x = X; y = Y; }
-	Vector2D operator+(const Vector2D& v)	const { return {x + v.x, y + v.y}; }
-	Vector2D operator-(const Vector2D& v)	const { return {x - v.x, y - v.y}; }
-	Vector2D operator*(float fl)				const { return {x * fl, y * fl}; }
-	Vector2D operator/(float fl)				const { return {x / fl, y / fl}; }
+	Vector2D operator+(const Vector2D& v)	const { return { x + v.x, y + v.y }; }
+	Vector2D operator-(const Vector2D& v)	const { return { x - v.x, y - v.y }; }
+	Vector2D operator*(float fl)				const { return { x * fl, y * fl }; }
+	Vector2D operator/(float fl)				const { return { x / fl, y / fl }; }
 
 	float Length()						const { return std::pow(x * x + y * y, 0.5f); }//sqrt(x*x + y*y);		}
 
@@ -50,12 +50,12 @@ public:
 		float flLen = Length();
 		if (flLen == 0.0f)
 		{
-			return {0, 0};
+			return { 0, 0 };
 		}
 		else
 		{
 			flLen = 1 / flLen;
-			return {x * flLen, y * flLen};
+			return { x * flLen, y * flLen };
 		}
 	}
 
@@ -80,13 +80,13 @@ public:
 	Vector(const float rgfl[3]) { x = rgfl[0]; y = rgfl[1]; z = rgfl[2]; }
 
 	// Operators
-	Vector operator-() const { return {-x, -y, -z}; }
+	Vector operator-() const { return { -x, -y, -z }; }
 	int operator==(const Vector& v) const { return x == v.x && y == v.y && z == v.z; }
 	int operator!=(const Vector& v) const { return !(*this == v); }
-	Vector operator+(const Vector& v) const { return {x + v.x, y + v.y, z + v.z}; }
-	Vector operator-(const Vector& v) const { return {x - v.x, y - v.y, z - v.z}; }
-	Vector operator*(float fl) const { return {x * fl, y * fl, z * fl}; }
-	Vector operator/(float fl) const { return {x / fl, y / fl, z / fl}; }
+	Vector operator+(const Vector& v) const { return { x + v.x, y + v.y, z + v.z }; }
+	Vector operator-(const Vector& v) const { return { x - v.x, y - v.y, z - v.z }; }
+	Vector operator*(float fl) const { return { x * fl, y * fl, z * fl }; }
+	Vector operator/(float fl) const { return { x / fl, y / fl, z / fl }; }
 
 	/////////////////////////////
 	// ADDED OPERATORS => / <=
@@ -101,9 +101,9 @@ public:
 	Vector Normalize() const
 	{
 		float flLen = Length();
-		if (flLen == 0.0f) return {0, 0, 1}; // ????
+		if (flLen == 0.0f) return { 0, 0, 1 }; // ????
 		flLen = 1 / flLen;
-		return {x * flLen, y * flLen, z * flLen};
+		return { x * flLen, y * flLen, z * flLen };
 	}
 
 	Vector2D Make2D() const
@@ -123,8 +123,10 @@ public:
 };
 inline Vector operator*(float fl, const Vector& v) { return v * fl; }
 inline float DotProduct(const Vector& a, const Vector& b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
-inline Vector CrossProduct(const Vector& a, const Vector& b) { return {a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x
-}; }
+inline Vector CrossProduct(const Vector& a, const Vector& b) {
+	return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x
+	};
+}
 inline float VecDistance(const Vector& a, const Vector& b) { return (b - a).Length(); }
 
 #endif

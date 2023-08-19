@@ -348,7 +348,7 @@ Vector UTIL_VecToAngles(const Vector& vec)
 {
 	float rgflVecOut[3];
 	VEC_TO_ANGLES(vec, rgflVecOut);
-	return {rgflVecOut};
+	return { rgflVecOut };
 }
 
 // Overloaded to add IGNORE_GLASS
@@ -370,7 +370,7 @@ void UTIL_MakeVectors(const Vector& vecAngles)
 void strlow(char* str)
 // lower a string to make it lower case.
 {
-	const int len = std::strlen(str);
+	const size_t len = std::strlen(str);
 
 	for (int i = 0; i < len; i++)
 	{
@@ -381,7 +381,7 @@ void strlow(char* str)
 void strhigh(char* str)
 // higher a string to make it upper case.
 {
-	const int len = std::strlen(str);
+	const size_t len = std::strlen(str);
 
 	for (int i = 0; i < len; i++)
 	{
@@ -401,8 +401,7 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 		{
 			if (!pent->free)
 			{
-				// 'strlen' function called too many times inside loop [APG]RoboCop[CL]
-				const int length = std::strlen(name);
+				const size_t length = std::strlen(name);
 
 				char arg_lwr[80];
 				char pent_lwr[80];
@@ -611,7 +610,7 @@ float UTIL_AngleBetweenVectors(Vector const& vec1, Vector const& vec2)
 	const double vec1Dotvec2 = vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
 	const double veclengths = vec1.Length() * vec2.Length();
 
-	return std::acos(vec1Dotvec2 / veclengths) * (180.0 / M_PI);
+	return static_cast<float>(std::acos(vec1Dotvec2 / veclengths) * (180.0 / M_PI));
 }
 
 float UTIL_YawAngleBetweenOrigin(entvars_t* pev, Vector const& vOrigin)
@@ -2209,7 +2208,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 		if (std::strstr(final_message, "%n") != nullptr)
 		{
 			const char* szName = STRING(pEntity->v.netname);
-			const int iLen = std::strlen(szName);
+			const size_t iLen = std::strlen(szName);
 			char* szNewName = static_cast<char*>(std::malloc(iLen + 1)); // No need to multiply by sizeof(char)
 
 			RemoveNameTags(szName, szNewName);

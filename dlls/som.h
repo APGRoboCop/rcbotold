@@ -44,7 +44,7 @@ public:
 
 	CSomNeuron();
 
-	CSomNeuron(int iInp, int iX, int iY);
+	CSomNeuron(int iInp, ga_value iX, ga_value iY);
 
 	ga_value getX() const
 	{

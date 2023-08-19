@@ -470,7 +470,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 	if (bfp == nullptr)
 	{
 		// try loading a .wpt file
-		const int iLen = std::strlen(filename);
+		const size_t iLen = std::strlen(filename);
 
 		filename[iLen - 1] = 't';
 		filename[iLen - 2] = 'p';
@@ -1031,13 +1031,13 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 // initial call. subsequent calls will return other paths if they exist.)
 int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team)
 {
-    int count = 0;
+	int count = 0;
 
-    if (*pPath == nullptr)
-    {
-        *pPath = paths[waypoint_index];
-        *path_index = 0;
-    }
+	if (*pPath == nullptr)
+	{
+		*pPath = paths[waypoint_index];
+		*path_index = 0;
+	}
 
 	/*if (*path_index == MAX_PATH_INDEX)
 	{
@@ -2342,7 +2342,7 @@ Vector WaypointOrigin(const int iWaypointIndex)
 	if (iWaypointIndex < 0)
 	{
 		BotMessage(nullptr, 0, "Caution: WaypointOrigin() received invalid waypoint index!");
-		return {0, 0, 0};
+		return { 0, 0, 0 };
 	}
 
 	return waypoints[iWaypointIndex].origin;

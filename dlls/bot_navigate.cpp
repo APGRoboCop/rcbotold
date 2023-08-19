@@ -1707,9 +1707,9 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 std::optional<PATH*> BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam) //Experimental [APG]RoboCop[CL]
 {
-    PATH* pPath = nullptr;
-    int iPathIndex = 0;
-    int iIndex;
+	PATH* pPath = nullptr;
+	int iPathIndex = 0;
+	int iIndex;
 
 	while ((iIndex = WaypointFindPath(&pPath, &iPathIndex, iFrom, iTeam)) != -1)//TODO: triggers crash? [APG]RoboCopCL]
 	{
@@ -1723,87 +1723,87 @@ std::optional<PATH*> BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam) /
 	return std::nullopt; // Return std::nullopt instead of nullptr
 }
 
-	/*CLocation :: CLocation (const char *szLocationName,edict_t *pEntity)
+/*CLocation :: CLocation (const char *szLocationName,edict_t *pEntity)
+{
+	FILE *fp;
+	//char filename[256];
+
+	this->Init();
+
+	m_pEntity = pEntity;
+
+	if ( szLocationName == NULL )
 	{
-		FILE *fp;
-		//char filename[256];
+		BotMessage(NULL,0,"Warning: CLocation() Received NULL Location");
+		return;
+	}
 
-		this->Init();
+	fp = std::fopen("ns\\titles.txt","r");
 
-		m_pEntity = pEntity;
+	if ( fp == NULL )
+	{
+		GiveName(szLocationName);
+		return;
+	}
 
-		if ( szLocationName == NULL )
-		{
-			BotMessage(NULL,0,"Warning: CLocation() Received NULL Location");
-			return;
-		}
+	char buffer[256];
+	int buffer_len;
 
-		fp = std::fopen("ns\\titles.txt","r");
+	BOOL found = false;
 
-		if ( fp == NULL )
-		{
-			GiveName(szLocationName);
-			return;
-		}
+	while ( std::fgets(buffer, 255, fp) != NULL)
+	{
+		buffer[255] = 0;
 
-		char buffer[256];
-		int buffer_len;
+		buffer_len = std::strlen(buffer);
 
-		BOOL found = false;
-
-		while ( std::fgets(buffer, 255, fp) != NULL)
-		{
-			buffer[255] = 0;
-
-			buffer_len = std::strlen(buffer);
-
-			if ( buffer[buffer_len-1] == '\n' )
-				buffer[--buffer_len] = 0;
-
-			if ( found == false )
-			{
-				if ( std::strcmp(szLocationName,buffer) == 0 )
-					found = true;
-			}
-			else
-			{
-				if ( buffer[0] == '{' )
-					continue;
-				else
-				{
-					GiveName(buffer);
-					break;
-				}
-			}
-		}
+		if ( buffer[buffer_len-1] == '\n' )
+			buffer[--buffer_len] = 0;
 
 		if ( found == false )
 		{
-			GiveName(szLocationName);
+			if ( std::strcmp(szLocationName,buffer) == 0 )
+				found = true;
 		}
-
-		std::fclose(fp);
+		else
+		{
+			if ( buffer[0] == '{' )
+				continue;
+			else
+			{
+				GiveName(buffer);
+				break;
+			}
+		}
 	}
 
-	void CLocation :: GiveName ( const char *szLocationName )
+	if ( found == false )
 	{
-		m_szLocationName = (char*)std::malloc((sizeof(char)*std::strlen(szLocationName))+1);
+		GiveName(szLocationName);
+	}
 
-		if ( m_szLocationName == NULL )
-		{
-			BotMessage(NULL,0,"Can't Allocate Memory For Location Name : %s",szLocationName);
-			return;
-		}
+	std::fclose(fp);
+}
 
-		std::strcpy(m_szLocationName,szLocationName);
-	}*/
+void CLocation :: GiveName ( const char *szLocationName )
+{
+	m_szLocationName = (char*)std::malloc((sizeof(char)*std::strlen(szLocationName))+1);
 
-	Vector BotNavigate_ScanFOV(CBot * pBot)
-	// Called when bot can't find a nearby waypoint
-	// instead fire tracelines in FOV and move to the furthest
-	// point it can find
+	if ( m_szLocationName == NULL )
+	{
+		BotMessage(NULL,0,"Can't Allocate Memory For Location Name : %s",szLocationName);
+		return;
+	}
 
-	// Thanks PM's racc bot source for some info pointers. (racc.bots-united.com)
+	std::strcpy(m_szLocationName,szLocationName);
+}*/
+
+Vector BotNavigate_ScanFOV(CBot* pBot)
+// Called when bot can't find a nearby waypoint
+// instead fire tracelines in FOV and move to the furthest
+// point it can find
+
+// Thanks PM's racc bot source for some info pointers. (racc.bots-united.com)
 {
 	constexpr float fFov = 105.0f;
 	int iStep;

@@ -107,7 +107,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 	// is bot chat allowed AND this message is not from this bot itself ?
 	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHATTING) && pSender != pBot->m_pEdict)
 	{
-		const int iNameLength = std::strlen(pBot->m_szBotName);
+		const size_t iNameLength = std::strlen(pBot->m_szBotName);
 		char* szName = new char[sizeof(char) * (iNameLength + 1)];
 		RemoveNameTags(pBot->m_szBotName, szName);
 		szName[iNameLength] = 0;
@@ -120,7 +120,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		const char* szNamePos = std::strstr(szMsg, szName);
 		const BOOL bNameInMsg = szNamePos != nullptr;
 
-		const int iSenderNameLength = std::strlen(STRING(pSender->v.netname));
+		const size_t iSenderNameLength = std::strlen(STRING(pSender->v.netname));
 		char* szSenderName = new char[sizeof(char) * (iSenderNameLength + 1)];
 		RemoveNameTags(STRING(pSender->v.netname), szSenderName);
 		szSenderName[iSenderNameLength] = 0;
@@ -184,10 +184,10 @@ void HumanizeString(char* string)
 	constexpr int capitalise_percent = 1;
 	constexpr int lower_percent = 2;
 
-	int length = std::strlen(string);
-	int i = 0;
-	int n = 0;
-	int rand;
+	size_t length = std::strlen(string);
+	unsigned int i = 0;
+	unsigned int n = 0;
+	unsigned int rand;
 
 	while (i < length)
 	{
@@ -247,7 +247,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 	if (in_string == nullptr)
 		return;
 
-	const int length = std::strlen(in_string);
+	const size_t length = std::strlen(in_string);
 
 	if (length > 127)
 	{
@@ -2061,7 +2061,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 				if (!szBuffer[0])
 					continue; // nothing on this line
 
-				const int iLen = std::strlen(szBuffer);
+				const size_t iLen = std::strlen(szBuffer);
 
 				if (szBuffer[iLen - 1] == '\n')
 					szBuffer[iLen - 1] = 0;

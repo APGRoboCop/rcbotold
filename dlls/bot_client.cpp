@@ -623,11 +623,11 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 		break;
 
 	case 1:
-		{
-			CBot* pBot;
-			// not a MSG_ALL message
-		//if ( iIndex != -1 )
-		//{
+	{
+		CBot* pBot;
+		// not a MSG_ALL message
+	//if ( iIndex != -1 )
+	//{
 		if (iIndex != -1)
 			pBot = &gBotGlobals.m_Bots[iIndex];
 		else
@@ -1267,7 +1267,7 @@ void BotClient_NS_HudText::execute(void* p, int iIndex)
 
 		if (msg)
 		{
-			const int length = std::strlen(msg);
+			const size_t length = std::strlen(msg);
 
 			// If a team has won (used to say "one" duhhh), round is over
 			if (!strcmpi(&msg[length - 3], "Won"))
@@ -2051,7 +2051,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 	const int iHealth = POINTER_TO_INT(p);
 
-	if (iHealth > pBot->m_fPrevHealth) // more health
+	if (static_cast<float>(iHealth) > pBot->m_fPrevHealth) // more health
 	{
 		if (pBot->m_bAcceptHealth)
 		{

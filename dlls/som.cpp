@@ -185,7 +185,7 @@ CSomNeuron::CSomNeuron()
 	return;
 }
 
-CSomNeuron::CSomNeuron(int iInp, int iX, int iY)
+CSomNeuron::CSomNeuron(int iInp, ga_value iX, ga_value iY)
 {
 	m_iX = iX;
 	m_iY = iY;

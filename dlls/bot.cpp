@@ -2234,7 +2234,6 @@ BOOL CBot::BotCanUseBuiltStructure(edict_t* structure) const //TODO: Experimenta
 	return true;
 }
 
-
 const char* BotFunc_GetRandomPlayerName(CBot* pBot, const int iState)
 // Get a random playername, depending on iState...
 	// iState 0 will return any random player name
@@ -10742,7 +10741,7 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 	weights.clear();
 	inputs.clear();
 
-	//return dec_followEnemy->fired(); //Not required? [APG]RoboCop[CL]	
+	//return dec_followEnemy->fired(); //Not required? [APG]RoboCop[CL]
 
 	if (pEnemy == nullptr)
 		return false;

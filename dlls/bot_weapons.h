@@ -599,7 +599,7 @@ public:
 		//m_iModId;
 		m_iPriority = pPreset->m_iPriority;
 	}
-	
+
 	void Init() override//replaced memset with std::fill_n [APG]RoboCop[CL]
 	{
 		std::fill_n(reinterpret_cast<char*>(this), sizeof(CWeaponPreset), 0);

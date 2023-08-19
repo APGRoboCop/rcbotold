@@ -695,7 +695,7 @@ public:
 
 	void write_short(int s) override
 	{
-		if (!m_ReceivedPlayers.size())
+		if (m_ReceivedPlayers.empty())
 			m_ReceivedPlayers.emplace_back(INDEXENT(s));
 		else if (!m_iOrderType)
 			m_iOrderType = static_cast<AvHOrderType>(s);

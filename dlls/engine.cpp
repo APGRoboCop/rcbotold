@@ -105,9 +105,11 @@ int pfnPrecacheSound(char* s)
 }
 void pfnSetModel(edict_t* e, const char* m)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a");
+	if (debug_engine) {
+		fp = std::fopen("bot.txt", "a");
 		std::fprintf(fp, "pfnSetModel: edict=%x %s\n", reinterpret_cast<unsigned>(e), m);
-		std::fclose(fp); }
+		std::fclose(fp);
+	}
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -136,9 +138,11 @@ int pfnModelFrames(int modelIndex)
 }
 void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a");
+	if (debug_engine) {
+		fp = std::fopen("bot.txt", "a");
 		std::fprintf(fp, "pfnSetSize: %x\n", reinterpret_cast<unsigned>(e));
-		std::fclose(fp); }
+		std::fclose(fp);
+	}
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1322,9 +1326,11 @@ void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 		pBot->m_fMaxSpeed = fNewMaxspeed;
 	}
 
-	if (debug_engine) { fp = std::fopen("bot.txt", "a");
+	if (debug_engine) {
+		fp = std::fopen("bot.txt", "a");
 		std::fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", reinterpret_cast<unsigned>(pEdict), fNewMaxspeed);
-		std::fclose(fp); }
+		std::fclose(fp);
+	}
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1480,9 +1486,11 @@ int pfnGetPlayerUserId(edict_t* e)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) { fp = std::fopen("bot.txt", "a");
+		if (debug_engine) {
+			fp = std::fopen("bot.txt", "a");
 			std::fprintf(fp, "pfnGetPlayerUserId: %x\n", reinterpret_cast<unsigned>(e));
-			std::fclose(fp); }
+			std::fclose(fp);
+		}
 	}
 
 #ifdef RCBOT_META_BUILD
@@ -1552,9 +1560,11 @@ unsigned int pfnGetPlayerWONId(edict_t* e)
 		}
 	}
 
-	if (debug_engine) { fp = std::fopen("bot.txt", "a");
+	if (debug_engine) {
+		fp = std::fopen("bot.txt", "a");
 		std::fprintf(fp, "pfnGetPlayerWONId: %x\n", reinterpret_cast<unsigned>(e));
-		std::fclose(fp); }
+		std::fclose(fp);
+	}
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1876,7 +1886,7 @@ const char* GetArg(const char* command, int arg_number)
 	if (!command || !*command)
 		return nullptr;
 
-	const int length = std::strlen(command); // get length of command
+	const size_t length = std::strlen(command); // get length of command
 
 	// while we have not reached end of line
 	while (index < length && arg_count <= arg_number)

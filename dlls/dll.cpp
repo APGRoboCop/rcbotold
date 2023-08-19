@@ -1575,7 +1575,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	}
 
 	gBotGlobals.m_bIsFakeClientCommand = true; // set the "fakeclient command" flag
-	const int length = std::strlen(command); // get the total length of the command string
+	const size_t length = std::strlen(command); // get the total length of the command string
 
 	// process all individual commands (separated by a semicolon) one each a time
 	while (stringindex < length)
@@ -1769,7 +1769,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		if (szBuffer[0] == '#')
 			continue;
 
-		int iLength = std::strlen(szBuffer);
+		size_t iLength = std::strlen(szBuffer);
 
 		if (szBuffer[iLength - 1] == '\n')
 			szBuffer[--iLength] = '\0';
@@ -1987,7 +1987,7 @@ void ReadBotUsersConfig()
 
 			buffer[255] = 0;
 
-			int length = std::strlen(buffer);
+			size_t length = std::strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;
@@ -2085,7 +2085,7 @@ void ReadMapConfig()
 		if (*szTemp == '#')
 			return;
 
-		int iLen = std::strlen(szTemp);
+		size_t iLen = std::strlen(szTemp);
 
 		if (iLen > 255)
 			szTemp[255] = 0;
@@ -2132,17 +2132,17 @@ edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Ve
 			continue;
 
 		if (pPlayer->v.iuser3 == iUser3 && std::strcmp(STRING(pPlayer->v.classname), szClassname) == 0)
-			{
-				pPlayer->v.origin = vOrigin;
-				return pPlayer;
-			}
+		{
+			pPlayer->v.origin = vOrigin;
+			return pPlayer;
 		}
+	}
 
 	return nullptr;
 }
-	//
-	// Hack building
-	edict_t * BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t * pEntityUser, BOOL bBuilt)
+//
+// Hack building
+edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser, BOOL bBuilt)
 {
 	//pfnCreateNamedEntity(MAKE_STRING(pCommBuildent));
 

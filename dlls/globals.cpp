@@ -1183,8 +1183,6 @@ void CBotGlobals::MapInit()
 
 	/*if (IsMod(MOD_TFC))
 	{
-
-
 		  TFC_MAP_UNKNOWN,		// unknown map type
 		  TFC_MAP_CTF,			// normal capture the flag (flag in enemy base) e.g. 2fort
 		  TFC_MAP_CAPTURE,		// capture without flag e.g. warpath
@@ -1311,7 +1309,7 @@ const char* CBotGlobals::GetModInfo()
 
 	GET_GAME_DIR(game_dir);
 
-	int pos = 0;
+	size_t pos = 0;
 
 	if (std::strchr(game_dir, '/') != nullptr)
 	{
@@ -1443,7 +1441,7 @@ void CBotGlobals::ReadConfig()
 		{
 			int i = 0;
 
-			int length = std::strlen(buffer);
+			size_t length = std::strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;
@@ -1591,7 +1589,7 @@ void CBotGlobals::loadLearnedData()
 
 		std::sprintf(tmpFilename, "team%d.rld", i);
 		UTIL_BuildFileName(szFilename, tmpFilename);
-		
+
 		std::FILE* bfp = std::fopen(szFilename, "rb");
 
 		if (bfp)
@@ -1769,7 +1767,7 @@ void CBotGlobals::ReadThingsToBuild() const
 			if (szbuffer[0] == '#')
 				continue; // comment
 
-			int ilen = std::strlen(szbuffer);
+			size_t ilen = std::strlen(szbuffer);
 
 			if (ilen == 0)
 				continue;
@@ -1977,7 +1975,7 @@ void CBotGlobals::SetupBotChat()
 		if (buffer[0] == '#')
 			continue;
 
-		int iLength = std::strlen(buffer);
+		size_t iLength = std::strlen(buffer);
 
 		if (buffer[iLength - 1] == '\n')
 		{

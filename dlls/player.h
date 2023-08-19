@@ -112,7 +112,7 @@ public:
 	unsigned int		m_afPhysicsFlags;	// physics flags - set when 'normal' physics should be revisited or overriden
 	float				m_fNextSuicideTime; // the time after which the player can next use the suicide command
 
-// these are time-sensitive things that we keep track of
+	// these are time-sensitive things that we keep track of
 	float				m_flTimeStepSound;	// when the last stepping sound was made
 	float				m_flTimeWeaponIdle; // when to play another weapon idle animation.
 	float				m_flSwimTime;		// how long player has been underwater
@@ -138,7 +138,7 @@ public:
 	int					m_idrownrestored;		// track drowning damage restored
 
 	int					m_bitsHUDDamage;		// Damage bits for the current fame. These get sent to
-												// the hude via the DAMAGE message
+	// the hude via the DAMAGE message
 	BOOL				m_fInitHUD;				// True when deferred HUD restart msg needs to be sent
 	BOOL				m_fGameHUDInitialized;
 	int					m_iTrain;				// Train control position
@@ -213,7 +213,7 @@ public:
 	BOOL IsPlayer() override { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
 
 	BOOL IsNetClient() override { return true; }		// Bots should return false for this, they can't receive NET messages
-															// Spectators should return true for this
+	// Spectators should return true for this
 	const char* TeamID() override;
 
 	int		Save(CSave& save) override;

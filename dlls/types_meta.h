@@ -37,7 +37,7 @@
 #ifndef TYPES_META_H
 #define TYPES_META_H
 
-// Our own boolean type, for stricter type matching.
+ // Our own boolean type, for stricter type matching.
 typedef enum mBOOL {
 	mFALSE = 0,
 	mTRUE = 1,

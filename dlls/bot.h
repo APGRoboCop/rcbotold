@@ -1381,7 +1381,7 @@ public:
 	}
 
 	int GetNewScheduleId() const
-	// Return an unused Schedule Id...
+		// Return an unused Schedule Id...
 	{
 		int iScheduleId = 1;
 
@@ -1620,7 +1620,7 @@ class CBotFailedPaths
 public:
 
 	BOOL Violate(PATH* pPath) const
-	// violate path, make it unavailable.
+		// violate path, make it unavailable.
 	{
 		dataStack<CBotFailedPath> tempStack = m_FailedPaths;
 
@@ -1720,7 +1720,7 @@ public:
 
 	Vector GetVector() const
 	{
-		return {static_cast<float>(m_x), static_cast<float>(m_y), static_cast<float>(m_z)};
+		return { static_cast<float>(m_x), static_cast<float>(m_y), static_cast<float>(m_z) };
 	}
 
 	BOOL IsVectorSet() const
@@ -2808,7 +2808,7 @@ private:
 
 	float m_fLastPlaceDetpack;
 	/////////////////////////////////////
-	public:
+public:
 	dataUnconstArray<int> iDetPackWaypoints; // for TFC Demoman
 	float m_fPrevHealth;
 	int m_iCombatTeam;
@@ -3190,7 +3190,7 @@ public:
 			}
 		}*/
 
-	//BOOL ThinkSpyOnTeam(edict_t* pSpy);
+		//BOOL ThinkSpyOnTeam(edict_t* pSpy);
 
 	void ThrowGrenade(edict_t* pEnemy, int preference = 0, BOOL bDontPrime = false);
 
@@ -3504,8 +3504,8 @@ public:
 	// NAVIGATION RELATED
 
 	int GetNextWaypoint() const
-	// get waypoint AFTER current waypoint,
-		// return current if no next one.
+		// get waypoint AFTER current waypoint,
+			// return current if no next one.
 	{
 		dataStack<int> tempStack = m_stBotPaths;
 		int iNextWaypoint = m_iCurrentWaypointIndex;
@@ -6131,8 +6131,8 @@ public:
 	void ReadThingsToBuild() const;
 
 	BOOL IsConfigSettingOn(int iConfigSetting) const
-	// returns a True value if the config setting iConfigSetting
-		// is On, False if Off..
+		// returns a True value if the config setting iConfigSetting
+			// is On, False if Off..
 	{
 		return (m_iConfigSettings & iConfigSetting) > 0;
 	}
@@ -6741,7 +6741,7 @@ public:
 				std::free(m_szWelcomeMessage);
 			m_szWelcomeMessage = strdup(message);
 		}*/
-	
+
 	void buildFileName(const char* in_filename, char* out_filename)
 	{
 		std::sprintf(out_filename, "%s%s", m_szBotFolder, in_filename);

@@ -189,7 +189,7 @@ void SetupMenus()
 	//if (gBotGlobals.IsMod(MOD_TFC))
 	//	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(1, "Capture Point", BotMenu_Func_Barney_Waypoint);
 	//else
-		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(1, "Barney Point", BotMenu_Func_Barney_Waypoint);
+	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(1, "Barney Point", BotMenu_Func_Barney_Waypoint);
 
 	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(2, "Check for lift", BotMenu_CheckForLift_Waypoint);
 

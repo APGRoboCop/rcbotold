@@ -1001,14 +1001,14 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	else if (FStrEq("min_bots", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_iMinBots = std::stoi(arg2);
+			gBotGlobals.m_iMinBots = static_cast<short>(std::stoi(arg2));
 		else
 			fSetVal = gBotGlobals.m_iMinBots;
 	}
 	else if (FStrEq("max_bots", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_iMaxBots = std::stoi(arg2);
+			gBotGlobals.m_iMaxBots = static_cast<short>(std::stoi(arg2));
 		else
 			fSetVal = gBotGlobals.m_iMaxBots;
 	}
@@ -1064,14 +1064,14 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	else if (FStrEq("chat_percent", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_iBotChatPercent = std::stoi(arg2);
+			gBotGlobals.m_iBotChatPercent = static_cast<short>(std::stoi(arg2));
 		else
 			fSetVal = gBotGlobals.m_iBotChatPercent;
 	}
 	else if (FStrEq("chat_reply_percent", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_iBotChatReplyPercent = std::stoi(arg2);
+			gBotGlobals.m_iBotChatReplyPercent = static_cast<short>(std::stoi(arg2));
 		else
 			fSetVal = gBotGlobals.m_iBotChatReplyPercent;
 	}
@@ -1675,7 +1675,6 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		//if ( !arg1valid && !arg2valid && !arg3valid )
 		//{
-
 		char filename[512];
 		UTIL_BuildFileName(filename, BOT_PROFILES_FILE);
 		/*
@@ -1882,7 +1881,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		int i = 0;
 		int j = 0;
 
-		const int len = std::strlen(teamlist);
+		const size_t len = std::strlen(teamlist);
 
 		while (i < len)
 		{
