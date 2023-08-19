@@ -7,7 +7,7 @@
 # the following specifies the path to your MOD...
 #MOD_DIR = /home/paul/hlds_l/rcbot
 
-CPP = g++ -m32
+CPP = clang++ -m32
 
 BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -DRCBOT_META_BUILD -D__linux__
 
@@ -16,7 +16,7 @@ BASEFLAGS = -Dstricmp=strcasecmp -Dstrcmpi=strcasecmp -DRCBOT_META_BUILD -D__lin
 
 CPPFLAGS = ${BASEFLAGS} -mtune=generic -march=i686 -mmmx -msse -msse2 -mfpmath=sse -std=gnu++17 -O2 \
            -Wno-write-strings -Wno-unused-local-typedefs -funsafe-math-optimizations -pipe \
-           -I. -I../engine -I../common -I../pm_shared -static-libgcc -static-libstdc++
+           -I. -I../engine -I../common -I../pm_shared# -static-libgcc -static-libstdc++
 		
 OBJ = bits.o bot.o bot_client.o bot_commands.o bot_ga.o bot_menu.o bot_navigate.o bot_nn.o \
 	bot_rep.o bot_visibles.o bot_weapons.o client.o dir.o dll.o engine.o ga.o globals.o \

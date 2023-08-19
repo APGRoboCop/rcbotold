@@ -331,6 +331,7 @@
     <ClCompile Include="waypoint.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\weaponinfo.h" />
     <ClInclude Include="actionutility.h" />
     <ClInclude Include="basemonster.h" />
     <ClInclude Include="bits.h" />

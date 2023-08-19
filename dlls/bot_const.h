@@ -44,8 +44,8 @@
  // Constants and macros
  //
 
-#ifndef __BOT_CONST_H__
-#define __BOT_CONST_H__
+#ifndef BOT_CONST_H
+#define BOT_CONST_H
 
 #define EXPLODE_RADIUS 300
 
@@ -191,6 +191,12 @@ typedef enum
 
 #define BOT_MAX_PASSWORD_LEN 16
 
+// start messages
+// Science and Industry
+#define MSG_SI_IDLE			1
+#define MSG_SI_TEAM_SELECT	2
+#define MSG_SI_MODEL_SELECT	3
+
 ////////////////////////////////
 // NATURAL SELECTION TEAMS
 #define TEAM_NONE     0
@@ -200,14 +206,17 @@ typedef enum
 
 #define TYPE_UNKNOWN  8
 
-#define TYPE_SOLDIER  0
-#define TYPE_HEAVY    1
-#define TYPE_SKULK    2
-#define TYPE_GORGE    3
-#define TYPE_LERK     4
-#define TYPE_FADE     5
-#define TYPE_ONOS     6
-#define TYPE_EVOLVING 7
+enum
+{
+	TYPE_SOLDIER = 0,
+	TYPE_HEAVY = 1,
+	TYPE_SKULK = 2,
+	TYPE_GORGE = 3,
+	TYPE_LERK = 4,
+	TYPE_FADE = 5,
+	TYPE_ONOS = 6,
+	TYPE_EVOLVING = 7
+};
 
 #define BOT_USERS_FILE "bot_users.ini"
 //#define BOT_PASSWORD_KEY "rcbot_pass"
@@ -413,6 +422,53 @@ typedef enum
 	// NOTE: If this gets larger then a byte, AvHTechNode will have to change it's networking, possibly other code too
 	// NOTE: When changing any of these values, make sure to update titles.txt, skill.cfg and dlls\game.cpp, and tech*s.spr
 } AvHMessageID;
+
+//-----------------------------------------------------------------------------
+// Possible Research Options - Science and Industry
+//-----------------------------------------------------------------------------
+enum ResearchGoal
+{
+	RESEARCH_NULL = 0,			// starting research option (sets up research), it's also the end-game research
+	RESEARCH_ARMOR_25,			// level one armor upgrade
+	RESEARCH_ARMOR_50,			// level two armor upgrade
+	RESEARCH_A_REGEN,			// player armor regeneration
+	RESEARCH_ARMOR_75,			// level three armor upgrade
+	RESEARCH_A_REGEN2,			// advanced player armor regeneration
+	RESEARCH_ARMOR_100,			// level four armor upgrade
+	RESEARCH_H_REGEN,			// player health regeneration
+	RESEARCH_H_REGEN2,			// advanced player health regeneration
+	RESEARCH_LEGS_1,			// faster player movement
+	RESEARCH_AMMO_REPLICATE,	// ammo replication
+	RESEARCH_STRENGTH,			// bionic strength
+	RESEARCH_SUPERJUMP,			// super jump module
+	RESEARCH_OPTICS,			// optical implants
+	RESEARCH_LEGS_2,			// long jump power
+	RESEARCH_AMMO_REPLICATE2,	// advanced ammo replication
+	RESEARCH_STRENGTH2,			// enhanced strength
+	RESEARCH_SHOTGUN,			// weapon_shotgun
+	RESEARCH_TOMMYGUN,			// weapon_tommygun
+	RESEARCH_SNUZI,				// weapon_snUZI
+	RESEARCH_GRENADE,			// weapon_grenade
+	RESEARCH_FEV,				// flesh eating virus
+	RESEARCH_CROSSBOW,			// weapon_crossbow
+	RESEARCH_GAUSS,				// weapon_gauss
+	RESEARCH_ROCKETPISTOL,		// weapon_rocketpistol
+	RESEARCH_BRIEFCASE,			// weapon_briefcase
+	RESEARCH_RADIO,				// weapon_transistor
+	RESEARCH_CLOAKING,			// cloaking device
+	RESEARCH_MINDRAY,			// weapon_mindray
+	RESEARCH_EMPCANNON,			// weapon_empcannon
+	RESEARCH_VOMIT,				// weapon_vomit
+	RESEARCH_SATCHEL,			// weapon_satchel
+	RESEARCH_TRIPMINE,			// weapon_tripmine
+	RESEARCH_COFFEE,			// quicker wake up for scientists and higher max eff.
+	RESEARCH_MANUFACTURING,		// cash reward, incentive for scis (cheaper and quicker replacemnts)
+	//RESEARCH_PRODUCTION,		// shortend weapon/ammo spawn times
+	RESEARCH_CLONING,			// cheaper/quicker player respawn
+	RESEARCH_COLT,				// weapon_colt
+
+	NUM_RESEARCH_OPTIONS		// leave this as the last item in the list
+};
 
 // 200 units away max from building (2d distance)
 #define MAX_BUILD_RANGE 800
@@ -639,30 +695,33 @@ typedef enum {
 // All conditions here specify the index in an array
 // Use bit mask, much quicker at adding/removing and checking. limited to 32 conditions.
 
-#define BOT_CONDITION_SEE_ENEMY			(1<<0)	// See an enemy
-#define BOT_CONDITION_HEAR_DANGER		(1<<1)	// Hear danger
-#define BOT_CONDITION_SEE_NEXT_WAYPOINT (1<<2) // bot see's it's waypoint, useful for checking when stuck
-#define BOT_CONDITION_TASK_EDICT_NA     (1<<3) // Task edict not avaialable anymore.
-#define BOT_CONDITION_ENEMY_OCCLUDED	(1<<4)	// Enemy blocked by something??
-#define BOT_CONDITION_ENEMY_DEAD		(1<<5)	// Enemy killed
-#define BOT_CONDITION_HAS_WEAPON		(1<<6)	// Has weapons
-#define BOT_CONDITION_OUT_OF_AMMO		(1<<7)	// Out of ammo on current weapon
-#define BOT_CONDITION_SQUAD_LEADER_DEAD (1<<8)  // Bots leader died
-#define BOT_CONDITION_SEE_SQUAD_LEADER  (1<<9)
-#define BOT_CONDITION_SEE_TASK_EDICT    (1<<10) // see the current edict for current task
-#define BOT_CONDITION_SEE_GOAL_EDICT    (1<<11) // see's the entity at bots objective
-#define BOT_CONDITION_CANT_SHOOT        (1<<12)
-#define BOT_CONDITION_SEE_BUILDABLE     (1<<13)
-#define BOT_CONDITION_SEE_ENEMY_HEAD    (1<<14)
-#define BOT_CONDITION_SEE_ENEMY_BODY    (1<<15)
-#define BOT_CONDITION_NEED_WEAPONS		(1<<16)
-#define BOT_CONDITION_ENEMY_IS_OSPREY   (1<<17)
-#define BOT_CONDITION_STOPPED_BUILDING  (1<<18)
-#define BOT_CONDITION_TASKS_CORRUPTED   (1<<19) // bot tasks can change while in task code causing problems
-#define BOT_CONDITION_TASK_EDICT_PAIN   (1<<20) // bot heardtask edict
-#define BOT_CONDITION_WANT_TO_LEAVE_GAME (1<<21) // will be set if the bot wants to leave the game
-#define BOT_CONDITION_SELECTED_GUN (1<<22) // TS: make a gun to use
-#define BOT_CONDITION_DONT_CLEAR_OBJECTIVES (1<<23)
+enum
+{
+	BOT_CONDITION_SEE_ENEMY = (1<<0),	// See an enemy
+	BOT_CONDITION_HEAR_DANGER = (1<<1),	// Hear danger
+	BOT_CONDITION_SEE_NEXT_WAYPOINT = (1<<2),	// bot see's it's waypoint, useful for checking when stuck
+	BOT_CONDITION_TASK_EDICT_NA = (1<<3),	// Task edict not avaialable anymore.
+	BOT_CONDITION_ENEMY_OCCLUDED = (1<<4),	// Enemy blocked by something??
+	BOT_CONDITION_ENEMY_DEAD = (1<<5),	// Enemy killed
+	BOT_CONDITION_HAS_WEAPON = (1<<6),	// Has weapons
+	BOT_CONDITION_OUT_OF_AMMO = (1<<7),	// Out of ammo on current weapon
+	BOT_CONDITION_SQUAD_LEADER_DEAD = (1<<8),	// Bots leader died
+	BOT_CONDITION_SEE_SQUAD_LEADER = (1<<9),	// See's squad leader
+	BOT_CONDITION_SEE_TASK_EDICT = (1<<10),	// see the current edict for current task
+	BOT_CONDITION_SEE_GOAL_EDICT = (1<<11),	// see's the entity at bots objective
+	BOT_CONDITION_CANT_SHOOT = (1<<12),	// can't shoot
+	BOT_CONDITION_SEE_BUILDABLE = (1<<13),
+	BOT_CONDITION_SEE_ENEMY_HEAD = (1<<14),
+	BOT_CONDITION_SEE_ENEMY_BODY = (1<<15),
+	BOT_CONDITION_NEED_WEAPONS = (1<<16),
+	BOT_CONDITION_ENEMY_IS_OSPREY = (1<<17),
+	BOT_CONDITION_STOPPED_BUILDING = (1<<18),
+	BOT_CONDITION_TASKS_CORRUPTED = (1<<19),	// bot tasks can change while in task code causing problems
+	BOT_CONDITION_TASK_EDICT_PAIN = (1<<20),	// bot heardtask edict
+	BOT_CONDITION_WANT_TO_LEAVE_GAME = (1<<21),	// will be set if the bot wants to leave the game
+	BOT_CONDITION_SELECTED_GUN = (1<<22),	// TS: make a gun to use
+	BOT_CONDITION_DONT_CLEAR_OBJECTIVES = (1<<23)
+};
 
 #define BOT_HEAR_DISTANCE 650.0f
 
@@ -911,12 +970,15 @@ typedef enum
 #define BOT_PITCH_SPEED 30
 #define BOT_YAW_SPEED 30
 
-#define RESPAWN_NONE             0
-#define RESPAWN_IDLE             1
-#define RESPAWN_NEED_TO_RESPAWN  2
-#define RESPAWN_IS_RESPAWNING    3
-#define RESPAWN_LEFT_GAME        4
-#define RESPAWN_NEED_TO_REJOIN   5
+enum
+{
+	RESPAWN_NONE = 0,
+	RESPAWN_IDLE = 1,
+	RESPAWN_NEED_TO_RESPAWN = 2,
+	RESPAWN_IS_RESPAWNING = 3,
+	RESPAWN_LEFT_GAME = 4,
+	RESPAWN_NEED_TO_REJOIN = 5
+};
 
 #define BOT_DEFAULT_REACTION_TIME	0.3f
 
@@ -1019,57 +1081,65 @@ typedef enum
 
 ///
 // combat stuff in NS, what bots want to get
-#define BOT_COMBAT_WANT_SHOTGUN			(1<<0)
-#define BOT_COMBAT_WANT_HMG				(1<<1)
-#define BOT_COMBAT_WANT_GRENADE_GUN		(1<<2)
-#define BOT_COMBAT_WANT_JETPACK			(1<<3)
-#define BOT_COMBAT_WANT_ARMOR			(1<<4)
-#define BOT_COMBAT_WANT_WELDER          (1<<5)
-#define BOT_COMBAT_WANT_RESUPPLY        (1<<6)
-#define BOT_COMBAT_WANT_MINES           (1<<7)
-#define BOT_COMBAT_WANT_CATALYST        (1<<8)
-#define BOT_COMBAT_WANT_MOVE_DETECTION  (1<<9)
-#define BOT_COMBAT_WANT_LERK			(1<<10)
-#define BOT_COMBAT_WANT_FADE			(1<<11)
-#define BOT_COMBAT_WANT_ONOS			(1<<12)
-#define BOT_COMBAT_WANT_DEFUP1			(1<<13)
-#define BOT_COMBAT_WANT_DEFUP2			(1<<14)
-#define BOT_COMBAT_WANT_DEFUP3	        (1<<15)
-#define BOT_COMBAT_WANT_MOVUP1          (1<<16)
-#define BOT_COMBAT_WANT_MOVUP2          (1<<17)
-#define BOT_COMBAT_WANT_MOVUP3			(1<<18)
-#define BOT_COMBAT_WANT_SENUP1			(1<<19)
-#define BOT_COMBAT_WANT_SENUP2			(1<<20)
-#define BOT_COMBAT_WANT_SENUP3			(1<<21)
-/*
+enum
+{
+	BOT_COMBAT_WANT_SHOTGUN = (1<<0),
+	BOT_COMBAT_WANT_HMG = (1<<1),
+	BOT_COMBAT_WANT_GRENADE_GUN = (1<<2),
+	BOT_COMBAT_WANT_JETPACK = (1<<3),
+	BOT_COMBAT_WANT_ARMOR = (1<<4),
+	BOT_COMBAT_WANT_WELDER = (1<<5),
+	BOT_COMBAT_WANT_RESUPPLY = (1<<6),
+	BOT_COMBAT_WANT_MINES = (1<<7),
+	BOT_COMBAT_WANT_CATALYST = (1<<8),
+	BOT_COMBAT_WANT_MOVE_DETECTION = (1<<9),
+	BOT_COMBAT_WANT_LERK = (1<<10),
+	BOT_COMBAT_WANT_FADE = (1<<11),
+	BOT_COMBAT_WANT_ONOS = (1<<12),
+	BOT_COMBAT_WANT_DEFUP1 = (1<<13),
+	BOT_COMBAT_WANT_DEFUP2 = (1<<14),
+	BOT_COMBAT_WANT_DEFUP3 = (1<<15),
+	BOT_COMBAT_WANT_MOVUP1 = (1<<16),
+	BOT_COMBAT_WANT_MOVUP2 = (1<<17),
+	BOT_COMBAT_WANT_MOVUP3 = (1<<18),
+	BOT_COMBAT_WANT_SENUP1 = (1<<19),
+	BOT_COMBAT_WANT_SENUP2 = (1<<20),
+	BOT_COMBAT_WANT_SENUP3 = (1<<21)
+};
+
+
 //////////////////////////////////////////////
 // Bits in GA Individual for combat
 //////////////////////////////////////////////
-#define BOT_GA_COMBAT_WANT_SHOTGUN			1
-#define BOT_GA_COMBAT_WANT_HMG				2
-#define BOT_GA_COMBAT_WANT_GRENADE_GUN		3
-#define BOT_GA_COMBAT_WANT_JETPACK			4
-#define BOT_GA_COMBAT_WANT_ARMOR			5
-#define BOT_GA_COMBAT_WANT_WELDER			6
-#define BOT_GA_COMBAT_WANT_RESUPPLY			7
-#define BOT_GA_COMBAT_WANT_MINES			8
-#define BOT_GA_COMBAT_WANT_MOVEMENT_DETECT	9
+enum
+{
+	BOT_GA_COMBAT_WANT_SHOTGUN = 1,
+	BOT_GA_COMBAT_WANT_HMG = 2,
+	BOT_GA_COMBAT_WANT_GRENADE_GUN = 3,
+	BOT_GA_COMBAT_WANT_JETPACK = 4,
+	BOT_GA_COMBAT_WANT_ARMOR = 5,
+	BOT_GA_COMBAT_WANT_WELDER = 6,
+	BOT_GA_COMBAT_WANT_RESUPPLY = 7,
+	BOT_GA_COMBAT_WANT_MINES = 8,
+	BOT_GA_COMBAT_WANT_MOVEMENT_DETECT = 9,
+	
+	BOT_GA_COMBAT_WANT_LERK = 10,
+	BOT_GA_COMBAT_WANT_FADE = 11,
+	BOT_GA_COMBAT_WANT_ONOS = 12,
+	
+	BOT_GA_COMBAT_WANT_DEF_UPGRADE1 = 13,
+	BOT_GA_COMBAT_WANT_DEF_UPGRADE2 = 14,
+	BOT_GA_COMBAT_WANT_DEF_UPGRADE3 = 15,
+	BOT_GA_COMBAT_WANT_MOV_UPGRADE1 = 16,
+	BOT_GA_COMBAT_WANT_MOV_UPGRADE2 = 17,
+	BOT_GA_COMBAT_WANT_MOV_UPGRADE3 = 18,
+	BOT_GA_COMBAT_WANT_SEN_UPGRADE1 = 19,
+	BOT_GA_COMBAT_WANT_SEN_UPGRADE2 = 20,
+	BOT_GA_COMBAT_WANT_SEN_UPGRADE3 = 21
+};
 
-#define BOT_GA_COMBAT_WANT_LERK				10
-#define BOT_GA_COMBAT_WANT_FADE				11
-#define BOT_GA_COMBAT_WANT_ONOS				12
-
-#define BOT_GA_COMBAT_WANT_DEF_UPGRADE1		13
-#define BOT_GA_COMBAT_WANT_DEF_UPGRADE2		14
-#define BOT_GA_COMBAT_WANT_DEF_UPGRADE3		15
-#define BOT_GA_COMBAT_WANT_MOV_UPGRADE1		16
-#define BOT_GA_COMBAT_WANT_MOV_UPGRADE2		17
-#define BOT_GA_COMBAT_WANT_MOV_UPGRADE3		18
-#define BOT_GA_COMBAT_WANT_SEN_UPGRADE1		19
-#define BOT_GA_COMBAT_WANT_SEN_UPGRADE2		20
-#define BOT_GA_COMBAT_WANT_SEN_UPGRADE3		21
 //////////////////////////////////////////////
-*/
+
 #ifdef __linux__
 
 ///////////////////////
@@ -1078,17 +1148,17 @@ typedef enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b3_mm_debug"
+#define BOT_VER "1.51b4_mm_debug"
 #else
-#define BOT_VER "1.51b3_mm"
+#define BOT_VER "1.51b4_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b3_debug"
+#define BOT_VER "1.51b4_debug"
 #else
-#define BOT_VER "1.51b3"
+#define BOT_VER "1.51b4"
 #endif
 
 #endif
@@ -1102,17 +1172,17 @@ typedef enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b3_mm_debug"
+#define BOT_VER "1.51b4_mm_debug"
 #else
-#define BOT_VER "1.51b3_mm"
+#define BOT_VER "1.51b4_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b3_debug"
+#define BOT_VER "1.51b4_debug"
 #else
-#define BOT_VER "1.51b3"
+#define BOT_VER "1.51b4"
 #endif
 
 #endif
@@ -1143,31 +1213,35 @@ typedef enum
 #define BOT_CHAT_MESSAGE_LENGTH 128
 #define BOT_CHAT_TYPE_SPEED_SEC 9
 
-#define BOT_CONFIG_WAIT_FOR_ORDERS		(1<<0)
-#define BOT_CONFIG_DONT_SHOOT			(1<<1)
-#define BOT_CONFIG_CHATTING				(1<<2)
-#define BOT_CONFIG_REAL_MODE			(1<<3)
-#define BOT_CONFIG_COMMANDING			(1<<4)
-#define BOT_CONFIG_RESERVE_BOT_SLOTS	(1<<5)
-#define BOT_CONFIG_CHAT_REPLY_TO_BOTS	(1<<6)
-#define BOT_CONFIG_MARINE_AUTO_BUILD    (1<<7)
-#define BOT_CONFIG_CHAT_DONT_LEARN      (1<<8)
-#define BOT_CONFIG_BALANCE_TEAMS        (1<<9)
-#define BOT_CONFIG_TOOLTIPS             (1<<10)
-#define BOT_CONFIG_ENABLE_BOTCAM        (1<<11)
-#define BOT_CONFIG_AUTOWAYPOINT_HUMANS  (1<<12)
-#define BOT_CONFIG_UNSTICK              (1<<13)
-#define BOT_CONFIG_ABNORMAL_GAME        (1<<14)
-#define BOT_CONFIG_BOTS_LEAVE_AND_JOIN  (1<<15)
-#define BOT_CONFIG_BOTS_WAIT_FOR_BOTS   (1<<16)
-#define BOT_CONFIG_NOT_NS3_FINAL        (1<<17)
-#define BOT_CONFIG_BLINKING		        (1<<18)
-#define BOT_CONFIG_WAIT_AT_RESOURCES    (1<<19) // marine bots wait for commander to drop res tower
-#define BOT_CONFIG_DISABLE_WEAPON_LEARN (1<<20)
-#define BOT_CONFIG_TS_KUNGFU			(1<<21)
-#define BOT_CONFIG_DISABLE_BOT_SQUADS   (1<<22)
-#define BOT_CONFIG_TS_DONT_STEAL_WEAPONS     (1<<23)
-#define BOT_CONFIG_TS_DONT_PICKUP_WEAPONS    (1<<24)
+enum
+{
+	BOT_CONFIG_WAIT_FOR_ORDERS = (1<<0),
+	BOT_CONFIG_DONT_SHOOT = (1<<1),
+	BOT_CONFIG_CHATTING = (1<<2),
+	BOT_CONFIG_REAL_MODE = (1<<3),
+	BOT_CONFIG_COMMANDING = (1<<4),
+	BOT_CONFIG_RESERVE_BOT_SLOTS = (1<<5),
+	BOT_CONFIG_CHAT_REPLY_TO_BOTS = (1<<6),
+	BOT_CONFIG_MARINE_AUTO_BUILD = (1<<7),
+	BOT_CONFIG_CHAT_DONT_LEARN = (1<<8),
+	BOT_CONFIG_BALANCE_TEAMS = (1<<9),
+	BOT_CONFIG_TOOLTIPS = (1<<10),
+	BOT_CONFIG_ENABLE_BOTCAM = (1<<11),
+	BOT_CONFIG_AUTOWAYPOINT_HUMANS = (1<<12),
+	BOT_CONFIG_UNSTICK = (1<<13),
+	BOT_CONFIG_ABNORMAL_GAME = (1<<14),
+	BOT_CONFIG_BOTS_LEAVE_AND_JOIN = (1<<15),
+	BOT_CONFIG_BOTS_WAIT_FOR_BOTS = (1<<16),
+	BOT_CONFIG_NOT_NS3_FINAL = (1<<17),
+	BOT_CONFIG_BLINKING = (1<<18),
+	BOT_CONFIG_WAIT_AT_RESOURCES = (1<<19),
+	// marine bots wait for commander to drop res tower
+	BOT_CONFIG_DISABLE_WEAPON_LEARN = (1<<20),
+	BOT_CONFIG_TS_KUNGFU = (1<<21),
+	BOT_CONFIG_DISABLE_BOT_SQUADS = (1<<22),
+	BOT_CONFIG_TS_DONT_STEAL_WEAPONS = (1<<23),
+	BOT_CONFIG_TS_DONT_PICKUP_WEAPONS = (1<<24)
+};
 
 ////////////////////////////////////////////
 // BOT CHAT
@@ -1228,22 +1302,28 @@ enum eBattleGroundsMessage
 
 /////////////////////////
 // DEBUG LEVELS							Debug Messages Will Be Shown When :
-#define BOT_DEBUG_TOUCH_LEVEL	(1<<0)// Bot touched object
-#define BOT_DEBUG_THINK_LEVEL	(1<<1)// Bot thinks
-#define BOT_DEBUG_HEAR_LEVEL	(1<<2)// Bot hears a sound
-#define BOT_DEBUG_MESSAGE_LEVEL (1<<3)// Bot recieves net message
-#define BOT_DEBUG_BLOCK_LEVEL	(1<<4)// Bot blocks object
-#define BOT_DEBUG_MOVE_LEVEL	(1<<5)// Bot moves somewhere
-#define BOT_DEBUG_AIM_LEVEL		(1<<6)// Bot aims at something
-#define BOT_DEBUG_NAV_LEVEL     (1<<7)// Bot touches/finds waypoints
-#define BOT_DEBUG_SEE_LEVEL     (1<<8)// Bot sees something
+enum
+{
+	BOT_DEBUG_TOUCH_LEVEL = (1<<0),	// Bot touched object
+	BOT_DEBUG_THINK_LEVEL = (1<<1),	// Bot thinks
+	BOT_DEBUG_HEAR_LEVEL = (1<<2),	// Bot hears a sound
+	BOT_DEBUG_MESSAGE_LEVEL = (1<<3),	// Bot recieves net message
+	BOT_DEBUG_BLOCK_LEVEL = (1<<4),	// Bot blocks object
+	BOT_DEBUG_MOVE_LEVEL = (1<<5),	// Bot moves somewhere
+	BOT_DEBUG_AIM_LEVEL = (1<<6),	// Bot aims at something
+	BOT_DEBUG_NAV_LEVEL = (1<<7),	// Bot touches/finds waypoints
+	BOT_DEBUG_SEE_LEVEL = (1<<8)	// Bot sees something
+};
 
 /////////////////////////////////
 // PROFILE
 
-#define BOT_PROFILE_READ_ERROR    0
-#define BOT_PROFILE_READ_BOT_INFO 1
-#define BOT_PROFILE_READ_REP_INFO 2
+enum
+{
+	BOT_PROFILE_READ_ERROR = 0,
+	BOT_PROFILE_READ_BOT_INFO = 1,
+	BOT_PROFILE_READ_REP_INFO = 2
+};
 
 #define BOT_PROFILE_FAVMOD "favmod="
 #define BOT_PROFILE_FAVTEAM "favteam="
@@ -1284,17 +1364,24 @@ enum eBattleGroundsMessage
 
 //////////////////////////////////////////////////////////
 // SKILLS
-#define MAX_BOT_SKILL 100
-#define MIN_BOT_SKILL 1
+enum
+{
+	MAX_BOT_SKILL = 100,
+	MIN_BOT_SKILL = 1
+};
+
 #define DEF_BOT_SKILL (int)((MAX_BOT_SKILL + MIN_BOT_SKILL)/2)
 
 //////////////////////////////////////////////////////////
 // REPUTATION DEFINITIONS
-#define BOT_MAX_REP  10
-#define BOT_MIN_REP  0
-#define BOT_MID_REP  5
-#define BOT_LOW_REP  3
-#define BOT_HIGH_REP 6
+enum
+{
+	BOT_MAX_REP = 10,
+	BOT_MIN_REP = 0,
+	BOT_MID_REP = 5,
+	BOT_LOW_REP = 3,
+	BOT_HIGH_REP = 6
+};
 
 #define BOT_VIEW_DISTANCE 2048
 //#define BOT_DEFAULT_TURN_SPEED 10

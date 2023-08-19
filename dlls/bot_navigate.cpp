@@ -418,7 +418,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 						continue;
 				}
 			}
-
+			
 			if (gBotGlobals.IsNS() && iSuccNodeFlags & W_FL_WALL_STICK)
 			{
 				if (!bBotCanUseWallStickWpt)
@@ -427,7 +427,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 					continue;
 				}
 			}
-
+			
 			if (iSuccNodeFlags & W_FL_FLY && !bBotCanUseFlyWpt)
 			{
 				// if its also a wall stick waypoint and can use it
