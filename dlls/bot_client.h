@@ -147,7 +147,7 @@ public:
 		m_iSize = iSize;
 	}
 
-	void setName(char* szName);
+	void setName(const char* szName);
 
 	void setMod(int iModId)
 	{
@@ -577,6 +577,73 @@ public:
 	{
 		setName("MakeMessage");
 		setMod(MOD_BG);
+	}
+	void execute(void* p, int iIndex) override; // override base function
+};
+
+//TODO: Science and Industry - Experimental [APG]RoboCop[CL]
+class BotClient_SI_TeamCash : public CBotNetMessage
+{
+public:
+	BotClient_SI_TeamCash()
+	{
+		setName("TeamCash");
+		setMod(MOD_SI);
+	}
+	void execute(void* p, int iIndex) override; // override base function
+};
+
+class BotClient_SI_SciCount : public CBotNetMessage
+{
+public:
+	BotClient_SI_SciCount()
+	{
+		setName("SciCount");
+		setMod(MOD_SI);
+	}
+	void execute(void* p, int iIndex) override; // override base function
+};
+
+class BotClient_SI_CarryInfo : public CBotNetMessage
+{
+public:
+	BotClient_SI_CarryInfo()
+	{
+		setName("CarryInfo");
+		setMod(MOD_SI);
+	}
+	void execute(void* p, int iIndex) override; // override base function
+};
+
+class BotClient_SI_Goal : public CBotNetMessage
+{
+public:
+	BotClient_SI_Goal()
+	{
+		setName("Goal");
+		setMod(MOD_SI);
+	}
+	void execute(void* p, int iIndex) override; // override base function
+};
+
+class BotClient_SI_Notice : public CBotNetMessage
+{
+public:
+	BotClient_SI_Notice()
+	{
+		setName("Notice");
+		setMod(MOD_SI);
+	}
+	void execute(void* p, int iIndex) override; // override base function
+};
+
+class BotClient_SI_VoteInfo : public CBotNetMessage
+{
+public:
+	BotClient_SI_VoteInfo()
+	{
+		setName("VoteInfo");
+		setMod(MOD_SI);
 	}
 	void execute(void* p, int iIndex) override; // override base function
 };

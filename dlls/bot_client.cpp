@@ -151,6 +151,14 @@ void SetupNetMessages()
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_NS_SetTech());
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_NS_AlienInfo());
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_BG_MakeMessage());
+	// Science and Industry
+	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_TeamCash());
+	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_SciCount());
+	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_CarryInfo());
+	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_Goal());
+	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_Notice());
+	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_VoteInfo());
+
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_Generic_ScreenShake());
 	//gBotGlobals.m_NetEntityMessages.AddNetMessage(BotClient_NS_Progress,			"Progress",		MOD_NS);
 
@@ -587,7 +595,174 @@ void BotClient_BG_MakeMessage::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(iState);
 }
 
-void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
+//TODO: Science and Industry - Experimental [APG]RoboCop[CL]
+void BotClient_SI_TeamCash::execute(void* p, int iIndex)
+{
+	static int iCash = 0;
+
+	if (p == nullptr || iIndex == -1)
+		return;
+
+	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+
+	if (POINTER_TO_INT(iState) == 0)
+	{
+		iCash = POINTER_TO_INT(p);
+	}
+	else
+	{
+		gBotGlobals.m_iTeamCash = iCash;
+	}
+
+	POINTER_INCREMENT_VALUE(iState);
+}
+
+void BotClient_SI_SciCount::execute(void* p, int iIndex)
+{
+	static int iSciCount = 0;
+
+	if (p == nullptr || iIndex == -1)
+		return;
+
+	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+
+	if (POINTER_TO_INT(iState) == 0)
+	{
+		iSciCount = POINTER_TO_INT(p);
+	}
+	else
+	{
+		gBotGlobals.m_iSciCount = iSciCount;
+	}
+
+	POINTER_INCREMENT_VALUE(iState);
+}
+
+void BotClient_SI_CarryInfo::execute(void* p, int iIndex)
+{
+	static int iCarry = 0;
+	static int iCarryTeam = 0;
+	static int iCarryClass = 0;
+
+	if (p == nullptr || iIndex == -1)
+		return;
+
+	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+
+	if (POINTER_TO_INT(iState) == 0)
+	{
+		iCarry = POINTER_TO_INT(p);
+	}
+	else if (POINTER_TO_INT(iState) == 1)
+	{
+		iCarryTeam = POINTER_TO_INT(p);
+	}
+	else
+	{
+		iCarryClass = POINTER_TO_INT(p);
+
+		gBotGlobals.m_iCarry = iCarry;
+		gBotGlobals.m_iCarryTeam = iCarryTeam;
+		gBotGlobals.m_iCarryClass = iCarryClass;
+	}
+
+	POINTER_INCREMENT_VALUE(iState);
+}
+
+void BotClient_SI_Goal::execute(void* p, int iIndex)
+{
+	static int iGoal = 0;
+	static int iGoalTeam = 0;
+	static int iGoalClass = 0;
+
+	if (p == nullptr || iIndex == -1)
+		return;
+
+	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+
+	if (POINTER_TO_INT(iState) == 0)
+	{
+		iGoal = POINTER_TO_INT(p);
+	}
+	else if (POINTER_TO_INT(iState) == 1)
+	{
+		iGoalTeam = POINTER_TO_INT(p);
+	}
+	else
+	{
+		iGoalClass = POINTER_TO_INT(p);
+
+		gBotGlobals.m_iGoal = iGoal;
+		gBotGlobals.m_iGoalTeam = iGoalTeam;
+		gBotGlobals.m_iGoalClass = iGoalClass;
+	}
+
+	POINTER_INCREMENT_VALUE(iState);
+}
+
+void BotClient_SI_Notice::execute(void* p, int iIndex)
+{
+	static int iNotice = 0;
+	static int iNoticeTeam = 0;
+	static int iNoticeClass = 0;
+
+	if (p == nullptr || iIndex == -1)
+		return;
+
+	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+
+	if (POINTER_TO_INT(iState) == 0)
+	{
+		iNotice = POINTER_TO_INT(p);
+	}
+	else if (POINTER_TO_INT(iState) == 1)
+	{
+		iNoticeTeam = POINTER_TO_INT(p);
+	}
+	else
+	{
+		iNoticeClass = POINTER_TO_INT(p);
+
+		gBotGlobals.m_iNotice = iNotice;
+		gBotGlobals.m_iNoticeTeam = iNoticeTeam;
+		gBotGlobals.m_iNoticeClass = iNoticeClass;
+	}
+
+	POINTER_INCREMENT_VALUE(iState);
+}
+
+void BotClient_SI_VoteInfo::execute(void* p, int iIndex)
+{
+	static int iVote = 0;
+	static int iVoteTeam = 0;
+	static int iVoteClass = 0;
+
+	if (p == nullptr || iIndex == -1)
+		return;
+
+	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+
+	if (POINTER_TO_INT(iState) == 0)
+	{
+		iVote = POINTER_TO_INT(p);
+	}
+	else if (POINTER_TO_INT(iState) == 1)
+	{
+		iVoteTeam = POINTER_TO_INT(p);
+	}
+	else
+	{
+		iVoteClass = POINTER_TO_INT(p);
+
+		gBotGlobals.m_iVote = iVote;
+		gBotGlobals.m_iVoteTeam = iVoteTeam;
+		gBotGlobals.m_iVoteClass = iVoteClass;
+	}
+
+	POINTER_INCREMENT_VALUE(iState);
+}
+
+void BotClient_Generic_TextMessage::execute(void* p, int iIndex)
 {
 	short int* iState = &gBotGlobals.m_iCurrentMessageState;
 
@@ -862,7 +1037,7 @@ void BotClient_Generic_SayText::execute(void* p, int iIndex)
 }
 
 // PM - use QItems!
-void BotClient_DMC_QuakeItem::execute(void* p, const int iIndex)
+void BotClient_DMC_QuakeItem::execute(void* p, int iIndex)
 {
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -883,7 +1058,7 @@ void BotClient_DMC_QuakeItem::execute(void* p, const int iIndex)
 	}
 }
 
-void BotClient_Generic_VGUIMenu::execute(void* p, const int iIndex)
+void BotClient_Generic_VGUIMenu::execute(void* p, int iIndex)
 {
 	if (p == nullptr || iIndex == -1)
 	{
@@ -1765,7 +1940,7 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_WeaponList::execute(void* p, const int iIndex)
+void BotClient_Generic_WeaponList::execute(void* p, int iIndex)
 {
 	// current state machine state
 	static char* szClassname;
@@ -1841,7 +2016,7 @@ void BotClient_Generic_WeaponList::execute(void* p, const int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
+void BotClient_Generic_CurrentWeapon::execute(void* p, int iIndex)
 {
 	static int iState;
 	static int iId;
@@ -1932,7 +2107,7 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_AmmoX::execute(void* p, const int iIndex)
+void BotClient_Generic_AmmoX::execute(void* p, int iIndex)
 {
 	static int index;
 	static int amount;
@@ -1961,7 +2136,7 @@ void BotClient_Generic_AmmoX::execute(void* p, const int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_AmmoPickup::execute(void* p, const int iIndex)
+void BotClient_Generic_AmmoPickup::execute(void* p, int iIndex)
 {
 	static int index;
 	static int amount;
@@ -1990,7 +2165,7 @@ void BotClient_Generic_AmmoPickup::execute(void* p, const int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_WeaponPickup::execute(void* p, const int iIndex)
+void BotClient_Generic_WeaponPickup::execute(void* p, int iIndex)
 {
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -2032,7 +2207,7 @@ void BotClient_Generic_WeaponPickup::execute(void* p, const int iIndex)
 	pBot->m_iBotWeapons |= 1 << iWeaponIndex;
 }
 
-void BotClient_Generic_ItemPickup::execute(void* p, const int iIndex)
+void BotClient_Generic_ItemPickup::execute(void* p, int iIndex)
 {
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -2043,7 +2218,7 @@ void BotClient_Generic_ItemPickup::execute(void* p, const int iIndex)
 		pBot->m_pPickupEntity = nullptr;
 }
 
-void BotClient_Generic_Health::execute(void* p, const int iIndex)
+void BotClient_Generic_Health::execute(void* p, int iIndex)
 {
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -2096,7 +2271,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 	}
 }
 
-void BotClient_Generic_Battery::execute(void* p, const int iIndex)
+void BotClient_Generic_Battery::execute(void* p, int iIndex)
 {
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -2118,7 +2293,7 @@ void BotClient_TS_TSMessage::execute(void* p, int iIndex)
 	// ALERT(at_console,"TS_TSMessage message (iIndex = %d) message = \"%s\"\n",iIndex,(char*)p);
 }
 
-void BotClient_Generic_Damage::execute(void* p, const int iIndex)
+void BotClient_Generic_Damage::execute(void* p, int iIndex)
 {
 	static int damage_armor;
 	static int damage_taken;
@@ -2182,7 +2357,7 @@ void BotClient_Generic_Damage::execute(void* p, const int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_Generic_ScreenFade::execute(void* p, const int iIndex)
+void BotClient_Generic_ScreenFade::execute(void* p, int iIndex)
 {
 	if (p == nullptr || iIndex == -1)
 		return;

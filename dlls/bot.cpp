@@ -1686,6 +1686,48 @@ void CBot::SpawnInit(const BOOL bInit)
 			if (pev && pev->maxspeed > m_fMaxSpeed)
 				m_fMaxSpeed = pev->maxspeed;
 		}
+		/*
+		else if (gBotGlobals.IsMod(MOD_SI))
+		{	// get longjump
+			if (g_Researched[UTIL_GetTeam(pBot->pEdict)][RESEARCH_LEGS_2].researched ||
+				g_Researched[UTIL_GetTeam(pBot->pEdict)][RESEARCH_LEGS_2].stolen)
+				pBot->b_longjump = true;
+
+			// get our max armor
+			if ((g_Researched[pBot->bot_team][RESEARCH_ARMOR_100].researched ||
+				g_Researched[pBot->bot_team][RESEARCH_ARMOR_100].stolen) &&
+				!g_Researched[pBot->bot_team][RESEARCH_ARMOR_100].disabled &&
+				pBot->max_armor < 100)
+				pBot->max_armor = 100;
+			else if ((g_Researched[pBot->bot_team][RESEARCH_ARMOR_75].researched ||
+				g_Researched[pBot->bot_team][RESEARCH_ARMOR_75].stolen) &&
+				!g_Researched[pBot->bot_team][RESEARCH_ARMOR_75].disabled &&
+				pBot->max_armor < 75)
+				pBot->max_armor = 75;
+			else if ((g_Researched[pBot->bot_team][RESEARCH_ARMOR_50].researched ||
+				g_Researched[pBot->bot_team][RESEARCH_ARMOR_50].stolen) &&
+				!g_Researched[pBot->bot_team][RESEARCH_ARMOR_50].disabled &&
+				pBot->max_armor < 50)
+				pBot->max_armor = 50;
+			else if ((g_Researched[pBot->bot_team][RESEARCH_ARMOR_25].researched ||
+				g_Researched[pBot->bot_team][RESEARCH_ARMOR_25].stolen) &&
+				!g_Researched[pBot->bot_team][RESEARCH_ARMOR_25].disabled &&
+				pBot->max_armor < 25)
+				pBot->max_armor = 25;
+
+			// get our max health
+			if ((g_Researched[pBot->bot_team][RESEARCH_STRENGTH2].researched ||
+				g_Researched[pBot->bot_team][RESEARCH_STRENGTH2].stolen) &&
+				!g_Researched[pBot->bot_team][RESEARCH_STRENGTH2].disabled &&
+				pBot->max_health < 150)
+				pBot->max_health = 150;
+			else if ((g_Researched[pBot->bot_team][RESEARCH_STRENGTH].researched ||
+				g_Researched[pBot->bot_team][RESEARCH_STRENGTH].stolen) &&
+				!g_Researched[pBot->bot_team][RESEARCH_STRENGTH].disabled &&
+				pBot->max_health < 125)
+				pBot->max_health = 125;
+		}
+		*/
 		else if (gBotGlobals.IsNS()) // quicker check
 		{
 			if (m_OrderTask.Task() != BOT_TASK_NONE)
@@ -1701,7 +1743,7 @@ void CBot::SpawnInit(const BOOL bInit)
 		m_stBotPaths.Destroy();     // the bot will be at a different
 		// position most likely after spawning so clear its paths
 		//m_stBotVisibles.Destroy();  // free the list of visible entities
-	//	m_stBotVisibles.Destroy();
+		//	m_stBotVisibles.Destroy();
 
 		sOpenList.Clear();
 		//sOpenList.Destroy();
@@ -1914,6 +1956,9 @@ void CBot::SpawnInit(const BOOL bInit)
 
 	m_pEnemyRep = nullptr;
 
+	////////////////////////////
+	// Science and Industry
+	
 	////////////////////////////
 	// MISCELLANEOUS
 
@@ -2785,8 +2830,77 @@ void CBot::StartGame()
 		FakeClientCommand(m_pEdict, "classmenu 0");
 		m_bStartedGame = true;
 		return;
-	case MOD_SI:
-		break;
+	/*case MOD_SI:
+		if (pBot->start_action == MSG_SI_IDLE)
+		{
+			// go into spectator mode if we're not already, to fix rejoin bug
+			if (m_pEdict->v.view_ofs != g_vecZero)
+				FakeClientCommand(m_pEdict, "spectate");
+
+			// select our team after one second
+			if (pBot->f_create_time + 1.0f <= gpGlobals->time)
+				pBot->start_action = MSG_SI_TEAM_SELECT;  // force team selection
+
+			return;
+		}
+		if (pBot->start_action == MSG_SI_TEAM_SELECT)
+		{
+			pBot->start_action = MSG_SI_MODEL_SELECT;  // force model selection
+
+			if (pBot->bot_team == -1)
+			{
+				// pick team with least amount of players
+				for (int i = 0; i < 2; i++)
+					team[i] = UTIL_PlayersOnTeam(i);
+
+				//SERVER_PRINT( "%s found MCL(1) has %i player(s), AFD(2) has %i player(s)...\n",
+				//	pBot->name, team[0], team[1]);
+
+				// choose a random team
+				if (team[0] == team[1])
+					std::sprintf(c_team, "%i", 3);
+				// join team with least players
+				else if (team[0] < team[1])
+					std::sprintf(c_team, "%i", 1);
+				else if (team[0] > team[1])
+					std::sprintf(c_team, "%i", 2);
+			}
+			else	// forced to join a certain team
+			{
+				if (pBot->bot_team < 1)
+					pBot->bot_team = 1;
+				else if (pBot->bot_team > 3)
+					pBot->bot_team = 3;
+
+				sprintf(c_team, "%i", pBot->bot_team);
+			}
+
+			//SERVER_PRINT( "%s will join team %s...\n", pBot->name, c_team);
+			// save our team
+			pBot->bot_team = atoi(c_team) - 1;
+
+			FakeClientCommand(m_pEdict, "setteam", c_team, nullptr);
+
+			return;
+		}
+		if (pBot->start_action == MSG_SI_MODEL_SELECT)
+		{
+			pBot->start_action = MSG_SI_IDLE;  // switch back to idle
+			pBot->f_create_time = gpGlobals->time;  // reset
+			if (pBot->bot_class == -1)
+			{	// random model for now
+				sprintf(c_model, "%i", 3);
+			}
+			else
+				sprintf(c_model, "%i", pBot->bot_class);
+
+			pBot->bot_class = atoi(c_model) - 1;
+
+			FakeClientCommand(m_pEdict, "setmodel", c_model, nullptr);5
+
+			pBot->not_started = 0;
+			return;
+		}*/
 	default:
 		break;
 	}
