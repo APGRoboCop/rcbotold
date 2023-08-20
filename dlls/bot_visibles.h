@@ -43,8 +43,8 @@
  //
  // Bot definitions header
  //
-#ifndef __RCBOT_BOT_VISIBLES_H__
-#define __RCBOT_BOT_VISIBLES_H__
+#ifndef RCBOT_BOT_VISIBLES_H
+#define RCBOT_BOT_VISIBLES_H
 
 #include "generic_class.h"
 

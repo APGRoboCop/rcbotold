@@ -29,8 +29,8 @@
  *
  */
 
-#ifndef __BOT_GA_H__
-#define __BOT_GA_H__
+#ifndef BOT_GA_H
+#define BOT_GA_H
 
 #include "ga.h"
 #include "gannconst.h"

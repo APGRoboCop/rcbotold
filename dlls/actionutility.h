@@ -1,5 +1,5 @@
-#ifndef __ACTION_UTILITY_H__
-#define __ACTION_UTILITY_H__
+#ifndef ACTION_UTILITY_H
+#define ACTION_UTILITY_H
 
 #include <vector>
 

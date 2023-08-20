@@ -29,8 +29,8 @@
  *
  */
 
-#ifndef __GANN_CONST_H__
-#define __GANN_CONST_H__
+#ifndef GANN_CONST_H
+#define GANN_CONST_H
 
 #include <cstring>
 

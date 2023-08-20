@@ -29,8 +29,8 @@
  *
  */
 
-#ifndef __PERCEPTRON_H__
-#define __PERCEPTRON_H__
+#ifndef PERCEPTRON_H
+#define PERCEPTRON_H
 
  //#include "ga.h"
 #include "gannconst.h"

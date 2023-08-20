@@ -1886,7 +1886,7 @@ const char* GetArg(const char* command, int arg_number)
 	if (!command || !*command)
 		return nullptr;
 
-	const size_t length = std::strlen(command); // get length of command
+	const int length = std::strlen(command); // get length of command
 
 	// while we have not reached end of line
 	while (index < length && arg_count <= arg_number)

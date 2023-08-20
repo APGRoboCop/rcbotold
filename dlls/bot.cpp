@@ -715,11 +715,10 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			// as it can dodge areas where it died next time.
 			if (m_iCurrentWaypointIndex != -1 && m_iPrevWaypointIndex != -1)
 			{
-				//TODO: Experimental [APG]RoboCop[CL]
-				const std::optional<PATH*> pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, GetTeam());
+				PATH* pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, GetTeam());
 
 				if (pPath)
-					m_stFailedPaths.AddFailedPath(pPath.value());
+					m_stFailedPaths.AddFailedPath(pPath);
 			}
 		}
 
@@ -1958,7 +1957,7 @@ void CBot::SpawnInit(const BOOL bInit)
 
 	////////////////////////////
 	// Science and Industry
-	
+
 	////////////////////////////
 	// MISCELLANEOUS
 
@@ -2385,7 +2384,6 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		// always null terminate the last possible character
 		string[start] = 0;
 
-		// 'strlen' function called too many times inside loop [APG]RoboCop[CL]
 		const size_t end = start + std::strlen(fill_point);
 		std::strncpy(after, &string[end], len - end);
 		after[len - end] = 0;
@@ -2405,12 +2403,12 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		ptr = string;
 
 		// free memory used
-//		if (before != NULL)
+		//if (before != NULL)
 		std::free(before);
 
 		before = nullptr;
 
-		//		if (after != NULL)
+		//if (after != NULL)
 		std::free(after);
 
 		after = nullptr;
@@ -2830,77 +2828,77 @@ void CBot::StartGame()
 		FakeClientCommand(m_pEdict, "classmenu 0");
 		m_bStartedGame = true;
 		return;
-	/*case MOD_SI:
-		if (pBot->start_action == MSG_SI_IDLE)
-		{
-			// go into spectator mode if we're not already, to fix rejoin bug
-			if (m_pEdict->v.view_ofs != g_vecZero)
-				FakeClientCommand(m_pEdict, "spectate");
-
-			// select our team after one second
-			if (pBot->f_create_time + 1.0f <= gpGlobals->time)
-				pBot->start_action = MSG_SI_TEAM_SELECT;  // force team selection
-
-			return;
-		}
-		if (pBot->start_action == MSG_SI_TEAM_SELECT)
-		{
-			pBot->start_action = MSG_SI_MODEL_SELECT;  // force model selection
-
-			if (pBot->bot_team == -1)
+		/*case MOD_SI:
+			if (pBot->start_action == MSG_SI_IDLE)
 			{
-				// pick team with least amount of players
-				for (int i = 0; i < 2; i++)
-					team[i] = UTIL_PlayersOnTeam(i);
+				// go into spectator mode if we're not already, to fix rejoin bug
+				if (m_pEdict->v.view_ofs != g_vecZero)
+					FakeClientCommand(m_pEdict, "spectate");
 
-				//SERVER_PRINT( "%s found MCL(1) has %i player(s), AFD(2) has %i player(s)...\n",
-				//	pBot->name, team[0], team[1]);
+				// select our team after one second
+				if (pBot->f_create_time + 1.0f <= gpGlobals->time)
+					pBot->start_action = MSG_SI_TEAM_SELECT;  // force team selection
 
-				// choose a random team
-				if (team[0] == team[1])
-					std::sprintf(c_team, "%i", 3);
-				// join team with least players
-				else if (team[0] < team[1])
-					std::sprintf(c_team, "%i", 1);
-				else if (team[0] > team[1])
-					std::sprintf(c_team, "%i", 2);
+				return;
 			}
-			else	// forced to join a certain team
+			if (pBot->start_action == MSG_SI_TEAM_SELECT)
 			{
-				if (pBot->bot_team < 1)
-					pBot->bot_team = 1;
-				else if (pBot->bot_team > 3)
-					pBot->bot_team = 3;
+				pBot->start_action = MSG_SI_MODEL_SELECT;  // force model selection
 
-				sprintf(c_team, "%i", pBot->bot_team);
+				if (pBot->bot_team == -1)
+				{
+					// pick team with least amount of players
+					for (int i = 0; i < 2; i++)
+						team[i] = UTIL_PlayersOnTeam(i);
+
+					//SERVER_PRINT( "%s found MCL(1) has %i player(s), AFD(2) has %i player(s)...\n",
+					//	pBot->name, team[0], team[1]);
+
+					// choose a random team
+					if (team[0] == team[1])
+						std::sprintf(c_team, "%i", 3);
+					// join team with least players
+					else if (team[0] < team[1])
+						std::sprintf(c_team, "%i", 1);
+					else if (team[0] > team[1])
+						std::sprintf(c_team, "%i", 2);
+				}
+				else	// forced to join a certain team
+				{
+					if (pBot->bot_team < 1)
+						pBot->bot_team = 1;
+					else if (pBot->bot_team > 3)
+						pBot->bot_team = 3;
+
+					sprintf(c_team, "%i", pBot->bot_team);
+				}
+
+				//SERVER_PRINT( "%s will join team %s...\n", pBot->name, c_team);
+				// save our team
+				pBot->bot_team = atoi(c_team) - 1;
+
+				FakeClientCommand(m_pEdict, "setteam", c_team, nullptr);
+
+				return;
 			}
+			if (pBot->start_action == MSG_SI_MODEL_SELECT)
+			{
+				pBot->start_action = MSG_SI_IDLE;  // switch back to idle
+				pBot->f_create_time = gpGlobals->time;  // reset
+				if (pBot->bot_class == -1)
+				{	// random model for now
+					sprintf(c_model, "%i", 3);
+				}
+				else
+					sprintf(c_model, "%i", pBot->bot_class);
 
-			//SERVER_PRINT( "%s will join team %s...\n", pBot->name, c_team);
-			// save our team
-			pBot->bot_team = atoi(c_team) - 1;
+				pBot->bot_class = atoi(c_model) - 1;
 
-			FakeClientCommand(m_pEdict, "setteam", c_team, nullptr);
+				FakeClientCommand(m_pEdict, "setmodel", c_model, nullptr);5
 
-			return;
-		}
-		if (pBot->start_action == MSG_SI_MODEL_SELECT)
-		{
-			pBot->start_action = MSG_SI_IDLE;  // switch back to idle
-			pBot->f_create_time = gpGlobals->time;  // reset
-			if (pBot->bot_class == -1)
-			{	// random model for now
-				sprintf(c_model, "%i", 3);
-			}
-			else
-				sprintf(c_model, "%i", pBot->bot_class);
-
-			pBot->bot_class = atoi(c_model) - 1;
-
-			FakeClientCommand(m_pEdict, "setmodel", c_model, nullptr);5
-
-			pBot->not_started = 0;
-			return;
-		}*/
+				pBot->not_started = 0;
+				return;
+			}*/
 	default:
 		break;
 	}
@@ -16571,13 +16569,12 @@ void CBot::CheckStuck()
 
 				if (m_bFailPath)
 				{
-					//TODO: Experimental [APG]RoboCop[CL]
 					// found the path
-					const std::optional<PATH*> pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, m_iTeam);
+					PATH* pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, m_iTeam);
 
 					// add it to failed paths
 					if (pPath)
-						m_stFailedPaths.AddFailedPath(pPath.value());
+						m_stFailedPaths.AddFailedPath(pPath);
 				}
 			}
 

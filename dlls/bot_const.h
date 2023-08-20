@@ -697,30 +697,30 @@ typedef enum {
 
 enum
 {
-	BOT_CONDITION_SEE_ENEMY = (1<<0),	// See an enemy
-	BOT_CONDITION_HEAR_DANGER = (1<<1),	// Hear danger
-	BOT_CONDITION_SEE_NEXT_WAYPOINT = (1<<2),	// bot see's it's waypoint, useful for checking when stuck
-	BOT_CONDITION_TASK_EDICT_NA = (1<<3),	// Task edict not avaialable anymore.
-	BOT_CONDITION_ENEMY_OCCLUDED = (1<<4),	// Enemy blocked by something??
-	BOT_CONDITION_ENEMY_DEAD = (1<<5),	// Enemy killed
-	BOT_CONDITION_HAS_WEAPON = (1<<6),	// Has weapons
-	BOT_CONDITION_OUT_OF_AMMO = (1<<7),	// Out of ammo on current weapon
-	BOT_CONDITION_SQUAD_LEADER_DEAD = (1<<8),	// Bots leader died
-	BOT_CONDITION_SEE_SQUAD_LEADER = (1<<9),	// See's squad leader
-	BOT_CONDITION_SEE_TASK_EDICT = (1<<10),	// see the current edict for current task
-	BOT_CONDITION_SEE_GOAL_EDICT = (1<<11),	// see's the entity at bots objective
-	BOT_CONDITION_CANT_SHOOT = (1<<12),	// can't shoot
-	BOT_CONDITION_SEE_BUILDABLE = (1<<13),
-	BOT_CONDITION_SEE_ENEMY_HEAD = (1<<14),
-	BOT_CONDITION_SEE_ENEMY_BODY = (1<<15),
-	BOT_CONDITION_NEED_WEAPONS = (1<<16),
-	BOT_CONDITION_ENEMY_IS_OSPREY = (1<<17),
-	BOT_CONDITION_STOPPED_BUILDING = (1<<18),
-	BOT_CONDITION_TASKS_CORRUPTED = (1<<19),	// bot tasks can change while in task code causing problems
-	BOT_CONDITION_TASK_EDICT_PAIN = (1<<20),	// bot heardtask edict
-	BOT_CONDITION_WANT_TO_LEAVE_GAME = (1<<21),	// will be set if the bot wants to leave the game
-	BOT_CONDITION_SELECTED_GUN = (1<<22),	// TS: make a gun to use
-	BOT_CONDITION_DONT_CLEAR_OBJECTIVES = (1<<23)
+	BOT_CONDITION_SEE_ENEMY = (1 << 0),	// See an enemy
+	BOT_CONDITION_HEAR_DANGER = (1 << 1),	// Hear danger
+	BOT_CONDITION_SEE_NEXT_WAYPOINT = (1 << 2),	// bot see's it's waypoint, useful for checking when stuck
+	BOT_CONDITION_TASK_EDICT_NA = (1 << 3),	// Task edict not avaialable anymore.
+	BOT_CONDITION_ENEMY_OCCLUDED = (1 << 4),	// Enemy blocked by something??
+	BOT_CONDITION_ENEMY_DEAD = (1 << 5),	// Enemy killed
+	BOT_CONDITION_HAS_WEAPON = (1 << 6),	// Has weapons
+	BOT_CONDITION_OUT_OF_AMMO = (1 << 7),	// Out of ammo on current weapon
+	BOT_CONDITION_SQUAD_LEADER_DEAD = (1 << 8),	// Bots leader died
+	BOT_CONDITION_SEE_SQUAD_LEADER = (1 << 9),	// See's squad leader
+	BOT_CONDITION_SEE_TASK_EDICT = (1 << 10),	// see the current edict for current task
+	BOT_CONDITION_SEE_GOAL_EDICT = (1 << 11),	// see's the entity at bots objective
+	BOT_CONDITION_CANT_SHOOT = (1 << 12),	// can't shoot
+	BOT_CONDITION_SEE_BUILDABLE = (1 << 13),
+	BOT_CONDITION_SEE_ENEMY_HEAD = (1 << 14),
+	BOT_CONDITION_SEE_ENEMY_BODY = (1 << 15),
+	BOT_CONDITION_NEED_WEAPONS = (1 << 16),
+	BOT_CONDITION_ENEMY_IS_OSPREY = (1 << 17),
+	BOT_CONDITION_STOPPED_BUILDING = (1 << 18),
+	BOT_CONDITION_TASKS_CORRUPTED = (1 << 19),	// bot tasks can change while in task code causing problems
+	BOT_CONDITION_TASK_EDICT_PAIN = (1 << 20),	// bot heardtask edict
+	BOT_CONDITION_WANT_TO_LEAVE_GAME = (1 << 21),	// will be set if the bot wants to leave the game
+	BOT_CONDITION_SELECTED_GUN = (1 << 22),	// TS: make a gun to use
+	BOT_CONDITION_DONT_CLEAR_OBJECTIVES = (1 << 23)
 };
 
 #define BOT_HEAR_DISTANCE 650.0f
@@ -1083,30 +1083,29 @@ typedef enum
 // combat stuff in NS, what bots want to get
 enum
 {
-	BOT_COMBAT_WANT_SHOTGUN = (1<<0),
-	BOT_COMBAT_WANT_HMG = (1<<1),
-	BOT_COMBAT_WANT_GRENADE_GUN = (1<<2),
-	BOT_COMBAT_WANT_JETPACK = (1<<3),
-	BOT_COMBAT_WANT_ARMOR = (1<<4),
-	BOT_COMBAT_WANT_WELDER = (1<<5),
-	BOT_COMBAT_WANT_RESUPPLY = (1<<6),
-	BOT_COMBAT_WANT_MINES = (1<<7),
-	BOT_COMBAT_WANT_CATALYST = (1<<8),
-	BOT_COMBAT_WANT_MOVE_DETECTION = (1<<9),
-	BOT_COMBAT_WANT_LERK = (1<<10),
-	BOT_COMBAT_WANT_FADE = (1<<11),
-	BOT_COMBAT_WANT_ONOS = (1<<12),
-	BOT_COMBAT_WANT_DEFUP1 = (1<<13),
-	BOT_COMBAT_WANT_DEFUP2 = (1<<14),
-	BOT_COMBAT_WANT_DEFUP3 = (1<<15),
-	BOT_COMBAT_WANT_MOVUP1 = (1<<16),
-	BOT_COMBAT_WANT_MOVUP2 = (1<<17),
-	BOT_COMBAT_WANT_MOVUP3 = (1<<18),
-	BOT_COMBAT_WANT_SENUP1 = (1<<19),
-	BOT_COMBAT_WANT_SENUP2 = (1<<20),
-	BOT_COMBAT_WANT_SENUP3 = (1<<21)
+	BOT_COMBAT_WANT_SHOTGUN = (1 << 0),
+	BOT_COMBAT_WANT_HMG = (1 << 1),
+	BOT_COMBAT_WANT_GRENADE_GUN = (1 << 2),
+	BOT_COMBAT_WANT_JETPACK = (1 << 3),
+	BOT_COMBAT_WANT_ARMOR = (1 << 4),
+	BOT_COMBAT_WANT_WELDER = (1 << 5),
+	BOT_COMBAT_WANT_RESUPPLY = (1 << 6),
+	BOT_COMBAT_WANT_MINES = (1 << 7),
+	BOT_COMBAT_WANT_CATALYST = (1 << 8),
+	BOT_COMBAT_WANT_MOVE_DETECTION = (1 << 9),
+	BOT_COMBAT_WANT_LERK = (1 << 10),
+	BOT_COMBAT_WANT_FADE = (1 << 11),
+	BOT_COMBAT_WANT_ONOS = (1 << 12),
+	BOT_COMBAT_WANT_DEFUP1 = (1 << 13),
+	BOT_COMBAT_WANT_DEFUP2 = (1 << 14),
+	BOT_COMBAT_WANT_DEFUP3 = (1 << 15),
+	BOT_COMBAT_WANT_MOVUP1 = (1 << 16),
+	BOT_COMBAT_WANT_MOVUP2 = (1 << 17),
+	BOT_COMBAT_WANT_MOVUP3 = (1 << 18),
+	BOT_COMBAT_WANT_SENUP1 = (1 << 19),
+	BOT_COMBAT_WANT_SENUP2 = (1 << 20),
+	BOT_COMBAT_WANT_SENUP3 = (1 << 21)
 };
-
 
 //////////////////////////////////////////////
 // Bits in GA Individual for combat
@@ -1122,11 +1121,11 @@ enum
 	BOT_GA_COMBAT_WANT_RESUPPLY = 7,
 	BOT_GA_COMBAT_WANT_MINES = 8,
 	BOT_GA_COMBAT_WANT_MOVEMENT_DETECT = 9,
-	
+
 	BOT_GA_COMBAT_WANT_LERK = 10,
 	BOT_GA_COMBAT_WANT_FADE = 11,
 	BOT_GA_COMBAT_WANT_ONOS = 12,
-	
+
 	BOT_GA_COMBAT_WANT_DEF_UPGRADE1 = 13,
 	BOT_GA_COMBAT_WANT_DEF_UPGRADE2 = 14,
 	BOT_GA_COMBAT_WANT_DEF_UPGRADE3 = 15,
@@ -1215,32 +1214,32 @@ enum
 
 enum
 {
-	BOT_CONFIG_WAIT_FOR_ORDERS = (1<<0),
-	BOT_CONFIG_DONT_SHOOT = (1<<1),
-	BOT_CONFIG_CHATTING = (1<<2),
-	BOT_CONFIG_REAL_MODE = (1<<3),
-	BOT_CONFIG_COMMANDING = (1<<4),
-	BOT_CONFIG_RESERVE_BOT_SLOTS = (1<<5),
-	BOT_CONFIG_CHAT_REPLY_TO_BOTS = (1<<6),
-	BOT_CONFIG_MARINE_AUTO_BUILD = (1<<7),
-	BOT_CONFIG_CHAT_DONT_LEARN = (1<<8),
-	BOT_CONFIG_BALANCE_TEAMS = (1<<9),
-	BOT_CONFIG_TOOLTIPS = (1<<10),
-	BOT_CONFIG_ENABLE_BOTCAM = (1<<11),
-	BOT_CONFIG_AUTOWAYPOINT_HUMANS = (1<<12),
-	BOT_CONFIG_UNSTICK = (1<<13),
-	BOT_CONFIG_ABNORMAL_GAME = (1<<14),
-	BOT_CONFIG_BOTS_LEAVE_AND_JOIN = (1<<15),
-	BOT_CONFIG_BOTS_WAIT_FOR_BOTS = (1<<16),
-	BOT_CONFIG_NOT_NS3_FINAL = (1<<17),
-	BOT_CONFIG_BLINKING = (1<<18),
-	BOT_CONFIG_WAIT_AT_RESOURCES = (1<<19),
+	BOT_CONFIG_WAIT_FOR_ORDERS = (1 << 0),
+	BOT_CONFIG_DONT_SHOOT = (1 << 1),
+	BOT_CONFIG_CHATTING = (1 << 2),
+	BOT_CONFIG_REAL_MODE = (1 << 3),
+	BOT_CONFIG_COMMANDING = (1 << 4),
+	BOT_CONFIG_RESERVE_BOT_SLOTS = (1 << 5),
+	BOT_CONFIG_CHAT_REPLY_TO_BOTS = (1 << 6),
+	BOT_CONFIG_MARINE_AUTO_BUILD = (1 << 7),
+	BOT_CONFIG_CHAT_DONT_LEARN = (1 << 8),
+	BOT_CONFIG_BALANCE_TEAMS = (1 << 9),
+	BOT_CONFIG_TOOLTIPS = (1 << 10),
+	BOT_CONFIG_ENABLE_BOTCAM = (1 << 11),
+	BOT_CONFIG_AUTOWAYPOINT_HUMANS = (1 << 12),
+	BOT_CONFIG_UNSTICK = (1 << 13),
+	BOT_CONFIG_ABNORMAL_GAME = (1 << 14),
+	BOT_CONFIG_BOTS_LEAVE_AND_JOIN = (1 << 15),
+	BOT_CONFIG_BOTS_WAIT_FOR_BOTS = (1 << 16),
+	BOT_CONFIG_NOT_NS3_FINAL = (1 << 17),
+	BOT_CONFIG_BLINKING = (1 << 18),
+	BOT_CONFIG_WAIT_AT_RESOURCES = (1 << 19),
 	// marine bots wait for commander to drop res tower
-	BOT_CONFIG_DISABLE_WEAPON_LEARN = (1<<20),
-	BOT_CONFIG_TS_KUNGFU = (1<<21),
-	BOT_CONFIG_DISABLE_BOT_SQUADS = (1<<22),
-	BOT_CONFIG_TS_DONT_STEAL_WEAPONS = (1<<23),
-	BOT_CONFIG_TS_DONT_PICKUP_WEAPONS = (1<<24)
+	BOT_CONFIG_DISABLE_WEAPON_LEARN = (1 << 20),
+	BOT_CONFIG_TS_KUNGFU = (1 << 21),
+	BOT_CONFIG_DISABLE_BOT_SQUADS = (1 << 22),
+	BOT_CONFIG_TS_DONT_STEAL_WEAPONS = (1 << 23),
+	BOT_CONFIG_TS_DONT_PICKUP_WEAPONS = (1 << 24)
 };
 
 ////////////////////////////////////////////
@@ -1304,15 +1303,15 @@ enum eBattleGroundsMessage
 // DEBUG LEVELS							Debug Messages Will Be Shown When :
 enum
 {
-	BOT_DEBUG_TOUCH_LEVEL = (1<<0),	// Bot touched object
-	BOT_DEBUG_THINK_LEVEL = (1<<1),	// Bot thinks
-	BOT_DEBUG_HEAR_LEVEL = (1<<2),	// Bot hears a sound
-	BOT_DEBUG_MESSAGE_LEVEL = (1<<3),	// Bot recieves net message
-	BOT_DEBUG_BLOCK_LEVEL = (1<<4),	// Bot blocks object
-	BOT_DEBUG_MOVE_LEVEL = (1<<5),	// Bot moves somewhere
-	BOT_DEBUG_AIM_LEVEL = (1<<6),	// Bot aims at something
-	BOT_DEBUG_NAV_LEVEL = (1<<7),	// Bot touches/finds waypoints
-	BOT_DEBUG_SEE_LEVEL = (1<<8)	// Bot sees something
+	BOT_DEBUG_TOUCH_LEVEL = (1 << 0),	// Bot touched object
+	BOT_DEBUG_THINK_LEVEL = (1 << 1),	// Bot thinks
+	BOT_DEBUG_HEAR_LEVEL = (1 << 2),	// Bot hears a sound
+	BOT_DEBUG_MESSAGE_LEVEL = (1 << 3),	// Bot recieves net message
+	BOT_DEBUG_BLOCK_LEVEL = (1 << 4),	// Bot blocks object
+	BOT_DEBUG_MOVE_LEVEL = (1 << 5),	// Bot moves somewhere
+	BOT_DEBUG_AIM_LEVEL = (1 << 6),	// Bot aims at something
+	BOT_DEBUG_NAV_LEVEL = (1 << 7),	// Bot touches/finds waypoints
+	BOT_DEBUG_SEE_LEVEL = (1 << 8)	// Bot sees something
 };
 
 /////////////////////////////////

@@ -44,8 +44,8 @@
  // Prototypes for bot commands & cvar functions
  //
 
-#ifndef __BOT_COMMANDS_H__
-#define __BOT_COMMANDS_H__
+#ifndef BOT_COMMANDS_H
+#define BOT_COMMANDS_H
 
 #define BOT_COMMAND_ACCESS_ALLOWED				0
 #define BOT_COMMAND_ACCESS_WAYPOINTING		(1<<0)

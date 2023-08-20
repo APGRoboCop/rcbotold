@@ -44,8 +44,8 @@
  // Prototypes for network message functions
  //
 
-#ifndef __BOT_CLIENT_H__
-#define __BOT_CLIENT_H__
+#ifndef BOT_CLIENT_H
+#define BOT_CLIENT_H
 
 #include "generic_class.h"
 #include "bot_const.h"
@@ -762,7 +762,7 @@ public:
 
 	void write_short(int s) override
 	{
-		if (m_ReceivedPlayers.empty())
+		if (!m_ReceivedPlayers.size())
 			m_ReceivedPlayers.emplace_back(INDEXENT(s));
 		else if (!m_iOrderType)
 			m_iOrderType = static_cast<AvHOrderType>(s);

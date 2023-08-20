@@ -61,7 +61,6 @@
 
 #include <vector>
 #include <algorithm>
-#include <optional>
 
 static std::FILE* fp;
 
@@ -418,7 +417,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 						continue;
 				}
 			}
-			
+
 			if (gBotGlobals.IsNS() && iSuccNodeFlags & W_FL_WALL_STICK)
 			{
 				if (!bBotCanUseWallStickWpt)
@@ -427,7 +426,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 					continue;
 				}
 			}
-			
+
 			if (iSuccNodeFlags & W_FL_FLY && !bBotCanUseFlyWpt)
 			{
 				// if its also a wall stick waypoint and can use it
@@ -1060,13 +1059,12 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 
 				if (pBot->m_iPrevWaypointIndex != -1)
 				{
-					//TODO: Experimental [APG]RoboCop[CL]
 					// Has a previous waypoint
 					// we can work out the path the bot tried to use.
-					const std::optional<PATH*> pPath = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);
+					PATH* pPath = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);
 
 					if (pPath)
-						pBot->m_stFailedPaths.AddFailedPath(pPath.value());
+						pBot->m_stFailedPaths.AddFailedPath(pPath);
 				}
 			}
 			else if (!pBot->m_stBotPaths.IsEmpty())
@@ -1183,11 +1181,11 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			if (pBot->m_fLastSeeWaypoint && pBot->m_fLastSeeWaypoint + fMaxWaypointSeeTime <= gpGlobals->time)
 			{
 				//Clear this waypoint, get a new one and flush path info.
-				//TODO: Experimental [APG]RoboCop[CL]
-				std::optional<PATH*> pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);//TODO: triggers crash? [APG]RoboCopCL]
+
+				PATH* pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);//TODO: triggers crash? [APG]RoboCopCL]
 
 				if (pFailed)
-					pBot->m_stFailedPaths.AddFailedPath(pFailed.value());
+					pBot->m_stFailedPaths.AddFailedPath(pFailed);
 
 				pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, REACHABLE_RANGE, pBot->m_iLastFailedWaypoint, true, false, true);
 				iCurrWpt = pBot->m_iCurrentWaypointIndex;
@@ -1705,7 +1703,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	return true;
 }
 
-std::optional<PATH*> BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam) //Experimental [APG]RoboCop[CL]
+PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam)
 {
 	PATH* pPath = nullptr;
 	int iPathIndex = 0;
@@ -1720,7 +1718,7 @@ std::optional<PATH*> BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam) /
 		iFrom = iIndex; // Update iFrom unconditionally
 	}
 
-	return std::nullopt; // Return std::nullopt instead of nullptr
+	return nullptr;
 }
 
 /*CLocation :: CLocation (const char *szLocationName,edict_t *pEntity)

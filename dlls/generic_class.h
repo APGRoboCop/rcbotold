@@ -42,8 +42,8 @@
   ****************************************************
  */
 
-#ifndef __RCBOT_GENERIC_CLASS__
-#define __RCBOT_GENERIC_CLASS__
+#ifndef RCBOT_GENERIC_CLASS
+#define RCBOT_GENERIC_CLASS
 
 #include <cassert>
 #include <vector>

@@ -1,5 +1,5 @@
-#ifndef __BOT_TICK_H__
-#define __BOT_TICK_H__
+#ifndef BOT_TICK_H
+#define BOT_TICK_H
 
 #include <list>
 

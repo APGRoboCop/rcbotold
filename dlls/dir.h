@@ -31,8 +31,8 @@
  /////////////////////////////////////////////
  // DIRECTORY ROUTINES...
 
-#ifndef __RCBOT_DIR_H__
-#define __RCBOT_DIR_H__
+#ifndef RCBOT_DIR_H
+#define RCBOT_DIR_H
 
 #ifndef __linux__
 #include <Windows.h>

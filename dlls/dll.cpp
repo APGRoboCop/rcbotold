@@ -1575,7 +1575,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	}
 
 	gBotGlobals.m_bIsFakeClientCommand = true; // set the "fakeclient command" flag
-	const size_t length = std::strlen(command); // get the total length of the command string
+	const int length = std::strlen(command); // get the total length of the command string
 
 	// process all individual commands (separated by a semicolon) one each a time
 	while (stringindex < length)
@@ -1769,7 +1769,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		if (szBuffer[0] == '#')
 			continue;
 
-		size_t iLength = std::strlen(szBuffer);
+		int iLength = std::strlen(szBuffer);
 
 		if (szBuffer[iLength - 1] == '\n')
 			szBuffer[--iLength] = '\0';
@@ -1987,7 +1987,7 @@ void ReadBotUsersConfig()
 
 			buffer[255] = 0;
 
-			size_t length = std::strlen(buffer);
+			int length = std::strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;

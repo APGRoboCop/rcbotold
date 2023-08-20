@@ -43,8 +43,8 @@
  //
  // Bot definitions header
  //
-#ifndef __RCBOT_BITS_H__
-#define __RCBOT_BITS_H__
+#ifndef RCBOT_BITS_H
+#define RCBOT_BITS_H
 
 #include "gannconst.h"
 

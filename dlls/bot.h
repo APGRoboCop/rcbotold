@@ -51,10 +51,8 @@
  *
  *
  */
-#ifndef __BOT_H__
-#define __BOT_H__
-
-#include <optional>
+#ifndef BOT_H
+#define BOT_H
 
 #include "generic_class.h"
 #include "bot_const.h"
@@ -6170,23 +6168,22 @@ public:
 	//Science and Industry
 	int m_iTeamCash;
 	int m_iSciCount;
-	
+
 	int m_iCarry;
 	int m_iCarryTeam;
 	int m_iCarryClass;
-	
+
 	int m_iGoal;
 	int m_iGoalTeam;
 	int m_iGoalClass;
-	
+
 	int m_iNotice;
 	int m_iNoticeTeam;
 	int m_iNoticeClass;
-	
+
 	int m_iVote;
 	int m_iVoteTeam;
 	int m_iVoteClass;
-
 
 	// get number of clients trying to join
 	// can sometimes be buggy because of HL's clientDisconnect
@@ -6924,7 +6921,7 @@ BOOL BotFunc_BreakableIsEnemy(edict_t* pBreakable, edict_t* pEdict);
 int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue);
 int BotNavigate_FindNextWaypoint(CBot* pBot);
 BOOL BotNavigate_UpdateWaypoint(CBot* pBot);
-std::optional<PATH*> BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam);
+PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam);
 
 BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid);
 #endif // BOT_H
