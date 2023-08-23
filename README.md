@@ -37,6 +37,7 @@ V 1.51-beta3
 * changed: Added returns for NS CAlienAction 
 * changed: NS Squad Menu repaired and should hopefully work
 * TODO: To allow Skulk and Lerk Aliens to bite and attack properly
+* TODO: To find out why listenserver crashes when using "autowaypoint"
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
 
 V 1.5-final
