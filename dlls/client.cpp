@@ -342,7 +342,7 @@ void InitMessage ( const char *message );
 	{
 		edict_t* pEntity = nullptr;
 
-		Vector v_other;
+		//Vector v_other; //Not used? [APG]RoboCop[CL]
 		Vector v_comp;
 		Vector v_origin = m_pPlayer->v.origin - Vector(0, 0, m_pPlayer->v.size.z * 0.5f);
 		Vector v_original_vel;
@@ -821,18 +821,18 @@ void InitMessage ( const char *message );
 					//clear from i
 
 					int pos = n;
-					int j = 0;
+					//int n = 0;
 
-					for (j = 0; pos < MAX_STORED_AUTOWAYPOINT; j++)
+					for (n = 0; pos < MAX_STORED_AUTOWAYPOINT; n++)
 					{
-						m_vLastAutoWaypointCheckPos[j] = m_vLastAutoWaypointCheckPos[pos];
+						m_vLastAutoWaypointCheckPos[n] = m_vLastAutoWaypointCheckPos[pos];
 
 						pos++;
 					}
 
-					for (j = 1; j < MAX_STORED_AUTOWAYPOINT; j++)// i supposed to = 1? [APG]RoboCop[CL]
+					for (n = 1; n < MAX_STORED_AUTOWAYPOINT; n++)
 					{
-						m_vLastAutoWaypointCheckPos[j].UnSetPoint();
+						m_vLastAutoWaypointCheckPos[n].UnSetPoint();
 					}
 				}
 
@@ -950,17 +950,17 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 
 		pClient->UpdatePlayerRepId(iPlayerRepId);
 
-		if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_AUTOWAYPOINT_HUMANS))
+		if ( gBotGlobals.IsConfigSettingOn(BOT_CONFIG_AUTOWAYPOINT_HUMANS) )
 		{
-			if (!(pPlayer->v.flags & FL_FAKECLIENT))
+			if ( !(pPlayer->v.flags & FL_FAKECLIENT) )
 				pClient->AutoWaypoint(1);
 		}
 
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (auto& m_Bot : gBotGlobals.m_Bots)
 		{
-			CBot* pBot = &gBotGlobals.m_Bots[i];
+			CBot* pBot = &m_Bot;
 
-			if (!pBot)
+			if (pBot == nullptr)
 				continue;
 			if (!pBot->m_bIsUsed || !pBot->m_pEdict)
 				continue;
@@ -991,8 +991,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 
 		return pClient;
 	}
-	else
-		BugMessage(pPlayer, "Could not allocate client space for %s", STRING(pPlayer->v.netname));
+	BugMessage(pPlayer, "Could not allocate client space for %s", STRING(pPlayer->v.netname));
 
 	return nullptr;
 }

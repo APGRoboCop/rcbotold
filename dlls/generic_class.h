@@ -48,9 +48,9 @@
 #include <cassert>
 #include <vector>
 
-void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, char* fmt, ...);
-void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...);
-void BugMessage(edict_t* pEntity, char* fmt, ...);
+void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, const char* fmt, ...);
+void BotMessage(edict_t* pEntity, int errorlevel, const char* fmt, ...);
+void BugMessage(edict_t* pEntity, const char* fmt, ...);
 //////////////////////////////////////////////////////////////////////
 // GENERIC CLASSES
 

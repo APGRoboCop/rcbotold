@@ -614,52 +614,45 @@ BOOL WaypointLoad(edict_t* pEntity)
 
 	return true;
 }
-/*
+
 void AutoWaypoint ()
 {
-	if ( gBotGlobals.IsMod(MOD_SVENCOOP) )
-	{
-		edict_t *pNode = NULL;
+	//if ( gBotGlobals.IsMod(MOD_SVENCOOP) )
+	//{
+		edict_t *pNode = nullptr;
 
 		TraceResult tr;
 
-		Vector min;
-		Vector max;
-		Vector vOrigin;
+		BotMessage(nullptr,0,"Autowaypointing using info_nodes...");
 
-		float fHeight;
-
-		BotMessage(NULL,0,"Autowaypointing using info_nodes...");
-
-		while ( (pNode = UTIL_FindEntityByClassname(pNode,"info_node")) != NULL )
+		while ( (pNode = UTIL_FindEntityByClassname(pNode,"info_node")) != nullptr)
 		{
-			vOrigin = pNode->v.origin;
+			Vector vOrigin = pNode->v.origin;
 
 			// hit the floor
-			UTIL_TraceLine(vOrigin,Vector(0,0,-4096.0f),ignore_monsters,dont_ignore_glass,NULL,&tr);
+			UTIL_TraceLine(vOrigin,Vector(0,0,-4096.0f),ignore_monsters,dont_ignore_glass, nullptr,&tr);
 
-			min = tr.vecEndPos;
+			Vector min = tr.vecEndPos;
 
 			// hit the ceiling
-			UTIL_TraceLine(vOrigin,Vector(0,0,4096.0f),ignore_monsters,dont_ignore_glass,NULL,&tr);
+			UTIL_TraceLine(vOrigin,Vector(0,0,4096.0f),ignore_monsters,dont_ignore_glass, nullptr,&tr);
 
-			max = tr.vecEndPos;
+			Vector max = tr.vecEndPos;
 
 			// small area ? might need to be a crouch waypoint
-			fHeight = max.z - min.z;
+			const float fHeight = max.z - min.z;
 
 			if ( fHeight < 72 )
 			{
-				WaypointAddOrigin(min+Vector(0,0,18),W_FL_CROUCH,NULL);
+				WaypointAddOrigin(min+Vector(0,0,18),W_FL_CROUCH, nullptr);
 			}
 			else
-				WaypointAddOrigin(min+Vector(0,0,36),0,NULL);
+				WaypointAddOrigin(min+Vector(0,0,36),0, nullptr);
 
-			BotMessage(NULL,0,"Added waypoint at node.");
+			BotMessage(nullptr,0,"Added waypoint at node.");
 		}
-	}
+	//}
 }
-*/
 
 std::FILE* CWaypointConversion::openWaypoint() const
 {

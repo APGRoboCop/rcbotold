@@ -1373,7 +1373,7 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 
 		if (pWantedClient)
 		{
-			const int state = std::stoi(arg2);
+			int state = std::atoi(arg2); //Don't change it as std::stoi
 
 			if (arg2 && *arg2)
 				pWantedClient->AutoWaypoint(state);

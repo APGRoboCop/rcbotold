@@ -9756,7 +9756,7 @@ BOOL EntityIsAlive(edict_t* pEdict)
 		pEdict->v.health > 0;
 }
 
-void BugMessage(edict_t* pEntity, char* fmt, ...)
+void BugMessage(edict_t* pEntity, const char* fmt, ...)
 {
 	va_list argptr;
 	static char string[1024];
@@ -9785,7 +9785,7 @@ void AssertMessage(const BOOL bAssert, char* fmt, ...)
 	}
 }
 
-void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, char* fmt, ...)
+void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, const char* fmt, ...)
 {
 	va_list argptr;
 	static char string[1024];
@@ -9900,7 +9900,7 @@ void BotFile_Write(char* string)
 	}
 }
 
-void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...)
+void BotMessage(edict_t* pEntity, int errorlevel, const char* fmt, ...)
 {
 	va_list argptr;
 	static char string[1024];

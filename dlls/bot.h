@@ -111,9 +111,9 @@ int GetMessageID(const char* szMsg);
 void GetGameDirectory(char* szDir);
 #endif
 
-void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, char* fmt, ...);
-void BotMessage(edict_t* pEntity, int errorlevel, char* fmt, ...);
-void BugMessage(edict_t* pEntity, char* fmt, ...);
+void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, const char* fmt, ...);
+void BotMessage(edict_t* pEntity, int errorlevel, const char* fmt, ...);
+void BugMessage(edict_t* pEntity, const char* fmt, ...);
 
 int GetPlayerRepId(const char* szPlayerName);
 int GetPlayerEdictRepId(edict_t* pEdict);
@@ -1739,19 +1739,19 @@ protected:
 class CAutoWaypointCheck : public CTypeVector<float>
 {
 public:
-	void SetPoint(Vector const& vec, int iFlags)
+	void SetPoint (const Vector& vec, int iFlags)
 	{
 		m_iFlags = iFlags;
 
 		SetVector(vec);
 	}
 
-	int getFlags() const
+	int getFlags () const
 	{
 		return m_iFlags;
 	}
 
-	void UnSetPoint()
+	void UnSetPoint ()
 	{
 		m_bVectorSet = false;
 		m_iFlags = 0;
@@ -4537,11 +4537,11 @@ public:
 			m_bAutoWaypoint = !m_bAutoWaypoint;
 		else
 		{
-			m_bAutoWaypoint = state > 0;
+			m_bAutoWaypoint = (state > 0);
 		}
 	}
 
-	BOOL IsAutoWaypointOn() const
+	BOOL IsAutoWaypointOn () const
 	{
 		return m_bAutoWaypoint;
 	}
