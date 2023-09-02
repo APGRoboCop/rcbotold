@@ -8885,8 +8885,8 @@ void CBot::RunPlayerMove()
 		}
 	}*/
 
-	(*g_engfuncs.pfnRunPlayerMove)(m_pEdict, pev->angles, m_fMoveSpeed, m_fStrafeSpeed, m_fUpSpeed, pev->button,
-		pev->impulse, static_cast<byte>(m_iMsecVal));
+	(*g_engfuncs.pfnRunPlayerMove)(m_pEdict, pev->angles, m_fMoveSpeed, m_fStrafeSpeed, m_fUpSpeed, static_cast<byte>(pev->button),
+		static_cast<byte>(pev->impulse), static_cast<byte>(m_iMsecVal));
 }
 
 void CBot::ThrowGrenade(edict_t* pEnemy, int preference, const BOOL bDontPrime)
@@ -9863,7 +9863,7 @@ void BotPrintTalkMessage(char* fmt, ...)
 	}
 }
 
-void BotPrintTalkMessageOne(edict_t* pClient, char* fmt, ...)
+void BotPrintTalkMessageOne(edict_t* pClient, const char* fmt, ...)
 {
 	va_list argptr;
 	static char string[1024];
@@ -10649,22 +10649,21 @@ BOOL CBot::RemoveMySquad()
 
 	return false;
 }
-/*
+
 void CBot :: BotOnLadder ()
 {
-	Vector v_src, v_dest, view_angles;
 	TraceResult tr;
-	float angle = 0.0f;
-	bool done = false;
 
 	// check if the bot has JUST touched this ladder...
 	if (m_siLadderDir == LADDER_UNKNOWN)
 	{
+		float angle = 0.0f;
+		bool done = false;
 		// try to square up the bot on the ladder...
-		while ((!done) && (angle < 180.0f))
+		while (!done && angle < 180.0f)
 		{
 			// try looking in one direction (forward + angle)
-			view_angles = pev->v_angle;
+			Vector view_angles = pev->v_angle;
 			view_angles.y = pev->v_angle.y + angle;
 
 			if (view_angles.y < 0.0f)
@@ -10674,8 +10673,8 @@ void CBot :: BotOnLadder ()
 
 			UTIL_MakeVectors( view_angles );
 
-			v_src = pev->origin + pev->view_ofs;
-			v_dest = v_src + gpGlobals->v_forward * 30;
+			Vector v_src = pev->origin + pev->view_ofs;
+			Vector v_dest = v_src + gpGlobals->v_forward * 30;
 
 			UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
 				pev->pContainingEntity, &tr);
@@ -10761,27 +10760,28 @@ void CBot :: BotOnLadder ()
 	{
 		pev->v_angle.x = -60;  // look upwards
 
+		//TODO: to replace 'moved_distance' and 'prev_speed' [APG]RoboCop[CL]
 		// check if the bot hasn't moved much since the last location...
-		if ((moved_distance <= 1) && (prev_speed >= 1.0f))
+		/*if (moved_distance <= 1 && prev_speed >= 1.0f)
 		{
 			// the bot must be stuck, change directions...
 
 			pev->v_angle.x = 60;  // look downwards
 			m_siLadderDir = LADDER_DOWN;
-		}
+		}*/
 	}
 	else if (m_siLadderDir == LADDER_DOWN)  // is the bot currently going down?
 	{
 		pev->v_angle.x = 60;  // look downwards
 
 		// check if the bot hasn't moved much since the last location...
-		if ((moved_distance <= 1) && (prev_speed >= 1.0f))
+		/*if (moved_distance <= 1 && prev_speed >= 1.0f)
 		{
 			// the bot must be stuck, change directions...
 
 			pev->v_angle.x = -60;  // look upwards
 			m_siLadderDir = LADDER_UP;
-		}
+		}*/
 	}
 	else  // the bot hasn't picked a direction yet, try going up...
 	{
@@ -10792,7 +10792,6 @@ void CBot :: BotOnLadder ()
 	// move forward (i.e. in the direction the bot is looking, up or down)
 	pev->button |= IN_FORWARD;
 }
-*/
 
 eMasterType CMasterEntity::CanFire(edict_t* pActivator) const
 {

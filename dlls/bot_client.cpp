@@ -1428,7 +1428,7 @@ void BotClient_Generic_TeamScore::execute(void* p, int iIndex)
 void BotClient_NS_HudText::execute(void* p, int iIndex)
 {
 	static short int state = 0;
-	const char* msg = nullptr;
+	const char* msg;
 
 	if (p == nullptr /*|| (iIndex==-1) */)
 	{

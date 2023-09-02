@@ -978,11 +978,11 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 		{
 			if (FStrEq(pkvd->szKeyName, "team_no"))  // team number allowed for cap point
 			{
-				m_currCapPoint->setTeam(std::stoi(pkvd->szValue));
+				m_currCapPoint->setTeam(std::atoi(pkvd->szValue));
 			}
 			else if (FStrEq(pkvd->szKeyName, "axhitme")) // make sure cap point IS a cap point i.e. removes an item from player
 			{
-				m_currCapPoint->setGoal(std::stoi(pkvd->szValue));
+				m_currCapPoint->setGoal(std::atoi(pkvd->szValue));
 
 				prevCapturePointInvalid = false;
 
@@ -990,7 +990,7 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 			}
 			else if (FStrEq(pkvd->szKeyName, "r_i_g")) // make sure cap point IS a cap point i.e. removes an item from player
 			{
-				m_currCapPoint->setGroup(std::stoi(pkvd->szValue));
+				m_currCapPoint->setGroup(std::atoi(pkvd->szValue));
 
 				prevCapturePointInvalid = false;
 
@@ -1015,31 +1015,31 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 		if (pentKeyvalue == m_pTFCDetect)
 		{
 			if (std::strcmp(pkvd->szKeyName, "ammo_medikit") == 0)  // max BLUE players
-				max_team_players[0] = std::stoi(pkvd->szValue);
+				max_team_players[0] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "ammo_detpack") == 0)  // max RED players
-				max_team_players[1] = std::stoi(pkvd->szValue);
+				max_team_players[1] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_medikit") == 0)  // max YELLOW players
-				max_team_players[2] = std::stoi(pkvd->szValue);
+				max_team_players[2] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_detpack") == 0)  // max GREEN players
-				max_team_players[3] = std::stoi(pkvd->szValue);
+				max_team_players[3] = std::atoi(pkvd->szValue);
 
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_shells") == 0)  // BLUE class limits
-				team_class_limits[0] = std::stoi(pkvd->szValue);
+				team_class_limits[0] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_nails") == 0)  // RED class limits
-				team_class_limits[1] = std::stoi(pkvd->szValue);
+				team_class_limits[1] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_rockets") == 0)  // YELLOW class limits
-				team_class_limits[2] = std::stoi(pkvd->szValue);
+				team_class_limits[2] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_cells") == 0)  // GREEN class limits
-				team_class_limits[3] = std::stoi(pkvd->szValue);
+				team_class_limits[3] = std::atoi(pkvd->szValue);
 
 			else if (std::strcmp(pkvd->szKeyName, "team1_allies") == 0)  // BLUE allies
-				team_allies[0] = std::stoi(pkvd->szValue);
+				team_allies[0] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "team2_allies") == 0)  // RED allies
-				team_allies[1] = std::stoi(pkvd->szValue);
+				team_allies[1] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "team3_allies") == 0)  // YELLOW allies
-				team_allies[2] = std::stoi(pkvd->szValue);
+				team_allies[2] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "team4_allies") == 0)  // GREEN allies
-				team_allies[3] = std::stoi(pkvd->szValue);
+				team_allies[3] = std::atoi(pkvd->szValue);
 		}
 		else if (m_pTFCDetect == nullptr)
 		{
@@ -1054,15 +1054,15 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 		if (m_currFlag && m_currFlag->isEdict(pentKeyvalue))
 		{
 			if (std::strcmp(pkvd->szKeyName, "team_no") == 0)
-				m_currFlag->setTeam(std::stoi(pkvd->szValue));
+				m_currFlag->setTeam(std::atoi(pkvd->szValue));
 			else if (strcmpi(pkvd->szKeyName, "mdl") == 0)
 			{
 				prevFlagInvalid = false;
 			}
 			else if (std::strcmp(pkvd->szKeyName, "goal_no") == 0)
-				m_currFlag->setGoal(std::stoi(pkvd->szValue)); // Goal number of flag for cap point
+				m_currFlag->setGoal(std::atoi(pkvd->szValue)); // Goal number of flag for cap point
 			else if (std::strcmp(pkvd->szKeyName, "group_no") == 0)
-				m_currFlag->setGroup(std::stoi(pkvd->szValue)); // Goal number of flag for cap point
+				m_currFlag->setGroup(std::atoi(pkvd->szValue)); // Goal number of flag for cap point
 		}
 		else if (!std::strcmp(pkvd->szKeyName, "classname"))
 		{
@@ -1097,19 +1097,19 @@ void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
 		else if (m_currBackPack && m_currBackPack->isEdict(pentKeyvalue))
 		{
 			if (std::strcmp(pkvd->szKeyName, "team_no") == 0)
-				m_currBackPack->setTeam(std::stoi(pkvd->szValue));
+				m_currBackPack->setTeam(std::atoi(pkvd->szValue));
 			else if (std::strcmp(pkvd->szKeyName, "armorvalue") == 0)
-				m_currBackPack->setArmor(std::stoi(pkvd->szValue));
+				m_currBackPack->setArmor(std::atoi(pkvd->szValue));
 			else if (std::strcmp(pkvd->szKeyName, "health") == 0)
-				m_currBackPack->setHealth(std::stoi(pkvd->szValue));
+				m_currBackPack->setHealth(std::atoi(pkvd->szValue));
 			else if (std::strcmp(pkvd->szKeyName, "ammo_nails") == 0 ||
 				std::strcmp(pkvd->szKeyName, "ammo_rockets") == 0 ||
 				std::strcmp(pkvd->szKeyName, "ammo_shells") == 0)
 			{
-				m_currBackPack->setAmmo(std::stoi(pkvd->szValue));
+				m_currBackPack->setAmmo(std::atoi(pkvd->szValue));
 			}
 			else if (std::strcmp(pkvd->szKeyName, "ammo_cells") == 0)
-				m_currBackPack->setCells(std::stoi(pkvd->szValue));
+				m_currBackPack->setCells(std::atoi(pkvd->szValue));
 
 			// Has a model in the game (visible)
 			if (std::strcmp(pkvd->szKeyName, "mdl") == 0) &&

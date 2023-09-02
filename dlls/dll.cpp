@@ -1788,7 +1788,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		}
 		else if (std::strncmp(szBuffer, "class=", 6) == 0)
 		{
-			bpBotProfile->m_iClass = std::stoi(&szBuffer[6]);
+			bpBotProfile->m_iClass = std::atoi(&szBuffer[6]);
 		}
 		else if (std::strncmp(szBuffer, "model=", 6) == 0)
 		{
@@ -1804,11 +1804,11 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		}
 		else if (std::strncmp(szBuffer, "favmod=", 7) == 0)
 		{
-			bpBotProfile->m_iFavMod = std::stoi(&szBuffer[7]);
+			bpBotProfile->m_iFavMod = std::atoi(&szBuffer[7]);
 		}
 		else if (std::strncmp(szBuffer, "favteam=", 8) == 0)
 		{
-			bpBotProfile->m_iFavTeam = std::stoi(&szBuffer[8]);
+			bpBotProfile->m_iFavTeam = std::atoi(&szBuffer[8]);
 		}
 		else if (std::strncmp(szBuffer, "favmap=", 7) == 0)
 		{
@@ -1824,7 +1824,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		}
 		else if (std::strncmp(szBuffer, "skill=", 6) == 0)
 		{
-			bpBotProfile->m_iSkill = std::stoi(&szBuffer[6]);
+			bpBotProfile->m_iSkill = std::atoi(&szBuffer[6]);
 		}
 		else if (std::strncmp(szBuffer, "spray=", 6) == 0)
 		{
@@ -1840,19 +1840,19 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		}
 		else if (std::strncmp(szBuffer, "gorge_percent=", 14) == 0)
 		{
-			bpBotProfile->m_GorgePercent = std::stoi(&szBuffer[14]);
+			bpBotProfile->m_GorgePercent = std::atoi(&szBuffer[14]);
 		}
 		else if (std::strncmp(szBuffer, "lerk_percent=", 13) == 0)
 		{
-			bpBotProfile->m_LerkPercent = std::stoi(&szBuffer[13]);
+			bpBotProfile->m_LerkPercent = std::atoi(&szBuffer[13]);
 		}
 		else if (std::strncmp(szBuffer, "fade_percent=", 13) == 0)
 		{
-			bpBotProfile->m_FadePercent = std::stoi(&szBuffer[13]);
+			bpBotProfile->m_FadePercent = std::atoi(&szBuffer[13]);
 		}
 		else if (std::strncmp(szBuffer, "onos_percent=", 13) == 0)
 		{
-			bpBotProfile->m_OnosPercent = std::stoi(&szBuffer[13]);
+			bpBotProfile->m_OnosPercent = std::atoi(&szBuffer[13]);
 		}
 		else if (std::strncmp(szBuffer, "aim_speed=", 10) == 0)
 			bpBotProfile->m_fAimSpeed = std::stof(&szBuffer[10]);
@@ -1862,7 +1862,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 			bpBotProfile->m_fAimTime = std::stof(&szBuffer[9]);
 		else if (std::strncmp(szBuffer, "bottomcolor=", 12) == 0)
 		{
-			bpBotProfile->m_iBottomColour = std::stoi(&szBuffer[12]);
+			bpBotProfile->m_iBottomColour = std::atoi(&szBuffer[12]);
 
 			if (bpBotProfile->m_iBottomColour < 0)
 				bpBotProfile->m_iBottomColour = 0;
@@ -1871,7 +1871,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		}
 		else if (std::strncmp(szBuffer, "topcolor=", 9) == 0)
 		{
-			bpBotProfile->m_iTopColour = std::stoi(&szBuffer[9]);
+			bpBotProfile->m_iTopColour = std::atoi(&szBuffer[9]);
 
 			if (bpBotProfile->m_iTopColour < 0)
 				bpBotProfile->m_iTopColour = 0;
@@ -1880,7 +1880,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		}
 		else if (std::strncmp(szBuffer, "numgames=", 9) == 0)
 		{
-			bpBotProfile->m_iNumGames = std::stoi(&szBuffer[9]);
+			bpBotProfile->m_iNumGames = std::atoi(&szBuffer[9]);
 		}
 		else if (std::strncmp(szBuffer, "hal_pretrain_file=", 18) == 0)
 		{
@@ -1932,11 +1932,11 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		}
 		else if (std::strncmp(szBuffer, "max_path_revs=", 14) == 0)
 		{
-			bpBotProfile->m_iPathRevs = std::stoi(&szBuffer[14]);
+			bpBotProfile->m_iPathRevs = std::atoi(&szBuffer[14]);
 		}
 		else if (std::strncmp(szBuffer, "max_update_vision_revs=", 23) == 0)
 		{
-			bpBotProfile->m_iVisionRevs = std::stoi(&szBuffer[23]);
+			bpBotProfile->m_iVisionRevs = std::atoi(&szBuffer[23]);
 		}
 		else if (std::strncmp(szBuffer, "update_vision_time=", 19) == 0)
 		{
@@ -2044,7 +2044,7 @@ void ReadBotUsersConfig()
 				BotMessage(nullptr, 0, "Added: name=\"%s\", pass=%s, accesslev=%s, steamid=%s", szName, szPass, szAccessLevel, szSteamId);
 
 				// Add to allowed users
-				gBotGlobals.m_BotUsers.AddPlayer(szName, szPass, std::stoi(szAccessLevel), szSteamId);
+				gBotGlobals.m_BotUsers.AddPlayer(szName, szPass, std::atoi(szAccessLevel), szSteamId);
 				users++;
 			}
 			else
@@ -2229,6 +2229,8 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 // TODO: Make new BOTCAM.CPP soon!!!
 CBotCam::CBotCam()
 {
+	//tr = nullptr;
+	//vBotOrigin = nullptr;
 	m_iPositionSet = 0;
 	m_pCurrentBot = nullptr;
 	m_iState = BOTCAM_NONE;

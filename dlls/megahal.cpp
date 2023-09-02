@@ -1123,7 +1123,7 @@ void HAL_MakeWords (char *input, HAL_DICTIONARY *words)
    }
 }*/
 
-BOOL HAL_BoundaryExists(char* string, int position)
+BOOL HAL_BoundaryExists(const char* string, int position)
 {
 	// this function returns whether or not a word boundary exists in a string at the
 	// specified location

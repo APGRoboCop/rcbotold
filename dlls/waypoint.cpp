@@ -331,7 +331,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 
 		if ((fDist = (curr_wpt->origin - vOrigin).Length()) < *pfMinDist)
 		{
-			BOOL bAdd = false;
+			BOOL bAdd;
 
 			if (bGetVisible == false)
 				bAdd = true;

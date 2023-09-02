@@ -210,7 +210,7 @@ Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, edict_t* pPushable);
 void UTIL_PlaySoundToAll(const char* szSound);
 void UTIL_PlaySound(edict_t* pPlayer, const char* szSound);
 
-void BotPrintTalkMessageOne(edict_t* pClient, char* fmt, ...);
+void BotPrintTalkMessageOne(edict_t* pClient,const char* fmt, ...);
 
 BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource);
 int NS_GetPlayerLevel(int exp);
@@ -3194,7 +3194,8 @@ public:
 
 	BOOL ThrowingGrenade() const;
 
-	void LostDisguise()
+	// No longer required for TFC [APG]RoboCop[CL]
+	/*void LostDisguise()
 	{
 		m_bIsDisguised = false;
 	}
@@ -3212,9 +3213,9 @@ public:
 	void DispenserDestroyed()
 	{
 		m_bBuiltDispenser = false;
-	}
+	}*/
 
-	void NeedMetal(BOOL flush = true, BOOL priority = false, int iSched = 0);
+	//void NeedMetal(BOOL flush = true, BOOL priority = false, int iSched = 0);
 	//void FindBackPack(int health = 0, int cells = 0, int armour = 0, int ammo = 0, BOOL flush = true, BOOL priority = false, int iSched = 0);
 
 	void CantBuildHere()
@@ -3716,7 +3717,7 @@ public:
 	////////////////////////////
 	// MISCELLANEOUS
 
-	short int m_iCombatInfo;
+	int m_iCombatInfo;
 	//short int m_iCombatUpgrades;
 
 	edict_t* m_pSquadLeader;
@@ -3825,9 +3826,9 @@ public:
 
 	void UpdateMsec();
 
-	void MapInit();
+	//void MapInit(); //Duplicate? [APG]RoboCop[CL]
 
-	void BotOnLadder(); //TODO: Needs implemented [APG]RoboCop[CL]
+	void BotOnLadder();
 
 	void UseTank(edict_t* pTank);
 

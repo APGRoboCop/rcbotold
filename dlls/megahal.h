@@ -122,7 +122,7 @@ void BotHALTrainModel(CBot* pBot, HAL_MODEL* model);
 void HAL_ShowDictionary(HAL_DICTIONARY* dictionary);
 void HAL_MakeWords(char* input, HAL_DICTIONARY* words);
 void BotHALGenerateReply(CBot* pBot, char* output);
-BOOL HAL_BoundaryExists(char* string, int position);
+BOOL HAL_BoundaryExists(const char* string, int position);
 void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg);
 BOOL HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2);
 HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words);
