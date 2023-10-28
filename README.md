@@ -18,7 +18,7 @@ Supported Mods
 RCBot versions
 --------------
 
-V 1.51-beta3
+V 1.51-beta4
 ---------
 
 * added: Enhanced performance
@@ -26,6 +26,7 @@ V 1.51-beta3
 * added: Opposing Force CTF, S&I and WizWars Support
 * added: C++17 Standard library support 
 * added: Strafing combat to evade from being easy target bots
+* added: Linux bot slow-motion fix by w00tguy
 * changed: Increased the bot's flexability
 * changed: Reduced redundant coding
 * changed: Reverted basemonster.h that was modified for Sven Coop
@@ -434,3 +435,4 @@ iii. Post in forum or e-mail me with :
 - RedFox : For the BotCam code from FoXBot
 - Tsmod.net : For allowing TS v3.0 support
 - Tschumann : For the code needed for Op4CTF
+- w00tguy : For Linux bot slow-motion fix
