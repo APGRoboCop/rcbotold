@@ -8840,6 +8840,11 @@ void CBot::RunPlayerMove()
 {
 	UpdateMsec();
 
+	//Fix by w00tguy https://github.com/wootguy/rcbot/commit/e3ebac2372b8639f8a2d56f51b32bc7bdb3543ea
+	if (m_iMsecVal < 10) {
+		return; // wait for more time to pass to prevent slow motion at high framerates
+	}
+
 	m_fLastCallRunPlayerMove = gpGlobals->time;
 
 	UTIL_FixAngles(&pev->angles);
