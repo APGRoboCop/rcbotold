@@ -185,7 +185,7 @@ typedef enum
 
 #define BOT_MIN_SOUND_DIST 128
 
-#define BOT_MIN_MSECVAL 30
+#define BOT_MIN_MSECVAL 1
 #define BOT_MAX_MSECVAL 60
 #define BOT_DEF_MSECDELTIME 0.5f
 
