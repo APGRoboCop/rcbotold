@@ -10221,7 +10221,7 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, entvars_t* pDoor, Vect
 				if (tr.pHit == pTarget || tr.flFraction >= 1.0f)
 				{
 					pBestTarget = pTarget;
-					fNearest = fDist;
+					//fNearest = fDist; // Not used? [APG]RoboCop[CL]
 
 					if (vFoundOrigin)
 						*vFoundOrigin = vEntityOrigin;
@@ -10235,7 +10235,7 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, entvars_t* pDoor, Vect
 				if (tr.pHit == pTarget || tr.flFraction >= 1.0f)
 				{
 					pBestTarget = pTarget;
-					fNearest = fDist;
+					//fNearest = fDist;
 
 					if (vFoundOrigin)
 						*vFoundOrigin = vEntityOrigin + pTarget->v.size;
@@ -10248,7 +10248,7 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, entvars_t* pDoor, Vect
 				if (tr.pHit == pTarget || tr.flFraction >= 1.0f)
 				{
 					pBestTarget = pTarget;
-					fNearest = fDist;
+					//fNearest = fDist;
 
 					if (vFoundOrigin)
 						*vFoundOrigin = vEntityOrigin - pTarget->v.size;
@@ -10692,10 +10692,10 @@ void CBot :: BotOnLadder ()
 					view_angles = UTIL_VecToAngles(tr.vecPlaneNormal);
 
 					// Normal comes OUT from wall, so flip it around...
-					view_angles.y += 180;
+					view_angles.y += 180.0f;
 
-					if (view_angles.y > 180)
-						view_angles.y -= 360;
+					if (view_angles.y > 180.0f)
+						view_angles.y -= 360.0f;
 
 					pev->ideal_yaw = view_angles.y;
 
@@ -10731,10 +10731,10 @@ void CBot :: BotOnLadder ()
 						view_angles = UTIL_VecToAngles(tr.vecPlaneNormal);
 
 						// Normal comes OUT from wall, so flip it around...
-						view_angles.y += 180;
+						view_angles.y += 180.0f;
 
-						if (view_angles.y > 180)
-							view_angles.y -= 360;
+						if (view_angles.y > 180.0f)
+							view_angles.y -= 360.0f;
 
 						pev->ideal_yaw = view_angles.y;
 
@@ -10763,7 +10763,7 @@ void CBot :: BotOnLadder ()
 
 	if (m_siLadderDir == LADDER_UP)  // is the bot currently going up?
 	{
-		pev->v_angle.x = -60;  // look upwards
+		pev->v_angle.x = -60.0f;  // look upwards
 
 		//TODO: to replace 'moved_distance' and 'prev_speed' [APG]RoboCop[CL]
 		// check if the bot hasn't moved much since the last location...
@@ -10771,13 +10771,13 @@ void CBot :: BotOnLadder ()
 		{
 			// the bot must be stuck, change directions...
 
-			pev->v_angle.x = 60;  // look downwards
+			pev->v_angle.x = 60.0f;  // look downwards
 			m_siLadderDir = LADDER_DOWN;
 		}*/
 	}
 	else if (m_siLadderDir == LADDER_DOWN)  // is the bot currently going down?
 	{
-		pev->v_angle.x = 60;  // look downwards
+		pev->v_angle.x = 60.0f;  // look downwards
 
 		// check if the bot hasn't moved much since the last location...
 		/*if (moved_distance <= 1 && prev_speed >= 1.0f)
@@ -10790,7 +10790,7 @@ void CBot :: BotOnLadder ()
 	}
 	else  // the bot hasn't picked a direction yet, try going up...
 	{
-		pev->v_angle.x = -60;  // look upwards
+		pev->v_angle.x = -60.0f;  // look upwards
 		m_siLadderDir = LADDER_UP;
 	}
 
