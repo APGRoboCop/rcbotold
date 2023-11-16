@@ -4429,6 +4429,8 @@ void CBot::LookForNewTasks()
 		}
 		case MOD_SI:
 			break;
+		case MOD_FLF:
+			break;
 		case MOD_NS:
 
 			if (bCanBuild)
@@ -5789,6 +5791,7 @@ void CBot::LookForNewTasks()
 						gBotGlobals.m_iCurrentMod != MOD_SI &&
 						gBotGlobals.m_iCurrentMod != MOD_TS &&
 						gBotGlobals.m_iCurrentMod != MOD_WW &&
+						gBotGlobals.m_iCurrentMod != MOD_FLF &&
 						gBotGlobals.m_iCurrentMod != MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 					//gBotGlobals.m_iCurrentMod != MOD_TFC
 

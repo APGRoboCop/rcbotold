@@ -1010,6 +1010,7 @@ enum
 	MOD_HL_DM = 13,		// half-life deathmatch
 	MOD_RS = 14,		// rival species meh...
 	MOD_WW = 15,		// TODO: Wizard Wars
+	MOD_FLF = 16,		// TODO: Front Line Force
 };
 
 #define VGUI_MENU_NONE 0

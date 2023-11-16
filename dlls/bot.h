@@ -6252,6 +6252,7 @@ public:
 		m_Mods.AddMod("wizawars", "hl", MOD_WW); // Support for Wiz Wars v1.2.9
 		m_Mods.AddMod("wizardwars", "wizardwars", MOD_WW); // Support for Wiz Wars v1.2.7 [APG]RoboCop[CL]
 		m_Mods.AddMod("si", "si", MOD_SI); // Support for Science and Industry [APG]RoboCop[CL]
+		m_Mods.AddMod("frontline", "frontline", MOD_FLF); // Support for Front Line Force [APG]RoboCop[CL]
 
 #else
 		// LINUX
@@ -6279,6 +6280,7 @@ public:
 		m_Mods.AddMod("wizawars", "mp", MOD_WW); // Support for Wiz Wars v1.2.9
 		m_Mods.AddMod("wizardwars", "wizardwars", MOD_WW); // Support for Wiz Wars v1.2.7 [APG]RoboCop[CL]
 		m_Mods.AddMod("si", "si", MOD_SI); // Support for Science and Industry [APG]RoboCop[CL]
+		m_Mods.AddMod("frontline", "front", MOD_FLF); // Support for Front Line Force [APG]RoboCop[CL]
 
 #endif
 		// same for linux & windows

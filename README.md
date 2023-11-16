@@ -11,6 +11,7 @@ Supported Mods
 - Opposing Force (CTF)
 - Natural Selection
 - Rocket Crowbar
+- Front Line Force
 - Science and Industry
 - The Specialists
 - Wizard Wars

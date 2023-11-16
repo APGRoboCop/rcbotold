@@ -946,6 +946,8 @@ int UTIL_GetTeam(edict_t* pEntity)
 		return pEntity->v.team - 1;
 	case MOD_WW: //TODO: Unannotated fall-through [APG]RoboCop[CL]
 		return pEntity->v.team - 1;
+	case MOD_FLF: //TODO: Front Line Force support [APG]RoboCop[CL]
+		return pEntity->v.team - 1;
 	default:
 		break;
 	}
