@@ -47,13 +47,13 @@
 
 CBotGAValues::CBotGAValues()
 {
-	clear();
+	CBotGAValues::clear();
 	setFitness(0);
 }
 
 CBotGAValues::CBotGAValues(const std::vector<ga_value>& values)
 {
-	clear();
+	CBotGAValues::clear();
 	setFitness(0);
 
 	setVector(values);
@@ -272,26 +272,26 @@ CBitsGAValues::CBitsGAValues(CBits* bits)
 // crossover with other individual
 void CBitsGAValues::crossOver(IIndividual* other)
 {
-	const unsigned int iNumBits = m_theBits->numBits();
-	const unsigned int iCrossoverPoint = static_cast<unsigned int>(RANDOM_LONG(0, iNumBits));
-	const CBits* tempBits = new CBits(iNumBits);
-
+	const int iNumBits = m_theBits->numBits();
+	const int iCrossoverPoint = RANDOM_LONG(0, iNumBits);
+	const CBits tempBits(iNumBits);
+	
 	const CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
-
-	unsigned int i;
-
+	
+	int i;
+	
 	for (i = 0; i < iCrossoverPoint; i++)
 	{
-		tempBits->setBit(i, m_theBits->getBit(i));
+		tempBits.setBit(i, m_theBits->getBit(i));
 		m_theBits->setBit(i, otherBits->get(i));
-		otherBits->set(i, tempBits->getBit(i));
+		otherBits->set(i, tempBits.getBit(i));
 	}
-
+	
 	for (i = iCrossoverPoint; i < iNumBits; i++)
 	{
-		tempBits->setBit(i, otherBits->get(i));
+		tempBits.setBit(i, otherBits->get(i));
 		otherBits->set(i, m_theBits->getBit(i));
-		m_theBits->setBit(i, tempBits->getBit(i));
+		m_theBits->setBit(i, tempBits.getBit(i));
 	}
 }
 

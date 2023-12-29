@@ -444,7 +444,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 			for (i = 0; i < static_cast<int>(replywords->size); ++i)
 				length += replywords->entry[i].length;
 
-			output_template = static_cast<char*>(std::realloc(output_template, sizeof(char) * length));
+			output_template = static_cast<char*>(std::realloc(output_template, sizeof(char) * length));//TODO: Fix realloc() leak
 			if (output_template == nullptr)
 				BotMessage(nullptr, 1, "HAL: HAL_MakeOutput() unable to reallocate output\n");
 
@@ -1705,7 +1705,7 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 
 		const char* string = std::strtok(buffer, "\t\n#");
 
-		if (string != nullptr && std::strlen(string) > 0)
+		if (string != nullptr && string[0] != '\0')
 		{
 			word.length = static_cast<unsigned char>(std::strlen(string));
 			word.word = strdup(buffer); // strdup - duplicates string
@@ -1977,7 +1977,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 
 	char filename[512];
 	char file[256];
-	char cookie[8];
+	char cookie[sizeof"RCBOTHAL"];
 
 	//int iNameLength;
 	//char *szName;

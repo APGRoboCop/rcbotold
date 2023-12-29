@@ -867,7 +867,9 @@ void ClientCommand(edict_t* pEntity)
 							std::free(szMessage);
 							szMessage = nullptr;
 						}
-
+						
+						delete[] szMessage;
+						
 						// 2 extra chars, 1 for terminator and 1 for space
 						szMessage = new char[iLenSoFar + 1];
 						szMessage[0] = 0;
@@ -1636,7 +1638,6 @@ void BotFunc_InitProfile(bot_profile_t* bpBotProfile)
 	bpBotProfile->m_GorgePercent = 0;
 	bpBotProfile->m_iFavMod = 0;
 	bpBotProfile->m_iFavTeam = TEAM_AUTOTEAM;
-	bpBotProfile->m_iClass = -1;
 	bpBotProfile->m_iProfileId = 0;
 	bpBotProfile->m_iSkill = DEF_BOT_SKILL;
 	bpBotProfile->m_LerkPercent = 50;

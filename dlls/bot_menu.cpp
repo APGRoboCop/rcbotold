@@ -281,10 +281,12 @@ void SetupMenus()
 
 */
 
-CBotMenu :: ~CBotMenu()
+/*CBotMenu :: ~CBotMenu()
 {
 	//DestroyMenu ();
-}
+}*/
+
+CBotMenu::~CBotMenu() = default;
 
 CBotMenu::CBotMenu(const char* szCaption)
 {

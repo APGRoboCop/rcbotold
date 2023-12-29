@@ -60,7 +60,6 @@
 #include "waypoint.h"
 
 #include <vector>
-#include <algorithm>
 
 static std::FILE* fp;
 
@@ -1959,7 +1958,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 
 	if (pHit)
 	{
-		if (pHit && pHit->v.targetname)
+		if (pHit->v.targetname)
 		{
 			if (std::strcmp("func_seethroughdoor", STRING(pHit->v.classname)) == 0 ||
 				std::strncmp("func_door", STRING(pHit->v.classname), 9) == 0 ||

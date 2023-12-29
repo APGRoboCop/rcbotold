@@ -393,25 +393,21 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 // find a player by a truncated name "name".
 // e.g. name = "Jo" might find a player called "John"
 {
+	// Calculate the length of the name once, before the loop
+	const size_t length = std::strlen(name);
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
 		edict_t* pent = INDEXENT(i);
-
 		if (pent != nullptr)
 		{
 			if (!pent->free)
 			{
-				const size_t length = std::strlen(name);
-
 				char arg_lwr[80];
 				char pent_lwr[80];
-
 				std::strcpy(arg_lwr, name);
 				std::strcpy(pent_lwr, STRING(pent->v.netname));
-
 				strlow(arg_lwr);
 				strlow(pent_lwr);
-
 				if (std::strncmp(arg_lwr, pent_lwr, length) == 0)
 				{
 					return pent;
@@ -419,7 +415,6 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 			}
 		}
 	}
-
 	return nullptr;
 }
 
@@ -1084,7 +1079,7 @@ float UTIL_EntityAnglesToVector2D(entvars_t* pev, const Vector* pOrigin) // For 
 
 	const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-	return std::acos(flDot) / 3.141592f * 180.0f;
+	return std::acos(flDot) / static_cast<float>(M_PI) * 180.0f;
 }
 
 float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin) // For 3d Movement (e.g. swimming)
@@ -1096,7 +1091,7 @@ float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin) // For 
 
 	const float flDot = DotProduct(vecLOS, gpGlobals->v_forward);
 
-	return std::acos(flDot) / 3.141592f * 180.0f;
+	return std::acos(flDot) / static_cast<float>(M_PI) * 180.0f;
 }
 
 int UTIL_ClassOnTeam(int iClass, int iTeam)

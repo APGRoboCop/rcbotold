@@ -1523,7 +1523,7 @@ typedef struct path {
 
 ////////////////////////////
 // Bot Profile Info
-// TODO: those need to be initialised for Bot Profile to work [APG]RoboCop[CL]
+// TODO: those need to be initialised for Bot Profile to work? [APG]RoboCop[CL]
 typedef struct bot_profile_s
 {
 	int m_iProfileId;
@@ -2150,7 +2150,7 @@ private:
 };*/
 /////////////////////////////////////////////////////
 // BOT CLASS
-// TODO: need to be initialised for Bot Class to work [APG]RoboCop[CL]
+// TODO: need to be initialised for Bot Class to work? [APG]RoboCop[CL]
 #define SQUAD_DEFAULT_SPREAD 50.0f// say 50 units between each member...?
 
 enum eSquadForm

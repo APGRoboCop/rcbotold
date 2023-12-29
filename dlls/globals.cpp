@@ -332,10 +332,7 @@ void CBotGlobals::StartFrame()
 
 				// Find the marine command console
 
-				while ((pEntity = UTIL_FindEntityByClassname(pEntity, "team_command")) != nullptr)
-				{
-					break;
-				}
+				pEntity = UTIL_FindEntityByClassname(pEntity, "team_command");
 
 				if (pEntity)
 				{
@@ -694,7 +691,7 @@ void CBotGlobals::StartFrame()
 									{
 										const BOOL bHasWeapon = pBot->HasWeapon(j);
 
-										if (pBot->pev->weapons & 1 << j && !bHasWeapon)
+										if (j < sizeof(int) * CHAR_BIT && pBot->pev->weapons & 1 << j && !bHasWeapon)
 										{
 											CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(j);
 

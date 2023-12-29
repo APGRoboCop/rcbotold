@@ -1970,16 +1970,12 @@ void CBot::SpawnInit(const BOOL bInit)
 	else
 		m_ibBotConditions = 0;
 
-	m_iPrevWaypointIndex = -1;
-
 	//m_Tasks.FlushTasks();
 	m_fFindPathTime = 0.0f;
 
 	m_pEnemyRep = nullptr;
 
 	m_pAvoidEntity = nullptr;
-	m_iWaypointGoalIndex = -1;
-	m_iCurrentWaypointIndex = -1;
 	m_iCurrentWaypointFlags = 0;
 	m_fPrevWaypointDist = 4096.0f;
 
@@ -2384,7 +2380,10 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		// always null terminate the last possible character
 		string[start] = 0;
 
-		const size_t end = start + std::strlen(fill_point);
+		// Calculate the length of fill_point once
+		// TODO: The 'strlen' function was called multiple times [APG]RoboCop[CL]
+		const size_t fill_point_length = std::strlen(fill_point);
+		const size_t end = start + fill_point_length;
 		std::strncpy(after, &string[end], len - end);
 		after[len - end] = 0;
 
@@ -3920,7 +3919,7 @@ BOOL CBot::WantToFindEnemy() const
 	return true;
 }
 
-// TODO: Experimental and NS AlienAction may need to be tested and added in bot.h [APG]RoboCop[CL]
+// TODO: Experimental and NS AlienAction may need to be tested and added in bot.h? [APG]RoboCop[CL]
 typedef enum
 {
 	ACTION_BUILD_DEF,
@@ -7882,7 +7881,7 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 		eBotTask iCurrentTask = m_CurrentTask->Task(); //iCurrentTask unused? [APG]RoboCop[CL]
 
 	vAngles.z = 0;
-	pev->v_angle.z = pev->v_angle.z = 0;
+	pev->v_angle.z = 0;
 
 	float zComp = m_vMoveToVector.z - pev->origin.z;
 
@@ -8383,7 +8382,7 @@ void CBot::WorkMoveDirection()
 	UTIL_FixFloatAngle(&fAngle);
 
 	// botmans code! (me maths suxorz...sorta)
-	const float radians = fAngle * 3.141592f / 180.0f; // degrees to radians
+	const float radians = fAngle * static_cast<float>(M_PI) / 180.0f; // degrees to radians
 	flMove = std::cos(radians);
 	flSide = std::sin(radians);
 	//

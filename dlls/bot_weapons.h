@@ -611,7 +611,7 @@ public:
 
 	CWeaponPreset()
 	{
-		this->Init();
+		this->CWeaponPreset::Init();
 	}
 
 	CWeaponPreset(weapon_preset_t* pPreset)
