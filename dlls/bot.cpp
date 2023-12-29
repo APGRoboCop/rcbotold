@@ -8626,13 +8626,13 @@ BOOL CBot::Touch(edict_t* pentTouched)
 		else if (!m_bHasFlag && std::strcmp(szClassname, "item_tfgoal") == 0)
 			m_bHasFlag = true;
 		else if (!m_bHasFlag && std::strcmp(szClassname, "item_ctfflag") == 0)
-			m_bHasFlag = true;
 		{
+			m_bHasFlag = true;
 #ifdef RCBOT_META_BUILD
 			MDLL_Touch(pentTouched, m_pEdict);
 #else
 			extern DLL_FUNCTIONS other_gFunctionTable;
-
+			
 			(*other_gFunctionTable.pfnTouch)(pentTouched, m_pEdict);
 #endif
 			if (pentTouched->v.owner == m_pEdict)
@@ -8640,10 +8640,10 @@ BOOL CBot::Touch(edict_t* pentTouched)
 				m_Tasks.FlushTasks();
 				m_bHasFlag = true;
 				m_stBotPaths.Destroy();
-
+				
 				m_pFlag = pentTouched;
 			}
-
+			
 			return true;
 		}
 	}
