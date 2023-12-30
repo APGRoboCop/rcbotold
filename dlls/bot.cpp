@@ -5443,12 +5443,18 @@ void CBot::LookForNewTasks()
 			break;
 		}
 	}
-	break;
+		break;
 	case MOD_GEARBOX:
 	{
 		//gBotGlobals.m_bTeamPlay = true; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
 
-		int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0f, -1, W_FL_ENDLEVEL, &m_FailedGoals);
+		if (m_bHasFlag)//Important? [APG]RoboCop[CL]
+		{
+			bRoam = true;
+			break;
+		}
+			
+		int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0f, -1, W_FL_IMPORTANT, &m_FailedGoals);
 
 		if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
 		{
@@ -5463,7 +5469,7 @@ void CBot::LookForNewTasks()
 			break;
 		}
 
-		bRoam = true;
+		bRoam = m_Tasks.NoTasksLeft(); //Important in order for bots to keep capping [APG]RoboCop[CL]
 		break;
 	}
 	case MOD_DMC:
@@ -5630,16 +5636,19 @@ void CBot::LookForNewTasks()
 					break;*/
 				case MOD_GEARBOX:
 				{
-					// go for a capture point
-					int iWpt = WaypointFindRandomGoal(m_pEdict, -1, W_FL_IMPORTANT, &m_FailedGoals);
-
-					bRoam = false;
-
-					if (iWpt != -1)
+					if (hasFlag())
 					{
-						// wait for 8 seconds or something for capture
-						AddPriorityTask(CBotTask(BOT_TASK_WAIT, iNewScheduleId, nullptr, 0, RANDOM_FLOAT(8.0f, 12.0f)));
-						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWpt, -1));
+						// Find the waypoint for the capture point
+						int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0f, -1, W_FL_RESCUE, &m_FailedGoals);
+
+						bRoam = false;
+						
+						if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
+						{
+							// Add a task to go to the capture point
+							AddTask(CBotTask(BOT_TASK_FIND_PATH, 0, nullptr, iWpt, -1));
+							return;
+						}
 					}
 				}
 				break;
@@ -5656,6 +5665,7 @@ void CBot::LookForNewTasks()
 				break;
 				case MOD_WW:
 				{
+					//TODO: Might need to use Op4CTF code for capping [APG]RoboCop[CL]	
 					// go for a capture point
 					int iWpt = WaypointFindRandomGoal(m_pEdict, -1, W_FL_IMPORTANT, &m_FailedGoals);
 
