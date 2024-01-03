@@ -19,26 +19,28 @@ Supported Mods
 RCBot versions
 --------------
 
-V 1.51-beta4
+V 1.51-beta5
 ---------
 
-* added: Enhanced performance
+* added: Enhanced performance and stability
 * added: AMBuild compiling support
+* added: A Welcome Message toggle cvar to hide welcome messages
 * added: Opposing Force CTF support and they should no longer team shoot nor flag hold
 * added: C++17 Standard library support 
 * added: Strafing combat to evade from being easy target bots
 * added: Linux bot slow-motion fix by w00tguy
-* changed: Increased the bot's flexability
+* changed: Increased the bot's flexibility
 * changed: Reduced redundant coding
 * changed: Reverted basemonster.h that was modified for Sven Coop
 * changed: The bot add or spawn delay for 10-12 seconds to prevent crashes
 * changed: Increasing bot's viewing angle to detect enemies better
 * changed: Reduced further Sven Co-op and TFC support
-* changed  Welcome Message modernised and is now displaying properly
+* changed: Welcome Message modernised and is now displaying properly
 * changed: Converted some doubles into floats
 * changed: Added returns for NS CAlienAction 
 * changed: NS Squad Menu repaired and should hopefully work
 * TODO: To allow Skulk and Lerk Aliens to bite and attack properly
+* TODO: To allow the Onos to be more aggressive and devour humans
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
 * TODO: To improve on how to allow bots climb ladders more properly
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors

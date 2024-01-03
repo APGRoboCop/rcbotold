@@ -1704,7 +1704,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam)
 {
-	PATH* pPath = nullptr;
+	PATH* pPath;
 	int iPathIndex = 0;
 	int iIndex;
 

@@ -987,7 +987,7 @@ public:
 
 	void Destroy()
 	{
-		if (buffer != nullptr)
+		//if (buffer != nullptr)
 			delete[] buffer;
 
 		Init();
@@ -1019,27 +1019,26 @@ public:
 	void Add(const T& pObj)
 	{
 		size++;
-
+		
 		if (size > capacity)
 		{
 			if (capacity == 0)
 				capacity = 1;
 			else
 				capacity *= 2;
-
+			
 			T* new_buffer = new T[capacity];
-
-			for (unsigned int i = 0; i < size - 1; i++)
-			{
-				new_buffer[i] = buffer[i];
-			}
-
+			
 			if (buffer != nullptr)
+			{
+				for (unsigned int i = 0; i < size - 1; i++)
+				{
+					new_buffer[i] = buffer[i];
+				}
 				delete[] buffer;
-
+			}
 			buffer = new_buffer;
 		}
-
 		buffer[size - 1] = pObj;
 	}
 

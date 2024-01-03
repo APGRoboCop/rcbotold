@@ -399,7 +399,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 	// Create an array of keywords from the words in the user's input...
 
 	static char* output_template = nullptr;
-	int tries_count, length = 1;
+	int length = 1;
 	int i, j;
 
 	if (output_template == nullptr)
@@ -421,6 +421,8 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 	// was it a question (i.e. was the last word in the general chat record a question mark ?)
 	if (pBot->m_Profile.m_HAL->input_words->entry[last_entry].word[last_character] == '?')
 	{
+		int tries_count;
+		
 		// try ten times to answer something relevant
 		for (tries_count = 0; tries_count < 10; tries_count++)
 		{
@@ -444,9 +446,17 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 			for (i = 0; i < static_cast<int>(replywords->size); ++i)
 				length += replywords->entry[i].length;
 
-			output_template = static_cast<char*>(std::realloc(output_template, sizeof(char) * length));//TODO: Fix realloc() leak
-			if (output_template == nullptr)
+			char* temp = static_cast<char*>(std::realloc(output_template, sizeof(char) * length));
+			if (temp == nullptr)
+			{
 				BotMessage(nullptr, 1, "HAL: HAL_MakeOutput() unable to reallocate output\n");
+				std::free(output_template); // free original block
+				// handle error here, possibly with a return or throw
+			}
+			else
+			{
+				output_template = temp;
+			}
 
 			length = 0;
 
@@ -460,7 +470,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 				output_template[length] = 0; // terminate the string
 
 			std::strcpy(output, output_template); // then copy the answer
-			return;
+			//return;
 		}
 	}
 
@@ -494,7 +504,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 			output_template[length] = 0; // terminate the string
 
 		std::strcpy(output, output_template); // then copy the answer
-		return;
+		//return;
 	}
 }
 
@@ -1650,8 +1660,6 @@ HAL_SWAP* HAL_InitializeSwap(char* filename)
 {
 	// this function reads a swap structure from a file.
 
-	char buffer[1024];
-
 	HAL_SWAP* list = HAL_NewSwap();
 
 	if (filename == nullptr)
@@ -1663,6 +1671,8 @@ HAL_SWAP* HAL_InitializeSwap(char* filename)
 
 	while (!std::feof(fp))
 	{
+		char buffer[1024];
+		
 		if (std::fgets(buffer, 1024, fp) == nullptr)
 			break;
 
@@ -1683,9 +1693,6 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 {
 	// this function reads a dictionary from a file
 
-	HAL_STRING word;
-	char buffer[1024];
-
 	HAL_DICTIONARY* list = HAL_NewDictionary();
 
 	if (filename == nullptr)
@@ -1697,6 +1704,8 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 
 	while (!std::feof(fp))
 	{
+		char buffer[1024];
+		
 		if (std::fgets(buffer, 1024, fp) == nullptr)
 			break;
 
@@ -1707,6 +1716,8 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 
 		if (string != nullptr && string[0] != '\0')
 		{
+			HAL_STRING word;
+			
 			word.length = static_cast<unsigned char>(std::strlen(string));
 			word.word = strdup(buffer); // strdup - duplicates string
 			HAL_AddWord(list, word);
@@ -1862,8 +1873,6 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	char swp_filename[256];
 	char brn_filename[256];
 
-	char cookie[32];
-
 	pBotProfile->m_HAL = static_cast<HAL_bot_t*>(std::malloc(sizeof(HAL_bot_t)));
 	pBotProfile->m_HAL->auxiliary_keywords = nullptr;
 	pBotProfile->m_HAL->banned_keywords = nullptr;
@@ -1940,6 +1949,8 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	std::FILE* fp = std::fopen(brn_filename, "rb");
 	if (fp != nullptr)
 	{
+		char cookie[32];
+		
 		std::fseek(fp, 0, SEEK_SET); // seek at start of file
 		std::fread(cookie, sizeof"RCBOTHAL", 1, fp); // read the brain signature
 		std::fclose(fp); // close the brain (we just wanted the signature)
@@ -1959,15 +1970,15 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	if (fp == nullptr)
 	{
 		BotMessage(nullptr, 1, "PrepareHALBrainForPersonality(): writing permissions not allowed on profile (%d) HAL brain!", pBotProfile->m_iProfileId);
+		return false; // return or exit here
 	}
-
 	std::fwrite("RCBOTHAL", sizeof"RCBOTHAL", 1, fp);
 	std::fwrite(&pBotProfile->m_HAL->bot_model->order, sizeof(unsigned char), 1, fp);
 	HAL_SaveTree(fp, pBotProfile->m_HAL->bot_model->forward);
 	HAL_SaveTree(fp, pBotProfile->m_HAL->bot_model->backward);
 	HAL_SaveDictionary(fp, pBotProfile->m_HAL->bot_model->dictionary);
 	std::fclose(fp); // everything is saved, close the file
-
+	
 	return true; // ok, now it is guarantee that this personality has an associated brain
 }
 

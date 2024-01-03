@@ -370,7 +370,7 @@ public:
 
 	CClient* GetRandomClient(int iRep);
 
-	void WriteToFile(int iBotProfile, CBotReputation* pRep);
+	static void WriteToFile(int iBotProfile, CBotReputation* pRep);
 
 	void RemoveSaveRep(int iBotProfile, int iPlayerRepId);
 
@@ -2600,7 +2600,7 @@ public:
 	CLearnedHeader(int iId);
 
 	BOOL operator == (const CLearnedHeader& other) const;
-	BOOL operator != (CLearnedHeader const other) const
+	BOOL operator != (CLearnedHeader const &other) const
 	{
 		return !(*this == other);
 	}
@@ -3976,7 +3976,7 @@ public:
 	//int		BotDanger				( void );
 
 	// does bot want to pursue the enemy or stop and do his own thing?
-	BOOL     WantToFollowEnemy(edict_t* pEnemy);
+	BOOL     WantToFollowEnemy(edict_t* pEnemy) const;
 
 	// returns true when bot is facing the ideal aim position
 	BOOL	 FacingIdeal() const;
@@ -4305,6 +4305,10 @@ public:
 		//BotFunc_StringCopy(szNewString,szString);
 
 		char* szNewString = static_cast<char*>(std::malloc(sizeof(char) * std::strlen(szString) + 1));
+		if (szNewString == nullptr) {
+			// handle error, for example throw an exception or return [APG]RoboCop[CL]
+			throw std::bad_alloc();
+		}
 		std::strcpy(szNewString, szString);
 
 		szStringsHead[iHashValue].Push(szNewString);
@@ -4385,6 +4389,11 @@ public:
 
 	~CClient()
 	{
+		if (m_vTeleportVector)
+		{
+			delete m_vTeleportVector;
+			m_vTeleportVector = nullptr;
+		}
 		m_iWonId = 0;
 	}
 
@@ -4789,7 +4798,7 @@ public:
 		return false;
 	}
 
-	BOOL operator == (CAllowedPlayer player)
+	BOOL operator == (const CAllowedPlayer &player)
 	{
 		// = Steam ID , or = name + password
 		return player.IsForName(m_szName) && player.IsForPass(m_szPass) || player.IsForSteamID(m_szSteamId);
@@ -6009,7 +6018,7 @@ public:
 		m_iRad = iRadius;
 	}
 
-	BOOL operator == (CBotNSTech const other) const
+	BOOL operator == (CBotNSTech const &other) const
 	{
 		return other.getID() == getID();
 	}
@@ -6029,7 +6038,7 @@ public:
 		return m_iCost;
 	}
 
-	void update(CBotNSTech const tech)
+	void update(CBotNSTech const &tech)
 	{
 		m_bAvailable = tech.getAvailable();
 		m_iCost = tech.getCost();
@@ -6429,6 +6438,7 @@ public:
 		m_bNetMessageStarted = false;
 		m_iMinBots = -1;
 		m_iMaxBots = -1;
+		m_bWelcomeMsg = true;
 
 		m_iMaxVisUpdateRevs = 200;
 		m_fHiveImportance = 1.0f;
@@ -6577,6 +6587,8 @@ public:
 
 	short int m_iMinBots;
 	short int m_iMaxBots;
+	
+	BOOL m_bWelcomeMsg;
 
 	eLanguage m_iLanguage;
 

@@ -138,7 +138,7 @@ void CBotGlobals::ReadBotFolder()
 
 BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
 {
-	if (m_bNetMessageStarted == 1)
+	if (m_bNetMessageStarted != false)
 	{
 		// message already started... engine will crash
 		assert(!m_bNetMessageStarted);
@@ -551,8 +551,8 @@ void CBotGlobals::StartFrame()
 		{
 			pBot = &m_Bots[iIndex];
 
-			if (!pBot)
-				continue;
+			//if (!pBot)
+			//	continue;
 
 			if (pBot->m_iRespawnState != RESPAWN_IDLE)
 			{
@@ -730,7 +730,7 @@ void CBotGlobals::StartFrame()
 
 									pBot->m_iBotWeapons = 0;
 
-									for (j = 1; j < MAX_WEAPONS; j++)
+									for (j = 1; j < static_cast<int>(std::fmin(MAX_WEAPONS, sizeof(int) * CHAR_BIT)); j++)
 									{
 										if (pBot->pev->weapons & 1 << j)
 										{
@@ -741,7 +741,6 @@ void CBotGlobals::StartFrame()
 									pBot->m_iBotWeapons = pBot->pev->weapons;
 								}
 							}
-							//}
 						}
 
 						//try
@@ -1436,14 +1435,14 @@ void CBotGlobals::ReadConfig()
 
 		while (std::fgets(buffer, 127, fp) != nullptr)
 		{
-			int i = 0;
+			unsigned int i = 0;
 
 			size_t length = std::strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;
 
-			if (buffer[length - 1] == '\n')
+			if (length > 0 && buffer[length - 1] == '\n')
 			{
 				buffer[length - 1] = 0;  // remove '\n'
 				length--;
@@ -1740,10 +1739,6 @@ void CBotGlobals::FreeLocalMemory()
 void CBotGlobals::ReadThingsToBuild() const
 {
 	char filename[512];
-	char szbuffer[256];
-	char szline[256];
-
-	int iBuilding = 0;
 
 	UTIL_BuildFileName(filename, "things_to_build.ini", nullptr);
 	//	std::sprintf(szbuffer,"%sthings_to_build.ini",RCBOT_FOLDER);
@@ -1755,6 +1750,10 @@ void CBotGlobals::ReadThingsToBuild() const
 
 	if (fp)
 	{
+		char szbuffer[256];
+		char szline[256];
+		int iBuilding = 0;
+		
 		m_ThingsToBuild->Clear();
 
 		while (std::fgets(szbuffer, 255, fp) != nullptr)
@@ -1973,8 +1972,8 @@ void CBotGlobals::SetupBotChat()
 			continue;
 
 		size_t iLength = std::strlen(buffer);
-
-		if (buffer[iLength - 1] == '\n')
+		
+		if (iLength > 0 && buffer[iLength - 1] == '\n')
 		{
 			buffer[--iLength] = 0;
 		}

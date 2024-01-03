@@ -398,7 +398,7 @@ class CPointEntity : public CBaseEntity
 public:
 	void	Spawn() override;
 	int	ObjectCaps() override { return CBaseEntity::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
-private:
+//private:
 };
 
 typedef struct locksounds			// sounds that doors and buttons make when locked/unlocked

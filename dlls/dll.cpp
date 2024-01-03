@@ -632,7 +632,6 @@ void ClientDisconnect(edict_t* pEntity)
 		pBot->SetEdict(nullptr);
 		pBot->m_bIsUsed = false;
 		pBot->m_fKickTime = gpGlobals->time;
-		pBot->m_bIsUsed = false;
 
 		pBot->m_Profile.m_iProfileId = iProfileId;
 		pBot->m_Profile.m_iFavTeam = iTeam;
@@ -794,7 +793,7 @@ void ClientCommand(edict_t* pEntity)
 		iState = BOT_CVAR_ACCESSED;
 	}
 	// someone said something
-	else if ((bSayMsg = FStrEq(pcmd, "say")) == 1 || (bSayTeamMsg = FStrEq(pcmd, "say_team")) == 1)
+	else if ((bSayMsg = FStrEq(pcmd, "say")) != false || (bSayTeamMsg = FStrEq(pcmd, "say_team")) != false)
 	{
 		BOOL bMadeSquad = false;
 
@@ -802,7 +801,7 @@ void ClientCommand(edict_t* pEntity)
 		{
 			// player wants to lead squad?
 			if (std::strncmp(arg1, "form", 4) == 0 &&
-				(std::strncmp(&arg1[4], " up", 3) == 0 || std::strncmp(arg2, "up", 2) == 0))
+				(std::strncmp(&arg1[4], " up", 3) == 0 || (arg2 && std::strncmp(arg2, "up", 2) == 0)))
 			{
 				// loop through bots in team
 				BotFunc_MakeSquad(pClient);
@@ -851,15 +850,15 @@ void ClientCommand(edict_t* pEntity)
 					while (i < iArgCount)
 					{
 						const char* szArgument = CmdArgv_func(i);
-
+						
 						if (!szArgument || !*szArgument)
 						{
 							i++;
 							continue;
 						}
-
+						
 						iLenSoFar += std::strlen(szArgument) + 1;
-
+						
 						// read a string already
 						if (szMessage)
 						{
@@ -868,17 +867,17 @@ void ClientCommand(edict_t* pEntity)
 							szMessage = nullptr;
 						}
 						
-						delete[] szMessage;
+						//delete[] szMessage;
 						
 						// 2 extra chars, 1 for terminator and 1 for space
-						szMessage = new char[iLenSoFar + 1];
+						szMessage = new char[iLenSoFar + 1]; //TODO: szMessage is assigned twice without releasing memory [APG]RoboCop[CL]
 						szMessage[0] = 0;
-
+						
 						// copy old string
 						if (szTemp)
 						{
 							BOOL bIsQuote = false;
-
+							
 							// if not a bot sending message, then the ' quotes can seperate words
 							// so can spaces argh :-@
 							if (!bSenderIsBot)
@@ -888,7 +887,7 @@ void ClientCommand(edict_t* pEntity)
 							if (bIsQuote || bWasQuote)
 							{
 								std::sprintf(szMessage, "%s%s", szTemp, szArgument);
-
+								
 								bWasQuote = !bWasQuote;
 							}
 							else
@@ -896,7 +895,7 @@ void ClientCommand(edict_t* pEntity)
 								// take space into count (thats what is seperating these words)
 								std::sprintf(szMessage, "%s %s", szTemp, szArgument);
 							}
-
+							
 							std::free(szTemp);
 							szTemp = nullptr;
 						}
@@ -905,12 +904,26 @@ void ClientCommand(edict_t* pEntity)
 							std::strcat(szMessage, szArgument);
 						}
 						szMessage[iLenSoFar] = 0;
-
+						
 						i++;
 					}
+					// Ensure szTemp is freed if it was not already
+					if (szTemp)
+					{
+						std::free(szTemp);
+						szTemp = nullptr;
+					}
+
 				}
 				else
+				{
+					if (szMessage)
+					{
+						std::free(szMessage);
+						szMessage = nullptr;
+					}
 					szMessage = strdup(arg1);
+				}
 
 				if (szMessage)
 				{
@@ -1766,13 +1779,13 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 	while (std::fgets(szBuffer, 127, fp))
 	{
 		szBuffer[127] = '\0';
-
+		
 		if (szBuffer[0] == '#')
 			continue;
-
+		
 		int iLength = std::strlen(szBuffer);
-
-		if (szBuffer[iLength - 1] == '\n')
+		
+		if (iLength > 0 && szBuffer[iLength - 1] == '\n')
 			szBuffer[--iLength] = '\0';
 
 		if (std::strncmp(szBuffer, "name=", 5) == 0)
@@ -1985,15 +1998,15 @@ void ReadBotUsersConfig()
 		while (std::fgets(buffer, 255, fp) != nullptr)
 		{
 			line++;
-
+			
 			buffer[255] = 0;
-
+			
 			int length = std::strlen(buffer);
-
+			
 			if (buffer[0] == '#') // comment
 				continue;
-
-			if (buffer[length - 1] == '\n')
+			
+			if (length > 0 && buffer[length - 1] == '\n')
 			{
 				buffer[length - 1] = 0;  // remove '\n'
 				length--;
@@ -2069,15 +2082,6 @@ void ReadMapConfig()
 // this is so that when bots are added it has some time to add another bot
 // thus this function only reads one line of the file until the file has reached the end
 // and so the file is stored globally.
-// To be done properly:
-
-/*
-
-  TODO:
-
-  Make config read whole file and enter commands in a queue for execution (faster??)
-
-  */
 {
 	char szTemp[256];
 
@@ -2087,10 +2091,8 @@ void ReadMapConfig()
 			return;
 
 		size_t iLen = std::strlen(szTemp);
-
-		if (iLen > 255)
-			szTemp[255] = 0;
-		if (szTemp[iLen - 1] != '\n')
+		
+		if (iLen > 0 && szTemp[iLen - 1] != '\n' && iLen < 255)
 		{
 			szTemp[iLen] = '\n';
 			szTemp[++iLen] = 0;

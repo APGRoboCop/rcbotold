@@ -682,7 +682,7 @@ public:
 
 	BOOL IsMelee() override
 	{
-		return m_bIsMelee == 1;
+		return m_bIsMelee != false;
 	}
 };
 
@@ -756,6 +756,8 @@ public:
 
 	void SetWeapon(int iId, int* iAmmoList);
 
+	void Reset();
+	
 	void setHasWeapon(BOOL bVal);
 
 	BOOL LowOnAmmo() const
@@ -833,7 +835,7 @@ public:
 	}
 
 	BOOL NeedToReload() const;
-
+	
 	BOOL CanReload() const;
 
 	BOOL CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const;
@@ -976,7 +978,7 @@ public:
 
 	BOOL HasWeapon(edict_t* pEdict, char* szClassname);
 
-	BOOL HasWeapon(edict_t* pEdict, int iId)
+	BOOL HasWeapon(edict_t* pEdict, int iId) const
 	{
 		if (iId > 0 && iId < MAX_WEAPONS)
 			return m_Weapons[iId].HasWeapon(pEdict);

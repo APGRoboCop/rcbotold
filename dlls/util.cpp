@@ -977,7 +977,7 @@ void BotFunc_KickBotFromTeam(int iTeam)
 		theBots.Clear();
 	}
 
-	return;
+	//return;
 }
 
 void UTIL_GetArgFromString(char** szString, char* szArg)
@@ -1022,8 +1022,8 @@ int UTIL_GetBotIndex(const edict_t* pEdict)
 	{
 		const CBot* pBot = &gBotGlobals.m_Bots[index];
 
-		if (!pBot)
-			continue;
+		//if (!pBot)
+		//	continue;
 
 		if (!pBot->IsUsed())
 			continue;
@@ -2125,7 +2125,7 @@ void UTIL_BotHudMessage(edict_t* pEntity, const hudtextparms_t& textparms, const
 
 unsigned short FixedUnsigned16(float value, float scale)
 {
-	int output = value * scale;
+	int output = static_cast<int>(value * scale);
 	if (output < 0)
 		output = 0;
 	if (output > 0xFFFF)
@@ -2136,7 +2136,7 @@ unsigned short FixedUnsigned16(float value, float scale)
 
 short FixedSigned16(float value, float scale)
 {
-	int output = value * scale;
+	int output = static_cast<int>(value * scale);
 
 	if (output > 32767)
 		output = 32767;
@@ -2170,53 +2170,56 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 // Show a Tooltip (message) to the pEntity
 //
 {
-	static HudText hudmessage = HudText(true);
-	static const char* tooltips[BOT_LANG_MAX][BOT_TOOL_TIP_MAX] =
+	if (gBotGlobals.m_bWelcomeMsg)
 	{
-		//---------------------------------------------------------------------------------------------------------------------<MAX
-		{"Welcome %n\nUse the command \"rcbot addbot\" to add a bot\nor use the bot menu (\"rcbot bot_menu\")",
-		 "Welcome %n\nServer running RCBot\n(http://rcbot.bots-united.com)",
-		 "You can use the squad menu\n(\"rcbot squad_menu\" command) to edit bot squads\ne.g. formation and mode",
-		 "You can gain access to rcbot commands if you have\na password on the server\nuse \"rcbot set_pass <password>\"",
-		 "CPU Usage of the bot can be decreased by changing some\ncommands like: \"rcbot config max_vision_revs\"",
-		 "There are no waypoints on this map\nThis will impair bots navigation\nYou can make your own, (use \"rcbot waypoint\")",
-		 "You can create a squad of bots as the leader\nUse the squad menu (rcbot squad_menu)\nselect \"more options\", \"squad\"",
-		 "You are now commander\nSelect marines (mouse1) and give orders (mouse2)\nOr select buildings to build (mouse1)",
-		 "A marine is looking for orders\nSelect the marine with the marine icon (left) and\ngive orders with mouse2 button",
-		 "As commander you can create a squad of marines\nSelect all marines you want\nand hold CTRL then a number 1-5",
-		 "You can select the squad of marines you made by\npressing the number of the squad you made",
-		 "A marine needs health\nSelect the health pack on the bottom right\nand place it above the marine in need",
-		 "You can turn on the bot cam\nto see all the bots in action\nUse the command \"rcbot botcam\"",
-		 "Bot cam is now ON\nYou are now watching the bot cam\nUse the command \"rcbot botcam off\" to switch off"
-		}
-	};
-
-	// check if tooltips are on
-	// check if array positions are in bounds
-	if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) &&
-		iLang < BOT_LANG_MAX && iTooltip < BOT_TOOL_TIP_MAX)
-	{
-		char final_message[1024];
-
-		// Using snprintf instead of sprintf to prevent buffer overflows
-		snprintf(final_message, sizeof(final_message), "%s %s", BOT_DBG_MSG_TAG, tooltips[iLang][iTooltip]);
-
-		// name in message
-		if (std::strstr(final_message, "%n") != nullptr)
+		static HudText hudmessage = HudText(true);
+		static const char* tooltips[BOT_LANG_MAX][BOT_TOOL_TIP_MAX] =
 		{
-			const char* szName = STRING(pEntity->v.netname);
-			const size_t iLen = std::strlen(szName);
-			char* szNewName = static_cast<char*>(std::malloc(iLen + 1)); // No need to multiply by sizeof(char)
+			//---------------------------------------------------------------------------------------------------------------------<MAX
+			{"Welcome %n\nUse the command \"rcbot addbot\" to add a bot\nor use the bot menu (\"rcbot bot_menu\")",
+			 "Welcome %n\nServer running RCBot\n(http://rcbot.bots-united.com)",
+			 "You can use the squad menu\n(\"rcbot squad_menu\" command) to edit bot squads\ne.g. formation and mode",
+			 "You can gain access to rcbot commands if you have\na password on the server\nuse \"rcbot set_pass <password>\"",
+			 "CPU Usage of the bot can be decreased by changing some\ncommands like: \"rcbot config max_vision_revs\"",
+			 "There are no waypoints on this map\nThis will impair bots navigation\nYou can make your own, (use \"rcbot waypoint\")",
+			 "You can create a squad of bots as the leader\nUse the squad menu (rcbot squad_menu)\nselect \"more options\", \"squad\"",
+			 "You are now commander\nSelect marines (mouse1) and give orders (mouse2)\nOr select buildings to build (mouse1)",
+			 "A marine is looking for orders\nSelect the marine with the marine icon (left) and\ngive orders with mouse2 button",
+			 "As commander you can create a squad of marines\nSelect all marines you want\nand hold CTRL then a number 1-5",
+			 "You can select the squad of marines you made by\npressing the number of the squad you made",
+			 "A marine needs health\nSelect the health pack on the bottom right\nand place it above the marine in need",
+			 "You can turn on the bot cam\nto see all the bots in action\nUse the command \"rcbot botcam\"",
+			 "Bot cam is now ON\nYou are now watching the bot cam\nUse the command \"rcbot botcam off\" to switch off"
+			}
+		};
 
-			RemoveNameTags(szName, szNewName);
+		// check if tooltips are on
+		// check if array positions are in bounds
+		if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) &&
+			iLang < BOT_LANG_MAX && iTooltip < BOT_TOOL_TIP_MAX)
+		{
+			char final_message[1024];
 
-			BotFunc_FillString(final_message, "%n", szNewName, sizeof(final_message));
+			// Using snprintf instead of sprintf to prevent buffer overflows
+			std::snprintf(final_message, sizeof(final_message), "%s %s", BOT_DBG_MSG_TAG, tooltips[iLang][iTooltip]);
 
-			std::free(szNewName);
-			szNewName = nullptr;
+			// name in message
+			if (std::strstr(final_message, "%n") != nullptr)
+			{
+				const char* szName = STRING(pEntity->v.netname);
+				const size_t iLen = std::strlen(szName);
+				char* szNewName = static_cast<char*>(std::malloc(iLen + 1)); // No need to multiply by sizeof(char)
+
+				RemoveNameTags(szName, szNewName);
+
+				BotFunc_FillString(final_message, "%n", szNewName, sizeof(final_message));
+
+				std::free(szNewName);
+				szNewName = nullptr;
+			}
+
+			hudmessage.SayMessage(final_message, pEntity);
 		}
-
-		hudmessage.SayMessage(final_message, pEntity);
 	}
 }
 

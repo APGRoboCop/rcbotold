@@ -97,6 +97,16 @@ void CWeapon::SetWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int 
 	m_bRegistered = true;
 }
 
+void CBotWeapon::Reset() //TODO: Experimental [APG]RoboCop[CL]
+{
+	// Reset fields to their initial state
+	m_iId = 0;
+	m_pWeaponInfo = nullptr;
+	m_bHasWeapon = false;
+	m_iAmmo1 = nullptr;
+	m_iAmmo2 = nullptr;
+}
+
 BOOL CBotWeapon::CanReload() const
 {
 	if (IsMelee())
@@ -134,32 +144,23 @@ BOOL CWeapon::IsSecondary() const
 
 void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
 {
-	CBotWeapon();
-
+	this->Reset();
+	
 	m_iId = iId;
 	m_pWeaponInfo = gBotGlobals.m_Weapons.GetWeapon(iId);
-
+	
 	if (m_pWeaponInfo != nullptr)
 	{
-		// this really should not be NULL!!!
-		//assert(m_pWeaponInfo != NULL);
-
 		m_bHasWeapon = true;
-
-		m_iAmmo1 = nullptr;
-		m_iAmmo2 = nullptr;
-
-		if (m_pWeaponInfo)
-		{
-			const int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
-			const int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
-
-			if (iAmmoList && iAmmoIndex1 != -1)
-				m_iAmmo1 = &iAmmoList[iAmmoIndex1];
-
-			if (iAmmoList && iAmmoIndex2 != -1)
-				m_iAmmo2 = &iAmmoList[iAmmoIndex2];
-		}
+		
+		const int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
+		const int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
+		
+		if (iAmmoList && iAmmoIndex1 != -1)
+			m_iAmmo1 = &iAmmoList[iAmmoIndex1];
+		
+		if (iAmmoList && iAmmoIndex2 != -1)
+			m_iAmmo2 = &iAmmoList[iAmmoIndex2];
 	}
 }
 

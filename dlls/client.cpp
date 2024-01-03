@@ -846,12 +846,11 @@ void InitMessage ( const char *message );
 
 void CClient::FreeGlobalMemory()
 {
-	//	if (m_vTeleportVector)
-	std::free(m_vTeleportVector);
-
+	delete m_vTeleportVector;
+	
 	m_vTeleportVector = nullptr;
 	m_Tooltips.Clear();
-
+	
 	std::memset(this, 0, sizeof(CClient));
 }
 

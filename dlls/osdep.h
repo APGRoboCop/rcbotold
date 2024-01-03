@@ -213,7 +213,7 @@ char* DLLINTERNAL my_strlwr(char* s);
 #define O_BINARY 0
 #endif
 #elif defined(_WIN32)
-#define snprintf	_snprintf
+//#define snprintf	_snprintf
 #define vsnprintf	_vsnprintf
 #define sleep(x)	Sleep((x)*1000)
 #define unlink		_unlink

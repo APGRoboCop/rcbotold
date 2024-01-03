@@ -218,8 +218,8 @@ public:
 
 	//virtual Vector getOrigin () { return origin; }
 
-	WAYPOINT(int f, const Vector& vec) { flags = f; origin = vec; }
-	WAYPOINT() { flags = 0; Vector(0, 0, 0); };
+	WAYPOINT(int f, const Vector& vec) : flags(f), origin(vec) {}
+	WAYPOINT() : flags(0), origin(0, 0, 0) {}
 };
 
 class WAYPOINT2 : public WAYPOINT
@@ -254,13 +254,13 @@ public:
 
 	void FreeMemory()
 	{
-		if (getName())
+		//if (getName())
 			std::free(getName());
-		if (getFolder())
+		//if (getFolder())
 			std::free(getFolder());
-		if (getExtension())
+		//if (getExtension())
 			std::free(getExtension());
-		if (getHeader())
+		//if (getHeader())
 			std::free(getHeader());
 
 		init();
@@ -431,7 +431,7 @@ public:
 		#define W_FL_DELETED     (1<<31) // used by waypoint allocation code*/
 	}
 };
-/*
+/*//TODO: Allow multiple conversion for various bots [APG]RoboCop[CL]
 class CWhichbotConvert : public CWaypointConversion
 {
 public:
@@ -505,8 +505,13 @@ public:
 		constexpr int iSize = g_iMaxVisibilityByte;
 		//create a heap...
 		m_VisTable = static_cast<unsigned char*>(std::malloc(iSize));
-
-		std::memset(m_VisTable, 0, iSize);
+		if (m_VisTable != nullptr) {
+			std::memset(m_VisTable, 0, iSize);
+		}
+		else {
+			// Handle memory allocation failure [APG]RoboCop[CL]
+			throw std::bad_alloc();
+		}
 	}
 
 	BOOL SaveToFile() const;
@@ -587,9 +592,9 @@ int  WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int tea
 int  WaypointFindNearest(edict_t* pEntity, float range, int team);
 int  WaypointFindNearest(const Vector& v_src, edict_t* pEntity, float range, int team);
 int  WaypointFindNearestGoal(const Vector& v_src, edict_t* pEntity, float range, int team, int flags, dataStack<int>* iIgnoreWpts);
-int WaypointFindRandomGoal(edict_t* pEntity, int team, dataStack<int>* iIgnoreWpts);
-int WaypointFindRandomGoal(edict_t* pEntity, int team, int flags, dataStack<int>* iIgnoreWpts);
-int WaypointFindRandomGoal(const Vector& v_src, edict_t* pEntity, float range, int team, int flags, dataStack<int>* iIgnoreWpts);
+int  WaypointFindRandomGoal(edict_t* pEntity, int team, dataStack<int>* iIgnoreWpts);
+int  WaypointFindRandomGoal(edict_t* pEntity, int team, int flags, dataStack<int>* iIgnoreWpts);
+int  WaypointFindRandomGoal(const Vector& v_src, edict_t* pEntity, float range, int team, int flags, dataStack<int>* iIgnoreWpts);
 int  WaypointFindNearestAiming(const Vector& v_origin);
 void WaypointAdd(CClient* pClient);
 void WaypointAddPath(short int add_index, short int path_index);

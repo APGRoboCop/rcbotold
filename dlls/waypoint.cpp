@@ -48,11 +48,8 @@
 #include <io.h>
 #endif
 #include <fcntl.h>
-#ifndef __linux__
-#include <sys\stat.h>
-#else
+
 #include <sys/stat.h>
-#endif
 
 #include "extdll.h"
 
@@ -63,7 +60,6 @@
 #else
 #include "h_export_meta.h"
 #include "dllapi.h"
-#include "meta_api.h"
 #endif
 
 #include "bot.h"
@@ -472,9 +468,17 @@ BOOL WaypointLoad(edict_t* pEntity)
 		// try loading a .wpt file
 		const size_t iLen = std::strlen(filename);
 
-		filename[iLen - 1] = 't';
-		filename[iLen - 2] = 'p';
-		filename[iLen - 3] = 'w';
+		if (iLen >= 3)
+		{
+			filename[iLen - 1] = 't';
+			filename[iLen - 2] = 'p';
+			filename[iLen - 3] = 'w';
+		}
+		else
+		{
+			std::snprintf(msg, sizeof(msg), "%s is not a RCBot compatible waypoint file!\n", filename);
+			ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
+		}
 
 		bfp = std::fopen(filename, "rb");
 
@@ -549,9 +553,8 @@ BOOL WaypointLoad(edict_t* pEntity)
 			}
 			else
 			{
-				if (pEntity)
 				{
-					std::sprintf(msg, "%s RCBot waypoints are not for this map!\n", filename);
+					std::snprintf(msg, sizeof(msg), "%s RCBot waypoints are not for this map!\n", filename);
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 				}
 
@@ -563,7 +566,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 		{
 			if (pEntity)
 			{
-				std::sprintf(msg, "%s is not a RCBot compatible waypoint file!\n", filename);
+				std::snprintf(msg, sizeof(msg), "%s is not a RCBot compatible waypoint file!\n", filename);
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
 
@@ -615,42 +618,42 @@ BOOL WaypointLoad(edict_t* pEntity)
 	return true;
 }
 
-void AutoWaypoint ()
+void AutoWaypoint()
 {
 	//if ( gBotGlobals.IsMod(MOD_SVENCOOP) )
 	//{
-		edict_t *pNode = nullptr;
+	edict_t* pNode = nullptr;
 
-		TraceResult tr;
+	TraceResult tr;
 
-		BotMessage(nullptr,0,"Autowaypointing using info_nodes...");
+	BotMessage(nullptr, 0, "Autowaypointing using info_nodes...");
 
-		while ( (pNode = UTIL_FindEntityByClassname(pNode,"info_node")) != nullptr)
+	while ((pNode = UTIL_FindEntityByClassname(pNode, "info_node")) != nullptr)
+	{
+		Vector vOrigin = pNode->v.origin;
+
+		// hit the floor
+		UTIL_TraceLine(vOrigin, Vector(0, 0, -4096.0f), ignore_monsters, dont_ignore_glass, nullptr, &tr);
+
+		Vector min = tr.vecEndPos;
+
+		// hit the ceiling
+		UTIL_TraceLine(vOrigin, Vector(0, 0, 4096.0f), ignore_monsters, dont_ignore_glass, nullptr, &tr);
+
+		const Vector max = tr.vecEndPos;
+
+		// small area ? might need to be a crouch waypoint
+		const float fHeight = max.z - min.z;
+
+		if (fHeight < 72)
 		{
-			Vector vOrigin = pNode->v.origin;
-
-			// hit the floor
-			UTIL_TraceLine(vOrigin,Vector(0,0,-4096.0f),ignore_monsters,dont_ignore_glass, nullptr,&tr);
-
-			Vector min = tr.vecEndPos;
-
-			// hit the ceiling
-			UTIL_TraceLine(vOrigin,Vector(0,0,4096.0f),ignore_monsters,dont_ignore_glass, nullptr,&tr);
-
-			Vector max = tr.vecEndPos;
-
-			// small area ? might need to be a crouch waypoint
-			const float fHeight = max.z - min.z;
-
-			if ( fHeight < 72 )
-			{
-				WaypointAddOrigin(min+Vector(0,0,18),W_FL_CROUCH, nullptr);
-			}
-			else
-				WaypointAddOrigin(min+Vector(0,0,36),0, nullptr);
-
-			BotMessage(nullptr,0,"Added waypoint at node.");
+			WaypointAddOrigin(min + Vector(0, 0, 18), W_FL_CROUCH, nullptr);
 		}
+		else
+			WaypointAddOrigin(min + Vector(0, 0, 36), 0, nullptr);
+
+		BotMessage(nullptr, 0, "Added waypoint at node.");
+	}
 	//}
 }
 
@@ -902,8 +905,6 @@ void WaypointInit()
 // add a path from one waypoint (add_index) to another (path_index)...
 void WaypointAddPath(const short int add_index, const short int path_index)
 {
-	int count = 0;
-
 	PATH* p = paths[add_index];
 	PATH* prev = nullptr;
 
@@ -928,6 +929,8 @@ void WaypointAddPath(const short int add_index, const short int path_index)
 		p = p->next;  // go to next node in linked list
 
 #ifdef _DEBUG
+		int count = 0;
+
 		count++;
 		if (count > 100) WaypointDebug();
 #endif
@@ -1026,27 +1029,23 @@ int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team
 {
 	int count = 0;
 
+	if (pPath == nullptr || path_index == nullptr) //Required to reduce crashes? [APG]RoboCop[CL]
+	{
+		// Handle error
+		return -1;
+	}
+
 	if (*pPath == nullptr)
 	{
 		*pPath = paths[waypoint_index];
 		*path_index = 0;
 	}
 
-	/*if (*path_index == MAX_PATH_INDEX)
-	{
-		*path_index = 0;
-
-		if (*pPath)
-		{
-			*pPath = (*pPath)->next;  // go to the next node in the linked list
-		}
-	}*/
-
 	while (*pPath != nullptr)
 	{
 		while (*path_index < MAX_PATH_INDEX)
 		{
-			if (*pPath != nullptr && (*pPath)->index[*path_index] != -1)  // found a path? TODO: triggers crash? [APG]RoboCopCL]
+			if (*pPath != nullptr && (*pPath)->index[*path_index] != -1 && (*pPath)->index[*path_index] < num_waypoints)  // found a path? TODO: triggers crash? [APG]RoboCopCL]
 			{
 				// save the return value
 				const int index = (*pPath)->index[*path_index];
@@ -1072,8 +1071,14 @@ int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team
 
 		if (*pPath)
 		{
-			*pPath = (*pPath)->next;  // go to the next node in the linked list
-
+			if ((*pPath)->next != nullptr) // Added null check before dereferencing
+			{
+				*pPath = (*pPath)->next;  // go to the next node in the linked list [APG]RoboCop[CL]
+			}
+			else
+			{
+				break;
+			}
 #ifdef _DEBUG
 			count++;
 			if (count > 100)

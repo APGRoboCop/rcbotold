@@ -1078,7 +1078,7 @@ typedef enum
 #define BOT_NAME "RCBot"
 #define BOT_WEBSITE "http://rcbot.bots-united.com"
 #define BOT_DBG_MSG_TAG "[RCBOT>] "
-#define BOT_DEBUG_TAG "[DEBUG"
+#define BOT_DEBUG_TAG "[DEBUG]"
 
 ///
 // combat stuff in NS, what bots want to get
@@ -1148,17 +1148,17 @@ enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b4_mm_debug"
+#define BOT_VER "1.51b5_mm_debug"
 #else
-#define BOT_VER "1.51b4_mm"
+#define BOT_VER "1.51b5_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b4_debug"
+#define BOT_VER "1.51b5_debug"
 #else
-#define BOT_VER "1.51b4"
+#define BOT_VER "1.51b5"
 #endif
 
 #endif
@@ -1172,17 +1172,17 @@ enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b4_mm_debug"
+#define BOT_VER "1.51b5_mm_debug"
 #else
-#define BOT_VER "1.51b4_mm"
+#define BOT_VER "1.51b5_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b4_debug"
+#define BOT_VER "1.51b5_debug"
 #else
-#define BOT_VER "1.51b4"
+#define BOT_VER "1.51b5"
 #endif
 
 #endif

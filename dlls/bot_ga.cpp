@@ -264,8 +264,8 @@ void CBitsGAValues::save(std::FILE* bfp)
 
 CBitsGAValues::CBitsGAValues(CBits* bits)
 {
-	m_theBits = nullptr;
-	delete m_theBits;
+	//m_theBits = nullptr;
+	//delete m_theBits;
 	m_theBits = bits;
 }
 

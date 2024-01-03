@@ -230,7 +230,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 		WriteToFile(iBotProfile, m_RepList.GetHeadInfoPointer());
 	}
 
-	return;
+	//return;
 }
 
 void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)

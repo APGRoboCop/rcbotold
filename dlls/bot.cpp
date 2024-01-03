@@ -1081,6 +1081,7 @@ void CBot::loadLearnedData() const
 	if (checkheader != header)
 	{
 		BotMessage(nullptr, 0, "Bots learned data for %s (profile %d) header mismatch", tmp_filename, m_Profile.m_iProfileId);
+		std::fclose(bfp); // Close the file before returning
 		return;
 	}
 
@@ -1912,8 +1913,6 @@ void CBot::SpawnInit(const BOOL bInit)
 	m_fPrevWaypointDist = 4096.0f;
 	m_fLastSeeWaypoint = 0.0f;
 
-	m_pAvoidEntity = nullptr;
-
 	m_fStuckTime = 0.0f;
 	m_fMoveSpeed = 0.0f;
 	m_fUpSpeed = 0.0f;
@@ -1925,8 +1924,6 @@ void CBot::SpawnInit(const BOOL bInit)
 	m_fEndJumpTime = 0.0f;
 	m_fStartDuckTime = 0.0f;
 	m_fEndDuckTime = 0.0f;
-
-	m_fFindPathTime = 0.0f;
 
 	m_fWallAtLeftTime = 0.0f;
 	m_fWallAtRightTime = 0.0f;
@@ -1961,8 +1958,6 @@ void CBot::SpawnInit(const BOOL bInit)
 	////////////////////////////
 	// MISCELLANEOUS
 
-	m_bNeedToInit = true;
-
 	//	m_siLadderDir = LADDER_UNKNOWN;
 
 	if (HasCondition(BOT_CONDITION_DONT_CLEAR_OBJECTIVES))
@@ -1973,13 +1968,9 @@ void CBot::SpawnInit(const BOOL bInit)
 	//m_Tasks.FlushTasks();
 	m_fFindPathTime = 0.0f;
 
-	m_pEnemyRep = nullptr;
-
 	m_pAvoidEntity = nullptr;
-	m_iCurrentWaypointFlags = 0;
-	m_fPrevWaypointDist = 4096.0f;
 
-	m_bNeedToInit = false;
+	m_bNeedToInit = false; //TODO: Mixed up? [APG]RoboCop[CL]
 
 	Vector m_vCurrentLookDir = Vector(0, 0, 0);
 	//    m_bCurrentLookDirIsValid = false;
@@ -2031,6 +2022,8 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, BOOL bSayNow)
 
 	dataUnconstArray <char*>* pChatArray = nullptr;
 
+	int iArrayNum = 1;
+
 	if (pChatEdict)
 	{
 		if (pChatEdict->v.flags & FL_CLIENT)
@@ -2042,19 +2035,17 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, BOOL bSayNow)
 		{
 			BugMessage(nullptr, "Caution : BotChat() Can't find pClient to talk to (Probably a bot fell/drowned/died from worldspawn)");
 		}
-	}
 
-	// lots of repetitive coding here, but I'd like bots to chat as much as possible ;)
-	// i.e. even if its not chatting to a client as long as the message it wants to say
-	// is kind of generic.
+		// lots of repetitive coding here, but I'd like bots to chat as much as possible ;)
+		// i.e. even if its not chatting to a client as long as the message it wants to say
+		// is kind of generic.
 
-	int iArrayNum = 1;
-
-	if (pClient == nullptr)
-		iArrayNum = BotFunc_GetRepArrayNum(m_Profile.m_Rep.AverageRepOnServer());
-	else if (pChatEdict->v.flags & FL_CLIENT)
-	{
-		iArrayNum = BotFunc_GetRepArrayNum(m_Profile.m_Rep.GetClientRep(pClient));
+		if (pClient == nullptr)
+			iArrayNum = BotFunc_GetRepArrayNum(m_Profile.m_Rep.AverageRepOnServer());
+		else if (pChatEdict->v.flags & FL_CLIENT)
+		{
+			iArrayNum = BotFunc_GetRepArrayNum(m_Profile.m_Rep.GetClientRep(pClient));
+		}
 	}
 
 	switch (iChatType)
@@ -2370,6 +2361,19 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		char* before = static_cast<char*>(std::malloc(sizeof(char) * len));
 		char* after = static_cast<char*>(std::malloc(sizeof(char) * len));
 
+		if (before == nullptr || after == nullptr) {
+			if (before != nullptr) {
+				std::free(before);
+				before = nullptr;
+			}
+			if (after != nullptr) {
+				std::free(after);
+				after = nullptr;
+			}
+			// handle the error, e.g., by throwing an exception or returning [APG]RoboCop[CL]
+			throw std::bad_alloc();
+		}
+
 		// initialize them to empty (don't need to null terminate at the right point)
 		std::memset(before, 0, len);
 		std::memset(after, 0, len);
@@ -2679,12 +2683,12 @@ void CBot::StartGame()
 		{
 			if (m_fCombatFitness > 0.0f)
 			{
-				m_pCombatBits->setFitness(m_fCombatFitness); //TODO: That line triggers crash? [APG]RoboCop[CL]
-				gBotGlobals.m_pCombatGA[m_iCombatTeam].addToPopulation(m_pCombatBits->copy());
-				m_fCombatFitness = 0.0f;
-
-				if (m_pCombatBits != nullptr)// using != nullptr removed crash? [APG]RoboCop[CL]
+				if (m_pCombatBits != nullptr)
 				{
+					m_pCombatBits->setFitness(m_fCombatFitness);
+					gBotGlobals.m_pCombatGA[m_iCombatTeam].addToPopulation(m_pCombatBits->copy());
+					m_fCombatFitness = 0.0f;
+
 					delete m_pCombatBits;
 					m_pCombatBits = nullptr;
 				}
@@ -3161,7 +3165,7 @@ void CBot::Think()
 			return;
 		}
 		//else
-		m_CurrentLookTask = BOT_LOOK_TASK_NONE;
+		//m_CurrentLookTask = BOT_LOOK_TASK_NONE;
 	}
 
 	if (m_fSpawnTime == 0.0f)
@@ -3733,7 +3737,7 @@ void CBot::Think()
 			StopMoving();
 		}
 	}
-	else
+	/*else
 	{
 		if (IsSquadLeader())
 			BotSquadLeaderThink();
@@ -3746,12 +3750,12 @@ void CBot::Think()
 				m_fUpdateWaypointTime = gpGlobals->time + 0.5f;
 			}
 		}
-	}
+	}*/
 
 	if (m_pEnemy == nullptr)
 	{
 		// Make sure the bot's not shooting an enemy before listening to sounds.
-		edict_t* pPlayer = nullptr;
+		edict_t* pPlayer = nullptr;//TODO: Unused? [APG]RoboCop[CL]
 
 		if (GetClimbType() == BOT_CLIMB_NONE && (!PlayerStandingOnMe() && !StandingOnPlayer()) && m_fListenToSoundTime < gpGlobals->time && !m_iOrderType)
 		{
@@ -4097,20 +4101,19 @@ public:
 	{
 		BOOL gotBest = false;
 		float fMax = 0.0f;
+		CAlienAction* best = nullptr;
 
 		for (unsigned int i = 0; i < m_Actions.size(); i++)
 		{
 			const float fCur = m_Actions[i].Utility() * m_Actions[i].ResultProbability(evd);
-
 			if (!gotBest || (fCur > fMax))
 			{
-				CAlienAction* best = &(m_Actions[i]);
+				best = &(m_Actions[i]);
 				fMax = fCur;
 				gotBest = true;
-				return best;
 			}
 		}
-		return nullptr;
+		return best;
 	}
 private:
 	std::vector<CAlienAction> m_Actions;
@@ -4838,6 +4841,7 @@ void CBot::LookForNewTasks()
 							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(25.0f, 35.0f));
 							break;
 						}
+						break;
 					case BOT_CAN_BUILD_STRUCT:
 						if (bNotCombatMap)
 						{
@@ -4865,6 +4869,7 @@ void CBot::LookForNewTasks()
 							m_Tasks.SetTimeToCompleteSchedule(iNewScheduleId, RANDOM_FLOAT(30.0f, 40.0f));
 							break;
 						}
+						break;
 					case BOT_CAN_HEAL:
 						AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHealablePlayer));
 
@@ -4981,13 +4986,13 @@ void CBot::LookForNewTasks()
 						gBotGlobals.m_fGorgeAmount)
 						bGoGorge = false;
 					else if (this->m_Profile.m_GorgePercent > 0)
-						bGoGorge = true;
+						//bGoGorge = true;
 
-					if (bGoGorge)
-					{
-						if (m_iResources < NS_GORGE_RESOURCES)
-							bGoGorge = false;
-					}
+						if (bGoGorge)
+						{
+							if (m_iResources < NS_GORGE_RESOURCES)
+								bGoGorge = false;
+						}
 
 					if (bGoGorge /*&& !gBotGlobals.IsCombatMap()*/)
 					{
@@ -4995,27 +5000,24 @@ void CBot::LookForNewTasks()
 						m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
 						break;
 					}
-					else
+					// pick a new species to go..
+					if (m_iResources >= NS_ONOS_RESOURCES && iRand <= this->m_Profile.m_OnosPercent)
 					{
-						// pick a new species to go..
-						if (m_iResources >= NS_ONOS_RESOURCES && iRand <= this->m_Profile.m_OnosPercent)
-						{
-							AddPriorityTask(CBotTask(BOT_TASK_ALIEN_EVOLVE, 0, nullptr, ALIEN_LIFEFORM_FIVE));
-							m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
-							break;
-						}
-						else if (m_iResources >= NS_FADE_RESOURCES && iRand <= this->m_Profile.m_FadePercent)
-						{
-							AddPriorityTask(CBotTask(BOT_TASK_ALIEN_EVOLVE, 0, nullptr, ALIEN_LIFEFORM_FOUR));
-							m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
-							break;
-						}
-						else if (m_iResources >= NS_LERK_RESOURCES && iRand <= this->m_Profile.m_LerkPercent)
-						{
-							AddPriorityTask(CBotTask(BOT_TASK_ALIEN_EVOLVE, 0, nullptr, ALIEN_LIFEFORM_THREE));
-							m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
-							break;
-						}
+						AddPriorityTask(CBotTask(BOT_TASK_ALIEN_EVOLVE, 0, nullptr, ALIEN_LIFEFORM_FIVE));
+						m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
+						break;
+					}
+					if (m_iResources >= NS_FADE_RESOURCES && iRand <= this->m_Profile.m_FadePercent)
+					{
+						AddPriorityTask(CBotTask(BOT_TASK_ALIEN_EVOLVE, 0, nullptr, ALIEN_LIFEFORM_FOUR));
+						m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
+						break;
+					}
+					if (m_iResources >= NS_LERK_RESOURCES && iRand <= this->m_Profile.m_LerkPercent)
+					{
+						AddPriorityTask(CBotTask(BOT_TASK_ALIEN_EVOLVE, 0, nullptr, ALIEN_LIFEFORM_THREE));
+						m_fAttemptEvolveTime = gpGlobals->time + 1.0f;
+						break;
 					}
 				}
 
@@ -5443,17 +5445,17 @@ void CBot::LookForNewTasks()
 			break;
 		}
 	}
-		break;
+	break;
 	case MOD_GEARBOX:
 	{
 		//gBotGlobals.m_bTeamPlay = true; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
 
-		if (m_bHasFlag)//Important? [APG]RoboCop[CL]
+		if (m_bHasFlag) //TODO: Important and bRoam should be false? [APG]RoboCop[CL]
 		{
 			bRoam = true;
 			break;
 		}
-			
+
 		int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0f, -1, W_FL_IMPORTANT, &m_FailedGoals);
 
 		if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
@@ -5642,7 +5644,7 @@ void CBot::LookForNewTasks()
 						int iWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0f, -1, W_FL_RESCUE, &m_FailedGoals);
 
 						bRoam = false;
-						
+
 						if (m_iCurrentWaypointIndex != iWpt && iWpt != -1)
 						{
 							// Add a task to go to the capture point
@@ -5653,19 +5655,21 @@ void CBot::LookForNewTasks()
 				}
 				break;
 				case MOD_DMC:
-				{
+				/*{
 					// go for a new weapon
 					int iWpt = WaypointFindRandomGoal(m_pEdict, -1, W_FL_WEAPON, &m_FailedGoals);
+
+					bRoam = true;
 
 					if (iWpt != -1)
 					{
 						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWpt, -1));
 					}
 				}
-				break;
+				break;*/
 				case MOD_WW:
 				{
-					//TODO: Might need to use Op4CTF code for capping [APG]RoboCop[CL]	
+					//TODO: Might need to use Op4CTF code for capping [APG]RoboCop[CL]
 					// go for a capture point
 					int iWpt = WaypointFindRandomGoal(m_pEdict, -1, W_FL_IMPORTANT, &m_FailedGoals);
 
@@ -6131,7 +6135,7 @@ BOOL CBot::UpdateVisibles()
 			m_bNearestRememberPointVisible = true;
 		}
 
-		m_bNearestRememberPointVisible = false;
+		//m_bNearestRememberPointVisible = false;
 	}
 	else
 	{
@@ -8314,11 +8318,10 @@ void CBot::WorkMoveDirection()
 
 	if (m_pAvoidEntity)
 	{
-		BOOL bEnemy = false;
-
 		if (m_fAvoidTime <= gpGlobals->time)
 		{
-			if ( /*gBotGlobals.IsMod(MOD_TFC) ||*/ (bEnemy = IsEnemy(m_pAvoidEntity)) == 1)
+			const BOOL bEnemy = IsEnemy(m_pAvoidEntity);
+			if (bEnemy)
 			{
 				if (m_pAvoidEntity->v.velocity.x || m_pAvoidEntity->v.velocity.y)
 				{
@@ -8589,7 +8592,7 @@ BOOL CBot::CanPickup(edict_t* pPickup) const
 		// quad damage etc..
 		if (std::strncmp(szClassname, "ts_powerup", 11) == 0)
 			return true;
-		else if (std::strcmp(szClassname, "ts_groundweapon") == 0)
+		if (std::strcmp(szClassname, "ts_groundweapon") == 0)
 			return true;
 	}
 	break;
@@ -8642,7 +8645,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 			MDLL_Touch(pentTouched, m_pEdict);
 #else
 			extern DLL_FUNCTIONS other_gFunctionTable;
-			
+
 			(*other_gFunctionTable.pfnTouch)(pentTouched, m_pEdict);
 #endif
 			if (pentTouched->v.owner == m_pEdict)
@@ -8650,10 +8653,10 @@ BOOL CBot::Touch(edict_t* pentTouched)
 				m_Tasks.FlushTasks();
 				m_bHasFlag = true;
 				m_stBotPaths.Destroy();
-				
+
 				m_pFlag = pentTouched;
 			}
-			
+
 			return true;
 		}
 	}
@@ -8687,7 +8690,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 
 		if (bIsDoor)
 		{
-			if ((bIsMoving = BotFunc_EntityIsMoving(pentTouchedpev)) == 1)
+			if (bIsMoving == BotFunc_EntityIsMoving(pentTouchedpev))
 				m_fLastSeeWaypoint = 0;
 		}
 
@@ -8986,7 +8989,7 @@ edict_t* CBot::FindEnemy()
 		}
 		else if (gBotGlobals.IsMod(MOD_TS))
 		{
-			pOldEnemy = m_pEnemy;
+			//pOldEnemy = m_pEnemy;
 			m_pEnemy = nullptr;
 
 			m_fNextGetEnemyTime = gpGlobals->time + RANDOM_FLOAT(0.75f, 1.25f);
@@ -9057,8 +9060,7 @@ edict_t* CBot::FindEnemy()
 
 						if (pRep)
 						{
-							int iRep = 5;
-							iRep = pRep->CurrentRep();
+							const int iRep = pRep->CurrentRep();
 
 							// add higher priority depending on bad reputation
 							iPriority = BOT_MAX_REP - iRep;
@@ -10667,7 +10669,7 @@ BOOL CBot::RemoveMySquad()
 	return false;
 }
 
-void CBot :: BotOnLadder ()
+void CBot::BotOnLadder()
 {
 	TraceResult tr;
 
@@ -10688,12 +10690,12 @@ void CBot :: BotOnLadder ()
 			if (view_angles.y > 360.0f)
 				view_angles.y -= 360.0f;
 
-			UTIL_MakeVectors( view_angles );
+			UTIL_MakeVectors(view_angles);
 
 			Vector v_src = pev->origin + pev->view_ofs;
 			Vector v_dest = v_src + gpGlobals->v_forward * 30;
 
-			UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
+			UTIL_TraceLine(v_src, v_dest, dont_ignore_monsters,
 				pev->pContainingEntity, &tr);
 
 			if (tr.flFraction < 1.0f)  // hit something?
@@ -10727,12 +10729,12 @@ void CBot :: BotOnLadder ()
 				if (view_angles.y > 360.0f)
 					view_angles.y -= 360.0f;
 
-				UTIL_MakeVectors( view_angles );
+				UTIL_MakeVectors(view_angles);
 
 				v_src = pev->origin + pev->view_ofs;
 				v_dest = v_src + gpGlobals->v_forward * 30;
 
-				UTIL_TraceLine( v_src, v_dest, dont_ignore_monsters,
+				UTIL_TraceLine(v_src, v_dest, dont_ignore_monsters,
 					pev->pContainingEntity, &tr);
 
 				if (tr.flFraction < 1.0f)  // hit something?
@@ -10829,7 +10831,7 @@ eMasterType CMasterEntity::CanFire(edict_t* pActivator) const
 	return MASTER_FAULT;
 }
 
-BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
+BOOL CBot::WantToFollowEnemy(edict_t* pEnemy) const
 // return true if bot wants to follow an enemy once out of sight
 // might want to add a few more things to it though
 {
@@ -10858,21 +10860,20 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 
 	dec_followEnemy->setWeights(weights);
 
+	if (pEnemy == nullptr)
+		return false;
+
 	inputs.emplace_back(pev->health / pev->max_health);
 	inputs.emplace_back(DistanceFromEdict(pEnemy) * 0.001f);
 	inputs.emplace_back(pev->size.Length() / pEnemy->v.size.Length());
 
 	dec_followEnemy->input(&inputs);
-
 	dec_followEnemy->execute();
 
 	weights.clear();
 	inputs.clear();
 
 	//return dec_followEnemy->fired(); //Not required? [APG]RoboCop[CL]
-
-	if (pEnemy == nullptr)
-		return false;
 
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -12839,7 +12840,7 @@ void CBot::DoTasks()
 				else
 				{
 					TraceResult tr;
-					bBuild = true;
+					//bBuild = true;
 
 					UTIL_TraceLine(GetGunPosition(), vOrigin, dont_ignore_monsters, ignore_glass, m_pEdict, &tr);
 
@@ -12977,10 +12978,9 @@ void CBot::DoTasks()
 			{
 				// Pick a new leader or become new leader or stop following
 
-				gBotGlobals.m_Squads.ChangeLeader(m_stSquad);
-
 				if (m_stSquad)
 				{
+					gBotGlobals.m_Squads.ChangeLeader(m_stSquad);
 					m_CurrentTask->SetEdict(m_pSquadLeader);
 				}
 				else
@@ -14705,11 +14705,11 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 								break;
 							}
 						}
-						else if (m_CurrentTask->TaskInt() != m_pCurrentWeapon->GetID())
+						else if (m_pCurrentWeapon != nullptr && m_CurrentTask->TaskInt() != m_pCurrentWeapon->GetID())
 						{
 							bChangeWeapon = true;
 						}
-						else if (!m_pCurrentWeapon->IsMelee() && !m_pCurrentWeapon->CanShootPrimary(m_pEdict, fEnemyDist, m_fDistanceFromWall))
+						else if (m_pCurrentWeapon != nullptr && !m_pCurrentWeapon->IsMelee() && !m_pCurrentWeapon->CanShootPrimary(m_pEdict, fEnemyDist, m_fDistanceFromWall))
 						{
 							m_CurrentTask->SetInt(m_Weapons.GetBestWeaponId(this, m_pEnemy));
 							bChangeWeapon = true;
@@ -15911,7 +15911,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						}
 					}
 
-					m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_EDICT;
+					//m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_EDICT;
 
 					if (iState == -1 || DistanceFrom(vEntityOrigin) < 72)
 					{
@@ -16445,6 +16445,7 @@ void CBot::CheckStuck()
 				}
 				else if (IsMarine())
 				{
+					//TODO: Needs revised [APG]RoboCop[CL]
 					// if bot does not have a task, he could be just waiting for orders
 					if (!m_CurrentTask) // if commander is not null then he wont check if stuck
 						bCheckIfStuck = EntityIsCommander(nullptr);

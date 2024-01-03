@@ -1012,6 +1012,13 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 		else
 			fSetVal = gBotGlobals.m_iMaxBots;
 	}
+	else if (FStrEq("welcome_msg", arg1))
+	{
+		if (bSetting)
+			gBotGlobals.m_bWelcomeMsg = static_cast<short>(std::atoi(arg2));
+		else
+			fSetVal = static_cast<float>(gBotGlobals.m_bWelcomeMsg);
+	}
 	/*
 		m_fHiveImportance = 1.0f;
 		m_fResTowerImportance = 0.7f;
@@ -1373,12 +1380,16 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 
 		if (pWantedClient)
 		{
-			const int state = std::atoi(arg2); //Don't change it as std::stoi
-
+			int state = 0;
 			if (arg2 && *arg2)
+			{
+				state = std::atoi(arg2); //Don't change it as std::stoi [APG]RoboCop[CL]
 				pWantedClient->AutoWaypoint(state);
+			}
 			else
+			{
 				pWantedClient->AutoWaypoint();
+			}
 
 			if (pEntity)
 			{
@@ -1410,10 +1421,10 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 eBotCvarState CBotCamCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
 	edict_t* pEntity = nullptr;
-
+	
 	if (pClient)
 		pEntity = pClient->GetPlayer();
-
+	
 	if (pEntity)
 	{
 		if (FStrEq("off", arg1))
@@ -1426,18 +1437,19 @@ eBotCvarState CBotCamCommand::action(CClient* pClient, const char* arg1, const c
 			if (gBotGlobals.m_BotCam.TuneIn(pEntity))
 			{
 				BotMessage(pEntity, 0, "Using botcam");
-
-				pClient->AddNewToolTip(BOT_TOOL_TIP_BOTCAM_ON);
+				
+				if (pClient) // Check if pClient is not nullptr before using it [APG]RoboCop[CL]
+					pClient->AddNewToolTip(BOT_TOOL_TIP_BOTCAM_ON);
 			}
 			else
 				BotMessage(pEntity, 0, "Camera never worked or is not enabled (see command \"rcbot config allow_botcam\")");
 		}
-
+		
 		return BOT_CVAR_ACCESSED;
 	}
 	else
 		BotMessage(nullptr, 0, "Can't use botcam on dedicated server");
-
+	
 	return BOT_CVAR_ERROR;
 }
 
@@ -1486,7 +1498,7 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 		if (arg2 && *arg2)
 		{
 			if (FStrEq(arg2, "wb"))
-				theConverter = new CWhichbotConvert(); //GravebotConvert(); //TODO: Allow Gravebot waypoints conversion [APG]RoboCop[CL]
+				theConverter = new CWhichbotConvert(); //TODO: Allow Gravebot waypoints conversion [APG]RoboCop[CL]
 		}
 
 		if (WaypointSave(false, theConverter))
@@ -1731,7 +1743,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 			while (!std::feof(fp1) && !pProfileToOpen)
 			{
 				// pickup a string first (safer)
-				std::fscanf(fp1, "%s\n", szBotProfile);
+				std::fscanf(fp1, "%127s\n", szBotProfile); //TODO: Might need to lower value [APG]RoboCop[CL]
 
 				// use atoi to get the integer value
 				// it will be 0 if it is invalid
