@@ -2196,20 +2196,11 @@ void BotClient_Generic_WeaponPickup::execute(void* p, int iIndex)
 			{
 				// make bot switch to deagle
 				pBot->SwitchWeapon(GEARBOX_WEAPON_EAGLE);
-				// Add a delay before checking if the bot has switched to the Desert Eagle
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT, 1));
 				// Check if the bot has switched to the Desert Eagle
 				if (pBot->m_pCurrentWeapon && pBot->m_pCurrentWeapon->GetID() == GEARBOX_WEAPON_EAGLE)
 				{
 					// make bot use laser
 					pBot->UseRPGLaser();
-					// Debug output
-					printf("Bot has switched to Desert Eagle and used laser.\n");
-				}
-				else
-				{
-					// Debug output
-					printf("Bot failed to switch to Desert Eagle.\n");
 				}
 			}
 			break;
