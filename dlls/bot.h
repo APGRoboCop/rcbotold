@@ -6349,7 +6349,7 @@ public:
 		//m_iNumClients = 0;
 
 		m_fMapInitTime = 0.0f;
-		m_fBotRejoinTime = 6.0f;
+		m_fBotRejoinTime = 8.0f;
 
 		m_fUpdateLadderTime = -1.0f;
 
@@ -6476,7 +6476,7 @@ public:
 		m_fClientUpdateTime = 0.0f;
 		m_bBotCanRejoin = false;
 		m_fMapInitTime = 0.0f;
-		m_fBotRejoinTime = 6.0f;
+		m_fBotRejoinTime = 8.0f;
 		m_iNumBots = 0;
 
 		m_bCanUpgradeDef = false;

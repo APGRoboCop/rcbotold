@@ -603,7 +603,7 @@ void CBotGlobals::StartFrame()
 						BotFunc_AddBot(nullptr, nullptr, nullptr, nullptr, nullptr);
 
 						m_bBotCanRejoin = false;
-						m_fBotRejoinTime = gpGlobals->time + 10.0f;
+						m_fBotRejoinTime = gpGlobals->time + 8.0f;
 
 						bAddBot = false;
 					}
@@ -1146,7 +1146,7 @@ void CBotGlobals::MapInit()
 	m_bNetMessageStarted = false;
 	m_CurrentHandledCvar = nullptr;
 	m_fMapInitTime = 0.0f;
-	m_fBotRejoinTime = 6.0f;
+	m_fBotRejoinTime = 8.0f;
 	m_pCommander.Set(nullptr);
 
 	m_bHasDefTech = false;

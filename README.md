@@ -33,7 +33,7 @@ V 1.51-beta5
 * changed: Increased the bot's flexibility
 * changed: Reduced redundant coding
 * changed: Reverted basemonster.h that was modified for Sven Coop
-* changed: The bot add or spawn delay for 10-12 seconds to prevent crashes
+* changed: The bot add or spawn delay for 8-10 seconds to prevent crashes
 * changed: Increasing bot's viewing angle to detect enemies better
 * changed: Reduced further Sven Co-op and TFC support
 * changed: Welcome Message modernised and is now displaying properly
@@ -45,6 +45,7 @@ V 1.51-beta5
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
 * TODO: To improve on how to allow bots climb ladders more properly
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
+* TODO: To allow bots in Op4 to use Grapple by using the "Fly" waypoint
 * TODO: To add proper support for S&I, FLF and WizWars
 
 V 1.5-final
