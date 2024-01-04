@@ -219,7 +219,11 @@ public:
 	//virtual Vector getOrigin () { return origin; }
 
 	WAYPOINT(int f, const Vector& vec) { flags = f; origin = vec; }
-	WAYPOINT() { flags = 0; Vector(0, 0, 0); };
+	WAYPOINT(): origin()
+	{
+		flags = 0;
+		Vector(0, 0, 0);
+	}
 };
 
 class WAYPOINT2 : public WAYPOINT
