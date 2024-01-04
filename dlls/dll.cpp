@@ -850,15 +850,15 @@ void ClientCommand(edict_t* pEntity)
 					while (i < iArgCount)
 					{
 						const char* szArgument = CmdArgv_func(i);
-						
+
 						if (!szArgument || !*szArgument)
 						{
 							i++;
 							continue;
 						}
-						
+
 						iLenSoFar += std::strlen(szArgument) + 1;
-						
+
 						// read a string already
 						if (szMessage)
 						{
@@ -866,18 +866,18 @@ void ClientCommand(edict_t* pEntity)
 							std::free(szMessage);
 							szMessage = nullptr;
 						}
-						
-						//delete[] szMessage;
-						
+
+						//delete[] szMessage;//TODO: Not required? [APG]RoboCop[CL]
+
 						// 2 extra chars, 1 for terminator and 1 for space
 						szMessage = new char[iLenSoFar + 1]; //TODO: szMessage is assigned twice without releasing memory [APG]RoboCop[CL]
 						szMessage[0] = 0;
-						
+
 						// copy old string
 						if (szTemp)
 						{
 							BOOL bIsQuote = false;
-							
+
 							// if not a bot sending message, then the ' quotes can seperate words
 							// so can spaces argh :-@
 							if (!bSenderIsBot)
@@ -887,7 +887,7 @@ void ClientCommand(edict_t* pEntity)
 							if (bIsQuote || bWasQuote)
 							{
 								std::sprintf(szMessage, "%s%s", szTemp, szArgument);
-								
+
 								bWasQuote = !bWasQuote;
 							}
 							else
@@ -895,7 +895,7 @@ void ClientCommand(edict_t* pEntity)
 								// take space into count (thats what is seperating these words)
 								std::sprintf(szMessage, "%s %s", szTemp, szArgument);
 							}
-							
+
 							std::free(szTemp);
 							szTemp = nullptr;
 						}
@@ -904,7 +904,7 @@ void ClientCommand(edict_t* pEntity)
 							std::strcat(szMessage, szArgument);
 						}
 						szMessage[iLenSoFar] = 0;
-						
+
 						i++;
 					}
 					// Ensure szTemp is freed if it was not already
@@ -913,7 +913,6 @@ void ClientCommand(edict_t* pEntity)
 						std::free(szTemp);
 						szTemp = nullptr;
 					}
-
 				}
 				else
 				{
@@ -1779,12 +1778,12 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 	while (std::fgets(szBuffer, 127, fp))
 	{
 		szBuffer[127] = '\0';
-		
+
 		if (szBuffer[0] == '#')
 			continue;
-		
+
 		int iLength = std::strlen(szBuffer);
-		
+
 		if (iLength > 0 && szBuffer[iLength - 1] == '\n')
 			szBuffer[--iLength] = '\0';
 
@@ -1998,14 +1997,14 @@ void ReadBotUsersConfig()
 		while (std::fgets(buffer, 255, fp) != nullptr)
 		{
 			line++;
-			
+
 			buffer[255] = 0;
-			
+
 			int length = std::strlen(buffer);
-			
+
 			if (buffer[0] == '#') // comment
 				continue;
-			
+
 			if (length > 0 && buffer[length - 1] == '\n')
 			{
 				buffer[length - 1] = 0;  // remove '\n'
@@ -2091,7 +2090,7 @@ void ReadMapConfig()
 			return;
 
 		size_t iLen = std::strlen(szTemp);
-		
+
 		if (iLen > 0 && szTemp[iLen - 1] != '\n' && iLen < 255)
 		{
 			szTemp[iLen] = '\n';

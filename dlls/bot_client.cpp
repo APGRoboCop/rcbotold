@@ -482,7 +482,7 @@ void BotClient_TS_WeaponInfo::execute(void* p, int iIndex)
 }
 
 void BotClient_NS_TechSlots::execute(void* p, int iIndex)
-{	
+{
 	static int iSlots; //TODO: Needs to be revised [APG]RoboCop[CL]
 
 	if (p == nullptr || iIndex == -1)
@@ -492,7 +492,7 @@ void BotClient_NS_TechSlots::execute(void* p, int iIndex)
 	}
 
 	short int* iState = &gBotGlobals.m_iCurrentMessageState;
-	
+
 	switch (POINTER_TO_INT(iState))
 	{
 	case 0:
@@ -503,7 +503,7 @@ void BotClient_NS_TechSlots::execute(void* p, int iIndex)
 	default:
 		break;
 	}
-	
+
 	iSlots = POINTER_TO_INT(p);
 
 	POINTER_INCREMENT_VALUE(iState);

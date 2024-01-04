@@ -835,7 +835,7 @@ public:
 	}
 
 	BOOL NeedToReload() const;
-	
+
 	BOOL CanReload() const;
 
 	BOOL CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const;

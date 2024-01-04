@@ -64,7 +64,7 @@ public:
 
 	void displayWeights() const;
 
-	ga_value neighbourDistance(CSomNeuron* other, ga_value fDistance) const;
+	ga_value neighbourDistance(CSomNeuron* other, ga_value fDistance);
 
 private:
 	std::vector<ga_value> fWeights;

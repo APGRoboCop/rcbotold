@@ -3737,7 +3737,7 @@ void CBot::Think()
 			StopMoving();
 		}
 	}
-	/*else
+	else
 	{
 		if (IsSquadLeader())
 			BotSquadLeaderThink();
@@ -3750,7 +3750,7 @@ void CBot::Think()
 				m_fUpdateWaypointTime = gpGlobals->time + 0.5f;
 			}
 		}
-	}*/
+	}
 
 	if (m_pEnemy == nullptr)
 	{
@@ -4986,13 +4986,13 @@ void CBot::LookForNewTasks()
 						gBotGlobals.m_fGorgeAmount)
 						bGoGorge = false;
 					else if (this->m_Profile.m_GorgePercent > 0)
-						//bGoGorge = true;
+						bGoGorge = true;
 
-						if (bGoGorge)
-						{
-							if (m_iResources < NS_GORGE_RESOURCES)
-								bGoGorge = false;
-						}
+					if (bGoGorge)
+					{
+						if (m_iResources < NS_GORGE_RESOURCES)
+							bGoGorge = false;
+					}
 
 					if (bGoGorge /*&& !gBotGlobals.IsCombatMap()*/)
 					{
@@ -5450,7 +5450,7 @@ void CBot::LookForNewTasks()
 	{
 		//gBotGlobals.m_bTeamPlay = true; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
 
-		if (m_bHasFlag) //TODO: Important and bRoam should be false? [APG]RoboCop[CL]
+		if (m_bHasFlag)//Important? [APG]RoboCop[CL]
 		{
 			bRoam = true;
 			break;
@@ -5655,18 +5655,16 @@ void CBot::LookForNewTasks()
 				}
 				break;
 				case MOD_DMC:
-				/*{
+				{
 					// go for a new weapon
 					int iWpt = WaypointFindRandomGoal(m_pEdict, -1, W_FL_WEAPON, &m_FailedGoals);
-
-					bRoam = true;
 
 					if (iWpt != -1)
 					{
 						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWpt, -1));
 					}
 				}
-				break;*/
+				break;
 				case MOD_WW:
 				{
 					//TODO: Might need to use Op4CTF code for capping [APG]RoboCop[CL]
@@ -8989,7 +8987,7 @@ edict_t* CBot::FindEnemy()
 		}
 		else if (gBotGlobals.IsMod(MOD_TS))
 		{
-			//pOldEnemy = m_pEnemy;
+			pOldEnemy = m_pEnemy;
 			m_pEnemy = nullptr;
 
 			m_fNextGetEnemyTime = gpGlobals->time + RANDOM_FLOAT(0.75f, 1.25f);
@@ -10831,7 +10829,7 @@ eMasterType CMasterEntity::CanFire(edict_t* pActivator) const
 	return MASTER_FAULT;
 }
 
-BOOL CBot::WantToFollowEnemy(edict_t* pEnemy) const
+BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 // return true if bot wants to follow an enemy once out of sight
 // might want to add a few more things to it though
 {
@@ -12840,7 +12838,7 @@ void CBot::DoTasks()
 				else
 				{
 					TraceResult tr;
-					//bBuild = true;
+					bBuild = true;
 
 					UTIL_TraceLine(GetGunPosition(), vOrigin, dont_ignore_monsters, ignore_glass, m_pEdict, &tr);
 
@@ -14699,8 +14697,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 									AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, m_pEnemy));
 									break;
 								}
-								else
-									bTaskFailed = true;
+								bTaskFailed = true;
 
 								break;
 							}
@@ -15911,7 +15908,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						}
 					}
 
-					//m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_EDICT;
+					m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_EDICT;
 
 					if (iState == -1 || DistanceFrom(vEntityOrigin) < 72)
 					{

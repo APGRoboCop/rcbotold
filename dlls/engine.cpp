@@ -503,8 +503,8 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 		{
 			CBot* pBot = &gBotGlobals.m_Bots[i];
 
-			//if (pBot == nullptr)
-			//	continue;
+			if (pBot == nullptr) //TODO: Not required? [APG]RoboCop[CL]
+				continue;
 			if (pBot->m_pEdict == nullptr)
 				continue;
 			if (pBot->m_pEdict == pEntityOwner)

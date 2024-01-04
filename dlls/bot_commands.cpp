@@ -1421,10 +1421,10 @@ eBotCvarState CAutoWaypointCommand::action(CClient* pClient, const char* arg1, c
 eBotCvarState CBotCamCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
 	edict_t* pEntity = nullptr;
-	
+
 	if (pClient)
 		pEntity = pClient->GetPlayer();
-	
+
 	if (pEntity)
 	{
 		if (FStrEq("off", arg1))
@@ -1437,19 +1437,19 @@ eBotCvarState CBotCamCommand::action(CClient* pClient, const char* arg1, const c
 			if (gBotGlobals.m_BotCam.TuneIn(pEntity))
 			{
 				BotMessage(pEntity, 0, "Using botcam");
-				
+
 				if (pClient) // Check if pClient is not nullptr before using it [APG]RoboCop[CL]
-					pClient->AddNewToolTip(BOT_TOOL_TIP_BOTCAM_ON);
+				pClient->AddNewToolTip(BOT_TOOL_TIP_BOTCAM_ON);
 			}
 			else
 				BotMessage(pEntity, 0, "Camera never worked or is not enabled (see command \"rcbot config allow_botcam\")");
 		}
-		
+
 		return BOT_CVAR_ACCESSED;
 	}
 	else
 		BotMessage(nullptr, 0, "Can't use botcam on dedicated server");
-	
+
 	return BOT_CVAR_ERROR;
 }
 

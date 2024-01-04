@@ -370,7 +370,7 @@ public:
 
 	CClient* GetRandomClient(int iRep);
 
-	static void WriteToFile(int iBotProfile, CBotReputation* pRep);
+	void WriteToFile(int iBotProfile, CBotReputation* pRep);
 
 	void RemoveSaveRep(int iBotProfile, int iPlayerRepId);
 
@@ -2600,7 +2600,7 @@ public:
 	CLearnedHeader(int iId);
 
 	BOOL operator == (const CLearnedHeader& other) const;
-	BOOL operator != (CLearnedHeader const &other) const
+	BOOL operator != (CLearnedHeader const other) const
 	{
 		return !(*this == other);
 	}
@@ -3976,7 +3976,7 @@ public:
 	//int		BotDanger				( void );
 
 	// does bot want to pursue the enemy or stop and do his own thing?
-	BOOL     WantToFollowEnemy(edict_t* pEnemy) const;
+	BOOL     WantToFollowEnemy(edict_t* pEnemy);
 
 	// returns true when bot is facing the ideal aim position
 	BOOL	 FacingIdeal() const;
@@ -4798,7 +4798,7 @@ public:
 		return false;
 	}
 
-	BOOL operator == (const CAllowedPlayer &player)
+	BOOL operator == (CAllowedPlayer player)
 	{
 		// = Steam ID , or = name + password
 		return player.IsForName(m_szName) && player.IsForPass(m_szPass) || player.IsForSteamID(m_szSteamId);
@@ -6018,7 +6018,7 @@ public:
 		m_iRad = iRadius;
 	}
 
-	BOOL operator == (CBotNSTech const &other) const
+	BOOL operator == (CBotNSTech const other) const
 	{
 		return other.getID() == getID();
 	}
@@ -6038,7 +6038,7 @@ public:
 		return m_iCost;
 	}
 
-	void update(CBotNSTech const &tech)
+	void update(CBotNSTech const tech)
 	{
 		m_bAvailable = tech.getAvailable();
 		m_iCost = tech.getCost();
@@ -6587,7 +6587,7 @@ public:
 
 	short int m_iMinBots;
 	short int m_iMaxBots;
-	
+
 	BOOL m_bWelcomeMsg;
 
 	eLanguage m_iLanguage;

@@ -1022,8 +1022,8 @@ int UTIL_GetBotIndex(const edict_t* pEdict)
 	{
 		const CBot* pBot = &gBotGlobals.m_Bots[index];
 
-		//if (!pBot)
-		//	continue;
+		if (!pBot) //TODO: Not required? [APG]RoboCop[CL]
+			continue;
 
 		if (!pBot->IsUsed())
 			continue;

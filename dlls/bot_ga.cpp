@@ -264,7 +264,7 @@ void CBitsGAValues::save(std::FILE* bfp)
 
 CBitsGAValues::CBitsGAValues(CBits* bits)
 {
-	//m_theBits = nullptr;
+	//m_theBits = nullptr; //TODO: Not required? [APG]RoboCop[CL]
 	//delete m_theBits;
 	m_theBits = bits;
 }

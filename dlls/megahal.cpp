@@ -422,7 +422,6 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 	if (pBot->m_Profile.m_HAL->input_words->entry[last_entry].word[last_character] == '?')
 	{
 		int tries_count;
-		
 		// try ten times to answer something relevant
 		for (tries_count = 0; tries_count < 10; tries_count++)
 		{
@@ -451,7 +450,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 			{
 				BotMessage(nullptr, 1, "HAL: HAL_MakeOutput() unable to reallocate output\n");
 				std::free(output_template); // free original block
-				// handle error here, possibly with a return or throw
+				// handle error here, possibly with a return or throw [APG]RoboCop[CL]
 			}
 			else
 			{
@@ -470,7 +469,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 				output_template[length] = 0; // terminate the string
 
 			std::strcpy(output, output_template); // then copy the answer
-			//return;
+			return;
 		}
 	}
 
@@ -504,7 +503,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 			output_template[length] = 0; // terminate the string
 
 		std::strcpy(output, output_template); // then copy the answer
-		//return;
+		return;
 	}
 }
 
@@ -1970,15 +1969,16 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	if (fp == nullptr)
 	{
 		BotMessage(nullptr, 1, "PrepareHALBrainForPersonality(): writing permissions not allowed on profile (%d) HAL brain!", pBotProfile->m_iProfileId);
-		return false; // return or exit here
+		return false; // return or exit here [APG]RoboCop[CL]
 	}
+	
 	std::fwrite("RCBOTHAL", sizeof"RCBOTHAL", 1, fp);
 	std::fwrite(&pBotProfile->m_HAL->bot_model->order, sizeof(unsigned char), 1, fp);
 	HAL_SaveTree(fp, pBotProfile->m_HAL->bot_model->forward);
 	HAL_SaveTree(fp, pBotProfile->m_HAL->bot_model->backward);
 	HAL_SaveDictionary(fp, pBotProfile->m_HAL->bot_model->dictionary);
 	std::fclose(fp); // everything is saved, close the file
-	
+
 	return true; // ok, now it is guarantee that this personality has an associated brain
 }
 

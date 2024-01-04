@@ -366,9 +366,9 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS* pFunctionTable, m
 	if (pFunctionTable == nullptr)
 	{
 		BotMessage(nullptr, 2, "Err: Received NULL pFunctionTable from Metamod... not my fault... check running plugins!!!");
-		return false; // Return an error code
+		return false; // Return an error code [APG]RoboCop[CL]
 	}
-	
+
 	// keep track of the pointers to engine function tables metamod gives us
 	gpMetaGlobals = pMGlobals;
 	std::memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
@@ -551,7 +551,7 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* inte
 }
 
 //#if defined(_WIN32) && !defined(__CYGWIN__)
-void WINAPI GiveFnptrsToDll(const enginefuncs_t* pengfuncsFromEngine, globalvars_t* pGlobals)
+void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pGlobals)
 //#else
 //extern "C" DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals )
 //#endif

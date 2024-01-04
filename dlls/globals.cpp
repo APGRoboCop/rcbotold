@@ -551,8 +551,8 @@ void CBotGlobals::StartFrame()
 		{
 			pBot = &m_Bots[iIndex];
 
-			//if (!pBot)
-			//	continue;
+			if (!pBot)//TODO: Not required? [APG]RoboCop[CL]
+				continue;
 
 			if (pBot->m_iRespawnState != RESPAWN_IDLE)
 			{
@@ -1972,7 +1972,7 @@ void CBotGlobals::SetupBotChat()
 			continue;
 
 		size_t iLength = std::strlen(buffer);
-		
+
 		if (iLength > 0 && buffer[iLength - 1] == '\n')
 		{
 			buffer[--iLength] = 0;
