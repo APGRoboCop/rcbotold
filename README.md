@@ -44,6 +44,7 @@ V 1.51-beta5
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
 * TODO: To improve on how to allow bots climb ladders more properly
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
+* TODO: To make sure the bots don't idle in Deathmatch Classic
 * TODO: To add proper support for S&I, FLF and WizWars
 
 V 1.5-final
