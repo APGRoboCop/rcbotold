@@ -1626,8 +1626,6 @@ void CBot::SpawnInit(const BOOL bInit)
 
 	m_bAcceptHealth = false;
 
-	m_bEagle_secondary_state = false; // JK-Botti Deagle Laser Sight script
-
 	m_fNextUseScientist = 0.0f;
 	m_fNextUseBarney = 0.0f;
 
@@ -2594,14 +2592,7 @@ void CBot::StartGame()
 		FakeClientCommand(m_pEdict, "jointeam 3");
 		FakeClientCommand(m_pEdict, "selectchar 7");
 		m_bStartedGame = true;
-
-		FakeClientCommand(m_pEdict, "slot2"); //Draw Deagle
-		FakeClientCommand(m_pEdict, "+attack");
-		FakeClientCommand(m_pEdict, "-attack");
-
-		FakeClientCommand(m_pEdict, "+attack2"); //Toggle Laser Sight
-		FakeClientCommand(m_pEdict, "-attack2");
-		//}
+		
 		break;
 
 		// team fortress
@@ -9092,22 +9083,6 @@ edict_t* CBot::FindEnemy()
 					else if (EntityIsMarineStruct(pEntity))
 						iPriority = 8;
 					break;
-					//TODO: Allow bots to toggle Deagle Laser Sight
-				/*case MOD_GEARBOX: // JK-Botti Deagle Laser Sight script
-				{
-					if (m_pCurrentWeapon->GetID() == GEARBOX_WEAPON_EAGLE &&
-						m_bEagle_secondary_state != false &&
-						!(pEntity->v.button & (IN_ATTACK | IN_ATTACK2)))
-					{
-						pEntity->v.button |= IN_ATTACK2;
-						m_bEagle_secondary_state = false;
-					}
-					else
-					{
-						m_bEagle_secondary_state = false;
-					}
-					break;
-				}*/
 				/*case MOD_TFC:
 					// Teleporter/disp/sentry gun (quick check)
 					if (pEntity->v.flags & FL_MONSTER)

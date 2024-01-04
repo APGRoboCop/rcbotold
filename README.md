@@ -26,6 +26,7 @@ V 1.51-beta5
 * added: AMBuild compiling support
 * added: A Welcome Message toggle cvar to hide welcome messages
 * added: Opposing Force CTF support and they should no longer team shoot nor flag hold
+* added: Bots in Op4CTF should now use Deagle's Laser Sight to improve its accuracy
 * added: C++17 Standard library support 
 * added: Strafing combat to evade from being easy target bots
 * added: Linux bot slow-motion fix by w00tguy
@@ -44,7 +45,6 @@ V 1.51-beta5
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
 * TODO: To improve on how to allow bots climb ladders more properly
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
-* TODO: To make sure the bots don't idle in Deathmatch Classic
 * TODO: To add proper support for S&I, FLF and WizWars
 
 V 1.5-final
