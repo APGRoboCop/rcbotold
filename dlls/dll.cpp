@@ -1771,8 +1771,6 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 	char szTemp[64];
 	int j;
 
-	// true when the bot needs to read pretraining file for megahal
-
 	// read bot profile with bots name etc on it.
 
 	while (std::fgets(szBuffer, 127, fp))
@@ -1868,11 +1866,11 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 			bpBotProfile->m_OnosPercent = std::atoi(&szBuffer[13]);
 		}
 		else if (std::strncmp(szBuffer, "aim_speed=", 10) == 0)
-			bpBotProfile->m_fAimSpeed = std::stof(&szBuffer[10]);
+			bpBotProfile->m_fAimSpeed = atof(&szBuffer[10]);
 		else if (std::strncmp(szBuffer, "aim_skill=", 10) == 0)
-			bpBotProfile->m_fAimSkill = std::stof(&szBuffer[10]);
+			bpBotProfile->m_fAimSkill = atof(&szBuffer[10]);
 		else if (std::strncmp(szBuffer, "aim_time=", 9) == 0)
-			bpBotProfile->m_fAimTime = std::stof(&szBuffer[9]);
+			bpBotProfile->m_fAimTime = atof(&szBuffer[9]);
 		else if (std::strncmp(szBuffer, "bottomcolor=", 12) == 0)
 		{
 			bpBotProfile->m_iBottomColour = std::atoi(&szBuffer[12]);
@@ -1953,7 +1951,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		}
 		else if (std::strncmp(szBuffer, "update_vision_time=", 19) == 0)
 		{
-			bpBotProfile->m_fVisionTime = std::stof(&szBuffer[19]);
+			bpBotProfile->m_fVisionTime = std::atof(&szBuffer[19]);
 		}
 	}
 
