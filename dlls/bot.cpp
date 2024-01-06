@@ -829,20 +829,18 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			weights.clear();
 		}
 
-		if (dec_runForCover->fired())
-		{
-			// getting pummelled so keep trying to run for cover somewhere!!
-			RunForCover(Vector(pFloatInfo), true);
-		}
-		// !!!dont break , drop down to the light damage stuff
-		if (!dec_faceHurtOrigin->fired())
-			break;
-		//case BOT_EVENT_LIGHT_DAMAGE:
-
 		if (pFloatInfo)
 		{
+			if (dec_runForCover->fired())
+			{
+				// getting pummelled so keep trying to run for cover somewhere!!
+				RunForCover(Vector(pFloatInfo), true);
+			}
+			// !!!dont break , drop down to the light damage stuff
+			if (!dec_faceHurtOrigin->fired())
+				break;
+			//case BOT_EVENT_LIGHT_DAMAGE:
 			BOOL bAdd = false;
-
 			if (!bAdd)
 			{
 				if (!m_Tasks.HasTask(BOT_TASK_FACE_VECTOR))
@@ -855,7 +853,6 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 						bAdd = true;
 				}
 			}
-
 			// face origin of damage
 			if (bAdd)
 				AddPriorityTask(CBotTask(BOT_TASK_FACE_VECTOR, 0, nullptr, 0, RANDOM_FLOAT(2.0f, 3.0f), Vector(pFloatInfo)));

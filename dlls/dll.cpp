@@ -1143,7 +1143,7 @@ void ServerDeactivate()
 		// when server was deactivated
 		// assume that bots were just kicked because the server changed map
 		// and let them reconnect upon map change.
-		if (pBot->m_fKickTime + 0.5f >= gpGlobals->time)
+		if (pBot->m_fKickTime + 5.0f >= gpGlobals->time)
 			pBot->m_iRespawnState = RESPAWN_NEED_TO_REJOIN;
 	}
 

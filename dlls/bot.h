@@ -2600,7 +2600,7 @@ public:
 	CLearnedHeader(int iId);
 
 	BOOL operator == (const CLearnedHeader& other) const;
-	BOOL operator != (CLearnedHeader const other) const
+	BOOL operator != (CLearnedHeader const &other) const
 	{
 		return !(*this == other);
 	}
@@ -4796,7 +4796,7 @@ public:
 		return false;
 	}
 
-	BOOL operator == (CAllowedPlayer player)
+	BOOL operator == (const CAllowedPlayer &player)
 	{
 		// = Steam ID , or = name + password
 		return player.IsForName(m_szName) && player.IsForPass(m_szPass) || player.IsForSteamID(m_szSteamId);
@@ -6016,7 +6016,7 @@ public:
 		m_iRad = iRadius;
 	}
 
-	BOOL operator == (CBotNSTech const other) const
+	BOOL operator == (CBotNSTech const &other) const
 	{
 		return other.getID() == getID();
 	}
@@ -6036,7 +6036,7 @@ public:
 		return m_iCost;
 	}
 
-	void update(CBotNSTech const tech)
+	void update(CBotNSTech const &tech)
 	{
 		m_bAvailable = tech.getAvailable();
 		m_iCost = tech.getCost();
