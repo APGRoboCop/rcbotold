@@ -2589,7 +2589,7 @@ void CBot::StartGame()
 		FakeClientCommand(m_pEdict, "jointeam 3");
 		FakeClientCommand(m_pEdict, "selectchar 7");
 		m_bStartedGame = true;
-		
+
 		break;
 
 		// team fortress
@@ -2903,7 +2903,7 @@ void CBot::StartGame()
 	}
 }
 
-eClimbType CBot::GetClimbType() const
+eClimbType CBot::GetClimbType()
 // return a type of climbing or flying info
 // if it is not BOT_CLIMB_NONE then the bot is
 // trying to climb or fly
@@ -4081,7 +4081,7 @@ public:
 		m_Actions.emplace_back(ACTION_BUILD_SENS, eMaskAlienActionResult(ACTION_RES_CLOACKED | ACTION_RES_MORE_TRAITS));
 		m_Actions.emplace_back(ACTION_BUILD_MOV, eMaskAlienActionResult(ACTION_RES_MORE_TRAITS));
 		m_Actions.emplace_back(ACTION_BUILD_RESTOWER, eMaskAlienActionResult(ACTION_RES_FASTER_RESOURCES));
-		m_Actions.emplace_back(ACTION_BUILD_HIVE, eMaskAlienActionResult((ACTION_RES_MORE_SPAWNPOINTS + ACTION_RES_MORE_ABILITIES)));
+		m_Actions.emplace_back(ACTION_BUILD_HIVE, eMaskAlienActionResult(ACTION_RES_MORE_SPAWNPOINTS + ACTION_RES_MORE_ABILITIES));
 		m_Actions.emplace_back(ACTION_HEAL_PLAYER, eMaskAlienActionResult(ACTION_RES_MORE_HEALTH));
 	}
 
@@ -4094,9 +4094,9 @@ public:
 		for (unsigned int i = 0; i < m_Actions.size(); i++)
 		{
 			const float fCur = m_Actions[i].Utility() * m_Actions[i].ResultProbability(evd);
-			if (!gotBest || (fCur > fMax))
+			if (!gotBest || fCur > fMax)
 			{
-				best = &(m_Actions[i]);
+				best = &m_Actions[i];
 				fMax = fCur;
 				gotBest = true;
 			}
@@ -8210,6 +8210,33 @@ void CBot::WorkMoveDirection()
 		}
 	}
 	break;
+	case MOD_GEARBOX:
+	{
+		//w00tguy
+		if (iCurrentClimbState == BOT_CLIMB_FLYING && m_CurrentTask && m_iCurrentWaypointIndex != -1) {
+			const Vector wapointOri = WaypointOrigin(m_iCurrentWaypointIndex);
+			const bool isAboveGrapplePoint = wapointOri.z < pev->origin.z;
+			const bool reachedGrapplePoint = (wapointOri - pev->origin).Length() < 96;
+
+			if (reachedGrapplePoint) {
+				m_fHoldAttackTime = 0.0f;
+			}
+
+			if (!isAboveGrapplePoint && !reachedGrapplePoint) {
+				StopMoving();
+
+				const CBotTask grapTask = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, GEARBOX_WEAPON_GRAPPLE, 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
+				if (!IsCurrentWeapon(GEARBOX_WEAPON_GRAPPLE) && !m_Tasks.HasTask(grapTask)) {
+					AddPriorityTask(grapTask);
+				}
+				else {
+					PrimaryAttack();
+					m_fHoldAttackTime = gpGlobals->time + 1.0f;
+				}
+			}
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -9080,19 +9107,19 @@ edict_t* CBot::FindEnemy()
 					else if (EntityIsMarineStruct(pEntity))
 						iPriority = 8;
 					break;
-				/*case MOD_TFC:
-					// Teleporter/disp/sentry gun (quick check)
-					if (pEntity->v.flags & FL_MONSTER)
-						iPriority = 12;
-					else if (pEntity->v.flags & FL_CLIENT)
-					{
-						// flag carrier
-						if (UTIL_TFC_PlayerHasFlag(pEntity))
-							iPriority = 13;
-						else if (pev->playerclass == pEntity->v.playerclass)
-							iPriority = 11;
-					}
-					break;*/
+					/*case MOD_TFC:
+						// Teleporter/disp/sentry gun (quick check)
+						if (pEntity->v.flags & FL_MONSTER)
+							iPriority = 12;
+						else if (pEntity->v.flags & FL_CLIENT)
+						{
+							// flag carrier
+							if (UTIL_TFC_PlayerHasFlag(pEntity))
+								iPriority = 13;
+							else if (pev->playerclass == pEntity->v.playerclass)
+								iPriority = 11;
+						}
+						break;*/
 				default:
 					break;
 				}
@@ -16350,7 +16377,14 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 	}
 }
 
-BOOL CBot::PrimaryAttack() const
+BOOL CBot::CanFly() const
+{
+	return IsLerk() || (IsMarine() && HasJetPack())
+		|| (gBotGlobals.IsMod(MOD_GEARBOX) && HasWeapon(GEARBOX_WEAPON_GRAPPLE)
+			|| gBotGlobals.IsMod(MOD_DMC));
+}
+
+BOOL CBot::PrimaryAttack()
 {
 	/*if ( HasCondition(BOT_CONDITION_CANT_SHOOT) )
 	{

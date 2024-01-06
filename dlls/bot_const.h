@@ -1388,4 +1388,11 @@ enum
 
 #define BOT_PROFILES_FOLDER "botprofiles"
 
+// sven co-op entity flags - w00tguy
+/*#define SF_BREAK_INSTANT                256// instant break if hit with crowbar/electric crowbar/wrench (depends on weapon key)
+#define SF_BREAK_EXPLOSIVES             512 // takes damage from explosives only
+#define SF_BREAK_IMMUNE_TO_CLIENTS      64 // can't be damaged by players
+#define SF_BREAK_REPAIRABLE             8 // can be repaired with the wrench
+*/
+
 #endif

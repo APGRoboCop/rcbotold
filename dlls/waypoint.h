@@ -153,7 +153,7 @@ private:
 #define W_FL_WEAPON			(1<<20) // Crouch and jump
 #define W_FL_TELEPORT       (1<<21)
 #define W_FL_TANK			(1<<22) // func_tank near waypoint
-#define W_FL_FLY			(1<<23)
+#define W_FL_FLY			(1<<23) // grapple waypoint for sven
 #define W_FL_STAY_NEAR		(1<<24)
 #define W_FL_ENDLEVEL       (1<<25) // end of level, in svencoop etc
 //#define W_FL_TFC_DETPACK    (1<<25)

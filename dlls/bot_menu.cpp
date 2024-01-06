@@ -115,7 +115,7 @@ void SetupMenus()
 	//	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS2].AddMenuItem(2, "Pain/Death", BotMenu_Func_Wall_Stick_Waypoint);
 	else
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS2].AddMenuItem(2, "Wall-Stick", BotMenu_Func_Wall_Stick_Waypoint);
-	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS2].AddMenuItem(3, "Fly", BotMenu_Func_Fly_Waypoint);
+	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS2].AddMenuItem(3, "Fly/Grapple", BotMenu_Func_Fly_Waypoint);
 	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS2].AddMenuItem(4, "More Flags", &gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS3]);
 	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS2].AddExitMenuItem(5);
 

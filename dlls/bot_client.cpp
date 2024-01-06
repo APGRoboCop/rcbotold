@@ -2191,17 +2191,11 @@ void BotClient_Generic_WeaponPickup::execute(void* p, int iIndex)
 	{
 		switch (iWeaponIndex)
 		{
-		case GEARBOX_WEAPON_GRAPPLE:
-			if (pBot->HasWeapon(GEARBOX_WEAPON_EAGLE))
+		case GEARBOX_WEAPON_EAGLE:
+			if (!pBot->HasWeapon(GEARBOX_WEAPON_EAGLE))
 			{
-				// make bot switch to deagle
-				pBot->SwitchWeapon(GEARBOX_WEAPON_EAGLE);
-				// Check if the bot has switched to the Desert Eagle
-				if (pBot->m_pCurrentWeapon && pBot->m_pCurrentWeapon->GetID() == GEARBOX_WEAPON_EAGLE)
-				{
-					// make bot use laser
-					pBot->UseRPGLaser();
-				}
+				// add a task to use the laser once the weapon has been switched
+				pBot->AddPriorityTask(CBotTask(BOT_TASK_SECONDARY_ATTACK, 0));
 			}
 			break;
 		}

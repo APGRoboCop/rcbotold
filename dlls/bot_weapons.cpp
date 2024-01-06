@@ -153,14 +153,14 @@ void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
 	{
 		m_bHasWeapon = true;
 
-			const int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
-			const int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
+		const int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
+		const int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
 
-			if (iAmmoList && iAmmoIndex1 != -1)
-				m_iAmmo1 = &iAmmoList[iAmmoIndex1];
+		if (iAmmoList && iAmmoIndex1 != -1)
+			m_iAmmo1 = &iAmmoList[iAmmoIndex1];
 
-			if (iAmmoList && iAmmoIndex2 != -1)
-				m_iAmmo2 = &iAmmoList[iAmmoIndex2];
+		if (iAmmoList && iAmmoIndex2 != -1)
+			m_iAmmo2 = &iAmmoList[iAmmoIndex2];
 	}
 }
 
@@ -578,6 +578,35 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 					}
 				}
 				break;*/
+		case MOD_GEARBOX: //w00tguy
+			if (FStrEq("func_breakable", STRING(pEnemy->v.classname)))
+			{
+				iAllowedWeapons[GEARBOX_WEAPON_GRAPPLE] = 0; // grapple can't damage breakables
+
+				if (pEnemy->v.spawnflags & 512)
+				{
+					GetNoWeaponArray(iAllowedWeapons);
+					GetArrayOfExplosives(iAllowedWeapons);//bExplosives = pEnemy->v.spawnflags & 512;
+
+					if (pBot->HasWeapon(GEARBOX_WEAPON_MP5))
+					{
+						const CBotWeapon* weapon = pBot->m_Weapons.GetWeapon(GEARBOX_WEAPON_MP5);
+
+						if (weapon->SecondaryAmmo() > 0 && weapon->SecondaryInRange(fEnemyDist))
+							iAllowedWeapons[GEARBOX_WEAPON_MP5] = 1;
+					}
+				}
+				if (pEnemy->v.spawnflags & 256)
+				{
+					const bool hasInstantBreakWep = pBot->HasWeapon(GEARBOX_WEAPON_PIPEWRENCH);
+
+					if (hasInstantBreakWep || pEnemy->v.health > 1000) {
+						GetNoWeaponArray(iAllowedWeapons);
+						iAllowedWeapons[GEARBOX_WEAPON_PIPEWRENCH] = 1;
+					}
+				}
+			}
+			break;
 		case MOD_NS:
 			if (pBot->IsMarine())
 			{

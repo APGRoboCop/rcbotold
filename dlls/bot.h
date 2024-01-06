@@ -3905,10 +3905,10 @@ public:
 	}
 
 	// if bot can fly, this will return true
-	BOOL CanFly() const
-	{
+	BOOL CanFly() const;
+	/*{
 		return IsMarine() && HasJetPack() || IsLerk();
-	}
+	}*/
 
 	// set crouch button
 	void     Duck() const
@@ -3917,11 +3917,11 @@ public:
 	}
 
 	// returns bots ideal climb situation (e.g. flying, climbing, wall-sticking)
-	eClimbType GetClimbType() const;
+	eClimbType GetClimbType();
 
-	BOOL     PrimaryAttack() const;
+	BOOL     PrimaryAttack();
 
-	BOOL     SecondaryAttack() const
+	BOOL     SecondaryAttack()
 	{
 		pev->button |= IN_ATTACK2;
 
