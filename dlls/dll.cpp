@@ -631,7 +631,7 @@ void ClientDisconnect(edict_t* pEntity)
 		pBot->Init();
 		pBot->SetEdict(nullptr);
 		pBot->m_bIsUsed = false;
-		pBot->m_fKickTime = gpGlobals->time;
+		pBot->m_fKickTime = gpGlobals->time + 8.0f;
 
 		pBot->m_Profile.m_iProfileId = iProfileId;
 		pBot->m_Profile.m_iFavTeam = iTeam;

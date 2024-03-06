@@ -372,7 +372,7 @@ void strlow(char* str)
 {
 	const size_t len = std::strlen(str);
 
-	for (int i = 0; i < len; i++)
+	for (unsigned int i = 0; i < len; i++)
 	{
 		str[i] = tolower(str[i]);
 	}
@@ -383,7 +383,7 @@ void strhigh(char* str)
 {
 	const size_t len = std::strlen(str);
 
-	for (int i = 0; i < len; i++)
+	for (unsigned int i = 0; i < len; i++)
 	{
 		str[i] = toupper(str[i]);
 	}
@@ -924,7 +924,7 @@ int UTIL_GetTeam(edict_t* pEntity)
 			{
 				return TEAM_BLACK_MESA;
 			}
-			else if (!std::strcmp(model_name, "beret") || !std::strcmp(model_name, "drill") || !std::strcmp(model_name, "grunt") ||
+			if (!std::strcmp(model_name, "beret") || !std::strcmp(model_name, "drill") || !std::strcmp(model_name, "grunt") ||
 				!std::strcmp(model_name, "recruit") || !std::strcmp(model_name, "shephard") || !std::strcmp(model_name, "tower"))
 			{
 				return TEAM_OPPOSING_FORCE;
@@ -1909,11 +1909,11 @@ void UTIL_LogPrintf(const char* fmt, ...)
 {
 	va_list        argptr;
 	static char    string[1024];
-
+	
 	va_start(argptr, fmt);
 	std::vsprintf(string, fmt, argptr);
 	va_end(argptr);
-
+	
 	// Print to server console
 	ALERT(at_logged, "%s", string);
 }
@@ -2201,7 +2201,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 			char final_message[1024];
 
 			// Using snprintf instead of sprintf to prevent buffer overflows
-			std::snprintf(final_message, sizeof(final_message), "%s %s", BOT_DBG_MSG_TAG, tooltips[iLang][iTooltip]);
+			snprintf(final_message, sizeof(final_message), "%s %s", BOT_DBG_MSG_TAG, tooltips[iLang][iTooltip]);
 
 			// name in message
 			if (std::strstr(final_message, "%n") != nullptr)

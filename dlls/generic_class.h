@@ -46,7 +46,11 @@
 #define RCBOT_GENERIC_CLASS
 
 #include <cassert>
+#include <limits>
+#include <stdexcept>
 #include <vector>
+
+#undef max
 
 void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, const char* fmt, ...);
 void BotMessage(edict_t* pEntity, int errorlevel, const char* fmt, ...);
@@ -732,7 +736,10 @@ private:
 	dataNode<T>* m_Head;
 };
 
-#define DEFAULT_ARRAY_VALUE 1
+enum
+{
+	DEFAULT_ARRAY_VALUE = 1
+};
 
 template <class T>
 class dataArray
@@ -1056,21 +1063,19 @@ public:
 	{
 		if (iIndex >= Size() || iIndex < 0)
 		{
-			throw "[RCBOT>] dataUnconstarray[] Array exception: index out of bounds";
+			throw std::out_of_range("[RCBOT] dataUnconstarray[] Array exception: index out of bounds");
 		}
-
 		return (buffer[iIndex]);
 	}
 
-	int getExistingIndex(T obj)
+	unsigned int getExistingIndex(T obj)
 	{
 		for (unsigned int i = 0; i < size; i++)
 		{
 			if (buffer[i] == obj)
 				return i;
 		}
-
-		return -1;
+		return std::numeric_limits<unsigned int>::max();
 	}
 
 	T* getExisting(T Obj)

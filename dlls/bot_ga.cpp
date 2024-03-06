@@ -133,16 +133,16 @@ void CBotGAValues::setVector(std::vector<ga_value> const& values)
 {
 	m_theValues.clear();
 
-	for (unsigned int i = 0; i < values.size(); i++)
-		m_theValues.emplace_back(values[i]);
+	for (float value : values)
+		m_theValues.emplace_back(value);
 }
 
 void CBotGAValues::getVector(std::vector<ga_value>* values)
 {
 	values->clear();
 
-	for (unsigned int i = 0; i < m_theValues.size(); i++)
-		values->emplace_back(m_theValues[i]);
+	for (float& m_theValue : m_theValues)
+		values->emplace_back(m_theValue);
 }
 
 void CBotGAValues::freeMemory()
@@ -298,7 +298,7 @@ void CBitsGAValues::crossOver(IIndividual* other)
 // mutate some values
 void CBitsGAValues::mutate()
 {
-	for (unsigned int i = 0; i < m_theBits->numBits(); i++)
+	for (int i = 0; i < m_theBits->numBits(); i++)
 	{
 		if (RANDOM_FLOAT(0.0f, 1.0f) < CGA::g_fMutateRate)
 		{

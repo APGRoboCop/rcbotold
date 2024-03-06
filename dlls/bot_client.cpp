@@ -395,9 +395,9 @@ void BotClient_TS_DelObj::execute(void* p, int iIndex)
 	{
 		const int id = *static_cast<int*>(p);
 
-		for (int i = 0; i < 32; i++)
+		for (auto& m_Bot : gBotGlobals.m_Bots)
 		{
-			CBot* pBot = &gBotGlobals.m_Bots[i];
+			CBot* pBot = &m_Bot;
 
 			if (pBot->IsUsed())
 			{

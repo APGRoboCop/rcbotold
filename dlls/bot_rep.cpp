@@ -89,7 +89,7 @@ CBotReputation::CBotReputation(const int iPlayerRepId, const int iRep)
 	m_iRep = iRep;
 }
 
-CClient* CBotReputations::GetRandomClient(const int iRep)
+CClient* CBotReputations::GetRandomClient(const int iRep) const
 // return a random client that conforms to the iRep (reputation)
 // -1 will return a random bad client
 // 0 : a random neutral client

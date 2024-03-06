@@ -102,7 +102,7 @@ public:
 
 	virtual void train(std::vector<CNNTrainSet> trainingsets)
 	{
-		return;
+		//return;
 	}
 private:
 	std::vector<NNLayer*> m_Layers;

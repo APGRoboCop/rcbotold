@@ -153,8 +153,6 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 
 	if (gpGlobals->deathmatch)
 	{
-		int index = -1;
-
 		if (debug_engine) {
 			fp = std::fopen("bot.txt", "a");
 			std::fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
@@ -168,7 +166,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 
 		if (ed)
 		{
-			index = UTIL_GetBotIndex(ed);
+			const int index = UTIL_GetBotIndex(ed);
 
 			// get the message to see if we can do anything right now
 			m_CurrentMessage = m_NetEntityMessages.GetMessage(msg_type, nullptr);
@@ -1506,7 +1504,7 @@ void CBotGlobals::ReadConfig()
 		BotMessage(nullptr, 0, "Error: could not find bot config file (%s)", filename);
 }
 
-void CBotGlobals::saveLearnedData()
+void CBotGlobals::saveLearnedData() const
 {
 	char szFilename[256];
 	char tmpFilename[64];
@@ -1776,7 +1774,7 @@ void CBotGlobals::ReadThingsToBuild() const
 
 			if (szbuffer[0] == '[')
 			{
-				int i = 1;
+				unsigned int i = 1;
 				int j = 0;
 
 				while (i < ilen && szbuffer[i] != ']')
@@ -1798,7 +1796,7 @@ void CBotGlobals::ReadThingsToBuild() const
 
 				continue;
 			}
-			else if (iBuilding)
+			if (iBuilding)
 			{
 				CThingToBuild* theThingsToBuild = nullptr;
 

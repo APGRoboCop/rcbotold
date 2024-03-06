@@ -26,7 +26,7 @@ V 1.51-beta5
 * added: AMBuild compiling support
 * added: A Welcome Message toggle cvar to hide welcome messages
 * added: Opposing Force CTF support and they should no longer team shoot nor flag hold
-* added: Bots in Op4CTF should now use Deagle's Laser Sight to improve its accuracy
+* added: Bots in Op4 should now use Deagle's Laser Sight to improve its accuracy
 * added: C++17 Standard library support 
 * added: Strafing combat to evade from being easy target bots
 * added: Linux bot slow-motion fix by w00tguy
@@ -442,3 +442,5 @@ iii. Post in forum or e-mail me with :
 - Tsmod.net : For allowing TS v3.0 support
 - Tschumann : For the code needed for Op4CTF
 - w00tguy : For Linux bot slow-motion fix
+- Tovasritch : For repairing some waypoints
+- jukivili : For sharing the code to allow bots to toggle Op4's Deagle Laser Sight

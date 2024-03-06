@@ -93,7 +93,7 @@ public:
 
 	ga_value bestFitness() const;
 
-	ga_value averageFitness();
+	ga_value averageFitness() const;
 
 	void load(std::FILE* bfp, int chromosize, int type = TYPE_BOTGAVALS);
 
@@ -165,7 +165,7 @@ public:
 	void save(std::FILE* bfp) const;
 
 	void loadTeam(char* szName, int iTeam, int chromosize);
-	void saveTeam(char* szName, int iTeam);
+	void saveTeam(char* szName, int iTeam) const;
 
 	//void loadBotGA ( char *szName, int iProfileId );
 	//void saveBotGA ( char *szName, int iProfileId );

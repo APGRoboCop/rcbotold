@@ -59,10 +59,8 @@ IIndividual* CPopulation::getBestIndividual() const
 {
 	IIndividual* best = nullptr;
 
-	for (unsigned int i = 0; i < m_theIndividuals.size(); i++)
+	for (const auto curr : m_theIndividuals)
 	{
-		IIndividual* curr = m_theIndividuals[i];
-
 		if (!best || curr->getFitness() > best->getFitness())
 			best = curr;
 	}
@@ -77,11 +75,11 @@ void CPopulation::add(IIndividual* individual)
 
 void CPopulation::freeMemory()
 {
-	for (unsigned int i = 0; i < m_theIndividuals.size(); i++)
+	for (auto& m_theIndividual : m_theIndividuals)
 	{
-		m_theIndividuals[i]->clear();
-		delete m_theIndividuals[i];
-		m_theIndividuals[i] = nullptr;
+		m_theIndividual->clear();
+		delete m_theIndividual;
+		m_theIndividual = nullptr;
 	}
 
 	m_theIndividuals.clear();
@@ -175,7 +173,7 @@ ga_value CPopulation::bestFitness() const
 	return fBestFitness;
 }
 
-ga_value CPopulation::averageFitness()
+ga_value CPopulation::averageFitness() const
 {
 	return totalFitness() / m_theIndividuals.size();
 }
@@ -251,7 +249,7 @@ void CGA::loadTeam(char* szName, int iTeam, int chromosize)
 	}
 }
 
-void CGA::saveTeam(char* szName, int iTeam)
+void CGA::saveTeam(char* szName, int iTeam) const
 {
 	std::FILE* bfp = RCBOpenFile(szName, "wb", SAVETYPE_TEAM, iTeam);
 

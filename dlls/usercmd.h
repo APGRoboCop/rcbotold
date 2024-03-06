@@ -22,22 +22,23 @@
 
 typedef struct usercmd_s
 {
-	short	lerp_msec;      // Interpolation time on client
-	byte	msec;           // Duration in ms of command
-	vec3_t	viewangles;     // Command view angles.
-
-	// intended velocities
-	float	forwardmove;    // Forward velocity.
-	float	sidemove;       // Sideways velocity.
-	float	upmove;         // Upward velocity.
-	byte	lightlevel;     // Light level at spot where we are standing.
-	unsigned short  buttons;  // Attack buttons
-	byte    impulse;          // Impulse command issued.
-	byte	weaponselect;	// Current weapon id
-
-	// Experimental player impact stuff.
-	int		impact_index;
-	vec3_t	impact_position;
+    // 4-byte types
+    int		impact_index;
+    vec3_t	viewangles;     // Command view angles.
+    vec3_t	impact_position;
+    float	forwardmove;    // Forward velocity.
+    float	sidemove;       // Sideways velocity.
+    float	upmove;         // Upward velocity.
+	
+    // 2-byte types
+    short	lerp_msec;      // Interpolation time on client
+    unsigned short  buttons;  // Attack buttons
+	
+    // 1-byte types
+    byte	msec;           // Duration in ms of command
+    byte	lightlevel;     // Light level at spot where we are standing.
+    byte    impulse;          // Impulse command issued.
+    byte	weaponselect;	// Current weapon id
 } usercmd_t;
 
 #endif // USERCMD_H

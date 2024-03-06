@@ -476,7 +476,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 		}
 		else
 		{
-			std::snprintf(msg, sizeof(msg), "%s is not a RCBot compatible waypoint file!\n", filename);
+			snprintf(msg, sizeof(msg), "%s is not a RCBot compatible waypoint file!\n", filename);
 			ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		}
 
@@ -554,7 +554,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 			else
 			{
 				{
-					std::snprintf(msg, sizeof(msg), "%s RCBot waypoints are not for this map!\n", filename);
+					snprintf(msg, sizeof(msg), "%s RCBot waypoints are not for this map!\n", filename);
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 				}
 
@@ -566,7 +566,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 		{
 			if (pEntity)
 			{
-				std::snprintf(msg, sizeof(msg), "%s is not a RCBot compatible waypoint file!\n", filename);
+				snprintf(msg, sizeof(msg), "%s is not a RCBot compatible waypoint file!\n", filename);
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
 
@@ -848,7 +848,7 @@ void WaypointDebug()
 	//x = x - 1;  // x is zero
 	//y = y / x;  // cause an divide by zero exception
 
-	return;
+	//return;
 }
 
 // free the linked list of waypoint path nodes...
@@ -856,8 +856,6 @@ void WaypointFree()
 {
 	for (int i = 0; i < MAX_WAYPOINTS; i++)
 	{
-		int count = 0;
-
 		if (paths[i])
 		{
 			PATH* p = paths[i];
@@ -869,6 +867,7 @@ void WaypointFree()
 				p = p_next;
 
 #ifdef _DEBUG
+				int count = 0;
 				count++;
 				if (count > 1000) WaypointDebug();
 #endif
@@ -940,7 +939,8 @@ void WaypointAddPath(const short int add_index, const short int path_index)
 
 	if (p == nullptr)
 	{
-		ALERT(at_error, "HPB_bot - Error allocating memory for path!");
+		char errorMsg[] = "HPB_bot - Error allocating memory for path!";
+		ALERT(at_error, errorMsg);
 	}
 
 	p->index[0] = path_index;
@@ -964,8 +964,6 @@ void WaypointDeletePath(const short int del_index)
 	{
 		PATH* p = paths[index];
 
-		int count = 0;
-
 		// search linked list for del_index...
 		while (p != nullptr)
 		{
@@ -984,6 +982,7 @@ void WaypointDeletePath(const short int del_index)
 			p = p->next;  // go to next node in linked list
 
 #ifdef _DEBUG
+			int count = 0;
 			count++;
 			if (count > 100) WaypointDebug();
 #endif
@@ -995,8 +994,6 @@ void WaypointDeletePath(const short int del_index)
 // (del_index)...
 void WaypointDeletePath(const short int path_index, const short int del_index)
 {
-	int count = 0;
-
 	PATH* p = paths[path_index];
 
 	// search linked list for del_index...
@@ -1017,6 +1014,7 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 		p = p->next;  // go to next node in linked list
 
 #ifdef _DEBUG
+		int count = 0;
 		count++;
 		if (count > 100) WaypointDebug();
 #endif
@@ -1027,8 +1025,6 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 // initial call. subsequent calls will return other paths if they exist.)
 int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team)
 {
-	int count = 0;
-
 	if (pPath == nullptr || path_index == nullptr) //Required to reduce crashes? [APG]RoboCop[CL]
 	{
 		// Handle error
@@ -1080,6 +1076,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team
 				break;
 			}
 #ifdef _DEBUG
+			int count = 0;
 			count++;
 			if (count > 100)
 				WaypointDebug();
@@ -1688,8 +1685,6 @@ void WaypointAddAiming(edict_t* pEntity)
 
 void WaypointDelete(CClient* pClient)
 {
-	int count = 0;
-
 	if (num_waypoints < 1)
 		return;
 
@@ -1754,6 +1749,7 @@ void WaypointDelete(CClient* pClient)
 			p = p_next;
 
 #ifdef _DEBUG
+			int count = 0;
 			count++;
 			if (count > 100) WaypointDebug();
 #endif

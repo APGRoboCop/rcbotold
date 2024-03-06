@@ -812,7 +812,7 @@ public:
 		case NS_WEAPON_KNIFE:
 		case NS_WEAPON_WELDER:
 			return false;
-			break;
+			//break;
 		default:
 			break;
 		}
@@ -879,8 +879,7 @@ public:
 	{
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->GetClassname();
-		else
-			return nullptr;
+		return nullptr;
 	}
 
 	BOOL IsMelee() const
@@ -976,7 +975,7 @@ public:
 			this->RemoveWeapon(i);
 	}
 
-	BOOL HasWeapon(edict_t* pEdict, char* szClassname);
+	BOOL HasWeapon(edict_t* pEdict, char* szClassname) const;
 
 	BOOL HasWeapon(edict_t* pEdict, int iId) const
 	{

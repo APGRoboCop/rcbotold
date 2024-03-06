@@ -394,15 +394,21 @@ class CWhichbotConvert : public CWaypointConversion
 public:
 	CWhichbotConvert()
 	{
-		setName("Whichbot");
-		setExtension("wpt");
-		setHeader("HPB_bot");
+		char str1[] = "Whichbot";
+		setName(str1);
+		char str2[] = "wpt";
+		setExtension(str2);
+		char str3[] = "HPB_bot";
+		setHeader(str3);
+		
 		setVersion(4);
 
 #ifndef __linux__
-		setFolder("addons\\whichbot\\data");
+		char str4[] = "addons\\whichbot\\data";
+		setFolder(str4);
 #else
-		setFolder("addons/whichbot/data");
+		char str4[] = "addons/whichbot/data";
+		setFolder(str4);
 #endif
 
 		setConvertBit(0, 1 << 0);

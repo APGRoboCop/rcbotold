@@ -236,7 +236,7 @@ void HumanizeString(char* string)
 // from old rcbot
 void RemoveNameTags(const char* in_string, char* out_string)
 {
-	int i = 0; // index of in_string
+	unsigned int i = 0; // index of in_string
 	int n = 0; // length of out_string
 
 	out_string[0] = 0;
@@ -271,7 +271,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 				i += 2;
 				continue;
 			}
-			else if (in_string[i] == ')' || in_string[i] == ']' || in_string[i] == '}')
+			if (in_string[i] == ')' || in_string[i] == ']' || in_string[i] == '}')
 			{
 				//char temp = in_string[i];
 
@@ -287,12 +287,9 @@ void RemoveNameTags(const char* in_string, char* out_string)
 
 				continue;
 			}
-			else
-			{
-				tag_size++;
-				i++;
-				continue;
-			}
+			tag_size++;
+			i++;
+			continue;
 		}
 
 		if (isalnum(in_string[i]))
@@ -1647,9 +1644,9 @@ void HAL_AddSwap(HAL_SWAP* list, char* s, char* d)
 	if (list->to == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_AddSwap() unable to reallocate to\n");
 
-	list->from[list->size].length = static_cast<unsigned char>(std::strlen(s));
+	list->from[list->size].length = std::strlen(s);
 	list->from[list->size].word = strdup(s);
-	list->to[list->size].length = static_cast<unsigned char>(std::strlen(d));
+	list->to[list->size].length = std::strlen(d);
 	list->to[list->size].word = strdup(d);
 	list->size++;
 }

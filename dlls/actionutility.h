@@ -44,12 +44,12 @@ public:
 
 		float total = 0.0f;
 
-		for (unsigned int i = 0; i < m_Utilities.size(); i++)
+		for (auto m_Utility : m_Utilities)
 		{
-			total += m_Utilities[i].getUtility();
+			total += m_Utility.getUtility();
 
-			if (m_Utilities[i].getUtility() && rand < total)
-				return m_Utilities[i].getAction();
+			if (m_Utility.getUtility() && rand < total)
+				return m_Utility.getAction();
 		}
 
 		return BOT_CAN_NONE;
@@ -59,9 +59,9 @@ public:
 	{
 		float total = 0.0f;
 
-		for (unsigned int i = 0; i < m_Utilities.size(); i++)
+		for (auto m_Utility : m_Utilities)
 		{
-			total += m_Utilities[i].getUtility();
+			total += m_Utility.getUtility();
 		}
 
 		return total;

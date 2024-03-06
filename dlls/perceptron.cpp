@@ -102,24 +102,24 @@ void CPerceptron::setWeights(std::vector <ga_value> const& weights, int iFrom, i
 
 void CPerceptron::randomize()
 {
-	for (unsigned int i = 0; i < m_weights.size(); i++)
-		m_weights[i] = RANDOM_FLOAT(0, 0.6f) - 0.3f;
+	for (float& m_weight : m_weights)
+		m_weight = RANDOM_FLOAT(0, 0.6f) - 0.3f;
 }
 
 void CPerceptron::setWeights(std::vector <ga_value> const& weights)
 {
 	m_weights.clear();
 
-	for (unsigned int i = 0; i < weights.size(); i++)
-		m_weights.emplace_back(weights[i]);
+	for (float weight : weights)
+		m_weights.emplace_back(weight);
 }
 
 void CPerceptron::input(std::vector <ga_value>* inputs)
 {
 	m_inputs.clear();
 
-	for (unsigned int i = 0; i < inputs->size(); i++)
-		m_inputs.emplace_back((*inputs)[i]);
+	for (float& input : *inputs)
+		m_inputs.emplace_back(input);
 }
 
 ga_value CPerceptron::execute()

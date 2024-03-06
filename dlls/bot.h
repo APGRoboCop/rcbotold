@@ -368,7 +368,7 @@ public:
 		m_RepList.Destroy();
 	}
 
-	CClient* GetRandomClient(int iRep);
+	CClient* GetRandomClient(int iRep) const;
 
 	void WriteToFile(int iBotProfile, CBotReputation* pRep);
 
@@ -710,6 +710,7 @@ public:
 class CBotTask
 {
 public:
+	
 	CBotTask()
 	{
 		std::memset(this, 0, sizeof(CBotTask));
@@ -1760,11 +1761,14 @@ private:
 	int m_iFlags = 0;
 };
 
-#define BOT_REMEMBER_POSITION			0
-#define BOT_REMEMBER_SENTRY			(1<<0)
-#define BOT_REMEMBER_LOST_ENEMY		(1<<1)
-#define BOT_REMEMBER_SOUND			(1<<2)
-#define BOT_REMEMBER_1ST_SEE_ENEMY	(1<<3)
+enum
+{
+	BOT_REMEMBER_POSITION = 0,
+	BOT_REMEMBER_SENTRY = (1<<0),
+	BOT_REMEMBER_LOST_ENEMY = (1<<1),
+	BOT_REMEMBER_SOUND = (1<<2),
+	BOT_REMEMBER_1ST_SEE_ENEMY = (1<<3)
+};
 
 class CRememberPosition
 {
@@ -2592,7 +2596,10 @@ private:
 	dataStack<CTFCBackpack> m_Backpacks;
 };*/
 
-#define LEARNED_FILE_VER 1
+enum
+{
+	LEARNED_FILE_VER = 1
+};
 
 class CLearnedHeader
 {
@@ -2729,6 +2736,7 @@ public:
 		return m_iId;
 	}
 	/*/guurk*/
+	
 	int getID() const { return m_iId; }
 
 	Vector getOrigin() { return m_vOrigin; }
@@ -2817,8 +2825,9 @@ private:
 	float m_fNextUpdateHealth;
 	int m_iPrevTeamScore;
 	float m_fNextCheckFeignTime;
-
+	
 	BOOL m_bUsedMelee;
+	CBotWeapon m_weapon; // The bot's weapon
 
 	unsigned char m_iBoredom; // negative if really bored
 
@@ -3674,7 +3683,7 @@ public:
 	///////////////////////////
 	// TASK RELATED
 
-//	BOOL m_bGotEnemyPath;
+	//BOOL m_bGotEnemyPath;
 
 	eBotTask m_iLastBotTask;
 	eBotTask m_iLastFailedTask; // make sure we dont try that last failed task for a while
@@ -3917,11 +3926,11 @@ public:
 	}
 
 	// returns bots ideal climb situation (e.g. flying, climbing, wall-sticking)
-	eClimbType GetClimbType();
+	eClimbType GetClimbType() const;
 
-	BOOL     PrimaryAttack();
+	BOOL     PrimaryAttack() const;
 
-	BOOL     SecondaryAttack()
+	BOOL     SecondaryAttack() const
 	{
 		pev->button |= IN_ATTACK2;
 
@@ -3974,7 +3983,7 @@ public:
 	//int		BotDanger				( void );
 
 	// does bot want to pursue the enemy or stop and do his own thing?
-	BOOL     WantToFollowEnemy(edict_t* pEnemy);
+	BOOL     WantToFollowEnemy(edict_t* pEnemy) const;
 
 	// returns true when bot is facing the ideal aim position
 	BOOL	 FacingIdeal() const;
@@ -4079,18 +4088,21 @@ public:
 
 	BOOL     UpdateVisibles();
 
-	BOOL     BotCanTalk();
+	BOOL     BotCanTalk();	//TODO: Not implemented yet [APG]RoboCop[CL]
 	//void     BotSayBuild               ( const char *msg );
 	void     BotSay(const char* msg);//, const char *arg1, int team_only );
 
 	// returns true when a bot is skulk and is sticking to a wall in NS mod.
 	BOOL     IsWallSticking() const { return (pev->iuser4 & MASK_WALLSTICKING) == MASK_WALLSTICKING && (pev->flags & FL_ONGROUND) == 0 && pev->waterlevel < 2; }
 
-	BOOL hasWeb();
-	BOOL hasBlink();
+	BOOL hasWeb() const;
+	BOOL hasBlink() const;
 
 	// returns true when bot thinks it is low on ammunition on its current weapon.
-	BOOL     LowOnAmmo(); //TODO: Not implimented yet and required for TS and Op4CTF [APG]RoboCop[CL]
+	BOOL LowOnAmmo() const //TODO: Required for TS and Op4CTF? [APG]RoboCop[CL]
+	{
+		return m_weapon.LowOnAmmo();
+	} 
 
 	BOOL     HasJetPack() const { return IsMarine() && (pev->iuser4 & MASK_UPGRADE_7) == MASK_UPGRADE_7; }
 	BOOL     HasUser4Mask(int iBits) const { return (pev->iuser4 & iBits) == iBits; }
@@ -4821,7 +4833,7 @@ public:
 
 	void ShowUser(edict_t* pEntity)
 	{
-		BotMessage(pEntity, 0, "name=\"%s\", pass=\"%s\", accesslevel=%d, steamID=\"%s\"", m_szName, m_szPass, m_iAccessLevel, m_szSteamId);
+		BotMessage(pEntity, 0, R"(name="%s", pass="%s", accesslevel=%d, steamID="%s")", m_szName, m_szPass, m_iAccessLevel, m_szSteamId);
 	}
 
 	//	unsigned int GetWonId ( void )
@@ -4961,7 +4973,7 @@ public:
 	virtual void showHelp(edict_t* pEntity)
 	{
 		BotMessage(pEntity, 0, "There is no help for this command");
-		return;
+		//return;
 	}
 
 private:
@@ -6108,7 +6120,7 @@ public:
 		return nullptr;
 	}
 
-	void saveLearnedData();
+	void saveLearnedData() const;
 	void loadLearnedData();
 
 	void printBotBoredom(edict_t* pEdictTo) const

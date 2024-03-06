@@ -206,7 +206,7 @@ public:
 	BOOL IsAlive() override
 
 	{
-		BOOL pev;
+		BOOL pev = 0;
 		return pev->deadflag == DEAD_NO && pev->health > 0;
 	}
 

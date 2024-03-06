@@ -499,9 +499,9 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 
 		const edict_t* pEntityOwner = entity->v.owner;
 
-		for (int i = 0; i < 32; i++)
+		for (auto& m_Bot : gBotGlobals.m_Bots)
 		{
-			CBot* pBot = &gBotGlobals.m_Bots[i];
+			CBot* pBot = &m_Bot;
 
 			if (pBot == nullptr) //TODO: Not required? [APG]RoboCop[CL]
 				continue;

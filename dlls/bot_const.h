@@ -49,12 +49,18 @@
 
 #define EXPLODE_RADIUS 300
 
-#define MAX_WAYPOINTS 1024
+enum
+{
+	MAX_WAYPOINTS = 1024
+};
 
-#define FL_ASTAR_OPEN (1<<0)
-#define FL_ASTAR_CLOSED (1<<1)
-#define FL_ASTAR_PARENT (1<<2)
-#define FL_ASTAR_HEURISTIC (1<<3)
+enum
+{
+	FL_ASTAR_OPEN = 1<<0,
+	FL_ASTAR_CLOSED = 1<<1,
+	FL_ASTAR_PARENT = 1<<2,
+	FL_ASTAR_HEURISTIC = 1<<3
+};
 
 typedef enum
 {
@@ -147,33 +153,45 @@ typedef enum
 
 /////////////
 // SVENCOOP MONSTERS
-#define R_AL	(-2) // (ALLY) pals. Good alternative to R_NO when applicable.
-#define R_FR	(-1)// (FEAR)will run
-#define	R_NO	0// (NO RELATIONSHIP) disregard
-#define R_DL	1// (DISLIKE) will attack
-#define R_HT	2// (HATE)will attack this character instead of any visible DISLIKEd characters
-#define R_NM	3// (NEMESIS)  A monster Will ALWAYS attack its nemsis, no matter what
+enum
+{
+	R_AL = -2,	// (ALLY) pals. Good alternative to R_NO when applicable.
+	R_FR = -1,	// (FEAR)will run
+	R_NO = 0,	// (NO RELATIONSHIP) disregard
+	R_DL = 1,	// (DISLIKE) will attack
+	R_HT = 2,	// (HATE)will attack this character instead of any visible DISLIKEd characters
+	R_NM = 3	// (NEMESIS)  A monster Will ALWAYS attack its nemsis, no matter what
+};
 
 // these bits represent the monster's memory
-#define MEMORY_CLEAR					0
-#define bits_MEMORY_PROVOKED			( 1 << 0 )// right now only used for houndeyes.
-#define bits_MEMORY_INCOVER				( 1 << 1 )// monster knows it is in a covered position.
-#define bits_MEMORY_SUSPICIOUS			( 1 << 2 )// Ally is suspicious of the player, and will move to provoked more easily
-#define bits_MEMORY_PATH_FINISHED		( 1 << 3 )// Finished monster path (just used by big momma for now)
-#define bits_MEMORY_ON_PATH				( 1 << 4 )// Moving on a path
-#define bits_MEMORY_MOVE_FAILED			( 1 << 5 )// Movement has already failed
-#define bits_MEMORY_FLINCHED			( 1 << 6 )// Has already flinched
-#define bits_MEMORY_KILLED				( 1 << 7 )// HACKHACK -- remember that I've already called my Killed()
-#define bits_MEMORY_CUSTOM4				( 1 << 28 )	// Monster-specific memory
-#define bits_MEMORY_CUSTOM3				( 1 << 29 )	// Monster-specific memory
-#define bits_MEMORY_CUSTOM2				( 1 << 30 )	// Monster-specific memory
-#define bits_MEMORY_CUSTOM1				( 1 << 31 )	// Monster-specific memory
+enum
+{
+	MEMORY_CLEAR = 0,
+	bits_MEMORY_PROVOKED = 1 << 0,	// right now only used for houndeyes.
+	bits_MEMORY_INCOVER = 1 << 1,	// monster knows it is in a covered position.
+	bits_MEMORY_SUSPICIOUS = 1 << 2,	// Ally is suspicious of the player, and will move to provoked more easily
+	bits_MEMORY_PATH_FINISHED = 1 << 3,	// Finished monster path (just used by big momma for now)
+	bits_MEMORY_ON_PATH = 1 << 4,	// Moving on a path
+	bits_MEMORY_MOVE_FAILED = 1 << 5,	// Movement has already failed
+	bits_MEMORY_FLINCHED = 1 << 6,	// Has already flinched
+	bits_MEMORY_KILLED = 1 << 7,	// HACKHACK -- remember that I've already called my Killed()
+	bits_MEMORY_CUSTOM4 = 1 << 28,	// Monster-specific memory
+	bits_MEMORY_CUSTOM3 = 1 << 29,	// Monster-specific memory
+	bits_MEMORY_CUSTOM2 = 1 << 30,	// Monster-specific memory
+	bits_MEMORY_CUSTOM1 = 1 << 31	// Monster-specific memory
+};
 
-#define MAX_REMEMBER_POSITIONS 8
+enum
+{
+	MAX_REMEMBER_POSITIONS = 8
+};
 
 //////////////////
 // CLIENTS STEAM IDS
-#define STEAM_ID_LEN 32
+enum
+{
+	STEAM_ID_LEN = 32
+};
 
 ///////////////////////////////////////////////////////////////////////
 // BOT CONTANTS
@@ -181,30 +199,52 @@ typedef enum
 
 #define MAX_JUMP_HEIGHT 45.0f
 
-#define MAX_TEAMS     4
+enum
+{
+	MAX_TEAMS = 4
+};
 
-#define BOT_MIN_SOUND_DIST 128
+enum
+{
+	BOT_MIN_SOUND_DIST = 128
+};
 
-#define BOT_MIN_MSECVAL 1
-#define BOT_MAX_MSECVAL 60
+enum
+{
+	BOT_MIN_MSECVAL = 1,
+	BOT_MAX_MSECVAL = 60
+};
+
 #define BOT_DEF_MSECDELTIME 0.5f
 
-#define BOT_MAX_PASSWORD_LEN 16
+enum
+{
+	BOT_MAX_PASSWORD_LEN = 16
+};
 
 // start messages
 // Science and Industry
-#define MSG_SI_IDLE			1
-#define MSG_SI_TEAM_SELECT	2
-#define MSG_SI_MODEL_SELECT	3
+enum
+{
+	MSG_SI_IDLE = 1,
+	MSG_SI_TEAM_SELECT = 2,
+	MSG_SI_MODEL_SELECT = 3
+};
 
 ////////////////////////////////
 // NATURAL SELECTION TEAMS
-#define TEAM_NONE     0
-#define TEAM_MARINE   1
-#define TEAM_ALIEN    2
-#define TEAM_AUTOTEAM 5
+enum
+{
+	TEAM_NONE = 0,
+	TEAM_MARINE = 1,
+	TEAM_ALIEN = 2,
+	TEAM_AUTOTEAM = 5
+};
 
-#define TYPE_UNKNOWN  8
+enum
+{
+	TYPE_UNKNOWN = 8
+};
 
 enum
 {
@@ -697,45 +737,54 @@ typedef enum {
 
 enum
 {
-	BOT_CONDITION_SEE_ENEMY = (1 << 0),	// See an enemy
-	BOT_CONDITION_HEAR_DANGER = (1 << 1),	// Hear danger
-	BOT_CONDITION_SEE_NEXT_WAYPOINT = (1 << 2),	// bot see's it's waypoint, useful for checking when stuck
-	BOT_CONDITION_TASK_EDICT_NA = (1 << 3),	// Task edict not avaialable anymore.
-	BOT_CONDITION_ENEMY_OCCLUDED = (1 << 4),	// Enemy blocked by something??
-	BOT_CONDITION_ENEMY_DEAD = (1 << 5),	// Enemy killed
-	BOT_CONDITION_HAS_WEAPON = (1 << 6),	// Has weapons
-	BOT_CONDITION_OUT_OF_AMMO = (1 << 7),	// Out of ammo on current weapon
-	BOT_CONDITION_SQUAD_LEADER_DEAD = (1 << 8),	// Bots leader died
-	BOT_CONDITION_SEE_SQUAD_LEADER = (1 << 9),	// See's squad leader
-	BOT_CONDITION_SEE_TASK_EDICT = (1 << 10),	// see the current edict for current task
-	BOT_CONDITION_SEE_GOAL_EDICT = (1 << 11),	// see's the entity at bots objective
-	BOT_CONDITION_CANT_SHOOT = (1 << 12),	// can't shoot
-	BOT_CONDITION_SEE_BUILDABLE = (1 << 13),
-	BOT_CONDITION_SEE_ENEMY_HEAD = (1 << 14),
-	BOT_CONDITION_SEE_ENEMY_BODY = (1 << 15),
-	BOT_CONDITION_NEED_WEAPONS = (1 << 16),
-	BOT_CONDITION_ENEMY_IS_OSPREY = (1 << 17),
-	BOT_CONDITION_STOPPED_BUILDING = (1 << 18),
-	BOT_CONDITION_TASKS_CORRUPTED = (1 << 19),	// bot tasks can change while in task code causing problems
-	BOT_CONDITION_TASK_EDICT_PAIN = (1 << 20),	// bot heardtask edict
-	BOT_CONDITION_WANT_TO_LEAVE_GAME = (1 << 21),	// will be set if the bot wants to leave the game
-	BOT_CONDITION_SELECTED_GUN = (1 << 22),	// TS: make a gun to use
-	BOT_CONDITION_DONT_CLEAR_OBJECTIVES = (1 << 23)
+	BOT_CONDITION_SEE_ENEMY = 1 << 0,	// See an enemy
+	BOT_CONDITION_HEAR_DANGER = 1 << 1,	// Hear danger
+	BOT_CONDITION_SEE_NEXT_WAYPOINT = 1 << 2,	// bot see's it's waypoint, useful for checking when stuck
+	BOT_CONDITION_TASK_EDICT_NA = 1 << 3,	// Task edict not avaialable anymore.
+	BOT_CONDITION_ENEMY_OCCLUDED = 1 << 4,	// Enemy blocked by something??
+	BOT_CONDITION_ENEMY_DEAD = 1 << 5,	// Enemy killed
+	BOT_CONDITION_HAS_WEAPON = 1 << 6,	// Has weapons
+	BOT_CONDITION_OUT_OF_AMMO = 1 << 7,	// Out of ammo on current weapon
+	BOT_CONDITION_SQUAD_LEADER_DEAD = 1 << 8,	// Bots leader died
+	BOT_CONDITION_SEE_SQUAD_LEADER = 1 << 9,	// See's squad leader
+	BOT_CONDITION_SEE_TASK_EDICT = 1 << 10,	// see the current edict for current task
+	BOT_CONDITION_SEE_GOAL_EDICT = 1 << 11,	// see's the entity at bots objective
+	BOT_CONDITION_CANT_SHOOT = 1 << 12,	// can't shoot
+	BOT_CONDITION_SEE_BUILDABLE = 1 << 13,
+	BOT_CONDITION_SEE_ENEMY_HEAD = 1 << 14,
+	BOT_CONDITION_SEE_ENEMY_BODY = 1 << 15,
+	BOT_CONDITION_NEED_WEAPONS = 1 << 16,
+	BOT_CONDITION_ENEMY_IS_OSPREY = 1 << 17,
+	BOT_CONDITION_STOPPED_BUILDING = 1 << 18,
+	BOT_CONDITION_TASKS_CORRUPTED = 1 << 19,	// bot tasks can change while in task code causing problems
+	BOT_CONDITION_TASK_EDICT_PAIN = 1 << 20,	// bot heardtask edict
+	BOT_CONDITION_WANT_TO_LEAVE_GAME = 1 << 21,	// will be set if the bot wants to leave the game
+	BOT_CONDITION_SELECTED_GUN = 1 << 22,	// TS: make a gun to use
+	BOT_CONDITION_DONT_CLEAR_OBJECTIVES = 1 << 23
 };
 
 #define BOT_HEAR_DISTANCE 650.0f
 
-#define BOT_UPGRADE_DEF 1
-#define BOT_UPGRADE_SEN 2
-#define BOT_UPGRADE_MOV 3
+enum
+{
+	BOT_UPGRADE_DEF = 1,
+	BOT_UPGRADE_SEN = 2,
+	BOT_UPGRADE_MOV = 3
+};
 
-#define BOT_LADDER_UNKNOWN 0
-#define BOT_LADDER_UP      1
-#define BOT_LADDER_DOWN    2
+enum
+{
+	BOT_LADDER_UNKNOWN = 0,
+	BOT_LADDER_UP = 1,
+	BOT_LADDER_DOWN = 2
+};
 
-#define BOT_TASKSTATUS_RANDOM_WAYPOINT (-1)
-#define BOT_TASKSTATUS_JUMP_OUT (-2)
-#define BOT_TASKSTATUS_STILL_PENDING (-3)
+enum
+{
+	BOT_TASKSTATUS_RANDOM_WAYPOINT = -1,
+	BOT_TASKSTATUS_JUMP_OUT = -2,
+	BOT_TASKSTATUS_STILL_PENDING = -3
+};
 
 //////////////////////
 // ENUMERTOR TYPES
@@ -963,12 +1012,18 @@ typedef enum
 
 ///////////////////////////////////////////////////////////////////////////////////
 // BOT DEFINITIONS
-#define LADDER_UP       1
-#define LADDER_UNKNOWN  0
-#define LADDER_DOWN     2
+enum
+{
+	LADDER_UP = 1,
+	LADDER_UNKNOWN = 0,
+	LADDER_DOWN = 2
+};
 
-#define BOT_PITCH_SPEED 30
-#define BOT_YAW_SPEED 30
+enum
+{
+	BOT_PITCH_SPEED = 30,
+	BOT_YAW_SPEED = 30
+};
 
 enum
 {
@@ -1013,19 +1068,28 @@ enum
 	MOD_FLF = 16,		// TODO: Front Line Force
 };
 
-#define VGUI_MENU_NONE 0
-#define VGUI_MENU_IOS_MOTD 1
-#define VGUI_MENU_IOS_SELECT_TEAM 2
-#define VGUI_MENU_IOS_SELECT_POSITION 3
-#define VGUI_MENU_BG_SELECT_TEAM 2
-#define VGUI_MENU_BG_SELECT_BRITISH_CLASS 3
-#define VGUI_MENU_BG_SELECT_AMERICAN_CLASS 4
+enum
+{
+	VGUI_MENU_NONE = 0,
+	VGUI_MENU_IOS_MOTD = 1,
+	VGUI_MENU_IOS_SELECT_TEAM = 2,
+	VGUI_MENU_IOS_SELECT_POSITION = 3,
+	VGUI_MENU_BG_SELECT_TEAM = 2,
+	VGUI_MENU_BG_SELECT_BRITISH_CLASS = 3,
+	VGUI_MENU_BG_SELECT_AMERICAN_CLASS = 4
+};
 
-#define TEAM_BLACK_MESA 0
-#define TEAM_OPPOSING_FORCE 1
+enum
+{
+	TEAM_BLACK_MESA = 0,
+	TEAM_OPPOSING_FORCE = 1
+};
 
-#define VGUI_MENU_WW_TEAM_SELECT 0
-#define VGUI_MENU_WW_CLASS_SELECT 1
+enum
+{
+	VGUI_MENU_WW_TEAM_SELECT = 0,
+	VGUI_MENU_WW_CLASS_SELECT = 1
+};
 
 //#define VGUI_MENU_TFC_TEAM_SELECT 2
 //#define VGUI_MENU_TFC_CLASS_SELECT 3
@@ -1077,35 +1141,35 @@ typedef enum
 
 #define BOT_NAME "RCBot"
 #define BOT_WEBSITE "http://rcbot.bots-united.com"
-#define BOT_DBG_MSG_TAG "[RCBOT>] "
+#define BOT_DBG_MSG_TAG "[RCBOT] "
 #define BOT_DEBUG_TAG "[DEBUG]"
 
 ///
 // combat stuff in NS, what bots want to get
 enum
 {
-	BOT_COMBAT_WANT_SHOTGUN = (1 << 0),
-	BOT_COMBAT_WANT_HMG = (1 << 1),
-	BOT_COMBAT_WANT_GRENADE_GUN = (1 << 2),
-	BOT_COMBAT_WANT_JETPACK = (1 << 3),
-	BOT_COMBAT_WANT_ARMOR = (1 << 4),
-	BOT_COMBAT_WANT_WELDER = (1 << 5),
-	BOT_COMBAT_WANT_RESUPPLY = (1 << 6),
-	BOT_COMBAT_WANT_MINES = (1 << 7),
-	BOT_COMBAT_WANT_CATALYST = (1 << 8),
-	BOT_COMBAT_WANT_MOVE_DETECTION = (1 << 9),
-	BOT_COMBAT_WANT_LERK = (1 << 10),
-	BOT_COMBAT_WANT_FADE = (1 << 11),
-	BOT_COMBAT_WANT_ONOS = (1 << 12),
-	BOT_COMBAT_WANT_DEFUP1 = (1 << 13),
-	BOT_COMBAT_WANT_DEFUP2 = (1 << 14),
-	BOT_COMBAT_WANT_DEFUP3 = (1 << 15),
-	BOT_COMBAT_WANT_MOVUP1 = (1 << 16),
-	BOT_COMBAT_WANT_MOVUP2 = (1 << 17),
-	BOT_COMBAT_WANT_MOVUP3 = (1 << 18),
-	BOT_COMBAT_WANT_SENUP1 = (1 << 19),
-	BOT_COMBAT_WANT_SENUP2 = (1 << 20),
-	BOT_COMBAT_WANT_SENUP3 = (1 << 21)
+	BOT_COMBAT_WANT_SHOTGUN = 1 << 0,
+	BOT_COMBAT_WANT_HMG = 1 << 1,
+	BOT_COMBAT_WANT_GRENADE_GUN = 1 << 2,
+	BOT_COMBAT_WANT_JETPACK = 1 << 3,
+	BOT_COMBAT_WANT_ARMOR = 1 << 4,
+	BOT_COMBAT_WANT_WELDER = 1 << 5,
+	BOT_COMBAT_WANT_RESUPPLY = 1 << 6,
+	BOT_COMBAT_WANT_MINES = 1 << 7,
+	BOT_COMBAT_WANT_CATALYST = 1 << 8,
+	BOT_COMBAT_WANT_MOVE_DETECTION = 1 << 9,
+	BOT_COMBAT_WANT_LERK = 1 << 10,
+	BOT_COMBAT_WANT_FADE = 1 << 11,
+	BOT_COMBAT_WANT_ONOS = 1 << 12,
+	BOT_COMBAT_WANT_DEFUP1 = 1 << 13,
+	BOT_COMBAT_WANT_DEFUP2 = 1 << 14,
+	BOT_COMBAT_WANT_DEFUP3 = 1 << 15,
+	BOT_COMBAT_WANT_MOVUP1 = 1 << 16,
+	BOT_COMBAT_WANT_MOVUP2 = 1 << 17,
+	BOT_COMBAT_WANT_MOVUP3 = 1 << 18,
+	BOT_COMBAT_WANT_SENUP1 = 1 << 19,
+	BOT_COMBAT_WANT_SENUP2 = 1 << 20,
+	BOT_COMBAT_WANT_SENUP3 = 1 << 21
 };
 
 //////////////////////////////////////////////
@@ -1195,9 +1259,12 @@ enum
 #define BOT_TAG "[RCBOT]"
 #define BOT_VER_CVAR "rcbot_ver"
 #define BOT_COMMAND_ACCESS "rcbot" // main bot command
-#define MAX_PLAYERS 32
 
-#define RCBOT_ACCESS_FORCE_GRIP 9
+enum
+{
+	MAX_PLAYERS = 32,
+	RCBOT_ACCESS_FORCE_GRIP = 9
+};
 
 #define BOT_CRASHLOG_FILE "rcbot_crashlog.txt"
 #define BOT_PROFILES_FILE "bot_profiles.ini"
@@ -1212,35 +1279,35 @@ enum
 #define DEFAULT_BOT_CHAT_PERCENT 15
 #define BOT_CHAT_MESSAGE_LENGTH 128
 #define BOT_CHAT_TYPE_SPEED_SEC 9
-
+	
 enum
 {
-	BOT_CONFIG_WAIT_FOR_ORDERS = (1 << 0),
-	BOT_CONFIG_DONT_SHOOT = (1 << 1),
-	BOT_CONFIG_CHATTING = (1 << 2),
-	BOT_CONFIG_REAL_MODE = (1 << 3),
-	BOT_CONFIG_COMMANDING = (1 << 4),
-	BOT_CONFIG_RESERVE_BOT_SLOTS = (1 << 5),
-	BOT_CONFIG_CHAT_REPLY_TO_BOTS = (1 << 6),
-	BOT_CONFIG_MARINE_AUTO_BUILD = (1 << 7),
-	BOT_CONFIG_CHAT_DONT_LEARN = (1 << 8),
-	BOT_CONFIG_BALANCE_TEAMS = (1 << 9),
-	BOT_CONFIG_TOOLTIPS = (1 << 10),
-	BOT_CONFIG_ENABLE_BOTCAM = (1 << 11),
-	BOT_CONFIG_AUTOWAYPOINT_HUMANS = (1 << 12),
-	BOT_CONFIG_UNSTICK = (1 << 13),
-	BOT_CONFIG_ABNORMAL_GAME = (1 << 14),
-	BOT_CONFIG_BOTS_LEAVE_AND_JOIN = (1 << 15),
-	BOT_CONFIG_BOTS_WAIT_FOR_BOTS = (1 << 16),
-	BOT_CONFIG_NOT_NS3_FINAL = (1 << 17),
-	BOT_CONFIG_BLINKING = (1 << 18),
-	BOT_CONFIG_WAIT_AT_RESOURCES = (1 << 19),
+	BOT_CONFIG_WAIT_FOR_ORDERS = 1 << 0,
+	BOT_CONFIG_DONT_SHOOT = 1 << 1,
+	BOT_CONFIG_CHATTING = 1 << 2,
+	BOT_CONFIG_REAL_MODE = 1 << 3,
+	BOT_CONFIG_COMMANDING = 1 << 4,
+	BOT_CONFIG_RESERVE_BOT_SLOTS = 1 << 5,
+	BOT_CONFIG_CHAT_REPLY_TO_BOTS = 1 << 6,
+	BOT_CONFIG_MARINE_AUTO_BUILD = 1 << 7,
+	BOT_CONFIG_CHAT_DONT_LEARN = 1 << 8,
+	BOT_CONFIG_BALANCE_TEAMS = 1 << 9,
+	BOT_CONFIG_TOOLTIPS = 1 << 10,
+	BOT_CONFIG_ENABLE_BOTCAM = 1 << 11,
+	BOT_CONFIG_AUTOWAYPOINT_HUMANS = 1 << 12,
+	BOT_CONFIG_UNSTICK = 1 << 13,
+	BOT_CONFIG_ABNORMAL_GAME = 1 << 14,
+	BOT_CONFIG_BOTS_LEAVE_AND_JOIN = 1 << 15,
+	BOT_CONFIG_BOTS_WAIT_FOR_BOTS = 1 << 16,
+	BOT_CONFIG_NOT_NS3_FINAL = 1 << 17,
+	BOT_CONFIG_BLINKING = 1 << 18,
+	BOT_CONFIG_WAIT_AT_RESOURCES = 1 << 19,
 	// marine bots wait for commander to drop res tower
-	BOT_CONFIG_DISABLE_WEAPON_LEARN = (1 << 20),
-	BOT_CONFIG_TS_KUNGFU = (1 << 21),
-	BOT_CONFIG_DISABLE_BOT_SQUADS = (1 << 22),
-	BOT_CONFIG_TS_DONT_STEAL_WEAPONS = (1 << 23),
-	BOT_CONFIG_TS_DONT_PICKUP_WEAPONS = (1 << 24)
+	BOT_CONFIG_DISABLE_WEAPON_LEARN = 1 << 20,
+	BOT_CONFIG_TS_KUNGFU = 1 << 21,
+	BOT_CONFIG_DISABLE_BOT_SQUADS = 1 << 22,
+	BOT_CONFIG_TS_DONT_STEAL_WEAPONS = 1 << 23,
+	BOT_CONFIG_TS_DONT_PICKUP_WEAPONS = 1 << 24
 };
 
 ////////////////////////////////////////////
@@ -1304,15 +1371,15 @@ enum eBattleGroundsMessage
 // DEBUG LEVELS							Debug Messages Will Be Shown When :
 enum
 {
-	BOT_DEBUG_TOUCH_LEVEL = (1 << 0),	// Bot touched object
-	BOT_DEBUG_THINK_LEVEL = (1 << 1),	// Bot thinks
-	BOT_DEBUG_HEAR_LEVEL = (1 << 2),	// Bot hears a sound
-	BOT_DEBUG_MESSAGE_LEVEL = (1 << 3),	// Bot recieves net message
-	BOT_DEBUG_BLOCK_LEVEL = (1 << 4),	// Bot blocks object
-	BOT_DEBUG_MOVE_LEVEL = (1 << 5),	// Bot moves somewhere
-	BOT_DEBUG_AIM_LEVEL = (1 << 6),	// Bot aims at something
-	BOT_DEBUG_NAV_LEVEL = (1 << 7),	// Bot touches/finds waypoints
-	BOT_DEBUG_SEE_LEVEL = (1 << 8)	// Bot sees something
+	BOT_DEBUG_TOUCH_LEVEL = 1 << 0,	// Bot touched object
+	BOT_DEBUG_THINK_LEVEL = 1 << 1,	// Bot thinks
+	BOT_DEBUG_HEAR_LEVEL = 1 << 2,	// Bot hears a sound
+	BOT_DEBUG_MESSAGE_LEVEL = 1 << 3,	// Bot recieves net message
+	BOT_DEBUG_BLOCK_LEVEL = 1 << 4,	// Bot blocks object
+	BOT_DEBUG_MOVE_LEVEL = 1 << 5,	// Bot moves somewhere
+	BOT_DEBUG_AIM_LEVEL = 1 << 6,	// Bot aims at something
+	BOT_DEBUG_NAV_LEVEL = 1 << 7,	// Bot touches/finds waypoints
+	BOT_DEBUG_SEE_LEVEL = 1 << 8	// Bot sees something
 };
 
 /////////////////////////////////
@@ -1345,7 +1412,10 @@ enum
 #define POINTER_VALUE(x) (*(x))
 //////////////////////////////
 // PATH INDEXES FOR A WAYPOINT
-#define MAX_PATH_INDEX 4
+enum
+{
+	MAX_PATH_INDEX = 4
+};
 
 #define BEGIN_SEARCH_THROUGH_PLAYERS(Variable) \
         int i; \
@@ -1360,28 +1430,26 @@ enum
 #define END_SEARCH_THROUGH_PLAYERS }
 
 /////////////////////
-#define MAX_BOT_ID 1000
+enum
+{
+	MAX_BOT_ID = 1000
+};
 
 //////////////////////////////////////////////////////////
 // SKILLS
-enum
-{
-	MAX_BOT_SKILL = 100,
-	MIN_BOT_SKILL = 1
-};
 
+#define	MAX_BOT_SKILL 100
+#define	MIN_BOT_SKILL 1
 #define DEF_BOT_SKILL (int)((MAX_BOT_SKILL + MIN_BOT_SKILL)/2)
 
 //////////////////////////////////////////////////////////
 // REPUTATION DEFINITIONS
-enum
-{
-	BOT_MAX_REP = 10,
-	BOT_MIN_REP = 0,
-	BOT_MID_REP = 5,
-	BOT_LOW_REP = 3,
-	BOT_HIGH_REP = 6
-};
+
+#define	BOT_MAX_REP 10
+#define	BOT_MIN_REP 0
+#define	BOT_MID_REP 5
+#define	BOT_LOW_REP 3
+#define	BOT_HIGH_REP 6
 
 #define BOT_VIEW_DISTANCE 2048
 //#define BOT_DEFAULT_TURN_SPEED 10

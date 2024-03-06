@@ -49,10 +49,8 @@ public:
 		// round robin
 		m_Tickables.sort();
 
-		for (std::list<CTickable*>::const_iterator it = m_Tickables.begin(); it != m_Tickables.end(); ++it)
+		for (const auto pCurrent : m_Tickables)
 		{
-			CTickable* pCurrent = *it;
-
 			if (pCurrent->isDone())
 				continue;
 

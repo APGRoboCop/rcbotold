@@ -928,7 +928,7 @@ BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWall
 	return true;
 }
 
-BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname)
+BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname) const
 {
 	const char* pClassname;
 

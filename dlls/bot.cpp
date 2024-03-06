@@ -503,7 +503,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 		if (m_CurrentTask && gBotGlobals.IsDebugLevelOn(BOT_DEBUG_THINK_LEVEL))
 		{
 			DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0,
-				"%s failed task \"%s\" part of schedule \"%s\"", m_szBotName,
+			             R"(%s failed task "%s" part of schedule "%s")", m_szBotName,
 				m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
 		}
 		break;
@@ -511,7 +511,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 		if (m_CurrentTask && gBotGlobals.IsDebugLevelOn(BOT_DEBUG_THINK_LEVEL))
 		{
 			DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0,
-				"%s finished task \"%s\" part of schedule \"%s\"", m_szBotName,
+			             R"(%s finished task "%s" part of schedule "%s")", m_szBotName,
 				m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
 		}
 		break;
@@ -2379,12 +2379,17 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		// always null terminate the last possible character
 		string[start] = 0;
 
-		// Calculate the length of fill_point once
-		// TODO: The 'strlen' function was called multiple times [APG]RoboCop[CL]
+		// Calculate the length of fill_point once before the loop
 		const size_t fill_point_length = std::strlen(fill_point);
-		const size_t end = start + fill_point_length;
-		std::strncpy(after, &string[end], len - end);
-		after[len - end] = 0;
+		
+		// Keep searching for a point in the string - [APG]RoboCop[CL]
+		while ((ptr = std::strstr(ptr, fill_point)) != nullptr)
+		{
+			// Use fill_point_length inside the loop
+			const size_t end = start + fill_point_length;
+			std::strncpy(after, &string[end], len - end);
+			after[len - end] = 0;
+		}
 
 		// fill in new string and..
 		// update len (string size may have INCREASED
@@ -2903,7 +2908,7 @@ void CBot::StartGame()
 	}
 }
 
-eClimbType CBot::GetClimbType()
+eClimbType CBot::GetClimbType() const
 // return a type of climbing or flying info
 // if it is not BOT_CLIMB_NONE then the bot is
 // trying to climb or fly
@@ -4091,12 +4096,12 @@ public:
 		float fMax = 0.0f;
 		CAlienAction* best = nullptr;
 
-		for (unsigned int i = 0; i < m_Actions.size(); i++)
+		for (auto& m_Action : m_Actions)
 		{
-			const float fCur = m_Actions[i].Utility() * m_Actions[i].ResultProbability(evd);
+			const float fCur = m_Action.Utility() * m_Action.ResultProbability(evd);
 			if (!gotBest || fCur > fMax)
 			{
-				best = &m_Actions[i];
+				best = &m_Action;
 				fMax = fCur;
 				gotBest = true;
 			}
@@ -6377,7 +6382,7 @@ BOOL CBot::UpdateVisibles()
 			float fNumResourceTowers = 1.0f;
 
 			if (iNumResourceFountains > 0)
-				fNumResourceTowers = 1.0f - static_cast<float>(iNumAlienResourceTowers) / iNumResourceFountains;
+				fNumResourceTowers = 1.0f - static_cast<float>(iNumAlienResourceTowers) / static_cast<float>(iNumResourceFountains);
 			/*
 			gBotGlobals.m_fHiveImportance = 1.0f;
 			gBotGlobals.m_fResTowerImportance = 0.7f;
@@ -7862,9 +7867,9 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 
 			// TODO: Experimental [APG]RoboCop[CL]
 			if (iLadderDir == 1)
-				vAngles.x = 45; // Angle of Elevation
+				vAngles.x = 80; // Angle of Elevation
 			else if (iLadderDir == -1)
-				vAngles.x = -45; // Angle of Depression
+				vAngles.x = -80; // Angle of Depression
 
 			SetLadderAngles(vAngles);
 			bUsePitch = true;
@@ -8698,7 +8703,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 
 	if (pentTouched->v.solid != SOLID_TRIGGER)
 	{
-		BOOL bIsMoving = false;
+		const BOOL bIsMoving = false;
 		const BOOL bIsDoor = std::strncmp(szClassname, "func_door", 9) == 0 || std::strncmp(szClassname, "func_plat", 9) == 0;
 
 		if (bIsDoor)
@@ -8721,7 +8726,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 					{
 						const int iNewScheduleId = m_Tasks.GetNewScheduleId();
 
-						if (bIsMoving && bUsingLift)
+						if constexpr (false)
 							// lift is already moving, dont need to press the button anymore
 							// remove the lift schedule
 						{
@@ -8775,7 +8780,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 
 		if (bIsDoor)
 		{
-			if (bIsMoving)
+			if constexpr (false)
 			{
 				BOOL bWait = true;
 
@@ -8802,21 +8807,18 @@ BOOL CBot::Touch(edict_t* pentTouched)
 						StopMoving();
 				}
 			}
-			else
+			// Use only door
+			if (gBotGlobals.IsMod(MOD_DMC) && pentTouched->v.health > 0 || pentTouched->v.spawnflags & 256)
 			{
-				// Use only door
-				if (gBotGlobals.IsMod(MOD_DMC) && pentTouched->v.health > 0 || pentTouched->v.spawnflags & 256)
+				const Vector vOrigin = EntityOrigin(pentTouched);
+
+				// If the door is blocking a path I can't walk by..
+				if (vOrigin.z > pev->absmin.z + 16)
 				{
-					const Vector vOrigin = EntityOrigin(pentTouched);
+					const CBotTask UseTask = CBotTask(BOT_TASK_USE, 0, pentTouched, -1);
 
-					// If the door is blocking a path I can't walk by..
-					if (vOrigin.z > pev->absmin.z + 16)
-					{
-						const CBotTask UseTask = CBotTask(BOT_TASK_USE, 0, pentTouched, -1);
-
-						if (!m_Tasks.HasTask(UseTask))
-							AddPriorityTask(UseTask);
-					}
+					if (!m_Tasks.HasTask(UseTask))
+						AddPriorityTask(UseTask);
 				}
 			}
 		}
@@ -8859,7 +8861,7 @@ void CBot::Blocked(edict_t* pentBlocked)
 {
 }*/
 
-BOOL CBot::hasBlink()
+BOOL CBot::hasBlink() const
 {
 	return m_Weapons.HasWeapon(m_pEdict, NS_WEAPON_BLINK);
 }
@@ -9313,7 +9315,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 		{
 			return EntityIsMarine(pEntity);
 		}
-		else if (IsMarine())
+		if (IsMarine())
 		{
 			if (EntityIsAlien(pEntity))
 			{
@@ -9337,7 +9339,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
-		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
 			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
 			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
@@ -9378,31 +9380,29 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 			return true;
 		}
-		else
+		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
+
+		if (std::strcmp(szClassname, "func_breakable") == 0)
 		{
-			const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
+			edict_t* pPlayer = nullptr;
+			const Vector origin = EntityOrigin(pEntity);
 
-			if (std::strcmp(szClassname, "func_breakable") == 0)
+			while ((pPlayer = UTIL_FindEntityInSphere(pPlayer, origin, 200)) != nullptr)
 			{
-				edict_t* pPlayer = nullptr;
-				const Vector origin = EntityOrigin(pEntity);
-
-				while ((pPlayer = UTIL_FindEntityInSphere(pPlayer, origin, 200)) != nullptr)
+				if (pPlayer->v.flags & FL_CLIENT)
 				{
-					if (pPlayer->v.flags & FL_CLIENT)
+					if (pPlayer == m_pEdict)
 					{
-						if (pPlayer == m_pEdict)
-						{
-							if (DistanceFrom(origin) < 80)
-								break;
-						}
-						else
+						if (DistanceFrom(origin) < 80)
 							break;
 					}
+					else
+						break;
 				}
-
-				return (m_iTS_State != TS_State_Stunt && pPlayer == m_pEdict || pPlayer != m_pEdict && pPlayer != nullptr && IsInVisibleList(pPlayer) && IsEnemy(pPlayer)) && BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
 			}
+
+			return (m_iTS_State != TS_State_Stunt && pPlayer == m_pEdict || pPlayer != m_pEdict && pPlayer != nullptr &&
+				IsInVisibleList(pPlayer) && IsEnemy(pPlayer)) && BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
 		}
 
 		break;
@@ -9490,7 +9490,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			return false;
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
-		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
 			// code from Sandbot by tschumann
 			const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
@@ -9525,7 +9525,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			return false;
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
-		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
 			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
 			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
@@ -9962,7 +9962,7 @@ void BotMessage(edict_t* pEntity, int errorlevel, const char* fmt, ...)
 #endif
 				std::exit(0);
 			}
-			break;
+			//break;
 			case 2:
 				UTIL_LogPrintf("!!!!ERROR : %s%s\n", BOT_DBG_MSG_TAG, string);
 
@@ -9976,7 +9976,7 @@ void BotMessage(edict_t* pEntity, int errorlevel, const char* fmt, ...)
 #endif
 				std::exit(0);
 
-				break;
+				//break;
 			default:
 				ALERT(at_console, "BotMessage() : errorlevel invalid\n");
 			}
@@ -10828,7 +10828,7 @@ eMasterType CMasterEntity::CanFire(edict_t* pActivator) const
 	return MASTER_FAULT;
 }
 
-BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
+BOOL CBot::WantToFollowEnemy(edict_t* pEnemy) const
 // return true if bot wants to follow an enemy once out of sight
 // might want to add a few more things to it though
 {
@@ -10880,7 +10880,7 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy)
 			return false;
 
 		return true;
-		break;
+		//break;
 		/*case MOD_TFC:
 			// focus on capturing the flag only
 			if ( m_bHasFlag )
@@ -11251,7 +11251,7 @@ int BotFunc_GetStructureForGorgeBuild(entvars_t* pGorge, entvars_t* pEntitypev)
 	if (fRange > MAX_BUILD_RANGE)
 		return 0;
 
-	if (const BOOL bCanBuildNearby = BotFunc_GetStructuresToBuildForEntity(iBuildingType, &iDefs, &iOffs, &iSens, &iMovs))
+	if (const bool bCanBuildNearby = BotFunc_GetStructuresToBuildForEntity(iBuildingType, &iDefs, &iOffs, &iSens, &iMovs))
 	{
 		if (pEntitypev->iuser3 == AVH_USER3_HIVE && UTIL_CanBuildHive(pEntitypev))
 		{
@@ -16384,7 +16384,7 @@ BOOL CBot::CanFly() const
 			|| gBotGlobals.IsMod(MOD_DMC));
 }
 
-BOOL CBot::PrimaryAttack()
+BOOL CBot::PrimaryAttack() const
 {
 	/*if ( HasCondition(BOT_CONDITION_CANT_SHOOT) )
 	{
@@ -16846,7 +16846,7 @@ void CBot::decideJumpDuckStrafe(const float fEnemyDist, const Vector& vEnemyOrig
 	m_bUsedMelee = true;
 }
 
-BOOL CBot::hasWeb()
+BOOL CBot::hasWeb() const
 {
 	return m_Weapons.HasWeapon(m_pEdict, NS_WEAPON_WEBSPINNER);
 }
