@@ -2386,16 +2386,16 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		while ((ptr = std::strstr(ptr, fill_point)) != nullptr)
 		{
 			// Use fill_point_length inside the loop
-			const size_t end = start + fill_point_length;
-			std::strncpy(after, &string[end], len - end);
-			after[len - end] = 0;
+		const size_t end = start + fill_point_length;
+		std::strncpy(after, &string[end], len - end);
+		after[len - end] = 0;
 		}
 
 		// fill in new string and..
 		// update len (string size may have INCREASED
 		// if by more than 2* normal string size, could have overwritten
 		// some precious memory!)
-		len = std::sprintf(temp, "%s%s%s", before, fill_with, after);
+		len = snprintf(temp, sizeof(temp), "%s%s%s", before, fill_with, after);
 
 		// fill string now with maximum length for string
 		std::strncpy(string, temp, max_len - 1);
@@ -8807,22 +8807,22 @@ BOOL CBot::Touch(edict_t* pentTouched)
 						StopMoving();
 				}
 			}
-			// Use only door
-			if (gBotGlobals.IsMod(MOD_DMC) && pentTouched->v.health > 0 || pentTouched->v.spawnflags & 256)
-			{
-				const Vector vOrigin = EntityOrigin(pentTouched);
-
-				// If the door is blocking a path I can't walk by..
-				if (vOrigin.z > pev->absmin.z + 16)
+				// Use only door
+				if (gBotGlobals.IsMod(MOD_DMC) && pentTouched->v.health > 0 || pentTouched->v.spawnflags & 256)
 				{
-					const CBotTask UseTask = CBotTask(BOT_TASK_USE, 0, pentTouched, -1);
+					const Vector vOrigin = EntityOrigin(pentTouched);
 
-					if (!m_Tasks.HasTask(UseTask))
-						AddPriorityTask(UseTask);
+					// If the door is blocking a path I can't walk by..
+					if (vOrigin.z > pev->absmin.z + 16)
+					{
+						const CBotTask UseTask = CBotTask(BOT_TASK_USE, 0, pentTouched, -1);
+
+						if (!m_Tasks.HasTask(UseTask))
+							AddPriorityTask(UseTask);
+					}
 				}
 			}
 		}
-	}
 
 	// touching a hurt that hurst me (doesnt give health...)
 	/*if ( (std::strcmp(szClassname,"trigger_hurt") == 0) && (pentTouched->v.dmg > 0) && (!m_pEnemy))
@@ -9315,7 +9315,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 		{
 			return EntityIsMarine(pEntity);
 		}
-		if (IsMarine())
+		else if (IsMarine())
 		{
 			if (EntityIsAlien(pEntity))
 			{
@@ -9339,7 +9339,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
-		if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
 			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
 			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
@@ -9380,29 +9380,32 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 			return true;
 		}
-		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
-
-		if (std::strcmp(szClassname, "func_breakable") == 0)
+		else
 		{
-			edict_t* pPlayer = nullptr;
-			const Vector origin = EntityOrigin(pEntity);
+			const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-			while ((pPlayer = UTIL_FindEntityInSphere(pPlayer, origin, 200)) != nullptr)
+			if (std::strcmp(szClassname, "func_breakable") == 0)
 			{
-				if (pPlayer->v.flags & FL_CLIENT)
+				edict_t* pPlayer = nullptr;
+				const Vector origin = EntityOrigin(pEntity);
+
+				while ((pPlayer = UTIL_FindEntityInSphere(pPlayer, origin, 200)) != nullptr)
 				{
-					if (pPlayer == m_pEdict)
+					if (pPlayer->v.flags & FL_CLIENT)
 					{
-						if (DistanceFrom(origin) < 80)
+						if (pPlayer == m_pEdict)
+						{
+							if (DistanceFrom(origin) < 80)
+								break;
+						}
+						else
 							break;
 					}
-					else
-						break;
 				}
-			}
 
 			return (m_iTS_State != TS_State_Stunt && pPlayer == m_pEdict || pPlayer != m_pEdict && pPlayer != nullptr &&
 				IsInVisibleList(pPlayer) && IsEnemy(pPlayer)) && BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
+			}
 		}
 
 		break;
@@ -9490,7 +9493,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			return false;
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
-		if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
 			// code from Sandbot by tschumann
 			const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
@@ -9525,7 +9528,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			return false;
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
-		if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
 			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
 			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
@@ -9704,7 +9707,7 @@ BOOL BotFunc_IsLongRangeWeapon(const int iId)
 	//return false; //unreachable? [APG]RoboCop[CL]
 }
 
-// crap function, doesn't work argh!
+// TODO: crap function, doesn't work argh!
 // USE STRDUP() INSTEAD!!!
 /*
 void BotFunc_StringCopy(char *szCopyTo, const char *szCopyFrom)
@@ -11251,7 +11254,7 @@ int BotFunc_GetStructureForGorgeBuild(entvars_t* pGorge, entvars_t* pEntitypev)
 	if (fRange > MAX_BUILD_RANGE)
 		return 0;
 
-	if (const bool bCanBuildNearby = BotFunc_GetStructuresToBuildForEntity(iBuildingType, &iDefs, &iOffs, &iSens, &iMovs))
+	if (const BOOL bCanBuildNearby = BotFunc_GetStructuresToBuildForEntity(iBuildingType, &iDefs, &iOffs, &iSens, &iMovs))
 	{
 		if (pEntitypev->iuser3 == AVH_USER3_HIVE && UTIL_CanBuildHive(pEntitypev))
 		{
