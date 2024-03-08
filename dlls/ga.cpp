@@ -392,9 +392,9 @@ std::FILE* RCBOpenFile(char* file, char* readtype, eGASaveType savedtype, int iI
 	char tmpfilename[256];
 
 	if (savedtype == SAVETYPE_BOT)
-		std::sprintf(tmpfilename, "%dp%s.rce", iId, file); // iId = profileid
+		snprintf(tmpfilename, sizeof(tmpfilename), "%dp%s.rce", iId, file); // iId = profileid
 	else if (savedtype == SAVETYPE_TEAM)
-		std::sprintf(tmpfilename, "%dt%s.rce", iId, file);	// iId = team id
+		snprintf(tmpfilename, sizeof(tmpfilename), "%dt%s.rce", iId, file); // iId = team id
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmpfilename);
 

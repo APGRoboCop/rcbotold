@@ -1124,7 +1124,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 	Vector vBotOrigin = pBot->pev->origin;
 	Vector vWptOrigin;
-	Vector vMoveVector;
+	//Vector vMoveVector; //Unused? [APG]RoboCop[CL]
 
 	int iCurrWpt;
 	int iWptFlags;
@@ -1184,17 +1184,13 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			{
 				//Clear this waypoint, get a new one and flush path info.
 
-				PATH* pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam);//TODO: triggers crash? [APG]RoboCopCL]
-
-				if (pFailed)
+				if (PATH* pFailed = BotNavigate_FindPathFromTo(pBot->m_iPrevWaypointIndex, pBot->m_iCurrentWaypointIndex, pBot->m_iTeam))
 					pBot->m_stFailedPaths.AddFailedPath(pFailed);
 
 				pBot->m_iCurrentWaypointIndex = WaypointLocations.NearestWaypoint(vBotOrigin, REACHABLE_RANGE, pBot->m_iLastFailedWaypoint, true, false, true);
 				iCurrWpt = pBot->m_iCurrentWaypointIndex;
 
-				CBotTask* pCurrentTask = pBot->m_Tasks.CurrentTask();
-
-				if (pCurrentTask)
+				if (CBotTask* pCurrentTask = pBot->m_Tasks.CurrentTask())
 				{
 					pCurrentTask->SetPathInfo(false);
 				}
@@ -1236,7 +1232,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 	fDistance = 0;
 
-	vMoveVector = vWptOrigin;
+	//Vector vMoveVector = vWptOrigin; //Unused? [APG]RoboCop[CL]
 
 	// bot is not climbing
 	if (pBot->GetClimbType() != BOT_CLIMB_NONE)
@@ -1510,9 +1506,8 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_PUSH_PUSHABLE))
 			{
 				// get nearest pushable
-				edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512, false);
 
-				if (pPushable)
+				if (edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512, false))
 				{
 					// if its too far away from the waypoint push it to the waypoint
 					if (!UTIL_AcceptablePushableVector(pPushable, vWptOrigin))
@@ -1531,9 +1526,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		// Reached objective waypoint???
 		if (pBot->m_iWaypointGoalIndex == pBot->m_iCurrentWaypointIndex)
 		{
-			CBotTask* m_CurrentTask = pBot->m_Tasks.CurrentTask();
-
-			if (m_CurrentTask)
+			if (CBotTask* m_CurrentTask = pBot->m_Tasks.CurrentTask())
 			{
 				if (m_CurrentTask->Task() == BOT_TASK_FIND_PATH)
 				{
@@ -1837,7 +1830,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 		vAngles = pBot->m_pEdict->v.angles;
 
-		vAngles.y = vAngles.y + (fAngle - iMaxStep / 2);
+		vAngles.y = vAngles.y + (fAngle - static_cast<float>(iMaxStep) / 2);
 
 		UTIL_FixFloatAngle(&vAngles.y);
 
@@ -1879,7 +1872,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 		vAngles = UTIL_VecToAngles(pBot->m_pEdict->v.velocity);
 
-		vAngles.y = vAngles.y + (fAngle - iMaxStep / 2);
+		vAngles.y = vAngles.y + (fAngle - static_cast<float>(iMaxStep) / 2);
 
 		UTIL_FixFloatAngle(&vAngles.y);
 
@@ -2083,9 +2076,9 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 								char* szClassnames[3] = { "func_button","button_target","func_rot_button" };
 
 								// check nearby the lift button waypoint
-								edict_t* pButton = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, true);
+								edict_t* button = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, true);
 
-								if (pButton)
+								if (button)
 								{
 									// if a button if found use this one
 
@@ -2094,8 +2087,8 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 									// Bot was below the lift so wait for the lift to descend
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_ENTITY, iScheduleId, pHit));
 									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, nullptr, iWpt, -1));
-									pBot->AddPriorityTask(CBotTask(BOT_TASK_USE, iScheduleId, pButton));
-									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, pButton));
+									pBot->AddPriorityTask(CBotTask(BOT_TASK_USE, iScheduleId, button));
+									pBot->AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, button));
 
 									// make sure we update these tasks so we know we are using a lift
 									pBot->m_Tasks.GiveSchedIdDescription(iScheduleId, BOT_SCHED_USE_LIFT);

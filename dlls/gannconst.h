@@ -57,7 +57,7 @@ public:
 
 	CGenericHeader(int iType, int iSize)
 	{
-		std::sprintf(m_szHeader, "t-%d-s-%d", iType, iSize);
+		snprintf(m_szHeader, sizeof(m_szHeader), "t-%d-s-%d", iType, iSize);
 	}
 
 	const char* getHeader() const

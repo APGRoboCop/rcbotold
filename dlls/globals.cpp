@@ -98,7 +98,7 @@ void CBotGlobals::ReadBotFolder()
 
 	BotMessage(nullptr, 0, "Reading Bot Folder");
 
-	std::sprintf(filename, "%s/rcbot_folder.ini", m_szModFolder);
+	snprintf(filename, sizeof(filename), "%s/rcbot_folder.ini", m_szModFolder);
 
 	std::FILE* fp = std::fopen(filename, "r");
 
@@ -638,7 +638,7 @@ void CBotGlobals::StartFrame()
 
 					//iUserId = (*g_engfuncs.pfnGetPlayerUserId)(pBot->m_pEdict);
 
-					std::sprintf(cmd, "kick \"%s\"\n", pBot->m_szBotName);
+					snprintf(cmd, sizeof(cmd), "kick \"%s\"\n", pBot->m_szBotName);
 					//std::sprintf(cmd,"kick #%d\n",iUserId);
 
 					SERVER_COMMAND(cmd);
@@ -1270,9 +1270,9 @@ void CBotGlobals::MapInit()
 	m_bCombatMap = std::strncmp("co_", STRING(gpGlobals->mapname), 3) == 0;
 
 #ifdef __linux__
-	std::sprintf(szTemp, "map_configs/%s/%s.cfg", m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(szTemp, sizeof(szTemp), "map_configs/%s/%s.cfg", m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	std::sprintf(szTemp, "map_configs\\%s\\%s.cfg", m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(szTemp, sizeof(szTemp), "map_configs\\%s\\%s.cfg", m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	char filename[512];
 
@@ -1513,7 +1513,7 @@ void CBotGlobals::saveLearnedData() const
 	{
 		CLearnedHeader header = CLearnedHeader(i);
 
-		std::sprintf(tmpFilename, "team%d.rld", i);
+		snprintf(tmpFilename, sizeof(tmpFilename), "team%d.rld", i);
 		UTIL_BuildFileName(szFilename, tmpFilename);
 
 		std::FILE* bfp = std::fopen(szFilename, "wb");
@@ -1526,10 +1526,10 @@ void CBotGlobals::saveLearnedData() const
 		}
 
 		//this->m_enemyCostGAsForTeam[i].freeLocalMemory();
-//		this->m_TFCspiesForTeam[i].freeLocalMemory();
+		//this->m_TFCspiesForTeam[i].freeLocalMemory();
 	}
 
-	std::sprintf(tmpFilename, "tsweaps.rld");
+	snprintf(tmpFilename, sizeof(tmpFilename), "tsweaps.rld");
 	UTIL_BuildFileName(szFilename, tmpFilename);
 
 	std::FILE* bfp = std::fopen(szFilename, "wb");
@@ -1544,7 +1544,7 @@ void CBotGlobals::saveLearnedData() const
 
 	if (IsNS() && IsCombatMap())
 	{
-		std::sprintf(tmpFilename, "combat0.rld");
+		snprintf(tmpFilename, sizeof(tmpFilename), "combat0.rld");
 		UTIL_BuildFileName(szFilename, tmpFilename);
 
 		bfp = std::fopen(szFilename, "wb");
@@ -1555,7 +1555,7 @@ void CBotGlobals::saveLearnedData() const
 			std::fclose(bfp);
 		}
 
-		std::sprintf(tmpFilename, "combat1.rld");
+		snprintf(tmpFilename, sizeof(tmpFilename), "combat1.rld");
 		UTIL_BuildFileName(szFilename, tmpFilename);
 
 		bfp = std::fopen(szFilename, "wb");
@@ -1581,7 +1581,7 @@ void CBotGlobals::loadLearnedData()
 		CLearnedHeader header = CLearnedHeader(i);
 		const CLearnedHeader checkheader = CLearnedHeader(i);
 
-		std::sprintf(tmpFilename, "team%d.rld", i);
+		snprintf(tmpFilename, sizeof(tmpFilename), "team%d.rld", i);
 		UTIL_BuildFileName(szFilename, tmpFilename);
 
 		std::FILE* bfp = std::fopen(szFilename, "rb");
@@ -1599,7 +1599,7 @@ void CBotGlobals::loadLearnedData()
 		}
 	}
 
-	std::sprintf(tmpFilename, "tsweaps.rld");
+	snprintf(tmpFilename, sizeof(tmpFilename), "tsweaps.rld");
 	UTIL_BuildFileName(szFilename, tmpFilename);
 
 	std::FILE* bfp = std::fopen(szFilename, "rb");
@@ -1612,7 +1612,7 @@ void CBotGlobals::loadLearnedData()
 
 	if (IsNS())
 	{
-		std::sprintf(tmpFilename, "combat0.rld");
+		snprintf(tmpFilename, sizeof(tmpFilename), "combat0.rld");
 		UTIL_BuildFileName(szFilename, tmpFilename);
 		bfp = std::fopen(szFilename, "rb");
 
@@ -1623,7 +1623,7 @@ void CBotGlobals::loadLearnedData()
 			std::fclose(bfp);
 		}
 
-		std::sprintf(tmpFilename, "combat1.rld");
+		snprintf(tmpFilename, sizeof(tmpFilename), "combat1.rld");
 		UTIL_BuildFileName(szFilename, tmpFilename);
 		bfp = std::fopen(szFilename, "rb");
 

@@ -747,9 +747,9 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 
 	// turn on color set 2  (color on,  no sound)
 	if (teamonly)
-		std::sprintf(text, "%c(TEAM) %s: ", 2, STRING(pEntity->v.netname));
+		snprintf(text, sizeof(text), "%c(TEAM) %s: ", 2, STRING(pEntity->v.netname));
 	else
-		std::sprintf(text, "%c%s: ", 2, STRING(pEntity->v.netname));
+		snprintf(text, sizeof(text), "%c%s: ", 2, STRING(pEntity->v.netname));
 
 	const int j = sizeof text - 2 - std::strlen(text);  // -2 for /n and null terminator
 	if (static_cast<int>(std::strlen(message)) > j)
@@ -1786,7 +1786,7 @@ BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid)
 
 	KeyValueData key;
 
-	std::sprintf(keyvalue, "%d", weaponid);
+	snprintf(keyvalue, sizeof(keyvalue), "%d", weaponid);
 
 	key.szClassName = "ts_groundweapon";
 	key.szKeyName = keyname;
@@ -1911,7 +1911,7 @@ void UTIL_LogPrintf(const char* fmt, ...)
 	static char    string[1024];
 	
 	va_start(argptr, fmt);
-	std::vsprintf(string, fmt, argptr);
+	vsnprintf(string, sizeof(string), fmt, argptr);
 	va_end(argptr);
 	
 	// Print to server console
@@ -1974,7 +1974,7 @@ void UTIL_PlaySound(edict_t* pPlayer, const char* szSound)
 	if (pPlayer->v.flags & FL_FAKECLIENT)
 		return;
 
-	std::sprintf(szCommand, "play %s\n", szSound);
+	snprintf(szCommand, sizeof(szCommand), "play %s\n", szSound);
 
 	CLIENT_COMMAND(pPlayer, szCommand);
 }

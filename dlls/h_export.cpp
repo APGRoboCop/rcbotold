@@ -57,8 +57,8 @@
 #include "bot.h"
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
-HINSTANCE h_Library = NULL;
-HGLOBAL h_global_argv = NULL;
+HINSTANCE h_Library = nullptr;
+HGLOBAL h_global_argv = nullptr;
 #else
 
 void* h_Library = NULL;
@@ -71,10 +71,10 @@ globalvars_t* gpGlobals;
 
 char* g_argv;
 
-GETENTITYAPI other_GetEntityAPI = NULL;
-GETNEWDLLFUNCTIONS other_GetNewDLLFunctions = NULL;
-GIVEFNPTRSTODLL other_GiveFnptrsToDll = NULL;
-CONSTRUCT_USE NS_constructUse = NULL;
+GETENTITYAPI other_GetEntityAPI = nullptr;
+GETNEWDLLFUNCTIONS other_GetNewDLLFunctions = nullptr;
+GIVEFNPTRSTODLL other_GiveFnptrsToDll = nullptr;
+CONSTRUCT_USE NS_constructUse = nullptr;
 
 int debug_engine = 0;
 
@@ -84,9 +84,9 @@ const char* CModInfo::GetDllFileName(const char* szFolder)
 {
 	char szFilename[256];
 #ifdef __linux__
-	std::sprintf(szFilename, "%s/dlls/%s.so", szFolder, m_szDllFile);
+	snprintf(szFilename, sizeof(szFilename), "%s/dlls/%s.so", szFolder, m_szDllFile);
 #else
-	std::sprintf(szFilename, "%s\\dlls\\%s.dll", szFolder, m_szDllFile);
+	snprintf(szFilename, sizeof(szFilename), "%s\\dlls\\%s.dll", szFolder, m_szDllFile);
 #endif
 	//store it globally instead of locally
 	return gBotGlobals.m_Strings.GetString(szFilename);
@@ -144,16 +144,16 @@ extern "C" DLLEXPORT void GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, g
 
 	game_dll_filename = gBotGlobals.GetModInfo();
 
-	if (game_dll_filename == NULL)
+	if (game_dll_filename == nullptr)
 	{
-		BotMessage(NULL, 1, "Error : Mod is NOT supported with this version of the bot!\nIf you intended to run the bot with a different mod,\ndownload the latest version to see if it is supported at: %s", BOT_WEBSITE);
+		BotMessage(nullptr, 1, "Error : Mod is NOT supported with this version of the bot!\nIf you intended to run the bot with a different mod,\ndownload the latest version to see if it is supported at: %s", BOT_WEBSITE);
 	}
 	else
 	{
 		// set-up menu's, some menus might depend on the MOD
 		SetupMenus();
 
-		BotMessage(NULL, 0, "DLL Attaching To : %s", game_dll_filename);
+		BotMessage(nullptr, 0, "DLL Attaching To : %s", game_dll_filename);
 
 #ifndef __linux__
 		h_Library = LoadLibrary(game_dll_filename);
@@ -162,11 +162,11 @@ extern "C" DLLEXPORT void GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, g
 #endif
 	}
 
-	if (h_Library == NULL)
+	if (h_Library == nullptr)
 	{
 		// Directory error or Unsupported MOD!
 
-		BotMessage(NULL, 1, "Error: MOD DLL not found (or unsupported MOD)!");
+		BotMessage(nullptr, 1, "Error: MOD DLL not found (or unsupported MOD)!");
 	}
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
@@ -179,11 +179,11 @@ extern "C" DLLEXPORT void GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, g
 
 	other_GetEntityAPI = (GETENTITYAPI)GetProcAddress(h_Library, "GetEntityAPI");
 
-	if (other_GetEntityAPI == NULL)
+	if (other_GetEntityAPI == nullptr)
 	{
 		// Can't find GetEntityAPI!
 
-		BotMessage(NULL, 1, "RCBot - Can't get MOD's GetEntityAPI! Mod DLL May be missing!");
+		BotMessage(nullptr, 1, "RCBot - Can't get MOD's GetEntityAPI! Mod DLL May be missing!");
 	}
 
 	//NS_constructUse = (CONSTRUCT_USE)GetProcAddress(h_Library, "?ConstructUse@AvHBaseBuildable@@QAEXPAVCBaseEntity@@0W4USE_TYPE@@M@Z");
@@ -199,7 +199,7 @@ extern "C" DLLEXPORT void GiveFnptrsToDll(enginefuncs_t * pengfuncsFromEngine, g
 
 	other_GiveFnptrsToDll = (GIVEFNPTRSTODLL)GetProcAddress(h_Library, "GiveFnptrsToDll");
 
-	if (other_GiveFnptrsToDll == NULL)
+	if (other_GiveFnptrsToDll == nullptr)
 	{
 		// Can't find GiveFnptrsToDll!
 

@@ -473,7 +473,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 
 								//std::sprintf(cmd, "kick #%d\n", iUserId);
 								// kick [# userid] doesnt work on linux ??
-								std::sprintf(cmd, "kick \"%s\"\n", pBot->m_szBotName);
+								snprintf(cmd, sizeof(cmd), "kick \"%s\"\n", pBot->m_szBotName);
 
 								SERVER_COMMAND(cmd);  // kick the bot using kick name //(kick #id)
 
@@ -886,14 +886,14 @@ void ClientCommand(edict_t* pEntity)
 							}
 							if (bIsQuote || bWasQuote)
 							{
-								std::sprintf(szMessage, "%s%s", szTemp, szArgument);
+								snprintf(szMessage, sizeof(szMessage), "%s%s", szTemp, szArgument);
 
 								bWasQuote = !bWasQuote;
 							}
 							else
 							{
 								// take space into count (thats what is seperating these words)
-								std::sprintf(szMessage, "%s %s", szTemp, szArgument);
+								snprintf(szMessage, sizeof(szMessage), "%s %s", szTemp, szArgument);
 							}
 
 							std::free(szTemp);
@@ -1280,7 +1280,7 @@ void Sys_Error(const char* error_string)
 {
 	char szError[1024];
 
-	std::sprintf(szError, "System Error: \"%s\"\n", error_string);
+	snprintf(szError, sizeof(szError), "System Error: \"%s\"\n", error_string);
 	szError[1023] = 0;
 
 	BotFile_Write(szError);
@@ -1579,7 +1579,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 
 	// concatenate all the arguments in one string
 	va_start(argptr, fmt);
-	std::vsprintf(command, fmt, argptr);
+	vsnprintf(command, sizeof(command), fmt, argptr);
 	va_end(argptr);
 
 	if (*command == 0 || *command == '\n')

@@ -1786,7 +1786,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 			{
 				iBotProfile = CanUseIds.Random();
 
-				std::sprintf(szBotProfile, "%d.ini", iBotProfile);
+				snprintf(szBotProfile, sizeof(szBotProfile), "%d.ini", iBotProfile);
 
 				UTIL_BuildFileName(szBotProfilePath, "botprofiles", szBotProfile);
 
@@ -1819,7 +1819,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		iTeam = pBot->m_Profile.m_iFavTeam;
 		iClass = pBot->m_Profile.m_iClass;
 
-		std::sprintf(szBotProfile, "%d.ini", iBotProfile);
+		snprintf(szBotProfile, sizeof(szBotProfile), "%d.ini", iBotProfile);
 
 		UTIL_BuildFileName(szProfileToOpen, "botprofiles", szBotProfile);
 
@@ -1970,9 +1970,9 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 	char szColour[5];
 
-	std::sprintf(szColour, "%d", pBot->m_Profile.m_iTopColour);
+	snprintf(szColour, sizeof(szColour), "%d", pBot->m_Profile.m_iTopColour);
 	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "topcolor", szColour);
-	std::sprintf(szColour, "%d", pBot->m_Profile.m_iBottomColour);
+	snprintf(szColour, sizeof(szColour), "%d", pBot->m_Profile.m_iBottomColour);
 	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "bottomcolor", szColour);
 
 #ifdef RCBOT_META_BUILD

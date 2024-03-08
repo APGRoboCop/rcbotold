@@ -1061,7 +1061,7 @@ void CBot::loadLearnedData() const
 	char tmp_filename[64];
 	char filename[256];
 
-	std::sprintf(tmp_filename, "%d.rld", m_Profile.m_iProfileId);
+	snprintf(tmp_filename, sizeof(tmp_filename), "%d.rld", m_Profile.m_iProfileId);
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmp_filename);
 
@@ -1132,7 +1132,7 @@ void CBot::saveLearnedData() const
 	char tmp_filename[64];
 	char filename[256];
 
-	std::sprintf(tmp_filename, "%d.rld", m_Profile.m_iProfileId);
+	snprintf(tmp_filename, sizeof(tmp_filename), "%d.rld", m_Profile.m_iProfileId);
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmp_filename);
 
@@ -3748,7 +3748,7 @@ void CBot::Think()
 	if (m_pEnemy == nullptr)
 	{
 		// Make sure the bot's not shooting an enemy before listening to sounds.
-		edict_t* pPlayer = nullptr;//TODO: Unused? [APG]RoboCop[CL]
+		edict_t* pPlayer;
 
 		if (GetClimbType() == BOT_CLIMB_NONE && (!PlayerStandingOnMe() && !StandingOnPlayer()) && m_fListenToSoundTime < gpGlobals->time && !m_iOrderType)
 		{
@@ -4978,8 +4978,8 @@ void CBot::LookForNewTasks()
 					if (UTIL_SpeciesOnTeam(AVH_USER3_ALIEN_PLAYER2) >= UTIL_PlayersOnTeam(TEAM_ALIEN) *
 						gBotGlobals.m_fGorgeAmount)
 						bGoGorge = false;
-					else if (this->m_Profile.m_GorgePercent > 0)
-						bGoGorge = true;
+					//else if (this->m_Profile.m_GorgePercent > 0)
+					//	bGoGorge = true;
 
 					if (bGoGorge)
 					{
@@ -9781,7 +9781,7 @@ void BugMessage(edict_t* pEntity, const char* fmt, ...)
 	static char string[1024];
 
 	va_start(argptr, fmt);
-	std::vsprintf(string, fmt, argptr);
+	vsnprintf(string, sizeof(string), fmt, argptr);
 	va_end(argptr);
 
 	BotMessage(pEntity, 0, "%s%s%s%s", "BUG: ", string, " Report bugs to : ", BOT_AUTHOR);
@@ -9797,7 +9797,7 @@ void AssertMessage(const BOOL bAssert, char* fmt, ...)
 		static char string[1024];
 
 		va_start(argptr, fmt);
-		vsprintf(string, fmt, argptr);
+		vsnprintf(string, sizeof(string), fmt, argptr);
 		va_end(argptr);
 
 		BugMessage(nullptr, "Assertion Failed : %s", string);
@@ -9811,46 +9811,46 @@ void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, const char*
 	char szDebugMsg[32];
 
 	va_start(argptr, fmt);
-	std::vsprintf(string, fmt, argptr);
+	vsnprintf(string, sizeof(string), fmt, argptr);
 	va_end(argptr);
 
 	switch (iDebugLevel)
 	{
 	case BOT_DEBUG_TOUCH_LEVEL:
 		// Bot touched object
-		std::sprintf(szDebugMsg, "%s:TOUCH]=>", BOT_DEBUG_TAG);
+		snprintf(szDebugMsg, sizeof(szDebugMsg), "%s:TOUCH]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_THINK_LEVEL:
 		// Bot thinks
-		std::sprintf(szDebugMsg, "%s:THINK]=>", BOT_DEBUG_TAG);
+		snprintf(szDebugMsg, sizeof(szDebugMsg), "%s:THINK]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_HEAR_LEVEL:
 		// Bot hears a sound
-		std::sprintf(szDebugMsg, "%s:HEAR]=>", BOT_DEBUG_TAG);
+		snprintf(szDebugMsg, sizeof(szDebugMsg), "%s:HEAR]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_MESSAGE_LEVEL:
 		// Bot recieves net message
-		std::sprintf(szDebugMsg, "%s:MESSAGE]=>", BOT_DEBUG_TAG);
+		snprintf(szDebugMsg, sizeof(szDebugMsg), "%s:MESSAGE]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_BLOCK_LEVEL:
 		// Bot blocks object
-		std::sprintf(szDebugMsg, "%s:BLOCK]=>", BOT_DEBUG_TAG);
+		snprintf(szDebugMsg, sizeof(szDebugMsg), "%s:BLOCK]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_MOVE_LEVEL:
 		// Bot moves somewhere
-		std::sprintf(szDebugMsg, "%s:MOVE]=>", BOT_DEBUG_TAG);
+		snprintf(szDebugMsg, sizeof(szDebugMsg), "%s:MOVE]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_AIM_LEVEL:
 		// Bot aims at something
-		std::sprintf(szDebugMsg, "%s:AIM]=>", BOT_DEBUG_TAG);
+		snprintf(szDebugMsg, sizeof(szDebugMsg), "%s:AIM]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_NAV_LEVEL:
 		// Bot touches/finds waypoints
-		std::sprintf(szDebugMsg, "%s:NAV]=>", BOT_DEBUG_TAG);
+		snprintf(szDebugMsg, sizeof(szDebugMsg), "%s:NAV]=>", BOT_DEBUG_TAG);
 		break;
 	case BOT_DEBUG_SEE_LEVEL:
 		// Bot touches/finds waypoints
-		std::sprintf(szDebugMsg, "%s:SEE]=>", BOT_DEBUG_TAG);
+		snprintf(szDebugMsg, sizeof(szDebugMsg), "%s:SEE]=>", BOT_DEBUG_TAG);
 		break;
 	}
 
@@ -9863,7 +9863,7 @@ void BotPrintTalkMessage(char* fmt, ...)
 	static char string[1024];
 
 	va_start(argptr, fmt);
-	vsprintf(string, fmt, argptr);
+	vsnprintf(string, sizeof(string), fmt, argptr);
 	va_end(argptr);
 
 	edict_t* pPlayer;
@@ -9888,7 +9888,7 @@ void BotPrintTalkMessageOne(edict_t* pClient, const char* fmt, ...)
 	static char string[1024];
 
 	va_start(argptr, fmt);
-	vsprintf(string, fmt, argptr);
+	vsnprintf(string, sizeof(string), fmt, argptr);
 	va_end(argptr);
 
 	if (pClient == nullptr)
@@ -9925,7 +9925,7 @@ void BotMessage(edict_t* pEntity, int errorlevel, const char* fmt, ...)
 	static char string[1024];
 
 	va_start(argptr, fmt);
-	std::vsprintf(string, fmt, argptr);
+	vsnprintf(string, sizeof(string), fmt, argptr);
 	va_end(argptr);
 
 	if (pEntity != nullptr)
@@ -10589,7 +10589,7 @@ CBotSquad* CBotSquads::AddSquadMember(edict_t* pLeader, edict_t* pMember)
 		pClient->AddNewToolTip(BOT_TOOL_TIP_SQUAD_HELP);
 	}
 
-	std::sprintf(msg, "%s %s has joined your squad", BOT_DBG_MSG_TAG, STRING(pMember->v.netname));
+	snprintf(msg, sizeof(msg), "%s %s has joined your squad", BOT_DBG_MSG_TAG, STRING(pMember->v.netname));
 	ClientPrint(pLeader, HUD_PRINTTALK, msg);
 
 	while (!tempStack.IsEmpty())
@@ -10777,7 +10777,7 @@ void CBot::BotOnLadder()
 
 	if (m_siLadderDir == LADDER_UP)  // is the bot currently going up?
 	{
-		pev->v_angle.x = -60.0f;  // look upwards
+		pev->v_angle.x = -80.0f;  // look upwards
 
 		//TODO: to replace 'moved_distance' and 'prev_speed' [APG]RoboCop[CL]
 		// check if the bot hasn't moved much since the last location...
@@ -10791,7 +10791,7 @@ void CBot::BotOnLadder()
 	}
 	else if (m_siLadderDir == LADDER_DOWN)  // is the bot currently going down?
 	{
-		pev->v_angle.x = 60.0f;  // look downwards
+		pev->v_angle.x = 80.0f;  // look downwards
 
 		// check if the bot hasn't moved much since the last location...
 		/*if (moved_distance <= 1 && prev_speed >= 1.0f)
@@ -10804,7 +10804,7 @@ void CBot::BotOnLadder()
 	}
 	else  // the bot hasn't picked a direction yet, try going up...
 	{
-		pev->v_angle.x = -60.0f;  // look upwards
+		pev->v_angle.x = -80.0f;  // look upwards
 		m_siLadderDir = LADDER_UP;
 	}
 

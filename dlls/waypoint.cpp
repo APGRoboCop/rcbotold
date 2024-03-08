@@ -147,13 +147,13 @@ int CWaypointLocations::GetCoverWaypoint(Vector const& vPlayerOrigin, const Vect
 
 	int iNearestIndex = -1;
 
-	FOR_EACH_WPT_LOC_BUCKET(vPlayerOrigin);
+	FOR_EACH_WPT_LOC_BUCKET(vPlayerOrigin)
 
 	// check each area around the current area
 	// for closer waypoints
 	FindNearestCoverWaypointInBucket(i, j, k, vPlayerOrigin, &fNearestDist, &iNearestIndex, iIgnoreWpts, iWaypoint);
 
-	END_EACH_WPT_LOC_BUCKET;
+	END_EACH_WPT_LOC_BUCKET
 
 	/*for ( i = iMinLoci; i <= iMaxLoci; i++ )
 	{
@@ -364,11 +364,11 @@ void CWaypointLocations::FillWaypointsInBucket(const int i, const int j, const i
 
 void CWaypointLocations::FillNearbyWaypoints(const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts) const
 {
-	FOR_EACH_WPT_LOC_BUCKET(vOrigin);
+	FOR_EACH_WPT_LOC_BUCKET(vOrigin)
 
 	FillWaypointsInBucket(i, j, k, vOrigin, iWaypoints, iFailedWpts);
 
-	END_EACH_WPT_LOC_BUCKET;
+	END_EACH_WPT_LOC_BUCKET
 }
 
 /////////////////////////////
@@ -381,11 +381,11 @@ int CWaypointLocations::NearestWaypoint(const Vector& vOrigin, float fNearestDis
 
 	//	dataStack<int> tempStack;
 
-	FOR_EACH_WPT_LOC_BUCKET(vOrigin);
+	FOR_EACH_WPT_LOC_BUCKET(vOrigin)
 
 	FindNearestInBucket(i, j, k, vOrigin, &fNearestDist, &iNearestIndex, iIgnoreWpt, bGetVisible, bGetUnReachable, bIsBot, iFailedWpts, bNearestAimingOnly);
 
-	END_EACH_WPT_LOC_BUCKET;
+	END_EACH_WPT_LOC_BUCKET
 
 	return iNearestIndex;
 }
@@ -405,7 +405,7 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float 
 	// Setup visibility, for quick vis checking
 	(*gFunctionTable.pfnSetupVisibility)(nullptr, pEntity, &pvs, &pas);
 
-	FOR_EACH_WPT_LOC_BUCKET(vOrigin);
+	FOR_EACH_WPT_LOC_BUCKET(vOrigin)
 
 	dataStack<int> tempStack = m_iLocations[i][j][k];
 
@@ -442,7 +442,6 @@ BOOL WaypointLoad(edict_t* pEntity)
 
 	WAYPOINT_HDR header;
 	char msg[80];
-	int i;
 	short int num;
 	short int path_index;
 
@@ -451,9 +450,9 @@ BOOL WaypointLoad(edict_t* pEntity)
 	num_waypoints = 0;
 
 #ifdef __linux__
-	std::sprintf(file, "waypoints/%s/%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "waypoints/%s/%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	std::sprintf(file, "waypoints\\%s\\%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "waypoints\\%s\\%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	UTIL_BuildFileName(filename, file);
 
@@ -512,6 +511,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 
 			if (std::strcmp(header.mapname, STRING(gpGlobals->mapname)) == 0)
 			{
+				int i;
 				WaypointInit();  // remove any existing waypoints
 
 				for (i = 0; i < header.number_of_waypoints; i++)
@@ -545,7 +545,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 					{
 						std::fread(&path_index, sizeof path_index, 1, bfp);
 
-						WaypointAddPath(index, path_index);
+						WaypointAddPath(static_cast<short>(index), path_index);
 					}
 				}
 
@@ -662,9 +662,9 @@ std::FILE* CWaypointConversion::openWaypoint() const
 	char szFilename[512];
 
 #ifndef __linux__
-	std::sprintf(szFilename, "%s\\%s\\%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
+	snprintf(szFilename, sizeof(szFilename), "%s\\%s\\%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
 #else
-	std::sprintf(szFilename, "%s/%s/%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
+	snprintf(szFilename, sizeof(szFilename), "%s/%s/%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
 #endif
 	return std::fopen(szFilename, "wb");
 }
@@ -713,9 +713,9 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	else
 	{
 #ifdef __linux__
-		std::sprintf(file, "waypoints/%s/%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+		snprintf(file, sizeof(file), "waypoints/%s/%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-		std::sprintf(file, "waypoints\\%s\\%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+		snprintf(file, sizeof(file), "waypoints\\%s\\%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 		UTIL_BuildFileName(filename, file);
 
@@ -1041,7 +1041,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team
 	{
 		while (*path_index < MAX_PATH_INDEX)
 		{
-			if (*pPath != nullptr && (*pPath)->index[*path_index] != -1 && (*pPath)->index[*path_index] < num_waypoints)  // found a path? TODO: triggers crash? [APG]RoboCopCL]
+			if ((*pPath)->index[*path_index] != -1 && (*pPath)->index[*path_index] < num_waypoints)	// found a path? TODO: triggers crash? [APG]RoboCopCL]
 			{
 				// save the return value
 				const int index = (*pPath)->index[*path_index];
@@ -1609,13 +1609,13 @@ int WaypointAddOrigin(Vector const& vOrigin, const int iFlags, edict_t* pEntity,
 			// check if the waypoint is reachable from the new one (one-way)
 			if (WaypointReachable(vOrigin, temp_waypoint->origin))
 			{
-				WaypointAddPath(index, i);
+				WaypointAddPath(static_cast<short>(index), static_cast<short>(i));
 			}
 
 			// check if the new one is reachable from the waypoint (other way)
 			if (WaypointReachable(temp_waypoint->origin, vOrigin))
 			{
-				WaypointAddPath(i, index);
+				WaypointAddPath(static_cast<short>(i), static_cast<short>(index));
 			}
 		}
 	}
@@ -1734,7 +1734,7 @@ void WaypointDelete(CClient* pClient)
 	}*/
 
 	// delete any paths that lead to this index...
-	WaypointDeletePath(index);
+	WaypointDeletePath(static_cast<short>(index));
 
 	// free the path for this index...
 
@@ -1827,7 +1827,7 @@ void WaypointCreatePath(CClient* pClient, const int cmd)
 			return;
 		}
 
-		WaypointAddPath(pClient->m_iPathWaypointCreateIndex, waypoint2);
+		WaypointAddPath(static_cast<short>(pClient->m_iPathWaypointCreateIndex), static_cast<short>(waypoint2));
 
 		// play "done" sound...
 		UTIL_PlaySound(pEdict, "common/wpn_hudon.wav");
@@ -1875,7 +1875,7 @@ void WaypointRemovePath(CClient* pClient, const int cmd)
 			return;
 		}
 
-		WaypointDeletePath(pClient->m_iPathWaypointRemoveIndex, waypoint2);
+		WaypointDeletePath(static_cast<short>(pClient->m_iPathWaypointRemoveIndex), static_cast<short>(waypoint2));
 
 		// play "done" sound...
 		UTIL_PlaySound(pEdict, "common/wpn_hudon.wav");
@@ -2036,7 +2036,7 @@ void WaypointPrintInfo(edict_t* pEntity)
 	if (index == -1)
 		return;
 
-	std::sprintf(msg, "Waypoint %d of %d total\n", index, num_waypoints);
+	snprintf(msg, sizeof(msg), "Waypoint %d of %d total\n", index, num_waypoints);
 	ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 
 	const int flags = waypoints[index].flags;
@@ -2416,9 +2416,9 @@ BOOL CWaypointVisibilityTable::SaveToFile() const
 	char file[256];
 
 #ifdef __linux__
-	std::sprintf(file, "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	std::sprintf(file, "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	UTIL_BuildFileName(filename, file);
 
@@ -2449,9 +2449,9 @@ BOOL CWaypointVisibilityTable::ReadFromFile() const
 
 	// get the folder right.
 #ifdef __linux__
-	std::sprintf(file, "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	std::sprintf(file, "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	UTIL_BuildFileName(filename, file);
 

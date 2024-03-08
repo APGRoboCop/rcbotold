@@ -31,7 +31,7 @@ V 1.51-beta5
 * added: Strafing combat to evade from being easy target bots
 * added: Linux bot slow-motion fix by w00tguy
 * changed: Increased the bot's flexibility
-* changed: Reduced redundant coding
+* changed: Reduced redundant coding and risks of buffer overflow crashes
 * changed: Reverted basemonster.h that was modified for Sven Coop
 * changed: The bot add or spawn delay for 8-10 seconds to prevent crashes
 * changed: Increasing bot's viewing angle to detect enemies better
@@ -44,7 +44,9 @@ V 1.51-beta5
 * TODO: To allow the Onos to be more aggressive and devour humans
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
 * TODO: To improve on how to allow bots climb ladders more properly
+* TODO: To prevent bots from team shooting in Team Deathmatch mode for HLDM, Op4DM, DMC and TS
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
+* TODO: To bring back the TS v3.0 stunt dive code that was working previously
 * TODO: To allow bots in Op4 to use Grapple by using the "Fly" waypoint
 * TODO: To add proper support for S&I, FLF and WizWars
 

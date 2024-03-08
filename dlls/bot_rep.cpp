@@ -180,7 +180,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 
 	BOOL bFound = false;
 
-	std::sprintf(repfile, "%d.rcr", iBotProfile);
+	snprintf(repfile, sizeof(repfile), "%d.rcr", iBotProfile);
 
 	UTIL_BuildFileName(filename, "botprofiles", repfile);
 
@@ -196,7 +196,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 	}
 
 	std::fseek(fp, 0, SEEK_END); // move pos to end of file
-	const long   fPos = std::ftell(fp);  // get length of file
+	const long fPos = std::ftell(fp);  // get length of file
 
 	// do some error checking - verify the file is not corrupt
 	if (fPos % sizeof(CBotReputation) != 0) return;
@@ -245,7 +245,7 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 	if (pRep == nullptr) // error
 		return;
 
-	std::sprintf(repfile, "%d.rcr", iBotProfile);
+	snprintf(repfile, sizeof(repfile), "%d.rcr", iBotProfile);
 
 	UTIL_BuildFileName(filename, "botprofiles", repfile);
 

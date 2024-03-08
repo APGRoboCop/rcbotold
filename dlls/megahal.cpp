@@ -1257,7 +1257,7 @@ void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int st
 	std::strncpy(before, string, start);
 	std::strncpy(after, &string[end], maxstring - end);
 
-	std::sprintf(string, "%s%s%s", before, fill, after);
+	snprintf(string, sizeof(string), "%s%s%s", before, fill, after);
 
 	//	if (before != NULL)
 	std::free(before);
@@ -1895,15 +1895,13 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 
 	char brn_file[256];
 
-	std::sprintf(brn_file, "%d_hal.brn", pBotProfile->m_iProfileId);
+	snprintf(brn_file, sizeof(brn_file), "%d_hal.brn", pBotProfile->m_iProfileId);
 	UTIL_BuildFileName(brn_filename, BOT_PROFILES_FOLDER, brn_file);
 
 	//#ifdef __linux__
-	//
-
-	  // sprintf (brn_filename, "%s%d_hal.brn", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId);
+		// sprintf (brn_filename, "%s%d_hal.brn", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId);
 	//#else
-	   //sprintf (brn_filename, "%s%d_hal.brn", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId);
+		//sprintf (brn_filename, "%s%d_hal.brn", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId);
 	//#endif
 
 	if (pBotProfile->m_szHAL_BanFile)
@@ -1912,7 +1910,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	{
 		char szFilename[16];
 
-		std::sprintf(szFilename, "%d_hal.ban", pBotProfile->m_iProfileId);
+		snprintf(szFilename, sizeof(szFilename), "%d_hal.ban", pBotProfile->m_iProfileId);
 		std::strcat(ban_filename, szFilename);
 	}
 
@@ -1922,7 +1920,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	{
 		char szFilename[16];
 
-		std::sprintf(szFilename, "%d_hal.aux", pBotProfile->m_iProfileId);
+		snprintf(szFilename, sizeof(szFilename), "%d_hal.aux", pBotProfile->m_iProfileId);
 		std::strcat(aux_filename, szFilename);
 	}
 
@@ -1932,7 +1930,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	{
 		char szFilename[16];
 
-		std::sprintf(szFilename, "%d_hal.swp", pBotProfile->m_iProfileId);
+		snprintf(szFilename, sizeof(szFilename), "%d_hal.swp", pBotProfile->m_iProfileId);
 		std::strcat(swp_filename, szFilename);
 	}
 
@@ -1995,7 +1993,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 	//RemoveNameTags(pBotProfile->m_szBotName,szName);
 	//szName[iNameLength] = 0;
 
-	std::sprintf(file, "%d_hal.brn", pBotProfile->m_iProfileId);
+	snprintf(file, sizeof(file), "%d_hal.brn", pBotProfile->m_iProfileId);
 
 	UTIL_BuildFileName(filename, "botprofiles", file);
 
@@ -2049,7 +2047,7 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 		{
 			char szFilename[16];
 
-			std::sprintf(szFilename, "%d_hal.trn", pBotProfile->m_iProfileId);
+			snprintf(szFilename, sizeof(szFilename), "%d_hal.trn", pBotProfile->m_iProfileId);
 			std::strcat(trn_filename, szFilename);
 		}
 
@@ -2092,7 +2090,7 @@ void SaveHALBrainForPersonality(bot_profile_t* pBotProfile)
 	char file[256];
 	char filename[256];
 
-	std::sprintf(file, "%d_hal.brn", pBotProfile->m_iProfileId);
+	snprintf(file, sizeof(file), "%d_hal.brn", pBotProfile->m_iProfileId);
 
 	UTIL_BuildFileName(filename, "botprofiles", file);
 

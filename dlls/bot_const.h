@@ -1418,8 +1418,8 @@ enum
 };
 
 #define BEGIN_SEARCH_THROUGH_PLAYERS(Variable) \
-        int i; \
-        for ( i = 1; i <= gpGlobals->maxClients; i ++ ) \
+		int i; \
+		for ( i = 1; i <= gpGlobals->maxClients; i ++ ) \
 { \
 			(Variable) = INDEXENT(i);\
 			if ( (Variable) == NULL )\

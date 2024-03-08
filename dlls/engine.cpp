@@ -162,7 +162,7 @@ void pfnChangeLevel(char* s1, char* s2)
 		{
 			char cmd[40];
 
-			std::sprintf(cmd, "kick \"%s\"\n", pBot->m_szBotName);
+			snprintf(cmd, sizeof(cmd), "kick \"%s\"\n", pBot->m_szBotName);
 
 			pBot->m_iRespawnState = RESPAWN_NEED_TO_RESPAWN;
 

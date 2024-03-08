@@ -100,9 +100,9 @@
 
 // types of damage to ignore...
 #define IGNORE_DAMAGE (DMG_CRUSH | DMG_FREEZE | DMG_FALL | \
-                       DMG_DROWN | DMG_NERVEGAS | DMG_RADIATION | \
-                       DMG_DROWNRECOVER | DMG_ACID | DMG_SLOWBURN | \
-                       DMG_SLOWFREEZE | 0xFF000000)
+					   DMG_DROWN | DMG_NERVEGAS | DMG_RADIATION | \
+					   DMG_DROWNRECOVER | DMG_ACID | DMG_SLOWBURN | \
+					   DMG_SLOWFREEZE | 0xFF000000)
 
 //extern bot_weapon_t weapon_defs[MAX_WEAPONS]; // array of weapon definitions
 

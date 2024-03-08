@@ -66,30 +66,30 @@ extern void* h_Library;
 #define LINK_ENTITY_TO_FUNC(mapClassName) \
  extern "C" EXPORT void mapClassName( entvars_t *pev ); \
  void mapClassName( entvars_t *pev ) { \
-      static LINK_ENTITY_FUNC otherClassName = NULL; \
-      static int skip_this = 0; \
-      if (skip_this) return; \
-      if (otherClassName == NULL) \
-         otherClassName = (LINK_ENTITY_FUNC)GetProcAddress(_h_Library, #mapClassName); \
-      if (otherClassName == NULL) { \
-         skip_this = 1; return; \
-      } \
-      (*otherClassName)(pev); }
+	  static LINK_ENTITY_FUNC otherClassName = NULL; \
+	  static int skip_this = 0; \
+	  if (skip_this) return; \
+	  if (otherClassName == NULL) \
+		 otherClassName = (LINK_ENTITY_FUNC)GetProcAddress(_h_Library, #mapClassName); \
+	  if (otherClassName == NULL) { \
+		 skip_this = 1; return; \
+	  } \
+	  (*otherClassName)(pev); }
 
 #else
 
 #define LINK_ENTITY_TO_FUNC(mapClassName) \
  extern "C" EXPORT void mapClassName( entvars_t *pev ); \
  void mapClassName( entvars_t *pev ) { \
-      static LINK_ENTITY_FUNC otherClassName = NULL; \
-      static int skip_this = 0; \
-      if (skip_this) return; \
-      if (otherClassName == NULL) \
-         otherClassName = (LINK_ENTITY_FUNC)GetProcAddress(h_Library, #mapClassName); \
-      if (otherClassName == NULL) { \
-         skip_this = 1; return; \
-      } \
-      (*otherClassName)(pev); }
+	  static LINK_ENTITY_FUNC otherClassName = NULL; \
+	  static int skip_this = 0; \
+	  if (skip_this) return; \
+	  if (otherClassName == NULL) \
+		 otherClassName = (LINK_ENTITY_FUNC)GetProcAddress(h_Library, #mapClassName); \
+	  if (otherClassName == NULL) { \
+		 skip_this = 1; return; \
+	  } \
+	  (*otherClassName)(pev); }
 
 #endif
 

@@ -6787,7 +6787,7 @@ public:
 
 	void buildFileName(const char* in_filename, char* out_filename)
 	{
-		std::sprintf(out_filename, "%s%s", m_szBotFolder, in_filename);
+		snprintf(out_filename, sizeof(out_filename), "%s%s", m_szBotFolder, in_filename);
 	}
 
 	const char* botFolder() const
