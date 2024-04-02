@@ -396,7 +396,7 @@ void CBotMenu::Render(CClient* pClient)
 
 	pClient->m_pMenu = this;
 
-	snprintf(szMenuText, sizeof(szMenuText), "%s\n-----\nOptions:\n", m_szCaption);
+	std::sprintf(szMenuText, "%s\n-----\nOptions:\n", m_szCaption);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -408,9 +408,9 @@ void CBotMenu::Render(CClient* pClient)
 				iSlots |= 1 << (i - 1);
 
 			if (m_Menus[i]->HasNextMenu())
-				snprintf(szMenuText, sizeof(szMenuItemText), "%d. %s...\n", i, m_Menus[i]->GetCaption());
+				std::sprintf(szMenuItemText, "%d. %s...\n", i, m_Menus[i]->GetCaption());
 			else
-				snprintf(szMenuText, sizeof(szMenuItemText), "%d. %s\n", i, m_Menus[i]->GetCaption());
+				std::sprintf(szMenuItemText, "%d. %s\n", i, m_Menus[i]->GetCaption());
 
 			std::strcat(szMenuText, szMenuItemText);
 		}
@@ -989,7 +989,7 @@ void BotMenu_Func_Squad_RemoveAllBotSquads(CClient* pClient)
 		}
 	}
 
-	snprintf(msg, sizeof(msg), "%s %d bot squads removed\n", BOT_DBG_MSG_TAG, iCount);
+	std::sprintf(msg, "%s %d bot squads removed\n", BOT_DBG_MSG_TAG, iCount);
 	ClientPrint(pClient->GetPlayer(), HUD_PRINTTALK, msg);
 }
 
