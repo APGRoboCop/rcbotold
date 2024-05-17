@@ -601,7 +601,7 @@ void CBotGlobals::StartFrame()
 						BotFunc_AddBot(nullptr, nullptr, nullptr, nullptr, nullptr);
 
 						m_bBotCanRejoin = false;
-						m_fBotRejoinTime = gpGlobals->time + 8.0f;
+						m_fBotRejoinTime = gpGlobals->time + 5.0f;
 
 						bAddBot = false;
 					}
@@ -1144,7 +1144,7 @@ void CBotGlobals::MapInit()
 	m_bNetMessageStarted = false;
 	m_CurrentHandledCvar = nullptr;
 	m_fMapInitTime = 0.0f;
-	m_fBotRejoinTime = 8.0f;
+	m_fBotRejoinTime = 5.0f;
 	m_pCommander.Set(nullptr);
 
 	m_bHasDefTech = false;
@@ -1174,51 +1174,51 @@ void CBotGlobals::MapInit()
 	prevFlagInvalid = false;
 
 	const char* mapname = STRING(gpGlobals->mapname);
-
+	//TODO: Wizard Wars may require this code [APG]RoboCop[CL]
 	/*if (IsMod(MOD_TFC))
 	{
-		  TFC_MAP_UNKNOWN,		// unknown map type
-		  TFC_MAP_CTF,			// normal capture the flag (flag in enemy base) e.g. 2fort
-		  TFC_MAP_CAPTURE,		// capture without flag e.g. warpath
-		  TFC_MAP_ATTACK_DEFEND,  // team attacks other defends e.g. dustbowl/avanti
-		  TFC_MAP_CTF_BASE		// capture the flag (flag in your base) e.g. epicenter
-		  TFC_MAP_FLAG_MULTIPLE,  // take many flags capture all of them, e.g. flagrun
-		  TFC_MAP_CAPTURE_FLAG_MULTIPLE,  // capture many points e.g. cz2
-		  TFC_MAP_VIP // hunted type map
+		  MAP_UNKNOWN,		// unknown map type
+		  MAP_CTF,			// normal capture the flag (flag in enemy base) e.g. 2fort
+		  MAP_CAPTURE,		// capture without flag e.g. warpath
+		  MAP_ATTACK_DEFEND,  // team attacks other defends e.g. dustbowl/avanti
+		  MAP_CTF_BASE		// capture the flag (flag in your base) e.g. epicenter
+		  MAP_FLAG_MULTIPLE,  // take many flags capture all of them, e.g. flagrun
+		  MAP_CAPTURE_FLAG_MULTIPLE,  // capture many points e.g. cz2
+		  MAP_VIP // hunted type map
 
 			// default
-		setMapType(TFC_MAP_CTF);
+		setMapType(MAP_CTF);
 
 		if (FStrEq(mapname, "dustbowl") || FStrEq(mapname, "avanti"))
 		{
-			setMapType(TFC_MAP_ATTACK_DEFEND);
+			setMapType(MAP_ATTACK_DEFEND);
 		}
 		else if (FStrEq(mapname, "hunted"))
 		{
-			setMapType(TFC_MAP_VIP);
+			setMapType(MAP_VIP);
 		}
 		else if (FStrEq(mapname, "warpath"))
 		{
-			setMapType(TFC_MAP_CAPTURE);
+			setMapType(MAP_CAPTURE);
 		}
 		else if (FStrEq(mapname, "epicenter") || FStrEq(mapname, "ravelin"))
 		{
-			setMapType(TFC_MAP_CTF_BASE);
+			setMapType(MAP_CTF_BASE);
 		}
 		else if (FStrEq(mapname, "flagrun"))
 		{
-			setMapType(TFC_MAP_FLAG_MULTIPLE);
+			setMapType(MAP_FLAG_MULTIPLE);
 		}
 		else if (FStrEq(mapname, "cz2"))
 		{
-			setMapType(TFC_MAP_CAPTURE_FLAG_MULTIPLE);
+			setMapType(MAP_CAPTURE_FLAG_MULTIPLE);
 		}
 	}
 	else */if (IsMod(MOD_TS))
 	{
 		if (std::strncmp(mapname, "tm_", 3) == 0)
 		{
-			//setMapType(NON_TFC_TS_TEAMPLAY);
+			setMapType(NON_TS_TEAMPLAY);
 			m_bTeamPlay = true;
 		}
 	}
@@ -1226,7 +1226,7 @@ void CBotGlobals::MapInit()
 	{
 		if (std::strncmp(mapname, "op4ctf_", 3) == 0)
 		{
-			//setMapType(NON_TFC_TS_TEAMPLAY);
+			setMapType(NON_TS_TEAMPLAY);
 			m_bTeamPlay = true;
 		}
 	}

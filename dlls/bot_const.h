@@ -1122,19 +1122,19 @@ enum
 
 #define TFC_TELEPORTER_ENTRANCE 1
 #define TFC_TELEPORTER_EXIT		2
-
+*/
 typedef enum
 {
-	TFC_MAP_UNKNOWN = 0,		// unknown map type
-	TFC_MAP_CTF = 1,			// normal capture the flag (flag in enemy base) e.g. 2fort
-	TFC_MAP_CAPTURE = 2,		// capture without flag e.g. warpath
-	TFC_MAP_ATTACK_DEFEND = 3,  // team attacks other defends e.g. dustbowl/avanti
-	TFC_MAP_CTF_BASE = 4,		// capture the flag (flag in your base) e.g. epicenter
-	TFC_MAP_FLAG_MULTIPLE = 5,  // take many flags capture all of them, e.g. flagrun
-	TFC_MAP_CAPTURE_FLAG_MULTIPLE = 6,  // capture many points e.g. cz2
-	TFC_MAP_VIP = 7, // hunted type map
-	NON_TFC_TS_TEAMPLAY = 12
-}eTFCMapType;*/
+	MAP_UNKNOWN = 0,		// unknown map type
+	MAP_CTF = 1,			// normal capture the flag (flag in enemy base) e.g. 2fort
+	MAP_CAPTURE = 2,		// capture without flag e.g. warpath
+	MAP_ATTACK_DEFEND = 3,  // team attacks other defends e.g. dustbowl/avanti
+	MAP_CTF_BASE = 4,		// capture the flag (flag in your base) e.g. epicenter
+	MAP_FLAG_MULTIPLE = 5,  // take many flags capture all of them, e.g. flagrun
+	MAP_CAPTURE_FLAG_MULTIPLE = 6,  // capture many points e.g. cz2
+	MAP_VIP = 7, // hunted type map*
+	NON_TS_TEAMPLAY = 12
+}eMapType;
 
 ////////////////////////////////
 // AUTHOR SHIP & PLUGIN INFO
@@ -1212,17 +1212,17 @@ enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b5_mm_debug"
+#define BOT_VER "1.51b6_mm_debug"
 #else
-#define BOT_VER "1.51b5_mm"
+#define BOT_VER "1.51b6_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b5_debug"
+#define BOT_VER "1.51b6_debug"
 #else
-#define BOT_VER "1.51b5"
+#define BOT_VER "1.51b6"
 #endif
 
 #endif
@@ -1236,17 +1236,17 @@ enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b5_mm_debug"
+#define BOT_VER "1.51b6_mm_debug"
 #else
-#define BOT_VER "1.51b5_mm"
+#define BOT_VER "1.51b6_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b5_debug"
+#define BOT_VER "1.51b6_debug"
 #else
-#define BOT_VER "1.51b5"
+#define BOT_VER "1.51b6"
 #endif
 
 #endif

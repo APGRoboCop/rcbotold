@@ -1047,7 +1047,7 @@ public:
 private:
 	CBotWeapon m_Weapons[MAX_WEAPONS];
 
-	int m_iAmmo[MAX_AMMO_SLOTS] = { 0 };
+	int m_iAmmo[MAX_AMMO_SLOTS] = {};
 };
 
 class CompareBotWeapon

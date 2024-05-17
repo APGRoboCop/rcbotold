@@ -3024,7 +3024,7 @@ void CBot::Think()
 	{
 		// If I am not the leader of the squad update the squad leader
 		if (!m_stSquad->IsLeader(m_pEdict))
-			m_pSquadLeader = m_stSquad->GetLeader();
+			m_pSquadLeader = static_cast<edict_t*>(m_stSquad->GetLeader());
 		else
 		{
 			// See if I have to say some stuff to my squad if I am leader
@@ -3053,7 +3053,7 @@ void CBot::Think()
 			// then we can't follow so assume not alive too...
 			if (EntityIsAlive(m_pSquadLeader))
 			{
-				if (gBotGlobals.IsNS() && EntityIsCommander(m_pSquadLeader) || IsEnemy(m_pSquadLeader))
+				if ((gBotGlobals.IsNS() && EntityIsCommander(m_pSquadLeader)) || IsEnemy(m_pSquadLeader))
 					UpdateCondition(BOT_CONDITION_SQUAD_LEADER_DEAD);
 				else
 					RemoveCondition(BOT_CONDITION_SQUAD_LEADER_DEAD);
@@ -3072,19 +3072,19 @@ void CBot::Think()
 
 	//	try
 	//	{
-	m_fCombatFitness = pev->frags / m_iNumDeaths;
+	m_fCombatFitness = pev->frags / static_cast<float>(m_iNumDeaths);
 
 	// Not alive anymore
 	if (!IsAlive())
 	{
-		constexpr BOOL feigned = false;
+		constexpr bool feigned = false;
 
 		/*if (gBotGlobals.IsMod(MOD_TFC))
 		{
 			feigned = pev->iuser3 == 1 && pev->playerclass == TFC_CLASS_SPY;
 		}*/
 
-		if (!feigned)
+		if constexpr (!feigned)
 		{
 			if (m_bNeedToInit)
 			{
@@ -3617,7 +3617,7 @@ void CBot::Think()
 				// make origin behind bot so it looks around
 				Vector origin = GetGunPosition() - gpGlobals->v_forward * 128;
 
-				BotEvent(BOT_EVENT_HURT, nullptr, nullptr, origin);
+				BotEvent(BOT_EVENT_HURT, nullptr, nullptr, static_cast<float*>(origin));
 			}
 		}
 	}
@@ -4399,9 +4399,10 @@ void CBot::LookForNewTasks()
 					}
 				}
 
-				if (m_fUseButtonTime < gpGlobals->time && (!pNearestButton || fNearestButtonDist < fDistance))
+				if (m_fUseButtonTime < gpGlobals->time && (!pNearestButton || (fNearestButtonDist < fDistance)))
 				{
-					if (std::strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 || std::strstr(szClassname, "button") != nullptr)
+					if (std::strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 || 
+						(std::strstr(szClassname, "button") != nullptr))
 					{
 						fNearestButtonDist = fDistance;
 						pNearestButton = pEntity;
@@ -4541,7 +4542,7 @@ void CBot::LookForNewTasks()
 			break;
 		}
 
-		if (gBotGlobals.m_bTeamPlay/* || gBotGlobals.isMapType(NON_TFC_TS_TEAMPLAY)*/)
+		if (gBotGlobals.m_bTeamPlay || gBotGlobals.isMapType(NON_TS_TEAMPLAY))
 		{
 			int iWpt;
 
@@ -4551,7 +4552,7 @@ void CBot::LookForNewTasks()
 
 				iWpt = WaypointLocations.NearestWaypoint(pObj.getOrigin(), REACHABLE_RANGE, m_iLastFailedWaypoint, false, false, true, nullptr);
 
-				bRoam = GetTeam() == 1 && !RANDOM_LONG(0, 2) || GetTeam() == 2 && !RANDOM_LONG(0, 10);
+				bRoam = (GetTeam() == 1 && !RANDOM_LONG(0, 2)) || (GetTeam() == 2 && !RANDOM_LONG(0, 10));
 
 				if (!bRoam && iWpt != -1)
 				{
@@ -7976,8 +7977,8 @@ void CBot::touchedWpt()
 		//dec_flapWings->train(1.0f);
 		m_bFlappedWings = false;
 
-		if (!bLeaderWalking && DistanceFrom(m_vMoveToVector) < BOT_WAYPOINT_TOUCH_DIST
-			|| m_iCurrentWaypointFlags & (W_FL_WALL_STICK | W_FL_FLY | W_FL_LADDER))
+		if ((!bLeaderWalking && DistanceFrom(m_vMoveToVector) < BOT_WAYPOINT_TOUCH_DIST)
+			|| (m_iCurrentWaypointFlags & (W_FL_WALL_STICK | W_FL_FLY | W_FL_LADDER)))
 		{
 			//BotMessage(NULL,0,"%s touched ma wpt",m_szBotName);
 
@@ -8095,7 +8096,7 @@ void CBot::WorkMoveDirection()
 		{
 			if (m_vMoveToVector.z > pev->absmin.z)
 			{
-				if (IsLerk() || IsMarine() && HasJetPack() && !(m_iCurrentWaypointFlags & W_FL_LADDER))
+				if ((IsLerk() || IsMarine()) && HasJetPack() && !(m_iCurrentWaypointFlags & W_FL_LADDER))
 				{
 					if (!onGround())
 					{
@@ -8808,7 +8809,7 @@ BOOL CBot::Touch(edict_t* pentTouched)
 				}
 			}
 				// Use only door
-				if (gBotGlobals.IsMod(MOD_DMC) && pentTouched->v.health > 0 || pentTouched->v.spawnflags & 256)
+				if (gBotGlobals.IsMod(MOD_DMC) && (pentTouched->v.health > 0 || pentTouched->v.spawnflags & 256))
 				{
 					const Vector vOrigin = EntityOrigin(pentTouched);
 
@@ -8891,7 +8892,7 @@ void CBot::RunPlayerMove()
 	// If duck and jump times are in range then duck or jump!
 	//{{
 	// dont want skulks to accidently fall off walls (crouch lets them unwall stick)
-	if (!IsSkulk() && m_iCurrentWaypointFlags & W_FL_CROUCH || m_fStartDuckTime <= gpGlobals->time && m_fEndDuckTime > gpGlobals->time)
+	if ((!IsSkulk() && m_iCurrentWaypointFlags & W_FL_CROUCH) || (m_fStartDuckTime <= gpGlobals->time && m_fEndDuckTime > gpGlobals->time))
 	{
 		Duck();
 	}
@@ -9365,7 +9366,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (pEntity->v.flags & FL_CLIENT)
 		{
-			if (gBotGlobals.m_bTeamPlay)
+			if (gBotGlobals.isMapType(NON_TS_TEAMPLAY) || gBotGlobals.m_bTeamPlay)
 			{
 				char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
 				char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
@@ -12348,7 +12349,7 @@ void CBot::DoTasks()
 			edict_t* pSound = m_CurrentTask->TaskEdict();
 			Vector vOrigin;
 
-			if (m_pEnemy && HasCondition(BOT_CONDITION_SEE_ENEMY) || IsOnLadder())
+			if ((m_pEnemy && HasCondition(BOT_CONDITION_SEE_ENEMY)) || IsOnLadder())
 			{
 				bTaskFailed = true;
 				break;
@@ -15101,11 +15102,12 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 						if ( (fire < 0.001f) || (fire > 0.999f) )
 							m_pTSWeaponSelect->set(8+iweapid,0.5f);
-*/
+						*/
 
 						if (m_pCurrentWeapon->NeedToReload())
 						{
 							RunForCover(vEnemyOrigin);
+							Reload(); // reload the weapon [APG]RoboCop[CL]
 						}
 						else if (m_fHoldAttackTime > gpGlobals->time || RANDOM_LONG(0, 100) < 90)
 						{
@@ -15124,12 +15126,12 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 							SetMoveVector(m_vLowestEnemyCostVec);
 						}
 						// dont know when we'reout of bullets, so it's random for now
-					//	else if ( !RANDOM_LONG(0,10) )
+						//	else if ( !RANDOM_LONG(0,10) )
 						//	Reload();
-							/*else if ( m_pCurrentWeapon->SecondaryInRange(fEnemyDist) && m_pCurrentWeapon->CanShootSecondary() && (RANDOM_LONG(0,100) < 50) )
-							{
+						/*else if ( m_pCurrentWeapon->SecondaryInRange(fEnemyDist) && m_pCurrentWeapon->CanShootSecondary() && (RANDOM_LONG(0,100) < 50) )
+						{
 							SecondaryAttack();
-					}*/
+						}*/
 					}
 				}
 				break;
@@ -16383,7 +16385,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 BOOL CBot::CanFly() const
 {
 	return IsLerk() || (IsMarine() && HasJetPack())
-		|| (gBotGlobals.IsMod(MOD_GEARBOX) && HasWeapon(GEARBOX_WEAPON_GRAPPLE)
+		|| ((gBotGlobals.IsMod(MOD_GEARBOX) && HasWeapon(GEARBOX_WEAPON_GRAPPLE))
 			|| gBotGlobals.IsMod(MOD_DMC));
 }
 
@@ -16760,7 +16762,7 @@ void CBot::workEnemyCosts(edict_t* pEntity, const Vector& vOrigin, const float f
 
 	Vector lowest;
 	constexpr int mid = BOT_COST_BUCKETS / 2;
-	int enemyState = 0;
+	int enemyState;
 
 	if (isInAnimate(pEntity))
 		enemyState = 2;
@@ -16770,7 +16772,7 @@ void CBot::workEnemyCosts(edict_t* pEntity, const Vector& vOrigin, const float f
 	{
 		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 		// grenade
-		if (pEntity->v.deadflag != DEAD_NO && std::strcmp(szClassname, "monster_robogrunt") == 0 ||
+		if ((pEntity->v.deadflag != DEAD_NO && std::strcmp(szClassname, "monster_robogrunt") == 0) ||
 			UTIL_IsGrenadeRocket(pEntity))
 			enemyState = 3;
 		else if (EntityIsAlive(pEntity))

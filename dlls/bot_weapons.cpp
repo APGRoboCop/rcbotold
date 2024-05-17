@@ -750,14 +750,14 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 
 		if (pWeapon->NeedToReload())//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
 		{
-			Weapons.push(pWeapon);//.Add(i);
+			Weapons.emplace(pWeapon);//.Add(i);
 			continue;
 		}
 
 		if (pWeapon->OutOfAmmo())//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
 			continue;
 
-		Weapons.push(pWeapon);//.Add(i);
+		Weapons.emplace(pWeapon);//.Add(i);
 	}
 
 	if (Weapons.empty())//.IsEmpty() )

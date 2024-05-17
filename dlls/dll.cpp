@@ -477,7 +477,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 
 								SERVER_COMMAND(cmd);  // kick the bot using kick name //(kick #id)
 
-								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 8.0f;
+								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
 								gBotGlobals.m_bBotCanRejoin = false;
 
 								break;
@@ -778,7 +778,7 @@ void ClientCommand(edict_t* pEntity)
 	eBotCvarState iState = BOT_CVAR_CONTINUE;
 	int iAccessLevel = 0;
 	BOOL bSayTeamMsg = false;
-	BOOL bSayMsg = false;
+	BOOL bSayMsg;
 
 	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEntity);
 
@@ -2101,8 +2101,8 @@ void ReadMapConfig()
 		{
 			// dont add bots for another while...
 			// Added more delay to prevent possible "Tried to write to uninitialized sizebuf_t" crashes - [APG]RoboCop[CL]
-			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 8.0f;
-			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 8.0f;
+			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
+			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 5.0f;
 		}
 
 		// Does the command in the text file
@@ -2581,7 +2581,7 @@ void CBotCam::Clear()
 		{
 			if (group && pGotCap->isForGroup(group) || goal && pGotCap->isForGoal(goal) && pGotCap->isForTeam(team))
 			{
-				if (gBotGlobals.isMapType(TFC_MAP_CAPTURE_FLAG_MULTIPLE))
+				if (gBotGlobals.isMapType(MAP_CAPTURE_FLAG_MULTIPLE))
 				{
 					goals.Add(pGotCap->edict());
 				}

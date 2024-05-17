@@ -480,7 +480,10 @@ void InitMessage ( const char *message );
 				BOOL bStunt = gBotGlobals.IsMod(MOD_TS) && m_iLastButtons & IN_ALT1;
 				Vector v_floor;
 
-				if (m_fCanPlaceJump != -1 && (bStunt || m_iLastButtons & IN_JUMP) && !(pev->flags & FL_ONGROUND))
+				// TODO: Fix for TS Stunt jumps? [APG]RoboCop[CL]
+				float tolerance = 0.0001f; // choose a suitable tolerance
+
+				if (std::fabs(m_fCanPlaceJump + 1) > tolerance && (bStunt || m_iLastButtons & IN_JUMP) && !(pev->flags & FL_ONGROUND))
 				{
 					int iNearestWpt = WaypointLocations.NearestWaypoint(vPlayerOrigin, 80.0f, -1, true, false, false, nullptr);
 
@@ -516,7 +519,7 @@ void InitMessage ( const char *message );
 				// ****************************************************
 				// Join jump waypoint to the landed waypoint
 				// ****************************************************
-				else if (m_fCanPlaceJump == -1 && pev->flags & FL_ONGROUND)
+				else if (std::fabs(m_fCanPlaceJump + 1) <= tolerance && pev->flags & FL_ONGROUND)
 				{
 					if (m_iLastJumpWaypointIndex != -1)
 					{
@@ -530,7 +533,7 @@ void InitMessage ( const char *message );
 							{
 								if (BotNavigate_FindPathFromTo(m_iLastJumpWaypointIndex, iNewWpt, -1) == nullptr)
 								{
-									WaypointAddPath(m_iLastJumpWaypointIndex, iNewWpt);
+									WaypointAddPath(static_cast<short>(m_iLastJumpWaypointIndex), static_cast<short>(iNewWpt));
 								}
 
 								if (m_iJumpType == JUMP_TYPE_STUNT)
@@ -549,7 +552,7 @@ void InitMessage ( const char *message );
 						{
 							if (BotNavigate_FindPathFromTo(m_iLastJumpWaypointIndex, iNearestWpt, -1) == nullptr)
 							{
-								WaypointAddPath(m_iLastJumpWaypointIndex, iNearestWpt);
+								WaypointAddPath(static_cast<short>(m_iLastJumpWaypointIndex), static_cast<short>(iNearestWpt));
 
 								if (m_iJumpType == JUMP_TYPE_STUNT)
 									waypoints[m_iLastJumpWaypointIndex].flags |= W_FL_STUNT;
@@ -627,7 +630,7 @@ void InitMessage ( const char *message );
 							m_iJoinLadderWaypointIndex = iNewWpt;
 
 							if (BotNavigate_FindPathFromTo(m_iLastLadderWaypointIndex, iNewWpt, -1) == nullptr)
-								WaypointAddPath(m_iLastLadderWaypointIndex, iNewWpt);
+								WaypointAddPath(static_cast<short>(m_iLastLadderWaypointIndex), static_cast<short>(iNewWpt));
 						}
 					}
 					else if (iNearestWpt != m_iLastLadderWaypointIndex)
@@ -635,7 +638,7 @@ void InitMessage ( const char *message );
 						m_iJoinLadderWaypointIndex = iNearestWpt;
 
 						if (BotNavigate_FindPathFromTo(m_iLastLadderWaypointIndex, iNearestWpt, -1) == nullptr)
-							WaypointAddPath(m_iLastLadderWaypointIndex, iNearestWpt);
+							WaypointAddPath(static_cast<short>(m_iLastLadderWaypointIndex), static_cast<short>(iNearestWpt));
 					}
 				}
 
@@ -660,13 +663,13 @@ void InitMessage ( const char *message );
 					if (iNewWpt != -1)
 					{
 						if (BotNavigate_FindPathFromTo(m_iJoinLadderWaypointIndex, iNewWpt, -1) == nullptr)
-							WaypointAddPath(m_iJoinLadderWaypointIndex, iNewWpt);
+							WaypointAddPath(static_cast<short>(m_iJoinLadderWaypointIndex), static_cast<short>(iNewWpt));
 					}
 				}
 				else if (iNearestWpt != m_iJoinLadderWaypointIndex)
 				{
 					if (BotNavigate_FindPathFromTo(m_iJoinLadderWaypointIndex, iNearestWpt, -1) == nullptr)
-						WaypointAddPath(m_iJoinLadderWaypointIndex, iNearestWpt);
+						WaypointAddPath(static_cast<short>(m_iJoinLadderWaypointIndex), static_cast<short>(iNearestWpt));
 				}
 
 				m_iJoinLadderWaypointIndex = -1;
@@ -1053,7 +1056,7 @@ void CClients::ClientDisconnected(CClient* pClient)
 		gBotGlobals.m_pListenServerEdict = nullptr;
 
 	// give a few seconds before adding more bots.
-	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 8.0f;
+	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
 
 	const BOOL RemoveGreeting = iPlayerIndex != -1;
 

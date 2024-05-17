@@ -263,8 +263,8 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	BOOL bBotCanUseFlyWpt;
 	BOOL bBotCanUseWallStickWpt;
 
-	bBotCanUseFlyWpt = gBotGlobals.IsMod(MOD_NS) && (pBot->IsMarine() && pBot->HasJetPack() || (pBot->IsFade() && pBot->
-		hasBlink() || pBot->IsLerk()));
+	bBotCanUseFlyWpt = gBotGlobals.IsMod(MOD_NS) && ((pBot->IsMarine() && pBot->HasJetPack()) || ((pBot->IsFade() && pBot->
+		hasBlink()) || pBot->IsLerk()));
 	bBotCanUseWallStickWpt = gBotGlobals.IsMod(MOD_TS) || (gBotGlobals.IsMod(MOD_NS) && bBotCanUseFlyWpt || pBot->IsSkulk());
 	if ((gBotGlobals.IsMod(MOD_GEARBOX) && pBot->HasWeapon(GEARBOX_WEAPON_GRAPPLE)) || gBotGlobals.IsMod(MOD_DMC)) {
 		bBotCanUseFlyWpt = true;

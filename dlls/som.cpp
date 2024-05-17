@@ -120,8 +120,7 @@ void CSom::input(std::vector<std::vector<ga_value>>* inputs, int epochs)//TODO: 
 	}
 
 	// Get the number of input vectors and the length of each input vector
-	const size_t numInputVectors = inputs->size();
-	size_t inputVectorLength = (*inputs)[0].size();
+   size_t inputVectorSize = (*inputs)[0].size();
 
 	// Initialize the self-organizing map with random initial weights
 	// This step is not shown in the provided code snippet and requires initialization logic
@@ -129,9 +128,9 @@ void CSom::input(std::vector<std::vector<ga_value>>* inputs, int epochs)//TODO: 
 	// Training loop for the specified number of epochs
 	for (int epoch = 0; epoch < epochs; ++epoch) {
 		// Iterate through each input vector
-		for (size_t i = 0; i < numInputVectors; ++i) {
+      for (size_t i = 0; i < inputVectorSize; ++i) {
 			// Get the current input vector
-			std::vector<ga_value>& inputVector = (*inputs)[i];
+			(*inputs)[i];
 
 			// Find the best matching unit (BMU) in the self-organizing map for the current input
 			// This involves calculating the distances between the input and each unit in the map

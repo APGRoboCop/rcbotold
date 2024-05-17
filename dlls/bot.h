@@ -4642,7 +4642,7 @@ private:
 	Vector* m_vTeleportVector;
 	//********************
 
-		// autowaypointing stuff
+	// autowaypointing stuff
 	BOOL m_bAutoWaypoint;
 
 	CAutoWaypointCheck m_vLastAutoWaypointCheckPos[MAX_STORED_AUTOWAYPOINT];
@@ -4784,7 +4784,7 @@ public:
 		std::memset(this, 0, sizeof(CAllowedPlayer));
 	}
 
-	CAllowedPlayer(const char* szName, char* szPass, int iAccessLevel, char* szSteamId)
+	CAllowedPlayer(const char* szName, const char* szPass, int iAccessLevel, const char* szSteamId)
 	{
 		std::strcpy(m_szName, szName);
 		std::strncpy(m_szPass, szPass, BOT_MAX_PASSWORD_LEN - 1);
@@ -4799,7 +4799,7 @@ public:
 		return m_szSteamId[0] != 0;
 	}
 
-	BOOL IsForSteamID(char* steamID) const
+	BOOL IsForSteamID(const char* steamID) const
 	{
 		// gotta take care if no steam id is mentioned, could be WON we are playing
 		if (steamID && *steamID && *m_szSteamId) //m_szSteamId always true [APG]RoboCop[CL]
@@ -4808,10 +4808,10 @@ public:
 		return false;
 	}
 
-	BOOL operator == (const CAllowedPlayer &player)
+	BOOL operator == (const CAllowedPlayer &player) const
 	{
 		// = Steam ID , or = name + password
-		return player.IsForName(m_szName) && player.IsForPass(m_szPass) || player.IsForSteamID(m_szSteamId);
+		return (player.IsForName(m_szName) && player.IsForPass(m_szPass)) || player.IsForSteamID(m_szSteamId);
 	}
 
 	BOOL IsForName(const char* szName) const
@@ -4932,7 +4932,7 @@ public:
 	CBotCvar()
 	{
 		m_iAccessLevel = 0;
-		m_bCanUseOnDedicatedServer = 0;
+		m_bCanUseOnDedicatedServer = FALSE;
 		m_szCvarName = nullptr;
 	}
 
@@ -5379,7 +5379,7 @@ public:
 	// keep checking hurt structures
 	edict_t* Tick(int* iBestPriority)
 	{
-		int iPriority = 0;
+		int iPriority;
 
 		edict_t* pUnderAttackStruct = nullptr;
 
@@ -5802,7 +5802,7 @@ public:
 
 			if (pGotFlag->isEdict(pFlag))
 			{
-				BOOL bValid = false;
+				BOOL bValid;
 
 				if (bEnemyFlag) // for demoman, e.g., to pipe enemy flags
 					bValid = pGotFlag->getTeam() && !pGotFlag->isForTeam(team);
@@ -6361,7 +6361,7 @@ public:
 		//m_iNumClients = 0;
 
 		m_fMapInitTime = 0.0f;
-		m_fBotRejoinTime = 8.0f;
+		m_fBotRejoinTime = 5.0f;
 
 		m_fUpdateLadderTime = -1.0f;
 
@@ -6488,7 +6488,7 @@ public:
 		m_fClientUpdateTime = 0.0f;
 		m_bBotCanRejoin = false;
 		m_fMapInitTime = 0.0f;
-		m_fBotRejoinTime = 8.0f;
+		m_fBotRejoinTime = 5.0f;
 		m_iNumBots = 0;
 
 		m_bCanUpgradeDef = false;
@@ -6729,24 +6729,25 @@ public:
 	/*	CGA m_TFCspiesForTeam[MAX_TEAMS];
 
 	edict_t* m_pTFCDetect;
-	edict_t* m_pTFCGoal;
+	edict_t* m_pTFCGoal;*/
 
-	void setMapType(eTFCMapType theMapType)
+	void setMapType(eMapType theMapType)
 	{
-		m_TFCMapType = theMapType;
+		m_MapType = theMapType;
 	}
 
-	int getMapType()
+	int getMapType() const
 	{
-		return m_TFCMapType;
+		return m_MapType;
 	}
 
-	BOOL isMapType(eTFCMapType theMapType)
+	BOOL isMapType(eMapType theMapType) const
 	{
-		return theMapType == m_TFCMapType;
+		return theMapType == m_MapType;
 	}
 
-	edict_t* findBackpack(Vector const location, int team, int min_health, int min_cells, int min_armor, int min_ammo)
+	//TODO: Wizard Wars may require this code [APG]RoboCop[CL]
+	/*edict_t* findBackpack(Vector const location, int team, int min_health, int min_cells, int min_armor, int min_ammo)
 	{
 		return m_Backpacks.findBackpack(location, team, min_health, min_cells, min_armor, min_ammo);
 	}
@@ -6810,7 +6811,7 @@ private:
 
 	///////////
 	// TFC
-	//eTFCMapType m_TFCMapType;
+	eMapType m_MapType;
 
 	int max_team_players[MAX_TEAMS];
 	int team_class_limits[MAX_TEAMS];

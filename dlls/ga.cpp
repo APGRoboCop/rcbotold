@@ -385,7 +385,7 @@ IIndividual* CRouletteSelection::select(CPopulation* population)
 
 ///////////////
 // SAVING
-
+//TODO: To allow the experience data to be saved properly [APG]RoboCop[CL]
 std::FILE* RCBOpenFile(char* file, char* readtype, eGASaveType savedtype, int iId)
 {
 	char filename[256];
