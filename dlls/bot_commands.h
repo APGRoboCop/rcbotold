@@ -408,7 +408,6 @@ public:
 		BotMessage(pEntity, 0, "booleans are 0 or 1");
 		BotMessage(pEntity, 0, ".......................");
 		BotMessage(pEntity, 0, "bots_leave_and_join (incomplete)");
-		BotMessage(pEntity, 0, "welcome_msg");
 		BotMessage(pEntity, 0, "tooltips");
 		BotMessage(pEntity, 0, "autowaypoint_humans");
 		BotMessage(pEntity, 0, "allow_botcam");

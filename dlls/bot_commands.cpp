@@ -1012,13 +1012,6 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 		else
 			fSetVal = gBotGlobals.m_iMaxBots;
 	}
-	else if (FStrEq("welcome_msg", arg1))
-	{
-		if (bSetting)
-			gBotGlobals.m_bWelcomeMsg = static_cast<short>(std::atoi(arg2));
-		else
-			fSetVal = static_cast<float>(gBotGlobals.m_bWelcomeMsg);
-	}
 	/*
 		m_fHiveImportance = 1.0f;
 		m_fResTowerImportance = 0.7f;
