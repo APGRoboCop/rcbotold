@@ -24,22 +24,22 @@ V 1.51-beta5
 
 * added: Enhanced performance and stability
 * added: AMBuild compiling support
-* added: A Welcome Message toggle cvar to hide welcome messages
 * added: Opposing Force CTF support and they should no longer team shoot nor flag hold
 * added: Bots in Op4 should now use Deagle's Laser Sight to improve its accuracy
 * added: C++17 Standard library support 
 * added: Strafing combat to evade from being easy target bots
 * added: Linux bot slow-motion fix by w00tguy
+
 * changed: Increased the bot's flexibility
 * changed: Reduced redundant coding and risks of buffer overflow crashes
 * changed: Reverted basemonster.h that was modified for Sven Coop
-* changed: The bot add or spawn delay for 8-10 seconds to prevent crashes
 * changed: Increasing bot's viewing angle to detect enemies better
 * changed: Reduced further Sven Co-op and TFC support
 * changed: Welcome Message modernised and is now displaying properly
 * changed: Converted some doubles into floats
 * changed: Added returns for NS CAlienAction 
 * changed: NS Squad Menu repaired and should hopefully work
+
 * TODO: To allow Skulk and Lerk Aliens to bite and attack properly
 * TODO: To allow the Onos to be more aggressive and devour humans
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
