@@ -19,7 +19,7 @@ Supported Mods
 RCBot versions
 --------------
 
-V 1.51-beta5
+V 1.51-beta6
 ---------
 
 * added: Enhanced performance and stability
