@@ -70,50 +70,49 @@
  ////////////////////////////////////////
  // NATURAL SELECTION
  // FLYRA (Charlie Cleveland : flayra@overmind.org)
-enum
+enum class NSWeapon
 {
-	NS_WEAPON_NONE = 0,
+	NONE = 0,
 
 	// Alien weapons
-	NS_WEAPON_CLAWS,
-	NS_WEAPON_SPIT,
-	NS_WEAPON_SPORES,
-	NS_WEAPON_SPIKE,
-	NS_WEAPON_BITE,		// Level 1 bite
-	NS_WEAPON_BITE2,	// Level 3 bite
-	NS_WEAPON_SWIPE,
-	NS_WEAPON_WEBSPINNER,
-	NS_WEAPON_METABOLIZE,
-	NS_WEAPON_PARASITE,
-	NS_WEAPON_BLINK,
-	NS_WEAPON_DIVINEWIND,
+	CLAWS,
+	SPIT,
+	SPORES,
+	SPIKE,
+	BITE,		// Level 1 bite
+	BITE2,		// Level 3 bite
+	SWIPE,
+	WEBSPINNER,
+	METABOLIZE,
+	PARASITE,
+	BLINK,
+	DIVINEWIND,
 
 	// Adding a new weapon?  Don't forget to add it's weight in AvHGamerules::GetWeightForItemAndAmmo(AvHWeaponID inWeapon, int inNumRounds)
-	NS_WEAPON_KNIFE,
-	NS_WEAPON_PISTOL,
-	NS_WEAPON_MG,
-	NS_WEAPON_SONIC,
-	NS_WEAPON_HMG,
-	NS_WEAPON_WELDER,
-	NS_WEAPON_MINE,
-	NS_WEAPON_GRENADE_GUN,
+	KNIFE,
+	PISTOL,
+	MG,
+	SONIC,
+	HMG,
+	WELDER,
+	MINE,
+	GRENADE_GUN,
 
 	// Abilities
-	NS_ABILITY_LEAP,
-	NS_ABILITY_CHARGE,
-
-	NS_WEAPON_UMBRA,
-	NS_WEAPON_PRIMALSCREAM,
-	NS_WEAPON_BILEBOMB,
-	NS_WEAPON_ACIDROCKET,
-	NS_WEAPON_HEALINGSPRAY,
-	NS_WEAPON_GRENADE,
-	NS_WEAPON_STOMP,
-	NS_WEAPON_DEVOUR,
+	LEAP,
+	CHARGE,
+	UMBRA,
+	PRIMALSCREAM,
+	BILEBOMB,
+	ACIDROCKET,
+	HEALINGSPRAY,
+	GRENADE,
+	STOMP,
+	DEVOUR,
 
 	// Can't go over 32 (client.cpp, GetWeaponData())
 
-	AVH_WEAPON_MAX
+	MAX
 };
 //AvHWeaponID;
 ////////////////////
@@ -148,8 +147,8 @@ enum
 #define SVEN_WEAPON_GRAPPLE       22
 #define SVEN_WEAPON_SNIPERRIFLE   23*/
 
-#define VALVE_MAX_NORMAL_BATTERY   100
-#define VALVE_HORNET_MAX_CARRY      8
+constexpr int VALVE_MAX_NORMAL_BATTERY = 100;
+constexpr int VALVE_HORNET_MAX_CARRY = 8;
 
 // weapon ID values for Valve's Team Fortress Classic & 1.5
 /*#define TF_WEAPON_UNKNOWN1       1
@@ -209,33 +208,33 @@ enum
 #define CS_WEAPON_P90           30
 */
 // weapon ID values for Gearbox's OpFor Deathmatch
-enum
+enum class GearboxWeapon
 {
-	GEARBOX_WEAPON_CROWBAR = 1,
-	GEARBOX_WEAPON_GLOCK = 2,
-	GEARBOX_WEAPON_PYTHON = 3,
-	GEARBOX_WEAPON_MP5 = 4,
-	GEARBOX_WEAPON_CHAINGUN = 5,
-	GEARBOX_WEAPON_CROSSBOW = 6,
-	GEARBOX_WEAPON_SHOTGUN = 7,
-	GEARBOX_WEAPON_RPG = 8,
-	GEARBOX_WEAPON_GAUSS = 9,
-	GEARBOX_WEAPON_EGON = 10,
-	GEARBOX_WEAPON_HORNETGUN = 11,
-	GEARBOX_WEAPON_HANDGRENADE = 12,
-	GEARBOX_WEAPON_TRIPMINE = 13,
-	GEARBOX_WEAPON_SATCHEL = 14,
-	GEARBOX_WEAPON_SNARK = 15,
-	GEARBOX_WEAPON_GRAPPLE = 16,
-	GEARBOX_WEAPON_EAGLE = 17,
-	GEARBOX_WEAPON_PIPEWRENCH = 18,
-	GEARBOX_WEAPON_M249 = 19,
-	GEARBOX_WEAPON_DISPLACER = 20,
-	GEARBOX_WEAPON_UNKNOWN21 = 21,
-	GEARBOX_WEAPON_SHOCKRIFLE = 22,
-	GEARBOX_WEAPON_SPORELAUNCHER = 23,
-	GEARBOX_WEAPON_SNIPERRIFLE = 24,
-	GEARBOX_WEAPON_KNIFE = 25
+	CROWBAR = 1,
+	GLOCK = 2,
+	PYTHON = 3,
+	MP5 = 4,
+	CHAINGUN = 5,
+	CROSSBOW = 6,
+	SHOTGUN = 7,
+	RPG = 8,
+	GAUSS = 9,
+	EGON = 10,
+	HORNETGUN = 11,
+	HANDGRENADE = 12,
+	TRIPMINE = 13,
+	SATCHEL = 14,
+	SNARK = 15,
+	GRAPPLE = 16,
+	EAGLE = 17,
+	PIPEWRENCH = 18,
+	M249 = 19,
+	DISPLACER = 20,
+	UNKNOWN21 = 21,
+	SHOCKRIFLE = 22,
+	SPORELAUNCHER = 23,
+	SNIPERRIFLE = 24,
+	KNIFE = 25
 };
 
 // weapon ID values for FrontLineForce
@@ -263,130 +262,131 @@ enum
 	FLF_WEAPON_HK21 = 29
 };
 
-enum
+enum class DMCWeapon
 {
-	DMC_WEAPON_AXE = 1,
-	DMC_WEAPON_SHOTGUN = 2,
-	DMC_WEAPON_DOUBLESHOTGUN = 3,
-	DMC_WEAPON_NAILGUN = 4,
-	DMC_WEAPON_SUPERNAIL = 5,
-	DMC_WEAPON_GRENADE1 = 6,
-	DMC_WEAPON_ROCKET1 = 7,
-	DMC_WEAPON_LIGHTNING = 8,
+	AXE = 1,
+	SHOTGUN = 2,
+	DOUBLESHOTGUN = 3,
+	NAILGUN = 4,
+	SUPERNAIL = 5,
+	GRENADE1 = 6,
+	ROCKET1 = 7,
+	LIGHTNING = 8,
 
-	DMC_EXTRA_WEAPON = 8,
+	EXTRA_WEAPON = 8,
 
-	DMC_SHELLS = 9,
-	DMC_NAILS = 10,
-	DMC_ROCKETS = 11,
-	DMC_CELLS = 12,
+	SHELLS = 9,
+	NAILS = 10,
+	ROCKETS = 11,
+	CELLS = 12,
 
-	DMC_ARMOR1 = 13,
-	DMC_ARMOR2 = 14,
-	DMC_ARMOR3 = 15,
-	DMC_SUPERHEALTH = 16,
+	ARMOR1 = 13,
+	ARMOR2 = 14,
+	ARMOR3 = 15,
 
-	DMC_KEY1 = 17,
-	DMC_KEY2 = 18,
+	SUPERHEALTH = 16,
 
-	DMC_INVISIBILITY = 19,
-	DMC_INVULNERABILITY = 20,
-	DMC_SUIT = 21,
-	DMC_QUAD = 22
+	KEY1 = 17,
+	KEY2 = 18,
+
+	INVISIBILITY = 19,
+	INVULNERABILITY = 20,
+	SUIT = 21,
+	QUAD = 22
 };
 
 //#define TS_WEAPON_TSGUN			1
 
-typedef enum
+enum class TSWeapon
 {
-	TS_Glock18 = 1,
-	TS_MiniUzi = 3,
-	TS_BenelliM3 = 4,
-	TS_M4A1 = 5,
-	TS_MP5SD = 6,
-	TS_MP5K = 7,
-	TS_AkimboBerettas = 8,
-	TS_SocomMk23 = 9,
-	TS_Usas12 = 11,
-	TS_DesertEagle = 12,
-	TS_Ak47 = 13,
-	TS_FiveSeven = 14,
-	TS_SteyrAug = 15,
-	TS_SteyrTmp = 17,
-	TS_BarrettM82 = 18,
-	TS_HKPdw = 19,
-	TS_Spas12 = 20,
-	TS_Akimbocolts = 21,
-	TS_Glock20 = 22,
-	TS_Mac10 = 23,
-	TS_CombatKnife = 25,
-	TS_Mossberg500 = 26,
-	TS_M16A4 = 27,
-	TS_RugerMk1 = 28,
-	TS_M61Grenade = 24,
-	TS_C4 = 29,
-	TS_RagingBull = 31,
-	TS_M60 = 32,
-	TS_Sawedoff = 33,
-	TS_Katana = 34,
-	TS_SealKnife = 35,
-	TS_KungFu = 36
-}eTSWeaponID;
+	Glock18 = 1,
+	MiniUzi = 3,
+	BenelliM3 = 4,
+	M4A1 = 5,
+	MP5SD = 6,
+	MP5K = 7,
+	AkimboBerettas = 8,
+	SocomMk23 = 9,
+	Usas12 = 11,
+	DesertEagle = 12,
+	Ak47 = 13,
+	FiveSeven = 14,
+	SteyrAug = 15,
+	SteyrTmp = 17,
+	BarrettM82 = 18,
+	HKPdw = 19,
+	Spas12 = 20,
+	Akimbocolts = 21,
+	Glock20 = 22,
+	Mac10 = 23,
+	CombatKnife = 25,
+	Mossberg500 = 26,
+	M16A4 = 27,
+	RugerMk1 = 28,
+	M61Grenade = 24,
+	C4 = 29,
+	RagingBull = 31,
+	M60 = 32,
+	Sawedoff = 33,
+	Katana = 34,
+	SealKnife = 35,
+	KungFu = 36
+};
 
 // weapon ID values for Science and Industry
-enum
+enum class SIWeapon
 {
-	SI_WEAPON_BRIEFCASE = 1,
-	SI_WEAPON_COLT = 2,
-	SI_WEAPON_VOMIT = 3,
-	SI_WEAPON_ROCKETPISTOL = 4,
-	SI_WEAPON_SHOTGUN = 5,
-	SI_WEAPON_TOMMYGUN = 6,
-	SI_WEAPON_SNUZI = 7,
-	SI_WEAPON_CROSSBOW = 8,
-	SI_WEAPON_GAUSS = 9,
+	BRIEFCASE = 1,
+	COLT = 2,
+	VOMIT = 3,
+	ROCKETPISTOL = 4,
+	SHOTGUN = 5,
+	TOMMYGUN = 6,
+	SNUZI = 7,
+	CROSSBOW = 8,
+	GAUSS = 9,
 	// WHERE IS WEAPON 10?
-	SI_WEAPON_MINDRAY = 11,
-	SI_WEAPON_HANDGRENADE = 12,
-	SI_WEAPON_TRIPMINE = 13,
-	SI_WEAPON_SATCHEL = 14,
-	SI_WEAPON_TRANSISTOR = 15,
-	SI_WEAPON_FLESHGRENADE = 16,
-	SI_WEAPON_RESOURCE = 17,
-	SI_WEAPON_CLOAK = 18,
-	SI_WEAPON_EMPCANNON = 19
+	MINDRAY = 11,
+	HANDGRENADE = 12,
+	TRIPMINE = 13,
+	SATCHEL = 14,
+	TRANSISTOR = 15,
+	FLESHGRENADE = 16,
+	RESOURCE = 17,
+	CLOAK = 18,
+	EMPCANNON = 19
 };
 
 // WIZARD WARS //TODO
-typedef enum
+enum class WizWeapon
 {
-	WEAPON_STAFF = 1,
-	WEAPON_SHIELD,
-	WEAPON_SEAL,
-	WEAPON_MISSILE,
-	WEAPON_DOUBLEMISSILE,
-	WEAPON_UPDRAFT,
-	WEAPON_LEVITATE,
-	WEAPON_LIGHTNINGBOLT,
-	WEAPON_SPOTBOLT,
-	WEAPON_FLAMELICK,
-	WEAPON_FIREBALL,
-	WEAPON_DEATHRAY,
-	WEAPON_SKULL,
-	WEAPON_WHITERAY,
-	WEAPON_FORCEBLAST,
-	WEAPON_PEBBLEBLAST,
-	WEAPON_ROLLINGSTONE,
-	WEAPON_BIRD,
-	WEAPON_BEARBITE,
-	WEAPON_DRAGONBREATH,
-	WEAPON_WYVERN,
-	WEAPON_ICEPOKE,
-	WEAPON_FREEZERAY,
-	WEAPON_THORNBLAST,
-	WEAPON_BEANSTALK,
-	WEAPON_COMBOSPELL,
-}eWizWeaponID;
+	STAFF = 1,
+	SHIELD,
+	SEAL,
+	MISSILE,
+	DOUBLEMISSILE,
+	UPDRAFT,
+	LEVITATE,
+	LIGHTNINGBOLT,
+	SPOTBOLT,
+	FLAMELICK,
+	FIREBALL,
+	DEATHRAY,
+	SKULL,
+	WHITERAY,
+	FORCEBLAST,
+	PEBBLEBLAST,
+	ROLLINGSTONE,
+	BIRD,
+	BEARBITE,
+	DRAGONBREATH,
+	WYVERN,
+	ICEPOKE,
+	FREEZERAY,
+	THORNBLAST,
+	BEANSTALK,
+	COMBOSPELL,
+};
 
 void GetNoWeaponArray(int* Array);
 void GetArrayOfExplosives(int* Array);
@@ -806,11 +806,11 @@ public:
 
 	BOOL CanGetMorePrimaryAmmo() const
 	{
-		switch (m_iId)
+		switch (static_cast<int>(m_iId))
 		{
-		case NS_WEAPON_MINE:
-		case NS_WEAPON_KNIFE:
-		case NS_WEAPON_WELDER:
+		case static_cast<int>(NSWeapon::MINE):
+		case static_cast<int>(NSWeapon::KNIFE):
+		case static_cast<int>(NSWeapon::WELDER):
 			return false;
 			//break;
 		default:

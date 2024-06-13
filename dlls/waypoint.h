@@ -55,8 +55,8 @@
 
 #include "generic_class.h"
 
-#define MAX_WPT_LOCATIONS 32
-#define MAX_WPT_LOC 31
+constexpr int MAX_WPT_LOCATIONS = 32;
+constexpr int MAX_WPT_LOC = 31;
 
 class CWaypointLocations
 	// Hash table of waypoint indexes accross certian
@@ -243,7 +243,7 @@ private:
 };
 //////////////////////
 
-#define MAX_BITS 32
+constexpr int MAX_BITS = 32;
 
 class CWaypointConversion
 {

@@ -248,7 +248,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	else if (FStrEq("givetsweapon", arg1))
 	{
 		if (pEntity && arg2 && *arg2)
-			UTIL_makeTSweapon(pEntity, static_cast<eTSWeaponID>(std::atoi(arg2)));
+			UTIL_makeTSweapon(pEntity, static_cast<TSWeapon>(std::atoi(arg2)));
 	}
 	else if (FStrEq("numclients", arg1))
 	{

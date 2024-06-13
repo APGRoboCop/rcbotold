@@ -414,11 +414,11 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 
 		if (iSound == SOUND_UNKNOWN)
 		{
-			// common sounds, like doors etc.
-			if (sample[0] == 'd' && !std::strncmp(sample, "doors/", 6))
+			// if sample starts with 'd' and is "doors/" or starts with 'p' and is "plats/"...
+			if ((sample[0] == 'd' && !std::strncmp(sample, "doors/", 6)) ||
+				(sample[0] == 'p' && !std::strncmp(sample, "plats/", 6))) {
 				iSound = SOUND_DOOR;
-			else if (sample[0] == 'p' && !std::strncmp(sample, "plats/", 6))
-				iSound = SOUND_DOOR;
+			}
 			else if (sample[0] == 'w' && !std::strncmp(sample, "weapons/", 8))
 				iSound = SOUND_WEAPON;
 			else if (sample[0] == 'p' && !std::strncmp(sample, "player/", 7))
@@ -499,7 +499,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 
 		const edict_t* pEntityOwner = entity->v.owner;
 
-		for (auto& m_Bot : gBotGlobals.m_Bots)
+		for (CBot& m_Bot : gBotGlobals.m_Bots)
 		{
 			CBot* pBot = &m_Bot;
 

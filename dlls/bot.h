@@ -2596,10 +2596,7 @@ private:
 	dataStack<CTFCBackpack> m_Backpacks;
 };*/
 
-enum
-{
-	LEARNED_FILE_VER = 1
-};
+constexpr int LEARNED_FILE_VER = 1;
 
 class CLearnedHeader
 {
@@ -2712,8 +2709,8 @@ class CPerceptron;
 
 class CBotVisibles;
 
-#define BOT_COST_RANGE   64
-#define BOT_COST_BUCKETS 7
+constexpr int BOT_COST_RANGE = 64;
+constexpr int BOT_COST_BUCKETS = 7;
 
 class TSObjective
 {
@@ -3570,12 +3567,11 @@ public:
 	// returns true if bot picked up invulnerabilty
 	BOOL DMC_HasInvulnerability() const
 	{
-		return (m_iQuakeItems & 1 << DMC_INVULNERABILITY) > 0;
+		return (m_iQuakeItems & 1 << static_cast<int>(DMCWeapon::INVULNERABILITY)) > 0;
 	}
-
 	BOOL DMC_HasInvisibility() const
 	{
-		return (m_iQuakeItems & 1 << DMC_INVISIBILITY) > 0;
+		return (m_iQuakeItems & 1 << static_cast<int>(DMCWeapon::INVISIBILITY)) > 0;
 	}
 
 	///////////////////////////
@@ -4027,7 +4023,7 @@ public:
 	Vector   GetAimVector(edict_t* pBotEnemy);
 
 	// get the distance from vector vec
-	float    DistanceFrom(const Vector& vec, BOOL twoD = false) const;
+	float    DistanceFrom(const Vector& vOrigin, BOOL twoD = false) const;
 
 	// set up tasks so bot runs from the origin
 	void	 RunForCover(const Vector& vOrigin, BOOL bDoItNow = false, int iScheduleId = 0);
@@ -4932,7 +4928,7 @@ public:
 	CBotCvar()
 	{
 		m_iAccessLevel = 0;
-		m_bCanUseOnDedicatedServer = FALSE;
+		m_bCanUseOnDedicatedServer = false;
 		m_szCvarName = nullptr;
 	}
 
@@ -5168,7 +5164,7 @@ typedef struct
 	edict_t* pHive;
 }hive_info_t;
 
-#define BOT_MAX_HIVES 3
+constexpr int BOT_MAX_HIVES = 3;
 
 ///////////////////////////
 // MASTER STUFF
@@ -6949,5 +6945,5 @@ int BotNavigate_FindNextWaypoint(CBot* pBot);
 BOOL BotNavigate_UpdateWaypoint(CBot* pBot);
 PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam);
 
-BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid);
+BOOL UTIL_makeTSweapon(edict_t* pOwner, TSWeapon weaponid);
 #endif // BOT_H

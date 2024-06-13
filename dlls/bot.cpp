@@ -845,11 +845,8 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			{
 				if (!m_Tasks.HasTask(BOT_TASK_FACE_VECTOR))
 				{
-					// if no enemy
-					if (!m_pEnemy)
-						bAdd = true;
-					// if shooting a breakable...
-					else if (std::strcmp("func_breakable", STRING(m_pEnemy->v.classname)) == 0)
+					// if no enemy or shooting a breakable...
+					if (!m_pEnemy || std::strcmp("func_breakable", STRING(m_pEnemy->v.classname)) == 0)
 						bAdd = true;
 				}
 			}
@@ -860,7 +857,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 
 		if (gBotGlobals.IsNS() && IsGorge())
 		{
-			const CBotWeapon* pBileBomb = m_Weapons.GetWeapon(NS_WEAPON_BILEBOMB);
+			const CBotWeapon* pBileBomb = m_Weapons.GetWeapon(static_cast<int>(NSWeapon::BILEBOMB));
 
 			if (!pBileBomb->HasWeapon(m_pEdict))
 			{
@@ -3275,9 +3272,9 @@ void CBot::Think()
 
 			if (!gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TS_KUNGFU))
 			{
-				UTIL_makeTSweapon(m_pEdict, static_cast<eTSWeaponID>(static_cast<int>(m_pTSWeaponSelect->get(0) * 35)));
-				UTIL_makeTSweapon(m_pEdict, static_cast<eTSWeaponID>(static_cast<int>(m_pTSWeaponSelect->get(1) * 35)));
-				UTIL_makeTSweapon(m_pEdict, static_cast<eTSWeaponID>(static_cast<int>(m_pTSWeaponSelect->get(2) * 35)));
+				UTIL_makeTSweapon(m_pEdict, static_cast<TSWeapon>(static_cast<int>(m_pTSWeaponSelect->get(0) * 35)));
+				UTIL_makeTSweapon(m_pEdict, static_cast<TSWeapon>(static_cast<int>(m_pTSWeaponSelect->get(1) * 35)));
+				UTIL_makeTSweapon(m_pEdict, static_cast<TSWeapon>(static_cast<int>(m_pTSWeaponSelect->get(2) * 35)));
 			}
 
 			RemoveCondition(BOT_CONDITION_DONT_CLEAR_OBJECTIVES);
@@ -3649,9 +3646,9 @@ void CBot::Think()
 				if (std::strcmp(STRING(tr.pHit->v.classname), "worldspawn") != 0)
 					// not worldspawn
 				{
-					if (BotFunc_EntityIsMoving(&tr.pHit->v))
-						bRemove = false;
-					else if (std::strncmp(STRING(tr.pHit->v.classname), "func_door", 8) == 0)
+					// if entity is moving or is a door...
+					if (BotFunc_EntityIsMoving(&tr.pHit->v) || 
+						std::strncmp(STRING(tr.pHit->v.classname), "func_door", 8) == 0)
 						bRemove = false;
 				}
 			}
@@ -3883,21 +3880,23 @@ void CBot::Think()
 
 BOOL CBot::WantToFindEnemy() const
 {
-	if (gBotGlobals.IsMod(MOD_TS))
+	if (gBotGlobals.IsMod(MOD_TS)) {
 		return !gBotGlobals.IsConfigSettingOn(BOT_CONFIG_DONT_SHOOT);
-	// can I shoot?
-	if (HasCondition(BOT_CONDITION_CANT_SHOOT))
+	}
+	// can't shoot, bot don't shoot setting is on?
+	if (HasCondition(BOT_CONDITION_CANT_SHOOT) ||
+		gBotGlobals.IsConfigSettingOn(BOT_CONFIG_DONT_SHOOT)) {
 		return false;
-	// is bot dont shoot setting on?
-	else if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_DONT_SHOOT))
-		return false;
+	}
 	// Always find enemy in bumpercars, whatever the problem ;-P
-	else if (gBotGlobals.IsMod(MOD_BUMPERCARS))
+	if (gBotGlobals.IsMod(MOD_BUMPERCARS)) {
 		return true;
+	}
 	// Have a weapon?
-	else if (!HasCondition(BOT_CONDITION_HAS_WEAPON))
+	if (!HasCondition(BOT_CONDITION_HAS_WEAPON)) {
 		return false;
-	/*else if (gBotGlobals.IsMod(MOD_TFC))
+	}
+	/*if (gBotGlobals.IsMod(MOD_TFC))
 	{
 		if (m_bHasFlag)
 		{
@@ -4215,23 +4214,9 @@ void CBot::LookForNewTasks()
 		switch (iMod)
 		{
 		case MOD_DMC:
-		{
-			if (!pNearestPickupEntity || fDistance < fNearestPickupEntityDist)
-			{
-				if (CanPickup(pEntity))
-				{
-					fNearestPickupEntityDist = fDistance;
-					pNearestPickupEntity = pEntity;
-					continue;
-				}
-			}
-		}
-		break;
 		case MOD_BUMPERCARS:
-			if (!pNearestPickupEntity || fDistance < fNearestPickupEntityDist)
-			{
-				if (CanPickup(pEntity))
-				{
+			if (!pNearestPickupEntity || fDistance < fNearestPickupEntityDist) {
+				if (CanPickup(pEntity)) {
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
 					continue;
@@ -4562,10 +4547,11 @@ void CBot::LookForNewTasks()
 
 					while ((pUse = UTIL_FindEntityInSphere(pUse, WaypointOrigin(iWpt), 100)) != nullptr)
 					{
-						if (std::strcmp("ts_hack", STRING(pUse->v.classname)) == 0)
+						// if classname is "ts_hack" or "ts_bomb"...
+						if (std::strcmp("ts_hack", STRING(pUse->v.classname)) == 0 ||
+							std::strcmp("ts_bomb", STRING(pUse->v.classname)) == 0) {
 							break;
-						else if (std::strcmp("ts_bomb", STRING(pUse->v.classname)) == 0)
-							break;
+						}
 					}
 
 					if (GetTeam() == 1)
@@ -4631,7 +4617,7 @@ void CBot::LookForNewTasks()
 				break;
 			}
 			// Got something to weld?
-			if (pNearestWeldable && HasWeapon(NS_WEAPON_WELDER))
+			if (pNearestWeldable && HasWeapon(static_cast<int>(NSWeapon::WELDER)))
 			{
 				AddPriorityTask(CBotTask(BOT_TASK_WELD_OBJECT, iNewScheduleId, pNearestWeldable, 0, 0, EntityOrigin(pNearestWeldable)));
 				AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestWeldable));
@@ -5947,7 +5933,7 @@ void CBot::LookForNewTasks()
 
 				if (gBotGlobals.IsNS())
 				{
-					if (IsMarine() && HasWeapon(NS_WEAPON_MINE))
+					if (IsMarine() && HasWeapon(static_cast<int>(NSWeapon::MINE)))
 						AddTask(CBotTask(BOT_TASK_DEPLOY_MINES, iNewScheduleId, nullptr, 0, 0, Vector(0, 0, 0), 10.0f));
 				}
 				/*else if (gBotGlobals.IsMod(MOD_TFC))
@@ -6702,10 +6688,11 @@ BOOL CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 		// hurts and crashes.. TRY to avoid them
 		if (std::strncmp("trigger_", szClassname, 8) == 0)
 		{
-			if (std::strcmp("crash", &szClassname[8]) == 0)
+			// if classname is "crash" or "hurt"...
+			if (std::strcmp("crash", &szClassname[8]) == 0 ||
+				std::strcmp("hurt", &szClassname[8]) == 0) {
 				return true;
-			else if (std::strcmp("hurt", &szClassname[8]) == 0)
-				return true;
+			}
 		}
 	}
 	break;
@@ -6825,7 +6812,7 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 		else
 			vEnemyOrigin = pBotEnemy->v.origin + pBotEnemy->v.view_ofs / 2;
 
-		if (IsCurrentWeapon(GEARBOX_WEAPON_RPG))
+		if (IsCurrentWeapon(static_cast<int>(GearboxWeapon::RPG)))
 		{
 			UTIL_MakeVectors(pev->v_angle);
 
@@ -6871,7 +6858,7 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 		if (m_pCurrentWeapon)
 		{
 			// aim at feet
-			if (m_pCurrentWeapon->GetID() == DMC_WEAPON_ROCKET1)
+			if (m_pCurrentWeapon->GetID() == static_cast<int>(DMCWeapon::ROCKET1))
 			{
 				TraceResult tr;
 
@@ -8231,8 +8218,8 @@ void CBot::WorkMoveDirection()
 			if (!isAboveGrapplePoint && !reachedGrapplePoint) {
 				StopMoving();
 
-				const CBotTask grapTask = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, GEARBOX_WEAPON_GRAPPLE, 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
-				if (!IsCurrentWeapon(GEARBOX_WEAPON_GRAPPLE) && !m_Tasks.HasTask(grapTask)) {
+				const CBotTask grapTask = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, static_cast<int>(GearboxWeapon::GRAPPLE), 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
+				if (!IsCurrentWeapon(static_cast<int>(GearboxWeapon::GRAPPLE)) && !m_Tasks.HasTask(grapTask)) {
 					AddPriorityTask(grapTask);
 				}
 				else {
@@ -8864,7 +8851,7 @@ void CBot::Blocked(edict_t* pentBlocked)
 
 BOOL CBot::hasBlink() const
 {
-	return m_Weapons.HasWeapon(m_pEdict, NS_WEAPON_BLINK);
+	return m_Weapons.HasWeapon(m_pEdict, static_cast<int>(NSWeapon::BLINK));
 }
 
 void CBot::RunPlayerMove()
@@ -9424,13 +9411,13 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 			if (FStrEq(szClassname, "monster_barney"))
 				return false;
-			else if (FStrEq(szClassname, "monster_scientist"))
+			if (FStrEq(szClassname, "monster_scientist"))
 				return false;
-			else if (FStrEq(szClassname, "monster_gman"))
+			if (FStrEq(szClassname, "monster_gman"))
 				return false;
-			else if (FStrEq(szClassname, "monster_furniture"))
+			if (FStrEq(szClassname, "monster_furniture"))
 				return false;
-			else if (FStrEq(szClassname, "monster_tentacle"))
+			if (FStrEq(szClassname, "monster_tentacle"))
 				return false;
 
 			return true;
@@ -9670,33 +9657,33 @@ BOOL BotFunc_IsLongRangeWeapon(const int iId)
 	switch (gBotGlobals.m_iCurrentMod)
 	{
 	case MOD_NS:
-		switch (iId)
+		switch (static_cast<int>(iId))
 		{
-		case NS_WEAPON_CLAWS: //Required to prevent aliens from attacking too far away? [APG]RoboCop[CL]
-		case NS_WEAPON_SPIT:
-		case NS_WEAPON_SPIKE:
-		case NS_WEAPON_BITE:
-		case NS_WEAPON_BITE2:
-		case NS_WEAPON_SWIPE:
+		case static_cast<int>(NSWeapon::CLAWS): //Required to prevent aliens from attacking too far away? [APG]RoboCop[CL]
+		case static_cast<int>(NSWeapon::SPIT):
+		case static_cast<int>(NSWeapon::SPIKE):
+		case static_cast<int>(NSWeapon::BITE):
+		case static_cast<int>(NSWeapon::BITE2):
+		case static_cast<int>(NSWeapon::SWIPE):
 			return false;
-		case NS_WEAPON_PISTOL:
-		case NS_WEAPON_MG:
-		case NS_WEAPON_SONIC:
-		case NS_WEAPON_HMG:
-		case NS_WEAPON_GRENADE_GUN:
-		case NS_WEAPON_SPORES:
-		case NS_WEAPON_METABOLIZE:
-		case NS_WEAPON_PARASITE:
-		case NS_WEAPON_DIVINEWIND:
-		case NS_ABILITY_LEAP:
-		case NS_WEAPON_UMBRA:
-		case NS_WEAPON_PRIMALSCREAM:
-		case NS_WEAPON_BILEBOMB:
-		case NS_WEAPON_ACIDROCKET:
-		case NS_WEAPON_HEALINGSPRAY:
-		case NS_WEAPON_GRENADE:
-		case NS_WEAPON_STOMP:
-		case NS_WEAPON_DEVOUR:
+		case static_cast<int>(NSWeapon::PISTOL):
+		case static_cast<int>(NSWeapon::MG):
+		case static_cast<int>(NSWeapon::SONIC):
+		case static_cast<int>(NSWeapon::HMG):
+		case static_cast<int>(NSWeapon::GRENADE_GUN):
+		case static_cast<int>(NSWeapon::SPORES):
+		case static_cast<int>(NSWeapon::METABOLIZE):
+		case static_cast<int>(NSWeapon::PARASITE):
+		case static_cast<int>(NSWeapon::DIVINEWIND):
+		case static_cast<int>(NSWeapon::LEAP):
+		case static_cast<int>(NSWeapon::UMBRA):
+		case static_cast<int>(NSWeapon::PRIMALSCREAM):
+		case static_cast<int>(NSWeapon::BILEBOMB):
+		case static_cast<int>(NSWeapon::ACIDROCKET):
+		case static_cast<int>(NSWeapon::HEALINGSPRAY):
+		case static_cast<int>(NSWeapon::GRENADE):
+		case static_cast<int>(NSWeapon::STOMP):
+		case static_cast<int>(NSWeapon::DEVOUR):
 			return true;
 		default:
 			return false;
@@ -9704,6 +9691,7 @@ BOOL BotFunc_IsLongRangeWeapon(const int iId)
 	default:
 		return false;
 	}
+
 
 	//return false; //unreachable? [APG]RoboCop[CL]
 }
@@ -10115,7 +10103,7 @@ void CBot::HearSound(const eSoundType iSound, Vector const& vOrigin, edict_t* pE
 
 				if (gBotGlobals.IsNS())
 				{
-					bCanHeal = IsGorge() && HasWeapon(NS_WEAPON_HEALINGSPRAY);
+					bCanHeal = IsGorge() && HasWeapon(static_cast<int>(NSWeapon::HEALINGSPRAY));
 				}
 				/*else if (gBotGlobals.IsMod(MOD_SVENCOOP))
 				{
@@ -10597,14 +10585,8 @@ CBotSquad* CBotSquads::AddSquadMember(edict_t* pLeader, edict_t* pMember)
 	{
 		theSquad = tempStack.ChooseFromStack();
 
-		if (theSquad->IsLeader(pLeader))
-		{
-			theSquad->AddMember(pMember);
-			tempStack.Init();
-			return theSquad;
-		}
-		else if (theSquad->IsMember(pLeader))
-		{
+		// if leader or member...
+		if (theSquad->IsLeader(pLeader) || theSquad->IsMember(pLeader)) {
 			theSquad->AddMember(pMember);
 			tempStack.Init();
 			return theSquad;
@@ -13966,21 +13948,20 @@ void CBot::DoTasks()
 				else
 				{
 					// make sure we only get one of these weapons, the one we want
-					if (!HasWeapon(NS_WEAPON_SONIC) && !HasWeapon(NS_WEAPON_GRENADE_GUN) && !HasWeapon(NS_WEAPON_HMG))
+					if (!HasWeapon(static_cast<int>(NSWeapon::SONIC)) && !HasWeapon(static_cast<int>(NSWeapon::GRENADE_GUN)) && !HasWeapon(static_cast<int>(NSWeapon::HMG)))
 						m_iPossibleUpgrades.Add(BUILD_SHOTGUN);
 					else
 					{
-						if (BotWantsCombatItem(BOT_COMBAT_WANT_GRENADE_GUN) && !HasWeapon(NS_WEAPON_GRENADE_GUN))
+						if (BotWantsCombatItem(BOT_COMBAT_WANT_GRENADE_GUN) && !HasWeapon(static_cast<int>(NSWeapon::GRENADE_GUN)))
 							m_iPossibleUpgrades.Add(BUILD_GRENADE_GUN);
-
-						if (BotWantsCombatItem(BOT_COMBAT_WANT_HMG) && !HasWeapon(NS_WEAPON_HMG))
+						if (BotWantsCombatItem(BOT_COMBAT_WANT_HMG) && !HasWeapon(static_cast<int>(NSWeapon::HMG)))
 							m_iPossibleUpgrades.Add(BUILD_HMG);
 					}
 
-					if (BotWantsCombatItem(BOT_COMBAT_WANT_WELDER) && !HasWeapon(NS_WEAPON_WELDER))
+					if (BotWantsCombatItem(BOT_COMBAT_WANT_WELDER) && !HasWeapon(static_cast<int>(NSWeapon::WELDER)))
 						m_iPossibleUpgrades.Add(BUILD_WELDER);
 
-					if (BotWantsCombatItem(BOT_COMBAT_WANT_MINES) && !HasWeapon(NS_WEAPON_MINE))
+					if (BotWantsCombatItem(BOT_COMBAT_WANT_MINES) && !HasWeapon(static_cast<int>(NSWeapon::MINE)))
 						m_iPossibleUpgrades.Add(BUILD_MINES);
 
 					if (!HasUser4Mask(MASK_UPGRADE_2))
@@ -14159,14 +14140,14 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 			if (!bDone)
 			{
-				if (!HasWeapon(NS_WEAPON_WELDER))
+				if (!HasWeapon(static_cast<int>(NSWeapon::WELDER)))
 				{
 					//TaskToAdd = CBotTask(BOT_TASK_PICKUP_ITEM,..."weapon_welder"); try looking for a welder
 					bTaskFailed = true; // no welder / can't weld
 				}
-				else if (!IsCurrentWeapon(NS_WEAPON_WELDER))
+				else if (!IsCurrentWeapon(static_cast<int>(NSWeapon::WELDER)))
 				{
-					TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, NS_WEAPON_WELDER);
+					TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, static_cast<int>(NSWeapon::WELDER));
 				}
 				else
 				{
@@ -14415,71 +14396,60 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 							bTaskFailed = true;
 							break;
 						}
+						if (!IsCurrentWeapon(static_cast<int>(NSWeapon::METABOLIZE)))
+						{
+							if (m_iLastFailedTask == BOT_TASK_CHANGE_WEAPON)
+								bTaskFailed = true;
+							else
+								TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, static_cast<int>(NSWeapon::METABOLIZE), 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
+						}
 						else
 						{
-							if (!IsCurrentWeapon(NS_WEAPON_METABOLIZE))
+							if (pev->health < pev->max_health)
 							{
-								if (m_iLastFailedTask == BOT_TASK_CHANGE_WEAPON)
-									bTaskFailed = true;
-								else
-									TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, NS_WEAPON_METABOLIZE, 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
+								if (RANDOM_LONG(0, 100) < 50)
+									PrimaryAttack();
 							}
 							else
-							{
-								if (pev->health < pev->max_health)
-								{
-									if (RANDOM_LONG(0, 100) < 50)
-										PrimaryAttack();
-								}
-								else
-									bDone = true;
-							}
+								bDone = true;
 						}
 					}
 					else
 					{
-						if (!IsGorge())
-						{
+						// if not Gorge or is an enemy...
+						if (!IsGorge() || IsEnemy(pPlayer)) {
 							bTaskFailed = true;
 							break;
 						}
-						// dont 'heal' an enemy? should be attack..
-						else if (IsEnemy(pPlayer))
+
+						if (!IsCurrentWeapon(static_cast<int>(NSWeapon::HEALINGSPRAY)))
 						{
-							bTaskFailed = true;
-							break;
+							if (m_iLastFailedTask == BOT_TASK_CHANGE_WEAPON)
+								bTaskFailed = true;
+							else
+								TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, static_cast<int>(NSWeapon::HEALINGSPRAY), 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
 						}
 						else
 						{
-							if (!IsCurrentWeapon(NS_WEAPON_HEALINGSPRAY))
-							{
-								if (m_iLastFailedTask == BOT_TASK_CHANGE_WEAPON)
-									bTaskFailed = true;
-								else
-									TaskToAdd = CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, NS_WEAPON_HEALINGSPRAY, 0.0f, Vector(0, 0, 0), m_CurrentTask->TimeToComplete());
-							}
-							else
-							{
-								float max_health = pPlayer->v.max_health * 0.95f;
+							float max_health = pPlayer->v.max_health * 0.95f;
 
-								if (UTIL_EntityIsHive(pPlayer))
-									max_health = pPlayer->v.max_health * 0.8f;
+							if (UTIL_EntityIsHive(pPlayer))
+								max_health = pPlayer->v.max_health * 0.8f;
 
-								if (pPlayer->v.health < max_health)
+							if (pPlayer->v.health < max_health)
+							{
+								if (NS_AmountOfEnergy() > 45)
 								{
-									if (NS_AmountOfEnergy() > 45)
-									{
-										m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_EDICT;
+									m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_EDICT;
 
-										if (RANDOM_LONG(0, 100) < 50)
-											PrimaryAttack();
-									}
-									else
-										m_CurrentLookTask = BOT_LOOK_TASK_LOOK_AROUND;
+									if (RANDOM_LONG(0, 100) < 50)
+										PrimaryAttack();
 								}
 								else
-									bDone = true;
+									m_CurrentLookTask = BOT_LOOK_TASK_LOOK_AROUND;
 							}
+							else
+								bDone = true;
 						}
 					}
 					break;
@@ -15433,7 +15403,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 								if (!m_Tasks.HasTask(BOT_TASK_SEARCH_FOR_ENEMY))
 								{
-									if (gBotGlobals.IsNS() && IsMarine() && HasWeapon(NS_WEAPON_MINE))
+									if (gBotGlobals.IsNS() && IsMarine() && HasWeapon(static_cast<int>(NSWeapon::MINE)))
 										AddPriorityTask(CBotTask(BOT_TASK_DEPLOY_MINES, iNewScheduleId, nullptr, 0, 0, Vector(0, 0, 0), 10.0f));
 									else if (IsGorge() && hasWeb())
 										AddPriorityTask(CBotTask(BOT_TASK_WEB, iNewScheduleId)); // do a little webbing
@@ -15712,7 +15682,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 				bTaskFailed = true;
 				break;
 			}
-			if (m_pCurrentWeapon == nullptr || m_pCurrentWeapon->GetID() != NS_WEAPON_BLINK)
+			if (m_pCurrentWeapon == nullptr || m_pCurrentWeapon->GetID() != static_cast<int>(NSWeapon::BLINK))
 			{
 				if (m_iLastFailedTask == BOT_TASK_CHANGE_WEAPON)
 				{
@@ -15720,7 +15690,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 					break;
 				}
 
-				AddPriorityTask(CBotTask(BOT_TASK_CHANGE_WEAPON, 0, nullptr, NS_WEAPON_BLINK));
+				AddPriorityTask(CBotTask(BOT_TASK_CHANGE_WEAPON, 0, nullptr, static_cast<int>(NSWeapon::BLINK)));
 
 				break;
 			}
@@ -16171,7 +16141,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 				break;
 			}
 
-			if (m_pCurrentWeapon == nullptr || m_pCurrentWeapon->GetID() != NS_WEAPON_WEBSPINNER)
+			if (m_pCurrentWeapon == nullptr || m_pCurrentWeapon->GetID() != static_cast<int>(NSWeapon::WEBSPINNER))
 			{
 				if (m_iLastFailedTask == BOT_TASK_CHANGE_WEAPON)
 				{
@@ -16179,7 +16149,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 					break;
 				}
 
-				AddPriorityTask(CBotTask(BOT_TASK_CHANGE_WEAPON, 0, nullptr, NS_WEAPON_WEBSPINNER));
+				AddPriorityTask(CBotTask(BOT_TASK_CHANGE_WEAPON, 0, nullptr, static_cast<int>(NSWeapon::WEBSPINNER)));
 
 				break;
 			}
@@ -16233,12 +16203,13 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 			if (gBotGlobals.IsNS())
 			{
-				CBotWeapon* pMines = m_Weapons.GetWeapon(NS_WEAPON_MINE);
+				CBotWeapon* pMines = m_Weapons.GetWeapon(static_cast<int>(NSWeapon::MINE));
+
 
 				if (m_CurrentTask->TaskFloat() == 0.0f)
 					m_CurrentTask->SetFloat(gpGlobals->time + 0.5f);
 
-				if (!HasWeapon(NS_WEAPON_MINE))
+				if (!HasWeapon(static_cast<int>(NSWeapon::MINE)))
 				{
 					bDone = true;
 					break;
@@ -16264,7 +16235,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						break;
 					}
 
-					AddPriorityTask(CBotTask(BOT_TASK_CHANGE_WEAPON, 0, nullptr, NS_WEAPON_MINE));
+					AddPriorityTask(CBotTask(BOT_TASK_CHANGE_WEAPON, 0, nullptr, static_cast<int>(NSWeapon::MINE)));
 
 					break;
 				}
@@ -16385,7 +16356,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 BOOL CBot::CanFly() const
 {
 	return IsLerk() || (IsMarine() && HasJetPack())
-		|| ((gBotGlobals.IsMod(MOD_GEARBOX) && HasWeapon(GEARBOX_WEAPON_GRAPPLE))
+		|| ((gBotGlobals.IsMod(MOD_GEARBOX) && HasWeapon(static_cast<int>(GearboxWeapon::GRAPPLE)))
 			|| gBotGlobals.IsMod(MOD_DMC));
 }
 
@@ -16404,13 +16375,13 @@ BOOL CBot::PrimaryAttack() const
 		switch (m_pCurrentWeapon->GetID())
 		{
 			// clamitius (whichbot)
-		case NS_ABILITY_LEAP:
+		case static_cast<int>(NSWeapon::LEAP):
 			Impulse(ALIEN_ABILITY_LEAP);
 			break;
-		case NS_WEAPON_BLINK:
+		case static_cast<int>(NSWeapon::BLINK):
 			Impulse(ALIEN_ABILITY_BLINK);
 			break;
-		case NS_ABILITY_CHARGE:
+		case static_cast<int>(NSWeapon::CHARGE):
 			Impulse(ALIEN_ABILITY_CHARGE);
 			break;
 		default:
@@ -16853,7 +16824,7 @@ void CBot::decideJumpDuckStrafe(const float fEnemyDist, const Vector& vEnemyOrig
 
 BOOL CBot::hasWeb() const
 {
-	return m_Weapons.HasWeapon(m_pEdict, NS_WEAPON_WEBSPINNER);
+	return m_Weapons.HasWeapon(m_pEdict, static_cast<int>(NSWeapon::WEBSPINNER));
 }
 
 BOOL CBot::isInAnimate(edict_t* pEntity)

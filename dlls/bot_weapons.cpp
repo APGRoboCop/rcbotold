@@ -475,37 +475,38 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 				if (pEnemy->v.iuser3 == AVH_USER3_BREAKABLE || EntityIsMarineStruct(pEnemy))
 				{
 					// cant leap structures etc...
-					iAllowedWeapons[NS_WEAPON_UMBRA] = 0;
-					iAllowedWeapons[NS_WEAPON_SPORES] = 0;
-					iAllowedWeapons[NS_WEAPON_WEBSPINNER] = 0;
-					iAllowedWeapons[NS_WEAPON_METABOLIZE] = 0;
-					iAllowedWeapons[NS_WEAPON_PARASITE] = 0;
-					iAllowedWeapons[NS_WEAPON_BLINK] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::UMBRA)] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::SPORES)] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::WEBSPINNER)] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::METABOLIZE)] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::PARASITE)] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::BLINK)] = 0;
+
 					// Abilities
-					iAllowedWeapons[NS_ABILITY_LEAP] = 0;
-					iAllowedWeapons[NS_ABILITY_CHARGE] = 0;
-					iAllowedWeapons[NS_WEAPON_PRIMALSCREAM] = 0;
-					iAllowedWeapons[NS_WEAPON_HEALINGSPRAY] = 0;
-					iAllowedWeapons[NS_WEAPON_STOMP] = 0;
-					iAllowedWeapons[NS_WEAPON_DEVOUR] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::LEAP)] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::CHARGE)] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::PRIMALSCREAM)] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::HEALINGSPRAY)] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::STOMP)] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::DEVOUR)] = 0;
 				}
 				else if (pEnemy->v.iuser3 == AVH_USER3_MARINE_PLAYER)
 				{
-					iAllowedWeapons[NS_WEAPON_BILEBOMB] = 0;
+					iAllowedWeapons[static_cast<int>(NSWeapon::BILEBOMB)] = 0;
 
 					// heavy armour
 					if (pEnemy->v.iuser4 & MASK_UPGRADE_13)
 					{
-						iAllowedWeapons[NS_WEAPON_SPORES] = 0;
+						iAllowedWeapons[static_cast<int>(NSWeapon::SPORES)] = 0;
 					}
 
 					if (pEnemy->v.iuser4 & MASK_PLAYER_STUNNED)
-						iAllowedWeapons[NS_WEAPON_STOMP] = 0;
+						iAllowedWeapons[static_cast<int>(NSWeapon::STOMP)] = 0;
 				}
 			}
 		}
 		else
-			iAllowedWeapons[NS_WEAPON_MINE] = 0;
+			iAllowedWeapons[static_cast<int>(NSWeapon::MINE)] = 0;
 
 		break;
 		/*case MOD_TFC:
@@ -581,28 +582,28 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		case MOD_GEARBOX: //w00tguy
 			if (FStrEq("func_breakable", STRING(pEnemy->v.classname)))
 			{
-				iAllowedWeapons[GEARBOX_WEAPON_GRAPPLE] = 0; // grapple can't damage breakables
+				iAllowedWeapons[static_cast<int>(GearboxWeapon::GRAPPLE)] = 0; // grapple can't damage breakables
 
 				if (pEnemy->v.spawnflags & 512)
 				{
 					GetNoWeaponArray(iAllowedWeapons);
 					GetArrayOfExplosives(iAllowedWeapons);//bExplosives = pEnemy->v.spawnflags & 512;
 
-					if (pBot->HasWeapon(GEARBOX_WEAPON_MP5))
+					if (pBot->HasWeapon(static_cast<int>(GearboxWeapon::MP5)))
 					{
-						const CBotWeapon* weapon = pBot->m_Weapons.GetWeapon(GEARBOX_WEAPON_MP5);
+						const CBotWeapon* weapon = pBot->m_Weapons.GetWeapon(static_cast<int>(GearboxWeapon::MP5));
 
 						if (weapon->SecondaryAmmo() > 0 && weapon->SecondaryInRange(fEnemyDist))
-							iAllowedWeapons[GEARBOX_WEAPON_MP5] = 1;
+							iAllowedWeapons[static_cast<int>(GearboxWeapon::MP5)] = 1;
 					}
 				}
 				if (pEnemy->v.spawnflags & 256)
 				{
-					const bool hasInstantBreakWep = pBot->HasWeapon(GEARBOX_WEAPON_PIPEWRENCH);
+					const bool hasInstantBreakWep = pBot->HasWeapon(static_cast<int>(GearboxWeapon::PIPEWRENCH));
 
 					if (hasInstantBreakWep || pEnemy->v.health > 1000) {
 						GetNoWeaponArray(iAllowedWeapons);
-						iAllowedWeapons[GEARBOX_WEAPON_PIPEWRENCH] = 1;
+						iAllowedWeapons[static_cast<int>(GearboxWeapon::PIPEWRENCH)] = 1;
 					}
 				}
 			}
@@ -618,10 +619,10 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 				case AVH_USER3_MOVEMENT_CHAMBER:
 					if (fEnemyDist < REACHABLE_RANGE)
 					{
-						if (pBot->HasWeapon(NS_WEAPON_WELDER))
-							return NS_WEAPON_WELDER;
+						if (pBot->HasWeapon(static_cast<int>(NSWeapon::WELDER)))
+							return static_cast<int>(NSWeapon::WELDER);
 
-						return NS_WEAPON_KNIFE;
+						return static_cast<int>(NSWeapon::KNIFE);
 					}
 					break;
 				default:
@@ -665,7 +666,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 
 		if (gBotGlobals.IsNS())
 		{
-			if (pWeapon->GetID() == NS_WEAPON_STOMP)
+			if (pWeapon->GetID() == static_cast<int>(NSWeapon::STOMP))
 			{
 				if (pEnemy)
 				{
@@ -673,7 +674,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 						continue;
 				}
 			}
-			else if (pWeapon->GetID() == NS_WEAPON_PARASITE)
+			else if (pWeapon->GetID() == static_cast<int>(NSWeapon::PARASITE))
 			{
 				if (pEnemy)
 				{
@@ -697,7 +698,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 				// too high to hit...
 				continue;
 			}
-			else if (pEnemy && bEnemyIsElectrified)
+			if (pEnemy && bEnemyIsElectrified)
 			{
 				std::vector<ga_value> inputs;
 
@@ -773,30 +774,24 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 					return 36;
 				return 0;
 			}
-			else
-			{
-				pWeapon = otherWeapons.top();
+			pWeapon = otherWeapons.top();
 
-				return pWeapon->GetID();
-			}
+			return pWeapon->GetID();
 		}
-		else
+		pBot->SetWeaponsNeeded(iAllowedWeapons);
+		pBot->UpdateCondition(BOT_CONDITION_NEED_WEAPONS);
+		//otherWeapons._delete();
+
+		if (!otherWeapons.empty())
 		{
-			pBot->SetWeaponsNeeded(iAllowedWeapons);
-			pBot->UpdateCondition(BOT_CONDITION_NEED_WEAPONS);
-			//otherWeapons._delete();
+			pWeapon = otherWeapons.top();
 
-			if (!otherWeapons.empty())
-			{
-				pWeapon = otherWeapons.top();
-
-				return pWeapon->GetID();
-			}
-
-			if (gBotGlobals.IsMod(MOD_TS))
-				return 36;
-			return 0;
+			return pWeapon->GetID();
 		}
+
+		if (gBotGlobals.IsMod(MOD_TS))
+			return 36;
+		return 0;
 	}
 
 	pWeapon = Weapons.top();

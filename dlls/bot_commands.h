@@ -47,13 +47,13 @@
 #ifndef BOT_COMMANDS_H
 #define BOT_COMMANDS_H
 
-#define BOT_COMMAND_ACCESS_ALLOWED				0
-#define BOT_COMMAND_ACCESS_WAYPOINTING		(1<<0)
-#define BOT_COMMAND_ACCESS_ADD_REMOVE_BOTS	(1<<1)
-#define BOT_COMMAND_ACCESS_UTIL				(1<<2)
-#define BOT_COMMAND_ACCESS_CONFIG			(1<<3)
-#define BOT_COMMAND_ACCESS_DEBUG			(1<<4)
-#define BOT_COMMAND_ACCESS_USERS            (1<<5)
+constexpr int BOT_COMMAND_ACCESS_ALLOWED = 0;
+constexpr int BOT_COMMAND_ACCESS_WAYPOINTING = (1 << 0);
+constexpr int BOT_COMMAND_ACCESS_ADD_REMOVE_BOTS = (1 << 1);
+constexpr int BOT_COMMAND_ACCESS_UTIL = (1 << 2);
+constexpr int BOT_COMMAND_ACCESS_CONFIG = (1 << 3);
+constexpr int BOT_COMMAND_ACCESS_DEBUG = (1 << 4);
+constexpr int BOT_COMMAND_ACCESS_USERS = (1 << 5);
 
 // test function
 void GiveTSWeapon(edict_t* pEdict, int id);

@@ -31,6 +31,7 @@ V 1.51-beta5
 * added: Linux bot slow-motion fix by w00tguy
 
 * changed: Increased the bot's flexibility
+* changed: Replaced most of the #define Marcos with Enumerators and constexpr
 * changed: Reduced redundant coding and risks of buffer overflow crashes
 * changed: Reverted basemonster.h that was modified for Sven Coop
 * changed: Increasing bot's viewing angle to detect enemies better

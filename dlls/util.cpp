@@ -1771,9 +1771,9 @@ BOOL UTIL_CanStand(Vector const& origin, Vector* v_floor)
 	return len > 72;
 }
 
-BOOL UTIL_makeTSweapon(edict_t* pOwner, eTSWeaponID weaponid)
+BOOL UTIL_makeTSweapon(edict_t* pOwner, TSWeapon weaponid)
 {
-	if (weaponid == 0)
+	if (weaponid == static_cast<TSWeapon>(0))
 		return false;
 
 	edict_t* pWeapon = CREATE_NAMED_ENTITY(MAKE_STRING("ts_groundweapon"));
@@ -2288,12 +2288,9 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 
 			bAdd = false;
 
-			if (fDistance < fNearest)
+			if (fDistance < fNearest && ((bSameTeam && fDistance > 128) || (!bSameTeam && fDistance > 64)))
 			{
-				if (bSameTeam && fDistance > 128)
-					bAdd = true;
-				else if (!bSameTeam && fDistance > 64)
-					bAdd = true;
+				bAdd = true;
 			}
 
 			if (bAdd)

@@ -47,12 +47,8 @@
 #ifndef BOT_CONST_H
 #define BOT_CONST_H
 
-#define EXPLODE_RADIUS 300
-
-enum
-{
-	MAX_WAYPOINTS = 1024
-};
+constexpr int EXPLODE_RADIUS = 300;
+constexpr int MAX_WAYPOINTS = 1024;
 
 enum
 {
@@ -178,44 +174,28 @@ enum
 	bits_MEMORY_CUSTOM4 = 1 << 28,	// Monster-specific memory
 	bits_MEMORY_CUSTOM3 = 1 << 29,	// Monster-specific memory
 	bits_MEMORY_CUSTOM2 = 1 << 30,	// Monster-specific memory
-	bits_MEMORY_CUSTOM1 = 1 << 31	// Monster-specific memory
+	bits_MEMORY_CUSTOM1 = 1u << 31  // Monster-specific memory
 };
 
-enum
-{
-	MAX_REMEMBER_POSITIONS = 8
-};
+constexpr int MAX_REMEMBER_POSITIONS = 8;
 
 //////////////////
 // CLIENTS STEAM IDS
-enum
-{
-	STEAM_ID_LEN = 32
-};
+constexpr int STEAM_ID_LEN = 32;
 
 ///////////////////////////////////////////////////////////////////////
 // BOT CONTANTS
 // (constants that bot structures may depend on below)
 
-#define MAX_JUMP_HEIGHT 45.0f
+constexpr float MAX_JUMP_HEIGHT = 45.0f;
 
-enum
-{
-	MAX_TEAMS = 4
-};
+constexpr int MAX_TEAMS = 4;
+constexpr int BOT_MIN_SOUND_DIST = 128;
 
-enum
-{
-	BOT_MIN_SOUND_DIST = 128
-};
+constexpr int BOT_MIN_MSECVAL = 1;
+constexpr int BOT_MAX_MSECVAL = 60;
 
-enum
-{
-	BOT_MIN_MSECVAL = 1,
-	BOT_MAX_MSECVAL = 60
-};
-
-#define BOT_DEF_MSECDELTIME 0.5f
+constexpr float BOT_DEF_MSECDELTIME = 0.5f;
 
 enum
 {
@@ -511,19 +491,19 @@ enum ResearchGoal
 };
 
 // 200 units away max from building (2d distance)
-#define MAX_BUILD_RANGE 800
+constexpr int MAX_BUILD_RANGE = 800;
 
-#define NS_HIVE_RESOURCES 40
-#define NS_ONOS_RESOURCES 75
-#define NS_FADE_RESOURCES 50
-#define NS_LERK_RESOURCES 30
-#define NS_GORGE_RESOURCES 10
-#define NS_SKULK_RESOURCES 2
-#define NS_RESOURCE_TOWER_RESOURCES 15
-#define NS_DEFENSE_CHAMBER_RESOURCES 10
-#define NS_OFFENSE_CHAMBER_RESOURCES 10
-#define NS_MOVEMENT_CHAMBER_RESOURCES 10
-#define NS_SENSORY_CHAMBER_RESOURCES 10
+constexpr int NS_HIVE_RESOURCES = 40;
+constexpr int NS_ONOS_RESOURCES = 75;
+constexpr int NS_FADE_RESOURCES = 50;
+constexpr int NS_LERK_RESOURCES = 30;
+constexpr int NS_GORGE_RESOURCES = 10;
+constexpr int NS_SKULK_RESOURCES = 2;
+constexpr int NS_RESOURCE_TOWER_RESOURCES = 15;
+constexpr int NS_DEFENSE_CHAMBER_RESOURCES = 10;
+constexpr int NS_OFFENSE_CHAMBER_RESOURCES = 10;
+constexpr int NS_MOVEMENT_CHAMBER_RESOURCES = 10;
+constexpr int NS_SENSORY_CHAMBER_RESOURCES = 10;
 
 typedef enum
 {
@@ -763,28 +743,20 @@ enum
 	BOT_CONDITION_DONT_CLEAR_OBJECTIVES = 1 << 23
 };
 
-#define BOT_HEAR_DISTANCE 650.0f
+// Reduced from 650 to 450 to avoid bots from being sidetracked when hearing enemies? [APG]RoboCop[CL]
+constexpr float BOT_HEAR_DISTANCE = 450.0f;
 
-enum
-{
-	BOT_UPGRADE_DEF = 1,
-	BOT_UPGRADE_SEN = 2,
-	BOT_UPGRADE_MOV = 3
-};
+constexpr int BOT_UPGRADE_DEF = 1;
+constexpr int BOT_UPGRADE_SEN = 2;
+constexpr int BOT_UPGRADE_MOV = 3;
 
-enum
-{
-	BOT_LADDER_UNKNOWN = 0,
-	BOT_LADDER_UP = 1,
-	BOT_LADDER_DOWN = 2
-};
+constexpr int BOT_LADDER_UNKNOWN = 0;
+constexpr int BOT_LADDER_UP = 1;
+constexpr int BOT_LADDER_DOWN = 2;
 
-enum
-{
-	BOT_TASKSTATUS_RANDOM_WAYPOINT = -1,
-	BOT_TASKSTATUS_JUMP_OUT = -2,
-	BOT_TASKSTATUS_STILL_PENDING = -3
-};
+constexpr int BOT_TASKSTATUS_RANDOM_WAYPOINT = -1;
+constexpr int BOT_TASKSTATUS_JUMP_OUT = -2;
+constexpr int BOT_TASKSTATUS_STILL_PENDING = -3;
 
 //////////////////////
 // ENUMERTOR TYPES
@@ -1012,18 +984,12 @@ typedef enum
 
 ///////////////////////////////////////////////////////////////////////////////////
 // BOT DEFINITIONS
-enum
-{
-	LADDER_UP = 1,
-	LADDER_UNKNOWN = 0,
-	LADDER_DOWN = 2
-};
+constexpr int LADDER_UP = 1;
+constexpr int LADDER_UNKNOWN = 0;
+constexpr int LADDER_DOWN = 2;
 
-enum
-{
-	BOT_PITCH_SPEED = 30,
-	BOT_YAW_SPEED = 30
-};
+constexpr int BOT_PITCH_SPEED = 30;
+constexpr int BOT_YAW_SPEED = 30;
 
 enum
 {
@@ -1035,12 +1001,11 @@ enum
 	RESPAWN_NEED_TO_REJOIN = 5
 };
 
-#define BOT_DEFAULT_REACTION_TIME	0.3f
-
-#define BOT_DEFAULT_THINK_TIME		0.04f
+constexpr float BOT_DEFAULT_REACTION_TIME = 0.3f;
+constexpr float BOT_DEFAULT_THINK_TIME = 0.04f;
 
 //#define BOT_WAYPOINT_TOUCH_DIST(pev) max36.0pev->absmin.z
-#define BOT_WAYPOINT_TOUCH_DIST		32.0f
+constexpr float BOT_WAYPOINT_TOUCH_DIST = 32.0f;
 
 #define BOT_DEFAULT_NAME "RCBot"
 ///////////////////////////////////////////////////////////////////////////////////
@@ -1260,11 +1225,8 @@ enum
 #define BOT_VER_CVAR "rcbot_ver"
 #define BOT_COMMAND_ACCESS "rcbot" // main bot command
 
-enum
-{
-	MAX_PLAYERS = 32,
-	RCBOT_ACCESS_FORCE_GRIP = 9
-};
+constexpr int MAX_PLAYERS = 32;
+constexpr int RCBOT_ACCESS_FORCE_GRIP = 9;
 
 #define BOT_CRASHLOG_FILE "rcbot_crashlog.txt"
 #define BOT_PROFILES_FILE "bot_profiles.ini"
@@ -1276,9 +1238,9 @@ enum
 ////////////////////////////////////////////
 // BOT CONFIGURATION
 
-#define DEFAULT_BOT_CHAT_PERCENT 15
-#define BOT_CHAT_MESSAGE_LENGTH 128
-#define BOT_CHAT_TYPE_SPEED_SEC 9
+constexpr int DEFAULT_BOT_CHAT_PERCENT = 15;
+constexpr int BOT_CHAT_MESSAGE_LENGTH = 128;
+constexpr int BOT_CHAT_TYPE_SPEED_SEC = 9;
 	
 enum
 {
@@ -1385,12 +1347,9 @@ enum
 /////////////////////////////////
 // PROFILE
 
-enum
-{
-	BOT_PROFILE_READ_ERROR = 0,
-	BOT_PROFILE_READ_BOT_INFO = 1,
-	BOT_PROFILE_READ_REP_INFO = 2
-};
+constexpr int BOT_PROFILE_READ_ERROR = 0;
+constexpr int BOT_PROFILE_READ_BOT_INFO = 1;
+constexpr int BOT_PROFILE_READ_REP_INFO = 2;
 
 #define BOT_PROFILE_FAVMOD "favmod="
 #define BOT_PROFILE_FAVTEAM "favteam="
@@ -1412,10 +1371,7 @@ enum
 #define POINTER_VALUE(x) (*(x))
 //////////////////////////////
 // PATH INDEXES FOR A WAYPOINT
-enum
-{
-	MAX_PATH_INDEX = 4
-};
+constexpr int MAX_PATH_INDEX = 4;
 
 #define BEGIN_SEARCH_THROUGH_PLAYERS(Variable) \
 		int i; \
@@ -1430,28 +1386,25 @@ enum
 #define END_SEARCH_THROUGH_PLAYERS }
 
 /////////////////////
-enum
-{
-	MAX_BOT_ID = 1000
-};
+constexpr int MAX_BOT_ID = 1000;
 
 //////////////////////////////////////////////////////////
 // SKILLS
 
-#define	MAX_BOT_SKILL 100
-#define	MIN_BOT_SKILL 1
-#define DEF_BOT_SKILL (int)((MAX_BOT_SKILL + MIN_BOT_SKILL)/2)
+constexpr int MAX_BOT_SKILL = 100;
+constexpr int MIN_BOT_SKILL = 1;
+constexpr int DEF_BOT_SKILL = (MAX_BOT_SKILL + MIN_BOT_SKILL) / 2;
 
 //////////////////////////////////////////////////////////
 // REPUTATION DEFINITIONS
 
-#define	BOT_MAX_REP 10
-#define	BOT_MIN_REP 0
-#define	BOT_MID_REP 5
-#define	BOT_LOW_REP 3
-#define	BOT_HIGH_REP 6
+constexpr int BOT_MAX_REP = 10;
+constexpr int BOT_MIN_REP = 0;
+constexpr int BOT_MID_REP = 5;
+constexpr int BOT_LOW_REP = 3;
+constexpr int BOT_HIGH_REP = 6;
 
-#define BOT_VIEW_DISTANCE 2048
+constexpr int BOT_VIEW_DISTANCE = 2048;
 //#define BOT_DEFAULT_TURN_SPEED 10
 
 #define BOT_PROFILES_FOLDER "botprofiles"

@@ -1568,12 +1568,11 @@ int WaypointAddOrigin(Vector const& vOrigin, const int iFlags, edict_t* pEntity,
 				new_waypoint->flags |= W_FL_WEAPON;
 			else if (std::strncmp("item_health", szClassname, 11) == 0 || std::strcmp("func_healthcharger", szClassname) == 0)
 				new_waypoint->flags |= W_FL_HEALTH;
-			else if (std::strncmp("item_armor", szClassname, 10) == 0)
+			else if (std::strncmp("item_armor", szClassname, 10) == 0 ||
+				std::strcmp("item_battery", szClassname) == 0 ||
+				std::strcmp("func_recharge", szClassname) == 0) {
 				new_waypoint->flags |= W_FL_ARMOR;
-			else if (std::strcmp("item_battery", szClassname) == 0)
-				new_waypoint->flags |= W_FL_ARMOR;
-			else if (std::strcmp("func_recharge", szClassname) == 0)
-				new_waypoint->flags |= W_FL_ARMOR;
+			}
 		}
 	}
 
@@ -2214,7 +2213,7 @@ void WaypointDrawIndex(edict_t* pEntity, int index)
 	else if (waypoint_flags & W_FL_FLY)
 		colour = Vector(0.0f, 50.0f, 150.0f);
 	else if (waypoint_flags & W_FL_WAIT_FOR_LIFT)
-		colour = Vector(100.0f, 100.0f, 100.0f);
+		colour = Vector(100.0f, 150.0f, 100.0f);
 	else if (waypoint_flags & W_FL_ENDLEVEL)
 		colour = Vector(0.0f, 20.0f, 150.0f);
 	else if (waypoint_flags & W_FL_HUMAN_TOWER)

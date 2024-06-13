@@ -1669,7 +1669,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 
 					case BOT_TASK_WELD_OBJECT:
 						// if has the weapon then do the welding
-						if (pBot->HasWeapon(NS_WEAPON_WELDER))
+						if (pBot->HasWeapon(static_cast<int>(NSWeapon::WELDER)))
 							OrderTaskToAdd = CBotTask(TryOrderTask, 1, pEntity, 0, 0, vOrigin);
 						break;
 					default:
@@ -2176,11 +2176,11 @@ void BotClient_Generic_WeaponPickup::execute(void* p, int iIndex)
 
 	if (gBotGlobals.IsNS())
 	{
-		switch (iWeaponIndex)
+		switch (static_cast<int>(iWeaponIndex))
 		{
-		case NS_WEAPON_KNIFE:
-		case NS_WEAPON_WELDER:
-		case NS_WEAPON_MINE:
+		case static_cast<int>(NSWeapon::KNIFE):
+		case static_cast<int>(NSWeapon::WELDER):
+		case static_cast<int>(NSWeapon::MINE):
 			pBot->m_bCanUseAmmoDispenser = false;
 			break;
 		default:
@@ -2191,11 +2191,11 @@ void BotClient_Generic_WeaponPickup::execute(void* p, int iIndex)
 	{
 		switch (iWeaponIndex)
 		{
-		case GEARBOX_WEAPON_EAGLE:
-			if (!pBot->HasWeapon(GEARBOX_WEAPON_EAGLE))
+		case static_cast<int>(GearboxWeapon::EAGLE):
+			if (!pBot->HasWeapon(static_cast<int>(GearboxWeapon::EAGLE)))
 			{
-				// add a task to use the laser once the weapon has been switched
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_SECONDARY_ATTACK, 0));
+				// make bot use laser
+				pBot->UseRPGLaser();
 			}
 			break;
 		}
