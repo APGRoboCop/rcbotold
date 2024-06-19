@@ -717,7 +717,7 @@ public:
 	}
 
 	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = nullptr, int iInfo = 0, float fInfo = 0.0f,
-		const Vector& vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0f/*, CBotTask *GoalTask = NULL */)
+		const Vector& vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0f) : m_vInfo(vInfo)/*, CBotTask *GoalTask = NULL */
 	{
 		// cheap way of adding schedules.. ;)
 		// means if this task fails we can fail every other task with the same
@@ -726,7 +726,6 @@ public:
 
 		m_Task = iTask;
 		m_iInfo = iInfo;
-		m_vInfo = vInfo;
 		m_pInfo.Set(pInfo);
 		m_fInfo = fInfo;
 		m_bFoundPath = false;
@@ -1780,8 +1779,8 @@ public:
 	}
 
 	CRememberPosition(const Vector& vOrigin, edict_t* pEntity)
+		: m_vOrigin(vOrigin)
 	{
-		m_vOrigin = vOrigin;
 		setEntity(pEntity);
 	}
 
@@ -2722,11 +2721,8 @@ public:
 		m_szName = nullptr;
 	}
 	TSObjective(int id, const Vector& origin, char* name)
-	{
-		m_iId = id;
-		m_vOrigin = origin;
-		m_szName = name;
-	}
+		: m_iId(id), m_vOrigin(origin), m_szName(name)
+	{}
 	/*guurk*/
 	int operator ==(TSObjective& comp) const
 	{
@@ -4140,7 +4136,8 @@ public:
 	//edict_t *m_pTeleExit;
 };
 
-#define HUD_TEXT_LENGTH 256
+constexpr int HUD_TEXT_LENGTH = 256;
+
 //	0 : "Fade In/Out"
 //	1 : "Credits"
 //	2 : "Scan Out"
@@ -4242,7 +4239,7 @@ private:
 ///////////////////////////////////////////////////////////
 // STRING STORAGE
 
-#define STRING_HASHES 26
+constexpr int STRING_HASHES = 26;
 
 // class of strings
 class CStoredStrings
@@ -4251,15 +4248,15 @@ public:
 
 	CStoredStrings()
 	{
-		for (int i = 0; i < STRING_HASHES; i++)
-			szStringsHead[i].Init();
+		for (dataStack<char*>& i : szStringsHead)
+			i.Init();
 	}
 
 	void FreeStrings()
 	{
-		for (int i = 0; i < STRING_HASHES; i++)
+		for (dataStack<char*>& i : szStringsHead)
 		{
-			dataStack<char*> s_tempStack = szStringsHead[i];
+			dataStack<char*> s_tempStack = i;
 
 			while (!s_tempStack.IsEmpty())
 			{
@@ -4270,7 +4267,7 @@ public:
 				}
 			}
 
-			szStringsHead[i].Destroy();
+			i.Destroy();
 		}
 	}
 
@@ -4355,13 +4352,13 @@ private:
 
 class CBotMenu;
 
-#define MAX_STORED_AUTOWAYPOINT 5
+constexpr int MAX_STORED_AUTOWAYPOINT = 5;
 
-#define CLIENT_CMD_PROJ_REPEL 1
-#define CLIENT_CMD_GREN_DEACT 2
+constexpr int CLIENT_CMD_PROJ_REPEL = 1;
+constexpr int CLIENT_CMD_GREN_DEACT = 2;
 
-#define JUMP_TYPE_JUMP 0
-#define JUMP_TYPE_STUNT 1
+constexpr int JUMP_TYPE_JUMP = 0;
+constexpr int JUMP_TYPE_STUNT = 1;
 
 class CClient
 {
@@ -4687,12 +4684,12 @@ public:
 
 	edict_t* FindClient(const char* szPlayerName) const
 	{
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (const CClient& m_Client : m_Clients)
 		{
-			if (m_Clients[i].IsUsed())
+			if (m_Client.IsUsed())
 			{
-				if (m_Clients[i].HasPlayerName(szPlayerName))
-					return m_Clients[i].GetPlayer();
+				if (m_Client.HasPlayerName(szPlayerName))
+					return m_Client.GetPlayer();
 			}
 		}
 
@@ -4754,9 +4751,9 @@ public:
 
 	void FreeGlobalMemory()
 	{
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (CClient& m_Client : this->m_Clients)
 		{
-			this->m_Clients[i].FreeGlobalMemory();
+			m_Client.FreeGlobalMemory();
 		}
 	}
 
@@ -5352,7 +5349,7 @@ private:
 // for quick additions and member
 // checks
 //
-#define ALIEN_STRUCT_HASH_MAX 10
+constexpr int ALIEN_STRUCT_HASH_MAX = 10;
 
 class CStructures
 {
@@ -5368,8 +5365,8 @@ public:
 
 	void FreeLocalMemory()
 	{
-		for (int i = 0; i < ALIEN_STRUCT_HASH_MAX; i++)
-			m_Structures[i].Destroy();
+		for (dataStack<CStructure>& m_Structure : m_Structures)
+			m_Structure.Destroy();
 	}
 
 	// keep checking hurt structures
@@ -5379,9 +5376,9 @@ public:
 
 		edict_t* pUnderAttackStruct = nullptr;
 
-		for (int i = 0; i < ALIEN_STRUCT_HASH_MAX; i++)
+		for (dataStack<CStructure>& m_Structure : m_Structures)
 		{
-			dataStack<CStructure> tempStack = m_Structures[i];
+			dataStack<CStructure> tempStack = m_Structure;
 
 			while (!tempStack.IsEmpty())
 			{
@@ -5443,10 +5440,10 @@ public:
 				else
 				{
 					// Remove this
-					m_Structures[i].RemoveByPointer(pStructure);
+					m_Structure.RemoveByPointer(pStructure);
 
 					// structure changed, restart
-					tempStack = m_Structures[i];
+					tempStack = m_Structure;
 				}
 			}
 
@@ -6102,9 +6099,9 @@ public:
 
 	CBot* otherBotAtWaypoint(CBot* pBot, int iWpt)
 	{
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (CBot& m_Bot : m_Bots)
 		{
-			CBot* pOtherBot = &m_Bots[i];
+			CBot* pOtherBot = &m_Bot;
 
 			if (pOtherBot == pBot)
 				continue;
@@ -6121,9 +6118,9 @@ public:
 
 	void printBotBoredom(edict_t* pEdictTo) const
 	{
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (const CBot& m_Bot : m_Bots)
 		{
-			const CBot* pBot = &m_Bots[i];
+			const CBot* pBot = &m_Bot;
 
 			if (pBot->IsUsed())
 			{
@@ -6207,8 +6204,8 @@ public:
 	{
 		int iNum = 0;
 
-		for (int i = 0; i < MAX_PLAYERS; i++)
-			iNum += m_iJoiningClients[i];
+		for (int m_iJoiningClient : m_iJoiningClients)
+			iNum += m_iJoiningClient;
 
 		return iNum;
 	}

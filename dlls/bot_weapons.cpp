@@ -619,8 +619,9 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 				case AVH_USER3_MOVEMENT_CHAMBER:
 					if (fEnemyDist < REACHABLE_RANGE)
 					{
-						if (pBot->HasWeapon(static_cast<int>(NSWeapon::WELDER)))
-							return static_cast<int>(NSWeapon::WELDER);
+						// Ignore using Welder in combat is best? [APG]RoboCop[CL]
+						//if (pBot->HasWeapon(static_cast<int>(NSWeapon::WELDER)))
+						//	return static_cast<int>(NSWeapon::WELDER);
 
 						return static_cast<int>(NSWeapon::KNIFE);
 					}

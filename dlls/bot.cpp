@@ -1356,6 +1356,7 @@ void CBot::Init()
 // Initialise everything required.
 {
 	std::memset(this, 0, sizeof(CBot));
+	//*this = CBot();
 
 	m_iBoredom = 127;
 
@@ -1964,7 +1965,7 @@ void CBot::SpawnInit(const BOOL bInit)
 
 	m_bNeedToInit = false; //TODO: Mixed up? [APG]RoboCop[CL]
 
-	Vector m_vCurrentLookDir = Vector(0, 0, 0);
+	//Vector m_vCurrentLookDir = Vector(0, 0, 0);
 	//    m_bCurrentLookDirIsValid = false;
 
 	m_vMoveToVector = Vector(0, 0, 0);
@@ -2383,9 +2384,9 @@ BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		while ((ptr = std::strstr(ptr, fill_point)) != nullptr)
 		{
 			// Use fill_point_length inside the loop
-		const size_t end = start + fill_point_length;
-		std::strncpy(after, &string[end], len - end);
-		after[len - end] = 0;
+			const size_t end = start + fill_point_length;
+			std::strncpy(after, &string[end], len - end);
+			after[len - end] = 0;
 		}
 
 		// fill in new string and..
@@ -4171,7 +4172,7 @@ void CBot::LookForNewTasks()
 	BOOL bIsAlien = IsAlien();
 
 	BOOL bNeedHealth = pev->health < pev->max_health * 0.75f;
-	BOOL bNeedArmor = pev->armorvalue < VALVE_MAX_NORMAL_BATTERY / 2;
+	BOOL bNeedArmor = pev->armorvalue < static_cast<float>(VALVE_MAX_NORMAL_BATTERY) / 2;
 
 	BOOL bCanUseScientist = !m_Tasks.HasSchedule(BOT_SCHED_USING_SCIENTIST);
 	BOOL bCanUseBarney = !m_Tasks.HasSchedule(BOT_SCHED_USING_BARNEY);
@@ -8596,7 +8597,7 @@ BOOL CBot::CanPickup(edict_t* pPickup) const
 		const char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
 
 		// quad damage etc..
-		if (std::strncmp(szClassname, "ts_powerup", 11) == 0)
+		if (std::strncmp(szClassname, "ts_powerup", 10) == 0)
 			return true;
 		if (std::strcmp(szClassname, "ts_groundweapon") == 0)
 			return true;
@@ -10454,9 +10455,9 @@ void CBotSquads::ChangeLeader(CBotSquad* theSquad)
 	{
 		// make sure any bots who has this squad set
 		// has their squad removed/cleared.
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (CBot& m_Bot : gBotGlobals.m_Bots)
 		{
-			CBot* pBot = &gBotGlobals.m_Bots[i];
+			CBot* pBot = &m_Bot;
 
 			if (pBot->InSquad(theSquad))
 			{
@@ -10622,9 +10623,9 @@ BOOL CBot::CanAddToSquad(edict_t* pLeader)
 
 void CBotSquads::RemoveSquad(CBotSquad* pSquad)
 {
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	for (CBot& m_Bot : gBotGlobals.m_Bots)
 	{
-		CBot* pBot = &gBotGlobals.m_Bots[i];
+		CBot* pBot = &m_Bot;
 
 		if (pBot->InSquad(pSquad))
 			pBot->ClearSquad();
@@ -11033,9 +11034,9 @@ void BotFunc_MakeSquad(CClient* pClient)
 	if (pEntity == nullptr)
 		return;
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	for (CBot& m_Bot : gBotGlobals.m_Bots)
 	{
-		CBot* pBot = &gBotGlobals.m_Bots[i];
+		CBot* pBot = &m_Bot;
 
 		if (!pBot || !pBot->IsUsed())
 			continue;

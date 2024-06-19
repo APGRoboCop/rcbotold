@@ -739,9 +739,9 @@ void BotMenu_Func_KickBot(CClient* pClient)
 
 	m_Bots.Init();
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	for (CBot& m_Bot : gBotGlobals.m_Bots)
 	{
-		pBot = &gBotGlobals.m_Bots[i];
+		pBot = &m_Bot;
 
 		if (!pBot->m_bIsUsed || !pBot->m_pEdict || pBot->m_iRespawnState != RESPAWN_IDLE)
 			continue;
@@ -974,9 +974,9 @@ void BotMenu_Func_Squad_RemoveAllBotSquads(CClient* pClient)
 	if (!pEntity)
 		return; // cant get player
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	for (CBot& m_Bot : gBotGlobals.m_Bots)
 	{
-		CBot* pBot = &gBotGlobals.m_Bots[i];
+		CBot* pBot = &m_Bot;
 
 		if (!pBot || !pBot->IsUsed())
 			continue;
@@ -1004,9 +1004,9 @@ void BotMenu_Func_KickBotFromTeam(CClient* pClient)
 	dataUnconstArray<CBot*> theBots;
 	CBot* pBot;
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	for (CBot& m_Bot : gBotGlobals.m_Bots)
 	{
-		pBot = &gBotGlobals.m_Bots[i];
+		pBot = &m_Bot;
 
 		if (pBot && pBot->IsUsed())
 		{

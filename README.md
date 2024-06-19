@@ -31,6 +31,7 @@ V 1.51-beta6
 * added: Linux bot slow-motion fix by w00tguy
 
 * changed: Increased the bot's flexibility
+* changed: Avoid using welder in NS Combat
 * changed: Replaced most of the #define Marcos with Enumerators and constexpr
 * changed: Reduced redundant coding and risks of buffer overflow crashes
 * changed: Reverted basemonster.h that was modified for Sven Coop

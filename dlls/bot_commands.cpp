@@ -959,8 +959,8 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 			if (fspeed > 0)
 			{
-				for (int i = 0; i < MAX_PLAYERS; i++)
-					gBotGlobals.m_Bots[i].m_fTurnSpeed = fspeed;
+				for (CBot& m_Bot : gBotGlobals.m_Bots)
+					m_Bot.m_fTurnSpeed = fspeed;
 				gBotGlobals.m_fTurnSpeed = fspeed;
 				fSetVal = gBotGlobals.m_fTurnSpeed;
 			}
@@ -1109,9 +1109,9 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 				gBotGlobals.m_iMaxPathRevs = iRevs;
 
 				// update each bot currently being used
-				for (int i = 0; i < MAX_PLAYERS; i++)
+				for (CBot& m_Bot : gBotGlobals.m_Bots)
 				{
-					CBot* pBot = &gBotGlobals.m_Bots[i];
+					CBot* pBot = &m_Bot;
 
 					if (pBot->IsUsed())
 					{
@@ -1136,9 +1136,9 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 				gBotGlobals.m_iMaxVisUpdateRevs = iRevs;
 
 				// update each bot currently being used
-				for (int i = 0; i < MAX_PLAYERS; i++)
+				for (CBot& m_Bot : gBotGlobals.m_Bots)
 				{
-					CBot* pBot = &gBotGlobals.m_Bots[i];
+					CBot* pBot = &m_Bot;
 
 					if (pBot->IsUsed())
 					{
@@ -1163,9 +1163,9 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 				gBotGlobals.m_fUpdateVisTime = fTime;
 
 				// update each bot currently being used
-				for (int i = 0; i < MAX_PLAYERS; i++)
+				for (CBot& m_Bot : gBotGlobals.m_Bots)
 				{
-					CBot* pBot = &gBotGlobals.m_Bots[i];
+					CBot* pBot = &m_Bot;
 
 					if (pBot->IsUsed())
 					{
@@ -1198,11 +1198,11 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 				BotMessage(pEntity, 0, "%s is now %d", arg1, iState);
 		}
 		else
-			BotMessage(pEntity, 0, "\"%s\" is currently \"%d\"", arg1, gBotGlobals.IsConfigSettingOn(iConfig));
+			BotMessage(pEntity, 0, R"("%s" is currently "%d")", arg1, gBotGlobals.IsConfigSettingOn(iConfig));
 	}
 	else if (!bSetting)
 	{
-		BotMessage(pEntity, 0, "\"%s\" is currently \"%0.2f\"", arg1, fSetVal);
+		BotMessage(pEntity, 0, R"("%s" is currently "%0.2f")", arg1, fSetVal);
 	}
 	else if (bSuccess)
 		BotMessage(pEntity, 0, "%s set to %s", arg1, arg2);
@@ -1668,9 +1668,9 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		dataStack<int> l_IdsInUse;
 
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (CBot& m_Bot : gBotGlobals.m_Bots)
 		{
-			const CBot* tempBot = &gBotGlobals.m_Bots[i];
+			const CBot* tempBot = &m_Bot;
 
 			if (tempBot && tempBot->m_bIsUsed && tempBot->m_pEdict)
 				l_IdsInUse.Push(tempBot->m_Profile.m_iProfileId);
@@ -1883,10 +1883,10 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		const char* teamlist = CVAR_GET_STRING("mp_teamlist");
 
-		int i = 0;
-		int j = 0;
+		unsigned int i = 0;
+		unsigned int j = 0;
 
-		const int len = std::strlen(teamlist);
+		const size_t len = std::strlen(teamlist);
 
 		while (i < len)
 		{

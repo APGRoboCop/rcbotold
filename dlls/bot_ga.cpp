@@ -72,7 +72,7 @@ void CBotGAValues::crossOver(IIndividual* other)
 
 	CBotGAValues* vother = static_cast<CBotGAValues*>(other);
 
-	unsigned int i;
+	int i;
 
 	for (i = 0; i < iPoint; i++)
 	{

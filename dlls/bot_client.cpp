@@ -1559,7 +1559,7 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-#define IS_NS_3_FINAL 1
+constexpr int IS_NS_3_FINAL = 1;
 
 // When a marine bot receives an order...
 void BotClient_NS_SetOrder::execute(void* p, int iIndex)

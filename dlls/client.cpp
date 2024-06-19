@@ -599,9 +599,9 @@ void InitMessage ( const char *message );
 				m_fCanPlaceLadder = 0.0f;
 
 				// need to unset every check point when going on ladder first time
-				for (int i = 0; i < MAX_STORED_AUTOWAYPOINT; i++)
+				for (CAutoWaypointCheck& m_vLastAutoWaypointCheckPo : m_vLastAutoWaypointCheckPos)
 				{
-					m_vLastAutoWaypointCheckPos[i].UnSetPoint();
+					m_vLastAutoWaypointCheckPo.UnSetPoint();
 				}
 			}
 			else if (pev->movetype != MOVETYPE_FLY && m_iLastMoveType == MOVETYPE_FLY)
@@ -1017,9 +1017,9 @@ void CClients::ClientDisconnected(edict_t* pPlayer)
 
 CClient* CClients::GetClientByRepId(const int iRepId)
 {
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	for (CClient& m_Client : m_Clients)
 	{
-		CClient* pClient = &m_Clients[i];
+		CClient* pClient = &m_Client;
 
 		if (pClient->IsUsed())
 		{
@@ -1062,9 +1062,9 @@ void CClients::ClientDisconnected(CClient* pClient)
 
 	if (iPlayerRepId >= 0)
 	{
-		for (int i = 0; i < MAX_PLAYERS; i++)
+		for (CBot& m_Bot : gBotGlobals.m_Bots)
 		{
-			CBot* pBot = &gBotGlobals.m_Bots[i];
+			CBot* pBot = &m_Bot;
 
 			if (!pBot)
 				continue;

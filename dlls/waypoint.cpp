@@ -432,8 +432,8 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float 
 	END_EACH_WPT_LOC_BUCKET
 }
 
-#define WPT_CONVERT_FROM_HPBBOT 1
-#define WPT_CONVERT_FROM_WHICHBOT 2
+constexpr int WPT_CONVERT_FROM_HPBBOT = 1;
+constexpr int WPT_CONVERT_FROM_WHICHBOT = 2;
 
 BOOL WaypointLoad(edict_t* pEntity)
 {
@@ -854,11 +854,11 @@ void WaypointDebug()
 // free the linked list of waypoint path nodes...
 void WaypointFree()
 {
-	for (int i = 0; i < MAX_WAYPOINTS; i++)
+	for (PATH*& i : paths)
 	{
-		if (paths[i])
+		if (i)
 		{
-			PATH* p = paths[i];
+			PATH* p = i;
 
 			while (p)  // free the linked list
 			{
@@ -873,7 +873,7 @@ void WaypointFree()
 #endif
 			}
 
-			paths[i] = nullptr;
+			i = nullptr;
 		}
 	}
 }

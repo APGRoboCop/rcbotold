@@ -174,7 +174,7 @@ enum
 	bits_MEMORY_CUSTOM4 = 1 << 28,	// Monster-specific memory
 	bits_MEMORY_CUSTOM3 = 1 << 29,	// Monster-specific memory
 	bits_MEMORY_CUSTOM2 = 1 << 30,	// Monster-specific memory
-	bits_MEMORY_CUSTOM1 = 1u << 31  // Monster-specific memory
+	bits_MEMORY_CUSTOM1 = 1 << 31  // Monster-specific memory
 };
 
 constexpr int MAX_REMEMBER_POSITIONS = 8;

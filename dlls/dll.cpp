@@ -458,9 +458,9 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 				if (gBotGlobals.m_iNumBots > gBotGlobals.m_iMinBots && iNumPlayerCheck > gBotGlobals.m_iMaxBots)
 					// Can it kick a bot to free a slot?
 				{
-					for (int i = 0; i < MAX_PLAYERS; i++)
+					for (CBot& m_Bot : gBotGlobals.m_Bots)
 					{
-						if (const CBot* pBot = &gBotGlobals.m_Bots[i])  // is this slot used?
+						if (const CBot* pBot = &m_Bot)  // is this slot used?
 						{
 							if (pBot->IsUsed())
 							{
@@ -926,9 +926,9 @@ void ClientCommand(edict_t* pEntity)
 
 				if (szMessage)
 				{
-					for (int i = 0; i < MAX_PLAYERS; i++)
+					for (CBot& m_Bot : gBotGlobals.m_Bots)
 					{
-						CBot* pBot = &gBotGlobals.m_Bots[i];
+						CBot* pBot = &m_Bot;
 
 						if (pBot && pBot->IsUsed())
 						{
@@ -1127,9 +1127,9 @@ void ServerDeactivate()
 	gBotGlobals.saveLearnedData();
 
 	// mark the bots as needing to be rejoined next game...
-	for (int iIndex = 0; iIndex < MAX_PLAYERS; iIndex++)
+	for (CBot& m_Bot : gBotGlobals.m_Bots)
 	{
-		CBot* pBot = &gBotGlobals.m_Bots[iIndex];
+		CBot* pBot = &m_Bot;
 
 		// Respawn left game when bot wants to leave game
 		// initialize bot so that it wont re-use the profile (hopefully)
@@ -1566,7 +1566,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 
 	va_list argptr;
 	static char command[256];
-	int fieldstop, i, stringindex = 0;
+	unsigned int fieldstop, i, stringindex = 0;
 
 	if (!pFakeClient)
 	{
@@ -1589,7 +1589,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	}
 
 	gBotGlobals.m_bIsFakeClientCommand = true; // set the "fakeclient command" flag
-	const int length = std::strlen(command); // get the total length of the command string
+	const size_t length = std::strlen(command); // get the total length of the command string
 
 	// process all individual commands (separated by a semicolon) one each a time
 	while (stringindex < length)
@@ -1606,7 +1606,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 		g_argv[i - fieldstart] = 0; // terminate the string
 		stringindex++; // move the overall string index one step further to bypass the semicolon
 
-		int index = 0;
+		unsigned int index = 0;
 		gBotGlobals.m_iFakeArgCount = 0; // let's now parse that command and count the different arguments
 
 		// count the number of arguments
@@ -1666,8 +1666,8 @@ void BotFunc_InitProfile(bot_profile_t* bpBotProfile)
 	bpBotProfile->m_szHAL_PreTrainFile = nullptr;
 	bpBotProfile->m_szHAL_SwapFile = nullptr;
 
-	bpBotProfile->m_fAimSpeed = 0.2f;
-	bpBotProfile->m_fAimSkill = 0.0f;
+	bpBotProfile->m_fAimSpeed = 0.25f;
+	bpBotProfile->m_fAimSkill = 0.2f;
 	bpBotProfile->m_fAimTime = 1.0f;
 
 	bpBotProfile->m_iBottomColour = RANDOM_LONG(0, 255);
@@ -1780,7 +1780,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		if (szBuffer[0] == '#')
 			continue;
 
-		int iLength = std::strlen(szBuffer);
+		size_t iLength = std::strlen(szBuffer);
 
 		if (iLength > 0 && szBuffer[iLength - 1] == '\n')
 			szBuffer[--iLength] = '\0';
@@ -1998,7 +1998,7 @@ void ReadBotUsersConfig()
 
 			buffer[255] = 0;
 
-			int length = std::strlen(buffer);
+			size_t length = std::strlen(buffer);
 
 			if (buffer[0] == '#') // comment
 				continue;

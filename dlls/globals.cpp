@@ -426,9 +426,9 @@ void CBotGlobals::StartFrame()
 						CBotTask(BOT_TASK_SEARCH_FOR_ENEMY),
 						CBotTask(BOT_TASK_SENSE_ENEMY) };
 
-					for (int i = 0; i < MAX_PLAYERS; i++)
+					for (CBot& m_Bot : m_Bots)
 					{
-						pBot = &m_Bots[i];
+						pBot = &m_Bot;
 
 						if (pBot->IsUsed())
 						{
@@ -455,9 +455,9 @@ void CBotGlobals::StartFrame()
 											 CBotTask(BOT_TASK_SEARCH_FOR_ENEMY),
 											 CBotTask(BOT_TASK_SENSE_ENEMY) };
 
-				for (int i = 0; i < MAX_PLAYERS; i++)
+				for (CBot& m_Bot : m_Bots)
 				{
-					pBot = &m_Bots[i];
+					pBot = &m_Bot;
 
 					if (pBot->IsUsed())
 					{

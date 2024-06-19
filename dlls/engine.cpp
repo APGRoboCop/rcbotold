@@ -154,9 +154,9 @@ void pfnChangeLevel(char* s1, char* s2)
 	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnChangeLevel:\n"); std::fclose(fp); }
 
 	// kick any bot off of the server after time/frag limit...
-	for (int index = 0; index < MAX_PLAYERS; index++)
+	for (CBot& m_Bot : gBotGlobals.m_Bots)
 	{
-		CBot* pBot = &gBotGlobals.m_Bots[index];
+		CBot* pBot = &m_Bot;
 
 		if (pBot->m_bIsUsed)  // is this slot used?
 		{
@@ -1405,9 +1405,9 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 			if (iOldPlayerRepId != -1) // otherwise : error...
 			{
 				CBotReputation* pRep;
-				for (int i = 0; i < MAX_PLAYERS; i++)
+				for (CBot& m_Bot : gBotGlobals.m_Bots)
 				{
-					CBot* pBot = &gBotGlobals.m_Bots[i];
+					CBot* pBot = &m_Bot;
 
 					if (pBot && pBot->m_iRespawnState == RESPAWN_IDLE)
 					{

@@ -697,12 +697,12 @@ public:
 
 	~CWeapons()
 	{
-		for (int i = 0; i < MAX_WEAPONS; i++)
+		for (CWeapon*& m_Weapon : m_Weapons)
 		{
-			if (m_Weapons[i] != nullptr)
+			if (m_Weapon != nullptr)
 			{
-				delete m_Weapons[i];
-				m_Weapons[i] = nullptr;
+				delete m_Weapon;
+				m_Weapon = nullptr;
 			}
 		}
 	}
@@ -711,9 +711,9 @@ public:
 
 	void Init()
 	{
-		for (int i = 0; i < MAX_WEAPONS; i++)
+		for (CWeapon*& m_Weapon : m_Weapons)
 		{
-			m_Weapons[i] = nullptr;
+			m_Weapon = nullptr;
 		}
 		//std::memset(m_Weapons,0,sizeof(CWeapon)*MAX_WEAPONS);
 	}
@@ -987,11 +987,11 @@ public:
 
 	void setHasWeapon(int id, BOOL bVal)
 	{
-		for (int i = 0; i < MAX_WEAPONS; i++)
+		for (CBotWeapon& m_Weapon : m_Weapons)
 		{
-			if (m_Weapons[i].GetID() == id)
+			if (m_Weapon.GetID() == id)
 			{
-				m_Weapons[i].setHasWeapon(bVal);
+				m_Weapon.setHasWeapon(bVal);
 				return;
 			}
 		}

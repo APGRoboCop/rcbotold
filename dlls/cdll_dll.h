@@ -21,7 +21,7 @@
 #define CDLL_DLL_H
 
 //#ifdef RCBOT_TS_BUILD
-#define MAX_WEAPONS	37		// ??? 37 for TS
+constexpr int MAX_WEAPONS = 37;		// ??? 37 for TS;
 //#else
 //	#define MAX_WEAPONS	32
 //#endif
