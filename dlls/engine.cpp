@@ -1657,7 +1657,7 @@ int pfnCheckVisibility(const edict_t* entity, unsigned char* pset)
 	return (*g_engfuncs.pfnCheckVisibility)(entity, pset);
 #endif
 }
-void pfnDeltaSetField(struct delta_s* pFields, const char* fieldname)
+void pfnDeltaSetField(delta_s* pFields, const char* fieldname)
 {
 	//   if (debug_engine) { fp=std::fopen("bot.txt","a"); std::fprintf(fp,"pfnDeltaSetField:\n"); std::fclose(fp); }
 #ifdef RCBOT_META_BUILD
@@ -1666,7 +1666,7 @@ void pfnDeltaSetField(struct delta_s* pFields, const char* fieldname)
 	(*g_engfuncs.pfnDeltaSetField)(pFields, fieldname);
 #endif
 }
-void pfnDeltaUnsetField(struct delta_s* pFields, const char* fieldname)
+void pfnDeltaUnsetField(delta_s* pFields, const char* fieldname)
 {
 	//   if (debug_engine) { fp=std::fopen("bot.txt","a"); std::fprintf(fp,"pfnDeltaUnsetField:\n"); std::fclose(fp); }
 #ifdef RCBOT_META_BUILD
@@ -1675,7 +1675,7 @@ void pfnDeltaUnsetField(struct delta_s* pFields, const char* fieldname)
 	(*g_engfuncs.pfnDeltaUnsetField)(pFields, fieldname);
 #endif
 }
-void pfnDeltaAddEncoder(char* name, void (*conditionalencode)(struct delta_s* pFields, const unsigned char* from, const unsigned char* to))
+void pfnDeltaAddEncoder(char* name, void (*conditionalencode)(delta_s* pFields, const unsigned char* from, const unsigned char* to))
 {
 	//   if (debug_engine) { fp=std::fopen("bot.txt","a"); std::fprintf(fp,"pfnDeltaAddEncoder:\n"); std::fclose(fp); }
 #ifdef RCBOT_META_BUILD
@@ -1702,7 +1702,7 @@ int pfnCanSkipPlayer(const edict_t* player)
 	return (*g_engfuncs.pfnCanSkipPlayer)(player);
 #endif
 }
-int pfnDeltaFindField(struct delta_s* pFields, const char* fieldname)
+int pfnDeltaFindField(delta_s* pFields, const char* fieldname)
 {
 	//   if (debug_engine) { fp=std::fopen("bot.txt","a"); std::fprintf(fp,"pfnDeltaFindField:\n"); std::fclose(fp); }
 #ifdef RCBOT_META_BUILD
@@ -1711,7 +1711,7 @@ int pfnDeltaFindField(struct delta_s* pFields, const char* fieldname)
 	return (*g_engfuncs.pfnDeltaFindField)(pFields, fieldname);
 #endif
 }
-void pfnDeltaSetFieldByIndex(struct delta_s* pFields, int fieldNumber)
+void pfnDeltaSetFieldByIndex(delta_s* pFields, int fieldNumber)
 {
 	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnDeltaSetFieldByIndex:\n"); std::fclose(fp); }
 #ifdef RCBOT_META_BUILD
@@ -1720,7 +1720,7 @@ void pfnDeltaSetFieldByIndex(struct delta_s* pFields, int fieldNumber)
 	(*g_engfuncs.pfnDeltaSetFieldByIndex)(pFields, fieldNumber);
 #endif
 }
-void pfnDeltaUnsetFieldByIndex(struct delta_s* pFields, int fieldNumber)
+void pfnDeltaUnsetFieldByIndex(delta_s* pFields, int fieldNumber)
 {
 	//   if (debug_engine) { fp=std::fopen("bot.txt","a"); std::fprintf(fp,"pfnDeltaUnsetFieldByIndex:\n"); std::fclose(fp); }
 #ifdef RCBOT_META_BUILD
@@ -1738,7 +1738,7 @@ void pfnSetGroupMask(int mask, int op)
 	(*g_engfuncs.pfnSetGroupMask)(mask, op);
 #endif
 }
-int pfnCreateInstancedBaseline(int classname, struct entity_state_s* baseline)
+int pfnCreateInstancedBaseline(int classname, entity_state_s* baseline)
 {
 	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCreateInstancedBaseline:\n"); std::fclose(fp); }
 #ifdef RCBOT_META_BUILD
@@ -1747,7 +1747,7 @@ int pfnCreateInstancedBaseline(int classname, struct entity_state_s* baseline)
 	return (*g_engfuncs.pfnCreateInstancedBaseline)(classname, baseline);
 #endif
 }
-void pfnCvar_DirectSet(struct cvar_s* var, char* value)
+void pfnCvar_DirectSet(cvar_s* var, char* value)
 {
 	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCvar_DirectSet:\n"); std::fclose(fp); }
 #ifdef RCBOT_META_BUILD

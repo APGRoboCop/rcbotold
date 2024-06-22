@@ -24,7 +24,7 @@
 
 // Entity state is used for the baseline and for delta compression of a packet of 
 //  entities that is sent to a client.
-typedef struct entity_state_s entity_state_t;
+typedef entity_state_s entity_state_t;
 
 struct entity_state_s
 {

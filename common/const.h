@@ -730,7 +730,7 @@ typedef struct
 #endif
 typedef struct link_s
 {
-	struct link_s	*prev, *next;
+	link_s	*prev, *next;
 } link_t;
 
 typedef struct edict_s edict_t;

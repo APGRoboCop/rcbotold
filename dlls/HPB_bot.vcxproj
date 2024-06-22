@@ -207,6 +207,7 @@
       <PrecompiledHeaderOutputFile>.\Debug\HPB_bot.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\Debug\</ObjectFileName>
       <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -331,7 +332,20 @@
     <ClCompile Include="waypoint.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\const.h" />
+    <ClInclude Include="..\common\crc.h" />
+    <ClInclude Include="..\common\cvardef.h" />
+    <ClInclude Include="..\common\entity_state.h" />
+    <ClInclude Include="..\common\event_flags.h" />
+    <ClInclude Include="..\common\in_buttons.h" />
+    <ClInclude Include="..\common\studio_event.h" />
     <ClInclude Include="..\common\weaponinfo.h" />
+    <ClInclude Include="..\engine\custom.h" />
+    <ClInclude Include="..\engine\edict.h" />
+    <ClInclude Include="..\engine\eiface.h" />
+    <ClInclude Include="..\engine\progdefs.h" />
+    <ClInclude Include="..\engine\studio.h" />
+    <ClInclude Include="..\pm_shared\pm_info.h" />
     <ClInclude Include="actionutility.h" />
     <ClInclude Include="basemonster.h" />
     <ClInclude Include="bits.h" />
