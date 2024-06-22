@@ -975,14 +975,13 @@ public:
 			this->RemoveWeapon(i);
 	}
 
-	BOOL HasWeapon(edict_t* pEdict, char* szClassname) const;
+	BOOL HasWeapon(edict_t* pEdict, const char* szClassname) const;
 
 	BOOL HasWeapon(edict_t* pEdict, int iId) const
 	{
 		if (iId > 0 && iId < MAX_WEAPONS)
 			return m_Weapons[iId].HasWeapon(pEdict);
-		else
-			return false;
+		return false;
 	}
 
 	void setHasWeapon(int id, BOOL bVal)

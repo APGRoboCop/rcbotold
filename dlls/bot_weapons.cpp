@@ -90,7 +90,7 @@ void CWeapon::SetWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int 
 	m_iSecAmmoMax = iSecAmmoMax;
 	m_iHudSlot = iHudSlot;
 	m_iHudPosition = iHudPosition;
-
+	m_iFlags = iFlags;
 	m_iAmmoIndex1 = iAmmoIndex1;
 	m_iAmmoIndex2 = iAmmoIndex2;
 
@@ -924,7 +924,7 @@ BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWall
 	return true;
 }
 
-BOOL CBotWeapons::HasWeapon(edict_t* pEdict, char* szClassname) const
+BOOL CBotWeapons::HasWeapon(edict_t* pEdict, const char* szClassname) const
 {
 	const char* pClassname;
 
