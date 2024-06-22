@@ -42,6 +42,7 @@ V 1.51-beta6
 * changed: Added returns for NS CAlienAction 
 * changed: NS Squad Menu repaired and should hopefully work
 
+* TODO: To add support for Half-Life 25th Anniversary builds as it doesn't support Waypoints being displayed
 * TODO: To allow Skulk and Lerk Aliens to bite and attack properly
 * TODO: To allow the Onos to be more aggressive and devour humans
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
@@ -50,7 +51,7 @@ V 1.51-beta6
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
 * TODO: To bring back the TS v3.0 stunt dive code that was working previously
 * TODO: To allow bots in Op4 to use Grapple by using the "Fly" waypoint
-* TODO: To add proper support for S&I, FLF and WizWars
+* TODO: To add proper support for S&I, AHL, FLF and WizWars
 
 V 1.5-final
 ---------
