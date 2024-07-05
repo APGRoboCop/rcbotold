@@ -1,9 +1,9 @@
 /***
 *
 *	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
-*	
-*	This product contains software technology licensed from Id 
-*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc. 
+*
+*	This product contains software technology licensed from Id
+*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
 *	All Rights Reserved.
 *
 *   Use, distribution, and modification of this source code and/or resulting
@@ -54,10 +54,8 @@
 #define FL_KILLME				(1<<30)	// This entity is marked for death -- This allows the engine to kill ents at the appropriate time
 #define FL_DORMANT				(1<<31)	// Entity is dormant, no updates to client
 
-
 // Goes into globalvars_t.trace_flags
 #define FTRACE_SIMPLEBOX		(1<<0)	// Traceline with a simple box
-
 
 // walkmove modes
 #define	WALKMOVE_NORMAL		0 // normal walkmove
@@ -112,41 +110,41 @@
 
 // entity flags
 #define EFLAG_SLERP				1	// do studio interpolation of this entity
-		
+
 //
 // temp entity events
 //
 #define	TE_BEAMPOINTS		0		// beam effect between two points
-// coord coord coord (start position) 
-// coord coord coord (end position) 
-// short (sprite index) 
-// byte (starting frame) 
-// byte (frame rate in 0.1's) 
-// byte (life in 0.1's) 
-// byte (line width in 0.1's) 
-// byte (noise amplitude in 0.01's) 
+// coord coord coord (start position)
+// coord coord coord (end position)
+// short (sprite index)
+// byte (starting frame)
+// byte (frame rate in 0.1's)
+// byte (life in 0.1's)
+// byte (line width in 0.1's)
+// byte (noise amplitude in 0.01's)
 // byte,byte,byte (color)
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
 #define	TE_BEAMENTPOINT		1		// beam effect between point and entity
-// short (start entity) 
-// coord coord coord (end position) 
-// short (sprite index) 
-// byte (starting frame) 
-// byte (frame rate in 0.1's) 
-// byte (life in 0.1's) 
-// byte (line width in 0.1's) 
-// byte (noise amplitude in 0.01's) 
+// short (start entity)
+// coord coord coord (end position)
+// short (sprite index)
+// byte (starting frame)
+// byte (frame rate in 0.1's)
+// byte (life in 0.1's)
+// byte (line width in 0.1's)
+// byte (noise amplitude in 0.01's)
 // byte,byte,byte (color)
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
 #define	TE_GUNSHOT			2		// particle effect plus ricochet sound
-// coord coord coord (position) 
+// coord coord coord (position)
 
 #define	TE_EXPLOSION		3		// additive sprite, 2 dynamic lights, flickering particles, explosion sound, move vertically 8 pps
-// coord coord coord (position) 
+// coord coord coord (position)
 // short (sprite index)
 // byte (scale in 0.1's)
 // byte (framerate)
@@ -159,56 +157,55 @@
 #define TE_EXPLFLAG_NOSOUND		4	// do not play client explosion sound
 #define TE_EXPLFLAG_NOPARTICLES	8	// do not draw particles
 
-
 #define	TE_TAREXPLOSION		4		// Quake1 "tarbaby" explosion with sound
-// coord coord coord (position) 
+// coord coord coord (position)
 
 #define	TE_SMOKE			5		// alphablend sprite, move vertically 30 pps
-// coord coord coord (position) 
+// coord coord coord (position)
 // short (sprite index)
 // byte (scale in 0.1's)
 // byte (framerate)
 
 #define	TE_TRACER			6		// tracer effect from point to point
-// coord, coord, coord (start) 
+// coord, coord, coord (start)
 // coord, coord, coord (end)
 
 #define	TE_LIGHTNING		7		// TE_BEAMPOINTS with simplified parameters
-// coord, coord, coord (start) 
-// coord, coord, coord (end) 
-// byte (life in 0.1's) 
-// byte (width in 0.1's) 
+// coord, coord, coord (start)
+// coord, coord, coord (end)
+// byte (life in 0.1's)
+// byte (width in 0.1's)
 // byte (amplitude in 0.01's)
 // short (sprite model index)
 
-#define	TE_BEAMENTS			8		
-// short (start entity) 
-// short (end entity) 
-// short (sprite index) 
-// byte (starting frame) 
-// byte (frame rate in 0.1's) 
-// byte (life in 0.1's) 
-// byte (line width in 0.1's) 
-// byte (noise amplitude in 0.01's) 
+#define	TE_BEAMENTS			8
+// short (start entity)
+// short (end entity)
+// short (sprite index)
+// byte (starting frame)
+// byte (frame rate in 0.1's)
+// byte (life in 0.1's)
+// byte (line width in 0.1's)
+// byte (noise amplitude in 0.01's)
 // byte,byte,byte (color)
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
 #define	TE_SPARKS			9		// 8 random tracers with gravity, ricochet sprite
-// coord coord coord (position) 
+// coord coord coord (position)
 
 #define	TE_LAVASPLASH		10		// Quake1 lava splash
-// coord coord coord (position) 
+// coord coord coord (position)
 
 #define	TE_TELEPORT			11		// Quake1 teleport splash
-// coord coord coord (position) 
+// coord coord coord (position)
 
 #define TE_EXPLOSION2		12		// Quake1 colormaped (base palette) particle explosion with sound
-// coord coord coord (position) 
+// coord coord coord (position)
 // byte (starting color)
 // byte (num colors)
 
-#define TE_BSPDECAL			13		// Decal from the .BSP file 
+#define TE_BSPDECAL			13		// Decal from the .BSP file
 // coord, coord, coord (x,y,z), decal position (center of texture in world)
 // short (texture index of precached decal texture name)
 // short (entity index)
@@ -218,67 +215,67 @@
 // coord, coord, coord (position)
 // byte (radius)
 // byte (count)
-// byte (life in 0.1's) 
+// byte (life in 0.1's)
 
 #define TE_SPRITETRAIL		15		// line of moving glow sprites with gravity, fadeout, and collisions
-// coord, coord, coord (start) 
-// coord, coord, coord (end) 
+// coord, coord, coord (start)
+// coord, coord, coord (end)
 // short (sprite index)
 // byte (count)
-// byte (life in 0.1's) 
-// byte (scale in 0.1's) 
+// byte (life in 0.1's)
+// byte (scale in 0.1's)
 // byte (velocity along vector in 10's)
 // byte (randomness of velocity in 10's)
 
 #define TE_BEAM				16		// obsolete
 
 #define TE_SPRITE			17		// additive sprite, plays 1 cycle
-// coord, coord, coord (position) 
-// short (sprite index) 
-// byte (scale in 0.1's) 
+// coord, coord, coord (position)
+// short (sprite index)
+// byte (scale in 0.1's)
 // byte (brightness)
 
 #define TE_BEAMSPRITE		18		// A beam with a sprite at the end
-// coord, coord, coord (start position) 
-// coord, coord, coord (end position) 
-// short (beam sprite index) 
-// short (end sprite index) 
+// coord, coord, coord (start position)
+// coord, coord, coord (end position)
+// short (beam sprite index)
+// short (end sprite index)
 
 #define TE_BEAMTORUS		19		// screen aligned beam ring, expands to max radius over lifetime
-// coord coord coord (center position) 
-// coord coord coord (axis and radius) 
-// short (sprite index) 
-// byte (starting frame) 
-// byte (frame rate in 0.1's) 
-// byte (life in 0.1's) 
-// byte (line width in 0.1's) 
-// byte (noise amplitude in 0.01's) 
+// coord coord coord (center position)
+// coord coord coord (axis and radius)
+// short (sprite index)
+// byte (starting frame)
+// byte (frame rate in 0.1's)
+// byte (life in 0.1's)
+// byte (line width in 0.1's)
+// byte (noise amplitude in 0.01's)
 // byte,byte,byte (color)
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
 #define TE_BEAMDISK			20		// disk that expands to max radius over lifetime
-// coord coord coord (center position) 
-// coord coord coord (axis and radius) 
-// short (sprite index) 
-// byte (starting frame) 
-// byte (frame rate in 0.1's) 
-// byte (life in 0.1's) 
-// byte (line width in 0.1's) 
-// byte (noise amplitude in 0.01's) 
+// coord coord coord (center position)
+// coord coord coord (axis and radius)
+// short (sprite index)
+// byte (starting frame)
+// byte (frame rate in 0.1's)
+// byte (life in 0.1's)
+// byte (line width in 0.1's)
+// byte (noise amplitude in 0.01's)
 // byte,byte,byte (color)
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
 #define TE_BEAMCYLINDER		21		// cylinder that expands to max radius over lifetime
-// coord coord coord (center position) 
-// coord coord coord (axis and radius) 
-// short (sprite index) 
-// byte (starting frame) 
-// byte (frame rate in 0.1's) 
-// byte (life in 0.1's) 
-// byte (line width in 0.1's) 
-// byte (noise amplitude in 0.01's) 
+// coord coord coord (center position)
+// coord coord coord (axis and radius)
+// short (sprite index)
+// byte (starting frame)
+// byte (frame rate in 0.1's)
+// byte (life in 0.1's)
+// byte (line width in 0.1's)
+// byte (noise amplitude in 0.01's)
 // byte,byte,byte (color)
 // byte (brightness)
 // byte (scroll speed in 0.1's)
@@ -286,30 +283,30 @@
 #define TE_BEAMFOLLOW		22		// create a line of decaying beam segments until entity stops moving
 // short (entity:attachment to follow)
 // short (sprite index)
-// byte (life in 0.1's) 
-// byte (line width in 0.1's) 
+// byte (life in 0.1's)
+// byte (line width in 0.1's)
 // byte,byte,byte (color)
 // byte (brightness)
 
-#define TE_GLOWSPRITE		23		
+#define TE_GLOWSPRITE		23
 // coord, coord, coord (pos) short (model index) byte (scale / 10)
 
 #define TE_BEAMRING			24		// connect a beam ring to two entities
-// short (start entity) 
-// short (end entity) 
-// short (sprite index) 
-// byte (starting frame) 
-// byte (frame rate in 0.1's) 
-// byte (life in 0.1's) 
-// byte (line width in 0.1's) 
-// byte (noise amplitude in 0.01's) 
+// short (start entity)
+// short (end entity)
+// short (sprite index)
+// byte (starting frame)
+// byte (frame rate in 0.1's)
+// byte (life in 0.1's)
+// byte (line width in 0.1's)
+// byte (noise amplitude in 0.01's)
 // byte,byte,byte (color)
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
 #define TE_STREAK_SPLASH	25		// oriented shower of tracers
-// coord coord coord (start position) 
-// coord coord coord (direction vector) 
+// coord coord coord (start position)
+// coord coord coord (direction vector)
 // byte (color)
 // short (count)
 // short (base speed)
@@ -318,8 +315,8 @@
 #define TE_BEAMHOSE			26		// obsolete
 
 #define TE_DLIGHT			27		// dynamic light, effect world, minor entity effect
-// coord, coord, coord (pos) 
-// byte (radius in 10's) 
+// coord, coord, coord (pos)
+// byte (radius in 10's)
 // byte byte byte (color)
 // byte (brightness)
 // byte (life in 10's)
@@ -327,7 +324,7 @@
 
 #define TE_ELIGHT			28		// point entity light, no world effect
 // short (entity:attachment to follow)
-// coord coord coord (initial position) 
+// coord coord coord (initial position)
 // coord (radius)
 // byte byte byte (color)
 // byte (life in 0.1's)
@@ -348,14 +345,13 @@
 // optional ushort 8.8 fxtime	(time the highlight lags behing the leading text in effect 2)
 // string text message		(512 chars max sz string)
 
-
 #define TE_KILLBEAM			99		// kill all beams attached to entity
 // short (entity)
 
 #define TE_LARGEFUNNEL		100
 // coord coord coord (funnel position)
-// short (sprite index) 
-// short (flags) 
+// short (sprite index)
+// short (flags)
 
 #define	TE_BLOODSTREAM		101		// particle spray
 // coord coord coord (start position)
@@ -384,7 +380,7 @@
 // byte (density)
 
 #define TE_MODEL			106		// create a moving model that bounces and makes a sound when it hits
-// coord, coord, coord (position) 
+// coord, coord, coord (position)
 // coord, coord, coord (velocity)
 // angle (initial yaw)
 // short (model index)
@@ -421,7 +417,7 @@
 // byte (speed)
 // byte (noise)
 
-#define TE_ARMOR_RICOCHET	111		// quick spark sprite, client ricochet sound. 
+#define TE_ARMOR_RICOCHET	111		// quick spark sprite, client ricochet sound.
 // coord, coord, coord (position)
 // byte (scale in 0.1's)
 
@@ -509,7 +505,7 @@
 #define TEFIRE_FLAG_SOMEFLOAT	2 // some of the sprites will drift upwards. (50% chance)
 #define TEFIRE_FLAG_LOOP		4 // if set, sprite plays at 15 fps, otherwise plays at whatever rate stretches the animation over the sprite's duration.
 #define TEFIRE_FLAG_ALPHA		8 // if set, sprite is rendered alpha blended at 50% else, opaque
-#define TEFIRE_FLAG_PLANAR		16 // if set, all fire sprites have same initial Z instead of randomly filling a cube. 
+#define TEFIRE_FLAG_PLANAR		16 // if set, all fire sprites have same initial Z instead of randomly filling a cube.
 
 #define TE_PLAYERATTACHMENT			124 // attaches a TENT to a player (this is a high-priority tent)
 // byte (entity index of player)
@@ -595,14 +591,13 @@
 #define CHAN_ITEM			3
 #define	CHAN_BODY			4
 #define CHAN_STREAM			5		// allocate stream channel from the static or dynamic area
-#define CHAN_STATIC			6		// allocate channel from the static area 
-
+#define CHAN_STATIC			6		// allocate channel from the static area
 
 // attenuation values
 #define ATTN_NONE		0
 #define	ATTN_NORM		(float)0.8
 #define ATTN_IDLE		(float)2
-#define ATTN_STATIC		(float)1.25 
+#define ATTN_STATIC		(float)1.25
 
 // pitch values
 #define	PITCH_NORM		100			// non-pitch shifted
@@ -654,8 +649,8 @@
 #define TE_BOUNCE_SHOTSHELL	2
 
 // Rendering constants
-enum 
-{	
+enum
+{
 	kRenderNormal,			// src
 	kRenderTransColor,		// c*a+dest*(1-a)
 	kRenderTransTexture,	// src*a+dest*(1-a)
@@ -664,21 +659,21 @@ enum
 	kRenderTransAdd,		// src*a+dest
 };
 
-enum 
-{	
-	kRenderFxNone = 0, 
-	kRenderFxPulseSlow, 
-	kRenderFxPulseFast, 
-	kRenderFxPulseSlowWide, 
-	kRenderFxPulseFastWide, 
-	kRenderFxFadeSlow, 
-	kRenderFxFadeFast, 
-	kRenderFxSolidSlow, 
-	kRenderFxSolidFast, 	   
-	kRenderFxStrobeSlow, 
-	kRenderFxStrobeFast, 
-	kRenderFxStrobeFaster, 
-	kRenderFxFlickerSlow, 
+enum
+{
+	kRenderFxNone = 0,
+	kRenderFxPulseSlow,
+	kRenderFxPulseFast,
+	kRenderFxPulseSlowWide,
+	kRenderFxPulseFastWide,
+	kRenderFxFadeSlow,
+	kRenderFxFadeFast,
+	kRenderFxSolidSlow,
+	kRenderFxSolidFast,
+	kRenderFxStrobeSlow,
+	kRenderFxStrobeFast,
+	kRenderFxStrobeFaster,
+	kRenderFxFlickerSlow,
 	kRenderFxFlickerFast,
 	kRenderFxNoDissipation,
 	kRenderFxDistort,			// Distort/scale/translate flicker
@@ -688,7 +683,6 @@ enum
 	kRenderFxGlowShell,			// Glowing Shell
 	kRenderFxClampMinScale,		// Keep this sprite from getting very small (SPRITES only!)
 };
-
 
 typedef int	func_t;
 typedef int	string_t;
@@ -701,8 +695,8 @@ typedef unsigned short 		word;
 #undef false
 
 #ifndef __cplusplus
-typedef enum {false, true}	qboolean;
-#else 
+typedef enum { false, true }	qboolean;
+#else
 typedef int qboolean;
 #endif
 
@@ -730,7 +724,7 @@ typedef struct
 #endif
 typedef struct link_s
 {
-	link_s	*prev, *next;
+	link_s* prev, * next;
 } link_t;
 
 typedef struct edict_s edict_t;
@@ -749,9 +743,8 @@ typedef struct
 	float	fraction;		// time completed, 1.0 = didn't hit anything
 	vec3_t	endpos;			// final position
 	plane_t	plane;			// surface normal at impact
-	edict_t	*ent;			// entity the surface is on
+	edict_t* ent;			// entity the surface is on
 	int		hitgroup;		// 0 == generic, non zero is specific body part
 } trace_t;
 
 #endif
-

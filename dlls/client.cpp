@@ -824,18 +824,18 @@ void InitMessage ( const char *message );
 					//clear from i
 
 					int pos = n;
-					//int n = 0;
+					int j = 0;
 
-					for (n = 0; pos < MAX_STORED_AUTOWAYPOINT; n++)
+					for (j = 0; pos < MAX_STORED_AUTOWAYPOINT; j++)
 					{
-						m_vLastAutoWaypointCheckPos[n] = m_vLastAutoWaypointCheckPos[pos];
+						m_vLastAutoWaypointCheckPos[j] = m_vLastAutoWaypointCheckPos[pos];
 
 						pos++;
 					}
 
-					for (n = 1; n < MAX_STORED_AUTOWAYPOINT; n++)
+					for (j = 1; j < MAX_STORED_AUTOWAYPOINT; j++)// i supposed to = 1? [APG]RoboCop[CL]
 					{
-						m_vLastAutoWaypointCheckPos[n].UnSetPoint();
+						m_vLastAutoWaypointCheckPos[j].UnSetPoint();
 					}
 				}
 
@@ -958,7 +958,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 				pClient->AutoWaypoint(1);
 		}
 
-		for (auto& m_Bot : gBotGlobals.m_Bots)
+		for (CBot& m_Bot : gBotGlobals.m_Bots)
 		{
 			CBot* pBot = &m_Bot;
 
@@ -1056,7 +1056,7 @@ void CClients::ClientDisconnected(CClient* pClient)
 		gBotGlobals.m_pListenServerEdict = nullptr;
 
 	// give a few seconds before adding more bots.
-	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
+	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 8.0f;
 
 	const BOOL RemoveGreeting = iPlayerIndex != -1;
 

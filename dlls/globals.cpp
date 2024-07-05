@@ -1227,6 +1227,9 @@ void CBotGlobals::MapInit()
 		if (std::strncmp(mapname, "op4ctf_", 3) == 0)
 		{
 			setMapType(NON_TS_TEAMPLAY);
+			//TODO: To make sure that Op4DM mode doesn't play as CTF Mode [APG]RoboCop[CL]
+			// Op4CTF Support [APG]RoboCop[CL]
+			//extern edict_t *pent_info_ctfdetect;
 			m_bTeamPlay = true;
 		}
 	}
@@ -1358,7 +1361,7 @@ void CBotGlobals::LoadBotModels()
 #ifndef __linux__
 	HANDLE directory = nullptr;
 #else
-	DIR* directory = NULL;
+	DIR* directory = nullptr;
 #endif
 
 	// find the directory name of the currently running MOD...

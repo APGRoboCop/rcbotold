@@ -1,5 +1,5 @@
-#ifndef BOT_TICK_H
-#define BOT_TICK_H
+#ifndef __BOT_TICK_H__
+#define __BOT_TICK_H__
 
 #include <list>
 
@@ -49,7 +49,7 @@ public:
 		// round robin
 		m_Tickables.sort();
 
-		for (const auto pCurrent : m_Tickables)
+		for (CTickable* pCurrent : m_Tickables)
 		{
 			if (pCurrent->isDone())
 				continue;

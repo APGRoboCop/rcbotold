@@ -153,16 +153,16 @@ void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
 	{
 		m_bHasWeapon = true;
 
-		const int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
-		const int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
+			const int iAmmoIndex1 = m_pWeaponInfo->m_iAmmoIndex1;
+			const int iAmmoIndex2 = m_pWeaponInfo->m_iAmmoIndex2;
 
-		if (iAmmoList && iAmmoIndex1 != -1)
-			m_iAmmo1 = &iAmmoList[iAmmoIndex1];
+			if (iAmmoList && iAmmoIndex1 != -1)
+				m_iAmmo1 = &iAmmoList[iAmmoIndex1];
 
-		if (iAmmoList && iAmmoIndex2 != -1)
-			m_iAmmo2 = &iAmmoList[iAmmoIndex2];
+			if (iAmmoList && iAmmoIndex2 != -1)
+				m_iAmmo2 = &iAmmoList[iAmmoIndex2];
+		}
 	}
-}
 
 void CBotWeapon::setHasWeapon(BOOL bVal)
 {

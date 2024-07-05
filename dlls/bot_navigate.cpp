@@ -1124,7 +1124,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 	Vector vBotOrigin = pBot->pev->origin;
 	Vector vWptOrigin;
-	//Vector vMoveVector; //Unused? [APG]RoboCop[CL]
+	Vector vMoveVector; //Unused? [APG]RoboCop[CL]
 
 	int iCurrWpt;
 	int iWptFlags;
@@ -1232,7 +1232,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 	fDistance = 0;
 
-	//Vector vMoveVector = vWptOrigin; //Unused? [APG]RoboCop[CL]
+	vMoveVector = vWptOrigin;
 
 	// bot is not climbing
 	if (pBot->GetClimbType() != BOT_CLIMB_NONE)
@@ -1981,6 +1981,8 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 
 					const int iNewScheduleId = pBot->m_Tasks.GetNewScheduleId();
 
+					//BOOL bFail = false;
+
 					if (pButton)
 					{
 						BOOL bNormalDoor = true;
@@ -2000,7 +2002,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 						if (bIsLift)
 						{
 							int iWaitForLiftWpt = WaypointFindNearestGoal(pBot->GetGunPosition(), pBot->m_pEdict, REACHABLE_RANGE,
-								pBot->m_iTeam, W_FL_LIFT, &pBot->m_FailedGoals);
+							                                              pBot->m_iTeam, W_FL_LIFT, &pBot->m_FailedGoals);
 
 							if (iWaitForLiftWpt == -1)
 								iWaitForLiftWpt = pBot->m_iPrevWaypointIndex;
@@ -2093,7 +2095,6 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 									// make sure we update these tasks so we know we are using a lift
 									pBot->m_Tasks.GiveSchedIdDescription(iScheduleId, BOT_SCHED_USE_LIFT);
 
-									BOOL bFail = false;
 								}
 							}
 						}

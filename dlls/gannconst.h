@@ -29,8 +29,8 @@
  *
  */
 
-#ifndef GANN_CONST_H
-#define GANN_CONST_H
+#ifndef __GANN_CONST_H__
+#define __GANN_CONST_H__
 
 #include <cstring>
 
@@ -65,7 +65,7 @@ public:
 		return m_szHeader;
 	}
 
-	BOOL operator == (const CGenericHeader &other) const
+	BOOL operator == (CGenericHeader other) const
 	{
 		return std::strcmp(m_szHeader, other.getHeader()) == 0;
 	}
@@ -75,7 +75,7 @@ public:
 		std::fwrite(this, sizeof(CGenericHeader), 1, bfp);
 	}
 
-	BOOL read(std::FILE* bfp, CGenericHeader const &compare)
+	BOOL read(std::FILE* bfp, CGenericHeader const compare)
 	{
 		CGenericHeader read;
 

@@ -19,8 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <SccProjectName>"$/SDKSrc/Public/dlls", NVGBAAAA</SccProjectName>
-    <SccLocalPath>.</SccLocalPath>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
     <ProjectGuid>{01733971-5040-4E19-915F-0E81FD25715D}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>HPB_bot</ProjectName>
@@ -360,6 +362,7 @@
     <ClInclude Include="bot_weapons.h" />
     <ClInclude Include="cbase.h" />
     <ClInclude Include="cdll_dll.h" />
+    <ClInclude Include="comp_dep.h" />
     <ClInclude Include="dir.h" />
     <ClInclude Include="enginecallback.h" />
     <ClInclude Include="extdll.h" />

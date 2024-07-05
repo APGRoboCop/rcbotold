@@ -112,7 +112,7 @@ void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency,
 		if (!pPlayer)	// still shake if not onground
 			continue;
 
-		float localAmplitude = 0;
+		float localAmplitude = 0.0f;
 
 		if (radius <= 0)
 			localAmplitude = amplitude;
@@ -398,16 +398,20 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
 		edict_t* pent = INDEXENT(i);
+
 		if (pent != nullptr)
 		{
 			if (!pent->free)
 			{
 				char arg_lwr[80];
 				char pent_lwr[80];
+
 				std::strcpy(arg_lwr, name);
 				std::strcpy(pent_lwr, STRING(pent->v.netname));
+
 				strlow(arg_lwr);
 				strlow(pent_lwr);
+
 				if (std::strncmp(arg_lwr, pent_lwr, length) == 0)
 				{
 					return pent;
@@ -415,6 +419,7 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 			}
 		}
 	}
+
 	return nullptr;
 }
 
@@ -888,7 +893,7 @@ int UTIL_GetTeam(edict_t* pEntity)
 
 			int team = 0;
 
-			if (pos == nullptr)
+			if (sofar == nullptr)
 				team = -1; // Model not found in team list, team not assigned
 			else
 			{
@@ -1053,9 +1058,9 @@ CBot* UTIL_GetBotPointer(const edict_t* pEdict)
 {
 	//assert(pEdict != NULL);
 
-	for (int index = 0; index < MAX_PLAYERS; index++)
+	for (CBot& m_Bot : gBotGlobals.m_Bots)
 	{
-		CBot* pBot = &gBotGlobals.m_Bots[index];
+		CBot* pBot = &m_Bot;
 
 		/// holy crap, this check needed to be in
 		if (!pBot->IsUsed())
@@ -1536,7 +1541,7 @@ void UTIL_SelectItem(edict_t* pEdict, char* item_name)
 
 //#ifndef RCBOT_META_BUILD
 
-void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, int magnitude, BOOL doDamage)
+void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, float magnitude, BOOL doDamage)
 {
 	/*if ( gBotGlobals.IsMod(MOD_SVENCOOP) )
 	{
@@ -1584,7 +1589,7 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 	// byte (flags)	*/
 	//	else
 	{
-		int byteMag = magnitude;
+		int byteMag = static_cast<int>(magnitude);
 
 		if (byteMag > 255)
 			byteMag = 255;
@@ -1600,7 +1605,7 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 		WRITE_BYTE(TE_EXPLFLAG_NONE);
 		MESSAGE_END();
 
-		int mag = magnitude * 4;
+		float mag = magnitude * 4;
 
 		if (doDamage)
 		{
@@ -1909,11 +1914,11 @@ void UTIL_LogPrintf(const char* fmt, ...)
 {
 	va_list        argptr;
 	static char    string[1024];
-	
+
 	va_start(argptr, fmt);
 	vsnprintf(string, sizeof(string), fmt, argptr);
 	va_end(argptr);
-	
+
 	// Print to server console
 	ALERT(at_logged, "%s", string);
 }
@@ -2194,7 +2199,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 		};
 
 		// check if tooltips are on
-		// check if array positions are in bounds
+	// check if array positions are in bounds
 		if (gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TOOLTIPS) &&
 			iLang < BOT_LANG_MAX && iTooltip < BOT_TOOL_TIP_MAX)
 		{

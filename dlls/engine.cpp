@@ -107,7 +107,7 @@ void pfnSetModel(edict_t* e, const char* m)
 {
 	if (debug_engine) {
 		fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "pfnSetModel: edict=%x %s\n", reinterpret_cast<unsigned>(e), m);
+		std::fprintf(fp, "pfnSetModel: edict=%x %s\n", unsigned(e), m);
 		std::fclose(fp);
 	}
 
@@ -140,7 +140,7 @@ void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 {
 	if (debug_engine) {
 		fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "pfnSetSize: %x\n", reinterpret_cast<unsigned>(e));
+		std::fprintf(fp, "pfnSetSize: %x\n", unsigned(e));
 		std::fclose(fp);
 	}
 #ifdef RCBOT_META_BUILD
@@ -318,7 +318,7 @@ void pfnRemoveEntity(edict_t* e)
 	if (debug_engine)
 	{
 		fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "pfnRemoveEntity: %x\n", reinterpret_cast<unsigned>(e));
+		std::fprintf(fp, "pfnRemoveEntity: %x\n", unsigned(e));
 		if (e->v.model != 0)
 			std::fprintf(fp, " model=%s\n", STRING(e->v.model));
 		std::fclose(fp);
@@ -406,6 +406,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 					iSound = SOUND_TAKE_COVER;
 			}
 		}
+		//TODO: Add this similar speech for WizWars [APG]RoboCop[CL]
 		else if (gBotGlobals.IsMod(MOD_TFC))
 		{
 			if (std::strncmp(sample, "speech/saveme", 13) == 0)
@@ -1328,7 +1329,7 @@ void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 
 	if (debug_engine) {
 		fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", reinterpret_cast<unsigned>(pEdict), fNewMaxspeed);
+		std::fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", unsigned(pEdict), fNewMaxspeed);
 		std::fclose(fp);
 	}
 #ifdef RCBOT_META_BUILD
@@ -1488,7 +1489,7 @@ int pfnGetPlayerUserId(edict_t* e)
 	{
 		if (debug_engine) {
 			fp = std::fopen("bot.txt", "a");
-			std::fprintf(fp, "pfnGetPlayerUserId: %x\n", reinterpret_cast<unsigned>(e));
+			std::fprintf(fp, "pfnGetPlayerUserId: %x\n", unsigned(e));
 			std::fclose(fp);
 		}
 	}
@@ -1562,7 +1563,7 @@ unsigned int pfnGetPlayerWONId(edict_t* e)
 
 	if (debug_engine) {
 		fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "pfnGetPlayerWONId: %x\n", reinterpret_cast<unsigned>(e));
+		std::fprintf(fp, "pfnGetPlayerWONId: %x\n", unsigned(e));
 		std::fclose(fp);
 	}
 #ifdef RCBOT_META_BUILD

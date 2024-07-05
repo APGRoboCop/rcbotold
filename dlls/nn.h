@@ -29,8 +29,8 @@
  *
  */
 
-#ifndef RCBOT_NN_H
-#define RCBOT_NN_H
+#ifndef __RCBOT_NN_H__
+#define __RCBOT_NN_H__
 
 #include "gannconst.h"
 #include "perceptron.h"

@@ -28,8 +28,8 @@
  *    version.
  *
  */
-#ifndef RCBOT_SOM_H
-#define RCBOT_SOM_H
+#ifndef __RCBOT_SOM_H__
+#define __RCBOT_SOM_H__
 
 #include <cmath>
 

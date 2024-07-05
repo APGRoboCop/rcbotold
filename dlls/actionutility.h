@@ -1,5 +1,5 @@
-#ifndef ACTION_UTILITY_H
-#define ACTION_UTILITY_H
+#ifndef __ACTION_UTILITY_H__
+#define __ACTION_UTILITY_H__
 
 #include <vector>
 
@@ -44,7 +44,7 @@ public:
 
 		float total = 0.0f;
 
-		for (auto m_Utility : m_Utilities)
+		for (CActionUtility m_Utility : m_Utilities)
 		{
 			total += m_Utility.getUtility();
 
@@ -59,7 +59,7 @@ public:
 	{
 		float total = 0.0f;
 
-		for (auto m_Utility : m_Utilities)
+		for (CActionUtility m_Utility : m_Utilities)
 		{
 			total += m_Utility.getUtility();
 		}

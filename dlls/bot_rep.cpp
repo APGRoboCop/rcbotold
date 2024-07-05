@@ -376,7 +376,7 @@ int GetPlayerRepId(const char* szPlayerName)
 			if (buffer[0] == '#') // comment
 				continue;
 
-			int length = std::strlen(buffer);
+			size_t length = std::strlen(buffer);
 
 			if (length == 0)
 				continue; // nothing on this line
@@ -387,7 +387,7 @@ int GetPlayerRepId(const char* szPlayerName)
 				buffer[length] = 0;
 			}
 
-			int i = 0;
+			unsigned int i = 0;
 
 			while (i < length && buffer[i] != '"')
 				i++;

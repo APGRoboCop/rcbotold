@@ -574,7 +574,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		float range = 100.0f;
 
 		if (arg2 && *arg2)
-			range = std::stof(arg2);
+			range = std::atof(arg2);
 
 		//FILE *fp;
 
@@ -955,7 +955,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 		if (arg2 && *arg2)
 		{
-			const float fspeed = std::stof(arg2);
+			const float fspeed = std::atof(arg2);
 
 			if (fspeed > 0)
 			{
@@ -987,14 +987,14 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	else if (FStrEq("bot_stuck_speed", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fBotStuckSpeed = std::stof(arg2);
+			gBotGlobals.m_fBotStuckSpeed = std::atof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fBotStuckSpeed;
 	}
 	else if (FStrEq("update_ladder_time", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fUpdateLadderTime = std::stof(arg2);
+			gBotGlobals.m_fUpdateLadderTime = std::atof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fUpdateLadderTime;
 	}
@@ -1022,42 +1022,42 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	else if (FStrEq("u_hive", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fHiveImportance = std::stof(arg2);
+			gBotGlobals.m_fHiveImportance = std::atof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fHiveImportance;
 	}
 	else if (FStrEq("u_restower", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fResTowerImportance = std::stof(arg2);
+			gBotGlobals.m_fResTowerImportance = std::atof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fResTowerImportance;
 	}
 	else if (FStrEq("u_healing", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fHealingImportance = std::stof(arg2);
+			gBotGlobals.m_fHealingImportance = std::atof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fHealingImportance;
 	}
 	else if (FStrEq("u_structure", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fStructureBuildingImportance = std::stof(arg2);
+			gBotGlobals.m_fStructureBuildingImportance = std::atof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fStructureBuildingImportance;
 	}
 	else if (FStrEq("u_refill", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fRefillStructureImportance = std::stof(arg2);
+			gBotGlobals.m_fRefillStructureImportance = std::atof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fRefillStructureImportance;
 	}
 	else if (FStrEq("gorge_amount", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fGorgeAmount = std::stof(arg2);
+			gBotGlobals.m_fGorgeAmount = std::atof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fGorgeAmount;
 	}
@@ -1078,21 +1078,21 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	else if (FStrEq("wall_stick_tolerance", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fWallStickTol = std::stof(arg2);
+			gBotGlobals.m_fWallStickTol = std::atof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fGorgeAmount;
 	}
 	/*else if ( FStrEq("lerk_hold_time",arg1) )
 	{
 		if ( bSetting )
-			gBotGlobals.m_fLerkHoldTime = std::stof(arg2);
+			gBotGlobals.m_fLerkHoldTime = std::atof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fLerkHoldTime;
 	}
 	else if ( FStrEq("lerk_flap_time",arg1) )
 	{
 		if ( bSetting )
-			gBotGlobals.m_fLerkFlapTime = std::stof(arg2);
+			gBotGlobals.m_fLerkFlapTime = std::atof(arg2);
 		else
 			fSetVal = gBotGlobals.m_fLerkFlapTime;
 	}*/
@@ -1154,7 +1154,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (bSetting)
 		{
-			const float fTime = std::stof(arg2);
+			const float fTime = std::atof(arg2);
 
 			bSuccess = fTime >= 0;
 
@@ -1267,7 +1267,7 @@ eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const
 	}
 	else if (FStrEq(arg1, "spread"))
 	{
-		const float fNewSpread = std::stof(arg2);
+		const float fNewSpread = std::atof(arg2);
 
 		if (fNewSpread)
 		{
@@ -1432,7 +1432,7 @@ eBotCvarState CBotCamCommand::action(CClient* pClient, const char* arg1, const c
 				BotMessage(pEntity, 0, "Using botcam");
 
 				if (pClient) // Check if pClient is not nullptr before using it [APG]RoboCop[CL]
-				pClient->AddNewToolTip(BOT_TOOL_TIP_BOTCAM_ON);
+					pClient->AddNewToolTip(BOT_TOOL_TIP_BOTCAM_ON);
 			}
 			else
 				BotMessage(pEntity, 0, "Camera never worked or is not enabled (see command \"rcbot config allow_botcam\")");
@@ -1491,7 +1491,7 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 		if (arg2 && *arg2)
 		{
 			if (FStrEq(arg2, "wb"))
-				theConverter = new CWhichbotConvert(); //TODO: Allow Gravebot waypoints conversion [APG]RoboCop[CL]
+				theConverter = new CWhichbotConvert(); //GravebotConvert(); //TODO: Allow Gravebot waypoints conversion [APG]RoboCop[CL]
 		}
 
 		if (WaypointSave(false, theConverter))

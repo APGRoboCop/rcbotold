@@ -217,7 +217,7 @@ int DispatchSpawn(edict_t* pent)
 				}
 			}
 			/*
-			doesn't work here... obviously iuser3 isn't set till after DispatchSpawn
+			doesn't work here... obviously iuser3 isn't set till after DispatchSpawn ¬_¬
 
 			// Use the bots vision to advantage
 			// and add ant structures it sees in NS to the hivemind
@@ -477,7 +477,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 
 								SERVER_COMMAND(cmd);  // kick the bot using kick name //(kick #id)
 
-								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
+								gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 8.0f;
 								gBotGlobals.m_bBotCanRejoin = false;
 
 								break;
@@ -668,7 +668,7 @@ void ClientKill(edict_t* pEntity)
 {
 	if (debug_engine) {
 		std::FILE* fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "ClientKill: %x\n", reinterpret_cast<unsigned>(pEntity));
+		std::fprintf(fp, "ClientKill: %x\n", unsigned(pEntity));
 		std::fclose(fp);
 	}
 
@@ -683,7 +683,7 @@ void ClientPutInServer(edict_t* pEntity)
 {
 	if (debug_engine) {
 		std::FILE* fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "ClientPutInServer: %x\n", reinterpret_cast<unsigned>(pEntity));
+		std::fprintf(fp, "ClientPutInServer: %x\n", unsigned(pEntity));
 		std::fclose(fp);
 	}
 
@@ -1083,7 +1083,7 @@ void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
 {
 	if (debug_engine) {
 		std::FILE* fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", reinterpret_cast<unsigned>(pEntity), infobuffer);
+		std::fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", unsigned(pEntity), infobuffer);
 		std::fclose(fp);
 	}
 
@@ -1238,7 +1238,7 @@ void PlayerCustomization(edict_t* pEntity, customization_t* pCust)
 {
 	if (debug_engine) {
 		std::FILE* fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "PlayerCustomization: %x\n", reinterpret_cast<unsigned>(pEntity));
+		std::fprintf(fp, "PlayerCustomization: %x\n", unsigned(pEntity));
 		std::fclose(fp);
 	}
 
@@ -1422,7 +1422,7 @@ int InconsistentFile(const edict_t* player, const char* filename, char* disconne
 {
 	if (debug_engine) {
 		std::FILE* fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "InconsistentFile: %x filename=%s\n", reinterpret_cast<unsigned>(player), filename);
+		std::fprintf(fp, "InconsistentFile: %x filename=%s\n", unsigned(player), filename);
 		std::fclose(fp);
 	}
 
@@ -1511,7 +1511,7 @@ DLL_FUNCTIONS gFunctionTable =
 #ifdef __BORLANDC__
 int EXPORT GetEntityAPI(DLL_FUNCTIONS* pFunctionTable, int interfaceVersion)
 #else
-extern "C" EXPORT int GetEntityAPI(DLL_FUNCTIONS * pFunctionTable, int interfaceVersion)
+extern "C" EXPORT int GetEntityAPI(DLL_FUNCTIONS* pFunctionTable, int interfaceVersion)
 #endif
 {
 	// check if engine's pointer is valid and version is correct...
@@ -1534,7 +1534,7 @@ extern "C" EXPORT int GetEntityAPI(DLL_FUNCTIONS * pFunctionTable, int interface
 #ifdef __BORLANDC__
 int EXPORT GetNewDLLFunctions(NEW_DLL_FUNCTIONS* pFunctionTable, int* interfaceVersion)
 #else
-extern "C" EXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS * pFunctionTable, int* interfaceVersion)
+extern "C" EXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS* pFunctionTable, int* interfaceVersion)
 #endif
 {
 	if (other_GetNewDLLFunctions == NULL)
@@ -1866,11 +1866,11 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 			bpBotProfile->m_OnosPercent = std::atoi(&szBuffer[13]);
 		}
 		else if (std::strncmp(szBuffer, "aim_speed=", 10) == 0)
-			bpBotProfile->m_fAimSpeed = atof(&szBuffer[10]);
+			bpBotProfile->m_fAimSpeed = std::atof(&szBuffer[10]);
 		else if (std::strncmp(szBuffer, "aim_skill=", 10) == 0)
-			bpBotProfile->m_fAimSkill = atof(&szBuffer[10]);
+			bpBotProfile->m_fAimSkill = std::atof(&szBuffer[10]);
 		else if (std::strncmp(szBuffer, "aim_time=", 9) == 0)
-			bpBotProfile->m_fAimTime = atof(&szBuffer[9]);
+			bpBotProfile->m_fAimTime = std::atof(&szBuffer[9]);
 		else if (std::strncmp(szBuffer, "bottomcolor=", 12) == 0)
 		{
 			bpBotProfile->m_iBottomColour = std::atoi(&szBuffer[12]);
@@ -2079,6 +2079,15 @@ void ReadMapConfig()
 // this is so that when bots are added it has some time to add another bot
 // thus this function only reads one line of the file until the file has reached the end
 // and so the file is stored globally.
+// To be done properly:
+
+/*
+
+  TO DO:
+
+  Make config read whole file and enter commands in a queue for execution (faster??)
+
+  */
 {
 	char szTemp[256];
 
@@ -2101,8 +2110,8 @@ void ReadMapConfig()
 		{
 			// dont add bots for another while...
 			// Added more delay to prevent possible "Tried to write to uninitialized sizebuf_t" crashes - [APG]RoboCop[CL]
-			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
-			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 5.0f;
+			gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 8.0f;
+			gBotGlobals.m_fReadConfigTime = gpGlobals->time + 8.0f;
 		}
 
 		// Does the command in the text file

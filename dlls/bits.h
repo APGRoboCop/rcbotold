@@ -43,8 +43,8 @@
  //
  // Bot definitions header
  //
-#ifndef RCBOT_BITS_H
-#define RCBOT_BITS_H
+#ifndef __RCBOT_BITS_H__
+#define __RCBOT_BITS_H__
 
 #include "gannconst.h"
 
@@ -66,7 +66,7 @@ public:
 
 	void setup(int iNumBits);
 
-	int numBits() const { return m_iNumBits; }
+	unsigned int numBits() const { return m_iNumBits; }
 
 	void copy(CBits* otherBits);
 

@@ -63,30 +63,30 @@ CBaseEntity
 
 #ifndef RCBOT_META_BUILD
 
-extern "C" EXPORT int GetEntityAPI(DLL_FUNCTIONS * pFunctionTable, int interfaceVersion);
-extern "C" EXPORT int GetEntityAPI2(DLL_FUNCTIONS * pFunctionTable, int* interfaceVersion);
-extern "C" EXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS * pFunctionTable, int* interfaceVersion);
+extern "C" EXPORT int GetEntityAPI(DLL_FUNCTIONS* pFunctionTable, int interfaceVersion);
+extern "C" EXPORT int GetEntityAPI2(DLL_FUNCTIONS* pFunctionTable, int* interfaceVersion);
+extern "C" EXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS* pFunctionTable, int* interfaceVersion);
 
 #endif
 
-extern "C" EXPORT int DispatchSpawn(edict_t * pent);
-extern "C" EXPORT void DispatchKeyValue(edict_t * pentKeyvalue, KeyValueData * pkvd);
-extern "C" EXPORT void DispatchTouch(edict_t * pentTouched, edict_t * pentOther);
-extern "C" EXPORT void DispatchUse(edict_t * pentUsed, edict_t * pentOther);
-extern "C" EXPORT void DispatchThink(edict_t * pent);
-extern "C" EXPORT void DispatchBlocked(edict_t * pentBlocked, edict_t * pentOther);
-extern "C" EXPORT void DispatchSave(edict_t * pent, SAVERESTOREDATA * pSaveData);
-extern "C" EXPORT int  DispatchRestore(edict_t * pent, SAVERESTOREDATA * pSaveData, int globalEntity);
-extern "C" EXPORT void	DispatchObjectCollsionBox(edict_t * pent);
-extern "C" EXPORT void SaveWriteFields(SAVERESTOREDATA * pSaveData, const char* pname, void* pBaseData, TYPEDESCRIPTION * pFields, int fieldCount);
-extern "C" EXPORT void SaveReadFields(SAVERESTOREDATA * pSaveData, const char* pname, void* pBaseData, TYPEDESCRIPTION * pFields, int fieldCount);
-extern "C" EXPORT void SaveGlobalState(SAVERESTOREDATA * pSaveData);
-extern "C" EXPORT void RestoreGlobalState(SAVERESTOREDATA * pSaveData);
+extern "C" EXPORT int DispatchSpawn(edict_t* pent);
+extern "C" EXPORT void DispatchKeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd);
+extern "C" EXPORT void DispatchTouch(edict_t* pentTouched, edict_t* pentOther);
+extern "C" EXPORT void DispatchUse(edict_t* pentUsed, edict_t* pentOther);
+extern "C" EXPORT void DispatchThink(edict_t* pent);
+extern "C" EXPORT void DispatchBlocked(edict_t* pentBlocked, edict_t* pentOther);
+extern "C" EXPORT void DispatchSave(edict_t* pent, SAVERESTOREDATA* pSaveData);
+extern "C" EXPORT int  DispatchRestore(edict_t* pent, SAVERESTOREDATA* pSaveData, int globalEntity);
+extern "C" EXPORT void	DispatchObjectCollsionBox(edict_t* pent);
+extern "C" EXPORT void SaveWriteFields(SAVERESTOREDATA* pSaveData, const char* pname, void* pBaseData, TYPEDESCRIPTION* pFields, int fieldCount);
+extern "C" EXPORT void SaveReadFields(SAVERESTOREDATA* pSaveData, const char* pname, void* pBaseData, TYPEDESCRIPTION* pFields, int fieldCount);
+extern "C" EXPORT void SaveGlobalState(SAVERESTOREDATA* pSaveData);
+extern "C" EXPORT void RestoreGlobalState(SAVERESTOREDATA* pSaveData);
 extern "C" EXPORT void ResetGlobalState();
 
 typedef enum { USE_OFF = 0, USE_ON = 1, USE_SET = 2, USE_TOGGLE = 3 } USE_TYPE;
 
-extern "C" EXPORT void FireTargets(const char* targetName, CBaseEntity * pActivator, CBaseEntity * pCaller, USE_TYPE useType, float value);
+extern "C" EXPORT void FireTargets(const char* targetName, CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value);
 
 typedef void (CBaseEntity::* BASEPTR)();
 typedef void (CBaseEntity::* ENTITYFUNCPTR)(CBaseEntity* pOther);
@@ -279,14 +279,14 @@ public:
 	static CBaseEntity* Instance(entvars_t* pev) { return Instance(ENT(pev)); }
 	static CBaseEntity* Instance(int eoffset) { return Instance(ENT(eoffset)); }
 
-	CBaseMonster* GetMonsterPointer(entvars_t* pevMonster) const
+	CBaseMonster* GetMonsterPointer(entvars_t* pevMonster)
 	{
 		CBaseEntity* pEntity = Instance(pevMonster);
 		if (pEntity)
 			return pEntity->MyMonsterPointer();
 		return nullptr;
 	}
-	CBaseMonster* GetMonsterPointer(edict_t* pentMonster) const
+	CBaseMonster* GetMonsterPointer(edict_t* pentMonster)
 	{
 		CBaseEntity* pEntity = Instance(pentMonster);
 		if (pEntity)
@@ -299,33 +299,33 @@ public:
 	void FunctionCheck(void* pFunction, char* name)
 	{
 #ifndef __linux__
-		if (pFunction && !NAME_FOR_FUNCTION(reinterpret_cast<unsigned long>(pFunction)))
-			ALERT(at_error, "No EXPORT: %s:%s (%08lx)\n", STRING(pev->classname), name, reinterpret_cast<unsigned long>(pFunction));
+		if (pFunction && !NAME_FOR_FUNCTION((unsigned long)(pFunction)))
+			ALERT(at_error, "No EXPORT: %s:%s (%08lx)\n", STRING(pev->classname), name, (unsigned long)pFunction);
 #endif // __linux__
 	}
 
 	BASEPTR	ThinkSet(BASEPTR func, char* name)
 	{
 		m_pfnThink = func;
-		FunctionCheck(reinterpret_cast<void*>(*reinterpret_cast<int*>(reinterpret_cast<char*>(this) + (offsetof(CBaseEntity, m_pfnThink)))), name);
+		FunctionCheck((void*)*((int*)((char*)this + (offsetof(CBaseEntity, m_pfnThink)))), name);
 		return func;
 	}
 	ENTITYFUNCPTR TouchSet(ENTITYFUNCPTR func, char* name)
 	{
 		m_pfnTouch = func;
-		FunctionCheck(reinterpret_cast<void*>(*reinterpret_cast<int*>(reinterpret_cast<char*>(this) + (offsetof(CBaseEntity, m_pfnTouch)))), name);
+		FunctionCheck((void*)*((int*)((char*)this + (offsetof(CBaseEntity, m_pfnTouch)))), name);
 		return func;
 	}
 	USEPTR	UseSet(USEPTR func, char* name)
 	{
 		m_pfnUse = func;
-		FunctionCheck(reinterpret_cast<void*>(*reinterpret_cast<int*>(reinterpret_cast<char*>(this) + (offsetof(CBaseEntity, m_pfnUse)))), name);
+		FunctionCheck((void*)*((int*)((char*)this + (offsetof(CBaseEntity, m_pfnUse)))), name);
 		return func;
 	}
 	ENTITYFUNCPTR	BlockedSet(ENTITYFUNCPTR func, char* name)
 	{
 		m_pfnBlocked = func;
-		FunctionCheck(reinterpret_cast<void*>(*reinterpret_cast<int*>(reinterpret_cast<char*>(this) + (offsetof(CBaseEntity, m_pfnBlocked)))), name);
+		FunctionCheck((void*)*((int*)((char*)this + (offsetof(CBaseEntity, m_pfnBlocked)))), name);
 		return func;
 	}
 
@@ -398,7 +398,7 @@ class CPointEntity : public CBaseEntity
 public:
 	void	Spawn() override;
 	int	ObjectCaps() override { return CBaseEntity::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
-//private:
+	//private:
 };
 
 typedef struct locksounds			// sounds that doors and buttons make when locked/unlocked

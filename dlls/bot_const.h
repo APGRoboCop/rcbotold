@@ -44,18 +44,18 @@
  // Constants and macros
  //
 
-#ifndef BOT_CONST_H
-#define BOT_CONST_H
+#ifndef __BOT_CONST_H__
+#define __BOT_CONST_H__
 
 constexpr int EXPLODE_RADIUS = 300;
 constexpr int MAX_WAYPOINTS = 1024;
 
 enum
 {
-	FL_ASTAR_OPEN = 1<<0,
-	FL_ASTAR_CLOSED = 1<<1,
-	FL_ASTAR_PARENT = 1<<2,
-	FL_ASTAR_HEURISTIC = 1<<3
+	FL_ASTAR_OPEN = 1 << 0,
+	FL_ASTAR_CLOSED = 1 << 1,
+	FL_ASTAR_PARENT = 1 << 2,
+	FL_ASTAR_HEURISTIC = 1 << 3
 };
 
 typedef enum
@@ -197,10 +197,7 @@ constexpr int BOT_MAX_MSECVAL = 60;
 
 constexpr float BOT_DEF_MSECDELTIME = 0.5f;
 
-enum
-{
-	BOT_MAX_PASSWORD_LEN = 16
-};
+constexpr int BOT_MAX_PASSWORD_LEN = 16;
 
 // start messages
 // Science and Industry
@@ -743,8 +740,7 @@ enum
 	BOT_CONDITION_DONT_CLEAR_OBJECTIVES = 1 << 23
 };
 
-// Reduced from 650 to 450 to avoid bots from being sidetracked when hearing enemies? [APG]RoboCop[CL]
-constexpr float BOT_HEAR_DISTANCE = 450.0f;
+constexpr float BOT_HEAR_DISTANCE = 650.0f;
 
 constexpr int BOT_UPGRADE_DEF = 1;
 constexpr int BOT_UPGRADE_SEN = 2;
@@ -1177,17 +1173,17 @@ enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b6_mm_debug"
+#define BOT_VER "1.51b7_mm_debug"
 #else
-#define BOT_VER "1.51b6_mm"
+#define BOT_VER "1.51b7_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b6_debug"
+#define BOT_VER "1.51b7_debug"
 #else
-#define BOT_VER "1.51b6"
+#define BOT_VER "1.51b7"
 #endif
 
 #endif
@@ -1201,17 +1197,17 @@ enum
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b6_mm_debug"
+#define BOT_VER "1.51b7_mm_debug"
 #else
-#define BOT_VER "1.51b6_mm"
+#define BOT_VER "1.51b7_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b6_debug"
+#define BOT_VER "1.51b7_debug"
 #else
-#define BOT_VER "1.51b6"
+#define BOT_VER "1.51b7"
 #endif
 
 #endif
@@ -1241,7 +1237,7 @@ constexpr int RCBOT_ACCESS_FORCE_GRIP = 9;
 constexpr int DEFAULT_BOT_CHAT_PERCENT = 15;
 constexpr int BOT_CHAT_MESSAGE_LENGTH = 128;
 constexpr int BOT_CHAT_TYPE_SPEED_SEC = 9;
-	
+
 enum
 {
 	BOT_CONFIG_WAIT_FOR_ORDERS = 1 << 0,
@@ -1374,8 +1370,8 @@ constexpr int BOT_PROFILE_READ_REP_INFO = 2;
 constexpr int MAX_PATH_INDEX = 4;
 
 #define BEGIN_SEARCH_THROUGH_PLAYERS(Variable) \
-		int i; \
-		for ( i = 1; i <= gpGlobals->maxClients; i ++ ) \
+        int i; \
+        for ( i = 1; i <= gpGlobals->maxClients; i ++ ) \
 { \
 			(Variable) = INDEXENT(i);\
 			if ( (Variable) == NULL )\

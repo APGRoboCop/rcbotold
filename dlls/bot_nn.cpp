@@ -67,10 +67,8 @@ void NN::setWeights(std::vector<ga_value>* weights) const
 {
 	unsigned short int w = 0;
 
-	for (unsigned short int i = 0; i < m_Layers.size(); i++)
+	for (const NNLayer* l : m_Layers)
 	{
-		const NNLayer* l = m_Layers[i];
-
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			CPerceptron* n = l->getNeuron(j);
@@ -85,10 +83,8 @@ void NN::setWeights(std::vector<ga_value>* weights) const
 
 void NN::getWeights(std::vector<ga_value>* weights) const
 {
-	for (unsigned short int i = 0; i < m_Layers.size(); i++)
+	for (const NNLayer* l : m_Layers)
 	{
-		const NNLayer* l = m_Layers[i];
-
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			const CPerceptron* n = l->getNeuron(j);
@@ -105,10 +101,8 @@ void NN::trainOutputs(std::vector<ga_value>* wanted_outputs) const
 {
 	unsigned short int w = 0;
 
-	for (unsigned short int i = 0; i < m_Layers.size(); i++)
+	for (const NNLayer* l : m_Layers)
 	{
-		const NNLayer* l = m_Layers[i];
-
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			CPerceptron* n = l->getNeuron(j);
@@ -124,10 +118,8 @@ void NN::getOutputs(std::vector<ga_value>* outputs) const
 
 	outputs->clear();
 
-	for (unsigned short int i = 0; i < m_Layers.size(); i++)
+	for (const NNLayer* l : m_Layers)
 	{
-		const NNLayer* l = m_Layers[i];
-
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			const CPerceptron* n = l->getNeuron(j);
@@ -183,9 +175,9 @@ void NNLayer::save(std::FILE* bfp) const
 
 	header.write(bfp);
 
-	for (unsigned int i = 0; i < m_Neurons.size(); i++)
+	for (const CPerceptron* m_Neuron : m_Neurons)
 	{
-		m_Neurons[i]->save(bfp);
+		m_Neuron->save(bfp);
 	}
 }
 
@@ -241,18 +233,16 @@ void NN::save(std::FILE* bfp) const
 
 	header.write(bfp);
 
-	for (unsigned int i = 0; i < m_Layers.size(); i++)
+	for (const NNLayer* m_Layer : m_Layers)
 	{
-		m_Layers[i]->save(bfp);
+		m_Layer->save(bfp);
 	}
 }
 
 void NN::randomize() const
 {
-	for (unsigned short int i = 0; i < m_Layers.size(); i++)
+	for (const NNLayer* l : m_Layers)
 	{
-		const NNLayer* l = m_Layers[i];
-
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
 			l->getNeuron(j)->randomize();
@@ -262,9 +252,9 @@ void NN::randomize() const
 
 void NN::freeMemory()
 {
-	for (unsigned short int i = 0; i < m_Layers.size(); i++)
+	for (NNLayer*& m_Layer : m_Layers)
 	{
-		NNLayer* l = m_Layers[i];
+		NNLayer* l = m_Layer;
 
 		for (unsigned short int j = 0; j < l->numNeurons(); j++)
 		{
@@ -272,7 +262,7 @@ void NN::freeMemory()
 		}
 
 		delete l;
-		m_Layers[i] = nullptr;
+		m_Layer = nullptr;
 	}
 
 	m_Layers.clear();
@@ -280,10 +270,10 @@ void NN::freeMemory()
 
 void NNLayer::freeMemory()
 {
-	for (unsigned short int i = 0; i < m_Neurons.size(); i++)
+	for (CPerceptron*& m_Neuron : m_Neurons)
 	{
-		delete m_Neurons[i];
-		m_Neurons[i] = nullptr;
+		delete m_Neuron;
+		m_Neuron = nullptr;
 	}
 
 	m_Neurons.clear();
@@ -341,13 +331,13 @@ void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
 	ga_value fTotalError = 0;
 	ga_value iNum = 0;
 
-	for (unsigned int i = 0; i < trainingsets.size(); i++)
+	for (CNNTrainSet& trainingset : trainingsets)
 	{
-		this->execute(&outputs, &trainingsets[i].inputs);
+		this->execute(&outputs, &trainingset.inputs);
 
 		for (unsigned int j = 0; j < outputs.size(); j++)
 		{
-			const ga_value fError = outputs[j] - trainingsets[i].outputs[j];
+			const ga_value fError = outputs[j] - trainingset.outputs[j];
 
 			fTotalError += fError * fError;
 			iNum++;

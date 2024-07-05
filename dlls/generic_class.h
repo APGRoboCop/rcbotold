@@ -42,8 +42,8 @@
   ****************************************************
  */
 
-#ifndef RCBOT_GENERIC_CLASS
-#define RCBOT_GENERIC_CLASS
+#ifndef __RCBOT_GENERIC_CLASS__
+#define __RCBOT_GENERIC_CLASS__
 
 #include <cassert>
 #include <limits>
@@ -736,10 +736,7 @@ private:
 	dataNode<T>* m_Head;
 };
 
-enum
-{
-	DEFAULT_ARRAY_VALUE = 1
-};
+constexpr int DEFAULT_ARRAY_VALUE = 1;
 
 template <class T>
 class dataArray

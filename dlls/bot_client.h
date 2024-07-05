@@ -44,8 +44,8 @@
  // Prototypes for network message functions
  //
 
-#ifndef BOT_CLIENT_H
-#define BOT_CLIENT_H
+#ifndef __BOT_CLIENT_H__
+#define __BOT_CLIENT_H__
 
 #include "generic_class.h"
 #include "bot_const.h"

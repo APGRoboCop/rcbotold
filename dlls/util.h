@@ -15,8 +15,6 @@
 //
 // Misc utility code
 //
-#ifndef UTIL_H
-#define UTIL_H
 
 #ifdef _WIN32
 #include <windef.h>
@@ -550,4 +548,3 @@ int UTIL_SharedRandomLong(unsigned int seed, int low, int high);
 float UTIL_SharedRandomFloat(unsigned int seed, float low, float high);
 
 float UTIL_WeaponTimeBase();
-#endif // UTIL_H

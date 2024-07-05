@@ -70,7 +70,7 @@ CSomNeuron* CSom::getBMU(std::vector <ga_value>* inputs) const
 	CSomNeuron* winner = nullptr;
 	ga_value bestdistance = 0;
 
-	for (const auto m_Neuron : m_Neurons)
+	for (CSomNeuron* m_Neuron : m_Neurons)
 	{
 		const ga_value dist = m_Neuron->distance(inputs);
 
@@ -89,7 +89,7 @@ void CSom::updateAround(std::vector<ga_value>* inputs, CSomNeuron* bmu) const
 	ga_value dist;
 	const ga_value nsiz = m_fNSize * m_fNSize;
 
-	for (const auto current : m_Neurons)
+	for (CSomNeuron* current : m_Neurons)
 	{
 		if ((dist = bmu->neighbourDistance(current, nsiz)) <= nsiz)
 		{
@@ -120,7 +120,7 @@ void CSom::input(std::vector<std::vector<ga_value>>* inputs, int epochs)//TODO: 
 	}
 
 	// Get the number of input vectors and the length of each input vector
-   size_t inputVectorSize = (*inputs)[0].size();
+	const size_t inputVectorSize = (*inputs)[0].size();
 
 	// Initialize the self-organizing map with random initial weights
 	// This step is not shown in the provided code snippet and requires initialization logic
@@ -128,7 +128,7 @@ void CSom::input(std::vector<std::vector<ga_value>>* inputs, int epochs)//TODO: 
 	// Training loop for the specified number of epochs
 	for (int epoch = 0; epoch < epochs; ++epoch) {
 		// Iterate through each input vector
-      for (size_t i = 0; i < inputVectorSize; ++i) {
+		for (size_t i = 0; i < inputVectorSize; ++i) {
 			// Get the current input vector
 			(*inputs)[i];
 
@@ -152,7 +152,7 @@ void CSom::display() const
 {
 	//std::printf("\nDisplaying...\n");
 
-	for (const auto m_Neuron : m_Neurons)
+	for (const CSomNeuron* m_Neuron : m_Neurons)
 	{
 		//std::printf("%d -- ",i);
 		m_Neuron->displayWeights();
@@ -184,8 +184,8 @@ CSomNeuron::CSomNeuron()
 
 CSomNeuron::CSomNeuron(int iInp, ga_value iX, ga_value iY)
 {
-	m_iX = iX;
-	m_iY = iY;
+	m_iX = static_cast<int>(iX);
+	m_iY = static_cast<int>(iY);
 
 	for (int i = 0; i < iInp; i++)
 		fWeights.emplace_back(RANDOM_FLOAT(0, 1));

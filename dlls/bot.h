@@ -51,8 +51,8 @@
  *
  *
  */
-#ifndef BOT_H
-#define BOT_H
+#ifndef __BOT_H__
+#define __BOT_H__
 
 #include "generic_class.h"
 #include "bot_const.h"
@@ -123,7 +123,7 @@ int GetPlayerEdictRepId(edict_t* pEdict);
 void BotFunc_ChangeAngles(float* fSpeed, const float* fIdeal, float* fCurrent, float* fUpdate);
 BOOL UTIL_FriendlyHatesPlayer(edict_t* pEntity, edict_t* pPlayer);
 edict_t* UTIL_getEntityInFront(edict_t* pEntity);
-void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, int magnitude, BOOL doDamage);
+void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, float magnitude, BOOL doDamage);
 Vector UTIL_GetGroundVector(edict_t* pEdict);
 BOOL UTIL_EntityIsHive(edict_t* pEdict);
 int UTIL_CountEntitiesInRange(char* classname, const Vector& vOrigin, float fRange);
@@ -210,7 +210,7 @@ Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, edict_t* pPushable);
 void UTIL_PlaySoundToAll(const char* szSound);
 void UTIL_PlaySound(edict_t* pPlayer, const char* szSound);
 
-void BotPrintTalkMessageOne(edict_t* pClient,const char* fmt, ...);
+void BotPrintTalkMessageOne(edict_t* pClient, const char* fmt, ...);
 
 BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource);
 int NS_GetPlayerLevel(int exp);
@@ -279,6 +279,8 @@ void BotFile_Write(char* string);
 
 //////////////////////////////////////////////////////////////////////////////////
 // END : FUNCTION PROTOTYPES
+
+//TODO: To use `typedef struct sel_ammo` to reload properly? [APG]RoboCop[CL]
 /*
 typedef struct
 {
@@ -710,7 +712,7 @@ public:
 class CBotTask
 {
 public:
-	
+
 	CBotTask()
 	{
 		std::memset(this, 0, sizeof(CBotTask));
@@ -1739,19 +1741,19 @@ protected:
 class CAutoWaypointCheck : public CTypeVector<float>
 {
 public:
-	void SetPoint (const Vector& vec, int iFlags)
+	void SetPoint(const Vector& vec, int iFlags)
 	{
 		m_iFlags = iFlags;
 
 		SetVector(vec);
 	}
 
-	int getFlags () const
+	int getFlags() const
 	{
 		return m_iFlags;
 	}
 
-	void UnSetPoint ()
+	void UnSetPoint()
 	{
 		m_bVectorSet = false;
 		m_iFlags = 0;
@@ -1827,7 +1829,7 @@ public:
 		return m_vVisibleOrigin;
 	}
 
-	BOOL operator == (const CRememberPosition& other) const
+	BOOL operator == (const CRememberPosition other) const
 	{
 		return other.getEntity() == getEntity();
 	}
@@ -2602,8 +2604,8 @@ class CLearnedHeader
 public:
 	CLearnedHeader(int iId);
 
-	BOOL operator == (const CLearnedHeader& other) const;
-	BOOL operator != (CLearnedHeader const &other) const
+	BOOL operator == (CLearnedHeader other) const;
+	BOOL operator != (CLearnedHeader const other) const
 	{
 		return !(*this == other);
 	}
@@ -2729,7 +2731,7 @@ public:
 		return m_iId;
 	}
 	/*/guurk*/
-	
+
 	int getID() const { return m_iId; }
 
 	Vector getOrigin() { return m_vOrigin; }
@@ -2818,7 +2820,7 @@ private:
 	float m_fNextUpdateHealth;
 	int m_iPrevTeamScore;
 	float m_fNextCheckFeignTime;
-	
+
 	BOOL m_bUsedMelee;
 	CBotWeapon m_weapon; // The bot's weapon
 
@@ -2863,7 +2865,7 @@ private:
 	edict_t* m_pTank; // CFuncTank
 	float m_fGrenadePrimeTime;
 	int m_iGrenadeHolding;
-	
+
 	float m_fUpdateFlagTime;
 	BOOL m_bHasFlag; // has a flag or the only flag?
 	edict_t* m_pFlag; // holding this flag
@@ -2877,7 +2879,7 @@ private:
 	float m_fUpgradeTime;
 
 	// the list of visible entities
-	//	dataStack<edict_t*>	m_stBotVisibles;
+//	dataStack<edict_t*>	m_stBotVisibles;
 
 	// Bitmask of conditions the bot has
 	int                 m_ibBotConditions;
@@ -3827,7 +3829,7 @@ public:
 
 	//void MapInit(); //Duplicate? [APG]RoboCop[CL]
 
-	void BotOnLadder();
+	//void BotOnLadder(); //TODO: Needs revised [APG]RoboCop[CL]
 
 	void UseTank(edict_t* pTank);
 
@@ -3893,7 +3895,7 @@ public:
 	// that the bot doesn't want to avoid.
 	BOOL CanAvoid(edict_t* pEntity, float fDistanceToEntity, float fAvoidDistance) const;
 
-	static void ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
+	void ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
 
 	BOOL IsOnLadder() const
 	{
@@ -3906,7 +3908,7 @@ public:
 	}
 
 	// if bot can fly, this will return true
-	BOOL CanFly() const;
+	BOOL CanFly();
 	/*{
 		return IsMarine() && HasJetPack() || IsLerk();
 	}*/
@@ -4554,7 +4556,7 @@ public:
 		}
 	}
 
-	BOOL IsAutoWaypointOn () const
+	BOOL IsAutoWaypointOn() const
 	{
 		return m_bAutoWaypoint;
 	}
@@ -4635,7 +4637,7 @@ private:
 	Vector* m_vTeleportVector;
 	//********************
 
-	// autowaypointing stuff
+		// autowaypointing stuff
 	BOOL m_bAutoWaypoint;
 
 	CAutoWaypointCheck m_vLastAutoWaypointCheckPos[MAX_STORED_AUTOWAYPOINT];
@@ -4801,7 +4803,7 @@ public:
 		return false;
 	}
 
-	BOOL operator == (const CAllowedPlayer &player) const
+	BOOL operator == (CAllowedPlayer player) const
 	{
 		// = Steam ID , or = name + password
 		return (player.IsForName(m_szName) && player.IsForPass(m_szPass)) || player.IsForSteamID(m_szSteamId);
@@ -4868,7 +4870,7 @@ public:
 		}
 	}
 
-	void AddPlayer(const char* szName, char* szPass, int iAccessLevel, char* szSteamId)
+	void AddPlayer(const char* szName, const char* szPass, int iAccessLevel, const char* szSteamId)
 	{
 		const CAllowedPlayer PlayerToAdd = CAllowedPlayer(szName, szPass, iAccessLevel, szSteamId);
 
@@ -4879,7 +4881,7 @@ public:
 		m_AllowedPlayers.Push(PlayerToAdd);
 	}
 
-	void RemovePlayer(const char* szName, char* szPass, char* szSteamId)
+	void RemovePlayer(const char* szName, const char* szPass, const char* szSteamId)
 	{
 		m_AllowedPlayers.Remove(CAllowedPlayer(szName, szPass, 0, szSteamId));
 	}
@@ -5390,7 +5392,7 @@ public:
 
 					if (pStructure->IsUnderAttack())
 					{
-						switch (const int iStructure = pStructure->GetStructureType())
+						switch (pStructure->GetStructureType())
 						{
 							// Different priorities for different structures under attack
 							// this will determine how many aliens will rush to the structure
@@ -6021,7 +6023,7 @@ public:
 		m_iRad = iRadius;
 	}
 
-	BOOL operator == (CBotNSTech const &other) const
+	BOOL operator == (CBotNSTech const other) const
 	{
 		return other.getID() == getID();
 	}
@@ -6041,7 +6043,7 @@ public:
 		return m_iCost;
 	}
 
-	void update(CBotNSTech const &tech)
+	void update(CBotNSTech const tech)
 	{
 		m_bAvailable = tech.getAvailable();
 		m_iCost = tech.getCost();
@@ -6058,7 +6060,7 @@ private:
 class CBotNSTechs
 {
 public:
-	void addTech(const CBotNSTech& tech)
+	void addTech(CBotNSTech tech)
 	{
 		if (!m_Techs.IsMember(tech))
 			m_Techs.Add(tech);
@@ -6116,9 +6118,9 @@ public:
 	void saveLearnedData() const;
 	void loadLearnedData();
 
-	void printBotBoredom(edict_t* pEdictTo) const
+	void printBotBoredom(edict_t* pEdictTo)
 	{
-		for (const CBot& m_Bot : m_Bots)
+		for (CBot& m_Bot : m_Bots)
 		{
 			const CBot* pBot = &m_Bot;
 
@@ -6143,7 +6145,7 @@ public:
 
 	BOOL IsConfigSettingOn(int iConfigSetting) const
 		// returns a True value if the config setting iConfigSetting
-			// is On, False if Off..
+		// is On, False if Off..
 	{
 		return (m_iConfigSettings & iConfigSetting) > 0;
 	}
@@ -6204,7 +6206,7 @@ public:
 	{
 		int iNum = 0;
 
-		for (int m_iJoiningClient : m_iJoiningClients)
+		for (const int m_iJoiningClient : m_iJoiningClients)
 			iNum += m_iJoiningClient;
 
 		return iNum;
@@ -6773,10 +6775,10 @@ public:
 	}*/
 
 	/*void changeWelcomeMessage ( char *message )
-		{
+	{
 			if ( m_szWelcomeMessage )
-				std::free(m_szWelcomeMessage);
-			m_szWelcomeMessage = strdup(message);
+			std::free(m_szWelcomeMessage);
+		m_szWelcomeMessage = strdup(message);
 		}*/
 
 	void buildFileName(const char* in_filename, char* out_filename)

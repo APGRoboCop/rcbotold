@@ -450,14 +450,14 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 				// handle error here, possibly with a return or throw [APG]RoboCop[CL]
 				return; // or throw an exception
 			}
-			
+
 			output_template = temp;
 
 			length = 0;
 			for (i = 0; i < static_cast<int>(replywords->size); ++i)
 				for (j = 0; j < replywords->entry[i].length; ++j)
 					output_template[length++] = replywords->entry[i].word[j];
-			
+
 			if (length > BOT_CHAT_MESSAGE_LENGTH)
 				output_template[BOT_CHAT_MESSAGE_LENGTH - 1] = 0; // disallow strings to be longer than BOT_CHAT_MESSAGE_LENGTH chars
 			else
@@ -510,23 +510,23 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 
 	int i;
 	BOOL found;
-	
+
 	// if the word's already in the dictionary, there is no need to add it
 	const int position = HAL_SearchDictionary(dictionary, word, &found);
 	// Check if dictionary->index is not nullptr before using it
 	if (found && dictionary->index != nullptr)
 		return dictionary->index[position];
-	
+
 	// increase the number of words in the dictionary
 	dictionary->size++;
-	
+
 	// allocate one more entry for the word index
 	if (dictionary->index == nullptr)
 		dictionary->index = static_cast<unsigned short*>(std::malloc(sizeof(unsigned short) * dictionary->size));
 	else
 		dictionary->index = static_cast<unsigned short*>(std::realloc(dictionary->index,
 			sizeof(unsigned short) * dictionary->size));
-	
+
 	if (dictionary->index == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_AddWord() unable to reallocate the dictionary index\n");
 
@@ -728,7 +728,7 @@ void HAL_LoadDictionary(std::FILE* file, HAL_DICTIONARY* dictionary)
 		HAL_AddWord(dictionary, word);
 
 		//if (word.word != nullptr)
-			std::free(word.word);
+		std::free(word.word);
 
 		word.word = nullptr;
 	}
@@ -1241,7 +1241,7 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words)
 
 int strpos(char* pos, char* start)
 {
-	return reinterpret_cast<int>(pos) - reinterpret_cast<int>(start);
+	return int(pos) - int(start);
 }
 
 void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int start, int end)
@@ -1644,9 +1644,9 @@ void HAL_AddSwap(HAL_SWAP* list, char* s, char* d)
 	if (list->to == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_AddSwap() unable to reallocate to\n");
 
-	list->from[list->size].length = std::strlen(s);
+	list->from[list->size].length = static_cast<unsigned char>(std::strlen(s));
 	list->from[list->size].word = strdup(s);
-	list->to[list->size].length = std::strlen(d);
+	list->to[list->size].length = static_cast<unsigned char>(std::strlen(d));
 	list->to[list->size].word = strdup(d);
 	list->size++;
 }
@@ -1667,7 +1667,7 @@ HAL_SWAP* HAL_InitializeSwap(char* filename)
 	while (!std::feof(fp))
 	{
 		char buffer[1024];
-		
+
 		if (std::fgets(buffer, 1024, fp) == nullptr)
 			break;
 
@@ -1700,7 +1700,7 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 	while (!std::feof(fp))
 	{
 		char buffer[1024];
-		
+
 		if (std::fgets(buffer, 1024, fp) == nullptr)
 			break;
 
@@ -1712,7 +1712,7 @@ HAL_DICTIONARY* HAL_InitializeList(char* filename)
 		if (string != nullptr && string[0] != '\0')
 		{
 			HAL_STRING word;
-			
+
 			word.length = static_cast<unsigned char>(std::strlen(string));
 			word.word = strdup(buffer); // strdup - duplicates string
 			HAL_AddWord(list, word);
@@ -1869,10 +1869,10 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	char brn_filename[256];
 
 	pBotProfile->m_HAL = static_cast<HAL_bot_t*>(std::malloc(sizeof(HAL_bot_t)));
-	
+
 	if (pBotProfile->m_HAL == nullptr)
 		return false; // reliability check
-	
+
 	pBotProfile->m_HAL->auxiliary_keywords = nullptr;
 	pBotProfile->m_HAL->banned_keywords = nullptr;
 	pBotProfile->m_HAL->bot_model = nullptr;
@@ -1880,7 +1880,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	pBotProfile->m_HAL->input_words = nullptr;
 	pBotProfile->m_HAL->swappable_keywords = nullptr;
 	pBotProfile->m_HAL->keyword_is_used = false;
-	
+
 	pBotProfile->m_HAL->bot_model = HAL_NewModel(BOT_HAL_MODEL_ORDER); // create a language model of a certain order
 
 	// build the file names
@@ -1899,9 +1899,9 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	UTIL_BuildFileName(brn_filename, BOT_PROFILES_FOLDER, brn_file);
 
 	//#ifdef __linux__
-		// sprintf (brn_filename, "%s%d_hal.brn", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId);
+	  // sprintf (brn_filename, "%s%d_hal.brn", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId);
 	//#else
-		//sprintf (brn_filename, "%s%d_hal.brn", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId);
+	   //sprintf (brn_filename, "%s%d_hal.brn", BOT_PROFILES_FOLDER, pBotProfile->m_iProfileId);
 	//#endif
 
 	if (pBotProfile->m_szHAL_BanFile)
@@ -1944,7 +1944,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	if (fp != nullptr)
 	{
 		char cookie[32];
-		
+
 		std::fseek(fp, 0, SEEK_SET); // seek at start of file
 		std::fread(cookie, sizeof"RCBOTHAL", 1, fp); // read the brain signature
 		std::fclose(fp); // close the brain (we just wanted the signature)
@@ -1966,7 +1966,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 		BotMessage(nullptr, 1, "PrepareHALBrainForPersonality(): writing permissions not allowed on profile (%d) HAL brain!", pBotProfile->m_iProfileId);
 		return false; // return or exit here [APG]RoboCop[CL]
 	}
-	
+
 	std::fwrite("RCBOTHAL", sizeof"RCBOTHAL", 1, fp);
 	std::fwrite(&pBotProfile->m_HAL->bot_model->order, sizeof(unsigned char), 1, fp);
 	HAL_SaveTree(fp, pBotProfile->m_HAL->bot_model->forward);
@@ -2057,27 +2057,26 @@ BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
 		if (fp != nullptr)
 		{
 			char szBuffer[256];
-			
+
 			while (std::fgets(szBuffer, 255, fp) != nullptr)
 			{
 				szBuffer[255] = 0;
-				
+
 				if (szBuffer[0] == '#')
 					continue; // a comment
 				if (!szBuffer[0])
 					continue; // nothing on this line
-				
+
 				const size_t iLen = std::strlen(szBuffer);
 				if (iLen > 0 && szBuffer[iLen - 1] == '\n')
 					szBuffer[iLen - 1] = 0;
-				
+
 				HAL_MakeWords(szBuffer, pBotProfile->m_HAL->input_words);
 				HAL_Learn(pBotProfile->m_HAL->bot_model, pBotProfile->m_HAL->input_words);
 			}
-			
+
 			std::fclose(fp);
 		}
-
 	}
 
 	return false; // no error, return false

@@ -43,8 +43,8 @@
   ****************************************************
  */
 
-#ifndef BOT_MENU_H
-#define BOT_MENU_H
+#ifndef __BOT_MENU_H__
+#define __BOT_MENU_H__
 
 class CClient;
 class CBotMenu;

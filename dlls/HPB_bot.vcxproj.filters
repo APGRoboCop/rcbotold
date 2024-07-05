@@ -244,6 +244,9 @@
     <ClInclude Include="..\common\studio_event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="comp_dep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

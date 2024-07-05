@@ -58,8 +58,8 @@
   ****************************************************
  */
 
-#ifndef BOT_WEAPONS_H
-#define BOT_WEAPONS_H
+#ifndef __BOT_WEAPONS_H__
+#define __BOT_WEAPONS_H__
 
 #include "generic_class.h"
 #include "weaponinfo.h"
@@ -112,7 +112,7 @@ enum class NSWeapon
 
 	// Can't go over 32 (client.cpp, GetWeaponData())
 
-	MAX
+	AVH_WEAPON_MAX
 };
 //AvHWeaponID;
 ////////////////////

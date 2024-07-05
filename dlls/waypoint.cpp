@@ -60,6 +60,7 @@
 #else
 #include "h_export_meta.h"
 #include "dllapi.h"
+#include "meta_api.h"
 #endif
 
 #include "bot.h"
@@ -149,35 +150,35 @@ int CWaypointLocations::GetCoverWaypoint(Vector const& vPlayerOrigin, const Vect
 
 	FOR_EACH_WPT_LOC_BUCKET(vPlayerOrigin)
 
-	// check each area around the current area
-	// for closer waypoints
-	FindNearestCoverWaypointInBucket(i, j, k, vPlayerOrigin, &fNearestDist, &iNearestIndex, iIgnoreWpts, iWaypoint);
+		// check each area around the current area
+		// for closer waypoints
+		FindNearestCoverWaypointInBucket(i, j, k, vPlayerOrigin, &fNearestDist, &iNearestIndex, iIgnoreWpts, iWaypoint);
 
 	END_EACH_WPT_LOC_BUCKET
 
-	/*for ( i = iMinLoci; i <= iMaxLoci; i++ )
-	{
-		for ( j = iMinLocj; j <= iMaxLocj; j++ )
+		/*for ( i = iMinLoci; i <= iMaxLoci; i++ )
 		{
 			for ( j = iMinLocj; j <= iMaxLocj; j++ )
 			{
-			// check each area around the current area
-			// for closer waypoints
-				FindNearestCoverWaypointInBucket(i,j,k,vPlayerOrigin,&fNearestDist,&iNearestIndex,iIgnoreWpts,iWaypoint);
+				for ( j = iMinLocj; j <= iMaxLocj; j++ )
+				{
+				// check each area around the current area
+				// for closer waypoints
+					FindNearestCoverWaypointInBucket(i,j,k,vPlayerOrigin,&fNearestDist,&iNearestIndex,iIgnoreWpts,iWaypoint);
+				}
 			}
-		}
-	}*/
+		}*/
 
-	/*if ( FBitSet(gBotGlobals.m_iDebugLevels,BOT_DEBUG_NAV_LEVEL) )
-	{
-		if ( !IS_DEDICATED_SERVER() && gBotGlobals.m_pListenServerEdict )
+		/*if ( FBitSet(gBotGlobals.m_iDebugLevels,BOT_DEBUG_NAV_LEVEL) )
 		{
-			if ( iNearestIndex != -1 )
-				WaypointDrawBeam(gBotGlobals.m_pListenServerEdict,vPlayerOrigin,WaypointOrigin(iNearestIndex),16,1,255,255,0,200,10);
-		}
-	}*/
+			if ( !IS_DEDICATED_SERVER() && gBotGlobals.m_pListenServerEdict )
+			{
+				if ( iNearestIndex != -1 )
+					WaypointDrawBeam(gBotGlobals.m_pListenServerEdict,vPlayerOrigin,WaypointOrigin(iNearestIndex),16,1,255,255,0,200,10);
+			}
+		}*/
 
-	return iNearestIndex;
+		return iNearestIndex;
 }
 
 void CWaypointLocations::AddWptLocation(const int iIndex, const float* fOrigin)
@@ -273,12 +274,12 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 
 		if (iFailedWpts)
 		{
-			dataStack<int> temp_stack = *iFailedWpts;
+			dataStack<int> tempStack = *iFailedWpts;
 			int iWpt;
 
-			while (!temp_stack.IsEmpty())
+			while (!tempStack.IsEmpty())
 			{
-				if ((iWpt = temp_stack.ChooseFromStack()) != -1)
+				if ((iWpt = tempStack.ChooseFromStack()) != -1)
 					g_iFailedWaypoints[iWpt] = 1;
 			}
 		}
@@ -366,7 +367,7 @@ void CWaypointLocations::FillNearbyWaypoints(const Vector& vOrigin, dataStack<in
 {
 	FOR_EACH_WPT_LOC_BUCKET(vOrigin)
 
-	FillWaypointsInBucket(i, j, k, vOrigin, iWaypoints, iFailedWpts);
+		FillWaypointsInBucket(i, j, k, vOrigin, iWaypoints, iFailedWpts);
 
 	END_EACH_WPT_LOC_BUCKET
 }
@@ -383,11 +384,11 @@ int CWaypointLocations::NearestWaypoint(const Vector& vOrigin, float fNearestDis
 
 	FOR_EACH_WPT_LOC_BUCKET(vOrigin)
 
-	FindNearestInBucket(i, j, k, vOrigin, &fNearestDist, &iNearestIndex, iIgnoreWpt, bGetVisible, bGetUnReachable, bIsBot, iFailedWpts, bNearestAimingOnly);
+		FindNearestInBucket(i, j, k, vOrigin, &fNearestDist, &iNearestIndex, iIgnoreWpt, bGetVisible, bGetUnReachable, bIsBot, iFailedWpts, bNearestAimingOnly);
 
 	END_EACH_WPT_LOC_BUCKET
 
-	return iNearestIndex;
+		return iNearestIndex;
 }
 
 //////////////////////////////////
@@ -407,7 +408,7 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float 
 
 	FOR_EACH_WPT_LOC_BUCKET(vOrigin)
 
-	dataStack<int> tempStack = m_iLocations[i][j][k];
+		dataStack<int> tempStack = m_iLocations[i][j][k];
 
 	while (!tempStack.IsEmpty())
 	{
@@ -618,44 +619,48 @@ BOOL WaypointLoad(edict_t* pEntity)
 	return true;
 }
 
+//TODO: This may cause WaypointFindPath server crashes in awkward designed maps [APG]RoboCop[CL]
+/*
 void AutoWaypoint()
 {
 	//if ( gBotGlobals.IsMod(MOD_SVENCOOP) )
 	//{
 	edict_t* pNode = nullptr;
 
-	TraceResult tr;
+		TraceResult tr;
 
 	BotMessage(nullptr, 0, "Autowaypointing using info_nodes...");
 
 	while ((pNode = UTIL_FindEntityByClassname(pNode, "info_node")) != nullptr)
-	{
+		{
 		Vector vOrigin = pNode->v.origin;
 
-		// hit the floor
+			// hit the floor
 		UTIL_TraceLine(vOrigin, Vector(0, 0, -4096.0f), ignore_monsters, dont_ignore_glass, nullptr, &tr);
 
 		Vector min = tr.vecEndPos;
 
-		// hit the ceiling
+			// hit the ceiling
 		UTIL_TraceLine(vOrigin, Vector(0, 0, 4096.0f), ignore_monsters, dont_ignore_glass, nullptr, &tr);
 
 		const Vector max = tr.vecEndPos;
 
-		// small area ? might need to be a crouch waypoint
+			// small area ? might need to be a crouch waypoint
 		const float fHeight = max.z - min.z;
 
 		if (fHeight < 72)
-		{
+			{
 			WaypointAddOrigin(min + Vector(0, 0, 18), W_FL_CROUCH, nullptr);
-		}
-		else
+			}
+			else
 			WaypointAddOrigin(min + Vector(0, 0, 36), 0, nullptr);
 
 		BotMessage(nullptr, 0, "Added waypoint at node.");
-	}
+		}
 	//}
+	}
 }
+*/
 
 std::FILE* CWaypointConversion::openWaypoint() const
 {
@@ -1023,7 +1028,7 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 
 // find a path from the current waypoint. (pPath MUST be NULL on the
 // initial call. subsequent calls will return other paths if they exist.)
-int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team)
+int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, const int team)
 {
 	if (pPath == nullptr || path_index == nullptr) //Required to reduce crashes? [APG]RoboCop[CL]
 	{
@@ -1458,12 +1463,10 @@ int WaypointFindNearestAiming(const Vector& v_origin)
 		if ((waypoints[index].flags & W_FL_AIMING) == 0)
 			continue;  // skip any NON aiming waypoints
 
-		const float distance = (v_origin - waypoints[index].origin).Length();
-
-		if (distance < min_distance && distance < 40)
+		if (const float distance = (v_origin - waypoints[index].origin).Length(); distance < static_cast<int>(min_distance) && distance < 40)
 		{
 			min_index = index;
-			min_distance = distance;
+			min_distance = static_cast<int>(distance);
 		}
 	}
 
@@ -1580,7 +1583,7 @@ int WaypointAddOrigin(Vector const& vOrigin, const int iFlags, edict_t* pEntity,
 	{
 		UTIL_PlaySound(pEntity, "weapons/xbow_hit1.wav");
 		//UTIL_PlaySound(pEntity,"weapons/xbow_hit1.wav");
-		 //
+		//
 	}
 
 	// increment total number of waypoints if adding at end of array...

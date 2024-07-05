@@ -28,8 +28,8 @@
  *    version.
  *
  */
-#ifndef GA_H
-#define GA_H
+#ifndef __GA_H__
+#define __GA_H__
 
 #include "gannconst.h"
 #include <vector>

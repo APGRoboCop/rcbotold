@@ -297,7 +297,7 @@ CBotMenu::CBotMenu(const char* szCaption)
 
 void CBotMenu::DestroyMenu() const
 {
-	for (const auto m_Menu : m_Menus)
+	for (CBotMenuItem* m_Menu : m_Menus)
 	{
 		if (m_Menu != nullptr)
 			m_Menu->Init();

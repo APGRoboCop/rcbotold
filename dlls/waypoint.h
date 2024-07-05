@@ -72,24 +72,24 @@ public:
 
 	void Init()
 	{
-		for (int i = 0; i < MAX_WPT_LOCATIONS; i++)
+		for (dataStack<int>(&m_iLocation)[32][32] : m_iLocations)
 		{
-			for (int j = 0; j < MAX_WPT_LOCATIONS; j++)
+			for (dataStack<int>(&j)[32] : m_iLocation)
 			{
-				for (int k = 0; k < MAX_WPT_LOCATIONS; k++)
-					m_iLocations[i][j][k].Init();
+				for (dataStack<int>& k : j)
+					k.Init();
 			}
 		}
 	}
 
 	void Clear()
 	{
-		for (int i = 0; i < MAX_WPT_LOCATIONS; i++)
+		for (dataStack<int> (&m_iLocation)[32][32] : m_iLocations)
 		{
-			for (int j = 0; j < MAX_WPT_LOCATIONS; j++)
+			for (dataStack<int>(&j)[32] : m_iLocation)
 			{
-				for (int k = 0; k < MAX_WPT_LOCATIONS; k++)
-					m_iLocations[i][j][k].Destroy();
+				for (dataStack<int>& k : j)
+					k.Destroy();
 			}
 		}
 	}
@@ -107,7 +107,7 @@ public:
 	void DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float fDist) const;
 
 	void DeleteWptLocation(int iIndex, const float* fOrigin);
-	
+
 	int NearestWaypoint(const Vector& vOrigin, float fNearestDist, int iIgnoreWpt, BOOL bGetVisible = true, BOOL bGetUnreachable = false, BOOL bIsBot = false, dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = false) const;
 
 	void FillWaypointsInBucket(int i, int j, int k, const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = nullptr) const;
@@ -396,7 +396,7 @@ public:
 		setExtension(str2);
 		char str3[] = "HPB_bot";
 		setHeader(str3);
-		
+
 		setVersion(4);
 
 #ifndef __linux__

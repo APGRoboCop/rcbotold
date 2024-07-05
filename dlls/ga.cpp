@@ -59,7 +59,7 @@ IIndividual* CPopulation::getBestIndividual() const
 {
 	IIndividual* best = nullptr;
 
-	for (const auto curr : m_theIndividuals)
+	for (IIndividual* curr : m_theIndividuals)
 	{
 		if (!best || curr->getFitness() > best->getFitness())
 			best = curr;
@@ -75,7 +75,7 @@ void CPopulation::add(IIndividual* individual)
 
 void CPopulation::freeMemory()
 {
-	for (auto& m_theIndividual : m_theIndividuals)
+	for (IIndividual*& m_theIndividual : m_theIndividuals)
 	{
 		m_theIndividual->clear();
 		delete m_theIndividual;
