@@ -260,10 +260,9 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	}
 	else if (FStrEq("hudtext", arg1))
 	{
-		Vector colour = Vector(255, 255, 255);
-
 		if (arg2 && *arg2)
 		{
+			Vector colour = Vector(255, 255, 255);
 			char msg[256]; //char needs to be const? [APG]RoboCop[CL]
 			std::strncpy(msg, arg2, 255);
 			msg[255] = 0;

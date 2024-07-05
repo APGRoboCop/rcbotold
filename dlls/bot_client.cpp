@@ -1543,10 +1543,9 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 		iRadius = POINTER_TO_INT(p);
 		break;
 	case 6:
-		const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, true, iRadius, iSlot);
-
 		if (pBot)
 		{
+			const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, true, iRadius, iSlot);
 			const int team = pBot->GetTeam();
 
 			if (team >= 0 && team < MAX_TEAMS)

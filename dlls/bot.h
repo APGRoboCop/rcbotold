@@ -1829,7 +1829,7 @@ public:
 		return m_vVisibleOrigin;
 	}
 
-	BOOL operator == (const CRememberPosition other) const
+	BOOL operator == (const CRememberPosition& other) const
 	{
 		return other.getEntity() == getEntity();
 	}
@@ -2604,8 +2604,8 @@ class CLearnedHeader
 public:
 	CLearnedHeader(int iId);
 
-	BOOL operator == (CLearnedHeader other) const;
-	BOOL operator != (CLearnedHeader const other) const
+	BOOL operator == (const CLearnedHeader& other) const;
+	BOOL operator != (const CLearnedHeader& other) const
 	{
 		return !(*this == other);
 	}
@@ -4803,7 +4803,7 @@ public:
 		return false;
 	}
 
-	BOOL operator == (CAllowedPlayer player) const
+	BOOL operator == (const CAllowedPlayer& player) const
 	{
 		// = Steam ID , or = name + password
 		return (player.IsForName(m_szName) && player.IsForPass(m_szPass)) || player.IsForSteamID(m_szSteamId);
@@ -6023,7 +6023,7 @@ public:
 		m_iRad = iRadius;
 	}
 
-	BOOL operator == (CBotNSTech const other) const
+	BOOL operator == (const CBotNSTech& other) const
 	{
 		return other.getID() == getID();
 	}
@@ -6043,7 +6043,7 @@ public:
 		return m_iCost;
 	}
 
-	void update(CBotNSTech const tech)
+	void update(const CBotNSTech& tech)
 	{
 		m_bAvailable = tech.getAvailable();
 		m_iCost = tech.getCost();

@@ -1046,7 +1046,7 @@ CLearnedHeader::CLearnedHeader(const int iId)
 	iProfileId = iId;
 }
 
-BOOL CLearnedHeader :: operator == (CLearnedHeader const other) const
+BOOL CLearnedHeader::operator == (const CLearnedHeader& other) const
 {
 	return !std::strcmp(szBotVersion, other.szBotVersion) &&
 		iProfileId == other.iProfileId &&
@@ -8797,12 +8797,15 @@ BOOL CBot::Touch(edict_t* pentTouched)
 
 				if (bWait)
 				{
-					const Vector vPentOrigin = EntityOrigin(pentTouched);
-
 					if ((EntityOrigin(pentTouched) - pev->origin).Length2D() > pentTouchedpev->size.Length2D() / 3)
+					{
+						const Vector vPentOrigin = EntityOrigin(pentTouched);
 						SetMoveVector(vPentOrigin);
+					}
 					else
+					{
 						StopMoving();
+					}
 				}
 			}
 			else
@@ -12833,14 +12836,13 @@ void CBot::DoTasks()
 				// Need to face the right direction
 				m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_EDICT;
 
-				Vector vOrigin = EntityOrigin(pFuncResource);
-
 				if (!UTIL_IsFacingEntity(pev, &pFuncResource->v))
 				{
 					bBuild = false;
 				}
 				else
 				{
+					Vector vOrigin = EntityOrigin(pFuncResource);
 					TraceResult tr;
 					bBuild = true;
 
@@ -16779,8 +16781,6 @@ void CBot::workEnemyCosts(edict_t* pEntity, const Vector& vOrigin, const float f
 		{
 			const int posy = y - mid;
 
-			Vector pos = Vector(posx * BOT_COST_RANGE, posy * BOT_COST_RANGE, pev->origin.z);
-
 			float fCost = fRangeCosts[x][y];
 
 			fCost += m_GASurvival->get(enemyState) / (fDistance * fDistance) * (pEntity->v.size.Length() / pev->size.Length());
@@ -16789,6 +16789,8 @@ void CBot::workEnemyCosts(edict_t* pEntity, const Vector& vOrigin, const float f
 
 			if (fCost < m_fLowestEnemyCost)
 			{
+				Vector pos = Vector(posx * BOT_COST_RANGE, posy * BOT_COST_RANGE, pev->origin.z);
+
 				m_fLowestEnemyCost = fCost;
 				m_vLowestEnemyCostVec = pev->origin + pos;
 			}

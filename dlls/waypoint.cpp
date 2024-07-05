@@ -519,7 +519,10 @@ BOOL WaypointLoad(edict_t* pEntity)
 				{
 					std::fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
 
-					if (waypoints[i].origin.x > 4096.0f || waypoints[i].origin.y > 4096.0f || waypoints[i].origin.z > 4096.0f)
+					//TODO: Experimental optimisation using waypoint_origin [APG]RoboCop[CL]
+					const Vector& waypoint_origin = waypoints[i].origin;
+
+					if (waypoint_origin.x > 4096.0f || waypoint_origin.y > 4096.0f || waypoint_origin.z > 4096.0f)
 					{
 						BotMessage(pEntity, 0, "ERROR!!! Invalid waypoint (id: %d) origin outside map !!!", i);
 						waypoints[i].flags |= W_FL_DELETED;

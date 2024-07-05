@@ -480,7 +480,6 @@ void InitMessage ( const char *message );
 				BOOL bStunt = gBotGlobals.IsMod(MOD_TS) && m_iLastButtons & IN_ALT1;
 				Vector v_floor;
 
-				// TODO: Fix for TS Stunt jumps? [APG]RoboCop[CL]
 				float tolerance = 0.0001f; // choose a suitable tolerance
 
 				if (std::fabs(m_fCanPlaceJump + 1) > tolerance && (bStunt || m_iLastButtons & IN_JUMP) && !(pev->flags & FL_ONGROUND))
