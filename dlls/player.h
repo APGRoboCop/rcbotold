@@ -203,7 +203,7 @@ public:
 	void StopSneaking() { m_tSneaking = gpGlobals->time + 30; }
 	BOOL IsSneaking() { return m_tSneaking <= gpGlobals->time; }
 
-	BOOL IsAlive() override
+	static BOOL IsAlive()
 
 	{
 		BOOL pev = 0;
@@ -211,9 +211,9 @@ public:
 	}
 
 	BOOL ShouldFadeOnDeath() override { return false; }
-	BOOL IsPlayer() { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
+	static BOOL IsPlayer() { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
 
-	BOOL IsNetClient() { return true; }		// Bots should return false for this, they can't receive NET messages
+	static BOOL IsNetClient() { return true; }		// Bots should return false for this, they can't receive NET messages
 	// Spectators should return true for this
 	const char* TeamID();
 

@@ -56,7 +56,7 @@ public:
 
 	NNLayer(int iNumNeurons, int iNumInputs);
 
-	int numNeurons() const { return m_Neurons.size(); }
+	unsigned int numNeurons() const { return m_Neurons.size(); }
 
 	CPerceptron* getNeuron(int iNeuron) const { return m_Neurons[iNeuron]; }
 
@@ -83,7 +83,7 @@ public:
 
 	NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
 
-	void setWeights(std::vector<ga_value>* weights) const;
+	void setWeights(const std::vector<ga_value>* weights) const;
 
 	void getWeights(std::vector<ga_value>* weights) const;
 
@@ -94,13 +94,13 @@ public:
 	void randomize() const;
 
 	void getOutputs(std::vector<ga_value>* outputs) const;
-	void trainOutputs(std::vector<ga_value>* wanted_outputs) const;
+	void trainOutputs(const std::vector<ga_value>* wanted_outputs) const;
 
 	void load(std::FILE* bfp);
 
 	void save(std::FILE* bfp) const;
 
-	virtual void train(std::vector<CNNTrainSet> trainingsets)
+	static void train(const std::vector<CNNTrainSet>&)
 	{
 		//return;
 	}
@@ -116,7 +116,7 @@ public:
 
 	~NNGATrained() override;
 
-	void train(std::vector<CNNTrainSet> trainingsets) override;
+	void train(std::vector<CNNTrainSet> trainingsets);
 private:
 	CGA* m_pGA;
 	IIndividual* m_pInd;

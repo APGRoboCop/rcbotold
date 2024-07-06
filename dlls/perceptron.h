@@ -93,7 +93,7 @@ public:
 
 	void setWeights(CBotGAValues* vals, int iFrom, int iNum);
 
-	int numWeights() const { return m_weights.size(); }
+	unsigned int numWeights() const { return m_weights.size(); }
 
 	void setWeight(int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
 

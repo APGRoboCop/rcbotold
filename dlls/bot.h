@@ -372,7 +372,7 @@ public:
 
 	CClient* GetRandomClient(int iRep) const;
 
-	void WriteToFile(int iBotProfile, CBotReputation* pRep);
+	static void WriteToFile(int iBotProfile, CBotReputation* pRep);
 
 	void RemoveSaveRep(int iBotProfile, int iPlayerRepId);
 
@@ -3079,7 +3079,7 @@ public:
 
 	edict_t* getSentry() const;
 
-	BOOL CanBuild(edict_t* pEdict, int* metal = nullptr);
+	static BOOL CanBuild(edict_t* pEdict, int* metal = nullptr);
 
 	const char* getLookTaskDescription() const
 	{
@@ -3123,7 +3123,7 @@ public:
 	CPerceptron* dec_stunt;
 	edict_t* m_pElectricEnemy;
 
-	BOOL isInAnimate(edict_t* pEntity);
+	static BOOL isInAnimate(edict_t* pEntity);
 
 	BOOL isFriendly(edict_t* pEntity) const;
 
@@ -3895,7 +3895,7 @@ public:
 	// that the bot doesn't want to avoid.
 	BOOL CanAvoid(edict_t* pEntity, float fDistanceToEntity, float fAvoidDistance) const;
 
-	void ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
+	static void ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
 
 	BOOL IsOnLadder() const
 	{
@@ -3908,7 +3908,7 @@ public:
 	}
 
 	// if bot can fly, this will return true
-	BOOL CanFly();
+	BOOL CanFly() const;
 	/*{
 		return IsMarine() && HasJetPack() || IsLerk();
 	}*/
@@ -4704,7 +4704,7 @@ public:
 
 	void ClientDisconnected(edict_t* pPlayer);
 
-	void ClientDisconnected(CClient* pClient);
+	static void ClientDisconnected(CClient* pClient);
 
 	CClient* GetClientByIndex(int iIndex)
 	{
@@ -5572,7 +5572,7 @@ public:
 
 	BOOL TuneIn(edict_t* pPlayer) const;
 
-	void TuneOff(edict_t* pPlayer);
+	static void TuneOff(edict_t* pPlayer);
 
 	BOOL IsWorking() const;
 
@@ -5782,7 +5782,7 @@ public:
 		m_Flags.Pop();
 	}
 
-	edict_t* getFlag(int team, int active_goal)
+	static edict_t* getFlag(int team, int active_goal)
 	{
 		return nullptr;
 	}

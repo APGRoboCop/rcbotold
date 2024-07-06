@@ -122,8 +122,8 @@ class CSquadMonster;
 class EHANDLE
 {
 private:
-	edict_t* m_pent;
-	int		m_serialnumber;
+	edict_t* m_pent = nullptr;
+	int		m_serialnumber = 0;
 public:
 	edict_t* Get();
 	edict_t* Set(edict_t* pent);
@@ -250,12 +250,12 @@ public:
 
 	virtual CBaseEntity* Respawn() { return nullptr; }
 
-	void SUB_UseTargets(CBaseEntity* pActivator, USE_TYPE useType, float value);
+	virtual void SUB_UseTargets(CBaseEntity* pActivator, USE_TYPE useType, float value);
 	// Do the bounding boxes of these two intersect?
 	int		Intersects(CBaseEntity* pOther);
 	void	MakeDormant();
 	int		IsDormant();
-	BOOL    IsLockedByMaster() { return false; }
+	static BOOL    IsLockedByMaster() { return false; }
 
 #ifdef _DEBUG
 	static CBaseEntity* Instance(edict_t* pent)
@@ -279,17 +279,16 @@ public:
 	static CBaseEntity* Instance(entvars_t* pev) { return Instance(ENT(pev)); }
 	static CBaseEntity* Instance(int eoffset) { return Instance(ENT(eoffset)); }
 
-	CBaseMonster* GetMonsterPointer(entvars_t* pevMonster)
+	static CBaseMonster* GetMonsterPointer(entvars_t* pevMonster)
 	{
-		CBaseEntity* pEntity = Instance(pevMonster);
-		if (pEntity)
+		if (CBaseEntity* pEntity = Instance(pevMonster))
 			return pEntity->MyMonsterPointer();
 		return nullptr;
 	}
-	CBaseMonster* GetMonsterPointer(edict_t* pentMonster)
+
+	static CBaseMonster* GetMonsterPointer(edict_t* pentMonster)
 	{
-		CBaseEntity* pEntity = Instance(pentMonster);
-		if (pEntity)
+		if (CBaseEntity* pEntity = Instance(pentMonster))
 			return pEntity->MyMonsterPointer();
 		return nullptr;
 	}
@@ -462,7 +461,7 @@ public:
 
 	static	TYPEDESCRIPTION m_SaveData[];
 	// common member functions
-	void SUB_UseTargets(CBaseEntity* pActivator, USE_TYPE useType, float value);
+	void SUB_UseTargets(CBaseEntity* pActivator, USE_TYPE useType, float value) override;
 	void EXPORT DelayThink();
 };
 

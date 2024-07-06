@@ -1164,7 +1164,7 @@ void CBotGlobals::MapInit()
 	m_fNextJoinTeam = 0.0f;
 	m_iNumBots = 0;
 
-	m_bTeamPlay = false;
+	m_bTeamPlay = true;
 
 	m_currCapPoint = nullptr;
 	m_currFlag = nullptr;
@@ -1224,13 +1224,20 @@ void CBotGlobals::MapInit()
 	}
 	else if (IsMod(MOD_GEARBOX))
 	{
-		if (std::strncmp(mapname, "op4ctf_", 3) == 0)
+		if (std::strncmp(mapname, "op4ctf_", 7) == 0 || std::strncmp(mapname, "op4cp_", 6) == 0)
 		{
 			setMapType(NON_TS_TEAMPLAY);
 			//TODO: To make sure that Op4DM mode doesn't play as CTF Mode [APG]RoboCop[CL]
 			// Op4CTF Support [APG]RoboCop[CL]
 			//extern edict_t *pent_info_ctfdetect;
 			m_bTeamPlay = true;
+		}
+		else
+		{
+			if (CVAR_GET_FLOAT("mp_teamplay") <= 0.0f)
+			{
+				m_bTeamPlay = false;
+			}
 		}
 	}
 

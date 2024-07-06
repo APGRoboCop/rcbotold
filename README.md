@@ -19,7 +19,7 @@ Supported Mods
 RCBot versions
 --------------
 
-V 1.51-beta6
+V 1.51-beta7
 ---------
 
 * added: Enhanced performance and stability
@@ -49,7 +49,6 @@ V 1.51-beta6
 * TODO: To improve on how to allow bots climb ladders more properly
 * TODO: To prevent bots from team shooting in Team Deathmatch mode for HLDM, Op4DM, DMC and TS
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
-* TODO: To bring back the TS v3.0 stunt dive code that was working previously
 * TODO: To allow bots in Op4 to use Grapple by using the "Fly" waypoint
 * TODO: To add proper support for S&I, AHL, FLF and WizWars
 

@@ -961,9 +961,9 @@ void BotFunc_KickBotFromTeam(int iTeam)
 	dataUnconstArray<CBot*> theBots;
 	CBot* pBot;
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
+	for (CBot& m_Bot : gBotGlobals.m_Bots)
 	{
-		pBot = &gBotGlobals.m_Bots[i];
+		pBot = &m_Bot;
 
 		if (pBot && pBot->IsUsed())
 		{

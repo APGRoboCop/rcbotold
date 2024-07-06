@@ -72,7 +72,7 @@ void CBotGAValues::crossOver(IIndividual* other)
 
 	CBotGAValues* vother = static_cast<CBotGAValues*>(other);
 
-	int i;
+	unsigned int i;
 
 	for (i = 0; i < iPoint; i++)
 	{
@@ -298,7 +298,7 @@ void CBitsGAValues::crossOver(IIndividual* other)
 // mutate some values
 void CBitsGAValues::mutate()
 {
-	for (int i = 0; i < m_theBits->numBits(); i++)
+	for (unsigned int i = 0; i < m_theBits->numBits(); i++)
 	{
 		if (RANDOM_FLOAT(0.0f, 1.0f) < CGA::g_fMutateRate)
 		{

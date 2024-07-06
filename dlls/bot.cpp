@@ -8412,8 +8412,8 @@ void CBot::WorkMoveDirection()
 
 	// botmans code! (me maths suxorz...sorta)
 	const float radians = fAngle * static_cast<float>(M_PI) / 180.0f; // degrees to radians
-	float flMove = std::cos(radians);
-	float flSide = std::sin(radians);
+	const float flMove = std::cos(radians);
+	const float flSide = std::sin(radians);
 	//
 
 	/* // <-- add extra slash to uncomment this code
@@ -16374,7 +16374,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 	}
 }
 
-BOOL CBot::CanFly()
+BOOL CBot::CanFly() const
 {
 	return IsLerk() || (IsMarine() && HasJetPack())
 		|| ((gBotGlobals.IsMod(MOD_GEARBOX) && HasWeapon(static_cast<int>(GearboxWeapon::GRAPPLE)))

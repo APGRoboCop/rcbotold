@@ -783,7 +783,7 @@ public:
 	virtual BOOL FInViewCone(Vector* pOrigin);// see if given location is in monster's view cone
 	void TraceAttack(entvars_t* pevAttacker, float flDamage, Vector vecDir, TraceResult* ptr, int bitsDamageType) override;
 	void MakeDamageBloodDecal(int cCount, float flNoise, TraceResult* ptr, const Vector& vecDir);
-	virtual BOOL	IsAlive() override { return pev->deadflag != DEAD_DEAD; }
+	BOOL IsAlive() override { return pev->deadflag != DEAD_DEAD; }
 };
 
 #endif

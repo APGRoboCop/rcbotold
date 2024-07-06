@@ -63,17 +63,17 @@ NN::NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int 
 	m_Layers.emplace_back(new NNLayer(iNumOutputs, iNumNeuronsPerHiddenLayer));
 }
 
-void NN::setWeights(std::vector<ga_value>* weights) const
+void NN::setWeights(const std::vector<ga_value>* weights) const
 {
-	unsigned short int w = 0;
+	unsigned int w = 0;
 
 	for (const NNLayer* l : m_Layers)
 	{
-		for (unsigned short int j = 0; j < l->numNeurons(); j++)
+		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
 			CPerceptron* n = l->getNeuron(j);
 
-			for (unsigned short int k = 0; k < n->numWeights(); k++)
+			for (unsigned int k = 0; k < n->numWeights(); k++)
 			{
 				n->setWeight(k, (*weights)[w++]);
 			}
@@ -85,11 +85,11 @@ void NN::getWeights(std::vector<ga_value>* weights) const
 {
 	for (const NNLayer* l : m_Layers)
 	{
-		for (unsigned short int j = 0; j < l->numNeurons(); j++)
+		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
 			const CPerceptron* n = l->getNeuron(j);
 
-			for (unsigned short int k = 0; k < n->numWeights(); k++)
+			for (unsigned int k = 0; k < n->numWeights(); k++)
 			{
 				weights->emplace_back(n->getWeight(k));
 			}
@@ -97,13 +97,13 @@ void NN::getWeights(std::vector<ga_value>* weights) const
 	}
 }
 
-void NN::trainOutputs(std::vector<ga_value>* wanted_outputs) const
+void NN::trainOutputs(const std::vector<ga_value>* wanted_outputs) const
 {
-	unsigned short int w = 0;
+	unsigned int w = 0;
 
 	for (const NNLayer* l : m_Layers)
 	{
-		for (unsigned short int j = 0; j < l->numNeurons(); j++)
+		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
 			CPerceptron* n = l->getNeuron(j);
 
@@ -120,7 +120,7 @@ void NN::getOutputs(std::vector<ga_value>* outputs) const
 
 	for (const NNLayer* l : m_Layers)
 	{
-		for (unsigned short int j = 0; j < l->numNeurons(); j++)
+		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
 			const CPerceptron* n = l->getNeuron(j);
 
@@ -131,7 +131,7 @@ void NN::getOutputs(std::vector<ga_value>* outputs) const
 
 void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs) const
 {
-	unsigned short int i;
+	unsigned int i;
 
 	std::vector<ga_value> newoutputs;
 
@@ -146,7 +146,7 @@ void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs
 
 		newoutputs.clear();
 
-		for (unsigned short int j = 0; j < l->numNeurons(); j++)
+		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
 			CPerceptron* n = l->getNeuron(j);
 
@@ -158,8 +158,8 @@ void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs
 
 		outputs->clear();
 
-		for (unsigned int k = 0; k < newoutputs.size(); k++)
-			outputs->emplace_back(newoutputs[k]);
+		for (float& newoutput : newoutputs)
+			outputs->emplace_back(newoutput);
 	}
 }
 
@@ -243,7 +243,7 @@ void NN::randomize() const
 {
 	for (const NNLayer* l : m_Layers)
 	{
-		for (unsigned short int j = 0; j < l->numNeurons(); j++)
+		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
 			l->getNeuron(j)->randomize();
 		}
@@ -256,7 +256,7 @@ void NN::freeMemory()
 	{
 		NNLayer* l = m_Layer;
 
-		for (unsigned short int j = 0; j < l->numNeurons(); j++)
+		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
 			l->freeMemory();
 		}

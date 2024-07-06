@@ -941,8 +941,7 @@ void ClientCommand(edict_t* pEntity)
 					}
 
 					// finished with message
-					std::free(szMessage);
-
+					delete[] szMessage;
 					szMessage = nullptr;
 				}
 			}
@@ -1766,7 +1765,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 {
 	char szBuffer[128];
 
-	int i;
+	unsigned int i;
 
 	char szTemp[64];
 	int j;
@@ -2012,7 +2011,7 @@ void ReadBotUsersConfig()
 			if (length == 0) // nothing on line
 				continue;
 
-			int i = 0;
+			unsigned int i = 0;
 
 			while (i < length && buffer[i] != '"')
 				i++;

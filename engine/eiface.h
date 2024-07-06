@@ -449,8 +449,8 @@ typedef struct
 	char			(*pfnPM_FindTextureType)(char* name);
 	void			(*pfnSetupVisibility)(edict_s* pViewEntity, edict_s* pClient, unsigned char** pvs, unsigned char** pas);
 	void			(*pfnUpdateClientData) (const edict_s* ent, int sendweapons, struct clientdata_s* cd);
-	int				(*pfnAddToFullPack)(entity_state_s* state, int e, edict_t* ent, edict_t* host, int hostflags, int player, unsigned char* pSet);
-	void			(*pfnCreateBaseline) (int player, int eindex, entity_state_s* baseline, edict_s* entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs);
+	int				(*pfnAddToFullPack)(struct entity_state_s* state, int e, edict_t* ent, edict_t* host, int hostflags, int player, unsigned char* pSet);
+	void			(*pfnCreateBaseline) (int player, int eindex, struct entity_state_s* baseline, edict_s* entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs);
 	void			(*pfnRegisterEncoders)	();
 	int				(*pfnGetWeaponData)		(edict_s* player, struct weapon_data_s* info);
 

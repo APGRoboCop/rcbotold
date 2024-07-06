@@ -87,7 +87,7 @@ static unsigned char g_iFailedWaypoints[MAX_WAYPOINTS];
 
 extern CBotGlobals gBotGlobals;
 
-void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk) const
+void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk)
 {
 	const int iLoc = std::abs(static_cast<int>(vOrigin.x + 4096.0f) / 256);
 	const int jLoc = std::abs(static_cast<int>(vOrigin.y + 4096.0f) / 256);
@@ -712,7 +712,6 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	header.mapname[31] = 0;
 
 	std::FILE* bfp;
-	bfp = nullptr;
 
 	if (theConverter != nullptr)
 	{
