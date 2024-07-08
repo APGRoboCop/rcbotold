@@ -645,6 +645,7 @@ LINK_ENTITY_TO_FUNC(defensechamber);
 LINK_ENTITY_TO_FUNC(ammo_gaussclip);
 LINK_ENTITY_TO_FUNC(ammo_egonclip);
 LINK_ENTITY_TO_FUNC(ammo_buckshot);
+LINK_ENTITY_TO_FUNC(ammo_spore);
 LINK_ENTITY_TO_FUNC(alienresourcetower);
 LINK_ENTITY_TO_FUNC(xen_ttrigger);
 LINK_ENTITY_TO_FUNC(xen_tree);

@@ -1019,7 +1019,7 @@ enum
 	MOD_SI = 6,			// TODO: Science and Industry
 	MOD_DMC = 7,		// deathmatch classic
 	MOD_TS = 8,			// the specialists
-	MOD_GEARBOX = 9,	// Support for OP4CTF [APG]RoboCop[CL]
+	MOD_GEARBOX = 9,	// Opposing Force [APG]RoboCop[CL]
 	MOD_IOS = 10,		// international online soccer (gave up :p)
 	MOD_BG = 11,		// battlegrounds
 	MOD_HL_RALLY = 12,  // half-life rally (game crashes when adding a bot!!)

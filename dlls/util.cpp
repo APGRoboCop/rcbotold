@@ -874,7 +874,7 @@ int UTIL_GetTeam(edict_t* pEntity)
 
 		char model[64];
 
-		std::strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
+		std::strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, const_cast<char*>("model")));
 
 		// Check if the map name starts with "tm_"
 		if (std::strncmp("tm_", STRING(gpGlobals->mapname), 3) == 0)
@@ -915,14 +915,14 @@ int UTIL_GetTeam(edict_t* pEntity)
 	case MOD_BG:
 		return pEntity->v.team;
 	case MOD_GEARBOX:
-		//if (pent_info_ctfdetect != nullptr)
-		//{
-			// OpFor CTF map... code from Sandbot by tschumann
-		if (gBotGlobals.m_bTeamPlay)
+	{
+		// OpFor CTF map... code from Sandbot by tschumann
+		if (std::strncmp("op4ctf_", STRING(gpGlobals->mapname), 7) == 0 ||
+			std::strncmp("op4cp_", STRING(gpGlobals->mapname), 6) == 0)
 		{
 			char model_name[32];
 			char* infobuffer = GET_INFOKEYBUFFER(pEntity);
-			std::strcpy(model_name, INFOKEY_VALUE(infobuffer, "model"));
+			std::strcpy(model_name, INFOKEY_VALUE(infobuffer, const_cast<char*>("model")));
 
 			if (!std::strcmp(model_name, "ctf_barney") || !std::strcmp(model_name, "cl_suit") || !std::strcmp(model_name, "ctf_gina") ||
 				!std::strcmp(model_name, "ctf_gordon") || !std::strcmp(model_name, "otis") || !std::strcmp(model_name, "ctf_scientist"))
@@ -937,11 +937,81 @@ int UTIL_GetTeam(edict_t* pEntity)
 			// unknown team
 			return 0;
 		}
-		//}
+		else if (gBotGlobals.m_bTeamPlay)
+		{
+			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+
+			char model[64];
+
+			std::strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, const_cast<char*>("model")));
+
+			const char* teamlist = CVAR_GET_STRING("mp_teamlist");
+
+			const char* pos = std::strstr(teamlist, model);
+			char* sofar = const_cast<char*>(teamlist);
+
+			int team = 0;
+
+			if (sofar == nullptr)
+				team = -1; // Model not found in team list, team not assigned
+			else
+			{
+				// count ";"s to determine the team index
+				while (sofar < pos)
+				{
+					if (*sofar == ';')
+						team++;
+
+					sofar = sofar + 1;
+				}
+			}
+
+			return team; // Return the determined team index
+		}
+	}
+
+	return -1;
+
+	//}
 	/*case MOD_TFC:
 		return pEntity->v.team - 1;
 	case MOD_SVENCOOP:
 		return -1;*/
+	case MOD_DMC:
+	case MOD_HL_DM:
+		if (gBotGlobals.m_bTeamPlay)
+		{
+			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+
+			char model[64];
+
+			std::strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, const_cast<char*>("model")));
+
+			const char* teamlist = CVAR_GET_STRING("mp_teamlist");
+
+			const char* pos = std::strstr(teamlist, model);
+			char* sofar = const_cast<char*>(teamlist);
+
+			int team = 0;
+
+			if (sofar == nullptr)
+				team = -1; // Model not found in team list, team not assigned
+			else
+			{
+				// count ";"s to determine the team index
+				while (sofar < pos)
+				{
+					if (*sofar == ';')
+						team++;
+
+					sofar = sofar + 1;
+				}
+			}
+
+			return team; // Return the determined team index
+		}
+
+		return -1;
 	case MOD_SI: //TODO: Science and Industry support [APG]RoboCop[CL]
 		return pEntity->v.team - 1;
 	case MOD_WW: //TODO: Wizard Wars support [APG]RoboCop[CL]

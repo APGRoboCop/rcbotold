@@ -607,6 +607,11 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 					}
 				}
 			}
+			//TODO: To allow bots to grapple onto spore making entities in order to be Batman [APG]RoboCop[CL]
+			else if (FStrEq("ammo_spore", STRING(pEnemy->v.classname)))
+			{
+				iAllowedWeapons[static_cast<int>(GearboxWeapon::GRAPPLE)] = 1; // Leech onto alien zit walls!
+			}
 			break;
 		case MOD_NS:
 			if (pBot->IsMarine())

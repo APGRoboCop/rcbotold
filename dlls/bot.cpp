@@ -85,9 +85,6 @@ extern CBotGlobals gBotGlobals; // defined in DLL.CPP
 // all waypoints
 extern WAYPOINTS waypoints;
 
-// Op4CTF Support [APG]RoboCop[CL]
-//extern edict_t *pent_info_ctfdetect;
-
 // safe - freeing... ??
 // shove in the POINTER to the pointer to free, so we can (nullify)
 // not used yet (I'm scared :P)
@@ -2589,11 +2586,14 @@ void CBot::StartGame()
 
 		break;
 	case MOD_GEARBOX: // Support for OP4CTF [APG]RoboCop[CL]
-
-		FakeClientCommand(m_pEdict, "jointeam 3");
-		FakeClientCommand(m_pEdict, "selectchar 7");
-		m_bStartedGame = true;
-
+		
+		if (std::strncmp("op4ctf_", STRING(gpGlobals->mapname), 7) == 0 ||
+			std::strncmp("op4cp_", STRING(gpGlobals->mapname), 6) == 0)
+		{
+			FakeClientCommand(m_pEdict, "jointeam 3");
+			FakeClientCommand(m_pEdict, "selectchar 7");
+			m_bStartedGame = true;
+		}
 		break;
 
 		// team fortress
@@ -3777,9 +3777,9 @@ void CBot::Think()
 		else
 		{
 			// safe to reload?
-			if (m_fLastSeeEnemyTime && m_fLastSeeEnemyTime + 5.0f < gpGlobals->time)
+			if (m_fLastSeeEnemyTime > 0 && m_fLastSeeEnemyTime + 5.0f < gpGlobals->time)
 			{
-				// Need a max clip variable in CWeaponPreset, to make this effective
+				//TODO: Need a max clip variable in CWeaponPreset, to make this effective
 				if (m_pCurrentWeapon && m_pCurrentWeapon->CanReload())
 				{
 					AddPriorityTask(CBotTask(BOT_TASK_RELOAD));
@@ -5797,7 +5797,7 @@ void CBot::LookForNewTasks()
 						gBotGlobals.m_iCurrentMod != MOD_TS &&
 						gBotGlobals.m_iCurrentMod != MOD_WW &&
 						gBotGlobals.m_iCurrentMod != MOD_FLF &&
-						gBotGlobals.m_iCurrentMod != MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
+						gBotGlobals.m_iCurrentMod != MOD_GEARBOX);
 					//gBotGlobals.m_iCurrentMod != MOD_TFC
 
 				/*if ( gBotGlobals.IsMod(MOD_TFC) )
@@ -9498,7 +9498,9 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			return false;
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
-		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		else if (pEntity->v.flags & FL_CLIENT && 
+			(std::strncmp("op4ctf_", STRING(gpGlobals->mapname), 7) == 0 ||
+				std::strncmp("op4cp_", STRING(gpGlobals->mapname), 6) == 0))
 		{
 			// code from Sandbot by tschumann
 			const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
@@ -9518,6 +9520,16 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			}
 			// different teams are enemies
 			return pEntity->v.flags & FL_CLIENT && GetTeam() != UTIL_GetTeam(pEntity);
+		}
+		else
+		{
+			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
+			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+
+			const char* model1 = g_engfuncs.pfnInfoKeyValue(infobuffer1, "model");
+			const char* model2 = g_engfuncs.pfnInfoKeyValue(infobuffer2, "model");
+
+			return !FStrEq(model1, model2);
 		}
 	}
 	break;
@@ -10912,7 +10924,7 @@ BOOL CBot::WantToFollowEnemy(edict_t* pEnemy) const
 
 			return false;
 			}*/
-		}
+	}
 
 	return pev->health > pev->max_health * 0.3f;
 }

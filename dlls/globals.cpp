@@ -262,7 +262,11 @@ void CBotGlobals::StartFrame()
 
 	if (bCheckedTeamplay && m_iCurrentMod)
 	{
-		m_bTeamPlay = CVAR_GET_FLOAT("mp_teamplay") > 0.0f;
+		if (m_bTeamPlay == CVAR_GET_FLOAT("mp_teamplay") > 0.0f)
+			m_bTeamPlay = true;
+		else if (m_bTeamPlay == CVAR_GET_FLOAT("mp_teamplay") <= 0.0f)
+			m_bTeamPlay = false;
+
 		bCheckedTeamplay = true;
 	}
 
@@ -1224,20 +1228,11 @@ void CBotGlobals::MapInit()
 	}
 	else if (IsMod(MOD_GEARBOX))
 	{
-		if (std::strncmp(mapname, "op4ctf_", 7) == 0 || std::strncmp(mapname, "op4cp_", 6) == 0)
+		if (std::strncmp(mapname, "op4ctf_", 7) == 0 || 
+			std::strncmp(mapname, "op4cp_", 6) == 0)
 		{
 			setMapType(NON_TS_TEAMPLAY);
-			//TODO: To make sure that Op4DM mode doesn't play as CTF Mode [APG]RoboCop[CL]
-			// Op4CTF Support [APG]RoboCop[CL]
-			//extern edict_t *pent_info_ctfdetect;
 			m_bTeamPlay = true;
-		}
-		else
-		{
-			if (CVAR_GET_FLOAT("mp_teamplay") <= 0.0f)
-			{
-				m_bTeamPlay = false;
-			}
 		}
 	}
 
@@ -1761,7 +1756,7 @@ void CBotGlobals::ReadThingsToBuild() const
 		char szbuffer[256];
 		char szline[256];
 		int iBuilding = 0;
-		
+
 		m_ThingsToBuild->Clear();
 
 		while (std::fgets(szbuffer, 255, fp) != nullptr)
