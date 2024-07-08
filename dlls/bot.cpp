@@ -2586,7 +2586,7 @@ void CBot::StartGame()
 
 		break;
 	case MOD_GEARBOX: // Support for OP4CTF [APG]RoboCop[CL]
-		
+
 		if (std::strncmp("op4ctf_", STRING(gpGlobals->mapname), 7) == 0 ||
 			std::strncmp("op4cp_", STRING(gpGlobals->mapname), 6) == 0)
 		{
@@ -9492,7 +9492,12 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 		break;*/
 	case MOD_GEARBOX:
 	{
-		//gBotGlobals.m_bTeamPlay = true; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
+		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
+
+		if (std::strcmp(szClassname, "func_breakable") == 0)
+		{
+			return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
+		}
 
 		if (!EntityIsAlive(pEntity))
 			return false;
@@ -9503,8 +9508,6 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 				std::strncmp("op4cp_", STRING(gpGlobals->mapname), 6) == 0))
 		{
 			// code from Sandbot by tschumann
-			const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
-
 			//char* infobuffer = GET_INFOKEYBUFFER(pEntity);
 			//std::strcpy(szClassname, INFOKEY_VALUE(infobuffer, "model"));
 
@@ -9521,7 +9524,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			// different teams are enemies
 			return pEntity->v.flags & FL_CLIENT && GetTeam() != UTIL_GetTeam(pEntity);
 		}
-		else
+		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
 			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
 			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);

@@ -5,16 +5,17 @@ RCbot created by Cheeseh
 Supported Mods
 --------------
 
+- Action Half-Life (WIP)
 - Bumpercars
 - Battlegrounds
 - Deathmatch Classic
-- Opposing Force (CTF)
+- Opposing Force
 - Natural Selection
 - Rocket Crowbar
-- Front Line Force
-- Science and Industry
+- Front Line Force (WIP)
+- Science and Industry (WIP)
 - The Specialists
-- Wizard Wars
+- Wizard Wars (WIP)
 
 RCBot versions
 --------------
@@ -29,6 +30,7 @@ V 1.51-beta7
 * added: C++17 Standard library support 
 * added: Strafing combat to evade from being easy target bots
 * added: Linux bot slow-motion fix by w00tguy
+* added: Team DeathMatch mode supported for HLDM, Op4DM, DMC and TS
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
@@ -47,7 +49,6 @@ V 1.51-beta7
 * TODO: To allow the Onos to be more aggressive and devour humans
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
 * TODO: To improve on how to allow bots climb ladders more properly
-* TODO: To prevent bots from team shooting in Team Deathmatch mode for HLDM, Op4DM, DMC and TS
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
 * TODO: To allow bots in Op4 to use Grapple by using the "Fly" waypoint
 * TODO: To add proper support for S&I, AHL, FLF and WizWars
