@@ -753,7 +753,7 @@ template <class T> T* GetClassPtr(T* a)
 
 #define TRACER_FREQ		4			// Tracers fire every 4 bullets
 
-typedef struct sel_ammo
+typedef struct _SelAmmo
 {
 	BYTE	Ammo1Type;
 	BYTE	Ammo1;

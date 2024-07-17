@@ -85,6 +85,9 @@ extern CBotGlobals gBotGlobals; // defined in DLL.CPP
 // all waypoints
 extern WAYPOINTS waypoints;
 
+// Science and Industry
+extern bot_research_t g_Researched[2][NUM_RESEARCH_OPTIONS];
+
 // safe - freeing... ??
 // shove in the POINTER to the pointer to free, so we can (nullify)
 // not used yet (I'm scared :P)
@@ -1676,46 +1679,45 @@ void CBot::SpawnInit(const BOOL bInit)
 			if (pev && pev->maxspeed > m_fMaxSpeed)
 				m_fMaxSpeed = pev->maxspeed;
 		}
-		/*
-		else if (gBotGlobals.IsMod(MOD_SI))
+		/*else if (gBotGlobals.IsMod(MOD_SI))
 		{	// get longjump
-			if (g_Researched[UTIL_GetTeam(pBot->pEdict)][RESEARCH_LEGS_2].researched ||
-				g_Researched[UTIL_GetTeam(pBot->pEdict)][RESEARCH_LEGS_2].stolen)
-				pBot->b_longjump = true;
+			if (g_Researched[UTIL_GetTeam(m_pEdict)][RESEARCH_LEGS_2].researched ||
+				g_Researched[UTIL_GetTeam(m_pEdict)][RESEARCH_LEGS_2].stolen)
+				m_bHasLongJump = true;
 
 			// get our max armor
-			if ((g_Researched[pBot->bot_team][RESEARCH_ARMOR_100].researched ||
-				g_Researched[pBot->bot_team][RESEARCH_ARMOR_100].stolen) &&
-				!g_Researched[pBot->bot_team][RESEARCH_ARMOR_100].disabled &&
-				pBot->max_armor < 100)
-				pBot->max_armor = 100;
-			else if ((g_Researched[pBot->bot_team][RESEARCH_ARMOR_75].researched ||
-				g_Researched[pBot->bot_team][RESEARCH_ARMOR_75].stolen) &&
-				!g_Researched[pBot->bot_team][RESEARCH_ARMOR_75].disabled &&
-				pBot->max_armor < 75)
-				pBot->max_armor = 75;
-			else if ((g_Researched[pBot->bot_team][RESEARCH_ARMOR_50].researched ||
-				g_Researched[pBot->bot_team][RESEARCH_ARMOR_50].stolen) &&
-				!g_Researched[pBot->bot_team][RESEARCH_ARMOR_50].disabled &&
-				pBot->max_armor < 50)
-				pBot->max_armor = 50;
-			else if ((g_Researched[pBot->bot_team][RESEARCH_ARMOR_25].researched ||
-				g_Researched[pBot->bot_team][RESEARCH_ARMOR_25].stolen) &&
-				!g_Researched[pBot->bot_team][RESEARCH_ARMOR_25].disabled &&
-				pBot->max_armor < 25)
-				pBot->max_armor = 25;
+			if ((g_Researched[UTIL_PlayersOnTeam(iTeam)][RESEARCH_ARMOR_100].researched ||
+				g_Researched[pBot->team][RESEARCH_ARMOR_100].stolen) &&
+				!g_Researched[pBot->team][RESEARCH_ARMOR_100].disabled &&
+				pBot->armorvalue < 100.0f)
+				pBot->armorvalue = 100.0f;
+			else if ((g_Researched[pBot->team][RESEARCH_ARMOR_75].researched ||
+				g_Researched[pBot->team][RESEARCH_ARMOR_75].stolen) &&
+				!g_Researched[pBot->team][RESEARCH_ARMOR_75].disabled &&
+				pBot->armorvalue < 75.0f)
+				pBot->armorvalue = 75.0f;
+			else if ((g_Researched[pBot->team][RESEARCH_ARMOR_50].researched ||
+				g_Researched[pBot->team][RESEARCH_ARMOR_50].stolen) &&
+				!g_Researched[pBot->team][RESEARCH_ARMOR_50].disabled &&
+				pBot->armorvalue < 50.0f)
+				pBot->armorvalue = 50.0f;
+			else if ((g_Researched[pBot->team][RESEARCH_ARMOR_25].researched ||
+				g_Researched[pBot->team][RESEARCH_ARMOR_25].stolen) &&
+				!g_Researched[pBot->team][RESEARCH_ARMOR_25].disabled &&
+				pBot->armorvalue < 25.0f)
+				pBot->armorvalue = 25.0f;
 
 			// get our max health
-			if ((g_Researched[pBot->bot_team][RESEARCH_STRENGTH2].researched ||
-				g_Researched[pBot->bot_team][RESEARCH_STRENGTH2].stolen) &&
-				!g_Researched[pBot->bot_team][RESEARCH_STRENGTH2].disabled &&
-				pBot->max_health < 150)
-				pBot->max_health = 150;
-			else if ((g_Researched[pBot->bot_team][RESEARCH_STRENGTH].researched ||
-				g_Researched[pBot->bot_team][RESEARCH_STRENGTH].stolen) &&
-				!g_Researched[pBot->bot_team][RESEARCH_STRENGTH].disabled &&
-				pBot->max_health < 125)
-				pBot->max_health = 125;
+			if ((g_Researched[pBot->team][RESEARCH_STRENGTH2].researched ||
+				g_Researched[pBot->team][RESEARCH_STRENGTH2].stolen) &&
+				!g_Researched[pBot->team][RESEARCH_STRENGTH2].disabled &&
+				pBot->max_health < 150.0f)
+				pBot->max_health = 150.0f;
+			else if ((g_Researched[pBot->team][RESEARCH_STRENGTH].researched ||
+				g_Researched[pBot->team][RESEARCH_STRENGTH].stolen) &&
+				!g_Researched[pBot->team][RESEARCH_STRENGTH].disabled &&
+				pBot->max_health < 125.0f)
+				pBot->max_health = 125.0f;
 		}
 		*/
 		else if (gBotGlobals.IsNS()) // quicker check
@@ -2823,79 +2825,85 @@ void CBot::StartGame()
 		FakeClientCommand(m_pEdict, "classmenu 0");
 		m_bStartedGame = true;
 		return;
-		/*case MOD_SI:
-			if (pBot->start_action == MSG_SI_IDLE)
+	case MOD_SI:
+		/*if (m_fJoinServerTime + 1.0f < gpGlobals->time)
+		{
+			// go into spectator mode if we're not already, to fix rejoin bug
+			if (m_pEdict->v.view_ofs != g_vecZero)
+				FakeClientCommand(m_pEdict, "spectate");
+			break;
+		}*/
+		FakeClientCommand(m_pEdict, "setteam 3");
+		FakeClientCommand(m_pEdict, "setmodel 3");
+		m_bStartedGame = true;
+		return;
+
+		/*switch (this->m_iVguiMenu)
+		{
+		case MSG_SI_IDLE:
+		{
+			// go into spectator mode if we're not already, to fix rejoin bug
+			if (m_pEdict->v.view_ofs != g_vecZero)
+				FakeClientCommand(m_pEdict, "spectate");
+			if (m_fJoinServerTime + 1.0f < gpGlobals->time)
+				this->m_iVguiMenu = MSG_SI_TEAM_SELECT;  // force team selection
+			break;
+		}
+		case MSG_SI_TEAM_SELECT:
+		{
+			this->m_iVguiMenu = MSG_SI_MODEL_SELECT;  // force model selection
+
+			int iTeam = m_Profile.m_iFavTeam;
+			// if team isn't valid then make iTeam 5. (keep it 1, 2 or 3 )
+			if (iTeam < 1 || iTeam > 5 || iTeam == 3 || iTeam == 4)
+				iTeam = 3;
+
+			if (iTeam == -1)
 			{
-				// go into spectator mode if we're not already, to fix rejoin bug
-				if (m_pEdict->v.view_ofs != g_vecZero)
-					FakeClientCommand(m_pEdict, "spectate");
-
-				// select our team after one second
-				if (pBot->f_create_time + 1.0f <= gpGlobals->time)
-					pBot->start_action = MSG_SI_TEAM_SELECT;  // force team selection
-
-				return;
+				// choose a random team
+				if (iTeam[0] == iTeam[1])
+					snprintf(iTeam, sizeof(iTeam), "%i", 3);
+				// join team with least players
+				else if (team[0] < team[1])
+					snprintf(iTeam, sizeof(iTeam), "%i", 1);
+				else if (team[0] > team[1])
+					snprintf(iTeam, sizeof(iTeam), "%i", 2);
 			}
-			if (pBot->start_action == MSG_SI_TEAM_SELECT)
+			else    // forced to join a certain team
 			{
-				pBot->start_action = MSG_SI_MODEL_SELECT;  // force model selection
-
-				if (pBot->bot_team == -1)
-				{
-					// pick team with least amount of players
-					for (int i = 0; i < 2; i++)
-						team[i] = UTIL_PlayersOnTeam(i);
-
-					//SERVER_PRINT( "%s found MCL(1) has %i player(s), AFD(2) has %i player(s)...\n",
-					//	pBot->name, team[0], team[1]);
-
-					// choose a random team
-					if (team[0] == team[1])
-						std::sprintf(c_team, "%i", 3);
-					// join team with least players
-					else if (team[0] < team[1])
-						std::sprintf(c_team, "%i", 1);
-					else if (team[0] > team[1])
-						std::sprintf(c_team, "%i", 2);
-				}
-				else	// forced to join a certain team
-				{
-					if (pBot->bot_team < 1)
-						pBot->bot_team = 1;
-					else if (pBot->bot_team > 3)
-						pBot->bot_team = 3;
-
-					sprintf(c_team, "%i", pBot->bot_team);
-				}
-
-				//SERVER_PRINT( "%s will join team %s...\n", pBot->name, c_team);
-				// save our team
-				pBot->bot_team = atoi(c_team) - 1;
-
-				FakeClientCommand(m_pEdict, "setteam", c_team, nullptr);
-
-				return;
+				if (bot_team < 1)
+					bot_team = 1;
+				else if (bot_team > 3)
+					bot_team = 3;
+				snprintf(iTeam, sizeof(iTeam), "%i", bot_team);
 			}
-			if (pBot->start_action == MSG_SI_MODEL_SELECT)
-			{
-				pBot->start_action = MSG_SI_IDLE;  // switch back to idle
-				pBot->f_create_time = gpGlobals->time;  // reset
-				if (pBot->bot_class == -1)
-				{	// random model for now
-					sprintf(c_model, "%i", 3);
-				}
-				else
-					sprintf(c_model, "%i", pBot->bot_class);
+			//SERVER_PRINT( "%s will join team %s...\n", pBot->name, iTeam);
+			// save our team
+			bot_team = std::atoi(iTeam) - 1;
+			FakeClientCommand(m_pEdict, "setteam");
 
-				pBot->bot_class = atoi(c_model) - 1;
+			FakeClientCommand(m_pEdict, "setteam 3");
+			break;
+		}
+		case MSG_SI_MODEL_SELECT:
+		{
+			this->m_iVguiMenu = MSG_SI_IDLE;  // switch back to idle
 
-				FakeClientCommand(m_pEdict, "setmodel", c_model, nullptr);5
+			f_create_time = gpGlobals->time;  // reset
+			if (bot_class == -1)
+			{   // random model for now
+				sprintf(c_model, "%i", 3);
+			}
+			else
+				sprintf(c_model, "%i", pBot->bot_class);
+			bot_class = std::atoi(c_model) - 1;
+			FakeClientCommand(m_pEdict, "setmodel");
 
-				pBot->not_started = 0;
-				return;
-			}*/
-	default:
-		break;
+			m_fJoinServerTime = gpGlobals->time;
+			FakeClientCommand(m_pEdict, "setmodel 3");
+			m_bStartedGame = true;
+			break;
+		}*/
 	}
 
 	// generic case, just press fire :)
@@ -4423,6 +4431,49 @@ void CBot::LookForNewTasks()
 			}
 		}
 		case MOD_SI:
+			if (!pNearestPickupEntity || fDistance < fNearestPickupEntityDist)
+			{
+				if (CanPickup(pEntity))
+				{
+					fNearestPickupEntityDist = fDistance;
+					pNearestPickupEntity = pEntity;
+					continue;
+				}
+			}
+
+			if (pEntity->v.frame == 0.0f)
+			{
+				if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
+				{
+					if (std::strcmp(szClassname, "func_recharge") == 0)
+					{
+						fNearestHEVchargerDist = fDistance;
+						pNearestHEVcharger = pEntity;
+						continue;
+					}
+				}
+
+				if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
+				{
+					if (std::strcmp(szClassname, "func_healthcharger") == 0)
+					{
+						fNearestHealthchargerDist = fDistance;
+						pNearestHealthcharger = pEntity;
+						continue;
+					}
+				}
+
+				if (m_fUseButtonTime < gpGlobals->time && (!pNearestButton || (fNearestButtonDist < fDistance)))
+				{
+					if (std::strncmp(szClassname, "func_door", 9) == 0 && pEntity->v.spawnflags & 256 ||
+						(std::strstr(szClassname, "button") != nullptr))
+					{
+						fNearestButtonDist = fDistance;
+						pNearestButton = pEntity;
+						continue;
+					}
+				}
+			}
 			break;
 		case MOD_FLF:
 			break;
@@ -9503,7 +9554,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			return false;
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
-		else if (pEntity->v.flags & FL_CLIENT && 
+		else if (pEntity->v.flags & FL_CLIENT &&
 			(std::strncmp("op4ctf_", STRING(gpGlobals->mapname), 7) == 0 ||
 				std::strncmp("op4cp_", STRING(gpGlobals->mapname), 6) == 0))
 		{

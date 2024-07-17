@@ -487,6 +487,72 @@ enum ResearchGoal
 	NUM_RESEARCH_OPTIONS		// leave this as the last item in the list
 };
 
+// -----------------------------------------------------------------------------
+// notice_type
+//
+// Notice types are used with the "Notice" message. Send one of these types as a
+// BYTE to the player
+// -----------------------------------------------------------------------------
+enum notice_type
+{
+	Notice_None = 0,
+
+	Notice_Kill_Def,
+	Notice_Kill_DefNoisy,
+	Notice_Kill_DefRecruiter,
+	Notice_Kill_Recruiter,
+	Notice_Kill_RecruiterResource,
+	Notice_Sci_Recruit,
+	Notice_Sci_RecruitAssist,
+	Notice_Sci_OtherRecruit,
+	Notice_Resource_Capture,
+	Notice_Resource_OtherCapture,
+	Notice_Research_CanSalvage,
+	Notice_Research_Salvage,
+	Notice_Research_OtherSalvage,
+	Notice_Sabotage,
+	Notice_Kill_Death,
+	Notice_Sci_NewHire,
+	Notice_Sci_Kill,
+	Notice_Kill_TeamKiller,
+	Notice_Sabotage_Opponent,
+	Notice_Sabotage_Replace,
+	Notice_Award_LlamaOn,
+	Notice_Award_LlamaOff,
+	Notice_Award_EotMOn,
+	Notice_Award_EotMOff,
+	Notice_Research_Completed,
+	Notice_Research_Start,
+	Notice_Research_Future,
+	Notice_Research_Espionage,
+	Notice_Sci_Missing,
+	Notice_Research_Vote,
+	Notice_Research_VoteResults,
+	Notice_Sci_Defend,
+	Notice_Sci_Attack,
+	Notice_Sci_AttackStill,
+	Notice_Sci_Dead,
+	Notice_NoTripmine,
+	Notice_NoSatchel,
+	Notice_TeamButton,
+	Notice_ChangeModel,
+	Notice_Research_Castvote,
+	Notice_Research_End,
+	Notice_Startmatch,
+
+	NUM_NOTICETYPES		// leave this one last
+};
+
+typedef struct
+{
+	bool	researched;
+	bool	canidate;
+	bool	stolen;
+	bool	disabled;
+} bot_research_t;
+
+////////////////
+// NS Stuff
 // 200 units away max from building (2d distance)
 constexpr int MAX_BUILD_RANGE = 800;
 
