@@ -9395,7 +9395,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
-		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
 			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
 			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
@@ -9554,7 +9554,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			return false;
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
-		else if (pEntity->v.flags & FL_CLIENT &&
+		if (pEntity->v.flags & FL_CLIENT &&
 			(std::strncmp("op4ctf_", STRING(gpGlobals->mapname), 7) == 0 ||
 				std::strncmp("op4cp_", STRING(gpGlobals->mapname), 6) == 0))
 		{
@@ -9599,7 +9599,7 @@ BOOL CBot::IsEnemy(edict_t* pEntity)
 			return false;
 		if (!gBotGlobals.m_bTeamPlay)
 			return pEntity->v.flags & FL_CLIENT;
-		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
 			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
 			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);

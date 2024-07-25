@@ -937,7 +937,8 @@ int UTIL_GetTeam(edict_t* pEntity)
 			// unknown team
 			return 0;
 		}
-		else if (gBotGlobals.m_bTeamPlay)
+		//TODO: May only attack models that don't match with themselves? [APG]RoboCop[CL]
+		if (gBotGlobals.m_bTeamPlay)
 		{
 			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
 
@@ -977,6 +978,8 @@ int UTIL_GetTeam(edict_t* pEntity)
 		return pEntity->v.team - 1;
 	case MOD_SVENCOOP:
 		return -1;*/
+		//TODO: May only attack models that don't match with themselves? [APG]RoboCop[CL]
+		// And to add CTF support for DMC
 	case MOD_DMC:
 	case MOD_HL_DM:
 		if (gBotGlobals.m_bTeamPlay)
