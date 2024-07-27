@@ -238,7 +238,7 @@ void CGA::addToPopulation(IIndividual* individual)
 	}
 }
 
-void CGA::loadTeam(char* szName, int iTeam, int chromosize)
+void CGA::loadTeam(const char* szName, int iTeam, int chromosize)
 {
 	std::FILE* bfp = RCBOpenFile(szName, "rb", SAVETYPE_TEAM, iTeam);
 
@@ -249,7 +249,7 @@ void CGA::loadTeam(char* szName, int iTeam, int chromosize)
 	}
 }
 
-void CGA::saveTeam(char* szName, int iTeam) const
+void CGA::saveTeam(const char* szName, int iTeam) const
 {
 	std::FILE* bfp = RCBOpenFile(szName, "wb", SAVETYPE_TEAM, iTeam);
 
@@ -386,7 +386,7 @@ IIndividual* CRouletteSelection::select(CPopulation* population)
 ///////////////
 // SAVING
 //TODO: To allow the experience data to be saved properly [APG]RoboCop[CL]
-std::FILE* RCBOpenFile(char* file, char* readtype, eGASaveType savedtype, int iId)
+std::FILE* RCBOpenFile(const char* file, const char* readtype, eGASaveType savedtype, int iId)
 {
 	char filename[256];
 	char tmpfilename[256];

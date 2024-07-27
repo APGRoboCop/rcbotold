@@ -80,7 +80,7 @@ public:
 		virtual IIndividual *copy () = 0;
 	*/
 
-	CPerceptron(unsigned int iInputs, ITransfer* transferFunction = nullptr, float fLearnRate = 0.0f);
+	CPerceptron(int iInputs, ITransfer* transferFunction = nullptr, float fLearnRate = 0.0f);
 
 	CPerceptron(std::FILE* bfp)
 	{
@@ -91,13 +91,13 @@ public:
 
 	void setWeights(const std::vector <ga_value>& weights, int iFrom, int iNum);
 
-	void setWeights(CBotGAValues* vals, int iFrom, int iNum);
+	void setWeights(const CBotGAValues* vals, int iFrom, int iNum);
 
 	unsigned int numWeights() const { return m_weights.size(); }
 
-	void setWeight(int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
+	void setWeight(unsigned int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
 
-	ga_value getWeight(int iWeight) const { return m_weights[iWeight]; }
+	ga_value getWeight(const unsigned int iWeight) const { return m_weights[iWeight]; }
 
 	void input(std::vector <ga_value>* inputs);
 
@@ -125,12 +125,12 @@ public:
 	void save(std::FILE* bfp) const;
 	void load(std::FILE* bfp);
 
-	void load(char* filename, int iProfileId);
-	void save(char* filename, int iProfileId) const;
+	void load(const char* filename, int iProfileId);
+	void save(const char* filename, int iProfileId) const;
 
 private:
 
-	unsigned int m_iInputs;
+	int m_iInputs;
 	ga_value m_Bias;
 	ga_value m_LearnRate;
 	std::vector <ga_value> m_inputs;

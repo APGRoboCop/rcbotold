@@ -57,12 +57,12 @@
 #include "bits.h"
 #include "gannconst.h"
 
-CBits::CBits(const int iNumBits)
+CBits::CBits(const unsigned int iNumBits)
 {
 	setup(iNumBits);
 }
 
-CBits::CBits(CBits* copyBits)
+CBits::CBits(const CBits* copyBits)
 {
 	copy(copyBits);
 }
@@ -101,13 +101,13 @@ void CBits::load(std::FILE* bfp)
 {
 	CGenericHeader header = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
-	if (!header.read(bfp, header))
+	if (!CGenericHeader::read(bfp, header))
 	{
 		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;
 	}
 
-	int iNumBits;
+	unsigned int iNumBits;
 
 	std::fread(&iNumBits, sizeof(unsigned int), 1, bfp);
 
@@ -126,13 +126,13 @@ void CBits::load(std::FILE* bfp)
 
 void CBits::randomize() const
 {
-	for (int i = 0; i < m_iNumBits; i++)
+	for (int i = 0; i < static_cast<int>(m_iNumBits); i++)
 	{
 		setBit(i, RANDOM_FLOAT(0.0f, 1.0f) >= 0.5f);
 	}
 }
 
-void CBits::setup(const int iNumBits)
+void CBits::setup(const unsigned int iNumBits)
 {
 	m_iNumBits = iNumBits;
 
@@ -160,7 +160,7 @@ void CBits::save(std::FILE* bfp) const
 	std::fwrite(&m_cBits, size(), 1, bfp);
 }
 
-void CBits::copy(CBits* otherBits)
+void CBits::copy(const CBits* otherBits)
 {
 	m_iNumBits = numBits();
 	std::memcpy(m_cBits, otherBits->getBits(), size());

@@ -55,7 +55,7 @@ public:
 		m_szHeader[0] = 0;
 	}
 
-	CGenericHeader(int iType, int iSize)
+	CGenericHeader(const unsigned int iType, const unsigned int iSize)
 	{
 		snprintf(m_szHeader, sizeof(m_szHeader), "t-%d-s-%d", iType, iSize);
 	}
@@ -75,7 +75,7 @@ public:
 		std::fwrite(this, sizeof(CGenericHeader), 1, bfp);
 	}
 
-	BOOL read(std::FILE* bfp, const CGenericHeader& compare)
+	static BOOL read(std::FILE* bfp, const CGenericHeader& compare)
 	{
 		CGenericHeader read;
 

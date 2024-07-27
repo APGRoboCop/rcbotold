@@ -94,7 +94,13 @@ public:
 	bool operator>=(const Vector& v) const { return x >= v.x && y >= v.y && z >= v.z; }
 
 	// Methods
-	void CopyToArray(float* rgfl) const { rgfl[0] = x, rgfl[1] = y, rgfl[2] = z; }
+	void CopyToArray(float* rgfl) const
+	{
+		rgfl[0] = x;
+		rgfl[1] = y;
+		rgfl[2] = z;
+	}
+
 	float Length() const { return std::pow(x * x + y * y + z * z, 0.5f); }//sqrt(x*x + y*y + z*z); }
 	operator float* () { return &x; } // Vectors will now automatically convert to float * when needed
 	operator const float* () const { return &x; } // Vectors will now automatically convert to float * when needed

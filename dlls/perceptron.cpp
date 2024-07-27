@@ -49,7 +49,7 @@ ga_value CSigmoidTransfer::transfer(ga_value netInput)
 	return 1 / (1 + std::exp(-netInput));
 }
 
-CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, float fLearnRate)
+CPerceptron::CPerceptron(int iInputs, ITransfer* transferFunction, float fLearnRate)
 {
 	m_inputs.clear();
 	m_iInputs = iInputs;
@@ -57,7 +57,7 @@ CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, floa
 	// bias weight
 	m_weights.emplace_back(RANDOM_FLOAT(0, 0.6f) - 0.3f);
 
-	for (unsigned int i = 0; i < m_iInputs; i++)
+	for (int i = 0; i < m_iInputs; i++)
 		m_weights.emplace_back(RANDOM_FLOAT(0, 0.6f) - 0.3f);
 
 	m_transferFunction = transferFunction;
@@ -76,7 +76,7 @@ CPerceptron::CPerceptron(unsigned int iInputs, ITransfer* transferFunction, floa
 	m_output = 0;
 }
 
-void CPerceptron::setWeights(CBotGAValues* vals, int iFrom, int iNum)
+void CPerceptron::setWeights(const CBotGAValues* vals, int iFrom, int iNum)
 {
 	float bias = m_weights[0];
 
@@ -242,22 +242,18 @@ void CPerceptron::load(std::FILE* bfp)
 	std::fread(&m_bTrained, sizeof(BOOL), 1, bfp);
 }
 
-void CPerceptron::load(char* filename, int iProfileId)
+void CPerceptron::load(const char* filename, int iProfileId)
 {
-	std::FILE* bfp = RCBOpenFile(filename, "rb", SAVETYPE_BOT, iProfileId);
-
-	if (bfp)
+	if (std::FILE* bfp = RCBOpenFile(filename, "rb", SAVETYPE_BOT, iProfileId))
 	{
 		load(bfp);
 		std::fclose(bfp);
 	}
 }
 
-void CPerceptron::save(char* filename, int iProfileId) const
+void CPerceptron::save(const char* filename, int iProfileId) const
 {
-	std::FILE* bfp = RCBOpenFile(filename, "wb", SAVETYPE_BOT, iProfileId);
-
-	if (bfp)
+	if (std::FILE* bfp = RCBOpenFile(filename, "wb", SAVETYPE_BOT, iProfileId))
 	{
 		save(bfp);
 		std::fclose(bfp);

@@ -1505,9 +1505,9 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
 	static AvHMessageID iImpulsemessage = static_cast<AvHMessageID>(0);
-	static int iSlot = 0;
-	static int iCost = 0;
-	static int iRadius = 0;
+	static short int iSlot = 0;
+	static short int iCost = 0;
+	static short int iRadius = 0;
 	/*
 
 	  WRITE_BYTE(43) // message "impulse" (& iuser2) 0

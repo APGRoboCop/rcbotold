@@ -102,7 +102,7 @@ public:
 
 	void AddWptLocation(int iIndex, const float* fOrigin);
 
-	void FindNearestInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, int iIgnoreWpt, BOOL bGetVisible = true, BOOL bGetUnreachable = false, BOOL bIsBot = false, dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = false) const;
+	void FindNearestInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, int iIgnoreWpt, BOOL bGetVisible = true, BOOL bGetUnreachable = false, BOOL bIsBot = false, const dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = false) const;
 
 	void DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float fDist) const;
 

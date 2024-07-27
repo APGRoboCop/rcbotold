@@ -103,12 +103,12 @@ void CBotGAValues::mutate()
 	}
 }
 
-float CBotGAValues::get(int iIndex) const //Unstable? [APG]RoboCop[CL]
+float CBotGAValues::get(unsigned int iIndex) const //Unstable? [APG]RoboCop[CL]
 {
 	return m_theValues[iIndex];
 }
 
-void CBotGAValues::set(const int iIndex, const ga_value fVal)
+void CBotGAValues::set(const unsigned int iIndex, const ga_value fVal)
 {
 	m_theValues[iIndex] = fVal;
 }
@@ -231,7 +231,7 @@ unsigned int CBitsGAValues::size() const
 	return m_theBits->size();
 }
 
-void CBitsGAValues::convert(int* iBits) const
+void CBitsGAValues::convert(unsigned int* iBits) const
 {
 	for (unsigned int i = 0; i < size(); i++)
 	{

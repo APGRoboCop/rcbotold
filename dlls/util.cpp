@@ -128,9 +128,7 @@ void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency,
 
 		if (localAmplitude)
 		{
-			const int iMsg = GetMessageID("ScreenShake");
-
-			if (iMsg)
+			if (const int iMsg = GetMessageID("ScreenShake"))
 			{
 				shake.amplitude = FixedUnsigned16(localAmplitude, 1 << 12);		// 4.12 fixed
 
@@ -374,7 +372,7 @@ void strlow(char* str)
 
 	for (unsigned int i = 0; i < len; i++)
 	{
-		str[i] = tolower(str[i]);
+		str[i] = static_cast<char>(std::tolower(static_cast<unsigned char>(str[i])));
 	}
 }
 
@@ -385,7 +383,7 @@ void strhigh(char* str)
 
 	for (unsigned int i = 0; i < len; i++)
 	{
-		str[i] = toupper(str[i]);
+		str[i] = static_cast<char>(std::toupper(static_cast<unsigned char>(str[i])));
 	}
 }
 
@@ -756,8 +754,8 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 	else
 		snprintf(text, sizeof(text), "%c%s: ", 2, STRING(pEntity->v.netname));
 
-	const int j = sizeof text - 2 - std::strlen(text);  // -2 for /n and null terminator
-	if (static_cast<int>(std::strlen(message)) > j)
+	if (const size_t j = sizeof text - 2 - std::strlen(text);  // -2 for /n and null terminator
+		std::strlen(message) > j)
 		message[j] = 0;
 
 	std::strcat(text, message);
@@ -1291,7 +1289,7 @@ BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 {
 	edict_t* pResourceTower = nullptr;
 
-	Vector vOrigin;
+	//Vector vOrigin;
 
 	while ((pResourceTower = UTIL_FindEntityByClassname(pResourceTower, "alienresourcetower")) != nullptr)
 	{
@@ -1859,7 +1857,7 @@ BOOL UTIL_makeTSweapon(edict_t* pOwner, TSWeapon weaponid)
 	if (pWeapon == nullptr || FNullEnt(pWeapon))
 		return false;
 
-	char* keyname = "tsweaponid";
+	const char* keyname = "tsweaponid";
 	char keyvalue[8];
 
 	KeyValueData key;
@@ -1966,7 +1964,7 @@ edict_t* UTIL_FacingEnt(edict_t* pPlayer, BOOL any)
 	UTIL_MakeVectors(pev->v_angle);
 
 	const Vector vSrc = pev->origin + pev->view_ofs;
-	const Vector vEnd = vSrc + gpGlobals->v_forward * 4096.0;
+	const Vector vEnd = vSrc + gpGlobals->v_forward * 4096.0f;
 
 	UTIL_TraceLine(vSrc, vEnd, dont_ignore_monsters, dont_ignore_glass, pPlayer, &tr);
 

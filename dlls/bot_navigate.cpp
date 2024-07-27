@@ -1180,7 +1180,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			if (gBotGlobals.IsNS() && pBot->IsSkulk() && pBot->m_iCurrentWaypointFlags & W_FL_WALL_STICK)
 				fMaxWaypointSeeTime = 10.0f;
 			// Bot hasn't seen this waypoint for two seconds
-			if (pBot->m_fLastSeeWaypoint && pBot->m_fLastSeeWaypoint + fMaxWaypointSeeTime <= gpGlobals->time)
+			if (pBot->m_fLastSeeWaypoint != 0.0f && pBot->m_fLastSeeWaypoint + fMaxWaypointSeeTime <= gpGlobals->time)
 			{
 				//Clear this waypoint, get a new one and flush path info.
 
@@ -1964,7 +1964,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 				const char* szTargetname = const_cast<char*>(STRING(pHit->v.targetname));
 
 				// a way to find out if this is a lift (big enough for the bot to walk on)
-				const BOOL bIsLift = pHit->v.movedir.z &&
+				const BOOL bIsLift = (pHit->v.movedir.z != 0.0f) &&
 					(pHit->v.size.x > pBot->pev->size.z &&
 						pHit->v.size.y > pBot->pev->size.z);
 

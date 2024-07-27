@@ -1868,7 +1868,7 @@ const char* pfnCmd_Argv(int argc)
 #endif
 }
 
-const char* GetArg(const char* command, int arg_number)
+const char* GetArg(const char* command, const unsigned int arg_number)
 {
 	// the purpose of this function is to provide fakeclients (bots) with the same Cmd_Argv
 	// convenience the engine provides to real clients. This way the handling of real client
@@ -1877,7 +1877,7 @@ const char* GetArg(const char* command, int arg_number)
 	// either to the actual engine functions (when the caller is a real client), either on
 	// our function here, which does the same thing, when the caller is a bot.
 
-	int i, index = 0, arg_count = 0, fieldstart, fieldstop;
+	unsigned int i, index = 0, arg_count = 0, fieldstart, fieldstop;
 
 	static char arg[1024];
 
@@ -1887,7 +1887,7 @@ const char* GetArg(const char* command, int arg_number)
 	if (!command || !*command)
 		return nullptr;
 
-	const int length = std::strlen(command); // get length of command
+	const size_t length = std::strlen(command); // get length of command
 
 	// while we have not reached end of line
 	while (index < length && arg_count <= arg_number)

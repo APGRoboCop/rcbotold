@@ -65,9 +65,9 @@ public:
 	void setVector(const std::vector<ga_value>& values);
 	void getVector(std::vector<ga_value>* values);
 
-	float get(int iIndex) const;
+	float get(unsigned int iIndex) const;
 
-	void set(int iIndex, ga_value fVal);
+	void set(unsigned int iIndex, ga_value fVal);
 
 	void clear() override;
 
@@ -137,7 +137,7 @@ public:
 	// mutate some values
 	void mutate() override
 	{
-		for (unsigned i = 0; i < 32; i++)
+		for (int i = 0; i < 32; i++)
 		{
 			if (RANDOM_FLOAT(0, 1) <= 0.1f)
 			{
@@ -181,7 +181,7 @@ public:
 	//void saveForBot ( char *file, int iProfile );
 
 	//~CBotGAValues();
-	void convert(int* iBits) const;
+	void convert(unsigned int* iBits) const;
 	CBitsGAValues(CBits* bits);
 
 	// crossover with other individual

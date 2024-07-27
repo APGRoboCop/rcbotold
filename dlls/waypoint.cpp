@@ -257,12 +257,12 @@ void CWaypointLocations::FindNearestCoverWaypointInBucket(const int i, const int
 void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int k, const Vector& vOrigin,
 	float* pfMinDist, int* piIndex, const int iIgnoreWpt,
 	const BOOL bGetVisible, const BOOL bGetUnReachable, const BOOL bIsBot,
-	dataStack<int>* iFailedWpts, const BOOL bNearestAimingOnly) const
+	const dataStack<int>* iFailedWpts, const BOOL bNearestAimingOnly) const
 	// Search for the nearest waypoint : I.e.
 		// Find the waypoint that is closest to vOrigin from the distance pfMinDist
 		// And set the piIndex to the waypoint index if closer.
 {
-	dataStack <int> tempStack = m_iLocations[i][j][k];
+	dataStack <int> tempStack1 = m_iLocations[i][j][k];
 
 	float fDist;
 
@@ -274,20 +274,20 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 
 		if (iFailedWpts)
 		{
-			dataStack<int> tempStack = *iFailedWpts;
+			dataStack<int> tempStack2 = *iFailedWpts;
 			int iWpt;
 
-			while (!tempStack.IsEmpty())
+			while (!tempStack2.IsEmpty())
 			{
-				if ((iWpt = tempStack.ChooseFromStack()) != -1)
+				if ((iWpt = tempStack2.ChooseFromStack()) != -1)
 					g_iFailedWaypoints[iWpt] = 1;
 			}
 		}
 	}
 
-	while (!tempStack.IsEmpty())
+	while (!tempStack1.IsEmpty())
 	{
-		const int iSelectedIndex = tempStack.ChooseFromStack();
+		const int iSelectedIndex = tempStack1.ChooseFromStack();
 
 		if (iSelectedIndex == iIgnoreWpt)
 			continue;
@@ -948,6 +948,7 @@ void WaypointAddPath(const short int add_index, const short int path_index)
 	{
 		char errorMsg[] = "HPB_bot - Error allocating memory for path!";
 		ALERT(at_error, errorMsg);
+		return; // or throw an exception
 	}
 
 	p->index[0] = path_index;
@@ -1465,10 +1466,10 @@ int WaypointFindNearestAiming(const Vector& v_origin)
 		if ((waypoints[index].flags & W_FL_AIMING) == 0)
 			continue;  // skip any NON aiming waypoints
 
-		if (const float distance = (v_origin - waypoints[index].origin).Length(); distance < static_cast<int>(min_distance) && distance < 40)
+		if (const float distance = (v_origin - waypoints[index].origin).Length(); distance < min_distance && distance < 40)
 		{
 			min_index = index;
-			min_distance = static_cast<int>(distance);
+			min_distance = distance;
 		}
 	}
 

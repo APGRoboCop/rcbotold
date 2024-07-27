@@ -573,7 +573,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		float range = 100.0f;
 
 		if (arg2 && *arg2)
-			range = std::atof(arg2);
+			range = static_cast<float>(std::atof(arg2));
 
 		//FILE *fp;
 
@@ -954,9 +954,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 		if (arg2 && *arg2)
 		{
-			const float fspeed = std::atof(arg2);
-
-			if (fspeed > 0)
+			if (const float fspeed = float(std::atof(arg2)); fspeed > 0)
 			{
 				for (CBot& m_Bot : gBotGlobals.m_Bots)
 					m_Bot.m_fTurnSpeed = fspeed;
@@ -986,14 +984,14 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	else if (FStrEq("bot_stuck_speed", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fBotStuckSpeed = std::atof(arg2);
+			gBotGlobals.m_fBotStuckSpeed = static_cast<float>(std::atof(arg2));
 		else
 			fSetVal = gBotGlobals.m_fBotStuckSpeed;
 	}
 	else if (FStrEq("update_ladder_time", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fUpdateLadderTime = std::atof(arg2);
+			gBotGlobals.m_fUpdateLadderTime = static_cast<float>(std::atof(arg2));
 		else
 			fSetVal = gBotGlobals.m_fUpdateLadderTime;
 	}
@@ -1021,42 +1019,42 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	else if (FStrEq("u_hive", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fHiveImportance = std::atof(arg2);
+			gBotGlobals.m_fHiveImportance = static_cast<float>(std::atof(arg2));
 		else
 			fSetVal = gBotGlobals.m_fHiveImportance;
 	}
 	else if (FStrEq("u_restower", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fResTowerImportance = std::atof(arg2);
+			gBotGlobals.m_fResTowerImportance = static_cast<float>(std::atof(arg2));
 		else
 			fSetVal = gBotGlobals.m_fResTowerImportance;
 	}
 	else if (FStrEq("u_healing", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fHealingImportance = std::atof(arg2);
+			gBotGlobals.m_fHealingImportance = static_cast<float>(std::atof(arg2));
 		else
 			fSetVal = gBotGlobals.m_fHealingImportance;
 	}
 	else if (FStrEq("u_structure", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fStructureBuildingImportance = std::atof(arg2);
+			gBotGlobals.m_fStructureBuildingImportance = static_cast<float>(std::atof(arg2));
 		else
 			fSetVal = gBotGlobals.m_fStructureBuildingImportance;
 	}
 	else if (FStrEq("u_refill", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fRefillStructureImportance = std::atof(arg2);
+			gBotGlobals.m_fRefillStructureImportance = static_cast<float>(std::atof(arg2));
 		else
 			fSetVal = gBotGlobals.m_fRefillStructureImportance;
 	}
 	else if (FStrEq("gorge_amount", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fGorgeAmount = std::atof(arg2);
+			gBotGlobals.m_fGorgeAmount = static_cast<float>(std::atof(arg2));
 		else
 			fSetVal = gBotGlobals.m_fGorgeAmount;
 	}
@@ -1077,7 +1075,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	else if (FStrEq("wall_stick_tolerance", arg1))
 	{
 		if (bSetting)
-			gBotGlobals.m_fWallStickTol = std::atof(arg2);
+			gBotGlobals.m_fWallStickTol = static_cast<float>(std::atof(arg2));
 		else
 			fSetVal = gBotGlobals.m_fGorgeAmount;
 	}
@@ -1153,7 +1151,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (bSetting)
 		{
-			const float fTime = std::atof(arg2);
+			const float fTime = static_cast<float>(std::atof(arg2));
 
 			bSuccess = fTime >= 0;
 
@@ -1266,9 +1264,7 @@ eBotCvarState CBotSquadCommand::action(CClient* pClient, const char* arg1, const
 	}
 	else if (FStrEq(arg1, "spread"))
 	{
-		const float fNewSpread = std::atof(arg2);
-
-		if (fNewSpread)
+		if (const float fNewSpread = static_cast<float>(std::atof(arg2)))
 		{
 			theSquad->ChangeSpread(fNewSpread);
 
@@ -1882,10 +1878,10 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		const char* teamlist = CVAR_GET_STRING("mp_teamlist");
 
-		unsigned int i = 0;
-		unsigned int j = 0;
+		int i = 0;
+		int j = 0;
 
-		const size_t len = std::strlen(teamlist);
+		const int len = std::strlen(teamlist);
 
 		while (i < len)
 		{

@@ -164,8 +164,8 @@ public:
 
 	void save(std::FILE* bfp) const;
 
-	void loadTeam(char* szName, int iTeam, int chromosize);
-	void saveTeam(char* szName, int iTeam) const;
+	void loadTeam(const char* szName, int iTeam, int chromosize);
+	void saveTeam(const char* szName, int iTeam) const;
 
 	//void loadBotGA ( char *szName, int iProfileId );
 	//void saveBotGA ( char *szName, int iProfileId );
@@ -193,6 +193,6 @@ private:
 	IIndividual* m_bestIndividual;
 };
 
-std::FILE* RCBOpenFile(char* file, char* readtype, eGASaveType savedtype, int iId);
+std::FILE* RCBOpenFile(const char* file, const char* readtype, eGASaveType savedtype, int iId);
 
 #endif

@@ -1025,7 +1025,7 @@ void HAL_MakeWords(char* input, HAL_DICTIONARY* words)
 
 	// re-written
 
-	int iLen = std::strlen(input);
+	size_t iLen = std::strlen(input);
 
 	// clear the entries in the dictionary
 	HAL_EmptyDictionary(words);

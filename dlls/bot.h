@@ -151,7 +151,7 @@ CBaseEntity* CreateEnt(char* szName, const Vector& vecOrigin, const Vector& vecA
 
 BOOL UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore = nullptr);
 
-BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, int max_len);
+BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, size_t max_len);
 
 BOOL	EntityIsBuildable(edict_t* pEdict);
 BOOL    EntityIsWeldable(edict_t* pEntity);
@@ -1451,9 +1451,6 @@ public:
 	{
 		CBotTask* pTask = CurrentTask();
 
-		if (pTask == nullptr)
-			return;
-
 		const eBotTask iTask = pTask->Task();
 		const BOOL bPathInfo = pTask->HasPath();
 		const int iScheduleId = pTask->GetScheduleId();
@@ -1472,11 +1469,8 @@ public:
 			if (!NoTasksLeft())
 			{
 				this->RemovePaths();
-
 				pTask = CurrentTask();
-
-				if (pTask)
-					pTask->SetPathInfo(bPathInfo);
+				pTask->SetPathInfo(bPathInfo);
 			}
 		}
 	}
@@ -1781,7 +1775,7 @@ public:
 	}
 
 	CRememberPosition(const Vector& vOrigin, edict_t* pEntity)
-		: m_vOrigin(vOrigin)
+		: m_vOrigin(vOrigin), m_iFlags(0) // initialize m_iFlags to 0
 	{
 		setEntity(pEntity);
 	}
@@ -1944,9 +1938,7 @@ public:
 
 		m_Positions.getExisting(newPosition);
 
-		const int index = m_Positions.getExistingIndex(newPosition);
-
-		if (index != -1)
+		if (const int index = m_Positions.getExistingIndex(newPosition); index != -1)
 			m_Positions.RemoveByIndex(index);
 		else if (m_Positions.Size() > MAX_REMEMBER_POSITIONS)
 			m_Positions.RemoveByIndex(0);
@@ -4159,7 +4151,7 @@ public:
 	}
 
 	// setup hud text class for tool tip properties
-	HudText(BOOL tooltip)
+	HudText(BOOL tooltip) : m_textParms() // Use default constructor of m_textParms
 	{
 		Initialise();
 
@@ -4221,14 +4213,16 @@ public:
 	void Initialise();
 	void SetColour1(Vector const& colours, int alpha)
 	{
-		m_textParms.r1 = static_cast<byte>(colours.x), m_textParms.g1 = static_cast<byte>(colours.y), m_textParms.b1 =
-			static_cast<byte>(colours.z);
+		m_textParms.r1 = static_cast<byte>(colours.x);
+		m_textParms.g1 = static_cast<byte>(colours.y);
+		m_textParms.b1 = static_cast<byte>(colours.z);
 		m_textParms.a1 = static_cast<byte>(alpha);
 	}
 	void SetColour2(Vector const& colours, int alpha)
 	{
-		m_textParms.r2 = static_cast<byte>(colours.x), m_textParms.g2 = static_cast<byte>(colours.y), m_textParms.b2 =
-			static_cast<byte>(colours.z);
+		m_textParms.r2 = static_cast<byte>(colours.x);
+		m_textParms.g2 = static_cast<byte>(colours.y);
+		m_textParms.b2 = static_cast<byte>(colours.z);
 		m_textParms.a2 = static_cast<byte>(alpha);
 	}
 	void InitMessage(const char* message);
@@ -5175,7 +5169,7 @@ typedef enum { MASTER_NONE, MASTER_NOT_TRIGGERED, MASTER_TRIGGERED, MASTER_FAULT
 class CMasterEntity
 {
 public:
-	CMasterEntity(edict_t* pEntity, char* szMasterName)
+	CMasterEntity(edict_t* pEntity, const char* szMasterName)
 	{
 		m_pEntity = pEntity;
 		m_szMasterName = new char[std::strlen(szMasterName) + 1];
@@ -5222,7 +5216,7 @@ public:
 		m_Masters.Destroy();
 	}
 
-	void AddMaster(edict_t* pEntity, char* szMasterName)
+	void AddMaster(edict_t* pEntity, const char* szMasterName)
 	{
 		m_Masters.Push(new CMasterEntity(pEntity, szMasterName));
 	}
@@ -6714,7 +6708,7 @@ public:
 
 	TraceResult m_tr;
 
-	short int m_iCurrentMod;
+	int m_iCurrentMod;
 
 	CGA m_TSWeaponChoices;
 	CGA m_pCombatGA[2];
@@ -6847,7 +6841,7 @@ private:
 	dataStack<char*> m_Messages[26];
 }*/
 
-const char* GetArg(const char* command, int arg_number);
+const char* GetArg(const char* command, unsigned int arg_number);
 void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...);
 
 ///////////////////////////////////////////////////////////////////

@@ -2333,7 +2333,7 @@ const char* BotFunc_GetRandomPlayerName(CBot* pBot, const int iState)
 
 // Fill string, a neat function I made
 // fills the points of a string with %l, %r, %whatever with readable text
-BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, const int max_len)
+BOOL BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, const size_t max_len)
 {
 	// keep a big string to make sure everything fits
 	size_t len = std::strlen(string) + 1;

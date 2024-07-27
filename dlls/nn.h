@@ -58,7 +58,7 @@ public:
 
 	unsigned int numNeurons() const { return m_Neurons.size(); }
 
-	CPerceptron* getNeuron(int iNeuron) const { return m_Neurons[iNeuron]; }
+	CPerceptron* getNeuron(unsigned int iNeuron) const { return m_Neurons[iNeuron]; }
 
 	void freeMemory();
 

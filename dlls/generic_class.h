@@ -63,7 +63,7 @@ template <class T>
 class dataNode
 {
 public:
-	dataNode()// constructor
+	dataNode() : m_NodeData() // constructor
 	{
 		m_Next = NULL;
 	}
@@ -776,7 +776,7 @@ public:
 
 		const int iSize = sizeof(T) * iArrayMax;
 
-		m_pArray = (T*)std::malloc(iSize);
+		m_pArray = static_cast<T*>(std::malloc(iSize));
 
 		assert(m_pArray != NULL);
 

@@ -225,7 +225,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 				{
 					// keep current message set so it wil be called whan messages are sent
 					// and update current bot index being affected by messages.
-					m_iBotMsgIndex = index;
+					m_iBotMsgIndex = static_cast<short>(index);
 				}
 				else // dont call a function
 				{
@@ -607,7 +607,7 @@ void CBotGlobals::StartFrame()
 						m_bBotCanRejoin = false;
 						m_fBotRejoinTime = gpGlobals->time + 5.0f;
 
-						bAddBot = false;
+						//bAddBot = false;
 					}
 				}
 
@@ -704,7 +704,7 @@ void CBotGlobals::StartFrame()
 
 											pBot->m_Weapons.AddWeapon(j);
 
-											// realiable check
+											// reliable check
 											pWeapon = pBot->m_Weapons.GetWeapon(j);
 
 											if (pWeapon)
@@ -732,7 +732,7 @@ void CBotGlobals::StartFrame()
 
 									pBot->m_iBotWeapons = 0;
 
-									for (j = 1; j < static_cast<int>(std::fmin(MAX_WEAPONS, sizeof(int) * CHAR_BIT)); j++)
+									for (j = 1; j < std::fmin(MAX_WEAPONS, sizeof(int) * CHAR_BIT); j++)
 									{
 										if (pBot->pev->weapons & 1 << j)
 										{

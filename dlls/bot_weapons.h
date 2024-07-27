@@ -540,7 +540,7 @@ public:
 
 	virtual float PrimMinRange()
 	{
-		return BOT_VIEW_DISTANCE;
+		return 0;
 	}
 
 	virtual BOOL SecondaryInRange(float fRange)

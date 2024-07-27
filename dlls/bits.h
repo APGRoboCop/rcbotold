@@ -51,8 +51,8 @@
 class CBits
 {
 public:
-	CBits(int iNumBits);
-	CBits(CBits* copyBits);
+	CBits(unsigned int iNumBits);
+	CBits(const CBits* copyBits);
 
 	void setBit(int iBit, BOOL bSet) const;
 
@@ -64,11 +64,11 @@ public:
 
 	void save(std::FILE* bfp) const;
 
-	void setup(int iNumBits);
+	void setup(unsigned int iNumBits);
 
 	unsigned int numBits() const { return m_iNumBits; }
 
-	void copy(CBits* otherBits);
+	void copy(const CBits* otherBits);
 
 	unsigned char* getBits() const { return m_cBits; }
 
