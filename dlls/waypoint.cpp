@@ -1041,31 +1041,42 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 
 	if (*pPath == nullptr)
 	{
-		*pPath = paths[waypoint_index];
-		*path_index = 0;
+		if (waypoint_index >= 0 && waypoint_index < std::size(paths))
+		{
+			*pPath = paths[waypoint_index];
+			*path_index = 0;
+		}
+		else
+		{
+			// Handle error
+			return -1;
+		}
 	}
 
 	while (*pPath != nullptr)
 	{
 		while (*path_index < MAX_PATH_INDEX)
 		{
-			if ((*pPath)->index[*path_index] != -1 && (*pPath)->index[*path_index] < num_waypoints)	// found a path? TODO: triggers crash? [APG]RoboCopCL]
+			if ((*pPath)->index[*path_index] != -1 && (*pPath)->index[*path_index] < num_waypoints)//TODO: triggers crash? [APG]RoboCopCL]
 			{
 				// save the return value
-				const int index = (*pPath)->index[*path_index];
-
-				// skip this path if next waypoint is team specific and NOT this team
-				if (team != -1 && (waypoints[index].flags & W_FL_TEAM_SPECIFIC) &&
-					(waypoints[index].flags & W_FL_TEAM) != team)
+				if (const int index = (*pPath)->index[*path_index]; index >= 0 && index < MAX_WAYPOINTS)
 				{
+					// skip this path if next waypoint is team specific and NOT this team
+					if (team != -1 && (waypoints[index].flags & W_FL_TEAM_SPECIFIC) &&
+						(waypoints[index].flags & W_FL_TEAM) != team)
+					{
+						(*path_index)++;
+						continue;
+					}
+
+					// set up stuff for subsequent calls...
 					(*path_index)++;
-					continue;
+
+					return index;
 				}
-
-				// set up stuff for subsequent calls...
-				(*path_index)++;
-
-				return index;
+				// Handle error
+				return -1;
 			}
 
 			(*path_index)++;
@@ -1075,9 +1086,9 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 
 		if (*pPath)
 		{
-			if ((*pPath)->next != nullptr) // Added null check before dereferencing
+			if (*pPath && (*pPath)->next != nullptr)
 			{
-				*pPath = (*pPath)->next;  // go to the next node in the linked list [APG]RoboCop[CL]
+				*pPath = (*pPath)->next;
 			}
 			else
 			{
