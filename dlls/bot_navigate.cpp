@@ -1680,7 +1680,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	// Wall stick waypoint
 	if (gBotGlobals.IsNS() && (pBot->IsSkulk() && pBot->m_iCurrentWaypointFlags & (W_FL_WALL_STICK | W_FL_LADDER) && pBot->m_iPrevWaypointIndex != -1))
 	{
-		Vector vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
+		vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
 		Vector vTemp = WaypointOrigin(pBot->m_iPrevWaypointIndex);
 
 		vTemp.z = vWptOrigin.z;
@@ -1852,7 +1852,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 			vPositions.Add(vEnd);
 		}
-		else if (!vPositions.IsEmpty() && fDistance == fMaxDistance)
+		else if (!vPositions.IsEmpty() && std::abs(fDistance - fMaxDistance) < std::numeric_limits<float>::epsilon())
 		{
 			vPositions.Add(vEnd);
 		}
@@ -1897,7 +1897,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 
 			vPositions.Add(vEnd);
 		}
-		else if (!vPositions.IsEmpty() && fDistance == fMaxDistance)
+		else if (!vPositions.IsEmpty() && std::abs(fDistance - fMaxDistance) < std::numeric_limits<float>::epsilon())
 		{
 			vPositions.Add(vEnd);
 		}

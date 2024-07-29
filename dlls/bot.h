@@ -270,12 +270,12 @@ void strhigh(char* str);
 void UTIL_CountBuildingsInRange(const Vector& vOrigin, float fRange, int* iDefs, int* iOffs, int* iSens, int* iMovs);
 float BotFunc_DistanceBetweenEdicts(edict_t* pEdict1, edict_t* pEdict2);
 
-float UTIL_AngleDiff(float destAngle, float srcAngle);
+//float UTIL_AngleDiff(float destAngle, float srcAngle);
 
-void BotPrintTalkMessage(char* fmt, ...);
+void BotPrintTalkMessage(const char* fmt, ...);
 
 int BotFunc_GetBitSetOf(int iId);
-void BotFile_Write(char* string);
+void BotFile_Write(const char* string);
 
 //////////////////////////////////////////////////////////////////////////////////
 // END : FUNCTION PROTOTYPES

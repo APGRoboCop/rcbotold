@@ -1041,7 +1041,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 
 	if (*pPath == nullptr)
 	{
-		if (waypoint_index >= 0 && waypoint_index < std::size(paths))
+		if (waypoint_index >= 0 && static_cast<size_t>(waypoint_index) < std::size(paths))
 		{
 			*pPath = paths[waypoint_index];
 			*path_index = 0;

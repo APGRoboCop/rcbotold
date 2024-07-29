@@ -180,9 +180,8 @@ void CWeapons::AddWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int
 	{
 		if (m_Weapons[iId] == nullptr)
 		{
-			weapon_preset_t* pPreset = gBotGlobals.m_WeaponPresets.GetPreset(gBotGlobals.m_iCurrentMod, iId);
-
-			if (pPreset == nullptr)
+			if (weapon_preset_t* pPreset = gBotGlobals.m_WeaponPresets.GetPreset(gBotGlobals.m_iCurrentMod,
+				static_cast<short>(iId)); pPreset == nullptr)
 			{
 				m_Weapons[iId] = new CWeapon();
 			}

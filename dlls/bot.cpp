@@ -598,7 +598,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 		{
 			//const int iRep = m_Profile.m_Rep.GetClientRep(pExtClient);
 
-			if (BotFunc_IncreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), m_Profile.m_iSkill))
+			if (BotFunc_IncreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), static_cast<float>(m_Profile.m_iSkill)))
 			{
 				m_Profile.m_Rep.IncreaseRep(pExtClient->GetPlayerRepId());
 				BotChat(BOT_CHAT_LAUGH, pInfo);
@@ -611,7 +611,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 		else if (m_Profile.m_Rep.GetClientRep(pClient) > BOT_MID_REP)
 		{
 			// decrease rep upon killer
-			if (BotFunc_DecreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), m_Profile.m_iSkill))
+			if (BotFunc_DecreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), static_cast<float>(m_Profile.m_iSkill)))
 			{
 				m_Profile.m_Rep.DecreaseRep(pExtClient->GetPlayerRepId());
 				BotChat(BOT_CHAT_LAUGH, pInfo);
@@ -692,7 +692,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			// killed a player i didn't like, are we even?
 
 			// if i got him (by making him want to decrease his rep)
-			if (BotFunc_IncreaseRep(iRep, DistanceFromEdict(m_pKilledEdict), m_Profile.m_iSkill))
+			if (BotFunc_IncreaseRep(iRep, DistanceFromEdict(m_pKilledEdict), static_cast<float>(m_Profile.m_iSkill)))
 			{
 				m_Profile.m_Rep.IncreaseRep(pClient->GetPlayerRepId());
 			}
@@ -756,7 +756,7 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 						{
 							const int iRep = pRep->CurrentRep();
 
-							if (BotFunc_DecreaseRep(iRep, DistanceFrom(EntityOrigin(m_pKillerEdict)), m_Profile.m_iSkill))
+							if (BotFunc_DecreaseRep(iRep, DistanceFrom(EntityOrigin(m_pKillerEdict)), static_cast<float>(m_Profile.m_iSkill)))
 								m_Profile.m_Rep.DecreaseRep(pKillerClient->GetPlayerRepId());
 						}
 					}
@@ -7879,7 +7879,7 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 
 	// if possible, stay looking one direction when climbing ladder ("ladder angles")
 	// best results is 0
-	if (gBotGlobals.m_fUpdateLadderTime != -1 && m_fUpdateLadderAngleTime < gpGlobals->time)
+	if (constexpr double epsilon = 0.00001; std::abs(gBotGlobals.m_fUpdateLadderTime - (-1)) > epsilon && m_fUpdateLadderAngleTime < gpGlobals->time)
 	{
 		UnSetLadderAngleAndMovement();
 		m_fUpdateLadderAngleTime = gpGlobals->time + gBotGlobals.m_fUpdateLadderTime;
@@ -8098,11 +8098,12 @@ void CBot::WorkMoveDirection()
 {
 	// Move Direction Related To View Direction!!!
 
-//	float angle;
+	//float angle;
 
 	float fAngle;
 
-	Vector vAngle;
+	//Vector vAngle;
+
 	BOOL bNullMove = false;
 
 	// climbing/trying to climb/flying etc..?
@@ -9928,7 +9929,7 @@ void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, const char*
 	BotMessage(pEntity, errorlevel, "%s%s", szDebugMsg, string);
 }
 
-void BotPrintTalkMessage(char* fmt, ...)
+void BotPrintTalkMessage(const char* fmt, ...)
 {
 	va_list argptr;
 	static char string[1024];
@@ -9971,7 +9972,7 @@ void BotPrintTalkMessageOne(edict_t* pClient, const char* fmt, ...)
 	ClientPrint(pClient, HUD_PRINTTALK, string);
 }
 
-void BotFile_Write(char* string)
+void BotFile_Write(const char* string)
 {
 	std::FILE* fp = std::fopen(BOT_CRASHLOG_FILE, "a");
 
@@ -16491,7 +16492,8 @@ void CBot::CheckStuck()
 	// Check Stuck
 
 	// Stuck speed not invalid
-	if (gBotGlobals.m_fBotStuckSpeed != -1.0f)
+	if (constexpr float epsilon = 0.00001f; std::abs(gBotGlobals.m_fBotStuckSpeed - -1.0f) > epsilon)
+
 	{
 		// check current task incase we dont want to check if stuck
 		// i.e. dont want to kill ourselves if gestating in NS like what used to happen O_o

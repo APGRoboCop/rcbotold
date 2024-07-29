@@ -18,7 +18,7 @@ public:
 	{
 		m_bDone = false;
 		m_iTicksLeft = 0; // ?
-		reset();
+		//reset();
 	}
 
 	virtual void _reset();
@@ -26,7 +26,7 @@ public:
 	virtual void tick();
 	bool isDone() const { return m_bDone; }
 	// more priorty with those with more ticks required to complete
-	bool operator < (CTickable* other) const { return m_iTicksLeft > other->ticksLeft(); }
+	bool operator < (const CTickable* other) const { return m_iTicksLeft > other->ticksLeft(); }
 	unsigned int ticksLeft() const { return m_iTicksLeft; }
 
 private:

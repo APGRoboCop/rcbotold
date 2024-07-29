@@ -568,7 +568,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 	else if (pEntity && FStrEq("search", arg1))
 	{
 		edict_t* pEnt = nullptr;
-		edict_t* pEntity = pClient->GetPlayer();
+		pEntity = pClient->GetPlayer();
 
 		float range = 100.0f;
 
@@ -1118,7 +1118,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 			}
 		}
 		else
-			fSetVal = gBotGlobals.m_iMaxPathRevs;
+			fSetVal = static_cast<float>(gBotGlobals.m_iMaxPathRevs);
 	}
 	else if (FStrEq("max_update_vision_revs", arg1))
 	{
@@ -1145,7 +1145,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 			}
 		}
 		else
-			fSetVal = gBotGlobals.m_iMaxVisUpdateRevs;
+			fSetVal = static_cast<float>(gBotGlobals.m_iMaxVisUpdateRevs);
 	}
 	else if (FStrEq("update_vision_time", arg1))
 	{
