@@ -20,7 +20,7 @@ Supported Mods
 RCBot versions
 --------------
 
-V 1.51-beta7
+V 1.51-beta8
 ---------
 
 * added: Enhanced performance and stability
@@ -51,6 +51,7 @@ V 1.51-beta7
 * TODO: To improve on how to allow bots climb ladders more properly
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
 * TODO: To allow bots in Op4 to use Grapple by using the "Fly" waypoint
+* TODO: To allow proper TDM and CTF support for DMQ2
 * TODO: To add proper support for S&I, AHL, FLF and WizWars
 
 V 1.5-final
