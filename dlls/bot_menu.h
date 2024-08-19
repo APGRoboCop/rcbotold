@@ -50,7 +50,7 @@ class CClient;
 class CBotMenu;
 
 // menu types
-typedef enum
+typedef enum : std::uint8_t
 {
 	BOT_MENU_NONE = 0,
 	BOT_MENU_WAYPOINT_MAIN,

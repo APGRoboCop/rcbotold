@@ -38,14 +38,16 @@
 #define TYPES_META_H
 
  // Our own boolean type, for stricter type matching.
-typedef enum mBOOL {
+typedef enum mBOOL : std::uint8_t
+{
 	mFALSE = 0,
 	mTRUE = 1,
 } mBOOL;
 
 // Like C's errno, for our various functions; describes causes of failure
 // or mFALSE returns.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	ME_NOERROR = 0,
 	ME_FORMAT,			// invalid format
 	ME_COMMENT,			// ignored comment

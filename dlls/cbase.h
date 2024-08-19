@@ -84,7 +84,7 @@ extern "C" EXPORT void SaveGlobalState(SAVERESTOREDATA* pSaveData);
 extern "C" EXPORT void RestoreGlobalState(SAVERESTOREDATA* pSaveData);
 extern "C" EXPORT void ResetGlobalState();
 
-typedef enum { USE_OFF = 0, USE_ON = 1, USE_SET = 2, USE_TOGGLE = 3 } USE_TYPE;
+typedef enum : std::uint8_t { USE_OFF = 0, USE_ON = 1, USE_SET = 2, USE_TOGGLE = 3 } USE_TYPE;
 
 extern "C" EXPORT void FireTargets(const char* targetName, CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value);
 
@@ -368,7 +368,7 @@ public:
 	int m_chargeReady;
 	int m_fInAttack;
 
-	enum EGON_FIRESTATE { FIRE_OFF, FIRE_CHARGE };
+	enum EGON_FIRESTATE : std::uint8_t { FIRE_OFF, FIRE_CHARGE };
 	int m_fireState;
 };
 
@@ -629,35 +629,38 @@ public:
 // NOTE: tweak these values based on gameplay feedback:
 
 #define PARALYZE_DURATION	2		// number of 2 second intervals to take damage
-#define PARALYZE_DAMAGE		1.0		// damage to take each 2 second interval
+#define PARALYZE_DAMAGE		1.0f	// damage to take each 2 second interval
 
 #define NERVEGAS_DURATION	2
-#define NERVEGAS_DAMAGE		5.0
+#define NERVEGAS_DAMAGE		5.0f
 
 #define POISON_DURATION		5
-#define POISON_DAMAGE		2.0
+#define POISON_DAMAGE		2.0f
 
 #define RADIATION_DURATION	2
-#define RADIATION_DAMAGE	1.0
+#define RADIATION_DAMAGE	1.0f
 
 #define ACID_DURATION		2
-#define ACID_DAMAGE			5.0
+#define ACID_DAMAGE			5.0f
 
 #define SLOWBURN_DURATION	2
-#define SLOWBURN_DAMAGE		1.0
+#define SLOWBURN_DAMAGE		1.0f
 
 #define SLOWFREEZE_DURATION	2
-#define SLOWFREEZE_DAMAGE	1.0
+#define SLOWFREEZE_DAMAGE	1.0f
 
-#define	itbd_Paralyze		0
-#define	itbd_NerveGas		1
-#define	itbd_Poison			2
-#define	itbd_Radiation		3
-#define	itbd_DrownRecover	4
-#define	itbd_Acid			5
-#define	itbd_SlowBurn		6
-#define	itbd_SlowFreeze		7
-#define CDMG_TIMEBASED		8
+enum : std::uint8_t
+{
+	itbd_Paralyze = 0,
+	itbd_NerveGas = 1,
+	itbd_Poison = 2,
+	itbd_Radiation = 3,
+	itbd_DrownRecover = 4,
+	itbd_Acid = 5,
+	itbd_SlowBurn = 6,
+	itbd_SlowFreeze = 7,
+	CDMG_TIMEBASED = 8
+};
 
 // when calling KILLED(), a value that governs gib behavior is expected to be
 // one of these three values
@@ -698,7 +701,7 @@ public:
 	int		Save(CSave& save) override;
 	int		Restore(CRestore& restore) override;
 
-	enum BUTTON_CODE { BUTTON_NOTHING, BUTTON_ACTIVATE, BUTTON_RETURN };
+	enum BUTTON_CODE : std::uint8_t { BUTTON_NOTHING, BUTTON_ACTIVATE, BUTTON_RETURN };
 	BUTTON_CODE	ButtonResponseToTouch();
 
 	static	TYPEDESCRIPTION m_SaveData[];
@@ -787,7 +790,7 @@ public:
 #define SF_TANK_CANCONTROL		0x0020
 #define SF_TANK_SOUNDON			0x8000
 
-enum TANKBULLET
+enum TANKBULLET : std::uint8_t
 {
 	TANK_BULLET_NONE = 0,
 	TANK_BULLET_9MM = 1,

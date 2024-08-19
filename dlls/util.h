@@ -166,7 +166,7 @@ inline BOOL FStringNull(int iString) { return iString == iStringNull; }
 #define		BLOOD_COLOR_YELLOW	(BYTE)195
 #define		BLOOD_COLOR_GREEN	BLOOD_COLOR_YELLOW
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	MONSTERSTATE_NONE = 0,
 	MONSTERSTATE_IDLE,
@@ -180,7 +180,7 @@ typedef enum
 } MONSTERSTATE;
 
 // Things that toggle (buttons/triggers/doors) need this
-typedef enum
+typedef enum : std::uint8_t
 {
 	TS_AT_TOP,
 	TS_AT_BOTTOM,
@@ -247,8 +247,8 @@ extern void			UTIL_ShowMessageAll(const char* pString);
 extern void			UTIL_ScreenFadeAll(const Vector& color, float fadeTime, float holdTime, int alpha, int flags);
 extern void			UTIL_ScreenFade(CBaseEntity* pEntity, const Vector& color, float fadeTime, float fadeHold, int alpha, int flags);
 
-typedef enum { ignore_monsters = 1, dont_ignore_monsters = 0, missile = 2 } IGNORE_MONSTERS;
-typedef enum { ignore_glass = 1, dont_ignore_glass = 0 } IGNORE_GLASS;
+typedef enum : std::uint8_t { ignore_monsters = 1, dont_ignore_monsters = 0, missile = 2 } IGNORE_MONSTERS;
+typedef enum : std::uint8_t { ignore_glass = 1, dont_ignore_glass = 0 } IGNORE_GLASS;
 extern void			UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon, edict_t* pentIgnore, TraceResult* ptr);
 extern void			UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon, IGNORE_GLASS ignoreGlass, edict_t* pentIgnore, TraceResult* ptr);
 typedef enum { point_hull = 0, human_hull = 1, large_hull = 2, head_hull = 3 } hull_enum;

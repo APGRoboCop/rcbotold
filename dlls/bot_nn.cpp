@@ -188,9 +188,9 @@ void NNLayer::load(std::FILE* bfp)
 	std::fread(&iTemp, sizeof(unsigned int), 1, bfp);
 
 	const CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN_LAYER, iTemp);
-	CGenericHeader header2;
+	//CGenericHeader header2; //header2 unused? [APG]RoboCop[CL]
 
-	if (header2.read(bfp, header1))
+	if (CGenericHeader::read(bfp, header1))
 	{
 		for (unsigned int i = 0; i < m_Neurons.size(); i++)
 		{
@@ -209,9 +209,9 @@ void NN::load(std::FILE* bfp)
 	std::fread(&iTemp, sizeof(unsigned int), 1, bfp);
 
 	const CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN, iTemp);
-	CGenericHeader header2;
+	//CGenericHeader header2; //header2 unused? [APG]RoboCop[CL]
 
-	if (header2.read(bfp, header1))
+	if (CGenericHeader::read(bfp, header1))
 	{
 		for (unsigned int i = 0; i < iTemp; i++)
 		{

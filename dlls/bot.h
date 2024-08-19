@@ -1756,7 +1756,7 @@ private:
 	int m_iFlags = 0;
 };
 
-enum
+enum : std::uint8_t
 {
 	BOT_REMEMBER_POSITION = 0,
 	BOT_REMEMBER_SENTRY = (1<<0),
@@ -2150,7 +2150,7 @@ private:
 // TODO: need to be initialised for Bot Class to work? [APG]RoboCop[CL]
 #define SQUAD_DEFAULT_SPREAD 50.0f// say 50 units between each member...?
 
-enum eSquadForm
+enum eSquadForm : std::uint8_t
 {
 	SQUAD_FORM_NONE = 0,
 	SQUAD_FORM_WEDGE,
@@ -2161,7 +2161,7 @@ enum eSquadForm
 	SQUAD_FORM_VEE
 };
 
-enum eCombatType
+enum eCombatType : std::uint8_t
 {
 	COMBAT_NONE = 0,
 	COMBAT_STEALTH,
@@ -5164,7 +5164,7 @@ constexpr int BOT_MAX_HIVES = 3;
 //
 // made this myself to get the state of doors that use masters
 //
-typedef enum { MASTER_NONE, MASTER_NOT_TRIGGERED, MASTER_TRIGGERED, MASTER_FAULT } eMasterType;
+typedef enum : std::uint8_t { MASTER_NONE, MASTER_NOT_TRIGGERED, MASTER_TRIGGERED, MASTER_FAULT } eMasterType;
 
 class CMasterEntity
 {
@@ -5542,7 +5542,7 @@ public:
 	CThingToBuild m_forMovementChamber;
 };
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	BOTCAM_NONE = 0,
 	BOTCAM_BOT,

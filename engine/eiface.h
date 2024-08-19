@@ -39,7 +39,7 @@
 #define DLLEXPORT /* */
 #endif
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	at_notice,
 	at_console,		// same as at_notice, but forces a ConPrintf, not a message box
@@ -50,7 +50,7 @@ typedef enum
 } ALERT_TYPE;
 
 // 4-22-98  JOHN: added for use in pfnClientPrintf
-typedef enum
+typedef enum : std::uint8_t
 {
 	print_console,
 	print_center,
@@ -58,7 +58,7 @@ typedef enum
 } PRINT_TYPE;
 
 // For integrity checking of content on clients
-typedef enum
+typedef enum : std::uint8_t
 {
 	force_exactfile,			// File on client must exactly match server's file
 	force_model_samebounds,		// For model files only, the geometry must fit in the same bbox

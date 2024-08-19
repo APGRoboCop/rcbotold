@@ -200,7 +200,7 @@ void CBotGAValues::load(std::FILE* bfp, const int req_size)
 
 	CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, req_size);
 
-	if (!header.read(bfp, header))
+	if (!CGenericHeader::read(bfp, header))
 	{
 		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;

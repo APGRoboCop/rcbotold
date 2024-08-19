@@ -3926,7 +3926,7 @@ BOOL CBot::WantToFindEnemy() const
 }
 
 // TODO: Experimental and NS AlienAction may need to be tested and added in bot.h? [APG]RoboCop[CL]
-typedef enum
+typedef enum : std::uint8_t
 {
 	ACTION_BUILD_DEF,
 	ACTION_BUILD_OFF,
@@ -3938,7 +3938,7 @@ typedef enum
 	ACTION_MAX
 }eAlienAction;
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	ACTION_RES_FASTER_RESOURCES = 1,
 	ACTION_RES_MORE_HEALTH = 2,
@@ -8978,7 +8978,7 @@ void CBot::RunPlayerMove()
 
 	//Don't convert `pev->button` and `pev->impulse` into C++ casts otherwise TS bots won't stunt dive [APG]RoboCop[CL]
 	(*g_engfuncs.pfnRunPlayerMove)(m_pEdict, pev->angles, m_fMoveSpeed, m_fStrafeSpeed, m_fUpSpeed, pev->button,
-		pev->impulse, static_cast<byte>(m_iMsecVal));
+		pev->impulse, m_iMsecVal);
 }
 
 void CBot::ThrowGrenade(edict_t* pEnemy, int preference, const BOOL bDontPrime)
@@ -10519,7 +10519,7 @@ int BotFunc_GetBitSetOf(const int iId)
 	return weapon_index;
 }
 
-BOOL CBot::HasWeapon(const int iWeapon) const
+BOOL CBot::HasWeapon(int iWeapon) const
 {
 	//	if ( gBotGlobals.IsMod(MOD_DMC) )
 	//		return ((m_iBotWeapons) & (1<<(iWeapon-1))) != 0;

@@ -50,7 +50,7 @@
 constexpr int EXPLODE_RADIUS = 300;
 constexpr int MAX_WAYPOINTS = 1024;
 
-enum
+enum : std::uint8_t
 {
 	FL_ASTAR_OPEN = 1 << 0,
 	FL_ASTAR_CLOSED = 1 << 1,
@@ -58,7 +58,7 @@ enum
 	FL_ASTAR_HEURISTIC = 1 << 3
 };
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	TS_State_Normal = 0,
 	TS_State_JumpDuck,
@@ -106,7 +106,7 @@ private:
 	short int flags;
 };
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	BOT_CLIMB_NONE = 0,
 	BOT_CLIMB_NOT_TOUCHING, // current waypoint is a ladder waypoint but not touching it yet.
@@ -117,7 +117,7 @@ typedef enum
 	BOT_CLIMB_TRYING_WALL_STICK // trying to wall-stick
 }eClimbType;
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	BOT_CAN_NONE,
 	BOT_CAN_BUILD_HIVE,
@@ -201,7 +201,7 @@ constexpr int BOT_MAX_PASSWORD_LEN = 16;
 
 // start messages
 // Science and Industry
-enum
+enum : std::uint8_t
 {
 	MSG_SI_IDLE = 1,
 	MSG_SI_TEAM_SELECT = 2,
@@ -210,7 +210,7 @@ enum
 
 ////////////////////////////////
 // NATURAL SELECTION TEAMS
-enum
+enum : std::uint8_t
 {
 	TEAM_NONE = 0,
 	TEAM_MARINE = 1,
@@ -218,12 +218,12 @@ enum
 	TEAM_AUTOTEAM = 5
 };
 
-enum
+enum : std::uint8_t
 {
 	TYPE_UNKNOWN = 8
 };
 
-enum
+enum : std::uint8_t
 {
 	TYPE_SOLDIER = 0,
 	TYPE_HEAVY = 1,
@@ -239,7 +239,7 @@ enum
 //#define BOT_PASSWORD_KEY "rcbot_pass"
 // Bot Sounds
 // different sound types the bot might hear
-typedef enum
+typedef enum : std::uint8_t
 {
 	SOUND_UNKNOWN = 0,
 	SOUND_PLAYER,
@@ -270,7 +270,7 @@ typedef enum
 // NATURAL SELECTION
 // (mod defined structures : Flayra@overmind.org)
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	// Special or misc. actions
 	MESSAGE_NULL = 0,
@@ -443,7 +443,7 @@ typedef enum
 //-----------------------------------------------------------------------------
 // Possible Research Options - Science and Industry
 //-----------------------------------------------------------------------------
-enum ResearchGoal
+enum ResearchGoal : std::uint8_t
 {
 	RESEARCH_NULL = 0,			// starting research option (sets up research), it's also the end-game research
 	RESEARCH_ARMOR_25,			// level one armor upgrade
@@ -493,7 +493,7 @@ enum ResearchGoal
 // Notice types are used with the "Notice" message. Send one of these types as a
 // BYTE to the player
 // -----------------------------------------------------------------------------
-enum notice_type
+enum notice_type : std::uint8_t
 {
 	Notice_None = 0,
 
@@ -568,7 +568,7 @@ constexpr int NS_OFFENSE_CHAMBER_RESOURCES = 10;
 constexpr int NS_MOVEMENT_CHAMBER_RESOURCES = 10;
 constexpr int NS_SENSORY_CHAMBER_RESOURCES = 10;
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	PLAYERCLASS_NONE = 0,
 	PLAYERCLASS_ALIVE_MARINE,
@@ -590,7 +590,7 @@ typedef enum
 } AvHPlayerClass;
 
 // Only one of these allowed per entity, stored in pev->iuser3.
-typedef enum
+typedef enum : std::uint8_t
 {
 	AVH_USER3_NONE = 0,
 	AVH_USER3_MARINE_PLAYER,
@@ -654,14 +654,14 @@ typedef enum
 	AVH_USER3_MAX
 } AvHUser3;
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	WEAPON_ON_TARGET = 0x01,
 	WEAPON_IS_CURRENT = 0x02,
 	WEAPON_IS_ENABLED = 0x04
 } CurWeaponStateFlags;
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	BALANCE_ACTION_INSERT_INT = 0,
 	BALANCE_ACTION_INSERT_FLOAT = 1,
@@ -712,7 +712,7 @@ typedef enum
 	MASK_SENSORY_NEARBY = 0x40000000
 } AvHUpgradeMask;
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	ALIEN_UPGRADE_CATEGORY_INVALID = 0,
 	ALIEN_UPGRADE_CATEGORY_DEFENSE,
@@ -722,7 +722,7 @@ typedef enum
 	ALIEN_UPGRADE_CATEGORY_MAX_PLUS_ONE,
 } AvHAlienUpgradeCategory;
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	ORDERTARGETTYPE_UNDEFINED = 0,
 	ORDERTARGETTYPE_GLOBAL = 1,
@@ -730,7 +730,7 @@ typedef enum
 	ORDERTARGETTYPE_TARGET = 3
 }AvHOrderTargetType;
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	ORDERTYPE_UNDEFINED = 0,
 	ORDERTYPEL_DEFAULT,
@@ -751,7 +751,8 @@ typedef enum
 	ORDERTYPE_MAX
 }AvHOrderType;
 
-typedef enum {
+typedef enum : std::uint8_t
+{
 	TEAMMATE_MARINE_ORDER_WELD = 0,
 	TEAMMATE_MARINE_ORDER_FOLLOW,
 	TEAMMATE_MARINE_ORDER_COVER,
@@ -829,7 +830,7 @@ constexpr int BOT_TASKSTATUS_STILL_PENDING = -3;
 
 */
 
-typedef enum
+typedef enum : std::uint8_t
 // collection of tasks
 // (Not really.. just told to be so when you make the tasks)
 // see bot_navigate lift tasks.
@@ -852,7 +853,7 @@ typedef enum
 	// etc
 }eScheduleDesc;
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	/*								*
 	 *  General + NS bot tasks		*
@@ -970,7 +971,7 @@ typedef enum
 
 // A Task the bot should only change its view angles for
 // i.e. turning
-typedef enum
+typedef enum : std::uint8_t
 {
 	BOT_LOOK_TASK_NONE,
 	BOT_LOOK_TASK_NEXT_WAYPOINT,
@@ -989,7 +990,7 @@ typedef enum
 
 // bot events.
 // can be handled inside bot code whilst being called from outside the bot
-typedef enum
+typedef enum : std::uint8_t
 {
 	BOT_EVENT_DIED,
 	BOT_EVENT_KILL,
@@ -1006,7 +1007,7 @@ typedef enum
 	BOT_EVENT_LEAVING
 }eBotEvent;
 
-enum eBotCvarState
+enum eBotCvarState : std::uint8_t
 {
 	BOT_CVAR_NOTEXIST = 0,
 	BOT_CVAR_ACCESSED,
@@ -1018,14 +1019,14 @@ enum eBotCvarState
 ///////////////////////////////////////////
 // MESSAGES
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	BOT_LANG_ENGLISH = 0,
 	BOT_LANG_MAX
 }eLanguage;
 
 // NO MORE THAN 31 !!!
-typedef enum
+typedef enum : std::uint8_t
 {
 	BOT_TOOL_TIP_SERVER_WELCOME = 0,
 	BOT_TOOL_TIP_CLIENT_WELCOME,
@@ -1053,7 +1054,7 @@ constexpr int LADDER_DOWN = 2;
 constexpr int BOT_PITCH_SPEED = 30;
 constexpr int BOT_YAW_SPEED = 30;
 
-enum
+enum : std::uint8_t
 {
 	RESPAWN_NONE = 0,
 	RESPAWN_IDLE = 1,
@@ -1074,7 +1075,7 @@ constexpr float BOT_WAYPOINT_TOUCH_DIST = 32.0f;
 // MOD ID's
 // add new mod Id's to the end!!!
 // notice some aren't used
-enum
+enum : std::uint8_t
 {
 	MOD_NOT_SUPPORTED = 0,
 	MOD_ANY = 1,
@@ -1095,7 +1096,7 @@ enum
 	MOD_FLF = 16,		// TODO: Front Line Force
 };
 
-enum
+enum : std::uint8_t
 {
 	VGUI_MENU_NONE = 0,
 	VGUI_MENU_IOS_MOTD = 1,
@@ -1106,13 +1107,13 @@ enum
 	VGUI_MENU_BG_SELECT_AMERICAN_CLASS = 4
 };
 
-enum
+enum : std::uint8_t
 {
 	TEAM_BLACK_MESA = 0,
 	TEAM_OPPOSING_FORCE = 1
 };
 
-enum
+enum : std::uint8_t
 {
 	VGUI_MENU_WW_TEAM_SELECT = 0,
 	VGUI_MENU_WW_CLASS_SELECT = 1
@@ -1150,7 +1151,7 @@ enum
 #define TFC_TELEPORTER_ENTRANCE 1
 #define TFC_TELEPORTER_EXIT		2
 */
-typedef enum
+typedef enum : std::uint8_t
 {
 	MAP_UNKNOWN = 0,		// unknown map type
 	MAP_CTF = 1,			// normal capture the flag (flag in enemy base) e.g. 2fort
@@ -1202,7 +1203,7 @@ enum
 //////////////////////////////////////////////
 // Bits in GA Individual for combat
 //////////////////////////////////////////////
-enum
+enum : std::uint8_t
 {
 	BOT_GA_COMBAT_WANT_SHOTGUN = 1,
 	BOT_GA_COMBAT_WANT_HMG = 2,
@@ -1353,7 +1354,7 @@ enum eBotChatType
 	BOT_CHAT_MAX
 };
 
-enum eBotRepType
+enum eBotRepType : std::uint8_t
 {
 	BOT_REP_UNKNOWN = 0,
 	BOT_REP_NEUTRAL,
@@ -1361,7 +1362,7 @@ enum eBotRepType
 	BOT_REP_UNFRIENDLY
 };
 
-enum eBattleGroundsMessage
+enum eBattleGroundsMessage : std::uint8_t
 {
 	BOT_BG_MSG_YES = 1,
 	BOT_BG_MSG_NO,

@@ -57,7 +57,7 @@
 //#include <minwindef.h>
 //#endif
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	PLAYER_IDLE,
 	PLAYER_WALK,
@@ -70,7 +70,7 @@ typedef enum
 #define MAX_ID_RANGE 2048
 #define SBAR_STRING_SIZE 128
 
-enum sbar_data
+enum sbar_data : std::uint8_t
 {
 	SBAR_ID_TARGETNAME = 1,
 	SBAR_ID_TARGETHEALTH,

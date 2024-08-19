@@ -199,7 +199,7 @@ void CPerceptron::load(std::FILE* bfp)
 
 	CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
 
-	if (!header.read(bfp, header))
+	if (!CGenericHeader::read(bfp, header))
 	{
 		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;

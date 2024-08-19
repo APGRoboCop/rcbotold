@@ -88,7 +88,7 @@ private:
 	char m_szHeader[32];
 };
 
-enum
+enum : std::uint8_t
 {
 	LEARNTYPE_PERCEPTRON = 1,
 	LEARNTYPE_POPULATION = 2,

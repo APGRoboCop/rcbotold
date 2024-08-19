@@ -26,7 +26,7 @@
 // Customization
 // passed to pfnPlayerCustomization
 // For automatic downloading.
-typedef enum
+typedef enum : std::uint8_t
 {
 	t_sound = 0,
 	t_skin,

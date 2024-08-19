@@ -34,7 +34,7 @@
 #include "gannconst.h"
 #include <vector>
 
-typedef enum
+typedef enum : std::uint8_t
 {
 	SAVETYPE_BOT,
 	SAVETYPE_TEAM,

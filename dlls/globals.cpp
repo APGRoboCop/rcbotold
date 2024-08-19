@@ -529,7 +529,7 @@ void CBotGlobals::StartFrame()
 				continue;
 
 			if (!*STRING(pPlayer->v.netname))
-				m_Clients.ClientDisconnected(pClient);
+				CClients::ClientDisconnected(pClient);
 			else
 			{
 				pClient->Think();
@@ -757,7 +757,7 @@ void CBotGlobals::StartFrame()
 						//}
 						// Need to run this function after the bot
 						// thinks each frame so it can move.
-						pBot->RunPlayerMove();
+						pBot->RunPlayerMove();//TODO: triggers crash? [APG]RoboCopCL]
 				}
 			}
 		}

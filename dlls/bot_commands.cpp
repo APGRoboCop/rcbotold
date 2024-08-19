@@ -1417,7 +1417,7 @@ eBotCvarState CBotCamCommand::action(CClient* pClient, const char* arg1, const c
 	{
 		if (FStrEq("off", arg1))
 		{
-			gBotGlobals.m_BotCam.TuneOff(pEntity);
+			CBotCam::TuneOff(pEntity);
 			BotMessage(pEntity, 0, "Finished using botcam");
 		}
 		else

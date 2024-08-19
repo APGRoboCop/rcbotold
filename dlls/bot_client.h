@@ -51,7 +51,7 @@
 #include "bot_const.h"
 
 // net message write types
-typedef enum
+typedef enum : std::uint8_t
 {
 	NET_MSG_TYPE_NONE = 0,
 	NET_MSG_TYPE_COORD,

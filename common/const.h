@@ -557,12 +557,12 @@
 #define MSG_ONE_UNRELIABLE	8		// Send to one client, but don't put in reliable stream, put in unreliable datagram ( could be dropped )
 
 // contents of a spot in the world
-#define	CONTENTS_EMPTY		-1
-#define	CONTENTS_SOLID		-2
-#define	CONTENTS_WATER		-3
-#define	CONTENTS_SLIME		-4
-#define	CONTENTS_LAVA		-5
-#define	CONTENTS_SKY		-6
+#define	CONTENTS_EMPTY		(-1)
+#define	CONTENTS_SOLID		(-2)
+#define	CONTENTS_WATER		(-3)
+#define	CONTENTS_SLIME		(-4)
+#define	CONTENTS_LAVA		(-5)
+#define	CONTENTS_SKY		(-6)
 /* These additional contents constants are defined in bspfile.h
 #define	CONTENTS_ORIGIN		-7		// removed at csg time
 #define	CONTENTS_CLIP		-8		// changed to contents_solid
@@ -575,14 +575,14 @@
 
 #define CONTENTS_TRANSLUCENT	-15
 */
-#define	CONTENTS_LADDER		-16
+#define	CONTENTS_LADDER		(-16)
 
-#define CONTENT_EMPTY	-1
-#define CONTENT_SOLID	-2
-#define	CONTENT_WATER	-3
-#define CONTENT_SLIME	-4
-#define CONTENT_LAVA	-5
-#define CONTENT_SKY		-6
+#define CONTENT_EMPTY	(-1)
+#define CONTENT_SOLID	(-2)
+#define	CONTENT_WATER	(-3)
+#define CONTENT_SLIME	(-4)
+#define CONTENT_LAVA	(-5)
+#define CONTENT_SKY		(-6)
 
 // channels
 #define CHAN_AUTO			0
@@ -595,9 +595,9 @@
 
 // attenuation values
 #define ATTN_NONE		0
-#define	ATTN_NORM		(float)0.8
-#define ATTN_IDLE		(float)2
-#define ATTN_STATIC		(float)1.25
+#define	ATTN_NORM		0.8f
+#define ATTN_IDLE		2.0f
+#define ATTN_STATIC		1.25f
 
 // pitch values
 #define	PITCH_NORM		100			// non-pitch shifted
@@ -649,7 +649,7 @@
 #define TE_BOUNCE_SHOTSHELL	2
 
 // Rendering constants
-enum
+enum : std::uint8_t
 {
 	kRenderNormal,			// src
 	kRenderTransColor,		// c*a+dest*(1-a)
@@ -659,7 +659,7 @@ enum
 	kRenderTransAdd,		// src*a+dest
 };
 
-enum
+enum : std::uint8_t
 {
 	kRenderFxNone = 0,
 	kRenderFxPulseSlow,

@@ -930,17 +930,16 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 
 	while ( (i < MAX_PLAYERS) && m_Clients[i].IsUsed() )
 		i++;*/
-	const int i = ENTINDEX(pPlayer) - 1;
 
 	//	gBotGlobals.m_iNumClients ++;
 
-	if (i < MAX_PLAYERS)
+	if (const int i = ENTINDEX(pPlayer) - 1; i < MAX_PLAYERS)
 	{
 		CClient* pClient = GetClientByIndex(i);
 
 		gBotGlobals.m_iJoiningClients[i] = 0;
 
-		gBotGlobals.m_BotCam.TuneOff(pPlayer);
+		CBotCam::TuneOff(pPlayer);
 
 		pClient->SetEdict(pPlayer);
 		pClient->setSteamID();

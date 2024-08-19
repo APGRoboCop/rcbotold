@@ -125,7 +125,7 @@ void CPopulation::load(std::FILE* bfp, int chromosize, int type)
 
 	CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
 
-	if (!header.read(bfp, header))
+	if (!CGenericHeader::read(bfp, header))
 	{
 		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
 		return;

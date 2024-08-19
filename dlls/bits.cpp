@@ -121,7 +121,7 @@ void CBits::load(std::FILE* bfp)
 
 	setup(m_iNumBits);
 
-	std::fread(&m_cBits, size(), 1, bfp);
+	std::fread(m_cBits, size(), 1, bfp);
 }
 
 void CBits::randomize() const
@@ -157,7 +157,7 @@ void CBits::save(std::FILE* bfp) const
 
 	std::fwrite(&m_iNumBits, sizeof(unsigned int), 1, bfp);
 
-	std::fwrite(&m_cBits, size(), 1, bfp);
+	std::fwrite(m_cBits, size(), 1, bfp);
 }
 
 void CBits::copy(const CBits* otherBits)

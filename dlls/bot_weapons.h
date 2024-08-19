@@ -70,7 +70,7 @@
  ////////////////////////////////////////
  // NATURAL SELECTION
  // FLYRA (Charlie Cleveland : flayra@overmind.org)
-enum class NSWeapon
+enum class NSWeapon : std::uint8_t
 {
 	NONE = 0,
 
@@ -118,7 +118,7 @@ enum class NSWeapon
 ////////////////////
 // HL DEATHMATCH
 
-enum
+enum : std::uint8_t
 {
 	// weapon ID values for Valve's Half-Life Deathmatch
 	VALVE_WEAPON_CROWBAR = 1,
@@ -208,7 +208,7 @@ constexpr int VALVE_HORNET_MAX_CARRY = 8;
 #define CS_WEAPON_P90           30
 */
 // weapon ID values for Gearbox's OpFor Deathmatch
-enum class GearboxWeapon
+enum class GearboxWeapon : std::uint8_t
 {
 	CROWBAR = 1,
 	GLOCK = 2,
@@ -238,7 +238,7 @@ enum class GearboxWeapon
 };
 
 // weapon ID values for FrontLineForce
-enum
+enum : std::uint8_t
 {
 	FLF_WEAPON_AK5 = 10,
 	FLF_WEAPON_UNKNOWN11 = 11,
@@ -262,7 +262,7 @@ enum
 	FLF_WEAPON_HK21 = 29
 };
 
-enum class DMCWeapon
+enum class DMCWeapon : std::uint8_t
 {
 	AXE = 1,
 	SHOTGUN = 2,
@@ -297,7 +297,7 @@ enum class DMCWeapon
 
 //#define TS_WEAPON_TSGUN			1
 
-enum class TSWeapon
+enum class TSWeapon : std::uint8_t
 {
 	Glock18 = 1,
 	MiniUzi = 3,
@@ -334,7 +334,7 @@ enum class TSWeapon
 };
 
 // weapon ID values for Science and Industry
-enum class SIWeapon
+enum class SIWeapon : std::uint8_t
 {
 	BRIEFCASE = 1,
 	COLT = 2,
@@ -358,7 +358,7 @@ enum class SIWeapon
 };
 
 // WIZARD WARS //TODO
-enum class WizWeapon
+enum class WizWeapon : std::uint8_t
 {
 	STAFF = 1,
 	SHIELD,
