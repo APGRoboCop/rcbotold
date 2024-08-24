@@ -20,7 +20,7 @@ Supported Mods
 RCBot versions
 --------------
 
-V 1.51-beta8
+V 1.51-beta9
 ---------
 
 * added: Enhanced performance and stability
@@ -35,6 +35,7 @@ V 1.51-beta8
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
 * changed: Replaced most of the #define Marcos with Enumerators and constexpr
+* changed: Strings and enums optimisated and modernised
 * changed: Reduced redundant coding and risks of buffer overflow crashes
 * changed: Reverted basemonster.h that was modified for Sven Coop
 * changed: Increasing bot's viewing angle to detect enemies better
