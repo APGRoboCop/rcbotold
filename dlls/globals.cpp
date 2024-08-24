@@ -260,11 +260,11 @@ void CBotGlobals::StartFrame()
 	static BOOL bUpdateClientData;
 	static BOOL bCheckedTeamplay = false;
 
-	if (!bCheckedTeamplay && m_iCurrentMod)
+	if (bCheckedTeamplay && m_iCurrentMod)
 	{
-		if (CVAR_GET_FLOAT("mp_teamplay") > 0.0f)
+		if (m_bTeamPlay == (CVAR_GET_FLOAT("mp_teamplay") > 0.0f))
 			m_bTeamPlay = true;
-		else if (CVAR_GET_FLOAT("mp_teamplay") <= 0.0f)
+		else if (m_bTeamPlay == (CVAR_GET_FLOAT("mp_teamplay") <= 0.0f))
 			m_bTeamPlay = false;
 
 		bCheckedTeamplay = true;
