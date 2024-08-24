@@ -225,7 +225,7 @@ int	    UTIL_GetClass(edict_t* pEntity);
 int		UTIL_GetBotIndex(const edict_t* pEdict);
 int		UTIL_MasterTriggered(string_t sMaster, CBaseEntity* pActivator);
 void		UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, BOOL needmore, char* pText);
-void		UTIL_BuildFileName(char* filename, char* arg1, char* arg2 = nullptr);
+void		UTIL_BuildFileName(char* filename, const char* arg1, const char* arg2 = nullptr);
 
 edict_t* UTIL_FacingEnt(edict_t* pPlayer, BOOL any = false);
 
@@ -839,12 +839,12 @@ public:
 
 	BOOL operator == (const CBotTask& Task) const;
 
-	char* getTaskDescription() const
+	const char* getTaskDescription() const
 	{
 		return _getTaskDescription(m_Task);
 	}
 
-	static char* _getTaskDescription(eBotTask itask)
+	static const char* _getTaskDescription(eBotTask itask)
 	{
 		switch (itask)
 		{
@@ -1034,7 +1034,7 @@ public:
 		return m_iScheduleDescription;
 	}
 
-	char* getScheduleDescription() const
+	const char* getScheduleDescription() const
 	{
 		switch (m_iScheduleDescription)
 		{
@@ -1528,9 +1528,9 @@ typedef struct bot_profile_s
 	int m_iFavTeam;
 	int m_iSkill;
 
-	char* m_szFavMap;
-	char* m_szSpray;
-	char* m_szBotName;
+	const char* m_szFavMap;
+	const char* m_szSpray;
+	const char* m_szBotName;
 
 	//////////////////////
 	// NS STUFF

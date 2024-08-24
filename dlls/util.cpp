@@ -1928,7 +1928,7 @@ BOOL UTIL_makeTSweapon(edict_t* pOwner, TSWeapon weaponid)
 	return true;
 }
 
-void UTIL_BuildFileName(char* filename, char* arg1, char* arg2)
+void UTIL_BuildFileName(char* filename, const char* arg1, const char* arg2)
 {
 	// Build file name will set up the directory for the filename
 	std::strcpy(filename, gBotGlobals.botFolder());

@@ -149,7 +149,7 @@ typedef enum : std::uint8_t
 
 /////////////
 // SVENCOOP MONSTERS
-enum
+enum : std::int8_t
 {
 	R_AL = -2,	// (ALLY) pals. Good alternative to R_NO when applicable.
 	R_FR = -1,	// (FEAR)will run
@@ -1340,7 +1340,7 @@ enum
 // TODO: those need to be declared for bot_chat.ini to work [APG]RoboCop[CL]
 #define BOT_CHAT_FILE "bot_chat.ini"
 
-enum eBotChatType
+enum eBotChatType : std::int8_t
 {
 	BOT_CHAT_UNKNOWN = -1,
 	BOT_CHAT_KILLS = 0,
@@ -1394,7 +1394,7 @@ enum eBattleGroundsMessage : std::uint8_t
 
 /////////////////////////
 // DEBUG LEVELS							Debug Messages Will Be Shown When :
-enum
+enum : std::uint16_t
 {
 	BOT_DEBUG_TOUCH_LEVEL = 1 << 0,	// Bot touched object
 	BOT_DEBUG_THINK_LEVEL = 1 << 1,	// Bot thinks

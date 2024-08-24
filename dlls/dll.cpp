@@ -96,7 +96,7 @@ cvar_t bot_ver_cvar = { BOT_VER_CVAR,BOT_VER,FCVAR_SERVER };
 
 std::FILE* fpMapConfig = nullptr;
 
-void UpdateClientData(const edict_s* ent, int sendweapons, clientdata_s* cd);
+//void UpdateClientData(const edict_s* ent, int sendweapons, clientdata_s* cd);
 
 ///////////////////////////////////////////////////////////
 //
@@ -1686,8 +1686,8 @@ void BotFunc_WriteProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 
 	while (i <= 10)
 	{
-		char* szTag = nullptr;
-		char* szToWrite = nullptr;
+		const char* szTag = nullptr;
+		const char* szToWrite = nullptr;
 		const int* iToWrite = nullptr;
 
 		switch (i)

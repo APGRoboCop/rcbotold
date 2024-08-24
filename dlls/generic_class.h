@@ -124,11 +124,9 @@ public:
 
 	void Destroy()
 	{
-		dataNode<T>* tempNode = nullptr;
-
 		while (m_Head)
 		{
-			tempNode = m_Head;
+			dataNode<T>* tempNode = m_Head;
 
 			m_Head = m_Head->m_Next;
 

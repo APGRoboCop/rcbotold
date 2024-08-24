@@ -946,7 +946,7 @@ void WaypointAddPath(const short int add_index, const short int path_index)
 
 	if (p == nullptr)
 	{
-		char errorMsg[] = "HPB_bot - Error allocating memory for path!";
+		constexpr char errorMsg[] = "HPB_bot - Error allocating memory for path!";
 		ALERT(at_error, errorMsg);
 		return; // or throw an exception
 	}
