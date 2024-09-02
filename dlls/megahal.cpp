@@ -663,8 +663,8 @@ void HAL_InitializeDictionary(HAL_DICTIONARY* dictionary)
 	constexpr HAL_STRING word = { 7, "<ERROR>" };
 	constexpr HAL_STRING end = { 5, "<FIN>" };
 
-	(void)HAL_AddWord(dictionary, word);
-	(void)HAL_AddWord(dictionary, end);
+	HAL_AddWord(dictionary, word);
+	HAL_AddWord(dictionary, end);
 }
 
 HAL_DICTIONARY* HAL_NewDictionary()

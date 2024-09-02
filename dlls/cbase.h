@@ -1,6 +1,6 @@
 /***
 *
-*	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
+*	Copyright (c) 1996-2001, Valve LLC. All rights reserved.
 *
 *	This product contains software technology licensed from Id
 *	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
@@ -51,11 +51,11 @@ CBaseEntity
 
 // C functions for external declarations that call the appropriate C++ methods
 
-#ifndef __linux__
-#if defined(_MSC_VER) || defined(__BORLANDC__)
-#define EXPORT	_declspec( dllexport )
+#ifndef CBASE_DLLEXPORT
+#ifdef _WIN32
+#define CBASE_DLLEXPORT _declspec( dllexport )
 #else
-#define EXPORT	__declspec( dllexport )
+#define CBASE_DLLEXPORT __attribute__ ((visibility("default")))
 #endif
 #else
 #define EXPORT
@@ -69,24 +69,33 @@ extern "C" EXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS* pFunctionTable, int*
 
 #endif
 
-extern "C" EXPORT int DispatchSpawn(edict_t* pent);
-extern "C" EXPORT void DispatchKeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd);
-extern "C" EXPORT void DispatchTouch(edict_t* pentTouched, edict_t* pentOther);
-extern "C" EXPORT void DispatchUse(edict_t* pentUsed, edict_t* pentOther);
-extern "C" EXPORT void DispatchThink(edict_t* pent);
-extern "C" EXPORT void DispatchBlocked(edict_t* pentBlocked, edict_t* pentOther);
-extern "C" EXPORT void DispatchSave(edict_t* pent, SAVERESTOREDATA* pSaveData);
-extern "C" EXPORT int  DispatchRestore(edict_t* pent, SAVERESTOREDATA* pSaveData, int globalEntity);
-extern "C" EXPORT void	DispatchObjectCollsionBox(edict_t* pent);
-extern "C" EXPORT void SaveWriteFields(SAVERESTOREDATA* pSaveData, const char* pname, void* pBaseData, TYPEDESCRIPTION* pFields, int fieldCount);
-extern "C" EXPORT void SaveReadFields(SAVERESTOREDATA* pSaveData, const char* pname, void* pBaseData, TYPEDESCRIPTION* pFields, int fieldCount);
-extern "C" EXPORT void SaveGlobalState(SAVERESTOREDATA* pSaveData);
-extern "C" EXPORT void RestoreGlobalState(SAVERESTOREDATA* pSaveData);
-extern "C" EXPORT void ResetGlobalState();
+#if defined EXPORT
+#undef EXPORT
+#endif
+
+#define EXPORT CBASE_DLLEXPORT
+
+extern "C" CBASE_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS* pFunctionTable, int interfaceVersion);
+extern "C" CBASE_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS* pFunctionTable, int* interfaceVersion);
+
+extern int DispatchSpawn(edict_t* pent);
+extern void DispatchKeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd);
+extern void DispatchTouch(edict_t* pentTouched, edict_t* pentOther);
+extern void DispatchUse(edict_t* pentUsed, edict_t* pentOther);
+extern void DispatchThink(edict_t* pent);
+extern void DispatchBlocked(edict_t* pentBlocked, edict_t* pentOther);
+extern void DispatchSave(edict_t* pent, SAVERESTOREDATA* pSaveData);
+extern int  DispatchRestore(edict_t* pent, SAVERESTOREDATA* pSaveData, int globalEntity);
+extern void	DispatchObjectCollsionBox(edict_t* pent);
+extern void SaveWriteFields(SAVERESTOREDATA* pSaveData, const char* pname, void* pBaseData, TYPEDESCRIPTION* pFields, int fieldCount);
+extern void SaveReadFields(SAVERESTOREDATA* pSaveData, const char* pname, void* pBaseData, TYPEDESCRIPTION* pFields, int fieldCount);
+extern void SaveGlobalState(SAVERESTOREDATA* pSaveData);
+extern void RestoreGlobalState(SAVERESTOREDATA* pSaveData);
+extern void ResetGlobalState();
 
 typedef enum : std::uint8_t { USE_OFF = 0, USE_ON = 1, USE_SET = 2, USE_TOGGLE = 3 } USE_TYPE;
 
-extern "C" EXPORT void FireTargets(const char* targetName, CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value);
+extern void FireTargets(const char* targetName, CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value);
 
 typedef void (CBaseEntity::* BASEPTR)();
 typedef void (CBaseEntity::* ENTITYFUNCPTR)(CBaseEntity* pOther);
@@ -109,7 +118,10 @@ typedef void (CBaseEntity::* USEPTR)(CBaseEntity* pActivator, CBaseEntity* pCall
 #define CLASS_ALIEN_BIOWEAPON	13 // hornets and snarks.launched by the alien menace
 #define	CLASS_BARNACLE			99 // special because no one pays attention to it, and it eats a wide cross-section of creatures.
 
+#define CLASS_VEHICLE			14
+
 class CBaseEntity;
+class CBaseToggle;
 class CBaseMonster;
 class CBasePlayerItem;
 class CSquadMonster;
@@ -152,8 +164,8 @@ public:
 	CBaseEntity* m_pLink;// used for temporary link-list operations.
 
 	// initialization functions
-	virtual void	Spawn() { return; }
-	virtual void	Precache() { return; }
+	virtual void	Spawn() {}
+	virtual void	Precache() {}
 	virtual void	KeyValue(KeyValueData* pkvd) { pkvd->fHandled = false; }
 	virtual int		Save(CSave& save);
 	virtual int		Restore(CRestore& restore);
@@ -177,6 +189,7 @@ public:
 	virtual int		BloodColor() { return DONT_BLEED; }
 	virtual void	TraceBleed(float flDamage, Vector vecDir, TraceResult* ptr, int bitsDamageType);
 	virtual BOOL    IsTriggered(CBaseEntity* pActivator) { return true; }
+	virtual CBaseToggle* MyTogglePointer() { return nullptr; }
 	virtual CBaseMonster* MyMonsterPointer() { return nullptr; }
 	virtual CSquadMonster* MySquadMonsterPointer() { return nullptr; }
 	virtual	int		GetToggleState() { return TS_AT_TOP; }
@@ -247,6 +260,7 @@ public:
 	void EXPORT SUB_CallUseToggle() { this->Use(this, this, USE_TOGGLE, 0); }
 	int			ShouldToggle(USE_TYPE useType, BOOL currentState);
 	void		FireBullets(ULONG	cShots, Vector  vecSrc, Vector	vecDirShooting, Vector	vecSpread, float flDistance, int iBulletType, int iTracerFreq = 4, int iDamage = 0, entvars_t* pevAttacker = nullptr);
+	Vector		FireBulletsPlayer(ULONG	cShots, Vector  vecSrc, Vector	vecDirShooting, Vector	vecSpread, float flDistance, int iBulletType, int iTracerFreq = 4, int iDamage = 0, entvars_t* pevAttacker = nullptr, int shared_rand = 0);
 
 	virtual CBaseEntity* Respawn() { return nullptr; }
 
@@ -281,14 +295,16 @@ public:
 
 	static CBaseMonster* GetMonsterPointer(entvars_t* pevMonster)
 	{
-		if (CBaseEntity* pEntity = Instance(pevMonster))
+		CBaseEntity* pEntity = Instance(pevMonster);
+		if (pEntity)
 			return pEntity->MyMonsterPointer();
 		return nullptr;
 	}
 
 	static CBaseMonster* GetMonsterPointer(edict_t* pentMonster)
 	{
-		if (CBaseEntity* pEntity = Instance(pentMonster))
+		CBaseEntity* pEntity = Instance(pentMonster);
+		if (pEntity)
 			return pEntity->MyMonsterPointer();
 		return nullptr;
 	}
@@ -297,10 +313,8 @@ public:
 #ifdef _DEBUG
 	void FunctionCheck(void* pFunction, char* name)
 	{
-#ifndef __linux__
-		if (pFunction && !NAME_FOR_FUNCTION((unsigned long)(pFunction)))
-			ALERT(at_error, "No EXPORT: %s:%s (%08lx)\n", STRING(pev->classname), name, (unsigned long)pFunction);
-#endif // __linux__
+		if (pFunction && !NAME_FOR_FUNCTION((uint32)pFunction))
+			ALERT(at_error, "No EXPORT: %s:%s (%08lx)\n", STRING(pev->classname), name, (uint32)pFunction);
 	}
 
 	BASEPTR	ThinkSet(BASEPTR func, char* name)
@@ -333,7 +347,7 @@ public:
 	// virtual functions used by a few classes
 
 	// used by monsters that are created by the MonsterMaker
-	virtual	void UpdateOwner() { return; }
+	virtual	void UpdateOwner() {}
 
 	//
 	static CBaseEntity* Create(char* szName, const Vector& vecOrigin, const Vector& vecAngles, edict_t* pentOwner = nullptr);
@@ -343,7 +357,7 @@ public:
 	EOFFSET eoffset() const { return OFFSET(pev); }
 	int	  entindex() const { return ENTINDEX(edict()); }
 
-	virtual Vector Center() { return (pev->absmax + pev->absmin) * 0.5; } // center point of entity
+	virtual Vector Center() { return (pev->absmax + pev->absmin) * 0.5f; } // center point of entity
 	virtual Vector EyePosition() { return pev->origin + pev->view_ofs; } // position of eyes
 	virtual Vector EarPosition() { return pev->origin + pev->view_ofs; } // position of ears
 	virtual Vector BodyTarget(const Vector& posSrc) { return Center(); } // position to shoot at
@@ -481,7 +495,7 @@ public:
 	int  LookupSequence(const char* label);
 	void ResetSequenceInfo();
 	void DispatchAnimEvents(float flFutureInterval = 0.1f); // Handle events that have happend since last time called up until X seconds into the future
-	virtual void HandleAnimEvent(MonsterEvent_t* pEvent) { return; }
+	virtual void HandleAnimEvent(MonsterEvent_t* pEvent) {}
 	float SetBoneController(int iController, float flValue);
 	void InitBoneControllers();
 	float SetBlending(int iBlender, float flValue);
@@ -548,6 +562,14 @@ public:
 	void AngularMove(Vector vecDestAngle, float flSpeed);
 	void EXPORT AngularMoveDone();
 	BOOL IsLockedByMaster();
+
+	CBaseToggle* MyTogglePointer() override { return this; }
+
+	// monsters use this, but so could buttons for instance
+	virtual void PlaySentence(const char* pszSentence, float duration, float volume, float attenuation);
+	virtual void PlayScriptedSentence(const char* pszSentence, float duration, float volume, float attenuation, BOOL bConcurrent, CBaseEntity* pListener);
+	virtual void SentenceStop();
+	virtual BOOL IsAllowedToSpeak() { return false; }
 
 	static float		AxisValue(int flags, const Vector& angles);
 	static void			AxisDir(entvars_t* pev);
@@ -707,6 +729,7 @@ public:
 	static	TYPEDESCRIPTION m_SaveData[];
 	// Buttons that don't take damage can be IMPULSE used
 	int	ObjectCaps() override { return (CBaseToggle::ObjectCaps() & ~FCAP_ACROSS_TRANSITION) | (pev->takedamage ? 0 : FCAP_IMPULSE_USE); }
+	BOOL IsAllowedToSpeak() override { return true; }
 
 	BOOL	m_fStayPushed;	// button stays pushed in until touched again?
 	BOOL	m_fRotating;		// a rotating button?  default is a sliding button.
@@ -728,7 +751,7 @@ public:
 // Weapons
 //
 
-#define	BAD_WEAPON 0x00007FFF
+constexpr int BAD_WEAPON = 0x00007FFF;
 
 //
 // Converts a entvars_t * to a class pointer
@@ -754,9 +777,32 @@ template <class T> T* GetClassPtr(T* a)
 	return a;
 }
 
+/*
+bit_PUSHBRUSH_DATA | bit_TOGGLE_DATA
+bit_MONSTER_DATA
+bit_DELAY_DATA
+bit_TOGGLE_DATA | bit_DELAY_DATA | bit_MONSTER_DATA
+bit_PLAYER_DATA | bit_MONSTER_DATA
+bit_MONSTER_DATA | CYCLER_DATA
+bit_LIGHT_DATA
+path_corner_data
+bit_MONSTER_DATA | wildcard_data
+bit_MONSTER_DATA | bit_GROUP_DATA
+boid_flock_data
+boid_data
+CYCLER_DATA
+bit_ITEM_DATA
+bit_ITEM_DATA | func_hud_data
+bit_TOGGLE_DATA | bit_ITEM_DATA
+EOFFSET
+env_sound_data
+env_sound_data
+push_trigger_data
+*/
+
 #define TRACER_FREQ		4			// Tracers fire every 4 bullets
 
-typedef struct _SelAmmo
+typedef struct SelAmmo
 {
 	BYTE	Ammo1Type;
 	BYTE	Ammo1;

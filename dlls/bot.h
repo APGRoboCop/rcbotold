@@ -111,9 +111,9 @@ int GetMessageID(const char* szMsg);
 void GetGameDirectory(char* szDir);
 #endif
 
-void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, const char* fmt, ...);
-void BotMessage(edict_t* pEntity, int errorlevel, const char* fmt, ...);
-void BugMessage(edict_t* pEntity, const char* fmt, ...);
+//void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, const char* fmt, ...);
+//void BotMessage(edict_t* pEntity, int errorlevel, const char* fmt, ...);
+//void BugMessage(edict_t* pEntity, const char* fmt, ...);
 
 int GetPlayerRepId(const char* szPlayerName);
 int GetPlayerEdictRepId(edict_t* pEdict);
@@ -376,7 +376,7 @@ public:
 
 	void RemoveSaveRep(int iBotProfile, int iPlayerRepId);
 
-	void SaveAllRep(int iBotProfile);
+	void SaveAllRep(int iBotProfile) const;
 
 	void AddLoadRep(int iBotProfile, int iPlayerRepId);
 
@@ -6054,7 +6054,7 @@ private:
 class CBotNSTechs
 {
 public:
-	void addTech(CBotNSTech tech)
+	void addTech(const CBotNSTech& tech)
 	{
 		if (!m_Techs.IsMember(tech))
 			m_Techs.Add(tech);

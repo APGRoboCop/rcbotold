@@ -148,7 +148,7 @@ eBotCvarState CWaypointMenuCommand::action(CClient* pClient, const char* arg1, c
 
 	//pEntity = pClient->GetPlayer();
 
-	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(EntityOrigin(pClient->GetPlayer()), 50.0, -1, false, true);
+	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(EntityOrigin(pClient->GetPlayer()), 50.0f, -1, false, true);
 
 	if (pClient->m_iCurrentWaypoint != -1)
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_MAIN].Render(pClient);
@@ -954,7 +954,7 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 
 		if (arg2 && *arg2)
 		{
-			if (const float fspeed = float(std::atof(arg2)); fspeed > 0)
+			if (const float fspeed = static_cast<float>(std::atof(arg2)); fspeed > 0)
 			{
 				for (CBot& m_Bot : gBotGlobals.m_Bots)
 					m_Bot.m_fTurnSpeed = fspeed;

@@ -4,7 +4,7 @@
 // metamod.h - (main) description of metamod operations
 
 /*
- * Copyright (c) 2001-2003 Will Day <willday@hpgx.net>
+ * Copyright (c) 2001-2006 Will Day <willday@hpgx.net>
  *
  *    This file is part of Metamod.
  *
@@ -37,16 +37,23 @@
 #ifndef METAMOD_H
 #define METAMOD_H
 
+#include "comp_dep.h"
 #include "meta_api.h"			// META_RES, etc
 #include "mlist.h"				// MPluginList, etc
 #include "mreg.h"				// MRegCmdList, etc
 #include "conf_meta.h"			// MConfig
 #include "osdep.h"				// NAME_MAX, etc
 #include "types_meta.h"			// mBOOL
+#include "mplayer.h"                    // MPlayerList
+#include "meta_eiface.h"        // HL_enginefuncs_t, meta_enginefuncs_t
+#include "engine_t.h"           // engine_t, Engine
 
-// file that lists plugins to load at startup
+ // file that lists plugins to load at startup
 #define PLUGINS_INI			"addons/metamod/plugins.ini"
 #define OLD_PLUGINS_INI		"metamod.ini"
+
+// file that lists maps where expensive hooks should be enabled
+#define SLOWHOOKS_INI		"addons/metamod/slowhooks.ini"
 
 // file that contains commands to metamod plugins at startup
 #define EXEC_CFG			"addons/metamod/exec.cfg"
@@ -58,67 +65,82 @@
 // generic config file
 #define CONFIG_INI			"addons/metamod/config.ini"
 
+// metamod module handle
+extern DLHANDLE metamod_handle DLLHIDDEN;
+
 // cvar to contain version
-extern cvar_t meta_version;
+extern cvar_t meta_version DLLHIDDEN;
 
 // Info about the game dll/mod.
 typedef struct gamedll_s {
 	char name[NAME_MAX];		// ie "cstrike" (from gamedir)
-	char *desc;					// ie "Counter-Strike"
+	const char* desc;				// ie "Counter-Strike"
 	char gamedir[PATH_MAX];		// ie "/home/willday/half-life/cstrike"
 	char pathname[PATH_MAX];	// ie "/home/willday/half-life/cstrike/dlls/cs_i386.so"
-	char const *file;			// ie "cs_i386.so"
+	char const* file;			// ie "cs_i386.so"
 	char real_pathname[PATH_MAX];	// in case pathname overridden by bot, etc
 	DLHANDLE handle;
 	gamedll_funcs_t funcs;		// dllapi_table, newapi_table
 } gamedll_t;
-extern gamedll_t GameDLL;
+extern gamedll_t GameDLL DLLHIDDEN;
 
 // SDK variables for storing engine funcs and globals.
-extern enginefuncs_t g_engfuncs;
-extern globalvars_t  *gpGlobals;
+extern HL_enginefuncs_t g_engfuncs DLLHIDDEN;
+extern globalvars_t* gpGlobals DLLHIDDEN;
 
 // Our modified version of the engine funcs, to give to plugins.
-extern enginefuncs_t g_plugin_engfuncs;
-
-// Our structure for storing engine references.
-typedef struct engine_s {
-	enginefuncs_t	*funcs;			// engine funcs
-	globalvars_t	*globals;		// engine globals
-	enginefuncs_t	*pl_funcs;		// "modified" eng funcs we give to plugins
-} engine_t;
-extern engine_t Engine;
+extern meta_enginefuncs_t g_plugin_engfuncs DLLHIDDEN;
 
 // Config structure.
-extern MConfig *Config;
+extern MConfig* Config DLLHIDDEN;
 
 // List of plugins loaded/opened/running.
-extern MPluginList *Plugins;
+extern MPluginList* Plugins DLLHIDDEN;
 
 // List of command functions registered by plugins.
-extern MRegCmdList *RegCmds;
+extern MRegCmdList* RegCmds DLLHIDDEN;
 
 // List of cvar structures registered by plugins.
-extern MRegCvarList *RegCvars;
+extern MRegCvarList* RegCvars DLLHIDDEN;
 
 // List of user messages registered by gamedll.
-extern MRegMsgList *RegMsgs;
-
-#ifdef UNFINISHED
-// List of event/logline hooks requested by plugins.
-extern MHookList *Hooks;
-#endif /* UNFINISHED */
+extern MRegMsgList* RegMsgs DLLHIDDEN;
 
 // Data provided to plugins.
 // Separate copies to prevent plugins from modifying "readable" parts.
 // See meta_api.h for meta_globals_t structure.
-extern meta_globals_t PublicMetaGlobals;
-extern meta_globals_t PrivateMetaGlobals;
+extern meta_globals_t PublicMetaGlobals DLLHIDDEN;
+extern meta_globals_t PrivateMetaGlobals DLLHIDDEN;
 
-void metamod_startup(void);
+// hook function tables
+extern DLL_FUNCTIONS* g_pHookedDllFunctions DLLHIDDEN;
+extern NEW_DLL_FUNCTIONS* g_pHookedNewDllFunctions DLLHIDDEN;
 
-mBOOL meta_init_gamedll(void);
-mBOOL meta_load_gamedll(void);
+extern int metamod_not_loaded DLLHIDDEN;
+
+// function tables that have all hooks enabled
+extern meta_enginefuncs_t g_slow_hooks_table_engine;
+extern DLL_FUNCTIONS g_slow_hooks_table_dll;
+extern NEW_DLL_FUNCTIONS g_slow_hooks_table_newdll;
+
+// function tables which have expensive hooks disabled
+extern meta_enginefuncs_t g_fast_hooks_table_engine;
+extern DLL_FUNCTIONS g_fast_hooks_table_dll;
+extern NEW_DLL_FUNCTIONS g_fast_hooks_table_newdll;
+
+// pointer to the engine's dll function table. For enabling/disabling hooks without a restart.
+extern DLL_FUNCTIONS* g_engine_dll_funcs_table;
+
+// Holds cached player info, right now only things for querying cvars
+// Max players is always 32, small enough that we can use a static array
+extern MPlayerList g_Players DLLHIDDEN;
+
+extern int requestid_counter DLLHIDDEN;
+
+int DLLINTERNAL metamod_startup();
+
+mBOOL DLLINTERNAL meta_init_gamedll();
+mBOOL DLLINTERNAL meta_load_gamedll();
 
 // ===== lotsa macros... ======================================================
 
@@ -177,215 +199,74 @@ mBOOL meta_load_gamedll(void);
 
 // ===== macros for void-returning functions ==================================
 
-// declare/init some variables
-#define SETUP_API_CALLS_void(FN_TYPE, pfnName, api_info_table) \
-	int i; \
-	META_RES mres=MRES_UNSET, status=MRES_UNSET, prev_mres=MRES_UNSET; \
-	MPlugin *iplug; \
-	FN_TYPE pfn_routine=NULL; \
-	int loglevel=api_info_table.pfnName.loglevel; \
-	char *pfn_string=api_info_table.pfnName.name; \
-	memset(&PublicMetaGlobals, 0, sizeof(PublicMetaGlobals));
-
-// call each plugin
-#define CALL_PLUGIN_API_void(post, pfnName, pfn_args, api_table) \
-	prev_mres=MRES_UNSET; \
-	for(i=0; i < Plugins->endlist; i++) { \
-		iplug=&Plugins->plist[i]; \
-		if (iplug->status != PL_RUNNING) \
-			continue; \
-		if(iplug->api_table && (pfn_routine=iplug->api_table->pfnName)); \
-		else \
-			/* plugin doesn't provide this function */  \
-			continue; \
-		/* initialize PublicMetaGlobals */ \
-		PublicMetaGlobals.mres = MRES_UNSET; \
-		PublicMetaGlobals.prev_mres = prev_mres; \
-		PublicMetaGlobals.status = status; \
-		/* call plugin */ \
-		META_DEBUG(loglevel, ("Calling %s:%s%s()", iplug->file, pfn_string, (post?"_Post":""))); \
-		pfn_routine pfn_args; \
-		/* plugin's result code */ \
-		mres=PublicMetaGlobals.mres; \
-		if(mres > status) \
-			status = mres; \
-		/* save this for successive plugins to see */ \
-		prev_mres = mres; \
-		if(mres==MRES_UNSET) \
-			META_ERROR("Plugin didn't set meta_result: %s:%s%s()", iplug->file, pfn_string, (post?"_Post":"")); \
-		if(post && mres==MRES_SUPERCEDE) \
-			META_ERROR("MRES_SUPERCEDE not valid in Post functions: %s:%s%s()", iplug->file, pfn_string, (post?"_Post":"")); \
-	}
-
-// call "real" function, from gamedll
-#define CALL_GAME_API_void(pfnName, pfn_args, api_table) \
-	if(status==MRES_SUPERCEDE) { \
-		META_DEBUG(loglevel, ("Skipped (supercede) %s:%s()", GameDLL.file, pfn_string)); \
-		/* don't return here; superceded game routine, but still allow \
-		 * _post routines to run. \
-		 */ \
-	} \
-	else if(GameDLL.funcs.api_table) { \
-		pfn_routine=NULL; \
-		if(GameDLL.funcs.api_table && (pfn_routine=GameDLL.funcs.api_table->pfnName)); \
-		if(pfn_routine) { \
-			META_DEBUG(loglevel, ("Calling %s:%s()", GameDLL.file, pfn_string)); \
-			pfn_routine pfn_args; \
-		} \
-		/* don't complain for NULL routines in NEW_DLL_FUNCTIONS  */ \
-		else if((void*) GameDLL.funcs.api_table != (void*) GameDLL.funcs.newapi_table) { \
-			META_ERROR("Couldn't find api call: %s:%s", GameDLL.file, pfn_string); \
-			status=MRES_UNSET; \
-		} \
-	} \
-	else { \
-		META_DEBUG(loglevel, ("No api table defined for api call: %s:%s", GameDLL.file, pfn_string)); \
-	}
-
-// call "real" function, from engine
-#define CALL_ENGINE_API_void(pfnName, pfn_args) \
-	if(status==MRES_SUPERCEDE) { \
-		META_DEBUG(loglevel, ("Skipped (supercede) engine:%s()", pfn_string)); \
-		/* don't return here; superceded game routine, but still allow \
-		 * _post routines to run. \
-		 */ \
-	} \
-	else { \
-		pfn_routine=NULL; \
-		pfn_routine=Engine.funcs->pfnName; \
-		if(pfn_routine) { \
-			META_DEBUG(loglevel, ("Calling engine:%s()", pfn_string)); \
-			pfn_routine pfn_args; \
-		} \
-		else { \
-			META_ERROR("Couldn't find api call: engine:%s", pfn_string); \
-			status=MRES_UNSET; \
-		} \
-	}
-
 // return (void)
 #define RETURN_API_void() \
 	return;
 
-
 // ===== macros for type-returning functions ==================================
 
-// declare/init some variables
-#define SETUP_API_CALLS(ret_t, ret_init, FN_TYPE, pfnName, api_info_table) \
-	int i; \
-	ret_t dllret=ret_init; \
-	ret_t override_ret=ret_init; \
-	ret_t pub_override_ret=ret_init; \
-	ret_t orig_ret=ret_init; \
-	ret_t pub_orig_ret=ret_init; \
-	META_RES mres=MRES_UNSET, status=MRES_UNSET, prev_mres=MRES_UNSET; \
-	MPlugin *iplug; \
-	FN_TYPE pfn_routine=NULL; \
-	int loglevel=api_info_table.pfnName.loglevel; \
-	char *pfn_string=api_info_table.pfnName.name; \
-	memset(&PublicMetaGlobals, 0, sizeof(PublicMetaGlobals));
-
-// call each plugin
-#define CALL_PLUGIN_API(post, ret_init, pfnName, pfn_args, MRES_TYPE, api_table) \
-	override_ret=ret_init; \
-	prev_mres=MRES_UNSET; \
-	for(i=0; i < Plugins->endlist; i++) { \
-		if (Plugins->plist[i].status != PL_RUNNING) \
-			continue; \
-		iplug=&Plugins->plist[i]; \
-		if(iplug->api_table && (pfn_routine=iplug->api_table->pfnName)); \
-		else \
-			/* plugin doesn't provide this function */  \
-			continue; \
-		/* initialize PublicMetaGlobals */ \
-		PublicMetaGlobals.mres = MRES_UNSET; \
-		PublicMetaGlobals.prev_mres = prev_mres; \
-		PublicMetaGlobals.status = status; \
-		pub_orig_ret = orig_ret; \
-		PublicMetaGlobals.orig_ret = &pub_orig_ret; \
-		if(status==MRES_TYPE) { \
-			pub_override_ret = override_ret; \
-			PublicMetaGlobals.override_ret = &pub_override_ret; \
-		} \
-		/* call plugin */ \
-		META_DEBUG(loglevel, ("Calling %s:%s%s()", iplug->file, pfn_string, (post?"_Post":""))); \
-		dllret=pfn_routine pfn_args; \
-		/* plugin's result code */ \
-		mres=PublicMetaGlobals.mres; \
-		if(mres > status) \
-			status = mres; \
-		/* save this for successive plugins to see */ \
-		prev_mres = mres; \
-		if(mres==MRES_TYPE) \
-			override_ret = pub_override_ret = dllret; \
-		else if(mres==MRES_UNSET) \
-			META_ERROR("Plugin didn't set meta_result: %s:%s%s()", iplug->file, pfn_string, (post?"_Post":"")); \
-		else if(post && mres==MRES_SUPERCEDE) \
-			META_ERROR("MRES_SUPERCEDE not valid in Post functions: %s:%s%s()", iplug->file, pfn_string, (post?"_Post":"")); \
-	}
-
-// call "real" function, from gamedll
-#define CALL_GAME_API(pfnName, pfn_args, api_table) \
-	if(status==MRES_SUPERCEDE) { \
-		META_DEBUG(loglevel, ("Skipped (supercede) %s:%s()", GameDLL.file, pfn_string)); \
-		orig_ret = pub_orig_ret = override_ret; \
-		PublicMetaGlobals.orig_ret = &pub_orig_ret; \
-		/* don't return here; superceded game routine, but still allow \
-		 * _post routines to run. \
-		 */ \
-	} \
-	else if(GameDLL.funcs.api_table) { \
-		pfn_routine=NULL; \
-		if(GameDLL.funcs.api_table && (pfn_routine=GameDLL.funcs.api_table->pfnName)); \
-		if(pfn_routine) { \
-			META_DEBUG(loglevel, ("Calling %s:%s()", GameDLL.file, pfn_string)); \
-			dllret=pfn_routine pfn_args; \
-			orig_ret = dllret; \
-		} \
-		/* don't complain for NULL routines in NEW_DLL_FUNCTIONS  */ \
-		else if((void*) GameDLL.funcs.api_table != (void*) GameDLL.funcs.newapi_table) { \
-			META_ERROR("Couldn't find api call: %s:%s", GameDLL.file, pfn_string); \
-			status=MRES_UNSET; \
-		} \
-	} \
-	else { \
-		META_DEBUG(loglevel, ("No api table defined for api call: %s:%s", GameDLL.file, pfn_string)); \
-	}
-
-// call "real" function, from engine
-#define CALL_ENGINE_API(pfnName, pfn_args) \
-	if(status==MRES_SUPERCEDE) { \
-		META_DEBUG(loglevel, ("Skipped (supercede) engine:%s()", pfn_string)); \
-		orig_ret = pub_orig_ret = override_ret; \
-		PublicMetaGlobals.orig_ret = &pub_orig_ret; \
-		/* don't return here; superceded game routine, but still allow \
-		 * _post routines to run. \
-		 */ \
-	} \
-	else { \
-		pfn_routine=NULL; \
-		pfn_routine=Engine.funcs->pfnName; \
-		if(pfn_routine) { \
-			META_DEBUG(loglevel, ("Calling engine:%s()", pfn_string)); \
-			dllret=pfn_routine pfn_args; \
-			orig_ret = dllret; \
-		} \
-		else { \
-			META_ERROR("Couldn't find api call: engine:%s", pfn_string); \
-			status=MRES_UNSET; \
-		} \
-	}
-
 // return a value
-#define RETURN_API() \
-	if(status==MRES_OVERRIDE) { \
-		META_DEBUG(loglevel, ("Returning (override) %s()", pfn_string)); \
-		return(override_ret); \
-	} \
-	else \
-		return(orig_ret);
+#define RETURN_API(ret_t) \
+	{return(GET_RET_CLASS(ret_val, ret_t));}
 
 // ===== end macros ===========================================================
 
+#ifdef META_PERFMON
+
+// ============================================================================
+// Api-hook performance monitoring
+// ============================================================================
+
+extern long double total_tsc DLLHIDDEN;
+extern unsigned long long count_tsc DLLHIDDEN;
+extern unsigned long long active_tsc DLLHIDDEN;
+extern unsigned long long min_tsc DLLHIDDEN;
+
+inline unsigned long long DLLINTERNAL GET_TSC(void) {
+	union { struct { unsigned int eax, edx; } split; unsigned long long full; } tsc;
+#ifdef __GNUC__
+	__asm__ __volatile__("rdtsc":"=a"(tsc.split.eax), "=d"(tsc.split.edx));
+#else
+	__asm
+	{
+		rdtsc
+		mov tsc.split.eax, eax
+		mov tsc.split.edx, edx
+	}
+#endif
+	return(tsc.full);
+}
+
+#define API_START_TSC_TRACKING() \
+	active_tsc = GET_TSC()
+
+#define API_PAUSE_TSC_TRACKING() \
+	total_tsc += GET_TSC() - active_tsc
+
+#define API_UNPAUSE_TSC_TRACKING() \
+	active_tsc = GET_TSC()
+
+#define API_END_TSC_TRACKING() { \
+		unsigned long long run_tsc = GET_TSC() - active_tsc; \
+		total_tsc += run_tsc; \
+		count_tsc++; \
+		if(min_tsc == 0 || run_tsc < min_tsc) \
+			min_tsc = run_tsc; \
+	}
+
+// ===== end ==================================================================
+
+#else
+
+// ===== performance monitor disabled =========================================
+
+#define API_START_TSC_TRACKING()
+#define API_PAUSE_TSC_TRACKING()
+#define API_UNPAUSE_TSC_TRACKING()
+#define API_END_TSC_TRACKING()
+
+// ===== end ==================================================================
+
+#endif /*META_PERFMON*/
 
 #endif /* METAMOD_H */

@@ -4,7 +4,7 @@
 // reg_support.h - functions for "registered" cmd/cvar/msg support
 
 /*
- * Copyright (c) 2001-2003 Will Day <willday@hpgx.net>
+ * Copyright (c) 2001-2006 Will Day <willday@hpgx.net>
  *
  *    This file is part of Metamod.
  *
@@ -37,11 +37,15 @@
 #ifndef REG_SUPPORT_H
 #define REG_SUPPORT_H
 
+#include "const.h"
+#include "cvardef.h"
 #include "mreg.h"			// REG_CMD_FN, etc
 
-void meta_command_handler(void);
-void meta_AddServerCommand(char *cmd_name, REG_CMD_FN function);
-void meta_CVarRegister(cvar_t *pCvar);
-int meta_RegUserMsg(const char *pszName, int iSize);
+ // these are only 'hidden' because called from outside (plugins and engine)
+void DLLHIDDEN meta_command_handler();
+void DLLHIDDEN meta_AddServerCommand(char* cmd_name, REG_CMD_FN function);
+void DLLHIDDEN meta_CVarRegister(cvar_t* pCvar);
+int DLLHIDDEN meta_RegUserMsg(const char* pszName, int iSize);
+void DLLHIDDEN meta_QueryClientCvarValue(const edict_t* player, const char* cvarName);
 
 #endif /* REG_SUPPORT_H */

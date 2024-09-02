@@ -1,12 +1,7 @@
-// vi: set ts=4 sw=4 :
-// vim: set tw=75 :
-
-// game_support.h - structures for supporting different HL mod "games"
-
 /*
- * Copyright (c) 2001-2006 Will Day <willday@hpgx.net>
+ * Copyright (c) 2004-2006 Jussi Kivilinna
  *
- *    This file is part of Metamod.
+ *    This file is part of "Metamod All-Mod-Support"-patch for Metamod.
  *
  *    Metamod is free software; you can redistribute it and/or modify it
  *    under the terms of the GNU General Public License as published by the
@@ -33,24 +28,42 @@
  *    version.
  *
  */
+#ifndef METAMOD_NEW_BASECLASS_H
+#define METAMOD_NEW_BASECLASS_H
 
-#ifndef GAME_SUPPORT_H
-#define GAME_SUPPORT_H
+#include <malloc.h>
 
-#include "types_meta.h"		// mBOOL
-#include "metamod.h"		// gamedll_t
+#include "comp_dep.h"
 
- // Information we have about each game/mod DLL.
-typedef struct game_modinfo_s {
-	const char* name;		// name (the game dir)
-	const char* linux_so;		// filename of linux shared lib
-	const char* win_dll;		// filename of win32 dll
-	const char* desc;		// our long-name description
-} game_modinfo_t;
+ //new/delete operators with malloc/free to remove need for libstdc++
 
-typedef game_modinfo_t game_modlist_t[];
+class class_metamod_new {
+public:
+	// Construction
+	class_metamod_new() = default;
 
-const DLLINTERNAL game_modinfo_t* lookup_game(const char* name);
-mBOOL DLLINTERNAL setup_gamedll(gamedll_t* gamedll);
+	// Operators
+	void* operator new(size_t size) {
+		if (size == 0)
+			return(calloc(1, 1));
+		return(calloc(1, size));
+	}
 
-#endif /* GAME_SUPPORT_H */
+	void* operator new[](size_t size) {
+		if (size == 0)
+			return(calloc(1, 1));
+		return(calloc(1, size));
+	}
+
+	void operator delete(void* ptr) {
+		//if(ptr)
+		free(ptr);
+	}
+
+	void operator delete[](void* ptr) {
+		//if(ptr)
+		free(ptr);
+	}
+};
+
+#endif /*METAMOD_NEW_BASECLASS_H*/

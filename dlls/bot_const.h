@@ -160,22 +160,19 @@ enum : std::int8_t
 };
 
 // these bits represent the monster's memory
-enum
-{
-	MEMORY_CLEAR = 0,
-	bits_MEMORY_PROVOKED = 1 << 0,	// right now only used for houndeyes.
-	bits_MEMORY_INCOVER = 1 << 1,	// monster knows it is in a covered position.
-	bits_MEMORY_SUSPICIOUS = 1 << 2,	// Ally is suspicious of the player, and will move to provoked more easily
-	bits_MEMORY_PATH_FINISHED = 1 << 3,	// Finished monster path (just used by big momma for now)
-	bits_MEMORY_ON_PATH = 1 << 4,	// Moving on a path
-	bits_MEMORY_MOVE_FAILED = 1 << 5,	// Movement has already failed
-	bits_MEMORY_FLINCHED = 1 << 6,	// Has already flinched
-	bits_MEMORY_KILLED = 1 << 7,	// HACKHACK -- remember that I've already called my Killed()
-	bits_MEMORY_CUSTOM4 = 1 << 28,	// Monster-specific memory
-	bits_MEMORY_CUSTOM3 = 1 << 29,	// Monster-specific memory
-	bits_MEMORY_CUSTOM2 = 1 << 30,	// Monster-specific memory
-	bits_MEMORY_CUSTOM1 = 1 << 31  // Monster-specific memory
-};
+constexpr unsigned int MEMORY_CLEAR = 0;
+constexpr unsigned int bits_MEMORY_PROVOKED = 1 << 0;    // right now only used for houndeyes.
+constexpr unsigned int bits_MEMORY_INCOVER = 1 << 1;     // monster knows it is in a covered position.
+constexpr unsigned int bits_MEMORY_SUSPICIOUS = 1 << 2;  // Ally is suspicious of the player, and will move to provoked more easily
+constexpr unsigned int bits_MEMORY_PATH_FINISHED = 1 << 3; // Finished monster path (just used by big momma for now)
+constexpr unsigned int bits_MEMORY_ON_PATH = 1 << 4;     // Moving on a path
+constexpr unsigned int bits_MEMORY_MOVE_FAILED = 1 << 5; // Movement has already failed
+constexpr unsigned int bits_MEMORY_FLINCHED = 1 << 6;    // Has already flinched
+constexpr unsigned int bits_MEMORY_KILLED = 1 << 7;      // HACKHACK -- remember that I've already called my Killed()
+constexpr unsigned int bits_MEMORY_CUSTOM4 = 1 << 28;    // Monster-specific memory
+constexpr unsigned int bits_MEMORY_CUSTOM3 = 1 << 29;    // Monster-specific memory
+constexpr unsigned int bits_MEMORY_CUSTOM2 = 1 << 30;    // Monster-specific memory
+constexpr unsigned int bits_MEMORY_CUSTOM1 = 1u << 31;   // Monster-specific memory
 
 constexpr int MAX_REMEMBER_POSITIONS = 8;
 

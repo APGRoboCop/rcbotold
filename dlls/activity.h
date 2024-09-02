@@ -1,6 +1,6 @@
 /***
 *
-*	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
+*	Copyright (c) 1996-2001, Valve LLC. All rights reserved.
 *	
 *	This product contains software technology licensed from Id 
 *	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc. 
@@ -17,7 +17,7 @@
 #define	ACTIVITY_H
 
 
-typedef enum {
+typedef enum : std::uint8_t {
 	ACT_RESET = 0,		// Set m_Activity to this invalid value to force a reset to m_IdealActivity
 	ACT_IDLE = 1,
 	ACT_GUARD,

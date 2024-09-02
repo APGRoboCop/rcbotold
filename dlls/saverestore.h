@@ -1,6 +1,6 @@
 /***
 *
-*	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
+*	Copyright (c) 1996-2001, Valve LLC. All rights reserved.
 *
 *	This product contains software technology licensed from Id
 *	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
@@ -59,7 +59,7 @@ public:
 	void	WriteVector(const char* pname, const float* value, int count);	// Save a vector
 	void	WritePositionVector(const char* pname, const Vector& value);		// Offset for landmark if necessary
 	void	WritePositionVector(const char* pname, const float* value, int count);	// array of pos vectors
-	void	WriteFunction(const char* pname, const int* value, int count);		// Save a function pointer
+	void	WriteFunction(const char* pname, void** value, int count);		// Save a function pointer
 	int		WriteEntVars(const char* pname, entvars_t* pev);		// Save entvars_t (entvars_t)
 	int		WriteFields(const char* pname, void* pBaseData, TYPEDESCRIPTION* pFields, int fieldCount);
 
@@ -81,8 +81,7 @@ typedef struct
 class CRestore : public CSaveRestoreBuffer
 {
 public:
-	CRestore(SAVERESTOREDATA* pdata) : CSaveRestoreBuffer(pdata) { m_global = 0; m_precache = 1; }
-
+	CRestore(SAVERESTOREDATA* pdata) : CSaveRestoreBuffer(pdata) { m_global = 0; m_precache = true; }
 	int		ReadEntVars(const char* pname, entvars_t* pev);		// entvars_t
 	int		ReadFields(const char* pname, void* pBaseData, TYPEDESCRIPTION* pFields, int fieldCount);
 	int		ReadField(void* pBaseData, TYPEDESCRIPTION* pFields, int fieldCount, int startField, int size, char* pName, void* pData);

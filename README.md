@@ -34,6 +34,7 @@ V 1.51-beta9
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
+* changed: Using HLSDK for HL1 25th Anniv and Metamod-P headers
 * changed: Replaced most of the #define Marcos with Enumerators and constexpr
 * changed: Strings and enums optimised and modernised
 * changed: Reduced redundant coding and risks of buffer overflow crashes
@@ -52,7 +53,7 @@ V 1.51-beta9
 * TODO: To improve on how to allow bots climb ladders more properly
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
 * TODO: To allow bots in Op4 to use Grapple by using the "Fly" waypoint
-* TODO: To allow proper TDM and CTF support for DMQ2
+* TODO: To allow proper TDM and CTF support for DMQ2 - plus they don't seem to attack the same model regardless if Deathmatch is on
 * TODO: To add proper support for S&I, AHL, FLF and WizWars
 
 V 1.5-final

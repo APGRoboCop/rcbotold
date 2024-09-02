@@ -4,7 +4,7 @@
 // commands_meta.h - prototypes for console commands
 
 /*
- * Copyright (c) 2001-2003 Will Day <willday@hpgx.net>
+ * Copyright (c) 2001-2006 Will Day <willday@hpgx.net>
  *
  *    This file is part of Metamod.
  *
@@ -38,9 +38,10 @@
 #define COMMANDS_META_H
 
 #include "types_meta.h"			// mBOOL
+#include "comp_dep.h"
 
-// Flags to use for meta_cmd_doplug(), to operate on existing plugins; note
-// "load" operates on a non-existing plugin thus isn't included here.
+ // Flags to use for meta_cmd_doplug(), to operate on existing plugins; note
+ // "load" operates on a non-existing plugin thus isn't included here.
 typedef enum {
 	PC_NULL = 0,
 	PC_PAUSE,		// pause the plugin
@@ -54,28 +55,29 @@ typedef enum {
 	PC_REQUIRE,		// require that this plugin is loaded/running
 } PLUG_CMD;
 
-void meta_register_cmdcvar();
+void DLLINTERNAL meta_register_cmdcvar();
 
-void svr_meta(void);
+void DLLHIDDEN svr_meta(); // only hidden because called from outside!
 
-void cmd_meta_usage(void);
-void cmd_meta_version(void);
-void cmd_meta_gpl(void);
+void DLLINTERNAL cmd_meta_usage();
+void DLLINTERNAL cmd_meta_version();
+void DLLINTERNAL cmd_meta_gpl();
 
-void cmd_meta_game(void);
-void cmd_meta_refresh(void);
-void cmd_meta_load(void);
+void DLLINTERNAL cmd_meta_game();
+void DLLINTERNAL cmd_meta_refresh();
+void DLLINTERNAL cmd_meta_load();
 
-void cmd_meta_pluginlist(void);
-void cmd_meta_cmdlist(void);
-void cmd_meta_cvarlist(void);
-void cmd_meta_config(void);
+void DLLINTERNAL cmd_meta_pluginlist();
+void DLLINTERNAL cmd_meta_cmdlist();
+void DLLINTERNAL cmd_meta_cvarlist();
+void DLLINTERNAL cmd_meta_config();
 
-void cmd_doplug(PLUG_CMD pcmd);
+void DLLINTERNAL cmd_doplug(PLUG_CMD pcmd);
 
-void client_meta(edict_t *pEntity);
-void client_meta_usage(edict_t *pEntity);
-void client_meta_version(edict_t *pEntity);
-void client_meta_pluginlist(edict_t *pEntity);
+void DLLINTERNAL client_meta(edict_t* pEntity);
+void DLLINTERNAL client_meta_usage(edict_t* pEntity);
+void DLLINTERNAL client_meta_version(edict_t* pEntity);
+void DLLINTERNAL client_meta_pluginlist(edict_t* pEntity);
+void DLLINTERNAL client_meta_aybabtu(edict_t* pEntity);
 
 #endif /* COMMANDS_META_H */

@@ -1,9 +1,9 @@
 /***
 *
-*	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
-*
-*	This product contains software technology licensed from Id
-*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
+*	Copyright (c) 1996-2002, Valve LLC. All rights reserved.
+*	
+*	This product contains software technology licensed from Id 
+*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc. 
 *	All Rights Reserved.
 *
 *   Use, distribution, and modification of this source code and/or resulting
@@ -22,20 +22,20 @@
 #define ENTITY_NORMAL		(1<<0)
 #define ENTITY_BEAM			(1<<1)
 
-// Entity state is used for the baseline and for delta compression of a packet of
+// Entity state is used for the baseline and for delta compression of a packet of 
 //  entities that is sent to a client.
 typedef entity_state_s entity_state_t;
 
 struct entity_state_s
 {
-	// Fields which are filled in by routines outside of delta compression
+// Fields which are filled in by routines outside of delta compression
 	int			entityType;
 	// Index into cl_entities array for this entity.
-	int			number;
+	int			number;      
 	float		msg_time;
 
 	// Message number last time the player/entity state was updated.
-	int			messagenum;
+	int			messagenum;		
 
 	// Fields which can be transitted and reconstructed over the network stream
 	vec3_t		origin;
@@ -51,7 +51,7 @@ struct entity_state_s
 	float		scale;
 
 	byte		eflags;
-
+	
 	// Render information
 	int			rendermode;
 	int			renderamt;
@@ -67,36 +67,36 @@ struct entity_state_s
 	vec3_t		velocity;
 
 	// Send bbox down to client for use during prediction.
-	vec3_t		mins;
+	vec3_t		mins;    
 	vec3_t		maxs;
 
 	int			aiment;
 	// If owned by a player, the index of that player ( for projectiles ).
-	int			owner;
+	int			owner; 
 
 	// Friction, for prediction.
-	float		friction;
+	float		friction;       
 	// Gravity multiplier
-	float		gravity;
+	float		gravity;		
 
-	// PLAYER SPECIFIC
+// PLAYER SPECIFIC
 	int			team;
 	int			playerclass;
 	int			health;
-	qboolean	spectator;
+	qboolean	spectator;  
 	int         weaponmodel;
 	int			gaitsequence;
 	// If standing on conveyor, e.g.
-	vec3_t		basevelocity;
+	vec3_t		basevelocity;   
 	// Use the crouched hull, or the regular player hull.
-	int			usehull;
+	int			usehull;		
 	// Latched buttons last time state updated.
-	int			oldbuttons;
+	int			oldbuttons;     
 	// -1 = in air, else pmove entity number
-	int			onground;
+	int			onground;		
 	int			iStepLeft;
 	// How fast we are falling
-	float		flFallVelocity;
+	float		flFallVelocity;  
 
 	float		fov;
 	int			weaponanim;
@@ -140,7 +140,7 @@ typedef struct clientdata_s
 	int					bInDuck;
 
 	int					weapons; // remove?
-
+	
 	int					flTimeStepSound;
 	int					flDuckTime;
 	int					flSwimTime;
@@ -157,14 +157,14 @@ typedef struct clientdata_s
 	int					ammo_cells;
 	int					ammo_rockets;
 	float				m_flNextAttack;
-
+	
 	int					tfstate;
 
 	int					pushmsec;
 
 	int					deadflag;
 
-	char				physinfo[MAX_PHYSINFO_STRING];
+	char				physinfo[ MAX_PHYSINFO_STRING ];
 
 	// For mods
 	int					iuser1;
@@ -187,7 +187,7 @@ typedef struct local_state_s
 {
 	entity_state_t playerstate;
 	clientdata_t   client;
-	weapon_data_t  weapondata[32];
+	weapon_data_t  weapondata[ 64 ];
 } local_state_t;
 
 #endif // !ENTITY_STATEH

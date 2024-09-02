@@ -2276,7 +2276,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 
 				if (pSupplier)
 				{
-					pBot->AddPriorityTask(CBotTask(BOT_TASK_ACCEPT_HEALTH, 0, pSupplier, 0, RANDOM_FLOAT(1.5, 2.5)));
+					pBot->AddPriorityTask(CBotTask(BOT_TASK_ACCEPT_HEALTH, 0, pSupplier, 0, RANDOM_FLOAT(1.5f, 2.5f)));
 					pBot->m_bAcceptHealth = false;
 				}
 			}

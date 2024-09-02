@@ -4,7 +4,7 @@
 // vdate.h - compile-time version date
 
 /*
- * Copyright (c) 2001-2003 Will Day <willday@hpgx.net>
+ * Copyright (c) 2001-2006 Will Day <willday@hpgx.net>
  *
  *    This file is part of Metamod.
  *
@@ -37,6 +37,9 @@
 #ifndef VDATE_H
 #define VDATE_H
 
-extern char const *COMPILE_TIME;
+#include "comp_dep.h"
+
+extern char const* COMPILE_TIME DLLHIDDEN;
+extern char const* COMPILE_TZONE DLLHIDDEN;
 
 #endif /* VDATE_H */

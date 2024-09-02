@@ -31,7 +31,7 @@
 #ifndef _MEGAHAL_H_
 #define _MEGAHAL_H_
 
- // HAL-related structure definitions
+// HAL-related structure definitions
 typedef struct
 {
 	unsigned char length; // length of word (for quick access)

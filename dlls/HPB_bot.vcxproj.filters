@@ -247,6 +247,69 @@
     <ClInclude Include="comp_dep.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="activity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pm_shared\pm_materials.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="schedule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="monsterevent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="conf_meta.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dllapi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enginecallbacks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="meta_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_support.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="info_name.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linkent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mlist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metamod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mplugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="new_baseclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mreg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="reg_support.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

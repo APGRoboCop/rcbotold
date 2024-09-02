@@ -21,9 +21,14 @@
 #define INTERFACE_VERSION		140
 #endif // !HLDEMO_BUILD
 
-#include <stdio.h>
+typedef long int32;
+typedef unsigned long uint32;
+typedef unsigned long long uint64;
+
+#include <cstdio>
 #include "custom.h"
 #include "cvardef.h"
+
 //
 // Defines entity interface between engine and DLLs.
 // This header file included by engine files and DLL files.
@@ -33,11 +38,13 @@
 // This is conveniently done for them in extdll.h
 //
 
+/*
 #ifdef _WIN32
 #define DLLEXPORT __stdcall
 #else
-#define DLLEXPORT /* */
+#define DLLEXPORT  __attribute__ ((visibility("default")))
 #endif
+*/
 
 typedef enum : std::uint8_t
 {
@@ -60,9 +67,10 @@ typedef enum : std::uint8_t
 // For integrity checking of content on clients
 typedef enum : std::uint8_t
 {
-	force_exactfile,			// File on client must exactly match server's file
-	force_model_samebounds,		// For model files only, the geometry must fit in the same bbox
-	force_model_specifybounds,	// For model files only, the geometry must fit in the specified bbox
+	force_exactfile,					// File on client must exactly match server's file
+	force_model_samebounds,				// For model files only, the geometry must fit in the same bbox
+	force_model_specifybounds,			// For model files only, the geometry must fit in the specified bbox
+	force_model_specifybounds_if_avail,	// For Steam model files only, the geometry must fit in the specified bbox (if the file is available)
 } FORCE_TYPE;
 
 // Returned by TraceLine
@@ -128,7 +136,7 @@ typedef struct enginefuncs_s
 	int			(*pfnDropToFloor)			(edict_t* e);
 	int			(*pfnWalkMove)				(edict_t* ent, float yaw, float dist, int iMode);
 	void		(*pfnSetOrigin)				(edict_t* e, const float* rgflOrigin);
-	void		(*pfnEmitSound)				(edict_t* entity, int channel, const char* sample, float volume, float attenuation, int fFlags, int pitch);
+	void		(*pfnEmitSound)				(edict_t* entity, int channel, const char* sample, /*int*/float volume, float attenuation, int fFlags, int pitch);
 	void		(*pfnEmitAmbientSound)		(edict_t* entity, float* pos, const char* samp, float vol, float attenuation, int fFlags, int pitch);
 	void		(*pfnTraceLine)				(const float* v1, const float* v2, int fNoMonsters, edict_t* pentToSkip, TraceResult* ptr);
 	void		(*pfnTraceToss)				(edict_t* pent, edict_t* pentToIgnore, TraceResult* ptr);
@@ -162,7 +170,7 @@ typedef struct enginefuncs_s
 	void		(*pfnCVarSetString)			(const char* szVarName, const char* szValue);
 	void		(*pfnAlertMessage)			(ALERT_TYPE atype, const char* szFmt, ...);
 	void		(*pfnEngineFprintf)			(std::FILE* pfile, const char* szFmt, ...);
-	void* (*pfnPvAllocEntPrivateData)	(edict_t* pEdict, long cb);
+	void* (*pfnPvAllocEntPrivateData)	(edict_t* pEdict, int32 cb);
 	void* (*pfnPvEntPrivateData)		(edict_t* pEdict);
 	void		(*pfnFreeEntPrivateData)	(edict_t* pEdict);
 	const char* (*pfnSzFromIndex)			(int iString);
@@ -177,8 +185,8 @@ typedef struct enginefuncs_s
 	int			(*pfnRegUserMsg)			(const char* pszName, int iSize);
 	void		(*pfnAnimationAutomove)		(const edict_t* pEdict, float flTime);
 	void		(*pfnGetBonePosition)		(const edict_t* pEdict, int iBone, float* rgflOrigin, float* rgflAngles);
-	unsigned long (*pfnFunctionFromName)	(const char* pName);
-	const char* (*pfnNameForFunction)		(unsigned long function);
+	uint32(*pfnFunctionFromName)	(const char* pName);
+	const char* (*pfnNameForFunction)		(uint32 function);
 	void		(*pfnClientPrintf)			(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg); // JOHN: engine callbacks so game DLL can print messages to individual clients
 	void		(*pfnServerPrint)			(const char* szMsg);
 	const char* (*pfnCmd_Args)				();		// these 3 added
@@ -189,7 +197,7 @@ typedef struct enginefuncs_s
 	void        (*pfnCRC32_ProcessBuffer)   (CRC32_t* pulCRC, void* p, int len);
 	void		(*pfnCRC32_ProcessByte)     (CRC32_t* pulCRC, unsigned char ch);
 	CRC32_t(*pfnCRC32_Final)			(CRC32_t pulCRC);
-	long		(*pfnRandomLong)			(long  lLow, long  lHigh);
+	int32(*pfnRandomLong)			(int32  lLow, int32  lHigh);
 	float		(*pfnRandomFloat)			(float flLow, float flHigh);
 	void		(*pfnSetView)				(const edict_t* pClient, const edict_t* pViewent);
 	float		(*pfnTime)					();
@@ -213,7 +221,7 @@ typedef struct enginefuncs_s
 	void		(*pfnStaticDecal)			(const float* origin, int decalIndex, int entityIndex, int modelIndex);
 	int			(*pfnPrecacheGeneric)		(char* s);
 	int			(*pfnGetPlayerUserId)		(edict_t* e); // returns the server assigned userid for this player.  useful for logging frags, etc.  returns -1 if the edict couldn't be found in the list of clients
-	void		(*pfnBuildSoundMsg)			(edict_t* entity, int channel, const char* sample, float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float* pOrigin, edict_t* ed);
+	void		(*pfnBuildSoundMsg)			(edict_t* entity, int channel, const char* sample, /*int*/float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float* pOrigin, edict_t* ed);
 	int			(*pfnIsDedicatedServer)		();// is this a dedicated server?
 	cvar_t* (*pfnCVarGetPointer)		(const char* szVarName);
 	unsigned int (*pfnGetPlayerWONId)		(edict_t* e); // returns the server assigned WONid for this player.  useful for logging frags, etc.  returns -1 if the edict couldn't be found in the list of clients
@@ -232,13 +240,13 @@ typedef struct enginefuncs_s
 	int			(*pfnCheckVisibility)		(const edict_t* entity, unsigned char* pset);
 
 	void		(*pfnDeltaSetField)			(struct delta_s* pFields, const char* fieldname);
-	void		(*pfnDeltaUnsetField)		(delta_s* pFields, const char* fieldname);
-	void		(*pfnDeltaAddEncoder)		(char* name, void (*conditionalencode)(delta_s* pFields, const unsigned char* from, const unsigned char* to));
+	void		(*pfnDeltaUnsetField)		(struct delta_s* pFields, const char* fieldname);
+	void		(*pfnDeltaAddEncoder)		(char* name, void (*conditionalencode)(struct delta_s* pFields, const unsigned char* from, const unsigned char* to));
 	int			(*pfnGetCurrentPlayer)		();
 	int			(*pfnCanSkipPlayer)			(const edict_t* player);
-	int			(*pfnDeltaFindField)		(delta_s* pFields, const char* fieldname);
-	void		(*pfnDeltaSetFieldByIndex)	(delta_s* pFields, int fieldNumber);
-	void		(*pfnDeltaUnsetFieldByIndex)(delta_s* pFields, int fieldNumber);
+	int			(*pfnDeltaFindField)		(struct delta_s* pFields, const char* fieldname);
+	void		(*pfnDeltaSetFieldByIndex)	(struct delta_s* pFields, int fieldNumber);
+	void		(*pfnDeltaUnsetFieldByIndex)(struct delta_s* pFields, int fieldNumber);
 
 	void		(*pfnSetGroupMask)			(int mask, int op);
 
@@ -261,20 +269,38 @@ typedef struct enginefuncs_s
 
 	const char* (*pfnGetPlayerAuthId)		(edict_t* e);
 
-	// Steam functions
-	//sequenceEntry_s*
-	void* (*pfnSequenceGet)	(const char* fileName, const char* entryName);
-	void* (*pfnSequencePickSentence)(const char* groupName, int pickMethod, int* picked);
-	int                 (*pfnGetFileSize)	(char* filename);
-	unsigned int		(*pfnGetApproxWavePlayLen) (const char* filepath);
-	int                 (*pfnIsCareerMatch)	();
-	int                 (*pfnGetLocalizedStringLength)(const char* label);
-	void				(*pfnRegisterTutorMessageShown)(int mid);
-	int					(*pfnGetTimesTutorMessageShown)(int mid);
-	void				(*ProcessTutorMessageDecayBuffer)(int* buffer, int bufferLength);
-	void				(*ConstructTutorMessageDecayBuffer)(int* buffer, int bufferLength);
-	void				(*ResetTutorMessageDecayData)();
+	// PSV: Added for CZ training map
+//	const char *(*pfnKeyNameForBinding)		( const char* pBinding );
+
+	//sequenceEntry_s*	(*pfnSequenceGet)			( const char* fileName, const char* entryName );
+	//sentenceEntry_s*	(*pfnSequencePickSentence)	( const char* groupName, int pickMethod, int *picked );
+
+	// LH: Give access to filesize via filesystem
+	int			(*pfnGetFileSize)			(char* filename);
+
+	unsigned int (*pfnGetApproxWavePlayLen) (const char* filepath);
+	// MDC: Added for CZ career-mode
+	int			(*pfnIsCareerMatch)			();
+
+	// BGC: return the number of characters of the localized string referenced by using "label"
+	int			(*pfnGetLocalizedStringLength)(const char* label);
+
+	// BGC: added to facilitate persistent storage of tutor message decay values for
+	// different career game profiles.  Also needs to persist regardless of mp.dll being
+	// destroyed and recreated.
+	void (*pfnRegisterTutorMessageShown)(int mid);
+	int (*pfnGetTimesTutorMessageShown)(int mid);
+	void (*ProcessTutorMessageDecayBuffer)(int* buffer, int bufferLength);
+	void (*ConstructTutorMessageDecayBuffer)(int* buffer, int bufferLength);
+	void (*ResetTutorMessageDecayData)();
+
+	void (*pfnQueryClientCvarValue)(const edict_t* player, const char* cvarName);
+	void (*pfnQueryClientCvarValue2)(const edict_t* player, const char* cvarName, int requestID);
+	int (*pfnCheckParm)(const char* pchCmdLineToken, char** ppnext);
+
+	edict_t* (*pfnPEntityOfEntIndexAllEntities)		(int iEntIndex);
 } enginefuncs_t;
+
 // ONLY ADD NEW FUNCTIONS TO THE END OF THIS STRUCT.  INTERFACE VERSION IS FROZEN AT 138
 
 // Passed to pfnKeyValue
@@ -283,7 +309,7 @@ typedef struct KeyValueData_s
 	const char* szClassName;	// in: entity classname
 	const char* szKeyName;		// in: name of key
 	const char* szValue;		// in: value of key
-	long	fHandled;		// out: DLL sets to true if key-value pair was understood
+	int32		fHandled;		// out: DLL sets to true if key-value pair was understood
 } KeyValueData;
 
 typedef struct
@@ -343,7 +369,7 @@ SAVERESTOREDATA
 #endif
 ;
 
-typedef enum _fieldtypes
+typedef enum fieldtypes : std::uint8_t
 {
 	FIELD_FLOAT = 0,		// Any floating point value
 	FIELD_STRING,			// A string ID (return from ALLOC_STRING)
@@ -367,11 +393,11 @@ typedef enum _fieldtypes
 	FIELD_TYPECOUNT,		// MUST BE LAST
 } FIELDTYPE;
 
-#ifndef offsetof
+#if !defined(offsetof)  && !defined(GNUC)
 #define offsetof(s,m)	(size_t)&(((s *)0)->m)
 #endif
 
-#define _FIELD(type,name,fieldtype,count,flags)		{ fieldtype, #name, offsetof(type, name), count, flags }
+#define FIELD(type,name,fieldtype,count,flags)		{ fieldtype, #name, offsetof(type, name), count, flags }
 #define DEFINE_FIELD(type,name,fieldtype)			_FIELD(type, name, fieldtype, 1, 0)
 #define DEFINE_ARRAY(type,name,fieldtype,count)		_FIELD(type, name, fieldtype, count, 0)
 #define DEFINE_ENTITY_FIELD(name,fieldtype)			_FIELD(entvars_t, name, fieldtype, 1, 0 )
@@ -389,7 +415,9 @@ typedef struct
 	short			flags;
 } TYPEDESCRIPTION;
 
-//#define ARRAYSIZE(p)		(sizeof(p)/sizeof(p[0]))
+#ifndef ARRAYSIZE
+#define ARRAYSIZE(p)		(sizeof(p)/sizeof(p[0]))
+#endif // ARRAYSIZE
 
 typedef struct
 {
@@ -490,6 +518,8 @@ typedef struct
 	void			(*pfnOnFreeEntPrivateData)(edict_t* pEnt);
 	void			(*pfnGameShutdown)();
 	int				(*pfnShouldCollide)(edict_t* pentTouched, edict_t* pentOther);
+	void			(*pfnCvarValue)(const edict_t* pEnt, const char* value);
+	void			(*pfnCvarValue2)(const edict_t* pEnt, int requestID, const char* cvarName, const char* value);
 } NEW_DLL_FUNCTIONS;
 typedef int	(*NEW_DLL_FUNCTIONS_FN)(NEW_DLL_FUNCTIONS* pFunctionTable, int* interfaceVersion);
 

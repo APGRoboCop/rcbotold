@@ -32,7 +32,7 @@
 #ifndef __PERCEPTRON_H__
 #define __PERCEPTRON_H__
 
- //#include "ga.h"
+//#include "ga.h"
 #include "gannconst.h"
 #include <vector>
 

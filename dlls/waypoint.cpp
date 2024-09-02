@@ -672,7 +672,7 @@ std::FILE* CWaypointConversion::openWaypoint() const
 #ifndef __linux__
 	snprintf(szFilename, sizeof(szFilename), "%s\\%s\\%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
 #else
-	snprintf(szFilename, sizeof(szFilename), "%s/%s/%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
+	std::snprintf(szFilename, sizeof(szFilename), "%s/%s/%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
 #endif
 	return std::fopen(szFilename, "wb");
 }
@@ -1710,7 +1710,7 @@ void WaypointDelete(CClient* pClient)
 
 	edict_t* pEntity = pClient->GetPlayer();
 
-	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0, -1, false, true);
+	pClient->m_iCurrentWaypoint = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0f, -1, false, true);
 
 	const int index = pClient->m_iCurrentWaypoint;
 
