@@ -39,7 +39,7 @@
 #define _GNU_SOURCE
 #endif /* linux */
 
-#include <string.h>			// strsignal, strdup, etc
+#include <cstring>			// strsignal, strdup, etc
 #include <errno.h>			// strerror, etc
 
 #include <extdll.h>			// always

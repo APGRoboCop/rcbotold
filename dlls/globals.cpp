@@ -108,10 +108,10 @@ void CBotGlobals::ReadBotFolder()
 
 	if (fp)
 	{
-		if (std::fscanf(fp, "%s\n", rcbot_folder) == 1)
+		if (std::fscanf(fp, "%255s\n", rcbot_folder) == 1)
 		{
 			std::strncpy(m_szBotFolder, rcbot_folder, 255);
-			m_szBotFolder[255] = 0;
+			m_szBotFolder[255] = '\0';
 		}
 
 		BotMessage(nullptr, 0, "Found Bot Folder file : %s", m_szBotFolder);
@@ -553,8 +553,8 @@ void CBotGlobals::StartFrame()
 		{
 			pBot = &m_Bots[iIndex];
 
-			if (!pBot)//TODO: Not required? [APG]RoboCop[CL]
-				continue;
+			//if (!pBot) // Not required? [APG]RoboCop[CL]
+			//	continue;
 
 			if (pBot->m_iRespawnState != RESPAWN_IDLE)
 			{
@@ -1168,7 +1168,7 @@ void CBotGlobals::MapInit()
 	m_fNextJoinTeam = 0.0f;
 	m_iNumBots = 0;
 
-	m_bTeamPlay = true;
+	m_bTeamPlay = false;
 
 	m_currCapPoint = nullptr;
 	m_currFlag = nullptr;

@@ -67,7 +67,8 @@
 
 // Flags returned by a plugin's api function.
 // NOTE: order is crucial, as greater/less comparisons are made.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	MRES_UNSET = 0,
 	MRES_IGNORED,		// plugin didn't take any action
 	MRES_HANDLED,		// plugin did something, but real function should still be called

@@ -52,11 +52,8 @@ public:
 		{
 			return { 0, 0 };
 		}
-		else
-		{
-			flLen = 1 / flLen;
-			return { x * flLen, y * flLen };
-		}
+		flLen = 1 / flLen;
+		return { x * flLen, y * flLen };
 	}
 
 	vec_t	x, y;

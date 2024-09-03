@@ -34,8 +34,8 @@
  *
  */
 
-#include <stdio.h>			// vsnprintf(), etc
-#include <stdarg.h>			// vs_start(), etc
+#include <cstdio>			// vsnprintf(), etc
+#include <cstdarg>			// vs_start(), etc
 
 #include <extdll.h>			// always
 

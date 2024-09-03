@@ -828,7 +828,7 @@ void ClientCommand(edict_t* pEntity)
 				{
 					// argh! someone said something in series of arguments. work out the message
 					int i = 1;
-					int iLenSoFar = 0;
+					size_t iLenSoFar = 0;
 					// for concatenating string dynamically
 					char* szTemp = nullptr;
 					BOOL bWasQuote = false;
@@ -886,14 +886,14 @@ void ClientCommand(edict_t* pEntity)
 							}
 							if (bIsQuote || bWasQuote)
 							{
-								snprintf(szMessage, sizeof(szMessage), "%s%s", szTemp, szArgument);
+								snprintf(szMessage, iLenSoFar + 1, "%s%s", szTemp, szArgument);
 
 								bWasQuote = !bWasQuote;
 							}
 							else
 							{
 								// take space into count (thats what is seperating these words)
-								snprintf(szMessage, sizeof(szMessage), "%s %s", szTemp, szArgument);
+								snprintf(szMessage, iLenSoFar + 1, "%s %s", szTemp, szArgument);
 							}
 
 							std::free(szTemp);
@@ -916,11 +916,11 @@ void ClientCommand(edict_t* pEntity)
 				}
 				else
 				{
-					if (szMessage)
-					{
-						std::free(szMessage);
-						szMessage = nullptr;
-					}
+					//if (szMessage)
+					//{
+					//	std::free(szMessage);
+					//	szMessage = nullptr;
+					//}
 					szMessage = strdup(arg1);
 				}
 
@@ -1345,7 +1345,7 @@ int AddToFullPack(entity_state_s* state, int e, edict_t* ent, edict_t* host, int
 #endif
 }
 
-void CreateBaseline(int player, int eindex, entity_state_s* baseline, edict_s* entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs)
+void CreateBaseline(int player, int eindex, entity_state_s* baseline, edict_s* entity, int playermodelindex, const vec3_t& player_mins, const vec3_t& player_maxs)
 {
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1593,7 +1593,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 	// process all individual commands (separated by a semicolon) one each a time
 	while (stringindex < length)
 	{
-		const int fieldstart = stringindex; // save field start position (first character)
+		const unsigned int fieldstart = stringindex; // save field start position (first character)
 		while (stringindex < length && command[stringindex] != ';')
 			stringindex++; // reach end of field
 		if (command[stringindex - 1] == '\n')
@@ -2159,9 +2159,9 @@ edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOri
 	if (iUser3 == AVH_USER3_RESTOWER)
 	{
 		// find nearest struct resource fountain
-		char* classname[1] = { "func_resource" };
+		const char* classname[1] = { "func_resource" };
 
-		edict_t* pResource = UTIL_FindNearestEntity(classname, 1, vOrigin, 200, false);
+		edict_t* pResource = UTIL_FindNearestEntity(const_cast<char**>(classname), 1, vOrigin, 200, false);
 
 		if (pResource)
 		{

@@ -51,7 +51,7 @@
 class CBits
 {
 public:
-	CBits(unsigned int iNumBits);
+	CBits(int iNumBits);
 	CBits(const CBits* copyBits);
 
 	void setBit(int iBit, BOOL bSet) const;
@@ -64,9 +64,9 @@ public:
 
 	void save(std::FILE* bfp) const;
 
-	void setup(unsigned int iNumBits);
+	void setup(int iNumBits);
 
-	unsigned int numBits() const { return m_iNumBits; }
+	int numBits() const { return m_iNumBits; }
 
 	void copy(const CBits* otherBits);
 
@@ -79,7 +79,7 @@ public:
 	int size() const;
 
 private:
-	unsigned int m_iNumBits;
+	int m_iNumBits;
 	unsigned char* m_cBits;
 	//int m_iSize; // bits' mem size
 };

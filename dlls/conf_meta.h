@@ -50,7 +50,8 @@
 #define MAX_MAPNAME_LENGTH	256
 
 // Supported config value-types.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	CF_NONE = 0,
 	CF_INT,
 	CF_BOOL,

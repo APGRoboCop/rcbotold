@@ -413,25 +413,23 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 				iSound = SOUND_NEEDHEALTH;
 		}*/
 
-		if (iSound == SOUND_UNKNOWN)
-		{
-			// if sample starts with 'd' and is "doors/" or starts with 'p' and is "plats/"...
-			if ((sample[0] == 'd' && !std::strncmp(sample, "doors/", 6)) ||
-				(sample[0] == 'p' && !std::strncmp(sample, "plats/", 6))) {
-				iSound = SOUND_DOOR;
-			}
-			else if (sample[0] == 'w' && !std::strncmp(sample, "weapons/", 8))
-				iSound = SOUND_WEAPON;
-			else if (sample[0] == 'p' && !std::strncmp(sample, "player/", 7))
-			{
-				if (std::strncmp(&sample[7], "pain", 4) == 0)
-					iSound = SOUND_PLAYER_PAIN;
-				else
-					iSound = SOUND_PLAYER;
-			}
-			else if (sample[0] == 'b' && !std::strncmp(sample, "buttons/", 8))
-				iSound = SOUND_BUTTON;
+		// Assuming iSound is always SOUND_UNKNOWN at this point, we can remove the check
+		// and directly proceed with the logic.
+		if ((sample[0] == 'd' && !std::strncmp(sample, "doors/", 6)) ||
+			(sample[0] == 'p' && !std::strncmp(sample, "plats/", 6))) {
+			iSound = SOUND_DOOR;
 		}
+		else if (sample[0] == 'w' && !std::strncmp(sample, "weapons/", 8))
+			iSound = SOUND_WEAPON;
+		else if (sample[0] == 'p' && !std::strncmp(sample, "player/", 7))
+		{
+			if (std::strncmp(&sample[7], "pain", 4) == 0)
+				iSound = SOUND_PLAYER_PAIN;
+			else
+				iSound = SOUND_PLAYER;
+		}
+		else if (sample[0] == 'b' && !std::strncmp(sample, "buttons/", 8))
+			iSound = SOUND_BUTTON;
 
 		if (iSound == SOUND_UNKNOWN)
 		{
@@ -504,8 +502,8 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 		{
 			CBot* pBot = &m_Bot;
 
-			if (pBot == nullptr) //TODO: Not required? [APG]RoboCop[CL]
-				continue;
+			//if (pBot == nullptr) // Not required? [APG]RoboCop[CL]
+			//	continue;
 			if (pBot->m_pEdict == nullptr)
 				continue;
 			if (pBot->m_pEdict == pEntityOwner)

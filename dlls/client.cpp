@@ -399,10 +399,9 @@ void InitMessage ( const char *message );
 			iCurrentWaypoint = WaypointLocations.NearestWaypoint(vOrigin, BOT_WAYPOINT_TOUCH_DIST, -1);
 
 			if (iCurrentWaypoint != -1)
+			{
 				m_iCurrentWaypoint = iCurrentWaypoint;
 
-			if (iCurrentWaypoint != -1)
-			{
 				int n;
 				// check if path waypointing is on...
 
@@ -410,7 +409,7 @@ void InitMessage ( const char *message );
 
 				p = paths[iCurrentWaypoint];
 
-				while (p != nullptr)
+				while (p != nullptr) 
 				{
 					n = 0;
 
@@ -960,8 +959,8 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 		{
 			CBot* pBot = &m_Bot;
 
-			if (pBot == nullptr)
-				continue;
+			//if (pBot == nullptr)
+			//	continue;
 			if (!pBot->m_bIsUsed || !pBot->m_pEdict)
 				continue;
 			if (pBot->m_pEdict == pPlayer)
@@ -1064,8 +1063,8 @@ void CClients::ClientDisconnected(CClient* pClient)
 		{
 			CBot* pBot = &m_Bot;
 
-			if (!pBot)
-				continue;
+			//if (!pBot)
+			//	continue;
 			if (!pBot->m_bIsUsed || !pBot->m_pEdict)
 				continue;
 

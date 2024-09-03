@@ -46,7 +46,8 @@
 #define MAX_LOGMSG_LEN  1024
 
 // For GetGameInfo:
-typedef enum {
+typedef enum : std::uint8_t
+{
 	GINFO_NAME = 0,
 	GINFO_DESC,
 	GINFO_GAMEDIR,

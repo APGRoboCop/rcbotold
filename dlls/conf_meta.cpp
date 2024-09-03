@@ -34,8 +34,8 @@
  *
  */
 
-#include <stdio.h>			// FILE,
-#include <stdlib.h>			// atoi
+#include <cstdio>			// FILE,
+#include <cstdlib>			// atoi
 #include <ctype.h>			// isdigit
 
 #include <extdll.h>			// always

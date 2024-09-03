@@ -51,7 +51,7 @@ V 1.51-beta9
 * TODO: To allow the Onos to be more aggressive and devour humans
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
 * TODO: To improve on how to allow bots climb ladders more properly
-* TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors
+* TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors - maybe allow them to instantly switch weapons?
 * TODO: To allow bots in Op4 to use Grapple by using the "Fly" waypoint
 * TODO: To allow proper TDM and CTF support for DMQ2 - plus they don't seem to attack the same model regardless if Deathmatch is on
 * TODO: To add proper support for S&I, AHL, FLF and WizWars

@@ -295,7 +295,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		iCurrentNode = -1;
 
 		fMinCost = 0.0f;
-		unsigned int bestIndex = 0;
+		int bestIndex = 0;
 
 		bestIndex = sOpenList->GetBestNode(CompareAStarNode);
 
@@ -1500,14 +1500,14 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		{
 			// find nearest pushable
 
-			char* szEntity[1] = { "func_pushable" };
+			const char* szEntity[1] = { "func_pushable" };
 
 			// not already trying to push a pushable
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_PUSH_PUSHABLE))
 			{
 				// get nearest pushable
 
-				if (edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512, false))
+				if (edict_t* pPushable = UTIL_FindNearestEntity(const_cast<char**>(szEntity), 1, vWptOrigin, 512.0f, false))
 				{
 					// if its too far away from the waypoint push it to the waypoint
 					if (!UTIL_AcceptablePushableVector(pPushable, vWptOrigin))
@@ -2075,10 +2075,10 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 							if (iWpt != -1)
 							{
 								// look for possible buttons
-								char* szClassnames[3] = { "func_button","button_target","func_rot_button" };
+								const char* szClassnames[3] = { "func_button", "button_target", "func_rot_button" };
 
 								// check nearby the lift button waypoint
-								edict_t* button = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, true);
+								edict_t* button = UTIL_FindNearestEntity(const_cast<char**>(szClassnames), 3, WaypointOrigin(iWpt), fRange, true);
 
 								if (button)
 								{

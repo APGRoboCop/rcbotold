@@ -33,7 +33,7 @@
 #include "sdk_util.h"
 #include <cbase.h>
 
-#include <string.h>			// for strncpy(), etc
+#include <cstring>			// for strncpy(), etc
 
 #include "osdep.h"			// win32 vsnprintf, etc
 

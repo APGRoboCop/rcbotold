@@ -1035,8 +1035,7 @@ void BotFunc_KickBotFromTeam(int iTeam)
 	for (CBot& m_Bot : gBotGlobals.m_Bots)
 	{
 		pBot = &m_Bot;
-
-		if (pBot && pBot->IsUsed())
+		if (pBot->IsUsed())
 		{
 			if (iTeam == -1 || pBot->pev->team == iTeam)
 				theBots.Add(pBot);
@@ -1097,9 +1096,6 @@ int UTIL_GetBotIndex(const edict_t* pEdict)
 	for (int index = 0; index < MAX_PLAYERS; index++)
 	{
 		const CBot* pBot = &gBotGlobals.m_Bots[index];
-
-		if (!pBot) //TODO: Not required? [APG]RoboCop[CL]
-			continue;
 
 		if (!pBot->IsUsed())
 			continue;

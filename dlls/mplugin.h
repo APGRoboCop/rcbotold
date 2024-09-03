@@ -52,15 +52,16 @@
 
  // Flags to indicate current "load" state of plugin.
  // NOTE: order is important, as greater/less comparisons are made.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	PL_EMPTY = 0,			// empty slot
 	PL_VALID,			// has valid info in it
 	PL_BADFILE,			// nonexistent file (open failed),
 					//    or not a valid plugin file (query failed)
-					PL_OPENED,			// dlopened and queried
-					PL_FAILED,			// opened, but failed to attach or unattach
-					PL_RUNNING,			// attached and running
-					PL_PAUSED,			// attached but paused
+	PL_OPENED,			// dlopened and queried
+	PL_FAILED,			// opened, but failed to attach or unattach
+	PL_RUNNING,			// attached and running
+	PL_PAUSED,			// attached but paused
 } PLUG_STATUS;
 
 // Action to take for plugin at next opportunity.

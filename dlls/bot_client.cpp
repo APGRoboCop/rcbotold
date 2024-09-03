@@ -1545,11 +1545,12 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 	case 6:
 		if (pBot)
 		{
-			const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, true, iRadius, iSlot);
 			const int team = pBot->GetTeam();
 
-			if (team >= 0 && team < MAX_TEAMS)
+			if (team >= 0 && team < MAX_TEAMS) {
+				const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, true, iRadius, iSlot);
 				gBotGlobals.m_TeamTechs[team].addTech(tech);
+			}
 		}
 
 		break;
@@ -2099,6 +2100,7 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 			const int enabled = POINTER_TO_INT(p);
 			pBot->m_Weapons.setHasWeapon(iId, enabled == 1);
 		}
+		break;
 	default:
 		break;
 	}

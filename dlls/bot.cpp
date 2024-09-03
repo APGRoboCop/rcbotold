@@ -1968,7 +1968,6 @@ void CBot::SpawnInit(const BOOL bInit)
 	//    m_bCurrentLookDirIsValid = false;
 
 	m_vMoveToVector = Vector(0, 0, 0);
-	m_bMoveToIsValid = false;
 
 	m_CurrentLookTask = BOT_LOOK_TASK_NEXT_WAYPOINT;
 	m_fLastLookTime = 0.0f;
@@ -3577,7 +3576,7 @@ void CBot::Think()
 			}*/
 		}
 	}
-	break;
+		break;
 	case MOD_TS: //TODO: Add BOT_TASK_RELOAD to allow bots to reload sooner when attacking and running on a empty clip
 	{
 		/*if ( gBotGlobals.m_iForceTeam != -1 )
@@ -3624,9 +3623,10 @@ void CBot::Think()
 				// make origin behind bot so it looks around
 				Vector origin = GetGunPosition() - gpGlobals->v_forward * 128;
 
-				BotEvent(BOT_EVENT_HURT, nullptr, nullptr, static_cast<float*>(origin));
+				BotEvent(BOT_EVENT_HURT, nullptr, nullptr, origin);
 			}
 		}
+		break;
 	}
 	default:
 		break;
@@ -4231,7 +4231,6 @@ void CBot::LookForNewTasks()
 				{
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					continue;
 				}
 			}
 		}
@@ -4241,7 +4240,6 @@ void CBot::LookForNewTasks()
 				if (CanPickup(pEntity)) {
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					continue;
 				}
 			}
 			break;
@@ -4369,7 +4367,6 @@ void CBot::LookForNewTasks()
 				{
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					continue;
 				}
 			}
 			break;
@@ -4413,7 +4410,6 @@ void CBot::LookForNewTasks()
 					{
 						fNearestButtonDist = fDistance;
 						pNearestButton = pEntity;
-						continue;
 					}
 				}
 			}
@@ -4426,9 +4422,9 @@ void CBot::LookForNewTasks()
 				{
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					continue;
 				}
 			}
+			break;
 		}
 		case MOD_SI:
 			if (!pNearestPickupEntity || fDistance < fNearestPickupEntityDist)
@@ -4470,7 +4466,6 @@ void CBot::LookForNewTasks()
 					{
 						fNearestButtonDist = fDistance;
 						pNearestButton = pEntity;
-						continue;
 					}
 				}
 			}
@@ -4478,7 +4473,6 @@ void CBot::LookForNewTasks()
 		case MOD_FLF:
 			break;
 		case MOD_NS:
-
 			if (bCanBuild)
 			{
 				if (EntityIsBuildable(pEntity))
@@ -4490,7 +4484,6 @@ void CBot::LookForNewTasks()
 					}
 				}
 			}
-
 			if (bIsMarine)
 			{
 				if (pEntitypev->iuser3 == AVH_USER3_ARMORY || pEntitypev->iuser3 == AVH_USER3_ADVANCED_ARMORY)
@@ -4502,7 +4495,6 @@ void CBot::LookForNewTasks()
 						continue;
 					}
 				}
-
 				if (!pNearestWeldable || fDistance < fNearestWeldableDist)
 				{
 					if (EntityIsWeldable(pEntity))
@@ -4512,14 +4504,12 @@ void CBot::LookForNewTasks()
 						continue;
 					}
 				}
-
 				if (bCanCommand && pEntitypev->iuser3 == AVH_USER3_COMMANDER_STATION)
 				{
 					if (!pNearestCommandStation || fDistance < fNearestCommandStationDist)
 					{
 						pNearestCommandStation = pEntity;
 						fNearestCommandStationDist = fDistance;
-						continue;
 					}
 				}
 			}
@@ -4538,7 +4528,6 @@ void CBot::LookForNewTasks()
 							fNearestBuildPositionDist = fDistance;
 						}
 					}
-
 					if (EntityIsAlive(pEntity) && EntityIsAlien(pEntity) && pEntitypev->health < pEntitypev->max_health * 0.75f && (!pNearestHealablePlayer || fDistance < fNearestHealablePlayerDist))
 					{
 						// If not a structure, OK
@@ -4572,7 +4561,6 @@ void CBot::LookForNewTasks()
 				//......
 			}*/
 			}
-
 			break;
 		}
 	}
@@ -10617,7 +10605,7 @@ Vector CBotSquad::GetFormationVector(edict_t* pEdict) const
 	break;
 	}
 
-	vBase = vBase * m_fDesiredSpread * iPosition;
+	vBase = vBase * m_fDesiredSpread * static_cast<float>(iPosition);
 
 	TraceResult tr;
 
@@ -11684,14 +11672,12 @@ void CBot::DoTasks()
 
 		//		BOOL bGotPath = m_CurrentTask->HasPath();
 
-				// May need to create a new task in some cases
-				// a bit crap, should just add them on the fly (do this sometimes)
+		// May need to create a new task in some cases
+		// a bit crap, should just add them on the fly (do this sometimes)
 		CBotTask TaskToAdd = CBotTask(BOT_TASK_NONE);
-
 		eBotTask iTask = m_CurrentTask->Task();
 
 		m_bLookForNewTasks = false;
-
 		m_bHasAskedForOrder = false;
 
 		RemoveCondition(BOT_CONDITION_TASKS_CORRUPTED);
@@ -11726,7 +11712,6 @@ void CBot::DoTasks()
 				UTIL_MakeVectors(pev->v_angle);
 
 				m_CurrentTask->SetVector(pev->origin + gpGlobals->v_forward * 100);
-
 				m_CurrentLookTask = BOT_LOOK_TASK_NEXT_WAYPOINT;
 
 				FakeClientCommand(m_pEdict, "build 2");
@@ -11740,7 +11725,6 @@ void CBot::DoTasks()
 				//FakeClientCommand(m_pEdict,"menuselect 2");
 
 				m_CurrentTask->SetInt(1);
-
 				m_CurrentTask->SetTimeToComplete(RANDOM_FLOAT(8.0f, 10.0f));
 
 				// look for current sentries around player and ignore it for finding my sentry
@@ -12491,20 +12475,23 @@ void CBot::DoTasks()
 								pos = tr.vecEndPos;
 							}
 							else
+							{
 								pos = EntityOrigin(pSound);
-
+							}
 							if (m_iWaypointGoalIndex == -1 || !(WaypointFlags(m_iWaypointGoalIndex) & W_FL_ENDLEVEL))
 							{
 								iGotoWpt = WaypointLocations.NearestWaypoint(pos, REACHABLE_RANGE, -1, false, false);
 							}
+							break;
 						}
-						break;
 						default:
 							break;
 						}*/
 
 						if (iGotoWpt != -1)
+						{
 							TaskToAdd = CBotTask(BOT_TASK_FIND_PATH, m_CurrentTask->GetScheduleId(), pSound, iGotoWpt, -2);
+						}
 					}
 				}
 

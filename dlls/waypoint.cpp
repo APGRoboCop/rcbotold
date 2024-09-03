@@ -1086,7 +1086,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 
 		if (*pPath)
 		{
-			if (*pPath && (*pPath)->next != nullptr)
+			if ((*pPath)->next != nullptr)
 			{
 				*pPath = (*pPath)->next;
 			}
