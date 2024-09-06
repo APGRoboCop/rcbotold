@@ -16,7 +16,7 @@
 #ifndef _STUDIO_H_
 #define _STUDIO_H_
 
-#include <cstdint> // Include this header for std::uint8_t //[APG]RoboCop[CL]
+#include <cstdint>
 #include "eiface.h"
 #include "util.h"
 #include "vector.h"
@@ -345,7 +345,7 @@ typedef struct
 #define STUDIO_RLOOP	0x8000	// controller that wraps shortest distance
 
 // sequence flags
-constexpr std::uint16_t STUDIO_LOOPING = 0x0001;
+#define STUDIO_LOOPING	0x0001
 
 // bone flags
 #define STUDIO_HAS_NORMALS	0x0001
@@ -353,7 +353,7 @@ constexpr std::uint16_t STUDIO_LOOPING = 0x0001;
 #define STUDIO_HAS_BBOX		0x0004
 #define STUDIO_HAS_CHROME	0x0008	// if any of the textures have chrome on them
 
-constexpr double RAD_TO_STUDIO = 32768.0 / M_PI;
-constexpr double STUDIO_TO_RAD = M_PI / 32768.0;
+#define RAD_TO_STUDIO		(32768.0/M_PI)
+#define STUDIO_TO_RAD		(M_PI/32768.0)
 
 #endif

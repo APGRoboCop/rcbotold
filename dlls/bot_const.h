@@ -1237,17 +1237,17 @@ enum : std::uint8_t
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b8_mm_debug"
+#define BOT_VER "1.51b10_mm_debug"
 #else
-#define BOT_VER "1.51b8_mm"
+#define BOT_VER "1.51b10_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b8_debug"
+#define BOT_VER "1.51b10_debug"
 #else
-#define BOT_VER "1.51b8"
+#define BOT_VER "1.51b10"
 #endif
 
 #endif
@@ -1261,17 +1261,17 @@ enum : std::uint8_t
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b8_mm_debug"
+#define BOT_VER "1.51b10_mm_debug"
 #else
-#define BOT_VER "1.51b8_mm"
+#define BOT_VER "1.51b10_mm"
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b8_debug"
+#define BOT_VER "1.51b10_debug"
 #else
-#define BOT_VER "1.51b8"
+#define BOT_VER "1.51b10"
 #endif
 
 #endif

@@ -676,7 +676,7 @@ int pfnPointContents(const float* rgflVector)
 
 void pfnMessageBegin(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
 {
-	BOOL no_error = gBotGlobals.NetMessageStarted(msg_dest, msg_type, pOrigin, ed);
+	//BOOL no_error = gBotGlobals.NetMessageStarted(msg_dest, msg_type, pOrigin, ed); //Unused? [APG]RoboCop[CL]
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);

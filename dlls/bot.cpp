@@ -8964,7 +8964,8 @@ void CBot::RunPlayerMove()
 		}
 	}*/
 
-	//Don't convert `pev->button` and `pev->impulse` into C++ casts otherwise TS bots won't stunt dive [APG]RoboCop[CL]
+	//TODO: Don't convert `pev->button` and `pev->impulse` into C++ casts
+	//otherwise TS bots won't stunt dive [APG]RoboCop[CL]
 	(*g_engfuncs.pfnRunPlayerMove)(m_pEdict, pev->angles, m_fMoveSpeed, m_fStrafeSpeed, m_fUpSpeed, pev->button,
 		pev->impulse, m_iMsecVal);
 }

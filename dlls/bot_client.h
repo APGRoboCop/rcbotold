@@ -781,13 +781,13 @@ public:
 	{
 	}
 private:
-	std::vector <edict_t*> m_ReceivedPlayers;
+	std::vector<edict_t*> m_ReceivedPlayers;
 	Vector m_vOrderOrigin;
 	AvHOrderType m_iOrderType;
 	AvHOrderTargetType m_iOrderTargetType;
 	int iOrderStatus = 0;
 	int iReceivers = 0;
-	int	iEntityUser3 = 0;
+	int iEntityUser3 = 0;
 };
 
 #endif

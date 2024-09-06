@@ -6803,6 +6803,7 @@ private:
 	// TFC
 	eMapType m_MapType;
 
+	//TODO: To be used for WizWars
 	int max_team_players[MAX_TEAMS];
 	int team_class_limits[MAX_TEAMS];
 	int team_allies[MAX_TEAMS];

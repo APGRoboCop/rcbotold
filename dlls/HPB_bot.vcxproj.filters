@@ -101,6 +101,9 @@
     <ClCompile Include="waypoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="botcam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bot_ga.h">
@@ -308,6 +311,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="reg_support.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="botcam.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

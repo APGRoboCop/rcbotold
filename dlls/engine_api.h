@@ -208,8 +208,8 @@ typedef int (*FN_DELTAFINDFIELD) (struct delta_s* pFields, const char* fieldname
 typedef void (*FN_DELTASETFIELDBYINDEX) (struct delta_s* pFields, int fieldNumber);
 typedef void (*FN_DELTAUNSETFIELDBYINDEX) (struct delta_s* pFields, int fieldNumber);
 typedef void (*FN_SETGROUPMASK) (int mask, int op);
-typedef int (*FN_CREATEINSTANCEDBASELINE) (int classname, entity_state_s* baseline);
-typedef void (*FN_CVAR_DIRECTSET) (cvar_s* var, char* value);
+typedef int (*FN_CREATEINSTANCEDBASELINE) (int classname, struct entity_state_s* baseline);
+typedef void (*FN_CVAR_DIRECTSET) (struct cvar_s* var, char* value);
 typedef void (*FN_FORCEUNMODIFIED) (FORCE_TYPE type, float* mins, float* maxs, const char* filename);
 typedef void (*FN_GETPLAYERSTATS) (const edict_t* pClient, int* ping, int* packet_loss);
 typedef void (*FN_ADDSERVERCOMMAND) (char* cmd_name, void (*function) ());

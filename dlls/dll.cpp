@@ -70,6 +70,8 @@
 #include "waypoint.h"
 #include "bot_commands.h"
 
+#include "botcam.h" //RedFox
+
 #ifndef RCBOT_META_BUILD
 extern GETENTITYAPI other_GetEntityAPI;
 extern GETNEWDLLFUNCTIONS other_GetNewDLLFunctions;
@@ -1006,7 +1008,7 @@ void ClientCommand(edict_t* pEntity)
 	}
 	else if (FStrEq(pcmd, BOT_COMMAND_ACCESS) &&
 		(!IS_DEDICATED_SERVER() && pEntity != gBotGlobals.m_pListenServerEdict ||
-			IS_DEDICATED_SERVER()))
+		IS_DEDICATED_SERVER()))
 	{
 		gBotGlobals.m_CurrentHandledCvar = gBotGlobals.m_BotCvars.GetCvar(arg1);
 

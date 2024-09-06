@@ -275,10 +275,10 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 	int iSuccNodeFlags;
 
-	BOOL m_bIsLerk = pBot->IsLerk();
+	BOOL m_bIsLerk = pBot->IsLerk(); //Unused? [APG]RoboCop[CL]
 
 	int iBotTeam = pBot->GetTeam();
-	BOOL bCanThrowGren = pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE);
+	BOOL bCanThrowGren = pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE); //Unused? [APG]RoboCop[CL]
 
 	BOOL bIsTeleport;
 	//	CBaseToggle *pToggle;
@@ -394,7 +394,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 				if (iSuccNodeFlags & W_FL_PAIN)
 				{
 					edict_t* pent = nullptr;
-					BOOL bFound = false;
+					BOOL bFound = false; //Unused? [APG]RoboCop[CL]
 					edict_t* pNearest = nullptr;
 					float fNearestDist = 0;
 
@@ -1574,46 +1574,43 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 			return false;
 		}
-		else
+		vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
+		pBot->m_iCurrentWaypointFlags = WaypointFlags(pBot->m_iCurrentWaypointIndex);
+
+		if (/*!gBotGlobals.IsMod(MOD_TFC) &&*/ (pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE) && pBot->m_iCurrentWaypointFlags & W_FL_GREN_THROW))
 		{
-			vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
-			pBot->m_iCurrentWaypointFlags = WaypointFlags(pBot->m_iCurrentWaypointIndex);
+			pBot->AddPriorityTask(CBotTask(BOT_TASK_THROW_GRENADE, 0, nullptr, 0, 0, vWptOrigin));
+		}
+		else if (pBot->pev->flags & FL_ONGROUND && pBot->pev->waterlevel < 3 && (pBot->m_iCurrentWaypointFlags &
+			W_FL_JUMP && iPrevFlags & W_FL_CROUCH || pBot->m_iCurrentWaypointFlags & W_FL_JUMP && pBot->
+			m_iCurrentWaypointFlags & W_FL_STAY_NEAR))
+		{
+			pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_AND_FACE_VECTOR, 0, nullptr, 0, 0.75f, vWptOrigin));
+		}
 
-			if (/*!gBotGlobals.IsMod(MOD_TFC) &&*/ (pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE) && pBot->m_iCurrentWaypointFlags & W_FL_GREN_THROW))
-			{
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_THROW_GRENADE, 0, nullptr, 0, 0, vWptOrigin));
-			}
-			else if (pBot->pev->flags & FL_ONGROUND && pBot->pev->waterlevel < 3 && (pBot->m_iCurrentWaypointFlags &
-				W_FL_JUMP && iPrevFlags & W_FL_CROUCH || pBot->m_iCurrentWaypointFlags & W_FL_JUMP && pBot->
-				m_iCurrentWaypointFlags & W_FL_STAY_NEAR))
-			{
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_AND_FACE_VECTOR, 0, nullptr, 0, 0.75f, vWptOrigin));
-			}
-
-			/*if ( pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) )
+		/*if ( pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) )
 			{
 				// stand still and face waypoint.
 				pBot->AddPriorityTask(CBotTask(BOT_TASK_FACE_VECTOR,0,NULL,0,0.0,vWptOrigin));
 			}*/
 
-			int iNextwpt = pBot->GetNextWaypoint();
+		int iNextwpt = pBot->GetNextWaypoint();
 
-			if (pBot->m_iCurrentWaypointFlags & W_FL_WAIT_FOR_LIFT)
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, nullptr, 0, 0, vWptOrigin));
-			else if (pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) && (iNextwpt != -1 && WaypointFlags(iNextwpt) & W_FL_WAIT_FOR_LIFT))
-				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, nullptr, 0, 0, WaypointOrigin(iNextwpt)));
-			else if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_LIFT))
+		if (pBot->m_iCurrentWaypointFlags & W_FL_WAIT_FOR_LIFT)
+			pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, nullptr, 0, 0, vWptOrigin));
+		else if (pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) && (iNextwpt != -1 && WaypointFlags(iNextwpt) & W_FL_WAIT_FOR_LIFT))
+			pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, nullptr, 0, 0, WaypointOrigin(iNextwpt)));
+		else if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_LIFT))
+		{
+			BOOL bCheckNext = iNextwpt != -1 && pBot->m_iCurrentWaypointFlags & W_FL_CHECK_LIFT;
+
+			if (bCheckNext && CheckLift(pBot, WaypointOrigin(pBot->m_iCurrentWaypointIndex), WaypointOrigin(iNextwpt)))
 			{
-				BOOL bCheckNext = iNextwpt != -1 && pBot->m_iCurrentWaypointFlags & W_FL_CHECK_LIFT;
-
-				if (bCheckNext && CheckLift(pBot, WaypointOrigin(pBot->m_iCurrentWaypointIndex), WaypointOrigin(iNextwpt)))
-				{
-					//
-				}
-				else if (CheckLift(pBot, WaypointOrigin(pBot->m_iPrevWaypointIndex), WaypointOrigin(pBot->m_iCurrentWaypointIndex)))
-				{
-					//
-				}
+				//
+			}
+			else if (CheckLift(pBot, WaypointOrigin(pBot->m_iPrevWaypointIndex), WaypointOrigin(pBot->m_iCurrentWaypointIndex)))
+			{
+				//
 			}
 		}
 
