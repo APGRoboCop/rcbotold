@@ -4,7 +4,7 @@
 // types_meta.h - common internal type, etc definitions
 
 /*
- * Copyright (c) 2001-2006 Will Day <willday@hpgx.net>
+ * Copyright (c) 2001-2003 Will Day <willday@hpgx.net>
  *
  *    This file is part of Metamod.
  *
@@ -37,8 +37,6 @@
 #ifndef TYPES_META_H
 #define TYPES_META_H
 
-#include "comp_dep.h"
-
  // Our own boolean type, for stricter type matching.
 typedef enum mBOOL : std::uint8_t
 {
@@ -53,7 +51,6 @@ typedef enum : std::uint8_t
 	ME_NOERROR = 0,
 	ME_FORMAT,			// invalid format
 	ME_COMMENT,			// ignored comment
-	ME_BLANK,			// ignored blank (empty) line
 	ME_ALREADY,			// request had already been done
 	ME_DELAYED,			// request is delayed
 	ME_NOTALLOWED,		// request not allowed
@@ -72,10 +69,8 @@ typedef enum : std::uint8_t
 	ME_DLMISSING,		// symbol missing in lib/dll
 	ME_DLERROR,			// some other error encountered calling functions from dll
 	ME_IFVERSION,		// incompatible interface version
-	ME_UNLOAD_UNLOADER,	// tried to unload unloader
-	ME_UNLOAD_SELF,		// tried to unload self
 } META_ERRNO;
-extern META_ERRNO meta_errno DLLHIDDEN;
+extern META_ERRNO meta_errno;
 
 #define RETURN_ERRNO(retval, errval) \
 	do { meta_errno=errval; return(retval); } while(0)

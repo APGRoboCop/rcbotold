@@ -1,10 +1,3 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
-//
-// Purpose: 
-//
-// $NoKeywords: $
-//=============================================================================
-
 #if !defined EDICT_H
 #define EDICT_H
 #ifdef _WIN32
@@ -12,14 +5,12 @@
 #endif
 #define	MAX_ENT_LEAFS	48
 
-#include "progdefs.h"
-
 struct edict_s
 {
 	qboolean	free;
 	int			serialnumber;
 	link_t		area;				// linked to a division node or leaf
-	
+
 	int			headnode;			// -1 to use normal leaf check
 	int			num_leafs;
 	short		leafnums[MAX_ENT_LEAFS];

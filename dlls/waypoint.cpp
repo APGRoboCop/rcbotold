@@ -672,7 +672,7 @@ std::FILE* CWaypointConversion::openWaypoint() const
 #ifndef __linux__
 	snprintf(szFilename, sizeof(szFilename), "%s\\%s\\%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
 #else
-	std::snprintf(szFilename, sizeof(szFilename), "%s/%s/%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
+	snprintf(szFilename, sizeof(szFilename), "%s/%s/%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
 #endif
 	return std::fopen(szFilename, "wb");
 }
@@ -1086,7 +1086,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 
 		if (*pPath)
 		{
-			if ((*pPath)->next != nullptr)
+			if (*pPath && (*pPath)->next != nullptr)
 			{
 				*pPath = (*pPath)->next;
 			}

@@ -42,7 +42,7 @@
 #include <setjmp.h>			// sigsetjmp, longjmp, etc
 #endif /* linux */
 
-#include <cstring>			// strpbrk, etc
+#include <string.h>			// strpbrk, etc
 
 #include <extdll.h>			// always
 

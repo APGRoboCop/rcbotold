@@ -4,7 +4,7 @@
 // game_support.h - structures for supporting different HL mod "games"
 
 /*
- * Copyright (c) 2001-2006 Will Day <willday@hpgx.net>
+ * Copyright (c) 2001-2003 Will Day <willday@hpgx.net>
  *
  *    This file is part of Metamod.
  *
@@ -40,17 +40,16 @@
 #include "types_meta.h"		// mBOOL
 #include "metamod.h"		// gamedll_t
 
- // Information we have about each game/mod DLL.
+// Information we have about each game/mod DLL.
 typedef struct game_modinfo_s {
-	const char* name;		// name (the game dir)
-	const char* linux_so;		// filename of linux shared lib
-	const char* win_dll;		// filename of win32 dll
-	const char* desc;		// our long-name description
+	char *name;			// name (the game dir)
+	char *linux_so;		// filename of linux shared lib
+	char *win_dll;		// filename of win32 dll
+	char *desc;			// our long-name description
 } game_modinfo_t;
 
 typedef game_modinfo_t game_modlist_t[];
-
-const DLLINTERNAL game_modinfo_t* lookup_game(const char* name);
-mBOOL DLLINTERNAL setup_gamedll(gamedll_t* gamedll);
+game_modinfo_t *lookup_game(const char *name);
+mBOOL setup_gamedll(gamedll_t *gamedll);
 
 #endif /* GAME_SUPPORT_H */

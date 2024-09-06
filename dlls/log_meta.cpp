@@ -34,8 +34,8 @@
  *
  */
 
-#include <cstdio>		// vsnprintf, etc
-#include <cstdarg>		// va_start, etc
+#include <stdio.h>		// vsnprintf, etc
+#include <stdarg.h>		// va_start, etc
 
 #include <extdll.h>				// always
 #include <enginecallback.h>		// ALERT, etc

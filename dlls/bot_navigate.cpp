@@ -295,7 +295,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 		iCurrentNode = -1;
 
 		fMinCost = 0.0f;
-		int bestIndex = 0;
+		unsigned int bestIndex = 0;
 
 		bestIndex = sOpenList->GetBestNode(CompareAStarNode);
 
@@ -1500,14 +1500,14 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		{
 			// find nearest pushable
 
-			const char* szEntity[1] = { "func_pushable" };
+			char* szEntity[1] = { "func_pushable" };
 
 			// not already trying to push a pushable
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_PUSH_PUSHABLE))
 			{
 				// get nearest pushable
 
-				if (edict_t* pPushable = UTIL_FindNearestEntity(const_cast<char**>(szEntity), 1, vWptOrigin, 512.0f, false))
+				if (edict_t* pPushable = UTIL_FindNearestEntity(szEntity, 1, vWptOrigin, 512, false))
 				{
 					// if its too far away from the waypoint push it to the waypoint
 					if (!UTIL_AcceptablePushableVector(pPushable, vWptOrigin))
@@ -1574,43 +1574,46 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 			return false;
 		}
-		vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
-		pBot->m_iCurrentWaypointFlags = WaypointFlags(pBot->m_iCurrentWaypointIndex);
-
-		if (/*!gBotGlobals.IsMod(MOD_TFC) &&*/ (pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE) && pBot->m_iCurrentWaypointFlags & W_FL_GREN_THROW))
+		else
 		{
-			pBot->AddPriorityTask(CBotTask(BOT_TASK_THROW_GRENADE, 0, nullptr, 0, 0, vWptOrigin));
-		}
-		else if (pBot->pev->flags & FL_ONGROUND && pBot->pev->waterlevel < 3 && (pBot->m_iCurrentWaypointFlags &
-			W_FL_JUMP && iPrevFlags & W_FL_CROUCH || pBot->m_iCurrentWaypointFlags & W_FL_JUMP && pBot->
-			m_iCurrentWaypointFlags & W_FL_STAY_NEAR))
-		{
-			pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_AND_FACE_VECTOR, 0, nullptr, 0, 0.75f, vWptOrigin));
-		}
+			vWptOrigin = WaypointOrigin(pBot->m_iCurrentWaypointIndex);
+			pBot->m_iCurrentWaypointFlags = WaypointFlags(pBot->m_iCurrentWaypointIndex);
 
-		/*if ( pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) )
+			if (/*!gBotGlobals.IsMod(MOD_TFC) &&*/ (pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE) && pBot->m_iCurrentWaypointFlags & W_FL_GREN_THROW))
+			{
+				pBot->AddPriorityTask(CBotTask(BOT_TASK_THROW_GRENADE, 0, nullptr, 0, 0, vWptOrigin));
+			}
+			else if (pBot->pev->flags & FL_ONGROUND && pBot->pev->waterlevel < 3 && (pBot->m_iCurrentWaypointFlags &
+				W_FL_JUMP && iPrevFlags & W_FL_CROUCH || pBot->m_iCurrentWaypointFlags & W_FL_JUMP && pBot->
+				m_iCurrentWaypointFlags & W_FL_STAY_NEAR))
+			{
+				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_AND_FACE_VECTOR, 0, nullptr, 0, 0.75f, vWptOrigin));
+			}
+
+			/*if ( pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) )
 			{
 				// stand still and face waypoint.
 				pBot->AddPriorityTask(CBotTask(BOT_TASK_FACE_VECTOR,0,NULL,0,0.0,vWptOrigin));
 			}*/
 
-		int iNextwpt = pBot->GetNextWaypoint();
+			int iNextwpt = pBot->GetNextWaypoint();
 
-		if (pBot->m_iCurrentWaypointFlags & W_FL_WAIT_FOR_LIFT)
-			pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, nullptr, 0, 0, vWptOrigin));
-		else if (pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) && (iNextwpt != -1 && WaypointFlags(iNextwpt) & W_FL_WAIT_FOR_LIFT))
-			pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, nullptr, 0, 0, WaypointOrigin(iNextwpt)));
-		else if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_LIFT))
-		{
-			BOOL bCheckNext = iNextwpt != -1 && pBot->m_iCurrentWaypointFlags & W_FL_CHECK_LIFT;
+			if (pBot->m_iCurrentWaypointFlags & W_FL_WAIT_FOR_LIFT)
+				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, nullptr, 0, 0, vWptOrigin));
+			else if (pBot->m_iCurrentWaypointFlags & (W_FL_JUMP | W_FL_CROUCHJUMP) && (iNextwpt != -1 && WaypointFlags(iNextwpt) & W_FL_WAIT_FOR_LIFT))
+				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, nullptr, 0, 0, WaypointOrigin(iNextwpt)));
+			else if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_LIFT))
+			{
+				BOOL bCheckNext = iNextwpt != -1 && pBot->m_iCurrentWaypointFlags & W_FL_CHECK_LIFT;
 
-			if (bCheckNext && CheckLift(pBot, WaypointOrigin(pBot->m_iCurrentWaypointIndex), WaypointOrigin(iNextwpt)))
-			{
-				//
-			}
-			else if (CheckLift(pBot, WaypointOrigin(pBot->m_iPrevWaypointIndex), WaypointOrigin(pBot->m_iCurrentWaypointIndex)))
-			{
-				//
+				if (bCheckNext && CheckLift(pBot, WaypointOrigin(pBot->m_iCurrentWaypointIndex), WaypointOrigin(iNextwpt)))
+				{
+					//
+				}
+				else if (CheckLift(pBot, WaypointOrigin(pBot->m_iPrevWaypointIndex), WaypointOrigin(pBot->m_iCurrentWaypointIndex)))
+				{
+					//
+				}
 			}
 		}
 
@@ -2072,10 +2075,10 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 							if (iWpt != -1)
 							{
 								// look for possible buttons
-								const char* szClassnames[3] = { "func_button", "button_target", "func_rot_button" };
+								char* szClassnames[3] = { "func_button","button_target","func_rot_button" };
 
 								// check nearby the lift button waypoint
-								edict_t* button = UTIL_FindNearestEntity(const_cast<char**>(szClassnames), 3, WaypointOrigin(iWpt), fRange, true);
+								edict_t* button = UTIL_FindNearestEntity(szClassnames, 3, WaypointOrigin(iWpt), fRange, true);
 
 								if (button)
 								{

@@ -40,7 +40,7 @@
 #define _GNU_SOURCE
 #endif /* linux */
 
-#include <cstring>			// strsignal, etc
+#include <string.h>			// strsignal, etc
 
 #include <extdll.h>			// always
 #include "sdk_util.h"		// REG_SVR_COMMAND, etc

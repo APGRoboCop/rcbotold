@@ -1,21 +1,5 @@
-/***
-*
-*	Copyright (c) 1996-2001, Valve LLC. All rights reserved.
-*
-*	This product contains software technology licensed from Id
-*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
-*	All Rights Reserved.
-*
-*   Use, distribution, and modification of this source code and/or resulting
-*   object code is restricted to non-commercial enhancements to products from
-*   Valve LLC.  All other use, distribution, or modification is prohibited
-*   without written permission from Valve LLC.
-*
-****/
-#ifndef PLAYER_H
-#define PLAYER_H
-
-#include "pm_materials.h"
+#ifndef __PLAYER_H__
+#define __PLAYER_H__
 
 #define PLAYER_FATAL_FALL_SPEED		1024// approx 60 feet
 #define PLAYER_MAX_SAFE_FALL_SPEED	580// approx 20 feet
@@ -94,24 +78,11 @@ enum sbar_data : std::uint8_t
 	SBAR_END,
 };
 
-constexpr float CHAT_INTERVAL = 1.0f;
+#define CHAT_INTERVAL 1.0f
 
 class CBasePlayer : public CBaseMonster
 {
 public:
-
-	// Spectator camera
-	void	Observer_FindNextPlayer(bool bReverse);
-	void	Observer_HandleButtons();
-	void	Observer_SetMode(int iMode);
-	void	Observer_CheckTarget();
-	void	Observer_CheckProperties();
-	EHANDLE	m_hObserverTarget;
-	float	m_flNextObserverInput;
-	int		m_iObserverWeapon;	// weapon of current tracked target
-	int		m_iObserverLastMode;// last used observer mode
-	int		IsObserver() { return pev->iuser1; }
-
 	int					random_seed;    // See that is shared between client & server for shared weapons code
 
 	int					m_iPlayerSound;// the index of the sound list slot reserved for this player
@@ -171,7 +142,7 @@ public:
 	BOOL				m_fInitHUD;				// True when deferred HUD restart msg needs to be sent
 	BOOL				m_fGameHUDInitialized;
 	int					m_iTrain;				// Train control position
-	BOOL				m_fWeapon;				// Set this to FALSE to force a reset of the current weapon HUD info
+	BOOL				m_fWeapon;				// Set this to false to force a reset of the current weapon HUD info
 
 	EHANDLE				m_pTank;				// the tank which the player is currently controlling,  NULL if no tank
 	float				m_fDeadTime;			// the time at which the player died  (used in PlayerDeathThink())
@@ -199,7 +170,7 @@ public:
 	Vector				m_vecAutoAim;
 	BOOL				m_fOnTarget;
 	int					m_iDeaths;
-	float				m_flRespawnTimer;	// used in PlayerDeathThink() to make sure players can always respawn
+	float				m_iRespawnFrames;	// used in PlayerDeathThink() to make sure players can always respawn
 
 	int m_lastx, m_lasty;  // These are the previous update's crosshair angles, DON"T SAVE/RESTORE
 
@@ -208,7 +179,7 @@ public:
 
 	char m_szTeamName[TEAM_NAME_LENGTH];
 
-	virtual void Spawn();
+	void Spawn();
 	void Pain();
 
 	//	virtual void Think( void );
@@ -216,23 +187,35 @@ public:
 	virtual void Duck();
 	virtual void PreThink();
 	virtual void PostThink();
-	Vector GetGunPosition() override;
+	virtual Vector GetGunPosition();
 	int TakeHealth(float flHealth, int bitsDamageType);
 	void TraceAttack(entvars_t* pevAttacker, float flDamage, Vector vecDir, TraceResult* ptr, int bitsDamageType);
 	int TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType);
 	void Killed(entvars_t* pevAttacker, int iGib);
-	Vector BodyTarget(const Vector& posSrc) { return Center() + pev->view_ofs * RANDOM_FLOAT(0.5f, 1.1f); }
-	// position to shoot at
-	virtual void StartSneaking() { m_tSneaking = gpGlobals->time - 1; }
-	virtual void StopSneaking() { m_tSneaking = gpGlobals->time + 30; }
-	virtual BOOL IsSneaking() { return m_tSneaking <= gpGlobals->time; }
-	BOOL IsAlive() override { return (pev->deadflag == DEAD_NO) && pev->health > 0; }
-	BOOL ShouldFadeOnDeath() override { return false; }
-	virtual	BOOL IsPlayer() { return true; }			// Spectators should return FALSE for this, they aren't "players" as far as game logic is concerned
 
-	virtual BOOL IsNetClient() { return true; }		// Bots should return FALSE for this, they can't receive NET messages
-	// Spectators should return TRUE for this
-	virtual const char* TeamID();
+	Vector BodyTarget(const Vector& posSrc)
+	{
+		int pev = 0;
+		return Center() + pev->view_ofs * RANDOM_FLOAT(0.5f, 1.1f);
+	} // position to shoot at
+
+	void StartSneaking() { m_tSneaking = gpGlobals->time - 1; }
+	void StopSneaking() { m_tSneaking = gpGlobals->time + 30; }
+	BOOL IsSneaking() { return m_tSneaking <= gpGlobals->time; }
+
+	static BOOL IsAlive()
+
+	{
+		BOOL pev = 0;
+		return pev->deadflag == DEAD_NO && pev->health > 0;
+	}
+
+	BOOL ShouldFadeOnDeath() override { return false; }
+	static BOOL IsPlayer() { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
+
+	static BOOL IsNetClient() { return true; }		// Bots should return false for this, they can't receive NET messages
+	// Spectators should return true for this
+	const char* TeamID();
 
 	int		Save(CSave& save);
 	int		Restore(CRestore& restore);
@@ -244,20 +227,18 @@ public:
 	// JOHN:  sends custom messages if player HUD data has changed  (eg health, ammo)
 	virtual void UpdateClientData();
 
-	void SetPrefsFromUserinfo(char* infobuffer);
-
 	static	TYPEDESCRIPTION m_playerSaveData[];
 
 	// Player is moved across the transition by other means
-	virtual int		ObjectCaps() { return CBaseMonster::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
-	virtual void	Precache();
+	int				ObjectCaps() { return CBaseMonster::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
+	void			Precache();
 	BOOL			IsOnLadder();
 	BOOL			FlashlightIsOn();
 	void			FlashlightTurnOn();
 	void			FlashlightTurnOff();
 
 	void UpdatePlayerSound();
-	void DeathSound() override;
+	void DeathSound();
 
 	int Classify();
 	void SetAnimation(PLAYER_ANIM playerAnim);
@@ -278,7 +259,6 @@ public:
 	void DropPlayerItem(char* pszItemName);
 	BOOL HasPlayerItem(CBasePlayerItem* pCheckItem);
 	BOOL HasNamedPlayerItem(const char* pszItemName);
-	BOOL HasPlayerItemFromID(int nID);
 	BOOL HasWeapons();// do I have ANY weapons?
 	void SelectPrevItem(int iItem);
 	void SelectNextItem(int iItem);
@@ -302,8 +282,8 @@ public:
 	void CheckTimeBasedDamage();
 
 	BOOL FBecomeProne();
-	void BarnacleVictimBitten(entvars_t* pevBarnacle) override;
-	void BarnacleVictimReleased() override;
+	void BarnacleVictimBitten(entvars_t* pevBarnacle);
+	void BarnacleVictimReleased();
 	static int GetAmmoIndex(const char* psz);
 	int AmmoInventory(int iAmmoIndex);
 	int Illumination();
@@ -337,13 +317,12 @@ public:
 	char m_SbarString1[SBAR_STRING_SIZE];
 
 	float m_flNextChatTime;
-	int	m_iAutoWepSwitch;
 };
 
-constexpr double AUTOAIM_2DEGREES = 0.0348994967025;
-constexpr double AUTOAIM_5DEGREES = 0.08715574274766;
-constexpr double AUTOAIM_8DEGREES = 0.1391731009601;
-constexpr double AUTOAIM_10DEGREES = 0.1736481776669;
+#define AUTOAIM_2DEGREES  0.0348994967025
+#define AUTOAIM_5DEGREES  0.08715574274766
+#define AUTOAIM_8DEGREES  0.1391731009601
+#define AUTOAIM_10DEGREES 0.1736481776669
 
 extern int	gmsgHudText;
 extern BOOL gInitHUD;

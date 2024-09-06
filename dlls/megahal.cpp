@@ -663,8 +663,8 @@ void HAL_InitializeDictionary(HAL_DICTIONARY* dictionary)
 	constexpr HAL_STRING word = { 7, "<ERROR>" };
 	constexpr HAL_STRING end = { 5, "<FIN>" };
 
-	HAL_AddWord(dictionary, word);
-	HAL_AddWord(dictionary, end);
+	(void)HAL_AddWord(dictionary, word);
+	(void)HAL_AddWord(dictionary, end);
 }
 
 HAL_DICTIONARY* HAL_NewDictionary()
@@ -1246,7 +1246,8 @@ int strpos(char* pos, char* start)
 
 void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int start, int end)
 {
-	const unsigned int size = sizeof(char) * (maxstring + 1);
+	const int size = sizeof(char) * (maxstring + 1);
+
 	char* before = static_cast<char*>(std::malloc(size));
 	char* after = static_cast<char*>(std::malloc(size));
 
@@ -1256,7 +1257,7 @@ void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int st
 	std::strncpy(before, string, start);
 	std::strncpy(after, &string[end], maxstring - end);
 
-	snprintf(string, maxstring, "%s%s%s", before, fill, after);
+	snprintf(string, sizeof(string), "%s%s%s", before, fill, after);
 
 	//	if (before != NULL)
 	std::free(before);

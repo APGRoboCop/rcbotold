@@ -376,7 +376,7 @@ public:
 
 	void RemoveSaveRep(int iBotProfile, int iPlayerRepId);
 
-	void SaveAllRep(int iBotProfile) const;
+	void SaveAllRep(int iBotProfile);
 
 	void AddLoadRep(int iBotProfile, int iPlayerRepId);
 
@@ -3750,7 +3750,6 @@ public:
 	}
 
 	CBot(edict_t* newpEdict)
-		: m_iRespawnState(RESPAWN_NEED_TO_RESPAWN) // Initialize m_iRespawnState
 	{
 		SetEdict(newpEdict);
 	}
@@ -4701,7 +4700,7 @@ public:
 
 	static void ClientDisconnected(CClient* pClient);
 
-	CClient* GetClientByIndex(const int iIndex)
+	CClient* GetClientByIndex(int iIndex)
 	{
 		if (iIndex >= 0 && iIndex < MAX_PLAYERS)
 			return &m_Clients[iIndex];
@@ -6055,7 +6054,7 @@ private:
 class CBotNSTechs
 {
 public:
-	void addTech(const CBotNSTech& tech)
+	void addTech(CBotNSTech tech)
 	{
 		if (!m_Techs.IsMember(tech))
 			m_Techs.Add(tech);
@@ -6778,7 +6777,7 @@ public:
 
 	void buildFileName(const char* in_filename, char* out_filename)
 	{
-		std::sprintf(out_filename, "%s%s", m_szBotFolder, in_filename);
+		snprintf(out_filename, sizeof(out_filename), "%s%s", m_szBotFolder, in_filename);
 	}
 
 	const char* botFolder() const
@@ -6912,7 +6911,7 @@ char PM_FindTextureType(char* name);
 void SetupVisibility(edict_t* pViewEntity, edict_t* pClient, unsigned char** pvs, unsigned char** pas);
 void UpdateClientData(const edict_s* ent, int sendweapons, clientdata_s* cd);
 int AddToFullPack(entity_state_s* state, int e, edict_t* ent, edict_t* host, int hostflags, int player, unsigned char* pSet);
-void CreateBaseline(int player, int eindex, entity_state_s* baseline, edict_s* entity, int playermodelindex, const vec3_t& player_mins, const vec3_t& player_maxs);
+void CreateBaseline(int player, int eindex, entity_state_s* baseline, edict_s* entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs);
 void RegisterEncoders();
 int GetWeaponData(edict_s* player, weapon_data_s* info);
 void CmdStart(const edict_t* player, const usercmd_s* cmd, unsigned int random_seed);

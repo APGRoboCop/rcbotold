@@ -19,7 +19,6 @@
 // Global header file for extension DLLs
 //
 
-#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
@@ -82,8 +81,8 @@ typedef unsigned char BYTE;
 #endif
 
 // Header file containing definition of globalvars_t and entvars_t
-typedef unsigned int func_t;
-typedef unsigned int string_t;
+typedef int	func_t;					//
+typedef int	string_t;				// from engine's pr_comp.h;
 typedef float vec_t;				// needed before including progdefs.h
 
 // Vector class

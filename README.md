@@ -20,7 +20,7 @@ Supported Mods
 RCBot versions
 --------------
 
-V 1.51-beta9
+V 1.51-beta10
 ---------
 
 * added: Enhanced performance and stability
@@ -34,7 +34,6 @@ V 1.51-beta9
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
-* changed: Using HLSDK for HL1 25th Anniv and Metamod-P headers
 * changed: Replaced most of the #define Marcos with Enumerators and constexpr
 * changed: Strings and enums optimised and modernised
 * changed: Reduced redundant coding and risks of buffer overflow crashes

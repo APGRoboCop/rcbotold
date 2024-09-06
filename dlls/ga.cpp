@@ -389,14 +389,12 @@ IIndividual* CRouletteSelection::select(CPopulation* population)
 std::FILE* RCBOpenFile(const char* file, const char* readtype, eGASaveType savedtype, int iId)
 {
 	char filename[256];
-	char tmpfilename[256] = {}; // Initialize tmpfilename to ensure it is not used uninitialized
+	char tmpfilename[256];
 
 	if (savedtype == SAVETYPE_BOT)
 		snprintf(tmpfilename, sizeof(tmpfilename), "%dp%s.rce", iId, file); // iId = profileid
 	else if (savedtype == SAVETYPE_TEAM)
 		snprintf(tmpfilename, sizeof(tmpfilename), "%dt%s.rce", iId, file); // iId = team id
-	else
-		snprintf(tmpfilename, sizeof(tmpfilename), "default_%s.rce", file); // Handle unexpected savedtype
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmpfilename);
 

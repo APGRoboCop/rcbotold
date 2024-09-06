@@ -1,10 +1,12 @@
 // vi: set ts=4 sw=4 :
 // vim: set tw=75 :
 
+#ifdef UNFINISHED
+
 // tqueue.h - template classes for Queue and QItem
 
 /*
- * Copyright (c) 2001-2006 Will Day <willday@hpgx.net>
+ * Copyright (c) 2001-2003 Will Day <willday@hpgx.net>
  *
  *    This file is part of Metamod.
  *
@@ -33,81 +35,110 @@
  *    version.
  *
  */
- /*
- #ifndef TQUEUE_H
- #define TQUEUE_H
 
- #include "new_baseclass.h"
+#ifndef TQUEUE_H
+#define TQUEUE_H
 
- // Forward declarations.
- template<class qdata_t> class Queue;
+#define MAX_QUEUE_SIZE	50
 
- // Template for Queue.
- template<class qdata_t> class Queue : public class_metamod_new {
-	 private:
-	 // private copy/assign constructors:
-		 Queue(const Queue &src);
-		 void operator=(const Queue &src);
-	 protected:
-	 // structs:
-		 class QItem : public class_metamod_new {
-			 private:
-			 // private copy/assign constructors:
-				 QItem(const QItem &src);
-				 void operator=(const QItem &src);
-			 public:
-				 qdata_t *data;
-				 QItem *next;
-				 QItem(void) :data(NULL), next(NULL) { };
-				 QItem(qdata_t *dnew) :data(dnew), next(NULL) { };
-		 };
-	 // data:
-		 int size;
-		 QItem *front;
-		 QItem *end;
-	 public:
-	 // constructor:
-		 Queue(void) :size(0), front(NULL), end(NULL) {};
-	 // functions:
-		 void push(qdata_t *qadd);
-		 qdata_t * pop(void);
- };
+#include "osdep.h"			// MUTEX_T, etc
 
- ///// Template Queue:
+// Forward declarations.
+template<class qdata_t> class Queue;
 
- // Push onto the queue (at end).
- template<class qdata_t> inline void Queue<qdata_t>::push(qdata_t *qadd) {
-	 QItem *qnew = new QItem(qadd);
+// Template for Queue.
+template<class qdata_t>
+class Queue {
+	private:
+	// private copy/assign constructors:
+		Queue(const Queue &src);
+		void operator=(const Queue &src);
+	protected:
+	// structs:
+		class QItem {
+			private:
+			// private copy/assign constructors:
+				QItem(const QItem &src);
+				void operator=(const QItem &src);
+			public:
+				qdata_t *data;
+				QItem *next;
+				QItem(void) :data(NULL), next(NULL) { };
+				QItem(qdata_t *dnew) :data(dnew), next(NULL) { };
+		};
+	// data:
+		int size;
+		int max_size;
+		QItem *front;
+		QItem *end;
+		MUTEX_T mx_queue;
+		COND_T cv_push;
+		COND_T cv_pop;
+	//functions
+		int MXlock(void) { return(MUTEX_LOCK(&mx_queue)); };
+		int MXunlock(void) { return(MUTEX_UNLOCK(&mx_queue)); };
+	public:
+	// constructor:
+		Queue(void);
+		Queue(int qmaxsize);
+	// functions:
+		void push(qdata_t *qadd);
+		qdata_t* pop(void);
+};
 
-	 if(size==0)
-		 front=qnew;
-	 else
-		 end->next=qnew;
 
-	 end=qnew;
+///// Template Queue:
 
-	 size++;
- }
+// Queue constructor (default).
+template<class qdata_t> Queue<qdata_t>::Queue(void)
+	: size(0), max_size(MAX_QUEUE_SIZE), front(NULL), end(NULL), mx_queue(), 
+	  cv_push(), cv_pop()
+{
+	MUTEX_INIT(&mx_queue);
+	COND_INIT(&cv_push);
+	COND_INIT(&cv_pop);
+}
 
- // Pop from queue (from front).  Wait for an item to actually be available
- // on the queue (block until there's something there).
- template<class qdata_t> inline qdata_t* Queue<qdata_t>::pop(void) {
-	 QItem *qtmp;
-	 qdata_t *ret;
+// Queue constructor.
+template<class qdata_t> Queue<qdata_t>::Queue(int qmaxsize)
+	: size(0), max_size(qmaxsize), front(NULL), end(NULL), mx_queue(), 
+	  cv_push(), cv_pop()
+{
+	MUTEX_INIT(&mx_queue);
+	COND_INIT(&cv_push);
+	COND_INIT(&cv_pop);
+}
 
-	 if(size==0)
-		 return(NULL);
+// Push onto the queue (at end).
+template<class qdata_t> void Queue<qdata_t>::push(qdata_t *qadd) {
+	QItem *qnew;
+	MXlock();
+	while(size >= max_size)
+		COND_WAIT(&cv_push, &mx_queue);
+	qnew = new QItem(qadd);
+	end->next = qnew;
+	end=qnew;
+	size++;
+	MXunlock();
+}
 
-	 qtmp=front;
+// Pop from queue (from front).  Wait for an item to actually be available
+// on the queue (block until there's something there).
+template<class qdata_t> qdata_t* Queue<qdata_t>::pop(void) {
+	QItem *qtmp;
+	qdata_t *ret;
+	MXlock();
+	while(!size)
+		COND_WAIT(&cv_pop, &mx_queue);
+	qtmp=front;
+	front=qtmp->next;
+	size--;
+	ret=qtmp->data;
+	delete qtmp;
+	MXunlock();
+	return(ret);
+}
 
-	 ret=front->data;
-	 front=front->next;
+#endif /* TQUEUE_H */
 
-	 delete qtmp;
-
-	 size--;
-
-	 return(ret);
- }
-
- #endif*/ /* TQUEUE_H */
+#endif /* UNFINISHED */

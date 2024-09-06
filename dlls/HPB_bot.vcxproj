@@ -349,7 +349,6 @@
     <ClInclude Include="..\engine\progdefs.h" />
     <ClInclude Include="..\engine\studio.h" />
     <ClInclude Include="..\pm_shared\pm_info.h" />
-    <ClInclude Include="..\pm_shared\pm_materials.h" />
     <ClInclude Include="actionutility.h" />
     <ClInclude Include="activity.h" />
     <ClInclude Include="basemonster.h" />
@@ -366,12 +365,12 @@
     <ClInclude Include="bot_weapons.h" />
     <ClInclude Include="cbase.h" />
     <ClInclude Include="cdll_dll.h" />
+    <ClInclude Include="commands_meta.h" />
     <ClInclude Include="comp_dep.h" />
     <ClInclude Include="conf_meta.h" />
     <ClInclude Include="dir.h" />
     <ClInclude Include="dllapi.h" />
     <ClInclude Include="enginecallback.h" />
-    <ClInclude Include="enginecallbacks.h" />
     <ClInclude Include="engine_api.h" />
     <ClInclude Include="extdll.h" />
     <ClInclude Include="ga.h" />
@@ -389,7 +388,6 @@
     <ClInclude Include="mplugin.h" />
     <ClInclude Include="mreg.h" />
     <ClInclude Include="mutil.h" />
-    <ClInclude Include="new_baseclass.h" />
     <ClInclude Include="nn.h" />
     <ClInclude Include="osdep.h" />
     <ClInclude Include="perceptron.h" />

@@ -1,6 +1,6 @@
 /***
 *
-*	Copyright (c) 1996-2001, Valve LLC. All rights reserved.
+*	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
 *
 *	This product contains software technology licensed from Id
 *	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
@@ -34,8 +34,8 @@ inline void MESSAGE_BEGIN(int msg_dest, int msg_type, const float* pOrigin, entv
 extern globalvars_t* gpGlobals;
 
 // Use this instead of ALLOC_STRING on constant strings
-#define STRING(offset)		((const char *)(gpGlobals->pStringBase + (unsigned int)(offset)))
-#define MAKE_STRING(str)	((uint64)(str) - (uint64)(STRING(0)))
+#define STRING(offset)		(const char *)(gpGlobals->pStringBase + (int)(offset))
+#define MAKE_STRING(str)	((int)(str) - (int)STRING(0))
 
 inline edict_t* FIND_ENTITY_BY_CLASSNAME(edict_t* entStart, const char* pszName)
 {
@@ -54,7 +54,8 @@ inline edict_t* FIND_ENTITY_BY_TARGET(edict_t* entStart, const char* pszName)
 }
 
 // Keeps clutter down a bit, when writing key-value pairs
-#define WRITEKEY_INT(pf, szKeyName, iKeyValue) ENGINE_FPRINTF(pf, "\"%s\" \"%d\"\n", szKeyName, iKeyValue)
+#define WRITEKEY_INT(pf, szKeyName, iKeyValue)									\
+		ENGINE_FPRINTF(pf, "\"%s\" \"%d\"\n", szKeyName, iKeyValue)
 #define WRITEKEY_FLOAT(pf, szKeyName, flKeyValue)								\
 		ENGINE_FPRINTF(pf, "\"%s\" \"%f\"\n", szKeyName, flKeyValue)
 #define WRITEKEY_STRING(pf, szKeyName, szKeyValue)								\
@@ -85,22 +86,15 @@ typedef int BOOL;
 #define M_PI			3.14159265358979323846
 
 // Keeps clutter down a bit, when declaring external entity/global method prototypes
-#define DECLARE_GLOBAL_METHOD(MethodName)  extern void UTIL_DLLEXPORT MethodName()
-#define GLOBAL_METHOD(funcname)					void UTIL_DLLEXPORT funcname()
-
-#ifndef UTIL_DLLEXPORT
-#ifdef _WIN32
-#define UTIL_DLLEXPORT _declspec( dllexport )
-#else
-#define UTIL_DLLEXPORT __attribute__ ((visibility("default")))
-#endif
-#endif
+#define DECLARE_GLOBAL_METHOD(MethodName) \
+		extern void DLLEXPORT MethodName( void )
+#define GLOBAL_METHOD(funcname)					void DLLEXPORT funcname(void)
 
 // This is the glue that hooks .MAP entity class names to our CPP classes
 // The _declspec forces them to be exported by name so we can do a lookup with GetProcAddress()
 // The function is used to intialize / allocate the object for the entity
 #define LINK_ENTITY_TO_CLASS(mapClassName,DLLClassName) \
-	extern "C" UTIL_DLLEXPORT void mapClassName( entvars_t *pev ); \
+	extern "C" EXPORT void mapClassName( entvars_t *pev ); \
 	void mapClassName( entvars_t *pev ) { GetClassPtr( (DLLClassName *)pev ); }
 
 //
@@ -117,7 +111,7 @@ inline edict_t* ENT(EOFFSET eoffset) { return (*g_engfuncs.pfnPEntityOfEntOffset
 inline EOFFSET OFFSET(EOFFSET eoffset) { return eoffset; }
 inline EOFFSET OFFSET(const edict_t* pent)
 {
-#if _DEBUG
+#ifdef _DEBUG
 	if (!pent)
 		ALERT(at_error, "Bad ent in OFFSET()\n");
 #endif
@@ -125,7 +119,7 @@ inline EOFFSET OFFSET(const edict_t* pent)
 }
 inline EOFFSET OFFSET(entvars_t* pev)
 {
-#if _DEBUG
+#ifdef _DEBUG
 	if (!pev)
 		ALERT(at_error, "Bad pev in OFFSET()\n");
 #endif
@@ -252,11 +246,12 @@ extern void			UTIL_ShowMessage(const char* pString, CBaseEntity* pPlayer);
 extern void			UTIL_ShowMessageAll(const char* pString);
 extern void			UTIL_ScreenFadeAll(const Vector& color, float fadeTime, float holdTime, int alpha, int flags);
 extern void			UTIL_ScreenFade(CBaseEntity* pEntity, const Vector& color, float fadeTime, float fadeHold, int alpha, int flags);
+
 typedef enum : std::uint8_t { ignore_monsters = 1, dont_ignore_monsters = 0, missile = 2 } IGNORE_MONSTERS;
 typedef enum : std::uint8_t { ignore_glass = 1, dont_ignore_glass = 0 } IGNORE_GLASS;
 extern void			UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon, edict_t* pentIgnore, TraceResult* ptr);
 extern void			UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon, IGNORE_GLASS ignoreGlass, edict_t* pentIgnore, TraceResult* ptr);
-typedef enum : std::uint8_t { point_hull = 0, human_hull = 1, large_hull = 2, head_hull = 3 } hull_enum;
+typedef enum { point_hull = 0, human_hull = 1, large_hull = 2, head_hull = 3 } hull_enum;
 extern void			UTIL_TraceHull(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon, int hullNumber, edict_t* pentIgnore, TraceResult* ptr);
 extern TraceResult	UTIL_GetGlobalTrace();
 extern void			UTIL_TraceModel(const Vector& vecStart, const Vector& vecEnd, int hullNumber, edict_t* pentModel, TraceResult* ptr);
@@ -345,7 +340,7 @@ extern void			UTIL_LogPrintf(const char* fmt, ...);
 // Sorta like FInViewCone, but for nonmonsters.
 extern float UTIL_DotPoints(const Vector& vecSrc, const Vector& vecCheck, const Vector& vecDir);
 
-extern void UTIL_StripToken(const char* pKey, char* pDest, int nLen);// for redundant keynames
+extern void UTIL_StripToken(const char* pKey, char* pDest);// for redundant keynames
 
 // Misc functions
 extern void SetMovedir(entvars_t* pev);
@@ -430,7 +425,6 @@ extern DLL_GLOBAL int			g_Language;
 #define SVC_CDTRACK			32
 #define SVC_WEAPONANIM		35
 #define SVC_ROOMTYPE		37
-#define	SVC_DIRECTOR		51
 
 // triggers
 #define	SF_TRIGGER_ALLOWMONSTERS	1// monsters allowed to fire this trigger
@@ -463,7 +457,7 @@ extern DLL_GLOBAL int			g_Language;
 
 // sentence groups
 #define CBSENTENCENAME_MAX 16
-#define CVOXFILESENTENCEMAX		2048		// max number of sentences in game. NOTE: this must match
+#define CVOXFILESENTENCEMAX		1536		// max number of sentences in game. NOTE: this must match
 											// CVOXFILESENTENCEMAX in engine\sound.h!!!
 
 extern char gszallsentencenames[CVOXFILESENTENCEMAX][CBSENTENCENAME_MAX];
@@ -484,6 +478,20 @@ int SENTENCEG_Lookup(const char* sample, char* sentencenum);
 void TEXTURETYPE_Init();
 char TEXTURETYPE_Find(char* name);
 float TEXTURETYPE_PlaySound(TraceResult* ptr, Vector vecSrc, Vector vecEnd, int iBulletType);
+
+#define CBTEXTURENAMEMAX	13			// only load first n chars of name
+
+#define CHAR_TEX_CONCRETE	'C'			// texture types
+#define CHAR_TEX_METAL		'M'
+#define CHAR_TEX_DIRT		'D'
+#define CHAR_TEX_VENT		'V'
+#define CHAR_TEX_GRATE		'G'
+#define CHAR_TEX_TILE		'T'
+#define CHAR_TEX_SLOSH		'S'
+#define CHAR_TEX_WOOD		'W'
+#define CHAR_TEX_COMPUTER	'P'
+#define CHAR_TEX_GLASS		'Y'
+#define CHAR_TEX_FLESH		'F'
 
 // NOTE: use EMIT_SOUND_DYN to set the pitch of a sound. Pitch of 100
 // is no pitch shift.  Pitch > 100 up to 255 is a higher pitch, pitch < 100
@@ -509,10 +517,10 @@ void EMIT_GROUPID_SUIT(edict_t* entity, int isentenceg);
 void EMIT_GROUPNAME_SUIT(edict_t* entity, const char* groupname);
 
 #define PRECACHE_SOUND_ARRAY( a ) \
-	{ for (int i = 0; i < ARRAYSIZE( a ); i++ ) PRECACHE_SOUND((char *) a [i]); }
+	{ for (int i = 0; i < ARRAYSIZE( a ); i++ ) PRECACHE_SOUND((char *) (a) [i]); }
 
 #define EMIT_SOUND_ARRAY_DYN( chan, array ) \
-	EMIT_SOUND_DYN ( ENT(pev), chan , array [ RANDOM_LONG(0,ARRAYSIZE( array )-1) ], 1.0, ATTN_NORM, 0, RANDOM_LONG(95,105) );
+	EMIT_SOUND_DYN ( ENT(pev), chan , (array) [ RANDOM_LONG(0,ARRAYSIZE( array )-1) ], 1.0, ATTN_NORM, 0, RANDOM_LONG(95,105) );
 
 #define RANDOM_SOUND_ARRAY( array ) (array) [ RANDOM_LONG(0,ARRAYSIZE( (array) )-1) ]
 

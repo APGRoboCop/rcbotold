@@ -1,6 +1,6 @@
 /***
 *
-*	Copyright (c) 1996-2002, Valve LLC. All rights reserved.
+*	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
 *
 *	This product contains software technology licensed from Id
 *	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
@@ -52,8 +52,11 @@ public:
 		{
 			return { 0, 0 };
 		}
-		flLen = 1 / flLen;
-		return { x * flLen, y * flLen };
+		else
+		{
+			flLen = 1 / flLen;
+			return { x * flLen, y * flLen };
+		}
 	}
 
 	vec_t	x, y;
@@ -104,7 +107,7 @@ public:
 	Vector Normalize() const
 	{
 		float flLen = Length();
-		if (flLen == 0.0f) return { 0,0,1 }; // ????
+		if (flLen == 0.0f) return { 0, 0, 1 }; // ????
 		flLen = 1 / flLen;
 		return { x * flLen, y * flLen, z * flLen };
 	}
@@ -125,26 +128,11 @@ public:
 	vec_t x, y, z;
 };
 inline Vector operator*(float fl, const Vector& v) { return v * fl; }
-inline float DotProduct(const Vector& a, const Vector& b) { return(a.x * b.x + a.y * b.y + a.z * b.z); }
+inline float DotProduct(const Vector& a, const Vector& b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
 inline Vector CrossProduct(const Vector& a, const Vector& b) {
 	return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x
 	};
 }
-inline Vector RotateVectorZ(const Vector& a, float angle)
-{
-	Vector new_vector;
-	const float x_old = a.x;
-	const float y_old = a.y;
-
-	const float R_angle = angle * (3.141517f / 180.0f);
-
-	new_vector.x = x_old * cos(R_angle) - y_old * sin(R_angle);
-	new_vector.y = y_old * cos(R_angle) + x_old * sin(R_angle);
-	new_vector.z = 0;
-	return new_vector;
-}
 inline float VecDistance(const Vector& a, const Vector& b) { return (b - a).Length(); }
-
-#define vec3_t Vector
 
 #endif

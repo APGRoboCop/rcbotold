@@ -253,9 +253,6 @@
     <ClInclude Include="activity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\pm_shared\pm_materials.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="schedule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -272,9 +269,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sdk_util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="enginecallbacks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="meta_api.h">
@@ -298,9 +292,6 @@
     <ClInclude Include="mplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="new_baseclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="mreg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -314,6 +305,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="botcam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="commands_meta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

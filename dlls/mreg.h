@@ -4,7 +4,7 @@
 // mreg.h - description of registered items (classes MRegCmd, MRegCmdList)
 
 /*
- * Copyright (c) 2001-2006 Will Day <willday@hpgx.net>
+ * Copyright (c) 2001-2003 Will Day <willday@hpgx.net>
  *
  *    This file is part of Metamod.
  *
@@ -38,11 +38,9 @@
 #define MREG_H
 
 #include "types_meta.h"		// mBOOL
-#include "comp_dep.h"		//
-#include "new_baseclass.h"
 
- // Number of entries to add to reglists when they need to grow.  Typically
- // more cvars than commands, so we grow them at different increments.
+// Number of entries to add to reglists when they need to grow.  Typically
+// more cvars than commands, so we grow them at different increments.
 #define REG_CMD_GROWSIZE	32
 #define REG_CVAR_GROWSIZE	64
 
@@ -58,12 +56,8 @@
 // Max number of registered user msgs we can manage.
 #define MAX_REG_MSGS	256
 
-// Max number of clients on server
-#define MAX_CLIENTS_CONNECTED 32
-
 // Flags to indicate if given cvar or func is part of a loaded plugin.
-typedef enum : std::uint8_t
-{
+typedef enum {
 	RG_INVALID,
 	RG_VALID,
 } REG_STATUS;
@@ -73,113 +67,114 @@ typedef void (*REG_CMD_FN) ();
 
 
 // An individual registered function/command.
-class MRegCmd : public class_metamod_new {
+class MRegCmd {
 	friend class MRegCmdList;
-private:
+	private:
 	// data:
-	int index;			// 1-based
-public:
-	char* name;			// space is malloc'd
-	REG_CMD_FN pfnCmd;		// pointer to the function
-	int plugid;			// index id of corresponding plugin
-	REG_STATUS status;		// whether corresponding plugin is loaded
-// functions:
-	void DLLINTERNAL init(int idx);	// init values, as not using constructors
-	mBOOL DLLINTERNAL call();	// try to call the function
+		int index;				// 1-based
+	public:
+		char *name;				// space is malloc'd
+		REG_CMD_FN pfnCmd;		// pointer to the function
+		int plugid;				// index id of corresponding plugin
+		REG_STATUS status;		// whether corresponding plugin is loaded
+	// functions:
+		void init(int idx);		// init values, as not using constructors
+		mBOOL call();		// try to call the function
 };
 
 // A list of registered commands.
-class MRegCmdList : public class_metamod_new {
-private:
+class MRegCmdList {
+	private:
 	// data:
-	MRegCmd* mlist;			// malloc'd array of registered commands
-	int size;			// current size of list
-	int endlist;			// index of last used entry
-	// Private; to satisfy -Weffc++ "has pointer data members but does
-	// not override" copy/assignment constructor.
-	void operator=(const MRegCmdList& src) = delete;
-	MRegCmdList(const MRegCmdList& src) = delete;
+		MRegCmd *mlist;			// malloc'd array of registered commands
+		int size;				// current size of list
+		int endlist;			// index of last used entry
+		// Private; to satisfy -Weffc++ "has pointer data members but does
+		// not override" copy/assignment constructor.
+		void operator=(const MRegCmdList &src);
+		MRegCmdList(const MRegCmdList &src);
 
-public:
+	public:
 	// constructor:
-	MRegCmdList() DLLINTERNAL;
+		MRegCmdList();
 
 	// functions:
-	MRegCmd* DLLINTERNAL find(const char* findname) const;	// find by MRegCmd->name
-	MRegCmd* DLLINTERNAL add(const char* addname);
-	void DLLINTERNAL disable(int plugin_id) const;		// change status to Invalid
-	void DLLINTERNAL show() const;			// list all funcs to console
-	void DLLINTERNAL show(int plugin_id) const;		// list given plugin's funcs to console
+		MRegCmd *find(const char *findname);	// find by MRegCmd->name
+		MRegCmd *add(const char *addname);
+		void disable(int plugin_id);			// change status to Invalid
+		void show();						// list all funcs to console
+		void show(int plugin_id);				// list given plugin's funcs to console
 };
 
 // An individual registered cvar.
-class MRegCvar : public class_metamod_new {
+class MRegCvar {
 	friend class MRegCvarList;
-private:
+	private:
 	// data:
-	int index;				// 1-based
-public:
-	cvar_t* data;				// actual cvar structure, malloc'd
-	int plugid;				// index id of corresponding plugin
-	REG_STATUS status;			// whether corresponding plugin is loaded
-// functions:
-	void DLLINTERNAL init(int idx);		// init values, as not using constructors
-	mBOOL DLLINTERNAL set(cvar_t* src) const;
+		int index;				// 1-based
+	public:
+		cvar_t *data;			// actual cvar structure, malloc'd
+		int plugid;				// index id of corresponding plugin
+		REG_STATUS status;		// whether corresponding plugin is loaded
+	// functions:
+		void init(int idx);		// init values, as not using constructors
+		mBOOL set(cvar_t *src);
 };
 
-// A list of registered cvars.
-class MRegCvarList : public class_metamod_new {
-private:
-	// data:
-	MRegCvar* vlist;		// malloc'd array of registered cvars
-	int size;			// size of list, ie MAX_REG_CVARS
-	int endlist;			// index of last used entry
-	// Private; to satisfy -Weffc++ "has pointer data members but does
-	// not override" copy/assignment constructor.
-	void operator=(const MRegCvarList& src) = delete;
-	MRegCvarList(const MRegCvarList& src) = delete;
 
-public:
+// A list of registered cvars.
+class MRegCvarList {
+	private:
+	// data:
+		MRegCvar *vlist;		// malloc'd array of registered cvars
+		int size;				// size of list, ie MAX_REG_CVARS
+		int endlist;			// index of last used entry
+		// Private; to satisfy -Weffc++ "has pointer data members but does
+		// not override" copy/assignment constructor.
+		void operator=(const MRegCvarList &src);
+		MRegCvarList(const MRegCvarList &src);
+
+	public:
 	// constructor:
-	MRegCvarList() DLLINTERNAL;
+		MRegCvarList();
 
 	// functions:
-	MRegCvar* DLLINTERNAL add(const char* addname);
-	MRegCvar* DLLINTERNAL find(const char* findname) const;	// find by MRegCvar->data.name
-	void DLLINTERNAL disable(int plugin_id) const;		// change status to Invalid
-	void DLLINTERNAL show() const;			// list all cvars to console
-	void DLLINTERNAL show(int plugin_id) const;		// list given plugin's cvars to console
+		MRegCvar *add(const char *addname);
+		MRegCvar *find(const char *findname);	// find by MRegCvar->data.name
+		void disable(int plugin_id);			// change status to Invalid
+		void show();						// list all cvars to console
+		void show(int plugin_id);				// list given plugin's cvars to console
 };
 
 // An individual registered user msg, from gamedll.
-class MRegMsg : public class_metamod_new {
+class MRegMsg {
 	friend class MRegMsgList;
-private:
+	private:
 	// data:
-	int index;				// 1-based
-public:
-	const char* name;		// name, assumed constant string in gamedll
-	int msgid;				// msgid, assigned by engine
-	int size;				// size, if given by gamedll
+		int index;				// 1-based
+	public:
+		const char *name;		// name, assumed constant string in gamedll
+		int msgid;				// msgid, assigned by engine
+		int size;				// size, if given by gamedll
 };
 
 // A list of registered user msgs.
-class MRegMsgList : public class_metamod_new {
-private:
+class MRegMsgList {
+	private:
 	// data:
-	MRegMsg mlist[MAX_REG_MSGS];	// array of registered msgs
-	int size;						// size of list, ie MAX_REG_MSGS
-	int endlist;					// index of last used entry
+		MRegMsg mlist[MAX_REG_MSGS];	// array of registered msgs
+		int size;						// size of list, ie MAX_REG_MSGS
+		int endlist;					// index of last used entry
 
-public:
+	public:
 	// constructor:
-	MRegMsgList() DLLINTERNAL;
+		MRegMsgList();
 
 	// functions:
-	MRegMsg* DLLINTERNAL add(const char* addname, int addmsgid, int addsize);
-	MRegMsg* DLLINTERNAL find(const char* findname);
-	MRegMsg* DLLINTERNAL find(int findmsgid);
-	void DLLINTERNAL show() const;						// list all msgs to console
+		MRegMsg *add(const char *addname, int addmsgid, int addsize);
+		MRegMsg *find(const char *findname);
+		MRegMsg *find(int findmsgid);
+		void show();						// list all msgs to console
 };
 
 #endif /* MREG_H */

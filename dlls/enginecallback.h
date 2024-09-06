@@ -1,9 +1,9 @@
 /***
 *
-*	Copyright (c) 1996-2001, Valve LLC. All rights reserved.
-*	
-*	This product contains software technology licensed from Id 
-*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc. 
+*	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
+*
+*	This product contains software technology licensed from Id
+*	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc.
 *	All Rights Reserved.
 *
 *   Use, distribution, and modification of this source code and/or resulting
@@ -67,9 +67,8 @@ extern enginefuncs_t g_engfuncs;
 #define CRC32_FINAL          (*g_engfuncs.pfnCRC32_Final)
 #define RANDOM_LONG		(*g_engfuncs.pfnRandomLong)
 #define RANDOM_FLOAT	(*g_engfuncs.pfnRandomFloat)
-#define GETPLAYERAUTHID	(*g_engfuncs.pfnGetPlayerAuthId)
 
-inline void MESSAGE_BEGIN( int msg_dest, int msg_type, const float *pOrigin = nullptr, edict_t *ed = nullptr) {
+inline void MESSAGE_BEGIN(int msg_dest, int msg_type, const float* pOrigin = nullptr, edict_t* ed = nullptr) {
 	(*g_engfuncs.pfnMessageBegin)(msg_dest, msg_type, pOrigin, ed);
 }
 #define MESSAGE_END		(*g_engfuncs.pfnMessageEnd)
@@ -86,13 +85,12 @@ inline void MESSAGE_BEGIN( int msg_dest, int msg_type, const float *pOrigin = nu
 #define CVAR_GET_STRING	(*g_engfuncs.pfnCVarGetString)
 #define CVAR_SET_FLOAT	(*g_engfuncs.pfnCVarSetFloat)
 #define CVAR_SET_STRING	(*g_engfuncs.pfnCVarSetString)
-#define CVAR_GET_POINTER (*g_engfuncs.pfnCVarGetPointer)
 #define ALERT			(*g_engfuncs.pfnAlertMessage)
 #define ENGINE_FPRINTF	(*g_engfuncs.pfnEngineFprintf)
 #define ALLOC_PRIVATE	(*g_engfuncs.pfnPvAllocEntPrivateData)
-inline void *GET_PRIVATE( edict_t *pent )
+inline void* GET_PRIVATE(edict_t* pent)
 {
-	if ( pent )
+	if (pent)
 		return pent->pvPrivateData;
 	return nullptr;
 }
@@ -125,6 +123,8 @@ inline void *GET_PRIVATE( edict_t *pent )
 #define IS_MAP_VALID			(*g_engfuncs.pfnIsMapValid)
 #define NUMBER_OF_ENTITIES		(*g_engfuncs.pfnNumberOfEntities)
 #define IS_DEDICATED_SERVER		(*g_engfuncs.pfnIsDedicatedServer)
+
+#define CVAR_GET_POINTER (*g_engfuncs.pfnCVarGetPointer)
 
 #define PRECACHE_EVENT			(*g_engfuncs.pfnPrecacheEvent)
 #define PLAYBACK_EVENT_FULL		(*g_engfuncs.pfnPlaybackEvent)

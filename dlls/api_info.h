@@ -4,7 +4,7 @@
 // api_info.h - structures to store info about api routines
 
 /*
- * Copyright (c) 2001-2006 Will Day <willday@hpgx.net>
+ * Copyright (c) 2001-2003 Will Day <willday@hpgx.net>
  *
  *    This file is part of Metamod.
  *
@@ -37,29 +37,19 @@
 #ifndef API_INFO_H
 #define API_INFO_H
 
-#include "comp_dep.h"
 #include "types_meta.h"			// mBOOL
-#include "ret_type.h"
+
 
 #define P_PRE 0		// plugin function called before gamedll
 #define P_POST 1	// plugin function called after gamedll
 
- // API selector
-typedef enum enum_api_t {
-	e_api_engine = 0,
-	e_api_dllapi = 1,
-	e_api_newapi = 2,
-} enum_api_t;
-
-// API caller function prototype
-typedef void* (DLLINTERNAL_NOVIS* api_caller_func_t)(const void* func, const void* packed_args);
 
 typedef struct api_info_s {
-	mBOOL trace;			// if true, log info about this function
-	int loglevel;			// level at which to log info about this function
-	api_caller_func_t api_caller;	// argument format/type for single-main-hook-function optimization
-	const char* name;		// string representation of function name
+	mBOOL trace;		// if true, log info about this function
+	int loglevel;		// level at which to log info about this function
+	char *name;			// string representation of function name
 } api_info_t;
+
 
 // DLL api functions
 typedef struct dllapi_info_s {
@@ -116,17 +106,15 @@ typedef struct dllapi_info_s {
 	api_info_t END;
 } dllapi_info_t;
 
+
 // "New" api functions
 typedef struct newapi_info_s {
 	api_info_t pfnOnFreeEntPrivateData;
 	api_info_t pfnGameShutdown;
 	api_info_t pfnShouldCollide;
-	// Added 2005/08/11 (no SDK update):
-	api_info_t pfnCvarValue;
-	// Added 2005/11/21 (no SDK update):
-	api_info_t pfnCvarValue2;
 	api_info_t END;
 } newapi_info_t;
+
 
 // Engine functions
 typedef struct engine_info_s {
@@ -288,18 +276,13 @@ typedef struct engine_info_s {
 	api_info_t pfnProcessTutorMessageDecayBuffer;
 	api_info_t pfnConstructTutorMessageDecayBuffer;
 	api_info_t pfnResetTutorMessageDecayData;
-	// Added 2005/08/11 (no SDK update):
-	api_info_t pfnQueryClientCvarValue;
-	// Added 2005/11/21 (no SDK update):
-	api_info_t pfnQueryClientCvarValue2;
-	// Added 2009/06/17 (no SDK update):
-	api_info_t pfnEngCheckParm;
 	// end
 	api_info_t END;
 } engine_info_t;
 
-extern const dllapi_info_t dllapi_info DLLHIDDEN;
-extern const newapi_info_t newapi_info DLLHIDDEN;
-extern const engine_info_t engine_info DLLHIDDEN;
+
+extern dllapi_info_t dllapi_info;
+extern newapi_info_t newapi_info;
+extern engine_info_t engine_info;
 
 #endif /* API_INFO_H */
