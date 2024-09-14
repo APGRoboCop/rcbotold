@@ -26,7 +26,6 @@ V 1.51-beta10
 * added: Enhanced performance and stability
 * added: AMBuild compiling support
 * added: Opposing Force CTF support and they should no longer team shoot nor flag hold
-* added: Bots in Op4 should now use Deagle's Laser Sight to improve its accuracy
 * added: C++17 Standard library support 
 * added: Strafing combat to evade from being easy target bots
 * added: Linux bot slow-motion fix by w00tguy
@@ -47,6 +46,7 @@ V 1.51-beta10
 
 * TODO: To add support for Half-Life 25th Anniversary builds as it doesn't support Waypoints being displayed
 * TODO: To allow Skulk and Lerk Aliens to bite and attack properly
+* TODO: To allow bots in Op4 should now use Deagle's Laser Sight to improve its accuracy
 * TODO: To allow the Onos to be more aggressive and devour humans
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
 * TODO: To improve on how to allow bots climb ladders more properly
