@@ -51,6 +51,8 @@
 
 #include <sys/stat.h>
 
+#include <algorithm>
+
 #include "extdll.h"
 
 #ifndef RCBOT_META_BUILD
@@ -105,18 +107,12 @@ void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj,
 
 	constexpr int iMaxLoc = MAX_WPT_LOCATIONS - 1;
 
-	if (mini < 0)
-		mini = 0;
-	if (minj < 0)
-		minj = 0;
-	if (mink < 0)
-		mink = 0;
-	if (maxi > iMaxLoc)
-		maxi = iMaxLoc;
-	if (maxj > iMaxLoc)
-		maxj = iMaxLoc;
-	if (maxk > iMaxLoc)
-		maxk = iMaxLoc;
+	mini = std::max(mini, 0);
+	minj = std::max(minj, 0);
+	mink = std::max(mink, 0);
+	maxi = std::min(maxi, iMaxLoc);
+	maxj = std::min(maxj, iMaxLoc);
+	maxk = std::min(maxk, iMaxLoc);
 }
 
 #define FOR_EACH_WPT_LOC_BUCKET(origin)\
@@ -256,8 +252,8 @@ void CWaypointLocations::FindNearestCoverWaypointInBucket(const int i, const int
 
 void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int k, const Vector& vOrigin,
 	float* pfMinDist, int* piIndex, const int iIgnoreWpt,
-	const BOOL bGetVisible, const BOOL bGetUnReachable, const BOOL bIsBot,
-	const dataStack<int>* iFailedWpts, const BOOL bNearestAimingOnly) const
+	const bool bGetVisible, const bool bGetUnReachable, const bool bIsBot,
+	const dataStack<int>* iFailedWpts, const bool bNearestAimingOnly) const
 	// Search for the nearest waypoint : I.e.
 		// Find the waypoint that is closest to vOrigin from the distance pfMinDist
 		// And set the piIndex to the waypoint index if closer.
@@ -328,7 +324,7 @@ void CWaypointLocations::FindNearestInBucket(const int i, const int j, const int
 
 		if ((fDist = (curr_wpt->origin - vOrigin).Length()) < *pfMinDist)
 		{
-			BOOL bAdd;
+			bool bAdd;
 
 			if (bGetVisible == false)
 				bAdd = true;
@@ -375,8 +371,8 @@ void CWaypointLocations::FillNearbyWaypoints(const Vector& vOrigin, dataStack<in
 /////////////////////////////
 // get the nearest waypoint INDEX from an origin
 int CWaypointLocations::NearestWaypoint(const Vector& vOrigin, float fNearestDist, const int iIgnoreWpt,
-	const BOOL bGetVisible, const BOOL bGetUnReachable, const BOOL bIsBot,
-	dataStack<int>* iFailedWpts, const BOOL bNearestAimingOnly) const
+	const bool bGetVisible, const bool bGetUnReachable, const bool bIsBot,
+	dataStack<int>* iFailedWpts, const bool bNearestAimingOnly) const
 {
 	int iNearestIndex = -1;
 
@@ -436,7 +432,7 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float 
 constexpr int WPT_CONVERT_FROM_HPBBOT = 1;
 constexpr int WPT_CONVERT_FROM_WHICHBOT = 2;
 
-BOOL WaypointLoad(edict_t* pEntity)
+bool WaypointLoad(edict_t* pEntity)
 {
 	char filename[512];
 	char file[256];
@@ -495,7 +491,7 @@ BOOL WaypointLoad(edict_t* pEntity)
 
 		header.filetype[7] = 0;
 
-		BOOL bWorkOutVisibility = (header.waypoint_file_flags & W_FILE_FL_READ_VISIBILITY) == W_FILE_FL_READ_VISIBILITY;
+		bool bWorkOutVisibility = (header.waypoint_file_flags & W_FILE_FL_READ_VISIBILITY) == W_FILE_FL_READ_VISIBILITY;
 
 		if (std::strcmp(header.filetype, "RCBot") == 0 || std::strcmp(header.filetype, "HPB_bot") == 0)
 		{
@@ -679,11 +675,8 @@ std::FILE* CWaypointConversion::openWaypoint() const
 
 /////////////////////////////
 // Saves the waypoints, bVisiblilityMade will be true when a visibility file has been made OK
-BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
+bool WaypointSave(const bool bVisibilityMade, CWaypointConversion* theConverter)
 {
-	char filename[512];
-	char file[256];
-
 	WAYPOINT_HDR header;
 	int index, i;
 	short int num;
@@ -719,6 +712,8 @@ BOOL WaypointSave(const BOOL bVisibilityMade, CWaypointConversion* theConverter)
 	}
 	else
 	{
+		char filename[512];
+		char file[256];
 #ifdef __linux__
 		snprintf(file, sizeof(file), "waypoints/%s/%s.rcw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
@@ -1517,7 +1512,7 @@ void WaypointDrawBeam(edict_t* pEntity, const Vector& start, const Vector& end, 
 }
 
 int WaypointAddOrigin(Vector const& vOrigin, const int iFlags, edict_t* pEntity,
-	const BOOL bDraw, const BOOL bSound, const BOOL bAutoSetFlagsForPlayer)
+	const bool bDraw, const bool bSound, const bool bAutoSetFlagsForPlayer)
 {
 	TraceResult tr;
 
@@ -1820,7 +1815,7 @@ void WaypointCreatePath(CClient* pClient, const int cmd)
 		const int waypoint1 = pClient->m_iPathWaypointCreateIndex;
 		const int waypoint2 = WaypointLocations.NearestWaypoint(pEdict->v.origin, 50.0f, -1);
 
-		BOOL bError = false;
+		bool bError = false;
 
 		if (waypoint1 == waypoint2)
 		{
@@ -1902,7 +1897,7 @@ void WaypointRemovePath(CClient* pClient, const int cmd)
 	}
 }
 
-BOOL WaypointReachable(Vector v_src, Vector v_dest, const BOOL bDistCheck)
+bool WaypointReachable(Vector v_src, Vector v_dest, const bool bDistCheck)
 {
 	TraceResult tr;
 
@@ -2051,7 +2046,7 @@ void WaypointPrintInfo(edict_t* pEntity)
 	// find the nearest waypoint...
 	const int index = WaypointLocations.NearestWaypoint(pEntity->v.origin, 50.0f, -1, false, true, false, nullptr);
 
-	//BOOL visible = WaypointVisibility.GetVisibilityFromTo(1,4);
+	//bool visible = WaypointVisibility.GetVisibilityFromTo(1,4);
 
 	if (index == -1)
 		return;
@@ -2414,7 +2409,7 @@ void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints) c
 		{
 			if (i == j)
 			{
-				SetVisibilityFromTo(i, j, 1);
+				SetVisibilityFromTo(i, j, true);
 				continue;
 			}
 
@@ -2430,7 +2425,7 @@ void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints) c
 	}
 }
 
-BOOL CWaypointVisibilityTable::SaveToFile() const
+bool CWaypointVisibilityTable::SaveToFile() const
 {
 	char filename[512];
 	char file[256];
@@ -2460,7 +2455,7 @@ BOOL CWaypointVisibilityTable::SaveToFile() const
 	return true;
 }
 
-BOOL CWaypointVisibilityTable::ReadFromFile() const
+bool CWaypointVisibilityTable::ReadFromFile() const
 {
 	char filename[512];
 	char file[256];
@@ -2511,7 +2506,7 @@ BOOL CWaypointVisibilityTable::ReadFromFile() const
 	return true;
 }
 
-BOOL WaypointFlagsOnLadderOrFly(const int iWaypointFlags)
+bool WaypointFlagsOnLadderOrFly(const int iWaypointFlags)
 {
 	// return true if waypoint index is on a ladder or a fly waypoint.
 	return (iWaypointFlags & (W_FL_FLY | W_FL_LADDER)) > 0;

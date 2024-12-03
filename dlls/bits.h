@@ -54,9 +54,9 @@ public:
 	CBits(unsigned int iNumBits);
 	CBits(const CBits* copyBits);
 
-	void setBit(int iBit, BOOL bSet) const;
+	void setBit(int iBit, bool bSet) const;
 
-	BOOL getBit(int iBit) const;
+	bool getBit(int iBit) const;
 
 	void freeMemory();
 

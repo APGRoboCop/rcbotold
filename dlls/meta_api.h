@@ -71,7 +71,8 @@
 #endif /* UNFINISHED */
 
 // Flags to indicate why the plugin is being unloaded.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	PNL_NULL = 0,
 	PNL_INI_DELETED,		// was deleted from plugins.ini
 	PNL_FILE_NEWER,			// file on disk is newer than last load
@@ -82,7 +83,8 @@ typedef enum {
 
 // Flags returned by a plugin's api function.
 // NOTE: order is crucial, as greater/less comparisons are made.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	MRES_UNSET = 0,
 	MRES_IGNORED,		// plugin didn't take any action
 	MRES_HANDLED,		// plugin did something, but real function should still be called

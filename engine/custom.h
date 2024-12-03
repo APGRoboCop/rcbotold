@@ -20,7 +20,10 @@
 #pragma once
 #endif
 
-#define MAX_QPATH 64    // Must match value in quakedefs.h
+enum : std::uint8_t
+{
+	MAX_QPATH = 64    // Must match value in quakedefs.h
+};
 
 /////////////////
 // Customization
@@ -37,7 +40,10 @@ typedef enum : std::uint8_t
 } resourcetype_t;
 
 // Fake type for world
-#define t_world 6
+enum : std::uint8_t
+{
+	t_world = 6
+};
 
 typedef struct
 {
@@ -49,11 +55,14 @@ typedef struct resourceinfo_s
 	_resourceinfo_t info[7];
 } resourceinfo_t;
 
-#define RES_FATALIFMISSING (1<<0)   // Disconnect if we can't get this file.
-#define RES_WASMISSING     (1<<1)   // Do we have the file locally, did we get it ok?
-#define RES_CUSTOM         (1<<2)   // Is this resource one that corresponds to another player's customization
-//  or is it a server startup resource.
-#define RES_REQUESTED	   (1<<3)	// Already requested a download of this one
+enum : std::uint8_t
+{
+	RES_FATALIFMISSING = (1<<0), // Disconnect if we can't get this file.
+	RES_WASMISSING = (1<<1), // Do we have the file locally, did we get it ok?
+	RES_CUSTOM = (1<<2), // Is this resource one that corresponds to another player's customization
+						//  or is it a server startup resource.
+	RES_REQUESTED = (1<<3)	// Already requested a download of this one
+};
 
 #include "crc.h"
 
@@ -87,9 +96,12 @@ typedef struct customization_s
 	customization_s* pNext; // Next in chain
 } customization_t;
 
-#define FCUST_FROMHPAK		( 1<<0 )
-#define FCUST_WIPEDATA		( 1<<1 )
-#define FCUST_IGNOREINIT	( 1<<2 )
+enum : std::uint8_t
+{
+	FCUST_FROMHPAK = ( 1<<0 ),
+	FCUST_WIPEDATA = ( 1<<1 ),
+	FCUST_IGNOREINIT = (1<<2 )
+};
 
 void		COM_ClearCustomizationList(customization_s* pHead, qboolean bCleanDecals);
 qboolean	COM_CreateCustomization(customization_s* pListHead, resource_s* pResource, int playernumber, int flags,

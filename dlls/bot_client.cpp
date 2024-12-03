@@ -773,9 +773,9 @@ void BotClient_Generic_TextMessage::execute(void* p, int iIndex)
 		TXTMSG_TYPE_BUILD_TELE_EXIT,
 		TXTMSG_TYPE_BUILD_SENTRY
 	}eTextMessageType;
-	static BOOL bCheckTeleEntrance = false;
-	static BOOL bCheckTeleExit = false;
-	static BOOL bBuiltSentry = false;*/
+	static bool bCheckTeleEntrance = false;
+	static bool bCheckTeleExit = false;
+	static bool bBuiltSentry = false;*/
 
 	//int iType;
 
@@ -1545,11 +1545,12 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 	case 6:
 		if (pBot)
 		{
-			const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, true, iRadius, iSlot);
 			const int team = pBot->GetTeam();
 
-			if (team >= 0 && team < MAX_TEAMS)
+			if (team >= 0 && team < MAX_TEAMS) {
+				const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, true, iRadius, iSlot);
 				gBotGlobals.m_TeamTechs[team].addTech(tech);
+			}
 		}
 
 		break;
@@ -1646,7 +1647,7 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 
 		CBotTask OrderTaskToAdd = CBotTask(OrderTask, 1, pEntity, iEntityUser3, 0, vOrigin);
 
-		const BOOL bHasOrder = !iOrderStatus;
+		const bool bHasOrder = !iOrderStatus;
 
 		while (!tempStack.IsEmpty())
 		{
@@ -1846,7 +1847,7 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 
 			// fire some bot events
 
-			BOOL iNotHandled[MAX_PLAYERS];
+			bool iNotHandled[MAX_PLAYERS];
 
 			for (i = 0; i < MAX_PLAYERS; i++)
 			{

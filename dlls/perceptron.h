@@ -103,7 +103,7 @@ public:
 
 	ga_value execute();
 
-	BOOL fired() const;
+	bool fired() const;
 
 	ga_value getOutput() const;
 
@@ -118,7 +118,7 @@ public:
 		m_transferFunction = nullptr;
 	}
 
-	BOOL trained() const { return m_bTrained; }
+	bool trained() const { return m_bTrained; }
 
 	void setTrained() { m_bTrained = true; }
 
@@ -137,7 +137,7 @@ private:
 	std::vector <ga_value> m_weights;
 	ga_value m_output;
 	ITransfer* m_transferFunction;
-	BOOL m_bTrained;
+	bool m_bTrained;
 };
 
 #endif

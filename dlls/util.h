@@ -143,16 +143,27 @@ inline void MESSAGE_BEGIN(int msg_dest, int msg_type, const float* pOrigin, entv
 }
 
 // Testing the three types of "entity" for nullity
-#define eoNullEntity 0
-inline BOOL FNullEnt(EOFFSET eoffset) { return eoffset == 0; }
-inline BOOL FNullEnt(const edict_t* pent) { return pent == nullptr || FNullEnt(OFFSET(pent)); }
-inline BOOL FNullEnt(entvars_t* pev) { return pev == nullptr || FNullEnt(OFFSET(pev)); }
+enum : std::uint8_t
+{
+	eoNullEntity = 0
+};
+
+inline bool FNullEnt(EOFFSET eoffset) { return eoffset == 0; }
+inline bool FNullEnt(const edict_t* pent) { return pent == nullptr || FNullEnt(OFFSET(pent)); }
+inline bool FNullEnt(entvars_t* pev) { return pev == nullptr || FNullEnt(OFFSET(pev)); }
 
 // Testing strings for nullity
-#define iStringNull 0
-inline BOOL FStringNull(int iString) { return iString == iStringNull; }
+enum : std::uint8_t
+{
+	iStringNull = 0
+};
 
-#define cchMapNameMost 32
+inline bool FStringNull(int iString) { return iString == iStringNull; }
+
+enum : std::uint8_t
+{
+	cchMapNameMost = 32
+};
 
 // Dot products for view cone checking
 #define VIEW_FIELD_FULL		(-1.0f) // +-180 degrees
@@ -161,7 +172,11 @@ inline BOOL FStringNull(int iString) { return iString == iStringNull; }
 #define	VIEW_FIELD_ULTRA_NARROW	0.9f // +-25 degrees, more narrow check used to set up ranged attacks
 
 // All monsters need this data
-#define		DONT_BLEED			(-1)
+enum : std::int8_t
+{
+	DONT_BLEED = (-1)
+};
+
 #define		BLOOD_COLOR_RED		(BYTE)247
 #define		BLOOD_COLOR_YELLOW	(BYTE)195
 #define		BLOOD_COLOR_GREEN	BLOOD_COLOR_YELLOW
@@ -189,15 +204,15 @@ typedef enum : std::uint8_t
 } TOGGLE_STATE;
 
 // Misc useful
-inline BOOL FStrEq(const char* sz1, const char* sz2)
+inline bool FStrEq(const char* sz1, const char* sz2)
 {
 	return (std::strcmp(sz1, sz2) == 0);
 }
-inline BOOL FClassnameIs(edict_t* pent, const char* szClassname)
+inline bool FClassnameIs(edict_t* pent, const char* szClassname)
 {
 	return FStrEq(STRING(VARS(pent)->classname), szClassname);
 }
-inline BOOL FClassnameIs(entvars_t* pev, const char* szClassname)
+inline bool FClassnameIs(entvars_t* pev, const char* szClassname)
 {
 	return FStrEq(STRING(pev->classname), szClassname);
 }
@@ -251,7 +266,7 @@ typedef enum : std::uint8_t { ignore_monsters = 1, dont_ignore_monsters = 0, mis
 typedef enum : std::uint8_t { ignore_glass = 1, dont_ignore_glass = 0 } IGNORE_GLASS;
 extern void			UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon, edict_t* pentIgnore, TraceResult* ptr);
 extern void			UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon, IGNORE_GLASS ignoreGlass, edict_t* pentIgnore, TraceResult* ptr);
-typedef enum { point_hull = 0, human_hull = 1, large_hull = 2, head_hull = 3 } hull_enum;
+typedef enum : std::uint8_t { point_hull = 0, human_hull = 1, large_hull = 2, head_hull = 3 } hull_enum;
 extern void			UTIL_TraceHull(const Vector& vecStart, const Vector& vecEnd, IGNORE_MONSTERS igmon, int hullNumber, edict_t* pentIgnore, TraceResult* ptr);
 extern TraceResult	UTIL_GetGlobalTrace();
 extern void			UTIL_TraceModel(const Vector& vecStart, const Vector& vecEnd, int hullNumber, edict_t* pentModel, TraceResult* ptr);
@@ -262,10 +277,10 @@ extern int			UTIL_IsMasterTriggered(string_t sMaster, CBaseEntity* pActivator);
 extern void			UTIL_BloodStream(const Vector& origin, const Vector& direction, int color, int amount);
 extern void			UTIL_BloodDrips(const Vector& origin, const Vector& direction, int color, int amount);
 extern Vector		UTIL_RandomBloodVector();
-extern BOOL			UTIL_ShouldShowBlood(int bloodColor);
+extern bool			UTIL_ShouldShowBlood(int bloodColor);
 extern void			UTIL_BloodDecalTrace(TraceResult* pTrace, int bloodColor);
 extern void			UTIL_DecalTrace(TraceResult* pTrace, int decalNumber);
-extern void			UTIL_PlayerDecalTrace(TraceResult* pTrace, int playernum, int decalNumber, BOOL bIsCustom);
+extern void			UTIL_PlayerDecalTrace(TraceResult* pTrace, int playernum, int decalNumber, bool bIsCustom);
 extern void			UTIL_GunshotDecalTrace(TraceResult* pTrace, int decalNumber);
 extern void			UTIL_Sparks(const Vector& position);
 extern void			UTIL_Ricochet(const Vector& position, float scale);
@@ -278,8 +293,8 @@ extern float		UTIL_AngleDistance(float next, float cur);
 
 extern char* UTIL_VarArgs(char* format, ...);
 extern void			UTIL_Remove(CBaseEntity* pEntity);
-extern BOOL			UTIL_IsValidEntity(edict_t* pent);
-extern BOOL			UTIL_TeamsMatch(const char* pTeamName1, const char* pTeamName2);
+extern bool			UTIL_IsValidEntity(edict_t* pent);
+extern bool			UTIL_TeamsMatch(const char* pTeamName1, const char* pTeamName2);
 
 // Use for ease-in, ease-out style interpolation (accel/decel)
 extern float		UTIL_SplineFraction(float value, float scale);
@@ -301,7 +316,7 @@ inline void			UTIL_CenterPrintAll(const char* msg_name, const char* param1 = nul
 
 class CBasePlayerItem;
 class CBasePlayer;
-extern BOOL UTIL_GetNextBestWeapon(CBasePlayer* pPlayer, CBasePlayerItem* pCurrentWeapon);
+extern bool UTIL_GetNextBestWeapon(CBasePlayer* pPlayer, CBasePlayerItem* pCurrentWeapon);
 
 // prints messages through the HUD
 extern void ClientPrint(entvars_t* client, int msg_dest, const char* msg_name, const char* param1 = nullptr, const char* param2 = nullptr, const char* param3 = nullptr, const char* param4 = nullptr);
@@ -351,7 +366,7 @@ extern int BuildChangeList(LEVELLIST* pLevelList, int maxList);
 // How did I ever live without ASSERT?
 //
 #ifdef	DEBUG
-void DBG_AssertFunction(BOOL fExpr, const char* szExpr, const char* szFile, int szLine, const char* szMessage);
+void DBG_AssertFunction(bool fExpr, const char* szExpr, const char* szFile, int szLine, const char* szMessage);
 #define ASSERT(f)		DBG_AssertFunction(f, #f, __FILE__, __LINE__, NULL)
 #define ASSERTSZ(f, sz)	DBG_AssertFunction(f, #f, __FILE__, __LINE__, sz)
 #else	// !DEBUG
@@ -366,47 +381,71 @@ extern DLL_GLOBAL const Vector g_vecZero;
 //
 // Un-comment only as needed
 //
-#define LANGUAGE_ENGLISH				0
-#define LANGUAGE_GERMAN					1
-#define LANGUAGE_FRENCH					2
-#define LANGUAGE_BRITISH				3
+enum : std::uint8_t
+{
+	LANGUAGE_ENGLISH = 0,
+	LANGUAGE_GERMAN = 1,
+	LANGUAGE_FRENCH = 2,
+	LANGUAGE_BRITISH = 3
+};
 
 extern DLL_GLOBAL int			g_Language;
 
-#define AMBIENT_SOUND_STATIC			0	// medium radius attenuation
-#define AMBIENT_SOUND_EVERYWHERE		1
-#define AMBIENT_SOUND_SMALLRADIUS		2
-#define AMBIENT_SOUND_MEDIUMRADIUS		4
-#define AMBIENT_SOUND_LARGERADIUS		8
-#define AMBIENT_SOUND_START_SILENT		16
-#define AMBIENT_SOUND_NOT_LOOPING		32
+enum : std::uint8_t
+{
+	AMBIENT_SOUND_STATIC = 0, // medium radius attenuation
+	AMBIENT_SOUND_EVERYWHERE = 1,
+	AMBIENT_SOUND_SMALLRADIUS = 2,
+	AMBIENT_SOUND_MEDIUMRADIUS = 4,
+	AMBIENT_SOUND_LARGERADIUS = 8,
+	AMBIENT_SOUND_START_SILENT = 16,
+	AMBIENT_SOUND_NOT_LOOPING = 32
+};
 
-#define SPEAKER_START_SILENT			1	// wait for trigger 'on' to start announcements
+enum : std::uint8_t
+{
+	SPEAKER_START_SILENT = 1	// wait for trigger 'on' to start announcements
+};
 
-#define SND_SPAWNING		(1<<8)		// duplicated in protocol.h we're spawing, used in some cases for ambients
-#define SND_STOP			(1<<5)		// duplicated in protocol.h stop sound
-#define SND_CHANGE_VOL		(1<<6)		// duplicated in protocol.h change sound vol
-#define SND_CHANGE_PITCH	(1<<7)		// duplicated in protocol.h change sound pitch
+enum : std::uint16_t
+{
+	SND_SPAWNING = (1<<8), // duplicated in protocol.h we're spawing, used in some cases for ambients
+	SND_STOP = (1<<5), // duplicated in protocol.h stop sound
+	SND_CHANGE_VOL = (1<<6), // duplicated in protocol.h change sound vol
+	SND_CHANGE_PITCH = (1<<7)		// duplicated in protocol.h change sound pitch
+};
 
-#define	LFO_SQUARE			1
-#define LFO_TRIANGLE		2
-#define LFO_RANDOM			3
+enum : std::uint8_t
+{
+	LFO_SQUARE = 1,
+	LFO_TRIANGLE = 2,
+	LFO_RANDOM = 3
+};
 
 // func_rotating
-#define SF_BRUSH_ROTATE_Y_AXIS		0
-#define SF_BRUSH_ROTATE_INSTANT		1
-#define SF_BRUSH_ROTATE_BACKWARDS	2
-#define SF_BRUSH_ROTATE_Z_AXIS		4
-#define SF_BRUSH_ROTATE_X_AXIS		8
-#define SF_PENDULUM_AUTO_RETURN		16
-#define	SF_PENDULUM_PASSABLE		32
+enum : std::uint8_t
+{
+	SF_BRUSH_ROTATE_Y_AXIS = 0,
+	SF_BRUSH_ROTATE_INSTANT = 1,
+	SF_BRUSH_ROTATE_BACKWARDS = 2,
+	SF_BRUSH_ROTATE_Z_AXIS = 4,
+	SF_BRUSH_ROTATE_X_AXIS = 8,
+	SF_PENDULUM_AUTO_RETURN = 16,
+	SF_PENDULUM_PASSABLE = 32
+};
 
-#define SF_BRUSH_ROTATE_SMALLRADIUS	128
-#define SF_BRUSH_ROTATE_MEDIUMRADIUS 256
-#define SF_BRUSH_ROTATE_LARGERADIUS 512
+enum : std::uint16_t
+{
+	SF_BRUSH_ROTATE_SMALLRADIUS = 128,
+	SF_BRUSH_ROTATE_MEDIUMRADIUS = 256,
+	SF_BRUSH_ROTATE_LARGERADIUS = 512
+};
 
-#define PUSH_BLOCK_ONLY_X	1
-#define PUSH_BLOCK_ONLY_Y	2
+enum : std::uint8_t
+{
+	PUSH_BLOCK_ONLY_X = 1,
+	PUSH_BLOCK_ONLY_Y = 2
+};
 
 #define VEC_HULL_MIN		Vector(-16, -16, -36)
 #define VEC_HULL_MAX		Vector( 16,  16,  36)
@@ -420,45 +459,76 @@ extern DLL_GLOBAL int			g_Language;
 #define VEC_DUCK_HULL_MAX	Vector( 16,  16,  18)
 #define VEC_DUCK_VIEW		Vector( 0, 0, 12 )
 
-#define SVC_TEMPENTITY		23
-#define SVC_INTERMISSION	30
-#define SVC_CDTRACK			32
-#define SVC_WEAPONANIM		35
-#define SVC_ROOMTYPE		37
+enum : std::uint8_t
+{
+	SVC_TEMPENTITY = 23,
+	SVC_INTERMISSION = 30,
+	SVC_CDTRACK = 32,
+	SVC_WEAPONANIM = 35,
+	SVC_ROOMTYPE = 37
+};
 
 // triggers
-#define	SF_TRIGGER_ALLOWMONSTERS	1// monsters allowed to fire this trigger
-#define	SF_TRIGGER_NOCLIENTS		2// players not allowed to fire this trigger
-#define SF_TRIGGER_PUSHABLES		4// only pushables can fire this trigger
+enum : std::uint8_t
+{
+	SF_TRIGGER_ALLOWMONSTERS = 1, // monsters allowed to fire this trigger
+	SF_TRIGGER_NOCLIENTS = 2, // players not allowed to fire this trigger
+	SF_TRIGGER_PUSHABLES = 4// only pushables can fire this trigger
+};
 
 // func breakable
-#define SF_BREAK_TRIGGER_ONLY	1// may only be broken by trigger
-#define	SF_BREAK_TOUCH			2// can be 'crashed through' by running player (plate glass)
-#define SF_BREAK_PRESSURE		4// can be broken by a player standing on it
-#define SF_BREAK_CROWBAR		256// instant break if hit with crowbar
+enum : std::uint16_t
+{
+	SF_BREAK_TRIGGER_ONLY = 1, // may only be broken by trigger
+	SF_BREAK_TOUCH = 2, // can be 'crashed through' by running player (plate glass)
+	SF_BREAK_PRESSURE = 4, // can be broken by a player standing on it
+	SF_BREAK_CROWBAR = 256// instant break if hit with crowbar
+};
 
 // func_pushable (it's also func_breakable, so don't collide with those flags)
-#define SF_PUSH_BREAKABLE		128
+enum : std::uint8_t
+{
+	SF_PUSH_BREAKABLE = 128
+};
 
-#define SF_LIGHT_START_OFF		1
+enum : std::uint8_t
+{
+	SF_LIGHT_START_OFF = 1
+};
 
-#define SPAWNFLAG_NOMESSAGE	1
-#define SPAWNFLAG_NOTOUCH	1
-#define SPAWNFLAG_DROIDONLY	4
+enum : std::uint8_t
+{
+	SPAWNFLAG_NOMESSAGE = 1,
+	SPAWNFLAG_NOTOUCH = 1,
+	SPAWNFLAG_DROIDONLY = 4
+};
 
-#define SPAWNFLAG_USEONLY	1		// can't be touched, must be used (buttons)
+enum : std::uint8_t
+{
+	SPAWNFLAG_USEONLY = 1 // can't be touched, must be used (buttons)
+};
 
-#define TELE_PLAYER_ONLY	1
-#define TELE_SILENT			2
+enum : std::uint8_t
+{
+	TELE_PLAYER_ONLY = 1,
+	TELE_SILENT = 2
+};
 
-#define SF_TRIG_PUSH_ONCE		1
+enum : std::uint8_t
+{
+	SF_TRIG_PUSH_ONCE = 1
+};
 
 // Sound Utilities
 
 // sentence groups
-#define CBSENTENCENAME_MAX 16
-#define CVOXFILESENTENCEMAX		1536		// max number of sentences in game. NOTE: this must match
-											// CVOXFILESENTENCEMAX in engine\sound.h!!!
+enum : std::uint16_t
+{
+	CBSENTENCENAME_MAX = 16,
+	CVOXFILESENTENCEMAX = 1536		// max number of sentences in game. NOTE: this must match
+};
+
+// CVOXFILESENTENCEMAX in engine\sound.h!!!
 
 extern char gszallsentencenames[CVOXFILESENTENCEMAX][CBSENTENCENAME_MAX];
 extern int gcallsentences;
@@ -479,19 +549,25 @@ void TEXTURETYPE_Init();
 char TEXTURETYPE_Find(char* name);
 float TEXTURETYPE_PlaySound(TraceResult* ptr, Vector vecSrc, Vector vecEnd, int iBulletType);
 
-#define CBTEXTURENAMEMAX	13			// only load first n chars of name
+enum : std::uint8_t
+{
+	CBTEXTURENAMEMAX = 13			// only load first n chars of name
+};
 
-#define CHAR_TEX_CONCRETE	'C'			// texture types
-#define CHAR_TEX_METAL		'M'
-#define CHAR_TEX_DIRT		'D'
-#define CHAR_TEX_VENT		'V'
-#define CHAR_TEX_GRATE		'G'
-#define CHAR_TEX_TILE		'T'
-#define CHAR_TEX_SLOSH		'S'
-#define CHAR_TEX_WOOD		'W'
-#define CHAR_TEX_COMPUTER	'P'
-#define CHAR_TEX_GLASS		'Y'
-#define CHAR_TEX_FLESH		'F'
+enum : std::uint8_t
+{
+	CHAR_TEX_CONCRETE = 'C', // texture types
+	CHAR_TEX_METAL = 'M',
+	CHAR_TEX_DIRT = 'D',
+	CHAR_TEX_VENT = 'V',
+	CHAR_TEX_GRATE = 'G',
+	CHAR_TEX_TILE = 'T',
+	CHAR_TEX_SLOSH = 'S',
+	CHAR_TEX_WOOD = 'W',
+	CHAR_TEX_COMPUTER = 'P',
+	CHAR_TEX_GLASS = 'Y',
+	CHAR_TEX_FLESH = 'F'
+};
 
 // NOTE: use EMIT_SOUND_DYN to set the pitch of a sound. Pitch of 100
 // is no pitch shift.  Pitch > 100 up to 255 is a higher pitch, pitch < 100
@@ -527,8 +603,11 @@ void EMIT_GROUPNAME_SUIT(edict_t* entity, const char* groupname);
 #define PLAYBACK_EVENT( flags, who, index ) PLAYBACK_EVENT_FULL( flags, who, index, 0, (float *)&g_vecZero, (float *)&g_vecZero, 0.0, 0.0, 0, 0, 0, 0 );
 #define PLAYBACK_EVENT_DELAY( flags, who, index, delay ) PLAYBACK_EVENT_FULL( flags, who, index, delay, (float *)&g_vecZero, (float *)&g_vecZero, 0.0, 0.0, 0, 0, 0, 0 );
 
-#define GROUP_OP_AND	0
-#define GROUP_OP_NAND	1
+enum : std::uint8_t
+{
+	GROUP_OP_AND = 0,
+	GROUP_OP_NAND = 1
+};
 
 extern int g_groupmask;
 extern int g_groupop;

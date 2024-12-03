@@ -102,13 +102,13 @@ public:
 
 	void AddWptLocation(int iIndex, const float* fOrigin);
 
-	void FindNearestInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, int iIgnoreWpt, BOOL bGetVisible = true, BOOL bGetUnreachable = false, BOOL bIsBot = false, const dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = false) const;
+	void FindNearestInBucket(int i, int j, int k, const Vector& vOrigin, float* pfMinDist, int* piIndex, int iIgnoreWpt, bool bGetVisible = true, bool bGetUnreachable = false, bool bIsBot = false, const dataStack<int>* iFailedWpts = nullptr, bool bNearestAimingOnly = false) const;
 
 	void DrawWaypoints(edict_t* pEntity, Vector& vOrigin, float fDist) const;
 
 	void DeleteWptLocation(int iIndex, const float* fOrigin);
 
-	int NearestWaypoint(const Vector& vOrigin, float fNearestDist, int iIgnoreWpt, BOOL bGetVisible = true, BOOL bGetUnreachable = false, BOOL bIsBot = false, dataStack<int>* iFailedWpts = nullptr, BOOL bNearestAimingOnly = false) const;
+	int NearestWaypoint(const Vector& vOrigin, float fNearestDist, int iIgnoreWpt, bool bGetVisible = true, bool bGetUnreachable = false, bool bIsBot = false, dataStack<int>* iFailedWpts = nullptr, bool bNearestAimingOnly = false) const;
 
 	void FillWaypointsInBucket(int i, int j, int k, const Vector& vOrigin, dataStack<int>* iWaypoints, dataStack<int>* iFailedWpts = nullptr) const;
 
@@ -119,7 +119,7 @@ private:
 	dataStack<int> m_iLocations[MAX_WPT_LOCATIONS][MAX_WPT_LOCATIONS][MAX_WPT_LOCATIONS];
 };
 
-#define REACHABLE_RANGE 400.0f
+constexpr float REACHABLE_RANGE = 400.0f;
 
 // defines for waypoint flags field (32 bits are available)
 #define W_FL_TEAM			((1<<0) + (1<<1))  /* allow for 4 teams (0-3) */
@@ -166,10 +166,17 @@ private:
 //#define W_FL_TFC_SNIPER     (1<<30)
 #define W_FL_DELETED		(1<<31) /* used by waypoint allocation code */
 
-#define WAYPOINT_VERSION 4
+enum : std::uint8_t
+{
+	WAYPOINT_VERSION = 4
+};
+
 //#define WAYPOINT_VERSION 5
 
-#define W_FILE_FL_READ_VISIBILITY (1<<0) // require to read visibility file
+enum : std::uint8_t
+{
+	W_FILE_FL_READ_VISIBILITY = (1<<0) // require to read visibility file
+};
 
 // define the waypoint file header structure...
 typedef struct
@@ -520,11 +527,11 @@ public:
 		}
 	}
 
-	BOOL SaveToFile() const;
+	bool SaveToFile() const;
 
-	BOOL ReadFromFile() const;
+	bool ReadFromFile() const;
 
-	BOOL GetVisibilityFromTo(int iFrom, int iTo) const
+	int GetVisibilityFromTo(int iFrom, int iTo) const
 	{
 		// work out the position
 		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
@@ -557,7 +564,7 @@ public:
 		}
 	}
 
-	void SetVisibilityFromTo(int iFrom, int iTo, BOOL bVisible) const
+	void SetVisibilityFromTo(int iFrom, int iTo, bool bVisible) const
 	{
 		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
 
@@ -586,11 +593,11 @@ private:
 #define WAYPOINT_UNREACHABLE   USHRT_MAX
 #define WAYPOINT_MAX_DISTANCE (USHRT_MAX-1)
 
-#define MAX_PATH_INDEX 4
+//#define MAX_PATH_INDEX 4
 
 // waypoint function prototypes...
 
-BOOL WaypointFlagsOnLadderOrFly(int iWaypointFlags);
+bool WaypointFlagsOnLadderOrFly(int iWaypointFlags);
 void WaypointDrawBeam(edict_t* pEntity, const Vector& start, const Vector& end, int width,
 	int noise, int red, int green, int blue, int brightness, int speed);
 void WaypointInit();
@@ -610,9 +617,9 @@ void WaypointDeletePath(short int del_index);
 void WaypointDeletePath(short int path_index, short int del_index);//TODO: Duplicate? [APG]RoboCopCL]
 void WaypointCreatePath(CClient* pClient, int cmd);
 void WaypointRemovePath(CClient* pClient, int cmd);
-BOOL WaypointLoad(edict_t* pEntity);
-BOOL WaypointSave(BOOL bVisibilityMade, CWaypointConversion* theConverter = nullptr);
-BOOL WaypointReachable(Vector v_src, Vector v_dest, BOOL bDistCheck = true);
+bool WaypointLoad(edict_t* pEntity);
+bool WaypointSave(bool bVisibilityMade, CWaypointConversion* theConverter = nullptr);
+bool WaypointReachable(Vector v_src, Vector v_dest, bool bDistCheck = true);
 int  WaypointFindReachable(edict_t* pEntity, float range, int team);
 void WaypointPrintInfo(edict_t* pEntity);
 //void WaypointThink();
@@ -622,9 +629,9 @@ Vector WaypointOrigin(int iWaypointIndex);
 int NearestWaypointToEdict(edict_t* pEdict, int iIgnoreWpt, dataStack<int>* iFailedWpts);
 int NearestWaypointToOrigin(const Vector& vOrigin, int iIgnoreWpt, dataStack<int>* iFailedWpts = nullptr);
 int WaypointFlags(int iWaypointIndex);
-int WaypointAddOrigin(const Vector& vOrigin, int iFlags, edict_t* pEntity, BOOL bDraw = true, BOOL bSound = true, BOOL bAutoSetFlagsForPlayer = true);
+int WaypointAddOrigin(const Vector& vOrigin, int iFlags, edict_t* pEntity, bool bDraw = true, bool bSound = true, bool bAutoSetFlagsForPlayer = true);
 void AutoWaypoint();
 Vector BotNavigate_ScanFOV(CBot* pBot);
 edict_t* PlayerNearVector(const Vector& vOrigin, float fRange);
-BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin);
+bool CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin);
 #endif // WAYPOINT_H

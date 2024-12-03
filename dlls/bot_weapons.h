@@ -61,6 +61,8 @@
 #ifndef __BOT_WEAPONS_H__
 #define __BOT_WEAPONS_H__
 
+#include <algorithm>
+
 #include "generic_class.h"
 #include "weaponinfo.h"
 
@@ -405,10 +407,10 @@ class CBot;
 typedef struct
 {
 	int m_iId;
-	BOOL m_bCanFireUnderWater;
+	bool m_bCanFireUnderWater;
 
-	BOOL m_bHasPrimaryFire;
-	BOOL m_bHasSecondaryFire;
+	bool m_bHasPrimaryFire;
+	bool m_bHasSecondaryFire;
 
 	float m_fPrimMinRange;
 	float m_fPrimMaxRange;
@@ -417,7 +419,7 @@ typedef struct
 	float m_fSecMaxRange;
 
 	//TODO: Maybe add ammo count and to hold fire button? [APG]RoboCop[CL]
-	BOOL m_bIsMelee;
+	bool m_bIsMelee;
 
 	short int m_iModId;
 	int m_iPriority;
@@ -491,7 +493,7 @@ public:
 
 	void SetWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int iSecAmmoMax, int iHudSlot, int iHudPosition, int iFlags, int iAmmoIndex1, int iAmmoIndex2);
 
-	virtual BOOL CanBeUsedUnderWater()
+	virtual bool CanBeUsedUnderWater()
 	{
 		// no preset
 		return true;
@@ -502,18 +504,18 @@ public:
 		return m_iPrimAmmoMax;
 	}
 
-	virtual BOOL CanUsePrimary()
+	virtual bool CanUsePrimary()
 	{
 		return true;
 	}
 
-	virtual BOOL CanUseSecondary()
+	virtual bool CanUseSecondary()
 	{
 		// no preset
 		return true;
 	}
 
-	BOOL IsRegistered() const
+	bool IsRegistered() const
 	{
 		return m_bRegistered;
 	}
@@ -528,7 +530,7 @@ public:
 		return m_szClassname;
 	}
 
-	virtual BOOL PrimaryInRange(float fRange)
+	virtual bool PrimaryInRange(float fRange)
 	{
 		return true;
 	}
@@ -543,7 +545,7 @@ public:
 		return 0;
 	}
 
-	virtual BOOL SecondaryInRange(float fRange)
+	virtual bool SecondaryInRange(float fRange)
 	{
 		return true;
 	}
@@ -558,14 +560,14 @@ public:
 		return m_iHudPosition;
 	}
 
-	virtual BOOL IsMelee()
+	virtual bool IsMelee()
 	{
 		return m_iAmmoIndex1 == -1;
 	}
 
-	BOOL IsPrimary() const;
+	bool IsPrimary() const;
 
-	BOOL IsSecondary() const;
+	bool IsSecondary() const;
 
 	int m_iAmmoIndex1;
 	int m_iAmmoIndex2;
@@ -576,7 +578,7 @@ private:
 
 	char* m_szClassname;
 
-	BOOL m_bRegistered; // Registered by the mod.
+	bool m_bRegistered; // Registered by the mod.
 
 	int m_iPrimAmmoMax;
 	int m_iSecAmmoMax;
@@ -593,10 +595,10 @@ class CWeaponPreset : public CWeapon
 {
 public:
 	//int m_iId;
-	BOOL m_bCanFireUnderWater;
+	bool m_bCanFireUnderWater;
 
-	BOOL m_bHasPrimaryFire;
-	BOOL m_bHasSecondaryFire;
+	bool m_bHasPrimaryFire;
+	bool m_bHasSecondaryFire;
 
 	float m_fPrimMinRange;
 	float m_fPrimMaxRange;
@@ -604,7 +606,7 @@ public:
 	float m_fSecMinRange;
 	float m_fSecMaxRange;
 
-	BOOL m_bIsMelee;
+	bool m_bIsMelee;
 
 	//short int m_iModId;
 	int m_iPriority;
@@ -638,17 +640,17 @@ public:
 		std::fill_n(reinterpret_cast<char*>(this), sizeof(CWeaponPreset), 0);
 	}
 
-	BOOL CanBeUsedUnderWater() override
+	bool CanBeUsedUnderWater() override
 	{
 		return m_bCanFireUnderWater;
 	}
 
-	BOOL CanUsePrimary() override
+	bool CanUsePrimary() override
 	{
 		return m_bHasPrimaryFire;
 	}
 
-	BOOL CanUseSecondary() override
+	bool CanUseSecondary() override
 	{
 		return m_bHasSecondaryFire;
 	}
@@ -658,7 +660,7 @@ public:
 		return m_iPriority;
 	}
 
-	BOOL PrimaryInRange(float fRange) override
+	bool PrimaryInRange(float fRange) override
 	{
 		return fRange >= m_fPrimMinRange &&
 			fRange <= m_fPrimMaxRange;
@@ -674,13 +676,13 @@ public:
 		return m_fPrimMaxRange;
 	}
 
-	BOOL SecondaryInRange(float fRange) override
+	bool SecondaryInRange(float fRange) override
 	{
 		return fRange >= m_fSecMinRange &&
 			fRange <= m_fSecMaxRange;
 	}
 
-	BOOL IsMelee() override
+	bool IsMelee() override
 	{
 		return m_bIsMelee != false;
 	}
@@ -758,15 +760,15 @@ public:
 
 	void Reset();
 	
-	void setHasWeapon(BOOL bVal);
+	void setHasWeapon(bool bVal);
 
-	BOOL LowOnAmmo() const
+	bool LowOnAmmo() const
 	{
 		// less in reserve than current clip
 		return !IsMelee() && m_iAmmo1 && *m_iAmmo1 < m_iClip;
 	}
 
-	BOOL OutOfAmmo() const
+	bool OutOfAmmo() const
 	{
 		if (m_iAmmo1)
 		{
@@ -797,14 +799,14 @@ public:
 		return 0;
 	}
 
-	BOOL SecondaryInRange(float fRange) const
+	bool SecondaryInRange(float fRange) const
 	{
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->SecondaryInRange(fRange);
-		return 1;
+		return true;
 	}
 
-	BOOL CanGetMorePrimaryAmmo() const
+	bool CanGetMorePrimaryAmmo() const
 	{
 		switch (static_cast<int>(m_iId))
 		{
@@ -820,27 +822,27 @@ public:
 		return !IsMelee() && PrimaryAmmo() < m_pWeaponInfo->MaxPrimaryAmmo();
 	}
 
-	BOOL IsPrimary() const
+	bool IsPrimary() const
 	{
 		assert(m_pWeaponInfo != NULL);
 
 		return m_pWeaponInfo->IsPrimary();
 	}
 
-	BOOL IsSecondary() const
+	bool IsSecondary() const
 	{
 		assert(m_pWeaponInfo != NULL);
 
 		return m_pWeaponInfo->IsSecondary();
 	}
 
-	BOOL NeedToReload() const;
+	bool NeedToReload() const;
 
-	BOOL CanReload() const;
+	bool CanReload() const;
 
-	BOOL CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const;
+	bool CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const;
 
-	BOOL CanShootSecondary() const
+	bool CanShootSecondary() const
 	{
 		const int iSecAmmo = SecondaryAmmo();
 
@@ -863,7 +865,7 @@ public:
 		return -1;
 	}
 
-	BOOL HasWeapon(edict_t* pEdict) const;
+	bool HasWeapon(edict_t* pEdict) const;
 
 	void RemoveWeapon()
 	{
@@ -882,14 +884,14 @@ public:
 		return nullptr;
 	}
 
-	BOOL IsMelee() const
+	bool IsMelee() const
 	{
 		if (m_pWeaponInfo == nullptr)
 			return true;
 		return m_pWeaponInfo->IsMelee();
 	}
 
-	BOOL CanBeUsedUnderWater() const
+	bool CanBeUsedUnderWater() const
 	{
 		if (m_pWeaponInfo == nullptr)
 			return true;
@@ -935,8 +937,7 @@ public:
 
 	void checkMaxClip(int clip)
 	{
-		if (clip > m_iMaxClip)
-			m_iMaxClip = clip;
+		m_iMaxClip = std::max(clip, m_iMaxClip);
 	}
 
 private:
@@ -955,7 +956,7 @@ private:
 
 	CWeapon* m_pWeaponInfo;
 
-	BOOL m_bHasWeapon;
+	bool m_bHasWeapon;
 };
 
 class CBotWeapons
@@ -975,16 +976,16 @@ public:
 			this->RemoveWeapon(i);
 	}
 
-	BOOL HasWeapon(edict_t* pEdict, const char* szClassname) const;
+	bool HasWeapon(edict_t* pEdict, const char* szClassname) const;
 
-	BOOL HasWeapon(edict_t* pEdict, int iId) const
+	bool HasWeapon(edict_t* pEdict, int iId) const
 	{
 		if (iId > 0 && iId < MAX_WEAPONS)
 			return m_Weapons[iId].HasWeapon(pEdict);
 		return false;
 	}
 
-	void setHasWeapon(int id, BOOL bVal)
+	void setHasWeapon(int id, bool bVal)
 	{
 		for (CBotWeapon& m_Weapon : m_Weapons)
 		{

@@ -477,7 +477,7 @@ void InitMessage ( const char *message );
 
 			if (pev->waterlevel < 3 && m_fCanPlaceJump < gpGlobals->time)
 			{
-				BOOL bStunt = gBotGlobals.IsMod(MOD_TS) && m_iLastButtons & IN_ALT1;
+				bool bStunt = gBotGlobals.IsMod(MOD_TS) && m_iLastButtons & IN_ALT1;
 				Vector v_floor;
 
 				float tolerance = 0.0001f; // choose a suitable tolerance
@@ -568,7 +568,7 @@ void InitMessage ( const char *message );
 				}
 			}
 
-			BOOL bCheckDistance = pev->movetype != MOVETYPE_FLY && m_fCanPlaceLadder == 0.0f; // always check distance unless ladder climbing
+			bool bCheckDistance = pev->movetype != MOVETYPE_FLY && m_fCanPlaceLadder == 0.0f; // always check distance unless ladder climbing
 
 			// ****************************************************
 			// Ladder waypoint
@@ -691,7 +691,7 @@ void InitMessage ( const char *message );
 
 				Vector vPlacePosition;
 				int iFlags = 0;
-				BOOL bPlace = false;
+				bool bPlace = false;
 
 				int i;
 				int n;
@@ -1056,7 +1056,7 @@ void CClients::ClientDisconnected(CClient* pClient)
 	// give a few seconds before adding more bots.
 	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
 
-	const BOOL RemoveGreeting = iPlayerIndex != -1;
+	const bool RemoveGreeting = iPlayerIndex != -1;
 
 	if (iPlayerRepId >= 0)
 	{

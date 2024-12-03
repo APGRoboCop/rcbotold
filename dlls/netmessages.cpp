@@ -69,7 +69,7 @@ void CBotNetMessage::setName(const char* szName)
 	m_szMessageName = gBotGlobals.m_Strings.GetString(szName);
 }
 
-BOOL CBotNetMessage::IsMessage(const int iMessage)
+bool CBotNetMessage::IsMessage(const int iMessage)
 {
 #ifdef RCBOT_META_BUILD
 	//////////////////////
@@ -129,7 +129,7 @@ CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName) co
 	return nullptr;
 }
 
-CBotNetMessage::CBotNetMessage(const char* szMessageName, int iModId, BOOL bAllowHumans)
+CBotNetMessage::CBotNetMessage(const char* szMessageName, int iModId, bool bAllowHumans)
 {
 	m_iSize = 0;
 	m_iMessage = 0;

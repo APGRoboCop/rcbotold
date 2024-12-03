@@ -74,7 +74,7 @@ void CBits::freeMemory()
 	m_iNumBits = 0;
 }
 
-void CBits::setBit(const int iBit, const BOOL bSet) const
+void CBits::setBit(const int iBit, const bool bSet) const
 {
 	const int iBitStart = iBit / 8;
 	const int iBitOffset = iBit % 8;
@@ -87,7 +87,7 @@ void CBits::setBit(const int iBit, const BOOL bSet) const
 		*c &= ~(1 << iBitOffset);
 }
 
-BOOL CBits::getBit(const int iBit) const
+bool CBits::getBit(const int iBit) const
 {
 	const int iBitStart = iBit / 8;
 	const int iBitOffset = iBit % 8;

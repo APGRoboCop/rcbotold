@@ -137,7 +137,7 @@ ga_value CPerceptron::execute()
 	return m_output;
 }
 
-BOOL CPerceptron::fired() const
+bool CPerceptron::fired() const
 {
 	return m_output >= 0.5f;
 }
@@ -186,7 +186,7 @@ void CPerceptron::save(std::FILE* bfp) const
 		std::fwrite(&m_weights[i], sizeof(ga_value), 1, bfp);
 
 	std::fwrite(&m_output, sizeof(ga_value), 1, bfp);
-	std::fwrite(&m_bTrained, sizeof(BOOL), 1, bfp);
+	std::fwrite(&m_bTrained, sizeof(bool), 1, bfp);
 }
 
 void CPerceptron::load(std::FILE* bfp)
@@ -239,7 +239,7 @@ void CPerceptron::load(std::FILE* bfp)
 	}
 
 	std::fread(&m_output, sizeof(ga_value), 1, bfp);
-	std::fread(&m_bTrained, sizeof(BOOL), 1, bfp);
+	std::fread(&m_bTrained, sizeof(bool), 1, bfp);
 }
 
 void CPerceptron::load(const char* filename, int iProfileId)

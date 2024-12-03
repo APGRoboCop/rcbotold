@@ -55,66 +55,91 @@
 #define FL_DORMANT				(1<<31)	// Entity is dormant, no updates to client
 
 // Goes into globalvars_t.trace_flags
-#define FTRACE_SIMPLEBOX		(1<<0)	// Traceline with a simple box
+enum : std::uint8_t
+{
+	FTRACE_SIMPLEBOX = (1<<0)	// Traceline with a simple box
+};
 
 // walkmove modes
-#define	WALKMOVE_NORMAL		0 // normal walkmove
-#define WALKMOVE_WORLDONLY	1 // doesn't hit ANY entities, no matter what the solid type
-#define WALKMOVE_CHECKONLY	2 // move, but don't touch triggers
+enum : std::uint8_t
+{
+	WALKMOVE_NORMAL = 0, // normal walkmove
+	WALKMOVE_WORLDONLY = 1, // doesn't hit ANY entities, no matter what the solid type
+	WALKMOVE_CHECKONLY = 2 // move, but don't touch triggers
+};
 
 // edict->movetype values
-#define	MOVETYPE_NONE			0		// never moves
+enum : std::uint8_t
+{
+	MOVETYPE_NONE = 0, // never moves
 //#define	MOVETYPE_ANGLENOCLIP	1
 //#define	MOVETYPE_ANGLECLIP		2
-#define	MOVETYPE_WALK			3		// Player only - moving on the ground
-#define	MOVETYPE_STEP			4		// gravity, special edge handling -- monsters use this
-#define	MOVETYPE_FLY			5		// No gravity, but still collides with stuff
-#define	MOVETYPE_TOSS			6		// gravity/collisions
-#define	MOVETYPE_PUSH			7		// no clip to world, push and crush
-#define	MOVETYPE_NOCLIP			8		// No gravity, no collisions, still do velocity/avelocity
-#define	MOVETYPE_FLYMISSILE		9		// extra size to monsters
-#define	MOVETYPE_BOUNCE			10		// Just like Toss, but reflect velocity when contacting surfaces
-#define MOVETYPE_BOUNCEMISSILE	11		// bounce w/o gravity
-#define MOVETYPE_FOLLOW			12		// track movement of aiment
-#define	MOVETYPE_PUSHSTEP		13		// BSP model that needs physics/world collisions (uses nearest hull for world collision)
+	MOVETYPE_WALK = 3, // Player only - moving on the ground
+	MOVETYPE_STEP = 4, // gravity, special edge handling -- monsters use this
+	MOVETYPE_FLY = 5, // No gravity, but still collides with stuff
+	MOVETYPE_TOSS = 6, // gravity/collisions
+	MOVETYPE_PUSH = 7, // no clip to world, push and crush
+	MOVETYPE_NOCLIP = 8, // No gravity, no collisions, still do velocity/avelocity
+	MOVETYPE_FLYMISSILE = 9, // extra size to monsters
+	MOVETYPE_BOUNCE = 10, // Just like Toss, but reflect velocity when contacting surfaces
+	MOVETYPE_BOUNCEMISSILE = 11, // bounce w/o gravity
+	MOVETYPE_FOLLOW = 12, // track movement of aiment
+	MOVETYPE_PUSHSTEP = 13		// BSP model that needs physics/world collisions (uses nearest hull for world collision)
+};
 
 // edict->solid values
 // NOTE: Some movetypes will cause collisions independent of SOLID_NOT/SOLID_TRIGGER when the entity moves
 // SOLID only effects OTHER entities colliding with this one when they move - UGH!
-#define	SOLID_NOT				0		// no interaction with other objects
-#define	SOLID_TRIGGER			1		// touch on edge, but not blocking
-#define	SOLID_BBOX				2		// touch on edge, block
-#define	SOLID_SLIDEBOX			3		// touch on edge, but not an onground
-#define	SOLID_BSP				4		// bsp clip, touch on edge, block
+enum : std::uint8_t
+{
+	SOLID_NOT = 0, // no interaction with other objects
+	SOLID_TRIGGER = 1, // touch on edge, but not blocking
+	SOLID_BBOX = 2, // touch on edge, block
+	SOLID_SLIDEBOX = 3, // touch on edge, but not an onground
+	SOLID_BSP = 4		// bsp clip, touch on edge, block
+};
 
 // edict->deadflag values
-#define	DEAD_NO					0 // alive
-#define	DEAD_DYING				1 // playing death animation or still falling off of a ledge waiting to hit ground
-#define	DEAD_DEAD				2 // dead. lying still.
-#define DEAD_RESPAWNABLE		3
-#define DEAD_DISCARDBODY		4
+enum : std::uint8_t
+{
+	DEAD_NO = 0, // alive
+	DEAD_DYING = 1, // playing death animation or still falling off of a ledge waiting to hit ground
+	DEAD_DEAD = 2, // dead. lying still.
+	DEAD_RESPAWNABLE = 3,
+	DEAD_DISCARDBODY = 4
+};
 
 #define	DAMAGE_NO				0
 #define	DAMAGE_YES				1
 #define	DAMAGE_AIM				2
 
 // entity effects
-#define	EF_BRIGHTFIELD			1	// swirling cloud of particles
-#define	EF_MUZZLEFLASH 			2	// single frame ELIGHT on entity attachment 0
-#define	EF_BRIGHTLIGHT 			4	// DLIGHT centered at entity origin
-#define	EF_DIMLIGHT 			8	// player flashlight
-#define EF_INVLIGHT				16	// get lighting from ceiling
-#define EF_NOINTERP				32	// don't interpolate the next frame
-#define EF_LIGHT				64	// rocket flare glow sprite
-#define EF_NODRAW				128	// don't draw entity
+enum : std::uint8_t
+{
+	EF_BRIGHTFIELD = 1, // swirling cloud of particles
+	EF_MUZZLEFLASH = 2, // single frame ELIGHT on entity attachment 0
+	EF_BRIGHTLIGHT = 4, // DLIGHT centered at entity origin
+	EF_DIMLIGHT = 8, // player flashlight
+	EF_INVLIGHT = 16, // get lighting from ceiling
+	EF_NOINTERP = 32, // don't interpolate the next frame
+	EF_LIGHT = 64, // rocket flare glow sprite
+	EF_NODRAW = 128	// don't draw entity
+};
 
 // entity flags
-#define EFLAG_SLERP				1	// do studio interpolation of this entity
+enum : std::uint8_t
+{
+	EFLAG_SLERP = 1	// do studio interpolation of this entity
+};
 
 //
 // temp entity events
 //
-#define	TE_BEAMPOINTS		0		// beam effect between two points
+enum : std::uint8_t
+{
+	TE_BEAMPOINTS = 0		// beam effect between two points
+};
+
 // coord coord coord (start position)
 // coord coord coord (end position)
 // short (sprite index)
@@ -127,7 +152,11 @@
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
-#define	TE_BEAMENTPOINT		1		// beam effect between point and entity
+enum : std::uint8_t
+{
+	TE_BEAMENTPOINT = 1		// beam effect between point and entity
+};
+
 // short (start entity)
 // coord coord coord (end position)
 // short (sprite index)
@@ -140,10 +169,16 @@
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
-#define	TE_GUNSHOT			2		// particle effect plus ricochet sound
+enum : std::uint8_t
+{
+	TE_GUNSHOT = 2		// particle effect plus ricochet sound
+};
+
 // coord coord coord (position)
 
-#define	TE_EXPLOSION		3		// additive sprite, 2 dynamic lights, flickering particles, explosion sound, move vertically 8 pps
+enum : std::uint8_t
+{
+	TE_EXPLOSION = 3, // additive sprite, 2 dynamic lights, flickering particles, explosion sound, move vertically 8 pps
 // coord coord coord (position)
 // short (sprite index)
 // byte (scale in 0.1's)
@@ -151,26 +186,44 @@
 // byte (flags)
 //
 // The Explosion effect has some flags to control performance/aesthetic features:
-#define TE_EXPLFLAG_NONE		0	// all flags clear makes default Half-Life explosion
-#define TE_EXPLFLAG_NOADDITIVE	1	// sprite will be drawn opaque (ensure that the sprite you send is a non-additive sprite)
-#define TE_EXPLFLAG_NODLIGHTS	2	// do not render dynamic lights
-#define TE_EXPLFLAG_NOSOUND		4	// do not play client explosion sound
-#define TE_EXPLFLAG_NOPARTICLES	8	// do not draw particles
+	TE_EXPLFLAG_NONE = 0, // all flags clear makes default Half-Life explosion
+	TE_EXPLFLAG_NOADDITIVE = 1,
+	// sprite will be drawn opaque (ensure that the sprite you send is a non-additive sprite)
+	TE_EXPLFLAG_NODLIGHTS = 2, // do not render dynamic lights
+	TE_EXPLFLAG_NOSOUND = 4, // do not play client explosion sound
+	TE_EXPLFLAG_NOPARTICLES = 8 // do not draw particles
+};
 
-#define	TE_TAREXPLOSION		4		// Quake1 "tarbaby" explosion with sound
+enum : std::uint8_t
+{
+	TE_TAREXPLOSION = 4		// Quake1 "tarbaby" explosion with sound
+};
+
 // coord coord coord (position)
 
-#define	TE_SMOKE			5		// alphablend sprite, move vertically 30 pps
+enum : std::uint8_t
+{
+	TE_SMOKE = 5		// alphablend sprite, move vertically 30 pps
+};
+
 // coord coord coord (position)
 // short (sprite index)
 // byte (scale in 0.1's)
 // byte (framerate)
 
-#define	TE_TRACER			6		// tracer effect from point to point
+enum : std::uint8_t
+{
+	TE_TRACER = 6		// tracer effect from point to point
+};
+
 // coord, coord, coord (start)
 // coord, coord, coord (end)
 
-#define	TE_LIGHTNING		7		// TE_BEAMPOINTS with simplified parameters
+enum : std::uint8_t
+{
+	TE_LIGHTNING = 7		// TE_BEAMPOINTS with simplified parameters
+};
+
 // coord, coord, coord (start)
 // coord, coord, coord (end)
 // byte (life in 0.1's)
@@ -178,7 +231,11 @@
 // byte (amplitude in 0.01's)
 // short (sprite model index)
 
-#define	TE_BEAMENTS			8
+enum : std::uint8_t
+{
+	TE_BEAMENTS = 8
+};
+
 // short (start entity)
 // short (end entity)
 // short (sprite index)
@@ -191,33 +248,61 @@
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
-#define	TE_SPARKS			9		// 8 random tracers with gravity, ricochet sprite
+enum : std::uint8_t
+{
+	TE_SPARKS = 9		// 8 random tracers with gravity, ricochet sprite
+};
+
 // coord coord coord (position)
 
-#define	TE_LAVASPLASH		10		// Quake1 lava splash
+enum : std::uint8_t
+{
+	TE_LAVASPLASH = 10		// Quake1 lava splash
+};
+
 // coord coord coord (position)
 
-#define	TE_TELEPORT			11		// Quake1 teleport splash
+enum : std::uint8_t
+{
+	TE_TELEPORT = 11		// Quake1 teleport splash
+};
+
 // coord coord coord (position)
 
-#define TE_EXPLOSION2		12		// Quake1 colormaped (base palette) particle explosion with sound
+enum : std::uint8_t
+{
+	TE_EXPLOSION2 = 12		// Quake1 colormaped (base palette) particle explosion with sound
+};
+
 // coord coord coord (position)
 // byte (starting color)
 // byte (num colors)
 
-#define TE_BSPDECAL			13		// Decal from the .BSP file
+enum : std::uint8_t
+{
+	TE_BSPDECAL = 13		// Decal from the .BSP file
+};
+
 // coord, coord, coord (x,y,z), decal position (center of texture in world)
 // short (texture index of precached decal texture name)
 // short (entity index)
 // [optional - only included if previous short is non-zero (not the world)] short (index of model of above entity)
 
-#define TE_IMPLOSION		14		// tracers moving toward a point
+enum : std::uint8_t
+{
+	TE_IMPLOSION = 14		// tracers moving toward a point
+};
+
 // coord, coord, coord (position)
 // byte (radius)
 // byte (count)
 // byte (life in 0.1's)
 
-#define TE_SPRITETRAIL		15		// line of moving glow sprites with gravity, fadeout, and collisions
+enum : std::uint8_t
+{
+	TE_SPRITETRAIL = 15		// line of moving glow sprites with gravity, fadeout, and collisions
+};
+
 // coord, coord, coord (start)
 // coord, coord, coord (end)
 // short (sprite index)
@@ -227,21 +312,36 @@
 // byte (velocity along vector in 10's)
 // byte (randomness of velocity in 10's)
 
-#define TE_BEAM				16		// obsolete
+enum : std::uint8_t
+{
+	TE_BEAM = 16		// obsolete
+};
 
-#define TE_SPRITE			17		// additive sprite, plays 1 cycle
+enum : std::uint8_t
+{
+	TE_SPRITE = 17		// additive sprite, plays 1 cycle
+};
+
 // coord, coord, coord (position)
 // short (sprite index)
 // byte (scale in 0.1's)
 // byte (brightness)
 
-#define TE_BEAMSPRITE		18		// A beam with a sprite at the end
+enum : std::uint8_t
+{
+	TE_BEAMSPRITE = 18		// A beam with a sprite at the end
+};
+
 // coord, coord, coord (start position)
 // coord, coord, coord (end position)
 // short (beam sprite index)
 // short (end sprite index)
 
-#define TE_BEAMTORUS		19		// screen aligned beam ring, expands to max radius over lifetime
+enum : std::uint8_t
+{
+	TE_BEAMTORUS = 19		// screen aligned beam ring, expands to max radius over lifetime
+};
+
 // coord coord coord (center position)
 // coord coord coord (axis and radius)
 // short (sprite index)
@@ -254,7 +354,11 @@
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
-#define TE_BEAMDISK			20		// disk that expands to max radius over lifetime
+enum : std::uint8_t
+{
+	TE_BEAMDISK = 20		// disk that expands to max radius over lifetime
+};
+
 // coord coord coord (center position)
 // coord coord coord (axis and radius)
 // short (sprite index)
@@ -267,7 +371,11 @@
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
-#define TE_BEAMCYLINDER		21		// cylinder that expands to max radius over lifetime
+enum : std::uint8_t
+{
+	TE_BEAMCYLINDER = 21		// cylinder that expands to max radius over lifetime
+};
+
 // coord coord coord (center position)
 // coord coord coord (axis and radius)
 // short (sprite index)
@@ -280,7 +388,11 @@
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
-#define TE_BEAMFOLLOW		22		// create a line of decaying beam segments until entity stops moving
+enum : std::uint8_t
+{
+	TE_BEAMFOLLOW = 22		// create a line of decaying beam segments until entity stops moving
+};
+
 // short (entity:attachment to follow)
 // short (sprite index)
 // byte (life in 0.1's)
@@ -288,10 +400,18 @@
 // byte,byte,byte (color)
 // byte (brightness)
 
-#define TE_GLOWSPRITE		23
+enum : std::uint8_t
+{
+	TE_GLOWSPRITE = 23
+};
+
 // coord, coord, coord (pos) short (model index) byte (scale / 10)
 
-#define TE_BEAMRING			24		// connect a beam ring to two entities
+enum : std::uint8_t
+{
+	TE_BEAMRING = 24		// connect a beam ring to two entities
+};
+
 // short (start entity)
 // short (end entity)
 // short (sprite index)
@@ -304,7 +424,11 @@
 // byte (brightness)
 // byte (scroll speed in 0.1's)
 
-#define TE_STREAK_SPLASH	25		// oriented shower of tracers
+enum : std::uint8_t
+{
+	TE_STREAK_SPLASH = 25		// oriented shower of tracers
+};
+
 // coord coord coord (start position)
 // coord coord coord (direction vector)
 // byte (color)
@@ -312,9 +436,16 @@
 // short (base speed)
 // short (ramdon velocity)
 
-#define TE_BEAMHOSE			26		// obsolete
+enum : std::uint8_t
+{
+	TE_BEAMHOSE = 26		// obsolete
+};
 
-#define TE_DLIGHT			27		// dynamic light, effect world, minor entity effect
+enum : std::uint8_t
+{
+	TE_DLIGHT = 27		// dynamic light, effect world, minor entity effect
+};
+
 // coord, coord, coord (pos)
 // byte (radius in 10's)
 // byte byte byte (color)
@@ -322,7 +453,11 @@
 // byte (life in 10's)
 // byte (decay rate in 10's)
 
-#define TE_ELIGHT			28		// point entity light, no world effect
+enum : std::uint8_t
+{
+	TE_ELIGHT = 28		// point entity light, no world effect
+};
+
 // short (entity:attachment to follow)
 // coord coord coord (initial position)
 // coord (radius)
@@ -330,7 +465,11 @@
 // byte (life in 0.1's)
 // coord (decay rate)
 
-#define TE_TEXTMESSAGE		29
+enum : std::uint8_t
+{
+	TE_TEXTMESSAGE = 29
+};
+
 // short 1.2.13 x (-1 = center)
 // short 1.2.13 y (-1 = center)
 // byte Effect 0 = fade in/fade out
@@ -345,41 +484,73 @@
 // optional ushort 8.8 fxtime	(time the highlight lags behing the leading text in effect 2)
 // string text message		(512 chars max sz string)
 
-#define TE_KILLBEAM			99		// kill all beams attached to entity
+enum : std::uint8_t
+{
+	TE_KILLBEAM = 99		// kill all beams attached to entity
+};
+
 // short (entity)
 
-#define TE_LARGEFUNNEL		100
+enum : std::uint8_t
+{
+	TE_LARGEFUNNEL = 100
+};
+
 // coord coord coord (funnel position)
 // short (sprite index)
 // short (flags)
 
-#define	TE_BLOODSTREAM		101		// particle spray
+enum : std::uint8_t
+{
+	TE_BLOODSTREAM = 101		// particle spray
+};
+
 // coord coord coord (start position)
 // coord coord coord (spray vector)
 // byte (color)
 // byte (speed)
 
-#define	TE_SHOWLINE			102		// line of particles every 5 units, dies in 30 seconds
+enum : std::uint8_t
+{
+	TE_SHOWLINE = 102		// line of particles every 5 units, dies in 30 seconds
+};
+
 // coord coord coord (start position)
 // coord coord coord (end position)
 
-#define TE_BLOOD			103		// particle spray
+enum : std::uint8_t
+{
+	TE_BLOOD = 103		// particle spray
+};
+
 // coord coord coord (start position)
 // coord coord coord (spray vector)
 // byte (color)
 // byte (speed)
 
-#define TE_DECAL			104		// Decal applied to a brush entity (not the world)
+enum : std::uint8_t
+{
+	TE_DECAL = 104		// Decal applied to a brush entity (not the world)
+};
+
 // coord, coord, coord (x,y,z), decal position (center of texture in world)
 // byte (texture index of precached decal texture name)
 // short (entity index)
 
-#define TE_FIZZ				105		// create alpha sprites inside of entity, float upwards
+enum : std::uint8_t
+{
+	TE_FIZZ = 105		// create alpha sprites inside of entity, float upwards
+};
+
 // short (entity)
 // short (sprite index)
 // byte (density)
 
-#define TE_MODEL			106		// create a moving model that bounces and makes a sound when it hits
+enum : std::uint8_t
+{
+	TE_MODEL = 106		// create a moving model that bounces and makes a sound when it hits
+};
+
 // coord, coord, coord (position)
 // coord, coord, coord (velocity)
 // angle (initial yaw)
@@ -387,14 +558,22 @@
 // byte (bounce sound type)
 // byte (life in 0.1's)
 
-#define TE_EXPLODEMODEL		107		// spherical shower of models, picks from set
+enum : std::uint8_t
+{
+	TE_EXPLODEMODEL = 107		// spherical shower of models, picks from set
+};
+
 // coord, coord, coord (origin)
 // coord (velocity)
 // short (model index)
 // short (count)
 // byte (life in 0.1's)
 
-#define TE_BREAKMODEL		108		// box of models or sprites
+enum : std::uint8_t
+{
+	TE_BREAKMODEL = 108		// box of models or sprites
+};
+
 // coord, coord, coord (position)
 // coord, coord, coord (size)
 // coord, coord, coord (velocity)
@@ -404,12 +583,20 @@
 // byte (life in 0.1 secs)
 // byte (flags)
 
-#define TE_GUNSHOTDECAL		109		// decal and ricochet sound
+enum : std::uint8_t
+{
+	TE_GUNSHOTDECAL = 109		// decal and ricochet sound
+};
+
 // coord, coord, coord (position)
 // short (entity index???)
 // byte (decal???)
 
-#define TE_SPRITE_SPRAY		110		// spay of alpha sprites
+enum : std::uint8_t
+{
+	TE_SPRITE_SPRAY = 110		// spay of alpha sprites
+};
+
 // coord, coord, coord (position)
 // coord, coord, coord (velocity)
 // short (sprite index)
@@ -417,18 +604,30 @@
 // byte (speed)
 // byte (noise)
 
-#define TE_ARMOR_RICOCHET	111		// quick spark sprite, client ricochet sound.
+enum : std::uint8_t
+{
+	TE_ARMOR_RICOCHET = 111		// quick spark sprite, client ricochet sound.
+};
+
 // coord, coord, coord (position)
 // byte (scale in 0.1's)
 
-#define TE_PLAYERDECAL		112		// ???
+enum : std::uint8_t
+{
+	TE_PLAYERDECAL = 112		// ???
+};
+
 // byte (playerindex)
 // coord, coord, coord (position)
 // short (entity???)
 // byte (decal number???)
 // [optional] short (model index???)
 
-#define TE_BUBBLES			113		// create alpha sprites inside of box, float upwards
+enum : std::uint8_t
+{
+	TE_BUBBLES = 113		// create alpha sprites inside of box, float upwards
+};
+
 // coord, coord, coord (min start position)
 // coord, coord, coord (max start position)
 // coord (float height)
@@ -436,7 +635,11 @@
 // byte (count)
 // coord (speed)
 
-#define TE_BUBBLETRAIL		114		// create alpha sprites along a line, float upwards
+enum : std::uint8_t
+{
+	TE_BUBBLETRAIL = 114		// create alpha sprites along a line, float upwards
+};
+
 // coord, coord, coord (min start position)
 // coord, coord, coord (max start position)
 // coord (float height)
@@ -444,34 +647,58 @@
 // byte (count)
 // coord (speed)
 
-#define TE_BLOODSPRITE		115		// spray of opaque sprite1's that fall, single sprite2 for 1..2 secs (this is a high-priority tent)
+enum : std::uint8_t
+{
+	TE_BLOODSPRITE = 115		// spray of opaque sprite1's that fall, single sprite2 for 1..2 secs (this is a high-priority tent)
+};
+
 // coord, coord, coord (position)
 // short (sprite1 index)
 // short (sprite2 index)
 // byte (color)
 // byte (scale)
 
-#define TE_WORLDDECAL		116		// Decal applied to the world brush
+enum : std::uint8_t
+{
+	TE_WORLDDECAL = 116		// Decal applied to the world brush
+};
+
 // coord, coord, coord (x,y,z), decal position (center of texture in world)
 // byte (texture index of precached decal texture name)
 
-#define TE_WORLDDECALHIGH	117		// Decal (with texture index > 256) applied to world brush
+enum : std::uint8_t
+{
+	TE_WORLDDECALHIGH = 117		// Decal (with texture index > 256) applied to world brush
+};
+
 // coord, coord, coord (x,y,z), decal position (center of texture in world)
 // byte (texture index of precached decal texture name - 256)
 
-#define TE_DECALHIGH		118		// Same as TE_DECAL, but the texture index was greater than 256
+enum : std::uint8_t
+{
+	TE_DECALHIGH = 118		// Same as TE_DECAL, but the texture index was greater than 256
+};
+
 // coord, coord, coord (x,y,z), decal position (center of texture in world)
 // byte (texture index of precached decal texture name - 256)
 // short (entity index)
 
-#define TE_PROJECTILE		119		// Makes a projectile (like a nail) (this is a high-priority tent)
+enum : std::uint8_t
+{
+	TE_PROJECTILE = 119		// Makes a projectile (like a nail) (this is a high-priority tent)
+};
+
 // coord, coord, coord (position)
 // coord, coord, coord (velocity)
 // short (modelindex)
 // byte (life)
 // byte (owner)  projectile won't collide with owner (if owner == 0, projectile will hit any client).
 
-#define TE_SPRAY			120		// Throws a shower of sprites or models
+enum : std::uint8_t
+{
+	TE_SPRAY = 120		// Throws a shower of sprites or models
+};
+
 // coord, coord, coord (position)
 // coord, coord, coord (direction)
 // short (modelindex)
@@ -480,19 +707,29 @@
 // byte (noise)
 // byte (rendermode)
 
-#define TE_PLAYERSPRITES	121		// sprites emit from a player's bounding box (ONLY use for players!)
+enum : std::uint8_t
+{
+	TE_PLAYERSPRITES = 121		// sprites emit from a player's bounding box (ONLY use for players!)
+};
+
 // byte (playernum)
 // short (sprite modelindex)
 // byte (count)
 // byte (variance) (0 = no variance in size) (10 = 10% variance in size)
 
-#define TE_PARTICLEBURST	122		// very similar to lavasplash.
+enum : std::uint8_t
+{
+	TE_PARTICLEBURST = 122		// very similar to lavasplash.
+};
+
 // coord (origin)
 // short (radius)
 // byte (particle color)
 // byte (duration * 10) (will be randomized a bit)
 
-#define TE_FIREFIELD			123		// makes a field of fire.
+enum : std::uint8_t
+{
+	TE_FIREFIELD = 123, // makes a field of fire.
 // coord (origin)
 // short (radius) (fire is made in a square around origin. -radius, -radius to radius, radius)
 // short (modelindex)
@@ -501,22 +738,36 @@
 // byte (duration (in seconds) * 10) (will be randomized a bit)
 //
 // to keep network traffic low, this message has associated flags that fit into a byte:
-#define TEFIRE_FLAG_ALLFLOAT	1 // all sprites will drift upwards as they animate
-#define TEFIRE_FLAG_SOMEFLOAT	2 // some of the sprites will drift upwards. (50% chance)
-#define TEFIRE_FLAG_LOOP		4 // if set, sprite plays at 15 fps, otherwise plays at whatever rate stretches the animation over the sprite's duration.
-#define TEFIRE_FLAG_ALPHA		8 // if set, sprite is rendered alpha blended at 50% else, opaque
-#define TEFIRE_FLAG_PLANAR		16 // if set, all fire sprites have same initial Z instead of randomly filling a cube.
+	TEFIRE_FLAG_ALLFLOAT = 1, // all sprites will drift upwards as they animate
+	TEFIRE_FLAG_SOMEFLOAT = 2, // some of the sprites will drift upwards. (50% chance)
+	TEFIRE_FLAG_LOOP = 4,
+	// if set, sprite plays at 15 fps, otherwise plays at whatever rate stretches the animation over the sprite's duration.
+	TEFIRE_FLAG_ALPHA = 8, // if set, sprite is rendered alpha blended at 50% else, opaque
+	TEFIRE_FLAG_PLANAR = 16 // if set, all fire sprites have same initial Z instead of randomly filling a cube.
+};
 
-#define TE_PLAYERATTACHMENT			124 // attaches a TENT to a player (this is a high-priority tent)
+enum : std::uint8_t
+{
+	TE_PLAYERATTACHMENT = 124 // attaches a TENT to a player (this is a high-priority tent)
+};
+
 // byte (entity index of player)
 // coord (vertical offset) ( attachment origin.z = player origin.z + vertical offset )
 // short (model index)
 // short (life * 10 );
 
-#define TE_KILLPLAYERATTACHMENTS	125 // will expire all TENTS attached to a player.
+enum : std::uint8_t
+{
+	TE_KILLPLAYERATTACHMENTS = 125 // will expire all TENTS attached to a player.
+};
+
 // byte (entity index of player)
 
-#define TE_MULTIGUNSHOT				126 // much more compact shotgun message
+enum : std::uint8_t
+{
+	TE_MULTIGUNSHOT = 126 // much more compact shotgun message
+};
+
 // This message is used to make a client approximate a 'spray' of gunfire.
 // Any weapon that fires more than one bullet per frame and fires in a bit of a spread is
 // a good candidate for MULTIGUNSHOT use. (shotguns)
@@ -535,7 +786,11 @@
 // byte (count)
 // byte (bullethole decal texture index)
 
-#define TE_USERTRACER				127 // larger message than the standard tracer, but allows some customization.
+enum : std::uint8_t
+{
+	TE_USERTRACER = 127 // larger message than the standard tracer, but allows some customization.
+};
+
 // coord (origin)
 // coord (origin)
 // coord (origin)
@@ -546,23 +801,31 @@
 // byte ( color ) this is an index into an array of color vectors in the engine. (0 - )
 // byte ( length * 10 )
 
-#define	MSG_BROADCAST		0		// unreliable to all
-#define	MSG_ONE				1		// reliable to one (msg_entity)
-#define	MSG_ALL				2		// reliable to all
-#define	MSG_INIT			3		// write to the init string
-#define MSG_PVS				4		// Ents in PVS of org
-#define MSG_PAS				5		// Ents in PAS of org
-#define MSG_PVS_R			6		// Reliable to PVS
-#define MSG_PAS_R			7		// Reliable to PAS
-#define MSG_ONE_UNRELIABLE	8		// Send to one client, but don't put in reliable stream, put in unreliable datagram ( could be dropped )
+enum : std::uint8_t
+{
+	MSG_BROADCAST = 0, // unreliable to all
+	MSG_ONE = 1, // reliable to one (msg_entity)
+	MSG_ALL = 2, // reliable to all
+	MSG_INIT = 3, // write to the init string
+	MSG_PVS = 4, // Ents in PVS of org
+	MSG_PAS = 5, // Ents in PAS of org
+	MSG_PVS_R = 6, // Reliable to PVS
+	MSG_PAS_R = 7, // Reliable to PAS
+	MSG_ONE_UNRELIABLE = 8
+	// Send to one client, but don't put in reliable stream, put in unreliable datagram ( could be dropped )
+};
 
 // contents of a spot in the world
-#define	CONTENTS_EMPTY		(-1)
-#define	CONTENTS_SOLID		(-2)
-#define	CONTENTS_WATER		(-3)
-#define	CONTENTS_SLIME		(-4)
-#define	CONTENTS_LAVA		(-5)
-#define	CONTENTS_SKY		(-6)
+enum: std::int8_t
+{
+	CONTENTS_EMPTY = (-1),
+	CONTENTS_SOLID = (-2),
+	CONTENTS_WATER = (-3),
+	CONTENTS_SLIME = (-4),
+	CONTENTS_LAVA = (-5),
+	CONTENTS_SKY = (-6)
+};
+
 /* These additional contents constants are defined in bspfile.h
 #define	CONTENTS_ORIGIN		-7		// removed at csg time
 #define	CONTENTS_CLIP		-8		// changed to contents_solid
@@ -575,44 +838,66 @@
 
 #define CONTENTS_TRANSLUCENT	-15
 */
-#define	CONTENTS_LADDER		(-16)
+enum : std::int8_t
+{
+	CONTENTS_LADDER = (-16)
+};
 
-#define CONTENT_EMPTY	(-1)
-#define CONTENT_SOLID	(-2)
-#define	CONTENT_WATER	(-3)
-#define CONTENT_SLIME	(-4)
-#define CONTENT_LAVA	(-5)
-#define CONTENT_SKY		(-6)
+enum : std::int8_t
+{
+	CONTENT_EMPTY = (-1),
+	CONTENT_SOLID = (-2),
+	CONTENT_WATER = (-3),
+	CONTENT_SLIME = (-4),
+	CONTENT_LAVA = (-5),
+	CONTENT_SKY = (-6)
+};
 
 // channels
-#define CHAN_AUTO			0
-#define CHAN_WEAPON			1
-#define	CHAN_VOICE			2
-#define CHAN_ITEM			3
-#define	CHAN_BODY			4
-#define CHAN_STREAM			5		// allocate stream channel from the static or dynamic area
-#define CHAN_STATIC			6		// allocate channel from the static area
+enum : std::uint8_t
+{
+	CHAN_AUTO = 0,
+	CHAN_WEAPON = 1,
+	CHAN_VOICE = 2,
+	CHAN_ITEM = 3,
+	CHAN_BODY = 4,
+	CHAN_STREAM = 5, // allocate stream channel from the static or dynamic area
+	CHAN_STATIC = 6		// allocate channel from the static area
+};
 
 // attenuation values
-#define ATTN_NONE		0
+enum : std::uint8_t
+{
+	ATTN_NONE = 0
+};
+
 #define	ATTN_NORM		0.8f
 #define ATTN_IDLE		2.0f
 #define ATTN_STATIC		1.25f
 
 // pitch values
-#define	PITCH_NORM		100			// non-pitch shifted
-#define PITCH_LOW		95			// other values are possible - 0-255, where 255 is very high
-#define PITCH_HIGH		120
+enum : std::uint8_t
+{
+	PITCH_NORM = 100, // non-pitch shifted
+	PITCH_LOW = 95, // other values are possible - 0-255, where 255 is very high
+	PITCH_HIGH = 120
+};
 
 // volume values
-#define VOL_NORM		1.0
+#define VOL_NORM		1.0f
 
 // plats
-#define	PLAT_LOW_TRIGGER	1
+enum : std::uint8_t
+{
+	PLAT_LOW_TRIGGER = 1
+};
 
 // Trains
-#define	SF_TRAIN_WAIT_RETRIGGER	1
-#define SF_TRAIN_PASSABLE		8		// Train is not solid -- used to make water trains
+enum : std::uint8_t
+{
+	SF_TRAIN_WAIT_RETRIGGER = 1,
+	SF_TRAIN_PASSABLE = 8		// Train is not solid -- used to make water trains
+};
 
 // buttons
 #ifndef IN_BUTTONS_H
@@ -621,16 +906,22 @@
 
 // Break Model Defines
 
-#define BREAK_TYPEMASK	0x4F
-#define BREAK_GLASS		0x01
-#define BREAK_METAL		0x02
-#define BREAK_FLESH		0x04
-#define BREAK_WOOD		0x08
+enum : std::uint8_t
+{
+	BREAK_TYPEMASK = 0x4F,
+	BREAK_GLASS = 0x01,
+	BREAK_METAL = 0x02,
+	BREAK_FLESH = 0x04,
+	BREAK_WOOD = 0x08
+};
 
-#define BREAK_SMOKE		0x10
-#define BREAK_TRANS		0x20
-#define BREAK_CONCRETE	0x40
-#define BREAK_2			0x80
+enum : std::uint8_t
+{
+	BREAK_SMOKE = 0x10,
+	BREAK_TRANS = 0x20,
+	BREAK_CONCRETE = 0x40,
+	BREAK_2 = 0x80
+};
 
 // Colliding temp entity sounds
 
@@ -638,15 +929,27 @@
 #define	BOUNCE_METAL	BREAK_METAL
 #define BOUNCE_FLESH	BREAK_FLESH
 #define BOUNCE_WOOD		BREAK_WOOD
-#define BOUNCE_SHRAP	0x10
-#define BOUNCE_SHELL	0x20
+
+enum : std::uint8_t
+{
+	BOUNCE_SHRAP = 0x10,
+	BOUNCE_SHELL = 0x20
+};
+
 #define	BOUNCE_CONCRETE BREAK_CONCRETE
-#define BOUNCE_SHOTSHELL 0x80
+
+enum : std::uint8_t
+{
+	BOUNCE_SHOTSHELL = 0x80
+};
 
 // Temp entity bounce sound types
-#define TE_BOUNCE_NULL		0
-#define TE_BOUNCE_SHELL		1
-#define TE_BOUNCE_SHOTSHELL	2
+enum : std::uint8_t
+{
+	TE_BOUNCE_NULL = 0,
+	TE_BOUNCE_SHELL = 1,
+	TE_BOUNCE_SHOTSHELL = 2
+};
 
 // Rendering constants
 enum : std::uint8_t

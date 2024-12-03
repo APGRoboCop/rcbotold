@@ -42,10 +42,14 @@
 #include "types_meta.h"		// mBOOL
 
 // Max length of line in config file.
-#define MAX_CONF_LEN	1024
+enum : std::uint16_t
+{
+	MAX_CONF_LEN = 1024
+};
 
 // Supported config value-types.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	CF_NONE=0,
 	CF_INT,
 	CF_BOOL,

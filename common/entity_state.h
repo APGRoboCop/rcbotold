@@ -19,8 +19,11 @@
 #endif
 
 // For entityType below
-#define ENTITY_NORMAL		(1<<0)
-#define ENTITY_BEAM			(1<<1)
+enum : std::uint8_t
+{
+	ENTITY_NORMAL = (1<<0),
+	ENTITY_BEAM = (1<<1)
+};
 
 // Entity state is used for the baseline and for delta compression of a packet of
 //  entities that is sent to a client.

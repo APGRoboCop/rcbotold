@@ -64,14 +64,14 @@ CBotVisibles::CBotVisibles()
 	m_iVisibleList.Clear();
 }
 
-BOOL CBotVisibles::isVisible(int iIndex) const
+bool CBotVisibles::isVisible(int iIndex) const
 {
 	return m_iVisibles->getBit(iIndex);
 }
 
-void CBotVisibles::setVisible(int iIndex, BOOL bVisible)
+void CBotVisibles::setVisible(int iIndex, bool bVisible)
 {
-	const BOOL bCurrentlyVisible = isVisible(iIndex);
+	const bool bCurrentlyVisible = isVisible(iIndex);
 
 	if (bCurrentlyVisible && !bVisible)
 		m_iVisibleList.Remove(iIndex);

@@ -94,7 +94,7 @@ const char* CModInfo::GetDllFileName(const char* szFolder)
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
 // Required DLL entry point
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+bool WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
 	if (fdwReason == DLL_PROCESS_ATTACH)
 	{

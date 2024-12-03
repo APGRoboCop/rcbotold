@@ -139,16 +139,16 @@ public:
 
 	int					m_bitsHUDDamage;		// Damage bits for the current fame. These get sent to
 	// the hude via the DAMAGE message
-	BOOL				m_fInitHUD;				// True when deferred HUD restart msg needs to be sent
-	BOOL				m_fGameHUDInitialized;
+	bool				m_fInitHUD;				// True when deferred HUD restart msg needs to be sent
+	bool				m_fGameHUDInitialized;
 	int					m_iTrain;				// Train control position
-	BOOL				m_fWeapon;				// Set this to false to force a reset of the current weapon HUD info
+	bool				m_fWeapon;				// Set this to false to force a reset of the current weapon HUD info
 
 	EHANDLE				m_pTank;				// the tank which the player is currently controlling,  NULL if no tank
 	float				m_fDeadTime;			// the time at which the player died  (used in PlayerDeathThink())
 
-	BOOL			m_fNoPlayerSound;	// a debugging feature. Player makes no sound if this is true.
-	BOOL			m_fLongJump; // does this player have the longjump module?
+	bool			m_fNoPlayerSound;	// a debugging feature. Player makes no sound if this is true.
+	bool			m_fLongJump; // does this player have the longjump module?
 
 	float       m_tSneaking;
 	int			m_iUpdateTime;		// stores the number of frame ticks before sending HUD update messages
@@ -168,7 +168,7 @@ public:
 	int	m_rgAmmoLast[MAX_AMMO_SLOTS];
 
 	Vector				m_vecAutoAim;
-	BOOL				m_fOnTarget;
+	bool				m_fOnTarget;
 	int					m_iDeaths;
 	float				m_iRespawnFrames;	// used in PlayerDeathThink() to make sure players can always respawn
 
@@ -201,19 +201,19 @@ public:
 
 	void StartSneaking() { m_tSneaking = gpGlobals->time - 1; }
 	void StopSneaking() { m_tSneaking = gpGlobals->time + 30; }
-	BOOL IsSneaking() { return m_tSneaking <= gpGlobals->time; }
+	bool IsSneaking() { return m_tSneaking <= gpGlobals->time; }
 
-	static BOOL IsAlive()
+	static bool IsAlive()
 
 	{
-		BOOL pev = 0;
+		bool pev = false;
 		return pev->deadflag == DEAD_NO && pev->health > 0;
 	}
 
-	BOOL ShouldFadeOnDeath() override { return false; }
-	static BOOL IsPlayer() { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
+	bool ShouldFadeOnDeath() override { return false; }
+	static bool IsPlayer() { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
 
-	static BOOL IsNetClient() { return true; }		// Bots should return false for this, they can't receive NET messages
+	static bool IsNetClient() { return true; }		// Bots should return false for this, they can't receive NET messages
 	// Spectators should return true for this
 	const char* TeamID();
 
@@ -221,8 +221,8 @@ public:
 	int		Restore(CRestore& restore);
 	void RenewItems();
 	void PackDeadPlayerItems();
-	void RemoveAllItems(BOOL removeSuit);
-	BOOL SwitchWeapon(CBasePlayerItem* pWeapon);
+	void RemoveAllItems(bool removeSuit);
+	bool SwitchWeapon(CBasePlayerItem* pWeapon);
 
 	// JOHN:  sends custom messages if player HUD data has changed  (eg health, ammo)
 	virtual void UpdateClientData();
@@ -232,8 +232,8 @@ public:
 	// Player is moved across the transition by other means
 	int				ObjectCaps() { return CBaseMonster::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
 	void			Precache();
-	BOOL			IsOnLadder();
-	BOOL			FlashlightIsOn();
+	bool			IsOnLadder();
+	bool			FlashlightIsOn();
 	void			FlashlightTurnOn();
 	void			FlashlightTurnOff();
 
@@ -252,14 +252,14 @@ public:
 	void StartDeathCam();
 	void StartObserver(Vector vecPosition, Vector vecViewAngle);
 
-	void AddPoints(int score, BOOL bAllowNegativeScore);
-	void AddPointsToTeam(int score, BOOL bAllowNegativeScore);
-	BOOL AddPlayerItem(CBasePlayerItem* pItem);
-	BOOL RemovePlayerItem(CBasePlayerItem* pItem);
+	void AddPoints(int score, bool bAllowNegativeScore);
+	void AddPointsToTeam(int score, bool bAllowNegativeScore);
+	bool AddPlayerItem(CBasePlayerItem* pItem);
+	bool RemovePlayerItem(CBasePlayerItem* pItem);
 	void DropPlayerItem(char* pszItemName);
-	BOOL HasPlayerItem(CBasePlayerItem* pCheckItem);
-	BOOL HasNamedPlayerItem(const char* pszItemName);
-	BOOL HasWeapons();// do I have ANY weapons?
+	bool HasPlayerItem(CBasePlayerItem* pCheckItem);
+	bool HasNamedPlayerItem(const char* pszItemName);
+	bool HasWeapons();// do I have ANY weapons?
 	void SelectPrevItem(int iItem);
 	void SelectNextItem(int iItem);
 	void SelectLastItem();
@@ -267,7 +267,7 @@ public:
 	void ItemPreFrame();
 	void ItemPostFrame();
 	void GiveNamedItem(const char* szName);
-	void EnableControl(BOOL fControl);
+	void EnableControl(bool fControl);
 
 	int  GiveAmmo(int iAmount, char* szName, int iMax);
 	void SendAmmoUpdate();
@@ -281,7 +281,7 @@ public:
 	void UpdateGeigerCounter();
 	void CheckTimeBasedDamage();
 
-	BOOL FBecomeProne();
+	bool FBecomeProne();
 	void BarnacleVictimBitten(entvars_t* pevBarnacle);
 	void BarnacleVictimReleased();
 	static int GetAmmoIndex(const char* psz);
@@ -325,6 +325,6 @@ public:
 #define AUTOAIM_10DEGREES 0.1736481776669
 
 extern int	gmsgHudText;
-extern BOOL gInitHUD;
+extern bool gInitHUD;
 
 #endif

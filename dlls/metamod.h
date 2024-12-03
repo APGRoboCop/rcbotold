@@ -183,8 +183,8 @@ mBOOL meta_load_gamedll();
 	META_RES mres=MRES_UNSET, status=MRES_UNSET, prev_mres=MRES_UNSET; \
 	MPlugin *iplug; \
 	FN_TYPE pfn_routine=NULL; \
-	int loglevel=api_info_table.pfnName.loglevel; \
-	char *pfn_string=api_info_table.pfnName.name; \
+	int loglevel=(api_info_table).pfnName.loglevel; \
+	char *pfn_string=(api_info_table).pfnName.name; \
 	memset(&PublicMetaGlobals, 0, sizeof(PublicMetaGlobals));
 
 // call each plugin
@@ -203,7 +203,7 @@ mBOOL meta_load_gamedll();
 		PublicMetaGlobals.prev_mres = prev_mres; \
 		PublicMetaGlobals.status = status; \
 		/* call plugin */ \
-		META_DEBUG(loglevel, ("Calling %s:%s%s()", iplug->file, pfn_string, (post?"_Post":""))); \
+		META_DEBUG(loglevel, ("Calling %s:%s%s()", iplug->file, pfn_string, ((post)?"_Post":""))); \
 		pfn_routine pfn_args; \
 		/* plugin's result code */ \
 		mres=PublicMetaGlobals.mres; \
@@ -212,9 +212,9 @@ mBOOL meta_load_gamedll();
 		/* save this for successive plugins to see */ \
 		prev_mres = mres; \
 		if(mres==MRES_UNSET) \
-			META_ERROR("Plugin didn't set meta_result: %s:%s%s()", iplug->file, pfn_string, (post?"_Post":"")); \
-		if(post && mres==MRES_SUPERCEDE) \
-			META_ERROR("MRES_SUPERCEDE not valid in Post functions: %s:%s%s()", iplug->file, pfn_string, (post?"_Post":"")); \
+			META_ERROR("Plugin didn't set meta_result: %s:%s%s()", iplug->file, pfn_string, ((post)?"_Post":"")); \
+		if((post) && mres==MRES_SUPERCEDE) \
+			META_ERROR("MRES_SUPERCEDE not valid in Post functions: %s:%s%s()", iplug->file, pfn_string, ((post)?"_Post":"")); \
 	}
 
 // call "real" function, from gamedll
@@ -281,8 +281,8 @@ mBOOL meta_load_gamedll();
 	META_RES mres=MRES_UNSET, status=MRES_UNSET, prev_mres=MRES_UNSET; \
 	MPlugin *iplug; \
 	FN_TYPE pfn_routine=NULL; \
-	int loglevel=api_info_table.pfnName.loglevel; \
-	char *pfn_string=api_info_table.pfnName.name; \
+	int loglevel=(api_info_table).pfnName.loglevel; \
+	char *pfn_string=(api_info_table).pfnName.name; \
 	memset(&PublicMetaGlobals, 0, sizeof(PublicMetaGlobals));
 
 // call each plugin
@@ -303,12 +303,12 @@ mBOOL meta_load_gamedll();
 		PublicMetaGlobals.status = status; \
 		pub_orig_ret = orig_ret; \
 		PublicMetaGlobals.orig_ret = &pub_orig_ret; \
-		if(status==MRES_TYPE) { \
+		if(status==(MRES_TYPE)) { \
 			pub_override_ret = override_ret; \
 			PublicMetaGlobals.override_ret = &pub_override_ret; \
 		} \
 		/* call plugin */ \
-		META_DEBUG(loglevel, ("Calling %s:%s%s()", iplug->file, pfn_string, (post?"_Post":""))); \
+		META_DEBUG(loglevel, ("Calling %s:%s%s()", iplug->file, pfn_string, ((post)?"_Post":""))); \
 		dllret=pfn_routine pfn_args; \
 		/* plugin's result code */ \
 		mres=PublicMetaGlobals.mres; \
@@ -316,12 +316,12 @@ mBOOL meta_load_gamedll();
 			status = mres; \
 		/* save this for successive plugins to see */ \
 		prev_mres = mres; \
-		if(mres==MRES_TYPE) \
+		if(mres==(MRES_TYPE)) \
 			override_ret = pub_override_ret = dllret; \
 		else if(mres==MRES_UNSET) \
-			META_ERROR("Plugin didn't set meta_result: %s:%s%s()", iplug->file, pfn_string, (post?"_Post":"")); \
-		else if(post && mres==MRES_SUPERCEDE) \
-			META_ERROR("MRES_SUPERCEDE not valid in Post functions: %s:%s%s()", iplug->file, pfn_string, (post?"_Post":"")); \
+			META_ERROR("Plugin didn't set meta_result: %s:%s%s()", iplug->file, pfn_string, ((post)?"_Post":"")); \
+		else if((post) && mres==MRES_SUPERCEDE) \
+			META_ERROR("MRES_SUPERCEDE not valid in Post functions: %s:%s%s()", iplug->file, pfn_string, ((post)?"_Post":"")); \
 	}
 
 // call "real" function, from gamedll

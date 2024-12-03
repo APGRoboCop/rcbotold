@@ -805,7 +805,7 @@ eBotCvarState CDebugBotCommand::action(CClient* pClient, const char* arg1, const
 
 eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
 {
-	BOOL bError;
+	bool bError;
 
 	int iDebugLevel = 0;
 
@@ -822,7 +822,7 @@ eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const ch
 		return BOT_CVAR_ERROR;
 	}
 
-	BOOL bMsg = false;
+	bool bMsg = false;
 
 	if (!arg1 || !*arg1 || (!arg2 || !*arg2))
 	{
@@ -890,13 +890,13 @@ eBotCvarState CConfigCommand::action(CClient* pClient, const char* arg1, const c
 		return BOT_CVAR_ERROR;
 	}
 
-	const BOOL bSetting = arg2 && *arg2; // is player setting the value or wanting details?
+	const bool bSetting = arg2 && *arg2; // is player setting the value or wanting details?
 	float fSetVal = 0.0f;
 
 	const int iState = std::atoi(arg2);
 	int iConfig = 0;
 
-	BOOL bSuccess = true;
+	bool bSuccess = true;
 
 	if (FStrEq("ts_dont_steal_weapons", arg1))
 		iConfig = BOT_CONFIG_TS_DONT_STEAL_WEAPONS;
@@ -1592,9 +1592,9 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	char szBotProfile[10]; // Store integer value of bot profile in string as filename
 	int iBotProfile = -1; // Store integer value of bot profile
 
-	const BOOL arg1valid = arg1 && *arg1;
-	const BOOL arg2valid = arg2 && *arg2;
-	const BOOL arg3valid = arg3 && *arg3;
+	const bool arg1valid = arg1 && *arg1;
+	const bool arg2valid = arg2 && *arg2;
+	const bool arg3valid = arg3 && *arg3;
 
 	///////////////////////////////////
 	// get bots previous team / class
@@ -1878,10 +1878,10 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		const char* teamlist = CVAR_GET_STRING("mp_teamlist");
 
-		int i = 0;
-		int j = 0;
+		unsigned int i = 0;
+		unsigned int j = 0;
 
-		const int len = std::strlen(teamlist);
+		const size_t len = std::strlen(teamlist);
 
 		while (i < len)
 		{
@@ -2085,7 +2085,7 @@ eBotCvarState CHelpCommand::action(CClient* pClient, const char* arg1, const cha
 //////////////////////////////////////////////////////////////////////////////
 // CVAR HANDLING
 
-void CBotCvar::setupCommand(const char* szCvarName, const int iAccessLevel, const BOOL bCanUseOnDedicatedServer)
+void CBotCvar::setupCommand(const char* szCvarName, const int iAccessLevel, const bool bCanUseOnDedicatedServer)
 {
 	m_szCvarName = gBotGlobals.m_Strings.GetString(szCvarName);
 

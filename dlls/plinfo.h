@@ -39,7 +39,8 @@
 
 // Flags for plugin to indicate when it can be be loaded/unloaded.
 // NOTE: order is crucial, as greater/less comparisons are made.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	PT_NEVER = 0,
 	PT_STARTUP,			// should only be loaded/unloaded at initial hlds execution
 	PT_CHANGELEVEL,		// can be loaded/unloaded between maps

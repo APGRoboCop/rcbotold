@@ -73,12 +73,12 @@ AStarNode::AStarNode()
 	m_iWaypoint = -1;
 }
 
-BOOL AStarNode::heuristicSet() const
+bool AStarNode::heuristicSet() const
 {
 	return (flags & FL_ASTAR_HEURISTIC) == FL_ASTAR_HEURISTIC;
 }
 
-void AStarNode::setHeuristic(const float botDist, const float goalDist, const BOOL bIsTeleport)
+void AStarNode::setHeuristic(const float botDist, const float goalDist, const bool bIsTeleport)
 {
 	if (bIsTeleport)
 		m_fHeuristic = goalDist;
@@ -88,17 +88,17 @@ void AStarNode::setHeuristic(const float botDist, const float goalDist, const BO
 	flags |= FL_ASTAR_HEURISTIC;
 }
 
-BOOL AStarNode::hasParent() const
+bool AStarNode::hasParent() const
 {
 	return (flags & FL_ASTAR_PARENT) == FL_ASTAR_PARENT;
 }
 
-BOOL AStarNode::isOpen() const
+bool AStarNode::isOpen() const
 {
 	return (flags & FL_ASTAR_OPEN) == FL_ASTAR_OPEN;
 }
 
-BOOL AStarNode::isClosed() const
+bool AStarNode::isClosed() const
 {
 	return (flags & FL_ASTAR_CLOSED) == FL_ASTAR_CLOSED;
 }
@@ -158,7 +158,7 @@ bool CompareAStarNode(AStarNode* a, AStarNode* b)
 {
 	return a->precedes(b);
 }
-int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
+int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, bool bContinue)
 {
 	dataStack<int> sTempList;
 	dataUnconstArray<AStarNode*>* sOpenList;
@@ -176,8 +176,8 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	//	int iNode;
 	int iCurrentNode;
 	int iSuccNode;
-	BOOL bFoundGoal = false;
-	BOOL bDeleteLoopPath = false;
+	bool bFoundGoal = false;
+	bool bDeleteLoopPath = false;
 
 	WAYPOINT* pSuccWpt;
 	WAYPOINT* pCurWpt;
@@ -260,8 +260,8 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 	//extern int num_waypoints;
 	const int iMaxLoops = pBot->m_Profile.m_iPathRevs;//gBotGlobals.m_iMaxPathRevs; // max loops per tick
 
-	BOOL bBotCanUseFlyWpt;
-	BOOL bBotCanUseWallStickWpt;
+	bool bBotCanUseFlyWpt;
+	bool bBotCanUseWallStickWpt;
 
 	bBotCanUseFlyWpt = gBotGlobals.IsMod(MOD_NS) && ((pBot->IsMarine() && pBot->HasJetPack()) || ((pBot->IsFade() && pBot->
 		hasBlink()) || pBot->IsLerk()));
@@ -275,18 +275,18 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 
 	int iSuccNodeFlags;
 
-	BOOL m_bIsLerk = pBot->IsLerk(); //Unused? [APG]RoboCop[CL]
+	bool m_bIsLerk = pBot->IsLerk(); //Unused? [APG]RoboCop[CL]
 
 	int iBotTeam = pBot->GetTeam();
-	BOOL bCanThrowGren = pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE); //Unused? [APG]RoboCop[CL]
+	bool bCanThrowGren = pBot->HasWeapon(VALVE_WEAPON_HANDGRENADE); //Unused? [APG]RoboCop[CL]
 
-	BOOL bIsTeleport;
+	bool bIsTeleport;
 	//	CBaseToggle *pToggle;
 	//	CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE(pBot->m_pEdict);
 		// Limit iLoops just incase we run into an infinite loop, or very long loop
 		// which can sometimes happen
 	int iPrevWpt = -1;
-	//BOOL bDetpackWpt;
+	//bool bDetpackWpt;
 
 	while (bFoundGoal == false && !sOpenList->IsEmpty()/*IsEmpty()*/ && iLoops < iMaxLoops)
 	{
@@ -394,7 +394,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, BOOL bContinue)
 				if (iSuccNodeFlags & W_FL_PAIN)
 				{
 					edict_t* pent = nullptr;
-					BOOL bFound = false; //Unused? [APG]RoboCop[CL]
+					bool bFound = false; //Unused? [APG]RoboCop[CL]
 					edict_t* pNearest = nullptr;
 					float fNearestDist = 0;
 
@@ -711,7 +711,7 @@ void BotTurnAtWall(CBot* pBot, TraceResult* tr)
 	pEdict->v.ideal_yaw = Z;
 }
 
-BOOL BotCantMoveForward(CBot* pBot, TraceResult* tr)
+bool BotCantMoveForward(CBot* pBot, TraceResult* tr)
 {
 	const edict_t* pEdict = pBot->m_pEdict;
 
@@ -753,7 +753,7 @@ BOOL BotCantMoveForward(CBot* pBot, TraceResult* tr)
 	return false;  // bot can move forward, return false
 }
 
-BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
+bool BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 {
 	// What I do here is trace 3 lines straight out, one unit higher than
 	// the highest normal jumping distance.  I trace once at the center of
@@ -864,7 +864,7 @@ BOOL BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 	return true;
 }
 
-BOOL BotCanDuckUnder(CBot* pBot)
+bool BotCanDuckUnder(CBot* pBot)
 {
 	// What I do here is trace 3 lines straight out, one unit higher than
 	// the ducking height.  I trace once at the center of the body, once
@@ -969,7 +969,7 @@ BOOL BotCanDuckUnder(CBot* pBot)
 	return true;
 }
 
-BOOL BotCheckWallOnLeft(CBot* pBot)
+bool BotCheckWallOnLeft(CBot* pBot)
 {
 	const edict_t* pEdict = pBot->m_pEdict;
 	TraceResult tr;
@@ -996,7 +996,7 @@ BOOL BotCheckWallOnLeft(CBot* pBot)
 	return false;
 }
 
-BOOL BotCheckWallOnRight(CBot* pBot)
+bool BotCheckWallOnRight(CBot* pBot)
 {
 	const edict_t* pEdict = pBot->m_pEdict;
 	TraceResult tr;
@@ -1113,7 +1113,7 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 	return -1;
 }
 
-BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
+bool BotNavigate_UpdateWaypoint(CBot* pBot)
 // updates the bot's current waypoint
 // checks if the bot has touched its waypoint
 // if yes, then it picks the next waypoint
@@ -1129,7 +1129,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 	int iCurrWpt;
 	int iWptFlags;
 
-	BOOL bTouchedWpt = false;
+	bool bTouchedWpt = false;
 
 	iCurrWpt = pBot->m_iCurrentWaypointIndex;
 
@@ -1150,7 +1150,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 
 			if (pBot->m_iCurrentWaypointIndex == -1)
 			{
-				BOOL getNew = !pBot->m_bMoveToIsValid;
+				bool getNew = !pBot->m_bMoveToIsValid;
 
 				if (!getNew)
 				{
@@ -1273,7 +1273,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 		{
 			int iLadderDir = pBot->GetLadderDir();
 			int iNextLadderDir = pBot->GetLadderDir(true);
-			BOOL bTouchingLadder = gBotGlobals.IsNS() && pBot->IsLerk() || (vWptOrigin - vBotOrigin).Length2D() <= pBot->pev->size.Length2D() / 2;
+			bool bTouchingLadder = gBotGlobals.IsNS() && pBot->IsLerk() || (vWptOrigin - vBotOrigin).Length2D() <= pBot->pev->size.Length2D() / 2;
 
 			bTouchedWpt = bTouchingLadder;
 
@@ -1489,7 +1489,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			pBot->DuckAndJump();
 		if (gBotGlobals.IsMod(MOD_TS) && pBot->m_iCurrentWaypointFlags & W_FL_STUNT)
 		{
-			BOOL kungfu = !pBot->m_pCurrentWeapon || pBot->m_pCurrentWeapon->GetID() == 36;
+			bool kungfu = !pBot->m_pCurrentWeapon || pBot->m_pCurrentWeapon->GetID() == 36;
 
 			if (kungfu && !pBot->m_pEnemy || !kungfu)
 				pBot->AltButton();
@@ -1604,7 +1604,7 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 				pBot->AddPriorityTask(CBotTask(BOT_TASK_WAIT_FOR_LIFT, 0, nullptr, 0, 0, WaypointOrigin(iNextwpt)));
 			else if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_USE_LIFT))
 			{
-				BOOL bCheckNext = iNextwpt != -1 && pBot->m_iCurrentWaypointFlags & W_FL_CHECK_LIFT;
+				bool bCheckNext = iNextwpt != -1 && pBot->m_iCurrentWaypointFlags & W_FL_CHECK_LIFT;
 
 				if (bCheckNext && CheckLift(pBot, WaypointOrigin(pBot->m_iCurrentWaypointIndex), WaypointOrigin(iNextwpt)))
 				{
@@ -1617,8 +1617,8 @@ BOOL BotNavigate_UpdateWaypoint(CBot* pBot)
 			}
 		}
 
-		BOOL bOnLadder = pBot->IsOnLadder();//pBot->GetClimbType() == BOT_CLIMB_CLIMBING;
-		BOOL bWptOnLadder = (pBot->m_iCurrentWaypointFlags & W_FL_LADDER) == W_FL_LADDER;
+		bool bOnLadder = pBot->IsOnLadder();//pBot->GetClimbType() == BOT_CLIMB_CLIMBING;
+		bool bWptOnLadder = (pBot->m_iCurrentWaypointFlags & W_FL_LADDER) == W_FL_LADDER;
 
 		if (!bOnLadder && bWptOnLadder)
 		{
@@ -1742,7 +1742,7 @@ PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam)
 	char buffer[256];
 	int buffer_len;
 
-	BOOL found = false;
+	bool found = false;
 
 	while ( std::fgets(buffer, 255, fp) != NULL)
 	{
@@ -1822,7 +1822,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 	UTIL_FixFloatAngle(&fStartAngle);
 
 	// angle
-	float fAngle = fStartAngle;
+	float fAngle;// = fStartAngle;
 
 	for (iStep = iMinStep; iStep <= iMaxStep; iStep += 10)
 	{
@@ -1936,7 +1936,7 @@ Vector BotNavigate_ScanFOV(CBot* pBot)
 	return vPosition;
 }
 
-BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
+bool CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 {
 	TraceResult tr;
 
@@ -1964,7 +1964,7 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 				const char* szTargetname = const_cast<char*>(STRING(pHit->v.targetname));
 
 				// a way to find out if this is a lift (big enough for the bot to walk on)
-				const BOOL bIsLift = (pHit->v.movedir.z != 0.0f) &&
+				const bool bIsLift = (pHit->v.movedir.z != 0.0f) &&
 					(pHit->v.size.x > pBot->pev->size.z &&
 						pHit->v.size.y > pBot->pev->size.z);
 
@@ -1981,11 +1981,11 @@ BOOL CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin)
 
 					const int iNewScheduleId = pBot->m_Tasks.GetNewScheduleId();
 
-					//BOOL bFail = false;
+					//bool bFail = false;
 
 					if (pButton)
 					{
-						BOOL bNormalDoor = true;
+						bool bNormalDoor = true;
 
 						pBot->m_Tasks.FlushTasks();
 

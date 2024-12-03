@@ -83,7 +83,7 @@ void pfnAlertMessage( ALERT_TYPE atype, char *szFmt, ... )
 #endif
 }
 */
-int pfnPrecacheModel(char* s)
+int pfnPrecacheModel(const char* s)
 {
 	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnPrecacheModel: %s\n", s); std::fclose(fp); }
 
@@ -93,7 +93,7 @@ int pfnPrecacheModel(char* s)
 	return (*g_engfuncs.pfnPrecacheModel)(s);
 #endif
 }
-int pfnPrecacheSound(char* s)
+int pfnPrecacheSound(const char* s)
 {
 	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnPrecacheSound: %s\n", s); std::fclose(fp); }
 
@@ -413,25 +413,24 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 				iSound = SOUND_NEEDHEALTH;
 		}*/
 
-		if (iSound == SOUND_UNKNOWN)
-		{
-			// if sample starts with 'd' and is "doors/" or starts with 'p' and is "plats/"...
-			if ((sample[0] == 'd' && !std::strncmp(sample, "doors/", 6)) ||
-				(sample[0] == 'p' && !std::strncmp(sample, "plats/", 6))) {
-				iSound = SOUND_DOOR;
-			}
-			else if (sample[0] == 'w' && !std::strncmp(sample, "weapons/", 8))
-				iSound = SOUND_WEAPON;
-			else if (sample[0] == 'p' && !std::strncmp(sample, "player/", 7))
-			{
-				if (std::strncmp(&sample[7], "pain", 4) == 0)
-					iSound = SOUND_PLAYER_PAIN;
-				else
-					iSound = SOUND_PLAYER;
-			}
-			else if (sample[0] == 'b' && !std::strncmp(sample, "buttons/", 8))
-				iSound = SOUND_BUTTON;
+		if ((sample[0] == 'd' && !std::strncmp(sample, "doors/", 6)) ||
+			(sample[0] == 'p' && !std::strncmp(sample, "plats/", 6))) {
+			iSound = SOUND_DOOR;
 		}
+
+		else if (sample[0] == 'w' && !std::strncmp(sample, "weapons/", 8))
+			iSound = SOUND_WEAPON;
+
+		else if (sample[0] == 'p' && !std::strncmp(sample, "player/", 7))
+		{
+			if (std::strncmp(&sample[7], "pain", 4) == 0)
+				iSound = SOUND_PLAYER_PAIN;
+			else
+				iSound = SOUND_PLAYER;
+		}
+
+		else if (sample[0] == 'b' && !std::strncmp(sample, "buttons/", 8))
+			iSound = SOUND_BUTTON;
 
 		if (iSound == SOUND_UNKNOWN)
 		{
@@ -678,7 +677,7 @@ int pfnPointContents(const float* rgflVector)
 
 void pfnMessageBegin(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
 {
-	BOOL no_error = gBotGlobals.NetMessageStarted(msg_dest, msg_type, pOrigin, ed);
+	/*bool no_error =*/ gBotGlobals.NetMessageStarted(msg_dest, msg_type, pOrigin, ed); //Don't comment this line as this will make bots lame [APG]RoboCop[CL]
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1504,7 +1503,7 @@ int pfnGetPlayerUserId(edict_t* e)
 const char* pfnGetPlayerAuthId(edict_t* e)
 {
 	static const char* BOT_STEAM_ID = "BOT";
-	BOOL bIsBot = UTIL_GetBotPointer(e) != nullptr;
+	bool bIsBot = UTIL_GetBotPointer(e) != nullptr;
 #ifdef RCBOT_META_BUILD
 
 	if (bIsBot)

@@ -87,16 +87,16 @@ public:
 		m_bAllowHumans = false;
 	}
 
-	virtual BOOL isStateMsg() { return false; }
+	virtual bool isStateMsg() { return false; }
 
-	BOOL humansAllowed() const
+	bool humansAllowed() const
 	{
 		return m_bAllowHumans;
 	}
 
-	CBotNetMessage(/*void (*fpBotFunction)(void *, int),*/const char* szMessageName, int iModId, BOOL bAllowHumans = false);
+	CBotNetMessage(/*void (*fpBotFunction)(void *, int),*/const char* szMessageName, int iModId, bool bAllowHumans = false);
 
-	BOOL MessageForMod(int iModId) const
+	bool MessageForMod(int iModId) const
 	{
 		return m_iModId == MOD_ANY || iModId == m_iModId;
 	}
@@ -130,9 +130,9 @@ public:
 		return m_iMessage;
 	}
 
-	BOOL IsMessage(int iMessage);
+	bool IsMessage(int iMessage);
 
-	BOOL IsMessageName(const char* szMessage) const
+	bool IsMessageName(const char* szMessage) const
 	{
 		return std::strcmp(m_szMessageName, szMessage) == 0;
 	}
@@ -166,7 +166,7 @@ private:
 	int m_iModId;
 	int m_iSize;
 
-	BOOL m_bAllowHumans;
+	bool m_bAllowHumans;
 
 	//void (*m_fpMsgFunction)(void *, int);
 };
@@ -725,7 +725,7 @@ public:
 
 	virtual void messageEnd() { iState = 0; message_end(); }
 
-	BOOL isStateMsg() override { return true; }
+	bool isStateMsg() override { return true; }
 
 private:
 	virtual void msg_init() {}

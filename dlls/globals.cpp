@@ -136,7 +136,7 @@ void CBotGlobals::ReadBotFolder()
 	return szClasses[iClass];
 }*/
 
-BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
+bool CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
 {
 	if (m_bNetMessageStarted != false)
 	{
@@ -155,7 +155,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 	{
 		if (debug_engine) {
 			fp = std::fopen("bot.txt", "a");
-			std::fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", ed, msg_dest, msg_type);
+			std::fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", static_cast<void*>(ed), msg_dest, msg_type);
 			std::fclose(fp);
 		}
 
@@ -218,8 +218,11 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 			{
 				m_pMessageEntity = ed;
 
+				// Ensure the message is of type CBotStatedNetMessage before casting - [APG]RoboCop[CL]
 				if (m_CurrentMessage->isStateMsg())
+				{
 					static_cast<CBotStatedNetMessage*>(m_CurrentMessage)->init(index);
+				}
 				// is this message for a bot?
 				if (m_CurrentMessage->humansAllowed() || index != -1)
 				{
@@ -241,8 +244,7 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 			if (m_CurrentMessage && /*m_CurrentMessage->IsMessageName("WeaponList") &&*/ IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL))
 			{
 				m_pDebugMessage = m_CurrentMessage;
-
-				//ALERT(at_console,"------ MESSAGE_BEGIN(\"%s\") : \"%s\" -------\n",m_CurrentMessage->getMessageName(),STRING(ed->v.netname));
+				//ALERT(at_console,"------ MESSAGE_BEGIN(\"%s\") : \"%s\" -------\n",m_CurrentMessage->getMessageName());
 				ALERT(at_console, "------ MESSAGE_BEGIN(\"%s\") : (MSG_ALL message) -------\n", m_CurrentMessage->getMessageName());
 			}
 		}
@@ -251,14 +253,15 @@ BOOL CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 	return true;
 }
 
+
 void CBotGlobals::StartFrame()
 {
 	static int iIndex = 0;
 	static CBot* pBot = nullptr;
 	static float fPreviousTime = -1.0f;
 	static int iNumClients = 0;
-	static BOOL bUpdateClientData;
-	static BOOL bCheckedTeamplay = false;
+	static bool bUpdateClientData;
+	static bool bCheckedTeamplay = false;
 
 	if (bCheckedTeamplay && m_iCurrentMod)
 	{
@@ -267,7 +270,7 @@ void CBotGlobals::StartFrame()
 		else if (m_bTeamPlay == (CVAR_GET_FLOAT("mp_teamplay") <= 0.0f))
 			m_bTeamPlay = false;
 
-		bCheckedTeamplay = true;
+		//bCheckedTeamplay = true;
 	}
 
 	// new map?
@@ -328,7 +331,7 @@ void CBotGlobals::StartFrame()
 			// update who is commander
 			SetCommander(UTIL_GetCommander());
 
-			if (!IsCombatMap() && IsConfigSettingOn(BOT_CONFIG_MARINE_AUTO_BUILD) && (!m_bAutoBuilt && (m_fAutoBuildTime && m_fAutoBuildTime < gpGlobals->time)))
+			if (!IsCombatMap() && IsConfigSettingOn(BOT_CONFIG_MARINE_AUTO_BUILD) && (!m_bAutoBuilt && (m_fAutoBuildTime != 0.0f && m_fAutoBuildTime < gpGlobals->time)))
 			{
 				edict_t* pEntity = nullptr;
 
@@ -536,18 +539,18 @@ void CBotGlobals::StartFrame()
 			}
 		}
 
-		BOOL bBotJoin = false;
+		bool bBotJoin = false;
 
 		if (IsConfigSettingOn(BOT_CONFIG_BOTS_LEAVE_AND_JOIN))
 		{
 			const int iClientsInGame = iNumClients; // argh, can't debug static variables
 			// Prevent bots from joining too soon? [APG]RoboCop[CL]
-			const float val = static_cast<float>(iClientsInGame) / gpGlobals->maxClients * RANDOM_FLOAT(4.9f, 6.3f);
+			const float val = static_cast<float>(iClientsInGame) / static_cast<float>(gpGlobals->maxClients) * RANDOM_FLOAT(4.9f, 6.3f);
 
 			bBotJoin = val < 0.75f;
 		}
 
-		const BOOL bServerFull = iNumClients >= gpGlobals->maxClients;
+		const bool bServerFull = iNumClients >= gpGlobals->maxClients;
 
 		for (iIndex = 0; iIndex < MAX_PLAYERS; iIndex++)
 		{
@@ -570,7 +573,7 @@ void CBotGlobals::StartFrame()
 				// ---------------------------------------
 				if (!bServerFull && m_bBotCanRejoin)
 				{
-					BOOL bAddBot = false;
+					bool bAddBot = false;
 
 					// Bot was in last game so is re-connecting
 					if (m_iMaxBots == -1 &&
@@ -618,9 +621,9 @@ void CBotGlobals::StartFrame()
 			{
 				if (pBot->HasCondition(BOT_CONDITION_WANT_TO_LEAVE_GAME))
 				{
-					if (!pBot->m_fLeaveTime)
+					if (pBot->m_fLeaveTime == 0.0f)
 					{
-						pBot->m_fLeaveTime = gpGlobals->time + RANDOM_FLOAT(3.0f, 6.0f);
+						pBot->m_fLeaveTime = gpGlobals->time + RANDOM_FLOAT(5.0f, 8.0f);
 
 						pBot->BotEvent(BOT_EVENT_LEAVING);
 					}
@@ -691,13 +694,13 @@ void CBotGlobals::StartFrame()
 
 									for (j = 1; j < MAX_WEAPONS; j++)
 									{
-										const BOOL bHasWeapon = pBot->HasWeapon(j);
+										const bool bHasWeapon = pBot->HasWeapon(j);
 
-										if (j < sizeof(int) * CHAR_BIT && pBot->pev->weapons & 1 << j && !bHasWeapon)
+										if (static_cast<size_t>(j) < sizeof(int) * CHAR_BIT && pBot->pev->weapons & (1 << j) && !bHasWeapon)
 										{
 											CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(j);
 
-											BOOL bWeaponStatus = true;
+											bool bWeaponStatus = true;
 
 											if (pWeapon)
 												bWeaponStatus = pWeapon->HasWeapon(pBot->m_pEdict);
@@ -828,12 +831,12 @@ int CBotGlobals::TFC_getTeamViaColorMap(edict_t* pEdict)
 	return -1;
 }
 
-BOOL CBotGlobals::TFC_playerHasFlag(edict_t* pPlayer)
+bool CBotGlobals::TFC_playerHasFlag(edict_t* pPlayer)
 {
 	return m_Flags.playerHasFlag(pPlayer);
 }
 
-BOOL CBotGlobals::TFC_canGoClass(int iClass, int iTeam)
+bool CBotGlobals::TFC_canGoClass(int iClass, int iTeam)
 {
 	int iLimit = -1;
 
@@ -909,7 +912,7 @@ int CBotGlobals::TFC_getBestTeam(int team)
 	return team;
 }
 
-BOOL CBotGlobals::TFC_IsAvailableFlag(edict_t* pFlag, int team, BOOL bEnemyFlag)
+bool CBotGlobals::TFC_IsAvailableFlag(edict_t* pFlag, int team, bool bEnemyFlag)
 {
 	if (m_Flags.isFlag(pFlag, team, bEnemyFlag))
 	{
@@ -924,7 +927,7 @@ edict_t* CBotGlobals::randomHeldFlagOnTeam(int team)
 	return m_Flags.getRandomHeldFlagByTeam(team);
 }
 
-BOOL CBotGlobals::TFC_getCaptureLocationForFlag(Vector* vec, edict_t* pFlag)
+bool CBotGlobals::TFC_getCaptureLocationForFlag(Vector* vec, edict_t* pFlag)
 {
 	int team, group, goal;
 
@@ -1357,7 +1360,7 @@ void CBotGlobals::LoadBotModels()
 	char path[MAX_PATH];
 	char search_path[MAX_PATH];
 	char dirname[MAX_PATH];
-	char filename[MAX_PATH];
+
 	//   int index;
 	struct stat stat_str;
 #ifndef __linux__
@@ -1399,6 +1402,8 @@ void CBotGlobals::LoadBotModels()
 
 	while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr)
 	{
+		char filename[MAX_PATH];
+
 		// don't want to get stuck looking in the same directory again and again (".")
 		// don't wan't to search parent directories ("..")
 		if (std::strcmp(dirname, ".") == 0 || std::strcmp(dirname, "..") == 0)

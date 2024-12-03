@@ -41,8 +41,11 @@
 
 // Number of entries to add to reglists when they need to grow.  Typically
 // more cvars than commands, so we grow them at different increments.
-#define REG_CMD_GROWSIZE	32
-#define REG_CVAR_GROWSIZE	64
+enum : std::uint8_t
+{
+	REG_CMD_GROWSIZE = 32,
+	REG_CVAR_GROWSIZE = 64
+};
 
 // Width required to printf a Reg*List index number, for show() functions.
 // This used to correspond to the number of digits in MAX_REG, which was a
@@ -51,13 +54,20 @@
 // the moment, it reflects what one might normally expect to be the max
 // width needed to print an index number; 4 allows 9999 (which is a damn
 // lot, if you ask me).
-#define WIDTH_MAX_REG	4
+enum : std::uint8_t
+{
+	WIDTH_MAX_REG = 4
+};
 
 // Max number of registered user msgs we can manage.
-#define MAX_REG_MSGS	256
+enum : std::uint16_t
+{
+	MAX_REG_MSGS = 256
+};
 
 // Flags to indicate if given cvar or func is part of a loaded plugin.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	RG_INVALID,
 	RG_VALID,
 } REG_STATUS;

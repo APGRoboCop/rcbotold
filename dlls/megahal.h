@@ -78,11 +78,14 @@ typedef struct
 	HAL_MODEL* bot_model; // Markov model of the bot
 	HAL_DICTIONARY* input_words; // global chat's dictionary of words
 	//   HAL_DICTIONARY *bot_words; // bot's own dictionary of words
-	BOOL keyword_is_used;
+	bool keyword_is_used;
 } HAL_bot_t;
 
 // bot HAL Markov model order
-#define BOT_HAL_MODEL_ORDER 5
+enum : std::uint8_t
+{
+	BOT_HAL_MODEL_ORDER = 5
+};
 
 #ifndef CBot
 class CBot;
@@ -103,7 +106,7 @@ void HAL_SaveTree(std::FILE* file, HAL_TREE* node);
 void HAL_SaveDictionary(std::FILE* file, HAL_DICTIONARY* dictionary);
 void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words);
 unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word);
-int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find);
+int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, bool* find);
 unsigned short HAL_FindWord(HAL_DICTIONARY* dictionary, HAL_STRING word);
 int HAL_CompareWords(HAL_STRING word1, HAL_STRING word2);
 void HAL_InitializeDictionary(HAL_DICTIONARY* dictionary);
@@ -116,21 +119,21 @@ HAL_TREE* HAL_AddSymbol(HAL_TREE* tree, unsigned short symbol);
 HAL_TREE* HAL_FindSymbol(HAL_TREE* node, int symbol);
 HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, int symbol);
 void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position);
-int HAL_SearchNode(HAL_TREE* node, int symbol, BOOL* found_symbol);
+int HAL_SearchNode(HAL_TREE* node, int symbol, bool* found_symbol);
 void HAL_InitializeContext(HAL_MODEL* model);
 void BotHALTrainModel(CBot* pBot, HAL_MODEL* model);
 void HAL_ShowDictionary(HAL_DICTIONARY* dictionary);
 void HAL_MakeWords(char* input, HAL_DICTIONARY* words);
 void BotHALGenerateReply(CBot* pBot, char* output);
-BOOL HAL_BoundaryExists(const char* string, int position);
+bool HAL_BoundaryExists(const char* string, int position);
 void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg);
-BOOL HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2);
+bool HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2);
 HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words);
 void BotHALAddKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word);
 void BotHALAddAuxiliaryKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word);
 HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys);
 int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words);
-BOOL HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word);
+bool HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word);
 int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys);
 HAL_SWAP* HAL_NewSwap();
 void HAL_AddSwap(HAL_SWAP* list, char* s, char* d);
@@ -140,8 +143,8 @@ void HAL_EmptyDictionary(HAL_DICTIONARY* dictionary);
 void HAL_FreeModel(HAL_MODEL* model);
 void HAL_FreeTree(HAL_TREE* tree);
 void HAL_FreeSwap(HAL_SWAP* swap);
-BOOL PrepareHALBrainForPersonality(bot_profile_s* pBotProfile);
-BOOL LoadHALBrainForPersonality(bot_profile_s* pBotProfile, BOOL bPreTrain);
+bool PrepareHALBrainForPersonality(bot_profile_s* pBotProfile);
+bool LoadHALBrainForPersonality(bot_profile_s* pBotProfile, bool bPreTrain);
 void SaveHALBrainForPersonality(bot_profile_s* pBotProfile);
 
 #endif

@@ -44,6 +44,8 @@
  // engine + initializing functions + bot interface
  //
 
+#include <algorithm>
+
 #include "extdll.h"
 
 #ifndef RCBOT_META_BUILD
@@ -102,9 +104,9 @@ std::FILE* fpMapConfig = nullptr;
 //
 // Allowed players
 // checks if this item is for a client
-BOOL CAllowedPlayer::IsForClient(CClient* pClient) const
+bool CAllowedPlayer::IsForClient(CClient* pClient) const
 {
-	BOOL bSameName = false;
+	bool bSameName = false;
 
 	if (steamID_defined())
 	{
@@ -119,7 +121,7 @@ BOOL CAllowedPlayer::IsForClient(CClient* pClient) const
 	if (pEdict == nullptr)
 		return false;
 
-	const BOOL bSamePass = IsForPass(pClient->GetPass());
+	const bool bSamePass = IsForPass(pClient->GetPass());
 
 	return bSameName && bSamePass;
 }
@@ -307,7 +309,7 @@ void DispatchBlocked(edict_t* pentBlocked, edict_t* pentOther)
 	static CBot* pBot = nullptr;
 
 	// Save some time since we use a static variable
-	BOOL bFindNewBot = true;
+	bool bFindNewBot = true;
 
 	if (pBot != nullptr)
 	{
@@ -411,7 +413,7 @@ void ResetGlobalState()
 #endif
 }
 ///////////////////////////////////////////////////////////////////////////
-BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128])
+int ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128])
 {
 	if (gpGlobals->deathmatch)
 	{
@@ -777,8 +779,8 @@ void ClientCommand(edict_t* pEntity)
 
 	eBotCvarState iState = BOT_CVAR_CONTINUE;
 	int iAccessLevel = 0;
-	BOOL bSayTeamMsg = false;
-	BOOL bSayMsg;
+	bool bSayTeamMsg = false;
+	bool bSayMsg;
 
 	CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pEntity);
 
@@ -795,7 +797,7 @@ void ClientCommand(edict_t* pEntity)
 	// someone said something
 	else if ((bSayMsg = FStrEq(pcmd, "say")) != false || (bSayTeamMsg = FStrEq(pcmd, "say_team")) != false)
 	{
-		BOOL bMadeSquad = false;
+		bool bMadeSquad = false;
 
 		if (bSayTeamMsg)
 		{
@@ -814,7 +816,7 @@ void ClientCommand(edict_t* pEntity)
 		{
 			///////
 			// see if bot can learn its HAL brain from this person speaking
-			const BOOL bSenderIsBot = UTIL_GetBotPointer(pEntity) != nullptr;
+			const bool bSenderIsBot = UTIL_GetBotPointer(pEntity) != nullptr;
 
 			if (!bSenderIsBot || gBotGlobals.IsConfigSettingOn(BOT_CONFIG_CHAT_REPLY_TO_BOTS))
 			{
@@ -828,10 +830,10 @@ void ClientCommand(edict_t* pEntity)
 				{
 					// argh! someone said something in series of arguments. work out the message
 					int i = 1;
-					int iLenSoFar = 0;
+					size_t iLenSoFar = 0;
 					// for concatenating string dynamically
 					char* szTemp = nullptr;
-					BOOL bWasQuote = false;
+					bool bWasQuote = false;
 
 					const char* (*CmdArgv_func)(int);
 					int iArgCount;
@@ -876,7 +878,7 @@ void ClientCommand(edict_t* pEntity)
 						// copy old string
 						if (szTemp)
 						{
-							BOOL bIsQuote = false;
+							bool bIsQuote = false;
 
 							// if not a bot sending message, then the ' quotes can seperate words
 							// so can spaces argh :-@
@@ -1874,19 +1876,15 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		{
 			bpBotProfile->m_iBottomColour = std::atoi(&szBuffer[12]);
 
-			if (bpBotProfile->m_iBottomColour < 0)
-				bpBotProfile->m_iBottomColour = 0;
-			if (bpBotProfile->m_iBottomColour > 255)
-				bpBotProfile->m_iBottomColour = 255;
+			bpBotProfile->m_iBottomColour = std::max(bpBotProfile->m_iBottomColour, 0);
+			bpBotProfile->m_iBottomColour = std::min(bpBotProfile->m_iBottomColour, 255);
 		}
 		else if (std::strncmp(szBuffer, "topcolor=", 9) == 0)
 		{
 			bpBotProfile->m_iTopColour = std::atoi(&szBuffer[9]);
 
-			if (bpBotProfile->m_iTopColour < 0)
-				bpBotProfile->m_iTopColour = 0;
-			if (bpBotProfile->m_iTopColour > 255)
-				bpBotProfile->m_iTopColour = 255;
+			bpBotProfile->m_iTopColour = std::max(bpBotProfile->m_iTopColour, 0);
+			bpBotProfile->m_iTopColour = std::min(bpBotProfile->m_iTopColour, 255);
 		}
 		else if (std::strncmp(szBuffer, "numgames=", 9) == 0)
 		{
@@ -1954,7 +1952,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 		}
 	}
 
-	const BOOL bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
+	const bool bPreTrain = PrepareHALBrainForPersonality(bpBotProfile); // check the bot HAL brain
 	LoadHALBrainForPersonality(bpBotProfile, bPreTrain); // wake the bot's HAL brain up
 
 	// Also read bots rep with other players on the server
@@ -2150,7 +2148,7 @@ edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Ve
 }
 //
 // Hack building
-edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser, BOOL bBuilt)
+edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser, bool bBuilt)
 {
 	//pfnCreateNamedEntity(MAKE_STRING(pCommBuildent));
 
@@ -2248,7 +2246,7 @@ CBotCam::CBotCam()
 	m_bTriedToSpawn = false;
 }
 
-BOOL CBotCam::IsWorking() const
+bool CBotCam::IsWorking() const
 {
 	return m_pCameraEdict != nullptr && gBotGlobals.IsConfigSettingOn(BOT_CONFIG_ENABLE_BOTCAM);
 }
@@ -2283,7 +2281,7 @@ void CBotCam::Spawn()
 
 void CBotCam::Think()
 {
-	static BOOL bNotAlive;
+	static bool bNotAlive;
 
 	if (gBotGlobals.m_iNumBots == 0)
 		return;
@@ -2391,7 +2389,7 @@ void CBotCam::Think()
 	if (!m_pCurrentBot || !m_iState)
 		return;
 
-	constexpr BOOL bSetAngle = true;
+	constexpr bool bSetAngle = true;
 
 	vBotOrigin = m_pCurrentBot->pev->origin + m_pCurrentBot->pev->view_ofs;
 
@@ -2528,7 +2526,7 @@ void CBotCam::Think()
 	DispatchThink(m_pCameraEdict);
 }
 
-BOOL CBotCam::TuneIn(edict_t* pPlayer) const
+bool CBotCam::TuneIn(edict_t* pPlayer) const
 {
 	if (gBotGlobals.m_iNumBots == 0)
 	{
@@ -2568,7 +2566,7 @@ void CBotCam::Clear()
 // when noInfo  is true we want to find ...
 // any valid capture point for team...
 // and haven't given goal or group info
-/*edict_t* CTFCCapturePoints::getCapturePoint(int group, int goal, int team, BOOL noInfo)
+/*edict_t* CTFCCapturePoints::getCapturePoint(int group, int goal, int team, bool noInfo)
 {
 	dataStack<CTFCGoal> tempStack = m_CapPoints;
 	CTFCGoal* pGotCap;

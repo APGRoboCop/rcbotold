@@ -37,6 +37,7 @@
 #ifndef REG_SUPPORT_H
 #define REG_SUPPORT_H
 
+#include "cvardef.h"
 #include "mreg.h"			// REG_CMD_FN, etc
 
 void meta_command_handler();

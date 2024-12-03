@@ -99,8 +99,8 @@ typedef struct
 // Engine hands this to DLLs for functionality callbacks
 typedef struct enginefuncs_s
 {
-	int			(*pfnPrecacheModel)			(char* s);
-	int			(*pfnPrecacheSound)			(char* s);
+	int			(*pfnPrecacheModel)			(const char* s);
+	int			(*pfnPrecacheSound)			(const char* s);
 	void		(*pfnSetModel)				(edict_t* e, const char* m);
 	int			(*pfnModelIndex)			(const char* m);
 	int			(*pfnModelFrames)			(int modelIndex);
@@ -293,7 +293,11 @@ typedef struct
 	edict_t* pentLandmark;
 	vec3_t		vecLandmarkOrigin;
 } LEVELLIST;
-#define MAX_LEVEL_CONNECTIONS	16		// These are encoded in the lower 16bits of ENTITYTABLE->flags
+
+enum : std::uint8_t
+{
+	MAX_LEVEL_CONNECTIONS = 16		// These are encoded in the lower 16bits of ENTITYTABLE->flags
+};
 
 typedef struct
 {
@@ -306,10 +310,13 @@ typedef struct
 	string_t	classname;		// entity class name
 } ENTITYTABLE;
 
-#define FENTTABLE_PLAYER		0x80000000
-#define FENTTABLE_REMOVED		0x40000000
-#define FENTTABLE_MOVEABLE		0x20000000
-#define FENTTABLE_GLOBAL		0x10000000
+enum : std::uint32_t
+{
+	FENTTABLE_PLAYER = 0x80000000,
+	FENTTABLE_REMOVED = 0x40000000,
+	FENTTABLE_MOVEABLE = 0x20000000,
+	FENTTABLE_GLOBAL = 0x10000000
+};
 
 typedef struct saverestore_s SAVERESTOREDATA;
 
@@ -481,7 +488,10 @@ typedef struct
 extern DLL_FUNCTIONS		gEntityInterface;
 
 // Current version.
-#define NEW_DLL_FUNCTIONS_VERSION	1
+enum : std::uint8_t
+{
+	NEW_DLL_FUNCTIONS_VERSION = 1
+};
 
 typedef struct
 {

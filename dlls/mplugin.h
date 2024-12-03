@@ -49,7 +49,8 @@
 
 // Flags to indicate current "load" state of plugin.
 // NOTE: order is important, as greater/less comparisons are made.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	PL_EMPTY = 0,		// empty slot
 	PL_VALID,			// has valid info in it
 	PL_BADFILE,			// nonexistent file (open failed), 
@@ -61,7 +62,8 @@ typedef enum {
 } PLUG_STATUS;
 
 // Action to take for plugin at next opportunity.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	PA_NULL = 0,
 	PA_NONE,			// no action needed right now
 	PA_KEEP,			// keep, after ini refresh
@@ -72,13 +74,15 @@ typedef enum {
 } PLUG_ACTION;
 
 // Flags to indicate from where the plugin was loaded.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	PS_INI = 0,			// was loaded from the plugins.ini
 	PS_CMD,				// was loaded via a server command
 } PLOAD_SOURCE;
 
 // Flags for how to word description of plugin loadtime.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	SL_SIMPLE = 0,		// single word
 	SL_SHOW,			// for "show" output, 5 chars
 	SL_ALLOWED,			// when plugin is allowed to load/unload
@@ -86,19 +90,22 @@ typedef enum {
 } STR_LOADTIME;
 
 // Flags for how to format description of status.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	ST_SIMPLE = 0,		// single word
 	ST_SHOW,			// for "show" output, 4 chars
 } STR_STATUS;
 
 // Flags for how to format description of action.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	SA_SIMPLE = 0,		// single word
 	SA_SHOW,			// for "show" output, 4 chars
 } STR_ACTION;
 
 // Flags for how to format description of source.
-typedef enum {
+typedef enum : std::uint8_t
+{
 	SO_SIMPLE = 0,		// two words
 	SO_SHOW,			// for "list" output, 3 chars
 } STR_SOURCE;
@@ -162,32 +169,35 @@ class MPlugin {
 		char *str_reason(PL_UNLOAD_REASON preason);
 		char *str_loadtime(PLUG_LOADTIME pallow, STR_LOADTIME fmt);
 
-		char *str_status()		{ return(str_status(ST_SIMPLE)); };
-		char *str_action()		{ return(str_action(SA_SIMPLE)); };
-		char *str_source()		{ return(str_source(SO_SIMPLE)); };
+		char *str_status()		{ return(str_status(ST_SIMPLE)); }
+		char *str_action()		{ return(str_action(SA_SIMPLE)); }
+		char *str_source()		{ return(str_source(SO_SIMPLE)); }
 
 		char *str_loadable() { 
 			if(info) return(str_loadtime(info->loadable, SL_SIMPLE)); 
 			else return(" -");
-		};
+		}
+
 		char *str_unloadable() { 
 			if(info) return(str_loadtime(info->unloadable, SL_SIMPLE)); 
 			else return(" -");
-		};
+		}
+
 		char *str_loadable(STR_LOADTIME fmt) { 
 			if(info) return(str_loadtime(info->loadable, fmt)); 
 			else return(" -");
-		};
+		}
+
 		char *str_unloadable(STR_LOADTIME fmt) { 
 			if(info) return(str_loadtime(info->unloadable, fmt)); 
 			else return(" -");
-		};
+		}
 };
 
 // Macros used by MPlugin::show(), to list the functions that the plugin
 // catches.
 #define SHOW_IFDEF(api_table, info_table, pfnName, pre_str, post_str) \
-	if(api_table->pfnName) { META_CONS("%s%s%s", pre_str, info_table.pfnName.name, post_str); n++;}
+	if((api_table)->pfnName) { META_CONS("%s%s%s", pre_str, (info_table).pfnName.name, post_str); n++;}
 
 #define SHOW_DEF_DLLAPI(api_table, pre_str, post_str) \
 	n=0; \

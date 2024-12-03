@@ -32,7 +32,7 @@ private:
 class CActionUtilities
 {
 public:
-	void add(eCanDoStuff action, BOOL CanDo, float utility)
+	void add(eCanDoStuff action, bool CanDo, float utility)
 	{
 		//m_Utilities.emplace_back(CActionUtility(action, (float)CanDo * utility));
 		m_Utilities.emplace_back(action, static_cast<float>(CanDo) * utility);

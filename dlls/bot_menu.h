@@ -105,7 +105,7 @@ public:
 
 	CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CClient*));
 
-	BOOL HasNextMenu() const
+	bool HasNextMenu() const
 	{
 		return m_pNextMenu != nullptr;
 	}

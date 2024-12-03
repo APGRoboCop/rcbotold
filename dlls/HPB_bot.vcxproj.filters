@@ -274,9 +274,6 @@
     <ClInclude Include="meta_api.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game_support.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="info_name.h">
       <Filter>Header Files</Filter>
     </ClInclude>

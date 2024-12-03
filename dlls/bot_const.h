@@ -69,15 +69,15 @@ class AStarNode
 {
 public:
 	AStarNode();
-	BOOL heuristicSet() const;
+	bool heuristicSet() const;
 
-	void setHeuristic(float botDist, float goalDist, BOOL bIsTeleport = false);
+	void setHeuristic(float botDist, float goalDist, bool bIsTeleport = false);
 
-	BOOL hasParent() const;
+	bool hasParent() const;
 
-	BOOL isOpen() const;
+	bool isOpen() const;
 
-	BOOL isClosed() const;
+	bool isClosed() const;
 
 	void unClose();
 
@@ -160,21 +160,21 @@ enum : std::int8_t
 };
 
 // these bits represent the monster's memory
-enum
+enum : std::uint32_t
 {
 	MEMORY_CLEAR = 0,
-	bits_MEMORY_PROVOKED = 1 << 0,	// right now only used for houndeyes.
-	bits_MEMORY_INCOVER = 1 << 1,	// monster knows it is in a covered position.
-	bits_MEMORY_SUSPICIOUS = 1 << 2,	// Ally is suspicious of the player, and will move to provoked more easily
-	bits_MEMORY_PATH_FINISHED = 1 << 3,	// Finished monster path (just used by big momma for now)
-	bits_MEMORY_ON_PATH = 1 << 4,	// Moving on a path
-	bits_MEMORY_MOVE_FAILED = 1 << 5,	// Movement has already failed
-	bits_MEMORY_FLINCHED = 1 << 6,	// Has already flinched
-	bits_MEMORY_KILLED = 1 << 7,	// HACKHACK -- remember that I've already called my Killed()
-	bits_MEMORY_CUSTOM4 = 1 << 28,	// Monster-specific memory
-	bits_MEMORY_CUSTOM3 = 1 << 29,	// Monster-specific memory
-	bits_MEMORY_CUSTOM2 = 1 << 30,	// Monster-specific memory
-	bits_MEMORY_CUSTOM1 = 1 << 31  // Monster-specific memory
+	bits_MEMORY_PROVOKED = 1u << 0,    // right now only used for houndeyes.
+	bits_MEMORY_INCOVER = 1u << 1,     // monster knows it is in a covered position.
+	bits_MEMORY_SUSPICIOUS = 1u << 2,  // Ally is suspicious of the player, and will move to provoked more easily
+	bits_MEMORY_PATH_FINISHED = 1u << 3,   // Finished monster path (just used by big momma for now)
+	bits_MEMORY_ON_PATH = 1u << 4,     // Moving on a path
+	bits_MEMORY_MOVE_FAILED = 1u << 5, // Movement has already failed
+	bits_MEMORY_FLINCHED = 1u << 6,    // Has already flinched
+	bits_MEMORY_KILLED = 1u << 7,      // HACKHACK -- remember that I've already called my Killed()
+	bits_MEMORY_CUSTOM4 = 1u << 28,    // Monster-specific memory
+	bits_MEMORY_CUSTOM3 = 1u << 29,    // Monster-specific memory
+	bits_MEMORY_CUSTOM2 = 1u << 30,    // Monster-specific memory
+	bits_MEMORY_CUSTOM1 = 1u << 31     // Monster-specific memory
 };
 
 constexpr int MAX_REMEMBER_POSITIONS = 8;
@@ -754,17 +754,17 @@ typedef enum : std::uint8_t
 typedef enum : std::uint8_t
 {
 	TEAMMATE_MARINE_ORDER_WELD = 0,
-	TEAMMATE_MARINE_ORDER_FOLLOW,
-	TEAMMATE_MARINE_ORDER_COVER,
-	TEAMMATE_MARINE_ORDER_UNKNOWN,
-	TEAMMATE_ALIEN_ORDER_HEAL,
-	TEAMMATE_ALIEN_ORDER_FOLLOW,
-	TEAMMATE_ALIEN_ORDER_COVER,
+	TEAMMATE_MARINE_ORDER_FOLLOW = 1,
+	TEAMMATE_MARINE_ORDER_COVER = 2,
+	TEAMMATE_MARINE_ORDER_UNKNOWN = 3,
+	TEAMMATE_ALIEN_ORDER_HEAL = 4,
+	TEAMMATE_ALIEN_ORDER_FOLLOW = 5,
+	TEAMMATE_ALIEN_ORDER_COVER = 6,
 	TEAMMATE_MARINE_LEFT_ARROW = 16,
-	TEAMMATE_MARINE_RIGHT_ARROW,
-	TEAMMATE_ALIEN_LEFT_ARROW,
-	TEAMMATE_ALIEN_RIGHT_ARROW,
-	TEAMMATE_ALIEN_ORDER_UNKNOWN
+	TEAMMATE_MARINE_RIGHT_ARROW = 17,
+	TEAMMATE_ALIEN_LEFT_ARROW = 18,
+	TEAMMATE_ALIEN_RIGHT_ARROW = 19,
+	TEAMMATE_ALIEN_ORDER_UNKNOWN = 20
 } TeammateOrderEnum;
 
 ////////////////////////////////////////////////////////////////
@@ -1344,14 +1344,14 @@ enum eBotChatType : std::int8_t
 {
 	BOT_CHAT_UNKNOWN = -1,
 	BOT_CHAT_KILLS = 0,
-	BOT_CHAT_KILLED,
-	BOT_CHAT_THANKS,
-	BOT_CHAT_HELP,
-	BOT_CHAT_IDLE,
-	BOT_CHAT_LAUGH,
-	BOT_CHAT_GREETINGS,
-	BOT_CHAT_LEAVEGAME,
-	BOT_CHAT_MAX
+	BOT_CHAT_KILLED = 1,
+	BOT_CHAT_THANKS = 2,
+	BOT_CHAT_HELP = 3,
+	BOT_CHAT_IDLE = 4,
+	BOT_CHAT_LAUGH = 5,
+	BOT_CHAT_GREETINGS = 6,
+	BOT_CHAT_LEAVEGAME = 7,
+	BOT_CHAT_MAX = 8
 };
 
 enum eBotRepType : std::uint8_t

@@ -118,7 +118,7 @@ void BotChatReply(CBot* pBot, char* szMsg, edict_t* pSender, char* szReplyMsg)
 		strlow(szName);
 
 		const char* szNamePos = std::strstr(szMsg, szName);
-		const BOOL bNameInMsg = szNamePos != nullptr;
+		const bool bNameInMsg = szNamePos != nullptr;
 
 		const size_t iSenderNameLength = std::strlen(STRING(pSender->v.netname));
 		char* szSenderName = new char[sizeof(char) * (iSenderNameLength + 1)];
@@ -261,7 +261,7 @@ void RemoveNameTags(const char* in_string, char* out_string)
 
 	while (i < length)
 	{
-		char current_char = 0;
+		char current_char;
 
 		if (inside_tag)
 		{
@@ -509,7 +509,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	// without adding it again.
 
 	int i;
-	BOOL found;
+	bool found;
 
 	// if the word's already in the dictionary, there is no need to add it
 	const int position = HAL_SearchDictionary(dictionary, word, &found);
@@ -560,7 +560,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	return dictionary->index[position];
 }
 
-int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find)
+int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, bool* find)
 {
 	// search the dictionary for the specified word, returning its position in the index if
 	// found, or the position where it should be inserted otherwise
@@ -576,7 +576,7 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, BOOL* find
 	int imin = 0;
 	int imax = dictionary->size - 1;
 
-	//BOOL bDone = false;
+	//bool bDone = false;
 	//int iFound = 0;
 
 	// search repeatedly, halving the search space each time, until either the entry is found,
@@ -622,7 +622,7 @@ unsigned short HAL_FindWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	// this function returns the symbol corresponding to the word specified. We assume that
 	// the word with index zero is equal to a NULL word, indicating an error condition.
 
-	BOOL found;
+	bool found;
 	const int position = HAL_SearchDictionary(dictionary, word, &found);
 
 	if (found == 1)
@@ -819,7 +819,7 @@ HAL_TREE* HAL_FindSymbol(HAL_TREE* node, int symbol)
 	// this function returns a pointer to the child node, if one exists, which contains symbol
 
 	HAL_TREE* found = nullptr;
-	BOOL found_symbol = false;
+	bool found_symbol = false;
 
 	// perform a binary search for the symbol
 	const int i = HAL_SearchNode(node, symbol, &found_symbol);
@@ -834,8 +834,8 @@ HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, int symbol)
 	// this function is conceptually similar to HAL_FindSymbol, apart from the fact that if the
 	// symbol is not found, a new node is automatically allocated and added to the tree
 
-	HAL_TREE* found = nullptr;
-	BOOL found_symbol = false;
+	HAL_TREE* found;
+	bool found_symbol = false;
 
 	// perform a binary search for the symbol. If the symbol isn't found, attach a new sub-node
 	// to the tree node so that it remains sorted.
@@ -877,7 +877,7 @@ void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position)
 	tree->branch++;
 }
 
-int HAL_SearchNode(HAL_TREE* node, int symbol, BOOL* found_symbol)
+int HAL_SearchNode(HAL_TREE* node, int symbol, bool* found_symbol)
 {
 	// this function performs a binary search for the specified symbol on the subtree of the
 	// given node. Return the position of the child node in the subtree if the symbol was found,
@@ -1128,7 +1128,7 @@ void HAL_MakeWords (char *input, HAL_DICTIONARY *words)
    }
 }*/
 
-BOOL HAL_BoundaryExists(const char* string, int position)
+bool HAL_BoundaryExists(const char* string, int position)
 {
 	// this function returns whether or not a word boundary exists in a string at the
 	// specified location
@@ -1159,7 +1159,7 @@ BOOL HAL_BoundaryExists(const char* string, int position)
 	return false;
 }
 
-BOOL HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2)
+bool HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2)
 {
 	// this function returns true if the dictionaries are NOT the same or false if not
 
@@ -1411,7 +1411,7 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 	static HAL_DICTIONARY* replies = nullptr;
 	int i;
 	int symbol;
-	BOOL start = true;
+	bool start = true;
 
 	if (!pBot || !pBot->IsUsed())
 		return nullptr; // reliability check
@@ -1553,7 +1553,7 @@ int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 	return symbol;
 }
 
-BOOL HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word)
+bool HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word)
 {
 	// here's a silly brute-force searcher for the reply string
 
@@ -1859,7 +1859,7 @@ void HAL_FreeSwap(HAL_SWAP* swap)
 }
 
 // return true if need to pre-train
-BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
+bool PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 {
 	// this function prepares a HAL personality
 
@@ -1977,7 +1977,7 @@ BOOL PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	return true; // ok, now it is guarantee that this personality has an associated brain
 }
 
-BOOL LoadHALBrainForPersonality(bot_profile_t* pBotProfile, BOOL bPreTrain)
+bool LoadHALBrainForPersonality(bot_profile_t* pBotProfile, bool bPreTrain)
 {
 	// this function loads a HAL brain
 

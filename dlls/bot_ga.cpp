@@ -319,12 +319,12 @@ IIndividual* CBitsGAValues::copy()
 //void setBits ( CBits values );
 //void getBits ( CBits *values );
 
-BOOL CBitsGAValues::get(const int iIndex) const
+bool CBitsGAValues::get(const int iIndex) const
 {
 	return m_theBits->getBit(iIndex);
 }
 
-void CBitsGAValues::set(const int iIndex, const BOOL bSet) const
+void CBitsGAValues::set(const int iIndex, const bool bSet) const
 {
 	m_theBits->setBit(iIndex, bSet);
 }

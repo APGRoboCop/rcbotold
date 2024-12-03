@@ -28,6 +28,8 @@
 #ifndef BOTCAM_H
 #define BOTCAM_H
 
+#include "const.h"
+
 void CreateCamera(edict_t* pPlayer, edict_t* pEntity);
 void KillCamera(const edict_t* pPlayer);
 

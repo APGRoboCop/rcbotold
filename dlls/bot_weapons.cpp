@@ -107,7 +107,7 @@ void CBotWeapon::Reset() //TODO: Experimental [APG]RoboCop[CL]
 	m_iAmmo2 = nullptr;
 }
 
-BOOL CBotWeapon::CanReload() const
+bool CBotWeapon::CanReload() const
 {
 	if (IsMelee())
 		return false;
@@ -120,7 +120,7 @@ BOOL CBotWeapon::CanReload() const
 	return false;
 }
 
-BOOL CWeapon::IsPrimary() const
+bool CWeapon::IsPrimary() const
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -131,7 +131,7 @@ BOOL CWeapon::IsPrimary() const
 	}
 }
 
-BOOL CWeapon::IsSecondary() const
+bool CWeapon::IsSecondary() const
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -164,7 +164,7 @@ void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
 		}
 	}
 
-void CBotWeapon::setHasWeapon(BOOL bVal)
+void CBotWeapon::setHasWeapon(bool bVal)
 {
 	m_bHasWeapon = bVal;
 }
@@ -216,7 +216,7 @@ void CWeaponPresets::ReadPresets()
 
 	// bSkipMod will be true when the weapons are not for the current mod
 	// and do not need to be loaded
-	BOOL bSkipMod = false;
+	bool bSkipMod = false;
 
 	std::memset(&sWeaponPreset, 0, sizeof(weapon_preset_t));
 
@@ -335,7 +335,7 @@ void CWeaponPresets::ReadPresets()
 	std::fclose(fp);
 }
 
-BOOL CBotWeapon::HasWeapon(edict_t* pEdict) const
+bool CBotWeapon::HasWeapon(edict_t* pEdict) const
 {
 	if (pEdict)
 	{
@@ -439,13 +439,13 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	float fEnemyDist;
 
 	//TODO: This prevents bots from zapping themselves underwater with Lightning Gun in DMC? [APG]RoboCop[CL]
-	BOOL bEnemyIsElectrified = false;
-	BOOL bEnemyTooHigh = false;
-	const BOOL bUnderwater = pEdict->v.waterlevel == 3;
-	const BOOL bIsDMC = gBotGlobals.m_iCurrentMod == MOD_DMC;
+	bool bEnemyIsElectrified = false;
+	bool bEnemyTooHigh = false;
+	const bool bUnderwater = pEdict->v.waterlevel == 3;
+	const bool bIsDMC = gBotGlobals.m_iCurrentMod == MOD_DMC;
 
-	const BOOL bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
-	BOOL bWantToMelee = false;
+	const bool bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
+	bool bWantToMelee = false;
 
 	short int iAllowedWeapons[MAX_WEAPONS];
 
@@ -525,8 +525,8 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		{
 			// want to melee true if needing to reload OR enemy within melee range
 			// AND random factor due to skill
-			const BOOL bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0f;
-			const BOOL bMaxRangeCheck = pEnemy && fEnemyDist < 512.0f;
+			const bool bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0f;
+			const bool bMaxRangeCheck = pEnemy && fEnemyDist < 512.0f;
 
 			bWantToMelee = (pBot->m_pCurrentWeapon->NeedToReload() && RANDOM_LONG(MIN_BOT_SKILL, MAX_BOT_SKILL) < pBot->
 				m_Profile.m_iSkill || bMeleeRangeCheck) && bMaxRangeCheck;
@@ -874,7 +874,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	return iBestMeleeWeaponId;*/
 }
 
-BOOL CBotWeapon::NeedToReload() const
+bool CBotWeapon::NeedToReload() const
 {
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -897,7 +897,7 @@ BOOL CBotWeapon::NeedToReload() const
 	return false;
 }
 
-BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const
+bool CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const
 {
 	if (m_pWeaponInfo == nullptr)
 		return true;
@@ -928,7 +928,7 @@ BOOL CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWall
 	return true;
 }
 
-BOOL CBotWeapons::HasWeapon(edict_t* pEdict, const char* szClassname) const
+bool CBotWeapons::HasWeapon(edict_t* pEdict, const char* szClassname) const
 {
 	const char* pClassname;
 

@@ -10,8 +10,8 @@
 #define ENGINE_H
 
 // engine prototypes (from engine\eiface.h)...
-int pfnPrecacheModel( char* s );
-int pfnPrecacheSound( char* s );
+int pfnPrecacheModel( const char* s );
+int pfnPrecacheSound( const char* s );
 void pfnSetModel( edict_t *e, const char *m );
 int pfnModelIndex( const char *m );
 int pfnModelFrames( int modelIndex );

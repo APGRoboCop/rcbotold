@@ -374,7 +374,6 @@
     <ClInclude Include="engine_api.h" />
     <ClInclude Include="extdll.h" />
     <ClInclude Include="ga.h" />
-    <ClInclude Include="game_support.h" />
     <ClInclude Include="gannconst.h" />
     <ClInclude Include="generic_class.h" />
     <ClInclude Include="h_export_meta.h" />

@@ -17,6 +17,9 @@
 #define PM_INFOH
 #pragma once
 
-#define MAX_PHYSINFO_STRING 256
+enum : std::uint16_t
+{
+	MAX_PHYSINFO_STRING = 256
+};
 
 #endif // PM_INFOH

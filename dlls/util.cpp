@@ -59,6 +59,8 @@
  // Bot & engine utility functions
  //
 
+#include <algorithm>
+
 #include "extdll.h"
 
 #ifndef RCBOT_META_BUILD
@@ -81,17 +83,17 @@ extern CWaypointLocations WaypointLocations;
 
 //#define PI 3.141592654 //use M_PI instead [APG]RoboCop[CL]
 
-BOOL UTIL_TankUsed(edict_t* pTank)
+bool UTIL_TankUsed(edict_t* pTank)
 {
 	return pTank->v.netname && *STRING(pTank->v.netname);
 }
 
-BOOL UTIL_EntityHasClassname(edict_t* pEntity, char* classname)
+bool UTIL_EntityHasClassname(edict_t* pEntity, char* classname)
 {
 	return std::strcmp(STRING(pEntity->v.classname), classname) == 0;
 }
 
-BOOL UTIL_IsGrenadeRocket(edict_t* pEntity)
+bool UTIL_IsGrenadeRocket(edict_t* pEntity)
 {
 	const char* szClassname = STRING(pEntity->v.classname);
 
@@ -144,7 +146,7 @@ void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency,
 	}
 }
 /*
-BOOL UTIL_FriendlyHatesPlayer ( edict_t *pEntity, edict_t *pPlayer )
+bool UTIL_FriendlyHatesPlayer ( edict_t *pEntity, edict_t *pPlayer )
 {
 	if ( !gBotGlobals.IsMod(MOD_SVENCOOP) )
 		return false;
@@ -181,7 +183,7 @@ Vector UTIL_GetGroundVector(edict_t* pEdict)
 	return tr.vecEndPos;
 }
 
-BOOL UTIL_EntityIsHive(edict_t* pEdict)
+bool UTIL_EntityIsHive(edict_t* pEdict)
 {
 	return pEdict->v.iuser3 == AVH_USER3_HIVE;
 }
@@ -645,7 +647,7 @@ Vector UTIL_AngleBetweenOrigin(entvars_t* pev, Vector const& vOrigin)
 	return vAngle;
 }
 
-BOOL UTIL_IsFacingEntity(entvars_t* pev, entvars_t* pevEntity)
+bool UTIL_IsFacingEntity(entvars_t* pev, entvars_t* pevEntity)
 {
 	UTIL_MakeVectors(pev->v_angle);
 
@@ -803,7 +805,7 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 	g_engfuncs.pfnServerPrint(text);
 }
 
-int UTIL_GetNumClients(BOOL bReport)
+int UTIL_GetNumClients(bool bReport)
 {
 	//int iUserId;
 
@@ -1212,7 +1214,7 @@ int UTIL_PlayersOnTeam(int iTeam)
 	return iPlayers;
 }
 
-BOOL UTIL_CanEvolveInto(int iSpecies)
+bool UTIL_CanEvolveInto(int iSpecies)
 {
 	switch (iSpecies)
 	{
@@ -1285,7 +1287,7 @@ void UTIL_CountBuildingsInRange(Vector const& vOrigin, float fRange, int* iDefs,
 }
 
 // finding if a resource fountain is occupied
-BOOL UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
+bool UTIL_FuncResourceIsOccupied(edict_t* pFuncResource)
 {
 	edict_t* pResourceTower = nullptr;
 
@@ -1339,7 +1341,7 @@ Vector UTIL_LengthFromVector(Vector const& relation, float length)
 	return relation / relation.Length() * length;
 }
 
-BOOL UTIL_IsResourceFountainUsed(edict_t* pFountain)
+bool UTIL_IsResourceFountainUsed(edict_t* pFountain)
 {
 	edict_t* pTower = nullptr;
 
@@ -1430,12 +1432,12 @@ int UTIL_CountEntitiesInRange(char* classname, const Vector& vOrigin, float fRan
 	return iTotal;
 }
 
-BOOL UTIL_CanBuildHive(entvars_t* pev)
+bool UTIL_CanBuildHive(entvars_t* pev)
 {
 	return pev->fuser1 == 0.0f;
 }
 
-BOOL UTIL_OnGround(entvars_t* pev)
+bool UTIL_OnGround(entvars_t* pev)
 {
 	return pev->flags & FL_ONGROUND && pev->movetype == MOVETYPE_WALK;
 }
@@ -1479,7 +1481,7 @@ int UTIL_GetBuildWaypoint(Vector const& vSpawn, dataStack<int>* iFailedGoals)
 	while (!tempStack.IsEmpty())
 	{
 		edict_t* pent = nullptr;
-		BOOL bAdd = true;
+		bool bAdd = true;
 
 		iWpt = tempStack.ChooseFromStack();
 
@@ -1513,7 +1515,7 @@ int UTIL_GetBuildWaypoint(Vector const& vSpawn, dataStack<int>* iFailedGoals)
 	return iWpt;
 }
 
-int UTIL_SpeciesOnTeam(int iSpecies, BOOL bIgnoreEmbryos)
+int UTIL_SpeciesOnTeam(int iSpecies, bool bIgnoreEmbryos)
 {
 	int iPlayers = 0;
 
@@ -1562,7 +1564,7 @@ int UTIL_SpeciesOnTeam(int iSpecies, BOOL bIgnoreEmbryos)
 	return 0;
 }*/
 
-BOOL BotFunc_FInViewCone(Vector* pOrigin, edict_t* pEdict)
+bool BotFunc_FInViewCone(Vector* pOrigin, edict_t* pEdict)
 {
 	UTIL_MakeVectors(pEdict->v.angles);
 
@@ -1574,7 +1576,7 @@ BOOL BotFunc_FInViewCone(Vector* pOrigin, edict_t* pEdict)
 	return flDot > 0.50f;  // 60 degree field of view
 }
 
-BOOL BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict)
+bool BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict)
 {
 	TraceResult tr;
 
@@ -1612,7 +1614,7 @@ void UTIL_SelectItem(edict_t* pEdict, char* item_name)
 
 //#ifndef RCBOT_META_BUILD
 
-void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, float magnitude, BOOL doDamage)
+void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, float magnitude, bool doDamage)
 {
 	/*if ( gBotGlobals.IsMod(MOD_SVENCOOP) )
 	{
@@ -1662,8 +1664,7 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 	{
 		int byteMag = static_cast<int>(magnitude);
 
-		if (byteMag > 255)
-			byteMag = 255;
+		byteMag = std::min(byteMag, 255);
 
 		MESSAGE_BEGIN(MSG_PAS, SVC_TEMPENTITY, center);
 		WRITE_BYTE(TE_EXPLOSION);
@@ -1744,10 +1745,7 @@ void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker
 					float flAdjustedDamage = (vecSrc - tr.vecEndPos).Length() * falloff;
 					flAdjustedDamage = flDamage - flAdjustedDamage;
 
-					if (flAdjustedDamage < 0)
-					{
-						flAdjustedDamage = 0;
-					}
+					flAdjustedDamage = std::max<float>(flAdjustedDamage, 0);
 					/*
 						// ALERT( at_console, "hit %s\n", STRING( pEntity->pev->classname ) );
 						if (tr.flFraction != 1.0f)
@@ -1810,7 +1808,7 @@ Vector AbsOrigin(edict_t* pEdict)
 	return (pEdict->v.absmin + pEdict->v.absmax) / 2;
 }
 
-void UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, BOOL needmore, char* pText)
+void UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, bool needmore, char* pText)
 {
 	const char* szMsg = { "ShowMenu" };
 
@@ -1829,11 +1827,11 @@ void UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, BOOL needmore, c
 	}
 }
 
-BOOL UTIL_CanStand(Vector const& origin, Vector* v_floor)
+bool UTIL_CanStand(Vector const& origin, Vector* v_floor)
 {
 	TraceResult tr;
 
-	const Vector v_src = origin;
+	const Vector& v_src = origin;
 
 	UTIL_TraceLine(v_src, v_src - Vector(0, 0, 144), ignore_monsters, ignore_glass, nullptr, &tr);
 
@@ -1847,7 +1845,7 @@ BOOL UTIL_CanStand(Vector const& origin, Vector* v_floor)
 	return len > 72;
 }
 
-BOOL UTIL_makeTSweapon(edict_t* pOwner, TSWeapon weaponid)
+bool UTIL_makeTSweapon(edict_t* pOwner, TSWeapon weaponid)
 {
 	if (weaponid == static_cast<TSWeapon>(0))
 		return false;
@@ -1956,7 +1954,7 @@ void UTIL_BuildFileName(char* filename, const char* arg1, const char* arg2)
 	}
 }
 
-edict_t* UTIL_FacingEnt(edict_t* pPlayer, BOOL any)
+edict_t* UTIL_FacingEnt(edict_t* pPlayer, bool any)
 {
 	TraceResult tr;
 	const entvars_t* pev = &pPlayer->v;
@@ -2077,7 +2075,7 @@ Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, edict_t* pPushable)
 	return vPushable - (vOrigin - vPushable).Normalize() * UTIL_GetBestPushableDistance(pPushable);
 }
 
-BOOL UTIL_AcceptablePushableVector(edict_t* pPushable, Vector const& vOrigin)
+bool UTIL_AcceptablePushableVector(edict_t* pPushable, Vector const& vOrigin)
 {
 	return UTIL_EntityDistance2D(&pPushable->v, vOrigin) <= UTIL_GetBestPushableDistance(pPushable);
 }
@@ -2202,10 +2200,8 @@ void UTIL_BotHudMessage(edict_t* pEntity, const hudtextparms_t& textparms, const
 unsigned short FixedUnsigned16(float value, float scale)
 {
 	int output = static_cast<int>(value * scale);
-	if (output < 0)
-		output = 0;
-	if (output > 0xFFFF)
-		output = 0xFFFF;
+	output = std::max(output, 0);
+	output = std::min(output, 0xFFFF);
 
 	return static_cast<unsigned short>(output);
 }
@@ -2214,11 +2210,9 @@ short FixedSigned16(float value, float scale)
 {
 	int output = static_cast<int>(value * scale);
 
-	if (output > 32767)
-		output = 32767;
+	output = std::min(output, 32767);
 
-	if (output < -32768)
-		output = -32768;
+	output = std::max(output, -32768);
 
 	return static_cast<short>(output);
 }
@@ -2315,7 +2309,7 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 	// i. footsteps are on AND..
 	// ii. mod isnt svencoop (dont listen to teammates... (except when shooting)
 	// iii. OR mod is bumpercars (hear engine always)
-	const BOOL bListenToFootSteps = CVAR_GET_FLOAT("mp_footsteps") > 0 && gBotGlobals.m_iCurrentMod == MOD_BUMPERCARS;
+	const bool bListenToFootSteps = CVAR_GET_FLOAT("mp_footsteps") > 0 && gBotGlobals.m_iCurrentMod == MOD_BUMPERCARS;
 
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
@@ -2337,9 +2331,9 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 		if (!*STRING(pPlayerpev->netname))
 			continue;
 
-		const BOOL bSameTeam = UTIL_GetTeam(pPlayer) == iMyTeam;
+		const bool bSameTeam = UTIL_GetTeam(pPlayer) == iMyTeam;
 
-		BOOL bAdd = false;
+		bool bAdd = false;
 
 		if (bListenToFootSteps && !bSameTeam)
 		{
@@ -2380,7 +2374,7 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 	return pNearest;
 }
 
-BOOL UTIL_IsButton(edict_t* pButton)
+bool UTIL_IsButton(edict_t* pButton)
 {
 	if (pButton == nullptr)
 		return false;
@@ -2390,7 +2384,7 @@ BOOL UTIL_IsButton(edict_t* pButton)
 	return std::strncmp(szClassname, "func_", 5) == 0;
 }
 
-edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, const Vector& vOrigin, float fRange, BOOL bVisible, edict_t* pIgnore)
+edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, const Vector& vOrigin, float fRange, bool bVisible, edict_t* pIgnore)
 {
 	TraceResult tr;
 
@@ -2412,7 +2406,7 @@ edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, const Vector& v
 
 			if (fDistance < fRange)
 			{
-				BOOL bAdd = !bVisible;
+				bool bAdd = !bVisible;
 
 				if (!bAdd)
 				{
@@ -2556,7 +2550,7 @@ edict_t* UTIL_CheckTeleEntrance(Vector const& vOrigin, edict_t* pExit, edict_t* 
 	return nullptr;
 }
 
-BOOL UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore)
+bool UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore)
 {
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{

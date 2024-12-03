@@ -34,8 +34,11 @@
 
 #include <cstring>
 
-#define TYPE_BOTGAVALS 0
-#define TYPE_INTGAVALS 1
+enum : std::uint8_t
+{
+	TYPE_BOTGAVALS = 0,
+	TYPE_INTGAVALS = 1
+};
 
 typedef float ga_value;
 
@@ -65,7 +68,7 @@ public:
 		return m_szHeader;
 	}
 
-	BOOL operator == (const CGenericHeader& other) const
+	bool operator == (const CGenericHeader& other) const
 	{
 		return std::strcmp(m_szHeader, other.getHeader()) == 0;
 	}
@@ -75,7 +78,7 @@ public:
 		std::fwrite(this, sizeof(CGenericHeader), 1, bfp);
 	}
 
-	static BOOL read(std::FILE* bfp, const CGenericHeader& compare)
+	static bool read(std::FILE* bfp, const CGenericHeader& compare)
 	{
 		CGenericHeader read;
 

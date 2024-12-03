@@ -3,7 +3,10 @@
 #ifdef _WIN32
 #pragma once
 #endif
-#define	MAX_ENT_LEAFS	48
+enum : std::uint8_t
+{
+	MAX_ENT_LEAFS = 48
+};
 
 struct edict_s
 {

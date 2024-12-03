@@ -37,7 +37,7 @@
 #ifndef DLLAPI_H
 #define DLLAPI_H
 
-#include "sdk_util.h"	// BOOL
+#include "sdk_util.h"	// bool
 #include "osdep.h"		// DLLEXPORT, etc
 
 // Typedefs for these are provided in SDK engine/eiface.h, but I didn't
@@ -75,7 +75,7 @@ extern void mm_RestoreGlobalState( SAVERESTOREDATA *pSaveData );
 extern void mm_ResetGlobalState();
 
 // From SDK dlls/client.h:
-extern BOOL mm_ClientConnect( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );
+extern bool mm_ClientConnect( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );
 extern void mm_ClientDisconnect( edict_t *pEntity );
 extern void mm_ClientKill( edict_t *pEntity );
 extern void mm_ClientPutInServer( edict_t *pEntity );
@@ -139,7 +139,7 @@ typedef void (*FN_SAVEGLOBALSTATE) ( SAVERESTOREDATA *pSaveData );
 typedef void (*FN_RESTOREGLOBALSTATE) ( SAVERESTOREDATA *pSaveData );
 typedef void (*FN_RESETGLOBALSTATE) ();
 
-typedef BOOL (*FN_CLIENTCONNECT) ( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );
+typedef bool (*FN_CLIENTCONNECT) ( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ] );
 typedef void (*FN_CLIENTDISCONNECT) ( edict_t *pEntity );
 typedef void (*FN_CLIENTKILL) ( edict_t *pEntity );
 typedef void (*FN_CLIENTPUTINSERVER) ( edict_t *pEntity );

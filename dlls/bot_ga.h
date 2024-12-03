@@ -199,9 +199,9 @@ public:
 	//void setBits ( CBits values );
 	//void getBits ( CBits *values );
 
-	BOOL get(int iIndex) const;
+	bool get(int iIndex) const;
 
-	void set(int iIndex, BOOL bSet) const;
+	void set(int iIndex, bool bSet) const;
 
 	void clear() override;
 

@@ -140,7 +140,7 @@ public:
 		m_Tail = NULL;
 	}
 
-	BOOL IsEmpty()
+	bool IsEmpty()
 	{
 		return ((m_Head == nullptr) || (m_Tail == nullptr));
 	}
@@ -277,7 +277,7 @@ public:
 		}
 	}
 
-	/*BOOL IsMemberByPointer ( const T *pObj )
+	/*bool IsMemberByPointer ( const T *pObj )
 	{
 		dataNode<T> *tempNode = m_Head;
 
@@ -297,7 +297,7 @@ public:
 		return false;
 	}*/
 
-	BOOL IsMember(const T& pObj)
+	bool IsMember(const T& pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 
@@ -346,7 +346,7 @@ public:
 		}
 	}*/
 
-	BOOL Remove(const T& pObj)
+	bool Remove(const T& pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 
@@ -401,7 +401,7 @@ public:
 		return false;
 	}
 
-	BOOL RemoveByPointer(const T* pObj)
+	bool RemoveByPointer(const T* pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 
@@ -529,7 +529,7 @@ public:
 		this->Destroy();
 	}
 
-	BOOL IsMember(const T& pObj)
+	bool IsMember(const T& pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 
@@ -548,7 +548,7 @@ public:
 		return false;
 	}
 
-	BOOL RemoveByPointer(const T* pObj)
+	bool RemoveByPointer(const T* pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 
@@ -587,7 +587,7 @@ public:
 		return false;
 	}
 
-	BOOL Remove(const T& pObj)
+	bool Remove(const T& pObj)
 	{
 		dataNode<T>* tempNode = m_Head;
 
@@ -642,7 +642,7 @@ public:
 		m_Head = NULL;
 	}
 
-	BOOL IsEmpty()
+	bool IsEmpty()
 	{
 		return (m_Head == nullptr);
 	}
@@ -843,7 +843,7 @@ class dataUnconstArray
 			m_iArrayMax = -1;
 		}
 
-		inline BOOL IsEmpty ( void )
+		inline bool IsEmpty ( void )
 		{
 			return (m_pArray == NULL);
 }
@@ -897,7 +897,7 @@ class dataUnconstArray
 			return T(NULL);
 		}
 
-		BOOL IsMember ( T Obj )
+		bool IsMember ( T Obj )
 		{
 			int i;
 
@@ -963,7 +963,7 @@ public:
 		return index;
 	}
 
-	void Remove(T obj)
+	void Remove(const T& obj)
 	{
 		for (unsigned int i = 0; i < size; i++)
 		{
@@ -1063,7 +1063,7 @@ public:
 		return (buffer[iIndex]);
 	}
 
-	unsigned int getExistingIndex(T obj)
+	unsigned int getExistingIndex(const T& obj)
 	{
 		for (unsigned int i = 0; i < size; i++)
 		{
@@ -1073,7 +1073,7 @@ public:
 		return std::numeric_limits<unsigned int>::max();
 	}
 
-	T* getExisting(T Obj)
+	T* getExisting(const T& Obj)
 	{
 		for (unsigned int i = 0; i < size; i++)
 		{
@@ -1084,7 +1084,7 @@ public:
 		return nullptr;
 	}
 
-	BOOL IsMember(T Obj)
+	bool IsMember(T Obj)
 	{
 		for (unsigned int i = 0; i < size; i++)
 		{

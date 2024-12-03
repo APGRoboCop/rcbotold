@@ -178,7 +178,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 
 	CBotReputation Rep;
 
-	BOOL bFound = false;
+	bool bFound = false;
 
 	snprintf(repfile, sizeof(repfile), "%d.rcr", iBotProfile);
 
@@ -202,7 +202,7 @@ void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
 	if (fPos % sizeof(CBotReputation) != 0) return;
 
 	// get the count of items in the file
-	long   count = fPos / sizeof(CBotReputation);
+	unsigned long count = fPos / sizeof(CBotReputation);
 
 	std::fseek(fp, 0, SEEK_SET); // move pos back to beginning
 
@@ -240,7 +240,7 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 
 	CBotReputation Rep;
 
-	BOOL bChanged = false;
+	bool bChanged = false;
 
 	if (pRep == nullptr) // error
 		return;
@@ -274,7 +274,7 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 	if (fPos % sizeof(CBotReputation) != 0) return;
 
 	// get the count of items in the file
-	long   count = fPos / sizeof(CBotReputation);
+	unsigned long count = fPos / sizeof(CBotReputation);
 
 	std::fseek(fp, 0, SEEK_SET); // move pos back to beginning
 
