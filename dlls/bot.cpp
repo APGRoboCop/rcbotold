@@ -2345,6 +2345,9 @@ bool BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 
 	char* ptr = string;
 
+	// Calculate the length of fill_point once before the loop
+	const size_t fill_point_length = std::strlen(fill_point);
+
 	// Keep searching for a point in the string
 	while ((ptr = std::strstr(ptr, fill_point)) != nullptr)
 	{
@@ -2376,17 +2379,10 @@ bool BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		// always null terminate the last possible character
 		string[start] = 0;
 
-		// Calculate the length of fill_point once before the loop
-		const size_t fill_point_length = std::strlen(fill_point);
-
-		// Keep searching for a point in the string - [APG]RoboCop[CL]
-		while ((ptr = std::strstr(ptr, fill_point)) != nullptr)
-		{
-			// Use fill_point_length inside the loop
-			const size_t end = start + fill_point_length;
-			std::strncpy(after, &string[end], len - end);
-			after[len - end] = 0;
-		}
+		// Use fill_point_length inside the loop
+		const size_t end = start + fill_point_length;
+		std::strncpy(after, &string[end], len - end);
+		after[len - end] = 0;
 
 		// fill in new string and..
 		// update len (string size may have INCREASED
@@ -2403,12 +2399,10 @@ bool BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		ptr = string;
 
 		// free memory used
-		//if (before != NULL)
 		std::free(before);
 
 		before = nullptr;
 
-		//if (after != NULL)
 		std::free(after);
 
 		after = nullptr;
