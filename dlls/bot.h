@@ -138,7 +138,7 @@ float UTIL_GetPlayerEnergy(entvars_t* pev);
 int UTIL_NS_GetMaxArmour(edict_t* pEntity);
 edict_t* UTIL_GetCommander();
 int UTIL_CountEntities(char* classname);
-edict_t* BotFunc_FindRandomEntity(char* szClassname);
+edict_t* BotFunc_FindRandomEntity(const char* szClassname);
 bool UTIL_IsGrenadeRocket(edict_t* pEntity);
 //void BotFunc_StringCopy(char *, const char *);
 bool BotFunc_IsLongRangeWeapon(int iId);
@@ -376,7 +376,7 @@ public:
 
 	void RemoveSaveRep(int iBotProfile, int iPlayerRepId);
 
-	void SaveAllRep(int iBotProfile);
+	void SaveAllRep(int iBotProfile) const;
 
 	void AddLoadRep(int iBotProfile, int iPlayerRepId);
 
@@ -6518,7 +6518,7 @@ public:
 		return (m_iDebugLevels & iDebugLevel) > 0;
 	}
 
-	void KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd);
+	void KeyValue(edict_t* pentKeyvalue, const KeyValueData* pkvd);
 
 	/*bool TFC_IsAvailableFlag(edict_t* pFlag, int team, bool bEnemyFlag = false);
 
@@ -6857,16 +6857,16 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile);
 void BotFunc_WriteProfile(std::FILE* fp, bot_profile_t* bpBotProfile);
 CBot* UTIL_GetBotPointer(const edict_t* pEdict);
 
-bool BotFunc_EntityIsMoving(entvars_t* pev);
+bool BotFunc_EntityIsMoving(const entvars_t* pev);
 edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, entvars_t* pDoor, Vector* vFoundOrigin = nullptr);
 
 ////////////////////////////////////////////////////
 // NAVIGATION
 
-void BotTurnAtWall(CBot* pBot, TraceResult* tr);
+void BotTurnAtWall(const CBot* pBot, const TraceResult* tr);
 bool BotCantMoveForward(CBot* pBot, TraceResult* tr);
-bool BotCanJumpUp(CBot* pBot); // BotCanJumpUp : By : Botman
-bool BotCanDuckUnder(CBot* pBot);
+bool BotCanJumpUp(const CBot* pBot); // BotCanJumpUp : By : Botman
+bool BotCanDuckUnder(const CBot* pBot);
 bool BotCheckWallOnLeft(CBot* pBot);
 bool BotCheckWallOnRight(CBot* pBot);
 const char* BotFunc_GetRandomPlayerName(CBot* pBot, int iState);

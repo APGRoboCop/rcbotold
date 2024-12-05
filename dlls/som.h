@@ -87,7 +87,7 @@ public:
 
 	CSomNeuron* input(std::vector < std::vector <ga_value> >* inputs);
 
-	CSomNeuron* inputOne(std::vector < ga_value >* inputs);
+	CSomNeuron* inputOne(const std::vector < ga_value >* inputs);
 
 	static void input(const std::vector <std::vector <ga_value> >* inputs, int epochs);
 

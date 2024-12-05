@@ -1651,7 +1651,7 @@ void HAL_AddSwap(HAL_SWAP* list, char* s, char* d)
 	list->size++;
 }
 
-HAL_SWAP* HAL_InitializeSwap(char* filename)
+HAL_SWAP* HAL_InitializeSwap(const char* filename)
 {
 	// this function reads a swap structure from a file.
 
@@ -1684,7 +1684,7 @@ HAL_SWAP* HAL_InitializeSwap(char* filename)
 	return list;
 }
 
-HAL_DICTIONARY* HAL_InitializeList(char* filename)
+HAL_DICTIONARY* HAL_InitializeList(const char* filename)
 {
 	// this function reads a dictionary from a file
 
@@ -1977,7 +1977,7 @@ bool PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	return true; // ok, now it is guarantee that this personality has an associated brain
 }
 
-bool LoadHALBrainForPersonality(bot_profile_t* pBotProfile, bool bPreTrain)
+bool LoadHALBrainForPersonality(const bot_profile_t* pBotProfile, bool bPreTrain)
 {
 	// this function loads a HAL brain
 
@@ -2082,7 +2082,7 @@ bool LoadHALBrainForPersonality(bot_profile_t* pBotProfile, bool bPreTrain)
 	return false; // no error, return false
 }
 
-void SaveHALBrainForPersonality(bot_profile_t* pBotProfile)
+void SaveHALBrainForPersonality(const bot_profile_t* pBotProfile)
 {
 	// this function saves the current state to a HAL brain file
 
@@ -2110,7 +2110,7 @@ void SaveHALBrainForPersonality(bot_profile_t* pBotProfile)
 	std::fclose(fp);
 }
 
-void FreeHALBrain(bot_profile_t* pBotProfile)
+void FreeHALBrain(const bot_profile_t* pBotProfile)
 {
 	if (!pBotProfile->m_HAL)
 		return;

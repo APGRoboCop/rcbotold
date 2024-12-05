@@ -1878,16 +1878,16 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 		const char* teamlist = CVAR_GET_STRING("mp_teamlist");
 
-		unsigned int i = 0;
+		int i = 0;
 		unsigned int j = 0;
 
 		const size_t len = std::strlen(teamlist);
 
-		while (i < len)
+		while (i < static_cast<int>(len)) // Cast len to int for comparison - [APG]RoboCop[CL]
 		{
-			if (i == len - 1 || teamlist[i] == ';')
+			if (i == static_cast<int>(len) - 1 || teamlist[i] == ';')
 			{
-				if (i == len - 1)
+				if (i == static_cast<int>(len) - 1)
 				{
 					newteam[j++] = teamlist[i];
 					newteam[j] = 0;

@@ -2113,8 +2113,8 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, bool bSayNow)
 		break;
 	case BOT_CHAT_UNKNOWN:
 		break;
-	default:
-		return;
+	//default:
+	//	return;
 	}
 
 	if (pChatArray == nullptr)
@@ -6938,7 +6938,7 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 		if (m_pEnemyRep == nullptr) // Isn't a player (monster or breakable...)
 		{
 			// Aim factor dependant on skill
-			m_fAimFactor = MAX_BOT_SKILL - m_Profile.m_iSkill;
+			m_fAimFactor = static_cast<float>(MAX_BOT_SKILL) - static_cast<float>(m_Profile.m_iSkill);
 			// get a 0 to 1 representation factor.
 			m_fAimFactor /= MAX_BOT_SKILL;
 
@@ -6948,7 +6948,7 @@ Vector CBot::GetAimVector(edict_t* pBotEnemy)
 		{
 			const int iRep = m_pEnemyRep->CurrentRep();
 			// Aim factor dependant on skill and reputation.
-			m_fAimFactor = MAX_BOT_SKILL - m_Profile.m_iSkill + (BOT_MAX_REP - iRep);
+			m_fAimFactor = static_cast<float>(MAX_BOT_SKILL) - static_cast<float>(m_Profile.m_iSkill) + static_cast<float>(BOT_MAX_REP - iRep);
 			// get a 0 to 1 representation factor.
 			m_fAimFactor /= MAX_BOT_SKILL + BOT_MAX_REP;
 
@@ -8863,7 +8863,7 @@ bool CBot::Touch(edict_t* pentTouched)
 	return false;
 }
 
-bool BotFunc_EntityIsMoving(entvars_t* pev)
+bool BotFunc_EntityIsMoving(const entvars_t* pev)
 {
 	const Vector velocity = pev->velocity;
 	const Vector avelocity = pev->avelocity;
@@ -11155,7 +11155,7 @@ bool BotFunc_BreakableIsEnemy(edict_t* pBreakable, edict_t* pEdict)
 	return false;
 }
 
-edict_t* BotFunc_FindRandomEntity(char* szClassname)
+edict_t* BotFunc_FindRandomEntity(const char* szClassname)
 // find a random entity with classname
 {
 	dataUnconstArray<edict_t*> theEntities;
@@ -16825,7 +16825,7 @@ void CBot::workEnemyCosts(edict_t* pEntity, const Vector& vOrigin, const float f
 
 			if (fCost < m_fLowestEnemyCost)
 			{
-				Vector pos = Vector(posx * BOT_COST_RANGE, posy * BOT_COST_RANGE, pev->origin.z);
+				Vector pos = Vector(static_cast<float>(posx) * BOT_COST_RANGE, static_cast<float>(posy) * BOT_COST_RANGE, pev->origin.z);
 
 				m_fLowestEnemyCost = fCost;
 				m_vLowestEnemyCostVec = pev->origin + pos;

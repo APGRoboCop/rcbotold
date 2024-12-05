@@ -156,7 +156,7 @@ void CBotReputations::RemoveSaveRep(const int iBotProfile, const int iPlayerRepI
 }
 ////////////////////////////////
 // Saves ALL rep
-void CBotReputations::SaveAllRep(const int iBotProfile)
+void CBotReputations::SaveAllRep(const int iBotProfile) const
 {
 	dataStack <CBotReputation> tempStack = m_RepList;
 

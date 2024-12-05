@@ -636,7 +636,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, bool bContinue)
 	return iNextWaypoint;
 }
 
-void BotTurnAtWall(CBot* pBot, TraceResult* tr)
+void BotTurnAtWall(const CBot* pBot, const TraceResult* tr)
 {
 	edict_t* pEdict = pBot->m_pEdict;
 	float Z;
@@ -753,7 +753,7 @@ bool BotCantMoveForward(CBot* pBot, TraceResult* tr)
 	return false;  // bot can move forward, return false
 }
 
-bool BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
+bool BotCanJumpUp(const CBot* pBot) // BotCanJumpUp : By : Botman
 {
 	// What I do here is trace 3 lines straight out, one unit higher than
 	// the highest normal jumping distance.  I trace once at the center of
@@ -864,7 +864,7 @@ bool BotCanJumpUp(CBot* pBot) // BotCanJumpUp : By : Botman
 	return true;
 }
 
-bool BotCanDuckUnder(CBot* pBot)
+bool BotCanDuckUnder(const CBot* pBot)
 {
 	// What I do here is trace 3 lines straight out, one unit higher than
 	// the ducking height.  I trace once at the center of the body, once

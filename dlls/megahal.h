@@ -99,7 +99,7 @@ void BotSayText(CBot* pBot);
 void BotSayAudio(CBot* pBot);
 void BotTalk(CBot* pBot, char* sound_path);
 
-void FreeHALBrain(struct bot_profile_s* pBotProfile);
+void FreeHALBrain(const struct bot_profile_s* pBotProfile);
 void HAL_LoadTree(std::FILE* file, HAL_TREE* node);
 void HAL_LoadDictionary(std::FILE* file, HAL_DICTIONARY* dictionary);
 void HAL_SaveTree(std::FILE* file, HAL_TREE* node);
@@ -137,14 +137,14 @@ bool HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word);
 int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys);
 HAL_SWAP* HAL_NewSwap();
 void HAL_AddSwap(HAL_SWAP* list, char* s, char* d);
-HAL_SWAP* HAL_InitializeSwap(char* filename);
-HAL_DICTIONARY* HAL_InitializeList(char* filename);
+HAL_SWAP* HAL_InitializeSwap(const char* filename);
+HAL_DICTIONARY* HAL_InitializeList(const char* filename);
 void HAL_EmptyDictionary(HAL_DICTIONARY* dictionary);
 void HAL_FreeModel(HAL_MODEL* model);
 void HAL_FreeTree(HAL_TREE* tree);
 void HAL_FreeSwap(HAL_SWAP* swap);
 bool PrepareHALBrainForPersonality(bot_profile_s* pBotProfile);
-bool LoadHALBrainForPersonality(bot_profile_s* pBotProfile, bool bPreTrain);
-void SaveHALBrainForPersonality(bot_profile_s* pBotProfile);
+bool LoadHALBrainForPersonality(const bot_profile_s* pBotProfile, bool bPreTrain);
+void SaveHALBrainForPersonality(const bot_profile_s* pBotProfile);
 
 #endif

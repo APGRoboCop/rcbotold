@@ -219,12 +219,12 @@ int DispatchSpawn(edict_t* pent)
 				}
 			}
 			/*
-			doesn't work here... obviously iuser3 isn't set till after DispatchSpawn ¬_¬
+			doesn't work here... obviously iuser3 isn't set till after DispatchSpawn
 
 			// Use the bots vision to advantage
-			// and add ant structures it sees in NS to the hivemind
+			// and add any structures it sees in NS to the hivemind
 			if ( EntityIsAlienStruct(pent) )
-				gBotGlobals.m_HiveMind.AddStructure(pent,ENTINDEX(pent));*/
+				gBotGlobals.m_HiveMind.AddStructure(pent, ENTINDEX(pent));*/
 		}
 	}
 

@@ -951,7 +951,7 @@ bool CBotGlobals::TFC_getCaptureLocationForFlag(Vector* vec, edict_t* pFlag)
 	return false;
 }
 */
-void CBotGlobals::KeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
+void CBotGlobals::KeyValue(edict_t* pentKeyvalue, const KeyValueData* pkvd)
 {
 	// If there has been an entity needing a master add it to the
 	// global masters list, for use with bots finding out if doors

@@ -137,13 +137,14 @@ public:
 		//std::memset(m_Menus,0,sizeof(CBotMenuItem)*10);
 	}
 
-	void DestroyMenu() const;
+	//CBotMenu& operator=(const CBotMenu& other) = delete;
 
+	void DestroyMenu() const;
 	void InitMenu();
 
 	CBotMenu(const char* szCaption);
 
-	void AddExitMenuItem(int iMenuNum)
+	void AddExitMenuItem(const int iMenuNum)
 	{
 		//if ( m_Menus[iMenuNum] )
 		//	delete m_Menus[iMenuNum];
@@ -151,7 +152,7 @@ public:
 		m_Menus[iMenuNum] = new CBotMenuItem("Exit");
 	}
 
-	void AddMenuItem(int iMenuNum, const char* szMenuCaption, CBotMenu* pNextMenu)
+	void AddMenuItem(const int iMenuNum, const char* szMenuCaption, CBotMenu* pNextMenu)
 	{
 		//if ( m_Menus[iMenuNum] )
 		//	delete m_Menus[iMenuNum];
@@ -159,7 +160,7 @@ public:
 		m_Menus[iMenuNum] = new CBotMenuItem(szMenuCaption, pNextMenu);
 	}
 
-	void AddMenuItem(int iMenuNum, const char* szMenuCaption, void (*m_pMenuFunction)(CClient*))
+	void AddMenuItem(const int iMenuNum, const char* szMenuCaption, void (*m_pMenuFunction)(CClient*))
 	{
 		//if ( m_Menus[iMenuNum] )
 		//	delete m_Menus[iMenuNum];
@@ -167,7 +168,7 @@ public:
 		m_Menus[iMenuNum] = new CBotMenuItem(szMenuCaption, m_pMenuFunction);
 	}
 
-	void Activate(int iMenuItem, CClient* pClient) const
+	void Activate(const int iMenuItem, CClient* pClient) const
 	{
 		if (iMenuItem < 0 || iMenuItem >= 10)
 			return;

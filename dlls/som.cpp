@@ -89,7 +89,7 @@ void CSom::updateAround(const std::vector<ga_value>* inputs, CSomNeuron* bmu) co
 	ga_value dist;
 	const ga_value nsiz = m_fNSize * m_fNSize;
 
-	for (CSomNeuron* current : m_Neurons)
+	for (const CSomNeuron* current : m_Neurons)
 	{
 		if ((dist = bmu->neighbourDistance(current, nsiz)) <= nsiz)
 		{
@@ -98,7 +98,7 @@ void CSom::updateAround(const std::vector<ga_value>* inputs, CSomNeuron* bmu) co
 	}
 }
 
-CSomNeuron* CSom::inputOne(std::vector <ga_value>* inputs)
+CSomNeuron* CSom::inputOne(const std::vector <ga_value>* inputs)
 {
 	CSomNeuron* winner = getBMU(inputs);
 

@@ -175,7 +175,7 @@ ga_value CPopulation::bestFitness() const
 
 ga_value CPopulation::averageFitness() const
 {
-	return totalFitness() / m_theIndividuals.size();
+	return totalFitness() / static_cast<ga_value>(m_theIndividuals.size());
 }
 
 IIndividual* CPopulation::pick()

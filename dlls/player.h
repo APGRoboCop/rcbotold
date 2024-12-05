@@ -26,21 +26,21 @@
 //-----------------------------------------------------
 #define CSUITPLAYLIST	4		// max of 4 suit sentences queued up at any time
 
-#define SUIT_GROUP			true
-#define	SUIT_SENTENCE		false
+constexpr bool SUIT_GROUP = true;
+constexpr bool SUIT_SENTENCE = false;
 
-#define	SUIT_REPEAT_OK		0
-#define SUIT_NEXT_IN_30SEC	30
-#define SUIT_NEXT_IN_1MIN	60
-#define SUIT_NEXT_IN_5MIN	300
-#define SUIT_NEXT_IN_10MIN	600
-#define SUIT_NEXT_IN_30MIN	1800
-#define SUIT_NEXT_IN_1HOUR	3600
+constexpr int SUIT_REPEAT_OK = 0;
+constexpr int SUIT_NEXT_IN_30SEC = 30;
+constexpr int SUIT_NEXT_IN_1MIN = 60;
+constexpr int SUIT_NEXT_IN_5MIN = 300;
+constexpr int SUIT_NEXT_IN_10MIN = 600;
+constexpr int SUIT_NEXT_IN_30MIN = 1800;
+constexpr int SUIT_NEXT_IN_1HOUR = 3600;
 
-#define CSUITNOREPEAT		32
+constexpr int CSUITNOREPEAT = 32;
 
-#define	SOUND_FLASHLIGHT_ON		"items/flashlight1.wav"
-#define	SOUND_FLASHLIGHT_OFF	"items/flashlight1.wav"
+constexpr const char* SOUND_FLASHLIGHT_ON = "items/flashlight1.wav";
+constexpr const char* SOUND_FLASHLIGHT_OFF = "items/flashlight1.wav";
 
 #define TEAM_NAME_LENGTH	16
 #include <basemonster.h>
@@ -67,8 +67,8 @@ typedef enum : std::uint8_t
 	PLAYER_ATTACK1,
 } PLAYER_ANIM;
 
-#define MAX_ID_RANGE 2048
-#define SBAR_STRING_SIZE 128
+constexpr int MAX_ID_RANGE = 2048;
+constexpr int SBAR_STRING_SIZE = 128;
 
 enum sbar_data : std::uint8_t
 {
@@ -78,7 +78,7 @@ enum sbar_data : std::uint8_t
 	SBAR_END,
 };
 
-#define CHAT_INTERVAL 1.0f
+constexpr float CHAT_INTERVAL = 1.0f;
 
 class CBasePlayer : public CBaseMonster
 {

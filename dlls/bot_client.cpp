@@ -1639,8 +1639,8 @@ void BotClient_NS_SetOrder::execute(void* p, int iIndex)
 		case ORDERTYPEG_CODE_RED:
 		case ORDERTYPE_MAX:
 			break;
-		default:
-			OrderTask = BOT_TASK_NONE;
+		//default:
+		//	OrderTask = BOT_TASK_NONE;
 		}
 
 		dataStack<int> tempStack = iReceiverIndexes;

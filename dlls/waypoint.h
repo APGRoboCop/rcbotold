@@ -273,22 +273,22 @@ public:
 		init();
 	}
 
-	void setExtension(char* szExt)
+	void setExtension(const char* szExt)
 	{
 		m_szExtension = strdup(szExt);
 	}
 
-	void setFolder(char* szFolder)
+	void setFolder(const char* szFolder)
 	{
 		m_szFolder = strdup(szFolder);
 	}
 
-	void setName(char* szName)
+	void setName(const char* szName)
 	{
 		m_szName = strdup(szName); // duplicate the string
 	}
 
-	void setHeader(char* szHeader)
+	void setHeader(const char* szHeader)
 	{
 		m_szHeader = strdup(szHeader);
 	}
