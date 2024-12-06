@@ -3778,17 +3778,17 @@ void CBot::Think()
 		}
 		else
 		{
-			// safe to reload?
-			if (m_fLastSeeEnemyTime > 0 && m_fLastSeeEnemyTime + 5.0f < gpGlobals->time)
-			{
-				//TODO: Need a max clip variable in CWeaponPreset, to make this effective
-				if (m_pCurrentWeapon && m_pCurrentWeapon->CanReload())
-				{
+			// Check if it's safe to reload
+			if (m_fLastSeeEnemyTime > 0 && m_fLastSeeEnemyTime + 5.0f < gpGlobals->time) {
+
+				// Check if the current weapon can reload and is out of ammo
+				if (m_pCurrentWeapon && m_pCurrentWeapon->CanReload() && m_pCurrentWeapon->OutOfAmmo()) {
 					AddPriorityTask(CBotTask(BOT_TASK_RELOAD));
 					m_fLastSeeEnemyTime = 0.0f;
 				}
-				else
+				else {
 					m_fLastSeeEnemyTime = 0.0f;
+				}
 			}
 		}
 	}
@@ -15180,100 +15180,87 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						break;
 					}*/
 
-					if (m_pCurrentWeapon == nullptr || m_pCurrentWeapon->HasWeapon(m_pEdict) == false)
-					{
-						//Get weapon
+					// Check if the current weapon is null or not held by the bot
+					if (m_pCurrentWeapon == nullptr || !m_pCurrentWeapon->HasWeapon(m_pEdict)) {
 						bChangeWeapon = true;
 					}
 
-					// lets say that an int of 0 means not chosen a weapon...
-					if (m_CurrentTask->TaskInt() == 0) // not chosen weapon yet?
-					{
+					// Check if a weapon has not been chosen yet or if the current weapon ID is different
+					if (m_CurrentTask->TaskInt() == 0 || m_CurrentTask->TaskInt() != m_pCurrentWeapon->GetID()) {
 						bChangeWeapon = true;
 					}
-					else if (m_CurrentTask->TaskInt() != m_pCurrentWeapon->GetID())
-					{
-						bChangeWeapon = true;
-					}
-					else if (m_pCurrentWeapon->IsMelee())
-					{
-						// need to get closer to enemy
-						if (m_pCurrentWeapon->PrimaryInRange(fEnemyDist) != 0)
-						{
+
+					else if (m_pCurrentWeapon->IsMelee()) {
+
+						// Handle melee weapon logic
+						if (m_pCurrentWeapon->PrimaryInRange(fEnemyDist) != 0) {
 							SetMoveVector(vEnemyOrigin);
 						}
 
-						// low?
-						if (pev->groundentity == m_pEnemy)
+						if (pev->groundentity == m_pEnemy) {
 							Duck();
-						// too high?
-						else if (vEnemyOrigin.z > pev->origin.z + MAX_JUMP_HEIGHT)
-						{
+						}
+
+						else if (vEnemyOrigin.z > pev->origin.z + MAX_JUMP_HEIGHT) {
 							bTaskFailed = true;
 							break;
 						}
 
 						decideJumpDuckStrafe(fEnemyDist, vEnemyOrigin);
 					}
-					else if (m_pCurrentWeapon->NeedToReload())
-					{
+
+					else if (m_pCurrentWeapon->NeedToReload()) {
+
+						// Reload if necessary
 						RunForCover(vEnemyOrigin);
 
-						// battlegrounds, MUST reload, does not do it automatically.
-						if (gBotGlobals.IsMod(MOD_BG))
+						if (gBotGlobals.IsMod(MOD_BG) || gBotGlobals.IsMod(MOD_TS)) {
 							TaskToAdd = CBotTask(BOT_TASK_RELOAD);
+						}
 					}
-					else if (!m_pCurrentWeapon->CanShootPrimary(m_pEdict, fEnemyDist, m_fDistanceFromWall))
-					{
+
+					else if (!m_pCurrentWeapon->CanShootPrimary(m_pEdict, fEnemyDist, m_fDistanceFromWall)) {
+
+						// Choose the best weapon if the current one can't shoot
 						int iWeaponId = m_Weapons.GetBestWeaponId(this, m_pEnemy);
 
-						if (iWeaponId)
-						{
-							m_CurrentTask->SetInt(m_Weapons.GetBestWeaponId(this, m_pEnemy));
+						if (iWeaponId) {
+							m_CurrentTask->SetInt(iWeaponId);
 							bChangeWeapon = true;
 						}
-						else
-						{
+						else {
+
 							m_iLastFailedWaypoint = m_iPrevWaypointIndex;
 
-							if (WantToFollowEnemy(m_pEnemy))
-							{
+							if (WantToFollowEnemy(m_pEnemy)) {
 								int iScheduleId = m_CurrentTask->GetScheduleId();
 								m_Tasks.FinishSchedule(iScheduleId);
 								AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iScheduleId, m_pEnemy));
 								break;
 							}
-							else
-								bTaskFailed = true;
 
+							bTaskFailed = true;
 							break;
 						}
 					}
-					// let GA do this
-					else if (fEnemyDist < 256.0f)
-					{
-						//------------------
+
+					else if (fEnemyDist < 256.0f) {
+						// Handle close enemy logic
 						SetMoveVector(m_vLowestEnemyCostVec);
-						// stay away from enemy
-						//m_pAvoidEntity = m_pEnemy;
 					}
 
-					if (bChangeWeapon)
-					{
-						int iWeaponId;
+					if (bChangeWeapon) {
 
-						iWeaponId = m_Weapons.GetBestWeaponId(this, m_pEnemy);
+						int iWeaponId = m_Weapons.GetBestWeaponId(this, m_pEnemy);
 
 						m_CurrentTask->SetInt(iWeaponId);
 
-						if (!IsCurrentWeapon(m_CurrentTask->TaskInt()))
-						{
+						if (!IsCurrentWeapon(m_CurrentTask->TaskInt())) {
 							AddPriorityTask(CBotTask(BOT_TASK_CHANGE_WEAPON, m_CurrentTask->GetScheduleId(), nullptr, m_CurrentTask->TaskInt()));
-
 							break;
 						}
-						else if (m_pCurrentWeapon && m_pCurrentWeapon->OutOfAmmo())
-						{
+
+						if (m_pCurrentWeapon && m_pCurrentWeapon->OutOfAmmo()) {
 							bTaskFailed = true;
 							break;
 						}
