@@ -29,8 +29,7 @@
  *
  */
 
-#ifndef __BOT_GA_H__
-#define __BOT_GA_H__
+#pragma once
 
 #include "ga.h"
 #include "gannconst.h"
@@ -63,18 +62,15 @@ public:
 	IIndividual* copy() override;
 
 	void setVector(const std::vector<ga_value>& values);
-	void getVector(std::vector<ga_value>* values);
+	void getVector(std::vector<ga_value>& values) const;
 
 	float get(unsigned int iIndex) const;
-
 	void set(unsigned int iIndex, ga_value fVal);
 
 	void clear() override;
-
 	void add(ga_value val) { m_theValues.emplace_back(val); }
 
 	std::vector<ga_value>* returnVector() { return &m_theValues; }
-
 	void freeMemory();
 
 private:
@@ -166,13 +162,13 @@ public:
 	int get() const { return m_Value; }
 	void set(int value) { m_Value = value; }
 private:
-	int m_Value;
+	int m_Value = 0;
 };
 
 class CBitsGAValues : public IIndividual
 {
 public:
-	CBitsGAValues(unsigned int iNumBits);
+	explicit CBitsGAValues(unsigned int iNumBits);
 
 	void load(std::FILE* bfp, int req_size) override;
 	void save(std::FILE* bfp) override;
@@ -204,15 +200,12 @@ public:
 	void set(int iIndex, bool bSet) const;
 
 	void clear() override;
-
-	inline void random() const;
+	void random() const;
 
 	CBits* returnBits() const { return m_theBits; }
 
 	void freeMemory();
 
 private:
-	CBits* m_theBits;
+	CBits* m_theBits = nullptr;
 };
-
-#endif

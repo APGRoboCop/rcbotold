@@ -32,6 +32,7 @@
 #define __GA_H__
 
 #include "gannconst.h"
+#include <memory>
 #include <vector>
 
 typedef enum : std::uint8_t

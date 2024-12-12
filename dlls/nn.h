@@ -29,11 +29,12 @@
  *
  */
 
-#ifndef __RCBOT_NN_H__
-#define __RCBOT_NN_H__
+#pragma once
 
 #include "gannconst.h"
 #include "perceptron.h"
+#include <cstdio>
+#include <memory>
 #include <vector>
 
 class CPerceptron;
@@ -42,84 +43,87 @@ class CGA;
 class CNNTrainSet
 {
 public:
-	std::vector<ga_value> inputs;
-	std::vector<ga_value> outputs;
+    std::vector<ga_value> inputs;
+    std::vector<ga_value> outputs;
 };
 
 class NNLayer
 {
 public:
-	NNLayer(std::FILE* bfp)
+    NNLayer(std::FILE* bfp)
 	{
-		load(bfp);
-	}
+        load(bfp);
+    }
 
-	NNLayer(int iNumNeurons, int iNumInputs);
+    NNLayer(int iNumNeurons, int iNumInputs);
 
-	unsigned int numNeurons() const { return m_Neurons.size(); }
+    unsigned int numNeurons() const
+	{
+        return m_Neurons.size();
+    }
 
-	CPerceptron* getNeuron(unsigned int iNeuron) const { return m_Neurons[iNeuron]; }
+    CPerceptron* getNeuron(unsigned int iNeuron) const {
+        return m_Neurons[iNeuron].get();
+    }
 
-	void freeMemory();
+    void freeMemory();
 
-	void save(std::FILE* bfp) const;
+    void save(std::FILE* bfp) const;
 
-	void load(std::FILE* bfp);
+    void load(std::FILE* bfp);
 private:
-	std::vector<CPerceptron*> m_Neurons;
+    std::vector<std::unique_ptr<CPerceptron>> m_Neurons;
 };
 
 class NN
 {
 public:
-	virtual ~NN() = default;
+    virtual ~NN() = default;
 
-	static float g_learnRate;
+    static float g_learnRate;
 
-	NN()
-	{
-		m_iNumInputs = 0;
-	}
+    NN()
+        : m_iNumInputs(0)
+    {
+    }
 
-	NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
+    NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
 
-	void setWeights(const std::vector<ga_value>* weights) const;
+    void setWeights(const std::vector<ga_value>* weights) const;
 
-	void getWeights(std::vector<ga_value>* weights) const;
+    void getWeights(std::vector<ga_value>* weights) const;
 
-	void execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs) const;
+    void execute(std::vector<ga_value>* outputs, const std::vector<ga_value>* inputs) const;
 
-	void freeMemory();
+    void freeMemory();
 
-	void randomize() const;
+    void randomize() const;
 
-	void getOutputs(std::vector<ga_value>* outputs) const;
-	void trainOutputs(const std::vector<ga_value>* wanted_outputs) const;
+    void getOutputs(std::vector<ga_value>* outputs) const;
+    void trainOutputs(const std::vector<ga_value>* wanted_outputs) const;
 
-	void load(std::FILE* bfp);
+    void load(std::FILE* bfp);
 
-	void save(std::FILE* bfp) const;
+    void save(std::FILE* bfp) const;
 
-	static void train(const std::vector<CNNTrainSet>&)
-	{
-		//return;
-	}
+    static void train(const std::vector<CNNTrainSet>&)
+    {
+        //return;
+    }
 private:
 	std::vector<NNLayer*> m_Layers;
-	int m_iNumInputs;
+    int m_iNumInputs;
 };
 
 class NNGATrained : public NN
 {
 public:
-	NNGATrained(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
+    NNGATrained(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
 
-	~NNGATrained() override;
+    ~NNGATrained() override;
 
-	void train(std::vector<CNNTrainSet> trainingsets);
+    void train(const std::vector<CNNTrainSet>& trainingsets);
 private:
 	CGA* m_pGA;
-	IIndividual* m_pInd;
+    IIndividual* m_pInd;
 };
-
-#endif

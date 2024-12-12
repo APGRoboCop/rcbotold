@@ -29,12 +29,12 @@
  *
  */
 
-#ifndef __PERCEPTRON_H__
-#define __PERCEPTRON_H__
+#pragma once
 
-//#include "ga.h"
+ //#include "ga.h"
 #include "gannconst.h"
 #include <vector>
+#include <memory>
 
 typedef float ga_value;
 
@@ -87,9 +87,9 @@ public:
 		load(bfp);
 	}
 
-	void setWeights(const std::vector <ga_value>& weights);
+	void setWeights(const std::vector<ga_value>& weights);
 
-	void setWeights(const std::vector <ga_value>& weights, int iFrom, int iNum);
+	void setWeights(const std::vector<ga_value>& weights, int iFrom, int iNum);
 
 	void setWeights(const CBotGAValues* vals, int iFrom, int iNum);
 
@@ -97,9 +97,9 @@ public:
 
 	void setWeight(unsigned int iWeight, ga_value fVal) { m_weights[iWeight] = fVal; }
 
-	ga_value getWeight(const unsigned int iWeight) const { return m_weights[iWeight]; }
+	ga_value getWeight(unsigned int iWeight) const { return m_weights[iWeight]; }
 
-	void input(std::vector <ga_value>* inputs);
+	void input(const std::vector<ga_value>& inputs);
 
 	ga_value execute();
 
@@ -111,12 +111,7 @@ public:
 
 	void randomize();
 
-	~CPerceptron()
-	{
-		//		if (m_transferFunction)
-		delete m_transferFunction;
-		m_transferFunction = nullptr;
-	}
+	~CPerceptron() = default;
 
 	bool trained() const { return m_bTrained; }
 
@@ -129,15 +124,12 @@ public:
 	void save(const char* filename, int iProfileId) const;
 
 private:
-
 	int m_iInputs;
 	ga_value m_Bias;
 	ga_value m_LearnRate;
-	std::vector <ga_value> m_inputs;
-	std::vector <ga_value> m_weights;
 	ga_value m_output;
-	ITransfer* m_transferFunction;
+	std::unique_ptr<ITransfer> m_transferFunction;
 	bool m_bTrained;
+	std::vector<ga_value> m_weights;
+	std::vector<ga_value> m_inputs;
 };
-
-#endif

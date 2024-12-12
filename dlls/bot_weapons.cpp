@@ -720,7 +720,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 				inputs.emplace_back(pBot->onGround());
 				inputs.emplace_back(pBot->pev->velocity.Length() / pBot->pev->maxspeed);
 
-				pBot->dec_attackElectrified->input(&inputs);
+				pBot->dec_attackElectrified->input(inputs);
 				pBot->dec_attackElectrified->execute();
 
 				pBot->m_pElectricEnemy = pEnemy;

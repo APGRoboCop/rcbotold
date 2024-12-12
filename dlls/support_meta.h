@@ -37,13 +37,15 @@
 #ifndef SUPPORT_META_H
 #define SUPPORT_META_H
 
-#include <string.h>		// strcpy(), strncat()
+#include <string>
+#include <cstring>		// strcpy(), strncat()
+#include <algorithm>
 #include <sys/types.h>	// stat
 #include <sys/stat.h>	// stat
 
 #include "osdep.h"		// strcasecmp, S_ISREG,
 
-void do_exit(int exitval);
+void do_exit(int exitval) noexcept;
 
 // Unlike snprintf(), strncpy() doesn't necessarily null-terminate the
 // target.  It appears the former function reasonably considers the given
@@ -86,63 +88,51 @@ void do_exit(int exitval);
 #endif
 
 // Technique 3: use inline
-inline char *STRNCPY(char *dst, const char *src, int size) {
-	strcpy(dst, "\0");
-	return(strncat(dst, src, size-1));
+inline char* STRNCPY(char* dst, const char* src, const int size) noexcept {
+    std::fill_n(dst, size, '\0');
+    std::copy_n(src, std::min(size - 1, static_cast<int>(std::strlen(src))), dst);
+    return dst;
 }
 
 // Renamed string functions to be clearer.
-inline int strmatch(const char *s1, const char *s2) {
-	if(!s1 || !s2) 
-		return(0);
-	else 
-		return(!strcmp(s1, s2));
-}
-inline int strnmatch(const char *s1, const char *s2, size_t n) {
-	if(!s1 || !s2) 
-		return(0);
-	else 
-		return(!strncmp(s1, s2, n));
-}
-inline int strcasematch(const char *s1, const char *s2) {
-	if(!s1 || !s2) 
-		return(0);
-	else 
-		return(!strcasecmp(s1, s2));
-}
-inline int strncasematch(const char *s1, const char *s2, size_t n) {
-	if(!s1 || !s2) 
-		return(0);
-	else 
-		return(!strncasecmp(s1, s2, n));
+inline int strmatch(const char* s1, const char* s2) noexcept {
+    return (s1 && s2) ? !std::strcmp(s1, s2) : 0;
 }
 
-inline int old_valid_file(char *path) {
-	char *cp;
-	int len, ret;
-	cp = (char *) LOAD_FILE_FOR_ME(path, &len);
-	if(cp && len)
-		ret=1;
-	else
-		ret=0;
-	FREE_FILE(cp);
-	return(ret);
+inline int strnmatch(const char* s1, const char* s2, const size_t n) noexcept {
+    return (s1 && s2) ? !std::strncmp(s1, s2, n) : 0;
 }
-int valid_gamedir_file(char *path);
-char *full_gamedir_path(const char *path, char *fullpath);
+
+inline int strcasematch(const char* s1, const char* s2) noexcept {
+    return (s1 && s2) ? !strcasecmp(s1, s2) : 0;
+}
+
+inline int strncasematch(const char* s1, const char* s2, const size_t n) noexcept {
+    return (s1 && s2) ? !strncasecmp(s1, s2, n) : 0;
+}
+
+inline int old_valid_file(char* path) noexcept {
+    int len;
+    // Use reinterpret_cast to cast from unsigned char* to char*
+    char* cp = reinterpret_cast<char*>(LOAD_FILE_FOR_ME(path, &len));
+    const int ret = (cp && len) ? 1 : 0;
+    FREE_FILE(cp);
+    return ret;
+}
+
+int valid_gamedir_file(const char* path);
+char* full_gamedir_path(const char* path, char* fullpath);
 
 // Turn a variable/function name into the corresponding string, optionally
-// stripping off the leading "len" characters.  Useful for things like
+// stripping off the leading "len" characters. Useful for things like
 // turning 'pfnClientCommand' into "ClientCommand" so we don't have to
 // specify strings used for all the debugging/log messages.
-#define STRINGIZE(name, len)		#name+len
-
+#define STRINGIZE(name, len) (#name + (len))
 
 // Max description length for plugins.ini and other places.
-#define MAX_DESC_LEN 256
-
+constexpr int MAX_DESC_LEN = 256;
 
 // For various character string buffers.
-#define MAX_STRBUF_LEN 1024
+constexpr int MAX_STRBUF_LEN = 1024;
 
 #endif /* SUPPORT_META_H */

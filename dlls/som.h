@@ -85,7 +85,7 @@ public:
 
 	void updateAround(const std::vector<ga_value>* inputs, CSomNeuron* bmu) const;
 
-	CSomNeuron* input(std::vector < std::vector <ga_value> >* inputs);
+	CSomNeuron* input(const std::vector < std::vector <ga_value> >* inputs);
 
 	CSomNeuron* inputOne(const std::vector < ga_value >* inputs);
 

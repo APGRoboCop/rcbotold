@@ -68,24 +68,12 @@ void CBotGAValues::clear()
 void CBotGAValues::crossOver(IIndividual* other)
 {
 	const unsigned int iPoint = RANDOM_LONG(0, m_theValues.size());
-	float fTemp;
 
 	CBotGAValues* vother = static_cast<CBotGAValues*>(other);
 
-	unsigned int i;
-
-	for (i = 0; i < iPoint; i++)
+	for (unsigned int i = 0; i < iPoint; i++)
 	{
-		fTemp = get(i);
-		set(i, vother->get(i));
-		vother->set(i, fTemp);
-	}
-
-	for (i = iPoint; i < m_theValues.size(); i++)
-	{
-		fTemp = vother->get(i);
-		vother->set(i, get(i));
-		set(i, fTemp);
+		std::swap(m_theValues[i], vother->m_theValues[i]);
 	}
 }
 
@@ -103,7 +91,7 @@ void CBotGAValues::mutate()
 	}
 }
 
-float CBotGAValues::get(unsigned int iIndex) const //Unstable? [APG]RoboCop[CL]
+float CBotGAValues::get(const unsigned int iIndex) const
 {
 	return m_theValues[iIndex];
 }
@@ -129,20 +117,19 @@ IIndividual* CBotGAValues::copy()
 	return individual;
 }
 
-void CBotGAValues::setVector(std::vector<ga_value> const& values)
+void CBotGAValues::setVector(const std::vector<ga_value>& values)
 {
 	m_theValues.clear();
-
-	for (float value : values)
+	m_theValues.reserve(values.size());
+	for (const ga_value& value : values) // Use const reference for efficiency
 		m_theValues.emplace_back(value);
 }
-
-void CBotGAValues::getVector(std::vector<ga_value>* values)
+void CBotGAValues::getVector(std::vector<ga_value>& values) const // Use reference instead of pointer
 {
-	values->clear();
-
-	for (float& m_theValue : m_theValues)
-		values->emplace_back(m_theValue);
+	values.clear();
+	values.reserve(m_theValues.size());
+	for (const ga_value& m_theValue : m_theValues) // Use const reference for efficiency
+		values.emplace_back(m_theValue);
 }
 
 void CBotGAValues::freeMemory()
@@ -272,13 +259,13 @@ CBitsGAValues::CBitsGAValues(CBits* bits)
 // crossover with other individual
 void CBitsGAValues::crossOver(IIndividual* other)
 {
+	int i;
+
 	const int iNumBits = m_theBits->numBits();
 	const int iCrossoverPoint = RANDOM_LONG(0, iNumBits);
 	const CBits tempBits(iNumBits);
 
 	const CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
-
-	int i;
 
 	for (i = 0; i < iCrossoverPoint; i++)
 	{

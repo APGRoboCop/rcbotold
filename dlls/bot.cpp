@@ -789,8 +789,8 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 			else
 				inputs.emplace_back(1);
 
-			dec_runForCover->input(&inputs);
-			dec_faceHurtOrigin->input(&inputs);
+			dec_runForCover->input(inputs);
+			dec_faceHurtOrigin->input(inputs);
 
 			std::vector<ga_value> weights;
 
@@ -8201,7 +8201,7 @@ void CBot::WorkMoveDirection()
 
 					dec_flapWings->setWeights(m_pFlyGAVals, 2, 4);
 
-					dec_flapWings->input(&inputs);
+					dec_flapWings->input(inputs);
 					dec_flapWings->execute();
 
 					if (fEnergy == 100.0f || (!dec_flapWings->trained() || dec_flapWings->fired()))//(NS_AmountOfEnergy()*0.01 > m_pFlyGAVals->get(2)) )//!dec_flapWings->trained() || dec_flapWings->fired () )
@@ -10910,7 +10910,7 @@ bool CBot::WantToFollowEnemy(edict_t* pEnemy) const
 	inputs.emplace_back(DistanceFromEdict(pEnemy) * 0.001f);
 	inputs.emplace_back(pev->size.Length() / pEnemy->v.size.Length());
 
-	dec_followEnemy->input(&inputs);
+	dec_followEnemy->input(inputs);
 	dec_followEnemy->execute();
 
 	weights.clear();
@@ -15104,7 +15104,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						inputs.emplace_back(UTIL_YawAngleBetweenOrigin(pev, vEnemyOrigin) / 180);
 						inputs.emplace_back(weap_id);
 
-						dec_stunt->input(&inputs);
+						dec_stunt->input(inputs);
 						dec_stunt->execute();
 
 						// replace with perceptron
@@ -16840,9 +16840,9 @@ void CBot::decideJumpDuckStrafe(const float fEnemyDist, const Vector& vEnemyOrig
 
 	inputs.emplace_back(pev->flags & FL_ONGROUND && pev->movetype == MOVETYPE_WALK);
 
-	dec_jump->input(&inputs);
-	dec_duck->input(&inputs);
-	dec_strafe->input(&inputs);
+	dec_jump->input(inputs);
+	dec_duck->input(inputs);
+	dec_strafe->input(inputs);
 
 	dec_jump->execute();
 	dec_duck->execute();

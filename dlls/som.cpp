@@ -111,7 +111,7 @@ CSomNeuron* CSom::inputOne(const std::vector <ga_value>* inputs)
 	return winner;
 }
 
-void CSom::input(const std::vector<std::vector<ga_value>>* inputs, int epochs)//TODO: Experimental [APG]RoboCop[CL]
+void CSom::input(const std::vector<std::vector<ga_value>>* inputs, const int epochs)//TODO: Experimental [APG]RoboCop[CL]
 {
 	// Check if the inputs vector is not empty and the number of epochs is valid
 	if (inputs == nullptr || inputs->empty() || epochs <= 0) {
@@ -143,7 +143,7 @@ void CSom::input(const std::vector<std::vector<ga_value>>* inputs, int epochs)//
 	}
 }
 
-CSomNeuron* CSom::input(std::vector <std::vector <ga_value> >* inputs)
+CSomNeuron* CSom::input(const std::vector <std::vector <ga_value> >* inputs)
 {
 	return inputOne(&(*inputs)[RANDOM_LONG(0, static_cast<int>(inputs->size()) - 1)]);
 }
@@ -160,7 +160,7 @@ void CSom::display() const
 	}
 }
 
-void CSomNeuron::update(const std::vector<ga_value>* inputs, ga_value inf)
+void CSomNeuron::update(const std::vector<ga_value>* inputs, const ga_value inf)
 {
 	for (unsigned int i = 0; i < inputs->size(); i++)
 	{
@@ -182,7 +182,7 @@ CSomNeuron::CSomNeuron()
 	return;
 }
 
-CSomNeuron::CSomNeuron(int iInp, ga_value iX, ga_value iY)
+CSomNeuron::CSomNeuron(const int iInp, const ga_value iX, const ga_value iY)
 {
 	m_iX = iX;
 	m_iY = iY;

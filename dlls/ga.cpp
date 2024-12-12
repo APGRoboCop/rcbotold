@@ -41,6 +41,9 @@
 
 #include "ga.h"
 
+#include <memory>
+#include <stdexcept>
+
 const int CGA::g_iDefaultMaxPopSize = 16;
 const float CGA::g_fCrossOverRate = 0.7f;
 const float CGA::g_fMutateRate = 0.1f;
@@ -50,7 +53,7 @@ const float CGA::g_fMaxPerturbation = 0.3f;
 // POPULATION
 ////////////////////
 
-IIndividual* CPopulation::get(int iIndex) const
+IIndividual* CPopulation::get(const int iIndex) const
 {
 	return m_theIndividuals[iIndex];
 }
@@ -116,7 +119,7 @@ void CPopulation::save(std::FILE* bfp) const
 		m_theIndividuals[i]->save(bfp);
 }
 
-void CPopulation::load(std::FILE* bfp, int chromosize, int type)
+void CPopulation::load(std::FILE* bfp, const int chromosize, const int type)
 {
 	unsigned int iSize;
 
@@ -238,7 +241,7 @@ void CGA::addToPopulation(IIndividual* individual)
 	}
 }
 
-void CGA::loadTeam(const char* szName, int iTeam, int chromosize)
+void CGA::loadTeam(const char* szName, const int iTeam, const int chromosize)
 {
 	std::FILE* bfp = RCBOpenFile(szName, "rb", SAVETYPE_TEAM, iTeam);
 
@@ -249,7 +252,7 @@ void CGA::loadTeam(const char* szName, int iTeam, int chromosize)
 	}
 }
 
-void CGA::saveTeam(const char* szName, int iTeam) const
+void CGA::saveTeam(const char* szName, const int iTeam) const
 {
 	std::FILE* bfp = RCBOpenFile(szName, "wb", SAVETYPE_TEAM, iTeam);
 
@@ -289,7 +292,7 @@ void CGA::save(std::FILE* bfp) const
 	m_theNewPopulation.save(bfp);
 }
 
-void CGA::load(std::FILE* bfp, int chromosize)
+void CGA::load(std::FILE* bfp, const int chromosize)
 {
 	m_thePopulation.load(bfp, chromosize, m_iPopType);
 	m_theNewPopulation.load(bfp, chromosize, m_iPopType);
@@ -386,7 +389,7 @@ IIndividual* CRouletteSelection::select(CPopulation* population)
 ///////////////
 // SAVING
 //TODO: To allow the experience data to be saved properly [APG]RoboCop[CL]
-std::FILE* RCBOpenFile(const char* file, const char* readtype, eGASaveType savedtype, int iId)
+std::FILE* RCBOpenFile(const char* file, const char* readtype, const eGASaveType savedtype, const int iId)
 {
 	char filename[256];
 	char tmpfilename[256];
@@ -395,10 +398,14 @@ std::FILE* RCBOpenFile(const char* file, const char* readtype, eGASaveType saved
 		snprintf(tmpfilename, sizeof(tmpfilename), "%dp%s.rce", iId, file); // iId = profileid
 	else if (savedtype == SAVETYPE_TEAM)
 		snprintf(tmpfilename, sizeof(tmpfilename), "%dt%s.rce", iId, file); // iId = team id
+	else
+		throw std::invalid_argument("Invalid save type");
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmpfilename);
 
 	std::FILE* bfp = std::fopen(filename, readtype);
+	if (!bfp)
+		throw std::runtime_error("Failed to open file");
 
 	return bfp;
 }

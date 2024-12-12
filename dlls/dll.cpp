@@ -2125,7 +2125,7 @@ void ReadMapConfig()
 	}
 }
 
-edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin) //TODO: Experimental [APG]RoboCop[CL]
+edict_t* BotFunc_NS_CommanderBuild(const int iUser3, const char* szClassname, const Vector& vOrigin) //TODO: Experimental [APG]RoboCop[CL]
 {
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{

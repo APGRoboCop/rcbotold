@@ -397,6 +397,7 @@
     <ClInclude Include="schedule.h" />
     <ClInclude Include="sdk_util.h" />
     <ClInclude Include="som.h" />
+    <ClInclude Include="support_meta.h" />
     <ClInclude Include="types_meta.h" />
     <ClInclude Include="usercmd.h" />
     <ClInclude Include="util.h" />

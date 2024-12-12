@@ -44,13 +44,13 @@
 
 float NN::g_learnRate = 0.9f;
 
-NNLayer::NNLayer(int iNumNeurons, int iNumInputs)
+NNLayer::NNLayer(const int iNumNeurons, const int iNumInputs)
 {
 	for (int i = 0; i < iNumNeurons; i++)
 		m_Neurons.emplace_back(new CPerceptron(iNumInputs, nullptr, NN::g_learnRate));
 }
 
-NN::NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs)
+NN::NN(const int iNumHiddenLayers, const int iNumInputs, const int iNumNeuronsPerHiddenLayer, const int iNumOutputs)
 {
 	//m_Layers.add(new NNLayer(iNumInputs));
 
@@ -67,7 +67,7 @@ void NN::setWeights(const std::vector<ga_value>* weights) const
 {
 	unsigned int w = 0;
 
-	for (const NNLayer* l : m_Layers)
+	for (NNLayer* const& l : m_Layers)
 	{
 		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
@@ -83,7 +83,7 @@ void NN::setWeights(const std::vector<ga_value>* weights) const
 
 void NN::getWeights(std::vector<ga_value>* weights) const
 {
-	for (const NNLayer* l : m_Layers)
+	for (NNLayer* const& l : m_Layers)
 	{
 		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
@@ -101,7 +101,7 @@ void NN::trainOutputs(const std::vector<ga_value>* wanted_outputs) const
 {
 	unsigned int w = 0;
 
-	for (const NNLayer* l : m_Layers)
+	for (NNLayer* const& l : m_Layers)
 	{
 		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
@@ -118,7 +118,7 @@ void NN::getOutputs(std::vector<ga_value>* outputs) const
 
 	outputs->clear();
 
-	for (const NNLayer* l : m_Layers)
+	for (NNLayer* const& l : m_Layers)
 	{
 		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
@@ -129,45 +129,35 @@ void NN::getOutputs(std::vector<ga_value>* outputs) const
 	}
 }
 
-void NN::execute(std::vector <ga_value>* outputs, std::vector <ga_value>* inputs) const
+void NN::execute(std::vector<ga_value>* outputs, const std::vector<ga_value>* inputs) const
 {
-	unsigned int i;
-
-	std::vector<ga_value> newoutputs;
+	std::vector<ga_value> newoutputs = *inputs; // Initialize with inputs
 
 	outputs->clear();
 
-	for (i = 0; i < inputs->size(); i++)
-		outputs->emplace_back((*inputs)[i]);
-
-	for (i = 0; i < m_Layers.size(); i++)
+	for (NNLayer* const l : m_Layers)
 	{
-		const NNLayer* l = m_Layers[i];
-
-		newoutputs.clear();
+		outputs->clear();
 
 		for (unsigned int j = 0; j < l->numNeurons(); j++)
 		{
 			CPerceptron* n = l->getNeuron(j);
 
-			n->input(outputs);
+			n->input(newoutputs);
+
 			n->execute();
-
-			newoutputs.emplace_back(n->getOutput());
+			outputs->emplace_back(n->getOutput());
 		}
-
-		outputs->clear();
-
-		for (float& newoutput : newoutputs)
-			outputs->emplace_back(newoutput);
+		// Swap to avoid unnecessary copying
+		std::swap(newoutputs, *outputs);
 	}
 }
 
 void NNLayer::save(std::FILE* bfp) const
 {
-	unsigned int iTemp;
+	if (!bfp) return;
 
-	iTemp = m_Neurons.size();
+	const unsigned int iTemp = m_Neurons.size();
 
 	std::fwrite(&iTemp, sizeof(unsigned int), 1, bfp);
 
@@ -175,7 +165,7 @@ void NNLayer::save(std::FILE* bfp) const
 
 	header.write(bfp);
 
-	for (const CPerceptron* m_Neuron : m_Neurons)
+	for (const std::unique_ptr<CPerceptron>& m_Neuron : m_Neurons)
 	{
 		m_Neuron->save(bfp);
 	}
@@ -183,18 +173,19 @@ void NNLayer::save(std::FILE* bfp) const
 
 void NNLayer::load(std::FILE* bfp)
 {
+	if (!bfp) return;
+
 	unsigned int iTemp;
 
 	std::fread(&iTemp, sizeof(unsigned int), 1, bfp);
 
 	const CGenericHeader header1 = CGenericHeader(LEARNTYPE_NN_LAYER, iTemp);
-	//CGenericHeader header2; //header2 unused? [APG]RoboCop[CL]
 
 	if (CGenericHeader::read(bfp, header1))
 	{
-		for (unsigned int i = 0; i < m_Neurons.size(); i++)
+		for (unsigned int i = 0; i < iTemp; i++)
 		{
-			m_Neurons.emplace_back(new CPerceptron(bfp));
+			m_Neurons.emplace_back(std::make_unique<CPerceptron>(bfp));
 		}
 	}
 }
@@ -270,12 +261,6 @@ void NN::freeMemory()
 
 void NNLayer::freeMemory()
 {
-	for (CPerceptron*& m_Neuron : m_Neurons)
-	{
-		delete m_Neuron;
-		m_Neuron = nullptr;
-	}
-
 	m_Neurons.clear();
 }
 
@@ -303,7 +288,7 @@ NNGATrained::~NNGATrained()
 	}
 }
 
-void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
+void NNGATrained::train(const std::vector<CNNTrainSet>& trainingsets)
 {
 	if (m_pGA->canPick())
 	{
@@ -331,21 +316,20 @@ void NNGATrained::train(std::vector<CNNTrainSet> trainingsets)
 	ga_value fTotalError = 0;
 	ga_value iNum = 0;
 
-	for (CNNTrainSet& trainingset : trainingsets)
+	for (const CNNTrainSet& trainingset : trainingsets)
 	{
 		this->execute(&outputs, &trainingset.inputs);
 
-		for (unsigned int j = 0; j < outputs.size(); j++)
+		for (size_t j = 0; j < outputs.size(); ++j)
 		{
 			const ga_value fError = outputs[j] - trainingset.outputs[j];
 
 			fTotalError += fError * fError;
-			iNum++;
+			++iNum;
 		}
 	}
 
-	fTotalError = fTotalError / iNum;
-
+	fTotalError /= iNum;
 	m_pInd->setFitness(1 / fTotalError);
 
 	m_pGA->addToPopulation(m_pInd->copy());
