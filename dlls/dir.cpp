@@ -113,6 +113,38 @@ HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec)
 	}
 }
 
+/// <summary>
+/// Returns true if the path has any sub-directories
+/// </summary>
+bool HasSubDirectories(char* path) {
+	char search_path[MAX_PATH];
+	char dirname[MAX_PATH];
+#ifndef __linux__
+	HANDLE directory = nullptr;
+#else
+	DIR* directory = nullptr;
+#endif
+
+
+	std::strcpy(search_path, path);
+
+#ifndef __linux__
+	std::strcat(search_path, "/*");
+#endif
+
+	// check if there's any sub-directories in the MOD models/player
+	while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr) {
+		// don't want to get stuck looking in the same directory again and again (".")
+		// don't wan't to search parent directories ("..")
+		if (std::strcmp(dirname, ".") == 0 || std::strcmp(dirname, "..") == 0)
+			continue;
+		
+		return true;
+	}
+
+	return false;
+}
+
 #else
 
 // Linux directory wildcard routines...
