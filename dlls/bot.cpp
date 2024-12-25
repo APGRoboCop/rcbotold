@@ -4413,6 +4413,7 @@ void CBot::LookForNewTasks()
 				}
 			}
 		}
+		//break;
 		case MOD_SI:
 			if (!pNearestPickupEntity || fDistance < fNearestPickupEntityDist)
 			{

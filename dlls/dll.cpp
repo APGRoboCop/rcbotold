@@ -943,7 +943,7 @@ void ClientCommand(edict_t* pEntity)
 					}
 
 					// finished with message
-					delete[] szMessage;
+					free(szMessage); // Use free() instead of delete[]
 					szMessage = nullptr;
 				}
 			}

@@ -47,7 +47,7 @@ float NN::g_learnRate = 0.9f;
 NNLayer::NNLayer(const int iNumNeurons, const int iNumInputs)
 {
 	for (int i = 0; i < iNumNeurons; i++)
-		m_Neurons.emplace_back(new CPerceptron(iNumInputs, nullptr, NN::g_learnRate));
+		m_Neurons.emplace_back(std::make_unique<CPerceptron>(iNumInputs, nullptr, NN::g_learnRate));
 }
 
 NN::NN(const int iNumHiddenLayers, const int iNumInputs, const int iNumNeuronsPerHiddenLayer, const int iNumOutputs)

@@ -1644,9 +1644,9 @@ void HAL_AddSwap(HAL_SWAP* list, char* s, char* d)
 	if (list->to == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_AddSwap() unable to reallocate to\n");
 
-	list->from[list->size].length = static_cast<unsigned char>(std::strlen(s));
+	list->from[list->size].length = std::strlen(s);
 	list->from[list->size].word = strdup(s);
-	list->to[list->size].length = static_cast<unsigned char>(std::strlen(d));
+	list->to[list->size].length = std::strlen(d);
 	list->to[list->size].word = strdup(d);
 	list->size++;
 }
