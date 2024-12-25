@@ -103,8 +103,8 @@ void CBotWeapon::Reset() //TODO: Experimental [APG]RoboCop[CL]
 	m_iId = 0;
 	m_pWeaponInfo = nullptr;
 	m_bHasWeapon = false;
-	m_iAmmo1 = nullptr;
-	m_iAmmo2 = nullptr;
+	m_iAmmo1 = 0;
+	m_iAmmo2 = 0;
 }
 
 bool CBotWeapon::CanReload() const
@@ -142,7 +142,7 @@ bool CWeapon::IsSecondary() const
 	}
 }
 
-void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
+void CBotWeapon::SetWeapon(const int iId, int* iAmmoList)
 {
 	this->Reset();
 
@@ -164,17 +164,17 @@ void CBotWeapon::SetWeapon(int iId, int* iAmmoList)
 		}
 	}
 
-void CBotWeapon::setHasWeapon(bool bVal)
+void CBotWeapon::setHasWeapon(const bool bVal)
 {
 	m_bHasWeapon = bVal;
 }
 
-void CBotWeapons::AddWeapon(int iId)
+void CBotWeapons::AddWeapon(const int iId)
 {
 	m_Weapons[iId].SetWeapon(iId, m_iAmmo);
 }
 
-void CWeapons::AddWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int iSecAmmoMax, int iHudSlot, int iHudPosition, int iFlags, int iAmmoIndex1, int iAmmoIndex2)
+void CWeapons::AddWeapon(const int iId, const char* szClassname, const int iPrimAmmoMax, const int iSecAmmoMax, const int iHudSlot, const int iHudPosition, const int iFlags, const int iAmmoIndex1, const int iAmmoIndex2)
 {
 	if (iId >= 0 && iId < MAX_WEAPONS)
 	{
@@ -335,7 +335,7 @@ void CWeaponPresets::ReadPresets()
 	std::fclose(fp);
 }
 
-bool CBotWeapon::HasWeapon(edict_t* pEdict) const
+bool CBotWeapon::HasWeapon(const edict_t* pEdict) const
 {
 	if (pEdict)
 	{
@@ -754,14 +754,20 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 				continue;
 		}
 
-		if (pWeapon->NeedToReload())//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
+		//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
+		if (pWeapon != nullptr) // Ensure pWeapon is valid
 		{
-			Weapons.emplace(pWeapon);//.Add(i);
-			continue;
-		}
+			if (pWeapon->NeedToReload()) // Allow bots to reload when needed
+			{
+				Weapons.emplace(pWeapon); // Add weapon to reload list
+				continue;
+			}
 
-		if (pWeapon->OutOfAmmo())//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
-			continue;
+			if (pWeapon->OutOfAmmo()) // Skip weapons that are out of ammo
+			{
+				continue;
+			}
+		}
 
 		Weapons.emplace(pWeapon);//.Add(i);
 	}
@@ -897,7 +903,7 @@ bool CBotWeapon::NeedToReload() const
 	return false;
 }
 
-bool CBotWeapon::CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const
+bool CBotWeapon::CanShootPrimary(const edict_t* pEdict, const float flFireDist, const float flWallDist) const
 {
 	if (m_pWeaponInfo == nullptr)
 		return true;

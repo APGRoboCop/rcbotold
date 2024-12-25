@@ -220,7 +220,7 @@ inline bool FClassnameIs(entvars_t* pev, const char* szClassname)
 class CBaseEntity;
 
 // Misc. Prototypes
-extern void			UTIL_SetSize(entvars_t* pev, const Vector& vecMin, const Vector& vecMax);
+extern void			UTIL_SetSize(const entvars_t* pev, const Vector& vecMin, const Vector& vecMax);
 extern float		UTIL_VecToYaw(const Vector& vec);
 extern Vector		UTIL_VecToAngles(const Vector& vec);
 extern float		UTIL_AngleMod(float a);
@@ -252,7 +252,7 @@ inline void UTIL_MakeVectorsPrivate(const Vector& vecAngles, float* p_vForward, 
 extern void			UTIL_MakeAimVectors(const Vector& vecAngles); // like MakeVectors, but assumes pitch isn't inverted
 extern void			UTIL_MakeInvVectors(const Vector& vec, globalvars_t* pgv);
 
-extern void			UTIL_SetOrigin(entvars_t* pev, const Vector& vecOrigin);
+extern void			UTIL_SetOrigin(const entvars_t* pev, const Vector& vecOrigin);
 extern void			UTIL_EmitAmbientSound(edict_t* entity, const Vector& vecOrigin, const char* samp, float vol, float attenuation, int fFlags, int pitch);
 extern void			UTIL_ParticleEffect(const Vector& vecOrigin, const Vector& vecDirection, ULONG ulColor, ULONG ulCount);
 extern void			UTIL_ScreenShake(const Vector& center, float amplitude, float frequency, float duration, float radius);

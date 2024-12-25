@@ -2243,7 +2243,7 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, bool bSayNow)
 	}
 }
 
-bool CBot::BotCanUseBuiltStructure(edict_t* structure) const //TODO: Experimental [APG]RoboCop[CL]
+bool CBot::BotCanUseBuiltStructure(const edict_t* structure) const //TODO: Experimental [APG]RoboCop[CL]
 {
 	if (structure == nullptr || FNullEnt(structure))
 		return false;
@@ -2470,30 +2470,31 @@ int CBot::GetLadderDir(const bool bCheckWaypoint) const
 // wants to go up or down..
 //return -1 (down), 0 (jump off), 1 (up)
 {
-	// get origin of next waypoint...
-	// want to go up or down?
-	const int iNextWaypoint = GetNextWaypoint();
+	//TODO: To adjust the 8 units for bots to climb properly [APG]RoboCop[CL]
+	constexpr float CLIMB_THRESHOLD = 8.0f; // Threshold for climbing adjustments
 
-	if (bCheckWaypoint && iNextWaypoint != -1)
+	// Helper lambda to determine direction based on z-coordinates
+	auto getDirection = [](const float targetZ, const float currentZ, const float threshold) -> int {
+		if (targetZ > currentZ - threshold)
+			return 1; // Up
+		else if (targetZ < currentZ)
+			return -1; // Down
+		return 0; // Stay
+		};
+
+	// Check if we should use the next waypoint
+	if (bCheckWaypoint)
 	{
-		const Vector vNextWptOrigin = waypoints[iNextWaypoint].origin;
-
-		//TODO: To adjust the 8 units for bots to climb properly [APG]RoboCop[CL]
-		if (vNextWptOrigin.z > pev->origin.z - 8)
-			return 1;
-		else if (vNextWptOrigin.z < pev->origin.z)
-			return -1;
-	}
-	else
-	{
-		// keep going up if 8 units from top so we can climb further.
-		if (m_vMoveToVector.z > pev->origin.z - 8)
-			return 1;
-		else if (m_vMoveToVector.z < pev->origin.z)
-			return -1;
+		const int iNextWaypoint = GetNextWaypoint();
+		if (iNextWaypoint != -1)
+		{
+			const Vector& vNextWptOrigin = waypoints[iNextWaypoint].origin;
+			return getDirection(vNextWptOrigin.z, pev->origin.z, CLIMB_THRESHOLD);
+		}
 	}
 
-	return 0;
+	// Default to using the move-to vector
+	return getDirection(m_vMoveToVector.z, pev->origin.z, CLIMB_THRESHOLD);
 }
 
 /*void CBot::TFC_UpdateFlagInfo()
@@ -3593,32 +3594,20 @@ void CBot::Think()
 			// run for cover from grenades and exploding robo grunts
 			if (UTIL_IsGrenadeRocket(m_pAvoidEntity))
 			{
-				// guess final position of grenade
-
-				Vector v_src = EntityOrigin(m_pAvoidEntity);
-
-				BotFunc_TraceToss(m_pAvoidEntity, nullptr, &tr);
-				//UTIL_TraceLine(v_src,v_src+m_pAvoidEntity->v.velocity*5.0,ignore_monsters,dont_ignore_glass,m_pAvoidEntity,&tr);
-
-				RunForCover(tr.vecEndPos, true);
-				/*
-				int iCoverWpt = WaypointLocations.GetCoverWaypoint(pev->origin,tr.vecEndPos,&m_FailedGoals);
-
-				if ( iCoverWpt != -1 )
-				{
-					AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH,0,NULL,iCoverWpt,-2));
-					m_fNextCheckCover = gpGlobals->time + 1.0f;
-				}*/
+				TraceResult traceResult;
+				BotFunc_TraceToss(m_pAvoidEntity, nullptr, &traceResult);
+				RunForCover(traceResult.vecEndPos, /* immediate */ true);
 			}
+
 			// cant get Damage message, do it manually
 			if (!m_pEnemy && pev->health < m_fPrevHealth)
 			{
 				UTIL_MakeVectors(pev->v_angle);
 
 				// make origin behind bot so it looks around
-				Vector origin = GetGunPosition() - gpGlobals->v_forward * 128;
+				Vector lookBehindOrigin = GetGunPosition() - gpGlobals->v_forward * 128.0f;
 
-				BotEvent(BOT_EVENT_HURT, nullptr, nullptr, static_cast<float*>(origin));
+				BotEvent(BOT_EVENT_HURT, nullptr, nullptr, lookBehindOrigin);
 			}
 		}
 	}
@@ -6998,27 +6987,33 @@ float CBot::DistanceFrom(const Vector& vOrigin, const bool twoD) const
 
 edict_t* CBot::BotCheckForWeldables() //TODO: Experimental [APG]RoboCop[CL]
 {
-	// check for weldables
-
+	constexpr float MAX_WELDABLE_DISTANCE = 100.0f; // Define a meaningful constant
 	edict_t* pWeldable = nullptr;
 
-	// find the nearest weldable
+	// Iterate through all entities of type "func_weldable"
 	while ((pWeldable = UTIL_FindEntityByClassname(pWeldable, "func_weldable")) != nullptr)
 	{
-		if (pWeldable->v.health > 0 && pWeldable->v.health < pWeldable->v.max_health)
+		// Check if the weldable is damaged and visible
+		if (pWeldable->v.health <= 0 || pWeldable->v.health >= pWeldable->v.max_health)
 		{
-			if (FVisible(pWeldable))
-			{
-				const float distance = DistanceFromEdict(pWeldable);
-				if (distance < 100.0f)
-				{
-					return pWeldable;
-				}
-			}
+			continue; // Skip invalid weldables
+		}
+
+		if (!FVisible(pWeldable))
+		{
+			continue; // Skip if not visible
+		}
+
+		// Check if the weldable is within the desired distance
+		const float distance = DistanceFromEdict(pWeldable);
+
+		if (distance < MAX_WELDABLE_DISTANCE)
+		{
+			return pWeldable; // Return the first valid weldable
 		}
 	}
 
-	return nullptr; // No weldable found
+	return nullptr; // No valid weldable found
 }
 
 float CBot::DistanceFromEdict(edict_t* pEntity) const
@@ -7900,17 +7895,22 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 		// ladder angles
 		if (bCanClimb && m_CurrentLookTask == BOT_LOOK_TASK_NEXT_WAYPOINT)
 		{
+			constexpr float LADDER_ANGLE_UP = 80.0f;   // Angle of elevation
+			constexpr float LADDER_ANGLE_DOWN = -80.0f; // Angle of depression
+
 			const int iLadderDir = GetLadderDir(); // Ladder Direction
 
-			// TODO: Experimental [APG]RoboCop[CL]
+			// Set ladder angles based on direction
 			if (iLadderDir == 1)
-				vAngles.x = 80; // Angle of Elevation
+				vAngles.x = LADDER_ANGLE_UP;
 			else if (iLadderDir == -1)
-				vAngles.x = -80; // Angle of Depression
-
+				vAngles.x = LADDER_ANGLE_DOWN;
 			SetLadderAngles(vAngles);
+
 			bUsePitch = true;
-			m_fTurnSpeed = MAX_JUMP_HEIGHT; // Not clear what MAX_JUMP_HEIGHT is; you might need to replace it with an appropriate value
+
+			// Ensure MAX_JUMP_HEIGHT is appropriate for turn speed
+			m_fTurnSpeed = MAX_JUMP_HEIGHT;
 		}
 		else if (LadderAnglesSet())
 			UnSetLadderAngleAndMovement();
@@ -8064,14 +8064,14 @@ void CBot::touchedWpt()
 	}
 }
 
-void CBot::gotStuck()//TODO: Experimental [APG]RoboCop[CL]
+void CBot::gotStuck() // Handles the bot being stuck
 {
-	// if stuck, go back to previous wpt
+	// Check if the bot is stuck and has a previous waypoint to revert to
 	if (m_iCurrentWaypointIndex > 0)
 	{
-		m_iCurrentWaypointIndex--;
+		--m_iCurrentWaypointIndex; // Move to the previous waypoint
 	}
-	m_bNotFollowingWaypoint = true;
+	m_bNotFollowingWaypoint = true; // Mark as not following the current waypoint
 }
 
 void CBot::WorkMoveDirection()
@@ -8901,7 +8901,9 @@ void CBot::RunPlayerMove()
 	UpdateMsec();
 
 	//Fix by w00tguy https://github.com/wootguy/rcbot/commit/e3ebac2372b8639f8a2d56f51b32bc7bdb3543ea
-	if (m_iMsecVal < 10) {
+	constexpr int MIN_MSEC_THRESHOLD = 10;
+
+	if (m_iMsecVal < MIN_MSEC_THRESHOLD) {
 		return; // wait for more time to pass to prevent slow motion at high framerates
 	}
 
@@ -8926,13 +8928,14 @@ void CBot::RunPlayerMove()
 		Duck();
 	}
 
-	if (m_fStartJumpTime <= gpGlobals->time && m_fEndJumpTime > gpGlobals->time)
+	if (m_fStartJumpTime <= gpGlobals->time && m_fEndJumpTime > gpGlobals->time) {
 		Jump();
+	}
 	//}}
 
-	if (m_fHoldAttackTime > gpGlobals->time)
+	if (m_fHoldAttackTime > gpGlobals->time) {
 		PrimaryAttack();
-
+	}
 	/*if (gBotGlobals.IsMod(MOD_TFC))
 	{
 		if (m_iGrenadeHolding && m_fGrenadePrimeTime <= gpGlobals->time)
@@ -10429,24 +10432,27 @@ bool CBot::HasVisitedResourceTower(edict_t* pEdict) const
 // so they know not to visit them again for a while.
 void CBot::AddVisitedResourceTower(edict_t* pEdict)
 {
-	const int iMax = m_iVisitedFuncResources;
-
-	for (int i = 0; i < iMax; i++)
+	// Check if the resource tower is already visited
+	for (int i = 0; i < m_iVisitedFuncResources; i++)
 	{
 		if (m_pVisitedFuncResources[i] == pEdict)
-			return;
+		{
+			return; // Already visited
+		}
 	}
 
-	if (iMax > MAX_REMEMBER_POSITIONS)
-		//{
-		//	m_pVisitedFuncResources[RANDOM_LONG(0, MAX_REMEMBER_POSITIONS - 1)];//TODO: unused [APG]RoboCop[CL]
-		//}
-		//else
+	// Ensure we don't exceed the maximum allowed positions
+	if (m_iVisitedFuncResources < MAX_REMEMBER_POSITIONS)
 	{
 		m_pVisitedFuncResources[m_iVisitedFuncResources++] = pEdict;
 	}
-
-	return;
+	else
+	{
+		// Handle the case where the array is full (optional logic)
+		// Example: Replace a random entry (if needed)
+		int randomIndex = RANDOM_LONG(0, MAX_REMEMBER_POSITIONS - 1);
+		m_pVisitedFuncResources[randomIndex] = pEdict;
+	}
 }
 
 // Remember Position of enemy or something else important
@@ -16468,12 +16474,17 @@ void CBot::CheckStuck()
 				}
 				else if (IsMarine())
 				{
-					//TODO: Needs revised [APG]RoboCop[CL]
-					// if bot does not have a task, he could be just waiting for orders
-					if (!m_CurrentTask) // if commander is not null then he wont check if stuck
+					// If the bot has no task, it might just be waiting for orders
+					if (!m_CurrentTask)
+					{
+						// Check if the entity is not a commander
 						bCheckIfStuck = EntityIsCommander(nullptr);
-					if (bCheckIfStuck) // digested and cant move
-						bCheckIfStuck = (pev->flags & MASK_DIGESTING) != MASK_DIGESTING;
+					}
+					// If still marked to check, ensure the bot is not digesting
+					if (bCheckIfStuck)
+					{
+						bCheckIfStuck = (pev->flags & MASK_DIGESTING) == 0;
+					}
 				}
 				break;
 			default:

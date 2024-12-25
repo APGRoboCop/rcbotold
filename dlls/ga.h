@@ -48,7 +48,7 @@ public:
 	virtual ~IIndividual() = default;
 	// get fitness for this individual
 	ga_value getFitness() const { return m_fFitness; }
-	void setFitness(float fVal) { m_fFitness = fVal; }
+	void setFitness(const float fVal) { m_fFitness = fVal; }
 
 	virtual void load(std::FILE* bfp, int req_size) = 0;
 	virtual void save(std::FILE* bfp) = 0;
@@ -125,7 +125,7 @@ class CGA
 {
 public:
 
-	CGA(int iMaxPopSize = 0)
+	CGA(const int iMaxPopSize = 0)
 	{
 		m_theSelectFunction = new CRouletteSelection();
 

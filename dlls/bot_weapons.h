@@ -840,7 +840,7 @@ public:
 
 	bool CanReload() const;
 
-	bool CanShootPrimary(edict_t* pEdict, float flFireDist, float flWallDist) const;
+	bool CanShootPrimary(const edict_t* pEdict, float flFireDist, float flWallDist) const;
 
 	bool CanShootSecondary() const
 	{
@@ -865,7 +865,7 @@ public:
 		return -1;
 	}
 
-	bool HasWeapon(edict_t* pEdict) const;
+	bool HasWeapon(const edict_t* pEdict) const;
 
 	void RemoveWeapon()
 	{

@@ -137,18 +137,18 @@ void CBotGAValues::freeMemory()
 	m_theValues.clear();
 }
 /*
-void CBotGAValues :: loadForBot ( char *file, int iProfile )
+void CBotGAValues :: loadForBot (const char *file, const int iProfile, const int chromosize)
 {
 	FILE *bfp = RCBOpenFile(file,"rb",SAVETYPE_BOT,iProfile);
 
 	if ( bfp )
 	{
-		load(bfp);
+		load(bfp, chromosize);
 		std::fclose(bfp);
 	}
 }
 
-void CBotGAValues :: saveForBot ( char *file, int iProfile )
+void CBotGAValues :: saveForBot (const char *file, const int iProfile)
 {
 	FILE *bfp = RCBOpenFile(file,"wb",SAVETYPE_BOT,iProfile);
 

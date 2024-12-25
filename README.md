@@ -31,6 +31,7 @@ V 1.51-beta10
 * added: Linux bot slow-motion fix by w00tguy
 * added: Team DeathMatch mode supported for HLDM, Op4DM, DMC and TS
 * added: Weapon Switch tactic added for when their clips are empty
+* added: Smart pointers and modern C++ features to reduce potential memory leaks
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat

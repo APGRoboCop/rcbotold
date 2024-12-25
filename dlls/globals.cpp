@@ -43,7 +43,6 @@
  //
  // Global class holding info required throughout program
  //
-
 #include "extdll.h"
 
 #ifndef RCBOT_META_BUILD
@@ -58,16 +57,18 @@
 #include "bot.h"
 #include "waypoint.h"
 #include "bot_weapons.h"
-
 #include "bot_commands.h"
 #include "bot_client.h"
 #include "bot_menu.h"
-
 #include "dir.h"
 
 #ifdef _WIN32
 #define strcmpi _strcmpi
 #endif
+
+#include <string>
+#include <cstdio>
+#include <cstring>
 
 extern CWaypointVisibilityTable WaypointVisibility;
 extern CWaypointLocations WaypointLocations;
@@ -108,10 +109,10 @@ void CBotGlobals::ReadBotFolder()
 
 	if (fp)
 	{
-		if (std::fscanf(fp, "%s\n", rcbot_folder) == 1)
+		if (std::fscanf(fp, "%255s", rcbot_folder) == 1)
 		{
-			std::strncpy(m_szBotFolder, rcbot_folder, 255);
-			m_szBotFolder[255] = 0;
+			std::strncpy(m_szBotFolder, rcbot_folder, sizeof(m_szBotFolder) - 1);
+			m_szBotFolder[sizeof(m_szBotFolder) - 1] = '\0';
 		}
 
 		BotMessage(nullptr, 0, "Found Bot Folder file : %s", m_szBotFolder);
@@ -138,7 +139,7 @@ void CBotGlobals::ReadBotFolder()
 
 bool CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
 {
-	if (m_bNetMessageStarted != false)
+	if (m_bNetMessageStarted)
 	{
 		// message already started... engine will crash
 		assert(!m_bNetMessageStarted);
@@ -153,7 +154,8 @@ bool CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) {
+		if (debug_engine)
+		{
 			fp = std::fopen("bot.txt", "a");
 			std::fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", static_cast<void*>(ed), msg_dest, msg_type);
 			std::fclose(fp);
@@ -214,7 +216,7 @@ bool CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 				}
 			}*/
 
-			if (m_CurrentMessage != nullptr)
+			if (m_CurrentMessage)
 			{
 				m_pMessageEntity = ed;
 
@@ -230,10 +232,9 @@ bool CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOr
 					// and update current bot index being affected by messages.
 					m_iBotMsgIndex = static_cast<short>(index);
 				}
-				else // dont call a function
+				else if (!IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL)) // dont call a function
 				{
-					if (!IsDebugLevelOn(BOT_DEBUG_MESSAGE_LEVEL))
-						m_CurrentMessage = nullptr;
+					m_CurrentMessage = nullptr;
 				}
 			}
 		}

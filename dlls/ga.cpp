@@ -43,6 +43,7 @@
 
 #include <memory>
 #include <stdexcept>
+#include <vector>
 
 const int CGA::g_iDefaultMaxPopSize = 16;
 const float CGA::g_fCrossOverRate = 0.7f;
@@ -62,7 +63,7 @@ IIndividual* CPopulation::getBestIndividual() const
 {
 	IIndividual* best = nullptr;
 
-	for (IIndividual* curr : m_theIndividuals)
+	for (IIndividual* const& curr : m_theIndividuals)
 	{
 		if (!best || curr->getFitness() > best->getFitness())
 			best = curr;
@@ -78,13 +79,6 @@ void CPopulation::add(IIndividual* individual)
 
 void CPopulation::freeMemory()
 {
-	for (IIndividual*& m_theIndividual : m_theIndividuals)
-	{
-		m_theIndividual->clear();
-		delete m_theIndividual;
-		m_theIndividual = nullptr;
-	}
-
 	m_theIndividuals.clear();
 }
 
@@ -97,9 +91,9 @@ ga_value CPopulation::totalFitness() const
 {
 	float fTotalFitness = 0.0f;
 
-	for (unsigned int i = 0; i < size(); i++)
+	for (IIndividual* const& individual : m_theIndividuals)
 	{
-		fTotalFitness += m_theIndividuals[i]->getFitness();
+		fTotalFitness += individual->getFitness();
 	}
 
 	return fTotalFitness;
@@ -115,8 +109,8 @@ void CPopulation::save(std::FILE* bfp) const
 
 	std::fwrite(&iSize, sizeof(int), 1, bfp);
 
-	for (unsigned int i = 0; i < iSize; i++)
-		m_theIndividuals[i]->save(bfp);
+	for (IIndividual* const& individual : m_theIndividuals)
+		individual->save(bfp);
 }
 
 void CPopulation::load(std::FILE* bfp, const int chromosize, const int type)
@@ -126,7 +120,7 @@ void CPopulation::load(std::FILE* bfp, const int chromosize, const int type)
 	if (std::feof(bfp))
 		return;
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
 
 	if (!CGenericHeader::read(bfp, header))
 	{
@@ -162,9 +156,9 @@ ga_value CPopulation::bestFitness() const
 	bool gotBestFitness = false;
 	float fBestFitness = 0.0f;
 
-	for (unsigned int i = 0; i < size(); i++)
+	for (IIndividual* const& individual : m_theIndividuals)
 	{
-		const float fFitness = m_theIndividuals[i]->getFitness();
+		const float fFitness = individual->getFitness();
 
 		if (!gotBestFitness || fFitness > fBestFitness)
 		{
@@ -218,20 +212,15 @@ void CGA::addToPopulation(IIndividual* individual)
 
 		IIndividual* best = m_thePopulation.getBestIndividual();
 
-		if (best && !m_bestIndividual || best && m_bestIndividual->getFitness() < best->getFitness())
+		if (best && (!m_bestIndividual || m_bestIndividual->getFitness() < best->getFitness()))
 		{
-			bool set = true;
-
 			if (m_bestIndividual && m_bestIndividual != best)
 			{
 				delete m_bestIndividual;
 				m_bestIndividual = nullptr;
 			}
-			else if (m_bestIndividual == best)
-				set = false;
 
-			if (set)
-				m_bestIndividual = best->copy();
+			m_bestIndividual = best->copy();
 		}
 
 		m_thePopulation.freeMemory();
@@ -269,7 +258,7 @@ void CGA :: loadBotGA ( char *szName, int iProfileId )
 
 	if ( bfp )
 	{
-		load(bfp);
+		load(bfp, chromosize);
 		std::fclose(bfp);
 	}
 }
@@ -389,6 +378,7 @@ IIndividual* CRouletteSelection::select(CPopulation* population)
 ///////////////
 // SAVING
 //TODO: To allow the experience data to be saved properly [APG]RoboCop[CL]
+// Maybe it needs to be implemented in bot.cpp?
 std::FILE* RCBOpenFile(const char* file, const char* readtype, const eGASaveType savedtype, const int iId)
 {
 	char filename[256];

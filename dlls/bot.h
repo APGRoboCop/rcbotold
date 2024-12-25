@@ -125,21 +125,21 @@ bool UTIL_FriendlyHatesPlayer(edict_t* pEntity, edict_t* pPlayer);
 edict_t* UTIL_getEntityInFront(edict_t* pEntity);
 void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, float magnitude, bool doDamage);
 Vector UTIL_GetGroundVector(edict_t* pEdict);
-bool UTIL_EntityIsHive(edict_t* pEdict);
-int UTIL_CountEntitiesInRange(char* classname, const Vector& vOrigin, float fRange);
+bool UTIL_EntityIsHive(const edict_t* pEdict);
+int UTIL_CountEntitiesInRange(const char* classname, const Vector& vOrigin, float fRange);
 int UTIL_SentryLevel(edict_t* pEntity);
 void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, float flRadius, int iClassIgnore, int bitsDamageType);
 void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency, float duration, float radius);
 edict_t* UTIL_GetPlayerByPlayerId(int id);
 Vector UTIL_FurthestVectorAroundYaw(CBot* pBot);
 int UTIL_ClassOnTeam(int iClass, int iTeam);
-bool UTIL_EntityHasClassname(edict_t* pEntity, char* classname);
-float UTIL_GetPlayerEnergy(entvars_t* pev);
+bool UTIL_EntityHasClassname(const edict_t* pEntity, const char* classname);
+float UTIL_GetPlayerEnergy(const entvars_t* pev);
 int UTIL_NS_GetMaxArmour(edict_t* pEntity);
 edict_t* UTIL_GetCommander();
-int UTIL_CountEntities(char* classname);
+int UTIL_CountEntities(const char* classname);
 edict_t* BotFunc_FindRandomEntity(const char* szClassname);
-bool UTIL_IsGrenadeRocket(edict_t* pEntity);
+bool UTIL_IsGrenadeRocket(const edict_t* pEntity);
 //void BotFunc_StringCopy(char *, const char *);
 bool BotFunc_IsLongRangeWeapon(int iId);
 bool BotFunc_IncreaseRep(int iRep, float fInfo = 0.0f, float fSkill = 0.0f);
@@ -165,7 +165,7 @@ bool	EntityIsAlienStruct(edict_t* pEdict);
 
 edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser = nullptr, bool bBuilt = false);
 edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin);
-bool UTIL_IsResourceFountainUsed(edict_t* pFountain);
+bool UTIL_IsResourceFountainUsed(const edict_t* pFountain);
 //////////////////////////////
 // UTIL FUNCTIONS
 
@@ -174,8 +174,8 @@ unsigned short FixedUnsigned16(float value, float scale);
 short FixedSigned16(float value, float scale);
 #endif
 //int LookupActivity( void *pmodel, entvars_t *pev, int activity );
-Vector AbsOrigin(edict_t* pEdict);
-bool UTIL_TankUsed(edict_t* pTank);
+Vector AbsOrigin(const edict_t* pEdict);
+bool UTIL_TankUsed(const edict_t* pTank);
 void UTIL_BotHudMessageAll(const hudtextparms_t& textparms, const char* pMessage);
 void UTIL_BotHudMessage(edict_t* pEntity, const hudtextparms_t& textparms, const char* pMessage);
 //unsigned short FixedUnsigned16( float value, float scale );
@@ -200,9 +200,9 @@ edict_t* UTIL_FindEntityByString(edict_t* pentStart, const char* szKeyword,
 	const char* szValue);
 
 bool UTIL_AcceptablePushableVector(edict_t* pPushable, const Vector& vOrigin);
-float UTIL_EntityDistance(entvars_t* pev, const Vector& vOrigin);
-float UTIL_EntityDistance2D(entvars_t* pev, const Vector& vOrigin);
-float UTIL_GetBestPushableDistance(edict_t* pPushable);
+float UTIL_EntityDistance(const entvars_t* pev, const Vector& vOrigin);
+float UTIL_EntityDistance2D(const entvars_t* pev, const Vector& vOrigin);
+float UTIL_GetBestPushableDistance(const edict_t* pPushable);
 Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, edict_t* pPushable);
 
 //edict_t* UTIL_TFC_PlayerHasFlag(edict_t* pPlayer);
@@ -212,7 +212,7 @@ void UTIL_PlaySound(edict_t* pPlayer, const char* szSound);
 
 void BotPrintTalkMessageOne(edict_t* pClient, const char* fmt, ...);
 
-bool UTIL_FuncResourceIsOccupied(edict_t* pFuncResource);
+bool UTIL_FuncResourceIsOccupied(const edict_t* pFuncResource);
 int NS_GetPlayerLevel(int exp);
 int UTIL_GetNumClients(bool bReport = false);
 edict_t* UTIL_FindEntityByTarget(edict_t* pentStart, const char* szName);
@@ -223,46 +223,46 @@ void		UTIL_HostSay(edict_t* pEntity, int teamonly, char* message);
 int		UTIL_GetTeam(edict_t* pEntity);
 int	    UTIL_GetClass(edict_t* pEntity);
 int		UTIL_GetBotIndex(const edict_t* pEdict);
-int		UTIL_MasterTriggered(string_t sMaster, CBaseEntity* pActivator);
-void		UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, bool needmore, char* pText);
+int		UTIL_MasterTriggered(string_t sMaster, const CBaseEntity* pActivator);
+void		UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, bool needmore, const char* pText);
 void		UTIL_BuildFileName(char* filename, const char* arg1, const char* arg2 = nullptr);
 
 edict_t* UTIL_FacingEnt(edict_t* pPlayer, bool any = false);
 
 void     UTIL_FixAngles(Vector* vAngles);
 void     UTIL_FixFloatAngle(float* fAngle);
-bool		UTIL_CanBuildHive(entvars_t* pev);
+bool		UTIL_CanBuildHive(const entvars_t* pev);
 
-float UTIL_EntityAnglesToVector2D(entvars_t* pev, const Vector* pOrigin); // For 2d Movement
-float UTIL_EntityAnglesToVector3D(entvars_t* pev, const Vector* pOrigin);
+float UTIL_EntityAnglesToVector2D(const entvars_t* pev, const Vector* pOrigin); // For 2d Movement
+float UTIL_EntityAnglesToVector3D(const entvars_t* pev, const Vector* pOrigin);
 edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, const Vector& vOrigin, float fRange, bool bVisible, edict_t* pIgnore = nullptr);
 
 Vector UTIL_LengthFromVector(const Vector& relation, float length);
 
-bool	BotFunc_FInViewCone(Vector* pOrigin, edict_t* pEdict);
+bool	BotFunc_FInViewCone(const Vector* pOrigin, const edict_t* pEdict);
 bool	BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict);
 Vector	Center(edict_t* pEdict);
-Vector	GetGunPosition(edict_t* pEdict);
-Vector	EntityOrigin(edict_t* pEdict);
+Vector	GetGunPosition(const edict_t* pEdict);
+Vector	EntityOrigin(const edict_t* pEdict);
 
 edict_t* UTIL_CheckTeleEntrance(const Vector& vOrigin, edict_t* pExit, edict_t* pOwner);
 edict_t* UTIL_CheckTeleExit(const Vector& vOrigin, edict_t* pOwner, edict_t* pEntrance);
 
-Vector UTIL_AngleBetweenOrigin(entvars_t* pev, const Vector& vOrigin);
-bool UTIL_OnGround(entvars_t* pev);
+Vector UTIL_AngleBetweenOrigin(const entvars_t* pev, const Vector& vOrigin);
+bool UTIL_OnGround(const entvars_t* pev);
 int     UTIL_TFC_getMaxArmor(edict_t* pEdict);
 void	ClientPrint(edict_t* pEdict, int msg_dest, const char* msg_name);
-float   UTIL_YawAngleBetweenOrigin(entvars_t* pev, const Vector& vOrigin);
-bool	UTIL_IsFacingEntity(entvars_t* pev, entvars_t* pevEntity);
+float   UTIL_YawAngleBetweenOrigin(const entvars_t* pev, const Vector& vOrigin);
+bool	UTIL_IsFacingEntity(const entvars_t* pev, const entvars_t* pevEntity);
 float   UTIL_AngleBetweenVectors(const Vector& vec1, const Vector& vec2);
-float	UTIL_AnglesBetweenEdictOrigin(edict_t* pEdict, const Vector& origin);
+float	UTIL_AnglesBetweenEdictOrigin(const edict_t* pEdict, const Vector& origin);
 
 int		UTIL_PlayersOnTeam(int iTeam);
 int		UTIL_SpeciesOnTeam(int iSpecies, bool bIgnoreEmbryos = false);
 int		UTIL_GetNumHives();
-int		UTIL_CountBuiltEntities(char* classname);
+int		UTIL_CountBuiltEntities(const char* classname);
 edict_t* UTIL_GetRandomUnbuiltHive();
-edict_t* UTIL_FindRandomUnusedFuncResource(CBot* pBot);
+edict_t* UTIL_FindRandomUnusedFuncResource(const CBot* pBot);
 edict_t* UTIL_UpdateSounds(entvars_t* pev);
 edict_t* UTIL_FindPlayerByTruncName(const char* name);
 void strlow(char* str);
@@ -4035,7 +4035,7 @@ public:
 
 	void	 BotChat(eBotChatType iChatType, edict_t* pChatEdict = nullptr, bool bSayNow = false);
 
-	bool     BotCanUseBuiltStructure(edict_t* structure) const;
+	bool     BotCanUseBuiltStructure(const edict_t* structure) const;
 	edict_t* BotCheckForWeldables();
 	float    DistanceFromEdict(edict_t* pEntity) const;
 
@@ -6926,7 +6926,7 @@ int InconsistentFile(const edict_t* player, const char* filename, char* disconne
 int AllowLagCompensation();
 void RCBot_ServerCommand();
 int GetModId();
-float UTIL_GetAvoidAngle(edict_t* pEdict, const Vector& origin);
+float UTIL_GetAvoidAngle(const edict_t* pEdict, const Vector& origin);
 void ReadBotUsersConfig();
 void BotFunc_MakeSquad(CClient* pClient);
 void AssertMessage(bool bAssert, char* fmt, ...);

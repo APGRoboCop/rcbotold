@@ -73,6 +73,9 @@ public:
 	std::vector<ga_value>* returnVector() { return &m_theValues; }
 	void freeMemory();
 
+	//void loadForBot(const char* file, int iProfile, int chromosize);
+	//void saveForBot(const char* file, int iProfile);
+
 private:
 	std::vector<ga_value> m_theValues;
 };
@@ -160,7 +163,7 @@ public:
 	}
 
 	int get() const { return m_Value; }
-	void set(int value) { m_Value = value; }
+	void set(const int value) { m_Value = value; }
 private:
 	int m_Value = 0;
 };
