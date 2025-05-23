@@ -12481,7 +12481,7 @@ void CBot::DoTasks()
 							break;
 						}*/
 
-						if (iGotoWpt != -1)
+						//if (iGotoWpt != -1)
 							TaskToAdd = CBotTask(BOT_TASK_FIND_PATH, m_CurrentTask->GetScheduleId(), pSound, iGotoWpt, -2);
 					}
 				}

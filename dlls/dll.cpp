@@ -47,6 +47,7 @@
  //
 
 #include <algorithm>
+#include <memory>
 
 #include "extdll.h"
 
@@ -825,16 +826,14 @@ void ClientCommand(edict_t* pEntity)
 				// team only message?
 				const int iTeamOnly = bSayTeamMsg;
 
-				char* szMessage = nullptr;
-				//				char *szTempArgument;
-
+				// Use a smart pointer to manage szMessage
+				std::unique_ptr<char[]> szMessage;
 				if (arg2 && *arg2)
 				{
 					// argh! someone said something in series of arguments. work out the message
 					int i = 1;
 					size_t iLenSoFar = 0;
-					// for concatenating string dynamically
-					char* szTemp = nullptr;
+					std::unique_ptr<char[]> szTemp;
 					bool bWasQuote = false;
 
 					const char* (*CmdArgv_func)(int);
@@ -863,21 +862,11 @@ void ClientCommand(edict_t* pEntity)
 
 						iLenSoFar += std::strlen(szArgument) + 1;
 
-						// read a string already
-						if (szMessage)
-						{
-							szTemp = strdup(szMessage);
-							std::free(szMessage);
-							szMessage = nullptr;
-						}
+						// Allocate new memory for szMessage
+						szMessage.reset(new char[iLenSoFar + 1]);
+						szMessage[0] = '\0';
 
-						//delete[] szMessage;//TODO: Not required? [APG]RoboCop[CL]
-
-						// 2 extra chars, 1 for terminator and 1 for space
-						szMessage = new char[iLenSoFar + 1]; //TODO: szMessage is assigned twice without releasing memory [APG]RoboCop[CL]
-						szMessage[0] = 0;
-
-						// copy old string
+						// Copy old string
 						if (szTemp)
 						{
 							bool bIsQuote = false;
@@ -886,46 +875,32 @@ void ClientCommand(edict_t* pEntity)
 							// so can spaces argh :-@
 							if (!bSenderIsBot)
 							{
-								bIsQuote = szArgument[0] == '\'' && szArgument[1] == 0;
+								bIsQuote = szArgument[0] == '\'' && szArgument[1] == '\0';
 							}
 							if (bIsQuote || bWasQuote)
 							{
-								snprintf(szMessage, sizeof(szMessage), "%s%s", szTemp, szArgument);
-
+								snprintf(szMessage.get(), iLenSoFar + 1, "%s%s", szTemp.get(), szArgument);
 								bWasQuote = !bWasQuote;
 							}
 							else
 							{
-								// take space into count (thats what is seperating these words)
-								snprintf(szMessage, sizeof(szMessage), "%s %s", szTemp, szArgument);
+								snprintf(szMessage.get(), iLenSoFar + 1, "%s %s", szTemp.get(), szArgument);
 							}
-
-							std::free(szTemp);
-							szTemp = nullptr;
+							szTemp.reset();
 						}
 						else
 						{
-							std::strcat(szMessage, szArgument);
+							std::strcat(szMessage.get(), szArgument);
 						}
-						szMessage[iLenSoFar] = 0;
 
 						i++;
-					}
-					// Ensure szTemp is freed if it was not already
-					if (szTemp)
-					{
-						std::free(szTemp);
-						szTemp = nullptr;
 					}
 				}
 				else
 				{
-					if (szMessage)
-					{
-						std::free(szMessage);
-						szMessage = nullptr;
-					}
-					szMessage = strdup(arg1);
+					// Allocate memory for szMessage
+					szMessage.reset(new char[std::strlen(arg1) + 1]);
+					std::strcpy(szMessage.get(), arg1);
 				}
 
 				if (szMessage)
@@ -939,14 +914,10 @@ void ClientCommand(edict_t* pEntity)
 							// say message, everyone can see, team message only team mates can see
 							if (bSayTeamMsg && UTIL_GetTeam(pEntity) == pBot->GetTeam() || bSayMsg)
 							{
-								pBot->ReplyToMessage(szMessage, pEntity, iTeamOnly);
+								pBot->ReplyToMessage(szMessage.get(), pEntity, iTeamOnly);
 							}
 						}
 					}
-
-					// finished with message
-					free(szMessage); // Use free() instead of delete[]
-					szMessage = nullptr;
 				}
 			}
 		}

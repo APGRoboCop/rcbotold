@@ -1259,7 +1259,8 @@ void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int st
 	std::strncpy(before, string, start);
 	std::strncpy(after, &string[end], maxstring - end);
 
-	snprintf(string, sizeof(string), "%s%s%s", before, fill, after);
+	// Correct the second argument to use maxstring instead of sizeof(string) [APG]RoboCop[CL]
+	snprintf(string, maxstring, "%s%s%s", before, fill, after);
 
 	//	if (before != NULL)
 	std::free(before);

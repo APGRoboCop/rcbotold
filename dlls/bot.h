@@ -718,8 +718,8 @@ public:
 		std::memset(this, 0, sizeof(CBotTask));
 	}
 
-	CBotTask(eBotTask iTask, int iScheduleId = 0, edict_t* pInfo = nullptr, int iInfo = 0, float fInfo = 0.0f,
-		const Vector& vInfo = Vector(0, 0, 0), float fTimeToComplete = -1.0f) : m_vInfo(vInfo)/*, CBotTask *GoalTask = NULL */
+	CBotTask(const eBotTask iTask, const int iScheduleId = 0, edict_t* pInfo = nullptr, const int iInfo = 0, const float fInfo = 0.0f,
+		const Vector& vInfo = Vector(0, 0, 0), const float fTimeToComplete = -1.0f) : m_vInfo(vInfo)/*, CBotTask *GoalTask = NULL */
 	{
 		// cheap way of adding schedules.. ;)
 		// means if this task fails we can fail every other task with the same
@@ -6778,9 +6778,9 @@ public:
 		m_szWelcomeMessage = strdup(message);
 		}*/
 
-	void buildFileName(const char* in_filename, char* out_filename)
+	void buildFileName(const char* in_filename, char* out_filename, const size_t out_filename_size)
 	{
-		snprintf(out_filename, sizeof(out_filename), "%s%s", m_szBotFolder, in_filename);
+		snprintf(out_filename, out_filename_size, "%s%s", m_szBotFolder, in_filename);
 	}
 
 	const char* botFolder() const
