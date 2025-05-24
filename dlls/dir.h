@@ -48,7 +48,7 @@
 // Windows OS Routine...
 // MS-DOS directory wildcard routines...
 
-HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec);
+HANDLE FindDirectory(HANDLE hFile, char* dirname, const char* dirspec);
 
 #else
 

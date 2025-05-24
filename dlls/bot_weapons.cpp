@@ -82,7 +82,8 @@ const char* pszTSWeaponModels[] = { "0","models/w_glock18.mdl","2 No gun","model
 
 extern CBotGlobals gBotGlobals;
 
-void CWeapon::SetWeapon(const int iId, const char* szClassname, const int iPrimAmmoMax, const int iSecAmmoMax, const int iHudSlot, const int iHudPosition, const int iFlags, const int iAmmoIndex1, const int iAmmoIndex2)
+void CWeapon::SetWeapon(const int iId, const char* szClassname, const int iPrimAmmoMax, const int iSecAmmoMax,
+                        const int iHudSlot, const int iHudPosition, const int iFlags, const int iAmmoIndex1, const int iAmmoIndex2)
 {
 	if (m_szClassname == nullptr)
 		m_szClassname = gBotGlobals.m_Strings.GetString(szClassname);
@@ -176,7 +177,8 @@ void CBotWeapons::AddWeapon(const int iId)
 	m_Weapons[iId].SetWeapon(iId, m_iAmmo);
 }
 
-void CWeapons::AddWeapon(const int iId, const char* szClassname, const int iPrimAmmoMax, const int iSecAmmoMax, const int iHudSlot, const int iHudPosition, const int iFlags, const int iAmmoIndex1, const int iAmmoIndex2)
+void CWeapons::AddWeapon(const int iId, const char* szClassname, const int iPrimAmmoMax, const int iSecAmmoMax,
+                         const int iHudSlot, const int iHudPosition, const int iFlags, const int iAmmoIndex1, const int iAmmoIndex2)
 {
 	if (iId >= 0 && iId < MAX_WEAPONS)
 	{
@@ -192,7 +194,8 @@ void CWeapons::AddWeapon(const int iId, const char* szClassname, const int iPrim
 				m_Weapons[iId] = new CWeaponPreset(pPreset);
 			}
 
-			m_Weapons[iId]->SetWeapon(iId, szClassname, iPrimAmmoMax, iSecAmmoMax, iHudSlot, iHudPosition, iFlags, iAmmoIndex1, iAmmoIndex2);
+			m_Weapons[iId]->SetWeapon(iId, szClassname, iPrimAmmoMax, iSecAmmoMax, iHudSlot, iHudPosition, iFlags,
+			                          iAmmoIndex1, iAmmoIndex2);
 		}
 	}
 }

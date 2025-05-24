@@ -1654,7 +1654,7 @@ void BotFunc_InitProfile(bot_profile_t* bpBotProfile)
 	bpBotProfile->m_Rep.Destroy();
 }
 
-void BotFunc_WriteProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
+void BotFunc_WriteProfile(std::FILE* fp, const bot_profile_t* bpBotProfile)
 // Writes a profile onto file
 {
 	int i = 0;
@@ -2121,7 +2121,7 @@ edict_t* BotFunc_NS_CommanderBuild(const int iUser3, const char* szClassname, co
 }
 //
 // Hack building
-edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser, bool bBuilt)
+edict_t* BotFunc_NS_MarineBuild(const int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser, const bool bBuilt)
 {
 	//pfnCreateNamedEntity(MAKE_STRING(pCommBuildent));
 
@@ -2517,7 +2517,7 @@ bool CBotCam::TuneIn(edict_t* pPlayer) const
 	return true;
 }
 
-void CBotCam::TuneOff(edict_t* pPlayer)
+void CBotCam::TuneOff(const edict_t* pPlayer)
 {
 	//m_TunedIn[ENTINDEX(pPlayer)-1] = 0;
 	SET_VIEW(pPlayer, pPlayer);

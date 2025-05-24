@@ -153,15 +153,15 @@ bool UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore = 
 
 bool BotFunc_FillString(char* string, const char* fill_point, const char* fill_with, size_t max_len);
 
-bool	EntityIsBuildable(edict_t* pEdict);
+bool	EntityIsBuildable(const edict_t* pEdict);
 bool    EntityIsWeldable(edict_t* pEntity);
-bool	EntityIsAlive(edict_t* pEdict);
+bool	EntityIsAlive(const edict_t* pEdict);
 bool	EntityIsMarine(edict_t* pEdict);
 bool	EntityIsAlien(edict_t* pEdict);
-bool    EntityIsCommander(edict_t* pEdict);
-bool    EntityIsSelectable(edict_t* pEdict);
-bool	EntityIsMarineStruct(edict_t* pEdict);
-bool	EntityIsAlienStruct(edict_t* pEdict);
+bool    EntityIsCommander(const edict_t* pEdict);
+bool    EntityIsSelectable(const edict_t* pEdict);
+bool	EntityIsMarineStruct(const edict_t* pEdict);
+bool	EntityIsAlienStruct(const edict_t* pEdict);
 
 edict_t* BotFunc_NS_MarineBuild(int iUser3, const char* szClassname, Vector vOrigin, edict_t* pEntityUser = nullptr, bool bBuilt = false);
 edict_t* BotFunc_NS_CommanderBuild(int iUser3, const char* szClassname, const Vector& vOrigin);
@@ -268,7 +268,7 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name);
 void strlow(char* str);
 void strhigh(char* str);
 void UTIL_CountBuildingsInRange(const Vector& vOrigin, float fRange, int* iDefs, int* iOffs, int* iSens, int* iMovs);
-float BotFunc_DistanceBetweenEdicts(edict_t* pEdict1, edict_t* pEdict2);
+float BotFunc_DistanceBetweenEdicts(const edict_t* pEdict1, const edict_t* pEdict2);
 
 //float UTIL_AngleDiff(float destAngle, float srcAngle);
 
@@ -342,7 +342,7 @@ public:
 		return m_iPlayerRepId == iPlayerRepId;
 	}
 
-	void printRep(CBot* forBot, edict_t* pPrintTo) const;
+	void printRep(const CBot* forBot, edict_t* pPrintTo) const;
 
 private:
 	int m_iPlayerRepId;
@@ -3071,7 +3071,7 @@ public:
 
 	edict_t* getSentry() const;
 
-	static bool CanBuild(edict_t* pEdict, int* metal = nullptr);
+	static bool CanBuild(const edict_t* pEdict, int* metal = nullptr);
 
 	const char* getLookTaskDescription() const
 	{
@@ -3115,9 +3115,9 @@ public:
 	CPerceptron* dec_stunt;
 	edict_t* m_pElectricEnemy;
 
-	static bool isInAnimate(edict_t* pEntity);
+	static bool isInAnimate(const edict_t* pEntity);
 
-	bool isFriendly(edict_t* pEntity) const;
+	bool isFriendly(const edict_t* pEntity) const;
 
 	CBotSquad* getSquad() const
 	{
@@ -3184,7 +3184,7 @@ public:
 
 		//bool ThinkSpyOnTeam(edict_t* pSpy);
 
-	void ThrowGrenade(edict_t* pEnemy, int preference = 0, bool bDontPrime = false);
+	void ThrowGrenade(const edict_t* pEnemy, int preference = 0, bool bDontPrime = false);
 
 	bool ThrowingGrenade() const;
 
@@ -3382,7 +3382,7 @@ public:
 
 	// Returns true when already visited resource tower
 	// (already added to list of those visited)
-	bool HasVisitedResourceTower(edict_t* pEdict) const;
+	bool HasVisitedResourceTower(const edict_t* pEdict) const;
 
 	// add resource tower to a list of those visited so
 	// gorge doesn't go back to ones we've been to already
@@ -3831,13 +3831,13 @@ public:
 
 	bool HasUpgraded(int iUpgrade) const;
 
-	bool FVisible(edict_t* pEntity);
+	bool FVisible(const edict_t* pEntity);
 
 	bool FVisible(const Vector& vecOrigin) const;
 
 	bool FInViewCone(Vector* pOrigin) const;
 
-	float DotProductFromOrigin(Vector* pOrigin) const;
+	float DotProductFromOrigin(const Vector* pOrigin) const;
 
 	Vector GetGunPosition() const
 	{
@@ -3887,7 +3887,7 @@ public:
 	// that the bot doesn't want to avoid.
 	bool CanAvoid(edict_t* pEntity, float fDistanceToEntity, float fAvoidDistance) const;
 
-	static void ChangeAngles(float* fSpeed, float* fIdeal, float* fCurrent, float* fUpdate);
+	static void ChangeAngles(float* fSpeed, const float* fIdeal, float* fCurrent, float* fUpdate);
 
 	bool IsOnLadder() const
 	{
@@ -3969,13 +3969,13 @@ public:
 	//int		BotDanger				( void );
 
 	// does bot want to pursue the enemy or stop and do his own thing?
-	bool     WantToFollowEnemy(edict_t* pEnemy) const;
+	bool     WantToFollowEnemy(const edict_t* pEnemy) const;
 
 	// returns true when bot is facing the ideal aim position
 	bool	 FacingIdeal() const;
 
 	// returns true if bot can pickup the entity pPickup
-	bool     CanPickup(edict_t* pPickup) const;
+	bool     CanPickup(const edict_t* pPickup) const;
 
 	// bot hears a sound type from a specific origin vector
 	void     HearSound(eSoundType iSound, const Vector& vOrigin, edict_t* pEdict);
@@ -3987,7 +3987,7 @@ public:
 	bool     Touch(edict_t* pentTouched);
 
 	// when an entity blocks the bot, this is called
-	void     Blocked(edict_t* pentBlocked);
+	void     Blocked(const edict_t* pentBlocked);
 
 	// returns bot team
 	int      GetTeam() const;
@@ -4007,10 +4007,10 @@ public:
 	void     EnemyFound(edict_t* pEnemy);
 
 	// returns true if bot knows where the enemy went
-	bool     HasSeenEnemy(edict_t* pEnemy) const;
+	bool     HasSeenEnemy(const edict_t* pEnemy) const;
 
 	// get bots vector to aim at for shooting the enemy
-	Vector   GetAimVector(edict_t* pBotEnemy);
+	Vector   GetAimVector(const edict_t* pBotEnemy);
 
 	// get the distance from vector vec
 	float    DistanceFrom(const Vector& vOrigin, bool twoD = false) const;
@@ -4037,7 +4037,7 @@ public:
 
 	bool     BotCanUseBuiltStructure(const edict_t* structure) const;
 	edict_t* BotCheckForWeldables();
-	float    DistanceFromEdict(edict_t* pEntity) const;
+	float    DistanceFromEdict(const edict_t* pEntity) const;
 
 	//edict_t *NearestStructure		( int structure_type );
 
@@ -5569,7 +5569,7 @@ public:
 
 	bool TuneIn(edict_t* pPlayer) const;
 
-	static void TuneOff(edict_t* pPlayer);
+	static void TuneOff(const edict_t* pPlayer);
 
 	bool IsWorking() const;
 
@@ -6854,11 +6854,11 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...);
 
 void BotFunc_InitProfile(bot_profile_t* bpBotProfile);
 void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile);
-void BotFunc_WriteProfile(std::FILE* fp, bot_profile_t* bpBotProfile);
+void BotFunc_WriteProfile(std::FILE* fp, const bot_profile_t* bpBotProfile);
 CBot* UTIL_GetBotPointer(const edict_t* pEdict);
 
 bool BotFunc_EntityIsMoving(const entvars_t* pev);
-edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, entvars_t* pDoor, Vector* vFoundOrigin = nullptr);
+edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, const entvars_t* pDoor, Vector* vFoundOrigin = nullptr);
 
 ////////////////////////////////////////////////////
 // NAVIGATION
@@ -6931,9 +6931,9 @@ void ReadBotUsersConfig();
 void BotFunc_MakeSquad(CClient* pClient);
 void AssertMessage(bool bAssert, char* fmt, ...);
 int UTIL_GetBuildWaypoint(const Vector& vSpawn, dataStack<int>* iFailedGoals = nullptr);
-int BotFunc_GetStructureForGorgeBuild(entvars_t* pGorge, entvars_t* pEntitypev);
+int BotFunc_GetStructureForGorgeBuild(const entvars_t* pGorge, entvars_t* pEntitypev);
 void BotFunc_KickBotFromTeam(int iTeam);
-bool BotFunc_BreakableIsEnemy(edict_t* pBreakable, edict_t* pEdict);
+bool BotFunc_BreakableIsEnemy(const edict_t* pBreakable, const edict_t* pEdict);
 ///////////////////////////////////////////////////////
 // NAVIGATION
 int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, bool bContinue);

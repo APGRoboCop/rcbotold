@@ -504,7 +504,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 	}
 }
 
-unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
+unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, const HAL_STRING word)
 {
 	// this function adds a word to a dictionary, and return the identifier assigned to the
 	// word. If the word already exists in the dictionary, then return its current identifier
@@ -562,7 +562,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	return dictionary->index[position];
 }
 
-int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, bool* find)
+int HAL_SearchDictionary(const HAL_DICTIONARY* dictionary, const HAL_STRING word, bool* find)
 {
 	// search the dictionary for the specified word, returning its position in the index if
 	// found, or the position where it should be inserted otherwise
@@ -619,7 +619,7 @@ int HAL_SearchDictionary(HAL_DICTIONARY* dictionary, HAL_STRING word, bool* find
 	}
 }
 
-unsigned short HAL_FindWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
+unsigned short HAL_FindWord(const HAL_DICTIONARY* dictionary, const HAL_STRING word)
 {
 	// this function returns the symbol corresponding to the word specified. We assume that
 	// the word with index zero is equal to a NULL word, indicating an error condition.
@@ -633,7 +633,7 @@ unsigned short HAL_FindWord(HAL_DICTIONARY* dictionary, HAL_STRING word)
 		return 0;
 }
 
-int HAL_CompareWords(HAL_STRING word1, HAL_STRING word2)
+int HAL_CompareWords(const HAL_STRING word1, const HAL_STRING word2)
 {
 	// this function compares two words, and return an integer indicating whether the first
 	// word is less than, equal to or greater than the second word
@@ -684,7 +684,7 @@ HAL_DICTIONARY* HAL_NewDictionary()
 	return dictionary;
 }
 
-void HAL_SaveDictionary(std::FILE* file, HAL_DICTIONARY* dictionary)
+void HAL_SaveDictionary(std::FILE* file, const HAL_DICTIONARY* dictionary)
 {
 	// this function saves a dictionary to the specified file
 
@@ -755,7 +755,7 @@ HAL_TREE* HAL_NewNode()
 	return node;
 }
 
-HAL_MODEL* HAL_NewModel(int order)
+HAL_MODEL* HAL_NewModel(const int order)
 {
 	// this function creates and initializes a new ngram model
 
@@ -777,7 +777,7 @@ HAL_MODEL* HAL_NewModel(int order)
 	return model;
 }
 
-void HAL_UpdateModel(HAL_MODEL* model, int symbol)
+void HAL_UpdateModel(const HAL_MODEL* model, const int symbol)
 {
 	// this function uppdates the model with the specified symbol
 
@@ -789,7 +789,7 @@ void HAL_UpdateModel(HAL_MODEL* model, int symbol)
 	return;
 }
 
-void HAL_UpdateContext(HAL_MODEL* model, int symbol)
+void HAL_UpdateContext(const HAL_MODEL* model, const int symbol)
 {
 	// this function updates the context of the model without adding the symbol
 
@@ -798,7 +798,7 @@ void HAL_UpdateContext(HAL_MODEL* model, int symbol)
 			model->context[i] = HAL_FindSymbol(model->context[i - 1], symbol);
 }
 
-HAL_TREE* HAL_AddSymbol(HAL_TREE* tree, unsigned short symbol)
+HAL_TREE* HAL_AddSymbol(HAL_TREE* tree, const unsigned short symbol)
 {
 	// this function updates the statistics of the specified tree with the specified symbol,
 	// which may mean growing the tree if the symbol hasn't been seen in this context before
@@ -816,7 +816,7 @@ HAL_TREE* HAL_AddSymbol(HAL_TREE* tree, unsigned short symbol)
 	return node;
 }
 
-HAL_TREE* HAL_FindSymbol(HAL_TREE* node, int symbol)
+HAL_TREE* HAL_FindSymbol(HAL_TREE* node, const int symbol)
 {
 	// this function returns a pointer to the child node, if one exists, which contains symbol
 
@@ -831,7 +831,7 @@ HAL_TREE* HAL_FindSymbol(HAL_TREE* node, int symbol)
 	return found;
 }
 
-HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, int symbol)
+HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, const int symbol)
 {
 	// this function is conceptually similar to HAL_FindSymbol, apart from the fact that if the
 	// symbol is not found, a new node is automatically allocated and added to the tree
@@ -879,7 +879,7 @@ void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position)
 	tree->branch++;
 }
 
-int HAL_SearchNode(HAL_TREE* node, int symbol, bool* found_symbol)
+int HAL_SearchNode(const HAL_TREE* node, const int symbol, bool* found_symbol)
 {
 	// this function performs a binary search for the specified symbol on the subtree of the
 	// given node. Return the position of the child node in the subtree if the symbol was found,
@@ -929,7 +929,7 @@ int HAL_SearchNode(HAL_TREE* node, int symbol, bool* found_symbol)
 	}
 }
 
-void HAL_InitializeContext(HAL_MODEL* model)
+void HAL_InitializeContext(const HAL_MODEL* model)
 {
 	// this function sets the context of the model to a default value
 
@@ -937,7 +937,7 @@ void HAL_InitializeContext(HAL_MODEL* model)
 		model->context[i] = nullptr; // reset all the context elements
 }
 
-void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words)
+void HAL_Learn(const HAL_MODEL* model, const HAL_DICTIONARY* words)
 {
 	// this function learns from the user's input
 
@@ -978,7 +978,7 @@ void HAL_Learn(HAL_MODEL* model, HAL_DICTIONARY* words)
 	return;
 }
 
-void HAL_SaveTree(std::FILE* file, HAL_TREE* node)
+void HAL_SaveTree(std::FILE* file, const HAL_TREE* node)
 {
 	// this function saves a tree structure to the specified file
 
@@ -1130,7 +1130,7 @@ void HAL_MakeWords (char *input, HAL_DICTIONARY *words)
    }
 }*/
 
-bool HAL_BoundaryExists(const char* string, int position)
+bool HAL_BoundaryExists(const char* string, const int position)
 {
 	// this function returns whether or not a word boundary exists in a string at the
 	// specified location
@@ -1161,7 +1161,7 @@ bool HAL_BoundaryExists(const char* string, int position)
 	return false;
 }
 
-bool HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2)
+bool HAL_DictionariesDiffer(const HAL_DICTIONARY* words1, const HAL_DICTIONARY* words2)
 {
 	// this function returns true if the dictionaries are NOT the same or false if not
 
@@ -1176,7 +1176,7 @@ bool HAL_DictionariesDiffer(HAL_DICTIONARY* words1, HAL_DICTIONARY* words2)
 	return false; // looks like those dictionaries are identical
 }
 
-HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, HAL_DICTIONARY* words)
+HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, const HAL_DICTIONARY* words)
 {
 	// this function puts all the interesting words from the user's input into a keywords
 	// dictionary, which will be used when generating a reply
@@ -1246,7 +1246,7 @@ int strpos(char* pos, char* start)
 	return int(pos) - int(start);
 }
 
-void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int start, int end)
+void FillStringArea(char* string, const int maxstring, char* fill, int maxfill, const int start, const int end)
 {
 	const int size = sizeof(char) * (maxstring + 1);
 
@@ -1273,7 +1273,7 @@ void FillStringArea(char* string, int maxstring, char* fill, int maxfill, int st
 	after = nullptr;
 }
 
-void BotHALAddKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
+void BotHALAddKeyword(const CBot* pBot, HAL_DICTIONARY* keys, const HAL_STRING word)
 {
 	// this function adds a word to the keyword dictionary
 
@@ -1385,7 +1385,7 @@ void BotHALAddKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
 	HAL_AddWord(keys, word); // once we are sure this word isn't known yet, we can add it
 }
 
-void BotHALAddAuxiliaryKeyword(CBot* pBot, HAL_DICTIONARY* keys, HAL_STRING word)
+void BotHALAddAuxiliaryKeyword(const CBot* pBot, HAL_DICTIONARY* keys, const HAL_STRING word)
 {
 	// this function adds an auxilliary keyword to the keyword dictionary
 
@@ -1508,7 +1508,7 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 	return replies;
 }
 
-int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
+int BotHALBabble(const CBot* pBot, const HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 {
 	// this function returns a random symbol from the current context, or a zero symbol
 	// identifier if we've reached either the start or end of the sentence. Selection of the
@@ -1556,7 +1556,7 @@ int BotHALBabble(CBot* pBot, HAL_DICTIONARY* keys, HAL_DICTIONARY* words)
 	return symbol;
 }
 
-bool HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word)
+bool HAL_WordExists(const HAL_DICTIONARY* dictionary, const HAL_STRING word)
 {
 	// here's a silly brute-force searcher for the reply string
 
@@ -1568,7 +1568,7 @@ bool HAL_WordExists(HAL_DICTIONARY* dictionary, HAL_STRING word)
 	return false; // word was not found
 }
 
-int BotHALSeedReply(CBot* pBot, HAL_DICTIONARY* keys)
+int BotHALSeedReply(const CBot* pBot, const HAL_DICTIONARY* keys)
 {
 	// this function seeds the reply by guaranteeing that it contains a keyword, if one exists
 
@@ -1621,7 +1621,7 @@ HAL_SWAP* HAL_NewSwap()
 	return list; // return the fresh new swap
 }
 
-void HAL_AddSwap(HAL_SWAP* list, char* s, char* d)
+void HAL_AddSwap(HAL_SWAP* list, const char* s, const char* d)
 {
 	// this function adds a new entry to the swap structure.
 
@@ -1841,7 +1841,7 @@ void HAL_FreeSwap(HAL_SWAP* swap)
 
 		// free TO
 
-//		if (swap->to[i].word != NULL)
+		//		if (swap->to[i].word != NULL)
 		std::free(swap->to[i].word); // free the "to" word
 
 		swap->to[i].word = nullptr;
@@ -1980,7 +1980,7 @@ bool PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 	return true; // ok, now it is guarantee that this personality has an associated brain
 }
 
-bool LoadHALBrainForPersonality(const bot_profile_t* pBotProfile, bool bPreTrain)
+bool LoadHALBrainForPersonality(const bot_profile_t* pBotProfile, const bool bPreTrain)
 {
 	// this function loads a HAL brain
 

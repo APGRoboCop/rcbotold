@@ -57,7 +57,7 @@
 
 // Call Find Directory with dirspec = the starting directory you want to look in
 
-HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec)
+HANDLE FindDirectory(HANDLE hFile, char* dirname, const char* dirspec)
 {
 	WIN32_FIND_DATA pFindFileData;
 
@@ -119,26 +119,25 @@ HANDLE FindDirectory(HANDLE hFile, char* dirname, char* dirspec)
 
 // Linux directory wildcard routines...
 
-DIR* FindDirectory(DIR* directory, char* dirname, char* dirspec)
+DIR* FindDirectory(DIR* directory, char* dirname, const char* dirspec)
 {
 	char pathname[256];
-	struct dirent* dirent;
 	struct stat stat_str;
 
-	if (directory == NULL)
+	if (directory == nullptr)
 	{
-		if ((directory = opendir(dirspec)) == NULL)
-			return NULL;
+		if ((directory = opendir(dirspec)) == nullptr)
+			return nullptr;
 	}
 
-	while (1)
+	while (true)
 	{
-		dirent = readdir(directory);
+		struct dirent* dirent = readdir(directory);
 
-		if (dirent == NULL)  // at end of directory?
+		if (dirent == nullptr)  // at end of directory?
 		{
 			closedir(directory);
-			return NULL;
+			return nullptr;
 		}
 
 		std::strcpy(pathname, dirspec);

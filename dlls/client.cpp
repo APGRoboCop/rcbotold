@@ -803,8 +803,8 @@ void InitMessage ( const char *message );
 
 									break;
 								}
-								else
-									continue;
+								//else
+								//	continue;
 							}
 						}
 					}

@@ -139,7 +139,7 @@ void CBotGlobals::ReadBotFolder()
 	return szClasses[iClass];
 }*/
 
-bool CBotGlobals::NetMessageStarted(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
+bool CBotGlobals::NetMessageStarted(const int msg_dest, const int msg_type, const float* pOrigin, edict_t* ed)
 {
 	if (m_bNetMessageStarted)
 	{
@@ -1774,23 +1774,23 @@ void CBotGlobals::ReadThingsToBuild() const
 			if (szbuffer[0] == '#')
 				continue; // comment
 
-			size_t ilen = std::strlen(szbuffer);
+			size_t iLen = std::strlen(szbuffer);
 
-			if (ilen == 0)
+			if (iLen == 0)
 				continue;
 
-			if (szbuffer[ilen - 1] == '\n')
-				szbuffer[--ilen] = 0;
+			if (szbuffer[iLen - 1] == '\n')
+				szbuffer[--iLen] = 0;
 
-			if (ilen == 0)
+			if (iLen == 0)
 				continue;
 
 			if (szbuffer[0] == '[')
 			{
-				unsigned int i = 1;
+				unsigned i = 1;
 				int j = 0;
 
-				while (i < ilen && szbuffer[i] != ']')
+				while (i < iLen && szbuffer[i] != ']')
 					szline[j++] = szbuffer[i++];
 				szline[j] = 0;
 
