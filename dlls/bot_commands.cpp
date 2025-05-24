@@ -309,7 +309,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 			return BOT_CVAR_ERROR;
 		}
 
-		int magnitude = 400;
+		float magnitude = 400.0f;
 		bool dodamage = true;
 
 		if (arg2 != nullptr && *arg2 != 0)
@@ -733,9 +733,8 @@ eBotCvarState CDebugEntCommand::action(CClient* pClient, const char* arg1, const
 		if (pClient)
 		{
 			edict_t* pEntity = pClient->GetPlayer();
-			edict_t* pOther = UTIL_FacingEnt(pEntity, true);
 
-			if (pOther)
+			if (edict_t* pOther = UTIL_FacingEnt(pEntity, true))
 				pClient->m_pDebugEnt = pOther;
 			else
 				BotMessage(pClient->GetPlayer(), 0, "No entity found");
@@ -781,9 +780,7 @@ eBotCvarState CDebugBotCommand::action(CClient* pClient, const char* arg1, const
 		{
 			edict_t* pEntity = pClient->GetPlayer();
 
-			const edict_t* pOther = UTIL_FacingEnt(pEntity);
-
-			if (pOther)
+			if (const edict_t* pOther = UTIL_FacingEnt(pEntity))
 			{
 				pClient->m_iDebugBot = UTIL_GetBotIndex(pOther);
 
@@ -2018,9 +2015,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		}
 	}
 
-	extern int num_waypoints;
-
-	if (num_waypoints == 0)
+	if (extern int num_waypoints; num_waypoints == 0)
 	{
 		if (pClient)
 		{
@@ -2159,9 +2154,7 @@ void RCBot_ServerCommand()
 		}
 		else
 		{
-			CClient* pListenServerClient = gBotGlobals.m_Clients.GetClientByEdict(gBotGlobals.m_pListenServerEdict);
-
-			if (pListenServerClient)
+			if (CClient* pListenServerClient = gBotGlobals.m_Clients.GetClientByEdict(gBotGlobals.m_pListenServerEdict))
 				iState = gBotGlobals.m_CurrentHandledCvar->action(pListenServerClient, arg1, arg2, arg3, arg4);
 			else
 			{

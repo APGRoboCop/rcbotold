@@ -270,7 +270,7 @@ void CBotReputations::WriteToFile(const int iBotProfile, CBotReputation* pRep)
 	}
 
 	std::fseek(fp, 0, SEEK_END); // move pos to end of file
-	long   fPos = std::ftell(fp);  // get length of file
+	long fPos = std::ftell(fp);  // get length of file
 
 	// do some error checking - verify the file is not corrupt
 	if (fPos % sizeof(CBotReputation) != 0) return;
@@ -389,7 +389,7 @@ int GetPlayerRepId(const char* szPlayerName)
 				buffer[length] = 0;
 			}
 
-			unsigned int i = 0;
+			unsigned i = 0;
 
 			while (i < length && buffer[i] != '"')
 				i++;
@@ -432,7 +432,7 @@ int GetPlayerRepId(const char* szPlayerName)
 	return -1;
 }
 
-int CBotReputations::GetClientRep(CClient* pClient) const
+int CBotReputations::GetClientRep(const CClient* pClient) const
 {
 	if (pClient == nullptr)
 	{

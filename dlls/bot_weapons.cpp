@@ -82,7 +82,7 @@ const char* pszTSWeaponModels[] = { "0","models/w_glock18.mdl","2 No gun","model
 
 extern CBotGlobals gBotGlobals;
 
-void CWeapon::SetWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int iSecAmmoMax, int iHudSlot, int iHudPosition, int iFlags, int iAmmoIndex1, int iAmmoIndex2)
+void CWeapon::SetWeapon(const int iId, const char* szClassname, const int iPrimAmmoMax, const int iSecAmmoMax, const int iHudSlot, const int iHudPosition, const int iFlags, const int iAmmoIndex1, const int iAmmoIndex2)
 {
 	if (m_szClassname == nullptr)
 		m_szClassname = gBotGlobals.m_Strings.GetString(szClassname);
@@ -105,8 +105,8 @@ void CBotWeapon::Reset() //TODO: Experimental [APG]RoboCop[CL]
 	m_iId = 0;
 	m_pWeaponInfo = nullptr;
 	m_bHasWeapon = false;
-	m_iAmmo1 = 0;
-	m_iAmmo2 = 0;
+	m_iAmmo1 = nullptr;
+	m_iAmmo2 = nullptr;
 }
 
 bool CBotWeapon::CanReload() const

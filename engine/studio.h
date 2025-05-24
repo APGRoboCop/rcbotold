@@ -25,6 +25,8 @@ Studio models are position independent, so the cache manager can move them.
 ==============================================================================
 */
 
+#include "extdll.h"
+
 #define MAXSTUDIOTRIANGLES	20000	// TODO: tune this
 #define MAXSTUDIOVERTS		2048	// TODO: tune this
 #define MAXSTUDIOSEQUENCES	256		// total animation sequences

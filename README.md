@@ -45,6 +45,7 @@ V 1.51-beta10
 * changed: Converted some doubles into floats
 * changed: Added returns for NS CAlienAction 
 * changed: NS Squad Menu repaired and should hopefully work
+* changed: Now using smart pointers for ClientCommand() to resolve memory leaks
 
 * TODO: To add support for Half-Life 25th Anniversary builds as it doesn't support Waypoints being displayed
 * TODO: To allow Skulk and Lerk Aliens to bite and attack properly

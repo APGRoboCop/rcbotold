@@ -85,13 +85,13 @@ bool CBotNetMessage::IsMessage(const int iMessage)
 	return m_iMessage == iMessage;
 }
 
-void CBotNetMessages::execute(int iMessage, void* p, int i) const
+void CBotNetMessages::execute(const int iMessage, void* p, const int i) const
 {
 	if (CBotNetMessage* pMsg = GetMessage(iMessage, nullptr))
 		pMsg->execute(p, i);
 }
 
-CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName) const
+CBotNetMessage* CBotNetMessages::GetMessage(const int iMessage, const char* szName) const
 {
 	dataStack<CBotNetMessage*> l_tempStack = m_NetMessages;
 
@@ -131,7 +131,7 @@ CBotNetMessage* CBotNetMessages::GetMessage(int iMessage, const char* szName) co
 	return nullptr;
 }
 
-CBotNetMessage::CBotNetMessage(const char* szMessageName, int iModId, bool bAllowHumans)
+CBotNetMessage::CBotNetMessage(const char* szMessageName, const int iModId, const bool bAllowHumans)
 {
 	m_iSize = 0;
 	m_iMessage = 0;

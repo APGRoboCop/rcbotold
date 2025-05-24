@@ -195,7 +195,7 @@ void BotClient_TS_Health::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_TS_TeamInfo::execute(void* p, int iIndex)
+void BotClient_TS_TeamInfo::execute(void* p, const int iIndex)
 {
 	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
@@ -215,7 +215,7 @@ void BotClient_TS_TeamInfo::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_TS_State::execute(void* p, int iIndex)
+void BotClient_TS_State::execute(void* p, const int iIndex)
 {
 	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
@@ -236,7 +236,7 @@ void BotClient_TS_State::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_TS_Frags::execute(void* p, int iIndex)
+void BotClient_TS_Frags::execute(void* p, const int iIndex)
 {
 	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
@@ -256,7 +256,7 @@ void BotClient_TS_Frags::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_TS_RoundTime::execute(void* p, int iIndex)
+void BotClient_TS_RoundTime::execute(void* p, const int iIndex)
 {
 	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
@@ -278,7 +278,7 @@ void BotClient_TS_RoundTime::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_TS_Objective::execute(void* p, int iIndex)
+void BotClient_TS_Objective::execute(void* p, const int iIndex)
 {
 	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
@@ -317,7 +317,7 @@ void BotClient_TS_Objective::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_TS_WStatus::execute(void* p, int iIndex)
+void BotClient_TS_WStatus::execute(void* p, const int iIndex)
 {
 	if (p == nullptr || iIndex == -1)
 	{
@@ -337,7 +337,7 @@ void BotClient_TS_WStatus::execute(void* p, int iIndex)
 	}
 }
 
-void BotClient_TS_ClipInfo::execute(void* p, int iIndex)
+void BotClient_TS_ClipInfo::execute(void* p, const int iIndex)
 {
 	short int* state = &gBotGlobals.m_iCurrentMessageState;
 
@@ -429,7 +429,7 @@ void BotClient_TS_DelObj::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(state);
 }
 
-void BotClient_TS_WeaponInfo::execute(void* p, int iIndex)
+void BotClient_TS_WeaponInfo::execute(void* p, const int iIndex)
 {
 	static int clip;
 	static int ammo;
@@ -483,7 +483,7 @@ void BotClient_TS_WeaponInfo::execute(void* p, int iIndex)
 	gBotGlobals.m_iCurrentMessageState++;
 }
 
-void BotClient_NS_TechSlots::execute(void* p, int iIndex)
+void BotClient_NS_TechSlots::execute(void* p, const int iIndex)
 {
 	static int iSlots; //TODO: Needs to be revised [APG]RoboCop[CL]
 
@@ -511,7 +511,7 @@ void BotClient_NS_TechSlots::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(iState);
 }
 
-void BotClient_BG_MakeMessage::execute(void* p, int iIndex)
+void BotClient_BG_MakeMessage::execute(void* p, const int iIndex)
 {
 	static int iSenderId = 0;
 	static int iMsg = 0;
@@ -532,9 +532,7 @@ void BotClient_BG_MakeMessage::execute(void* p, int iIndex)
 		// not a bot
 		if (pSender && UTIL_GetBotPointer(pSender) == nullptr)
 		{
-			CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender);
-
-			if (pClient)
+			if (CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pSender))
 			{
 				switch (POINTER_TO_INT(p))
 				{
@@ -598,7 +596,7 @@ void BotClient_BG_MakeMessage::execute(void* p, int iIndex)
 }
 
 //TODO: Science and Industry - Experimental [APG]RoboCop[CL]
-void BotClient_SI_TeamCash::execute(void* p, int iIndex)
+void BotClient_SI_TeamCash::execute(void* p, const int iIndex)
 {
 	static int iCash = 0;
 
@@ -619,7 +617,7 @@ void BotClient_SI_TeamCash::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(iState);
 }
 
-void BotClient_SI_SciCount::execute(void* p, int iIndex)
+void BotClient_SI_SciCount::execute(void* p, const int iIndex)
 {
 	static int iSciCount = 0;
 
@@ -640,7 +638,7 @@ void BotClient_SI_SciCount::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(iState);
 }
 
-void BotClient_SI_CarryInfo::execute(void* p, int iIndex)
+void BotClient_SI_CarryInfo::execute(void* p, const int iIndex)
 {
 	static int iCarry = 0;
 	static int iCarryTeam = 0;
@@ -671,7 +669,7 @@ void BotClient_SI_CarryInfo::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(iState);
 }
 
-void BotClient_SI_Goal::execute(void* p, int iIndex)
+void BotClient_SI_Goal::execute(void* p, const int iIndex)
 {
 	static int iGoal = 0;
 	static int iGoalTeam = 0;
@@ -702,7 +700,7 @@ void BotClient_SI_Goal::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(iState);
 }
 
-void BotClient_SI_Notice::execute(void* p, int iIndex)
+void BotClient_SI_Notice::execute(void* p, const int iIndex)
 {
 	static int iNotice = 0;
 	static int iNoticeTeam = 0;
@@ -733,7 +731,7 @@ void BotClient_SI_Notice::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(iState);
 }
 
-void BotClient_SI_VoteInfo::execute(void* p, int iIndex)
+void BotClient_SI_VoteInfo::execute(void* p, const int iIndex)
 {
 	static int iVote = 0;
 	static int iVoteTeam = 0;
@@ -764,10 +762,8 @@ void BotClient_SI_VoteInfo::execute(void* p, int iIndex)
 	POINTER_INCREMENT_VALUE(iState);
 }
 
-void BotClient_Generic_TextMessage::execute(void* p, int iIndex)
+void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 {
-	short int* iState = &gBotGlobals.m_iCurrentMessageState;
-
 	/*typedef enum
 	{
 		TXTMSG_TYPE_NONE;
@@ -793,7 +789,7 @@ void BotClient_Generic_TextMessage::execute(void* p, int iIndex)
 		return;
 	}*/
 
-	switch (POINTER_TO_INT(iState))
+	switch (short int* iState = &gBotGlobals.m_iCurrentMessageState; POINTER_TO_INT(iState))
 	{
 	case 0:
 		POINTER_INCREMENT_VALUE(iState);
@@ -1095,7 +1091,7 @@ void BotClient_Generic_VGUIMenu::execute(void* p, const int iIndex)
   catches new upgrades and hive info
 
   */
-void BotClient_NS_AlienInfo::execute(void* p, int iIndex)
+void BotClient_NS_AlienInfo::execute(void* p, const int iIndex)
 {
 	static short int state = 0;
 	static int message_type = -1;
@@ -1564,7 +1560,7 @@ void BotClient_NS_SetTech::execute(void* p, int iIndex)
 constexpr int IS_NS_3_FINAL = 1;
 
 // When a marine bot receives an order...
-void BotClient_NS_SetOrder::execute(void* p, int iIndex)
+void BotClient_NS_SetOrder::execute(void* p, const int iIndex)
 {
 	static Vector				vOrigin;
 	static dataStack<int>		iReceiverIndexes;
@@ -2293,7 +2289,7 @@ void BotClient_Generic_Battery::execute(void* p, const int iIndex)
 		return;
 }
 
-void BotClient_TS_PTakeDam::execute(void* p, int iIndex)
+void BotClient_TS_PTakeDam::execute(void* p, const int iIndex)
 {
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -2301,7 +2297,7 @@ void BotClient_TS_PTakeDam::execute(void* p, int iIndex)
 	ALERT(at_console, "PTakeDam message\n");
 }
 
-void BotClient_TS_TSMessage::execute(void* p, int iIndex)
+void BotClient_TS_TSMessage::execute(void* p, const int iIndex)
 {
 	if (p == nullptr || iIndex == -1)
 		return;

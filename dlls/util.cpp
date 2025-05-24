@@ -102,7 +102,7 @@ bool UTIL_IsGrenadeRocket(const edict_t* pEntity)
 	return std::strstr(szClassname, "grenade") != nullptr || std::strstr(szClassname, "rpg_rocket") != nullptr;
 }
 // from old RCBot
-void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency, float duration, float radius)
+void UTIL_BotScreenShake(const Vector& center, const float amplitude, const float frequency, const float duration, const float radius)
 {
 	ScreenShake	shake;
 
@@ -425,7 +425,7 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 	return nullptr;
 }
 
-edict_t* UTIL_FindEntityInSphere(edict_t* pentStart, const Vector& vecCenter, float flRadius)
+edict_t* UTIL_FindEntityInSphere(edict_t* pentStart, const Vector& vecCenter, const float flRadius)
 {
 	edict_t* pentEntity = FIND_ENTITY_IN_SPHERE(pentStart, vecCenter, flRadius);
 
@@ -570,7 +570,7 @@ int GetMessageID(const char* szMsg)
 	return msg_id;
 }
 
-float UTIL_AnglesBetweenEdictOrigin(const edict_t* pEdict, Vector const& origin)
+float UTIL_AnglesBetweenEdictOrigin(const edict_t* pEdict, const Vector& origin)
 {
 	const Vector v_enemy = origin - pEdict->v.origin + pEdict->v.view_ofs;
 	const Vector& angles = v_enemy;
@@ -604,7 +604,7 @@ edict_t* UTIL_getEntityInFront(edict_t* pEntity)
 	return tr.pHit;
 }
 
-float UTIL_AngleBetweenVectors(Vector const& vec1, Vector const& vec2)
+float UTIL_AngleBetweenVectors(const Vector& vec1, const Vector& vec2)
 {
 	//vec1 = UTIL_FixAngles(vec1);
 	//vec2 = UTIL_FixAngles(vec2);
@@ -615,7 +615,7 @@ float UTIL_AngleBetweenVectors(Vector const& vec1, Vector const& vec2)
 	return static_cast<float>(std::acos(vec1Dotvec2 / veclengths) * (180.0 / M_PI));
 }
 
-float UTIL_YawAngleBetweenOrigin(const entvars_t* pev, Vector const& vOrigin)
+float UTIL_YawAngleBetweenOrigin(const entvars_t* pev, const Vector& vOrigin)
 {
 	float fAngle;
 	const Vector vBotAngles = pev->v_angle;
@@ -632,7 +632,7 @@ float UTIL_YawAngleBetweenOrigin(const entvars_t* pev, Vector const& vOrigin)
 	return fAngle;
 }
 
-Vector UTIL_AngleBetweenOrigin(const entvars_t* pev, Vector const& vOrigin)
+Vector UTIL_AngleBetweenOrigin(const entvars_t* pev, const Vector& vOrigin)
 {
 	Vector vAngle;
 	const Vector vBotAngles = pev->v_angle;
@@ -691,7 +691,7 @@ float UTIL_PitchAngleBetweenOrigin(entvars_t *pev,Vector vOrigin)
 //}
 
 // from old bot code
-float UTIL_GetAvoidAngle(const edict_t* pEdict, Vector const& origin)
+float UTIL_GetAvoidAngle(const edict_t* pEdict, const Vector& origin)
 {
 	Vector v_enemy = origin - pEdict->v.origin;
 
@@ -718,7 +718,7 @@ float UTIL_GetAvoidAngle(const edict_t* pEdict, Vector const& origin)
 	return -angles;
 }
 
-edict_t* UTIL_GetPlayerByPlayerId(int id)
+edict_t* UTIL_GetPlayerByPlayerId(const int id)
 {
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
@@ -734,7 +734,7 @@ edict_t* UTIL_GetPlayerByPlayerId(int id)
 	return nullptr;
 }
 
-void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
+void UTIL_HostSay(edict_t* pEntity, const int teamonly, char* message)
 {
 	char  text[128];
 	char* pc;
@@ -807,7 +807,7 @@ void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message)
 	g_engfuncs.pfnServerPrint(text);
 }
 
-int UTIL_GetNumClients(bool bReport)
+int UTIL_GetNumClients(const bool bReport)
 {
 	//int iUserId;
 
@@ -1030,7 +1030,7 @@ int UTIL_GetTeam(edict_t* pEntity)
 	return -1;
 }
 
-void BotFunc_KickBotFromTeam(int iTeam)
+void BotFunc_KickBotFromTeam(const int iTeam)
 {
 	// list of possible bots to kick
 	dataUnconstArray<CBot*> theBots;
@@ -1039,8 +1039,7 @@ void BotFunc_KickBotFromTeam(int iTeam)
 	for (CBot& m_Bot : gBotGlobals.m_Bots)
 	{
 		pBot = &m_Bot;
-
-		if (pBot && pBot->IsUsed())
+		if (pBot->IsUsed())
 		{
 			if (iTeam == -1 || pBot->pev->team == iTeam)
 				theBots.Add(pBot);
@@ -1102,9 +1101,6 @@ int UTIL_GetBotIndex(const edict_t* pEdict)
 	{
 		const CBot* pBot = &gBotGlobals.m_Bots[index];
 
-		if (!pBot) //TODO: Not required? [APG]RoboCop[CL]
-			continue;
-
 		if (!pBot->IsUsed())
 			continue;
 
@@ -1116,7 +1112,7 @@ int UTIL_GetBotIndex(const edict_t* pEdict)
 	return -1;  // return -1 if edict is not a bot
 }
 
-int UTIL_MasterTriggered(string_t sMaster, const CBaseEntity* pActivator) //TODO: Required? [APG]RoboCop[CL]
+int UTIL_MasterTriggered(const string_t sMaster, const CBaseEntity* pActivator) //TODO: Required? [APG]RoboCop[CL]
 {
 	edict_t* pent = nullptr;
 
@@ -1174,7 +1170,7 @@ float UTIL_EntityAnglesToVector3D(const entvars_t* pev, const Vector* pOrigin) /
 	return std::acos(flDot) / static_cast<float>(M_PI) * 180.0f;
 }
 
-int UTIL_ClassOnTeam(int iClass, int iTeam)
+int UTIL_ClassOnTeam(const int iClass, const int iTeam)
 {
 	int iPlayers = 0;
 
@@ -1195,7 +1191,7 @@ int UTIL_ClassOnTeam(int iClass, int iTeam)
 	return iPlayers;
 }
 
-int UTIL_PlayersOnTeam(int iTeam)
+int UTIL_PlayersOnTeam(const int iTeam)
 {
 	int iPlayers = 0;
 
@@ -1216,7 +1212,7 @@ int UTIL_PlayersOnTeam(int iTeam)
 	return iPlayers;
 }
 
-bool UTIL_CanEvolveInto(int iSpecies)
+bool UTIL_CanEvolveInto(const int iSpecies)
 {
 	switch (iSpecies)
 	{
@@ -1246,7 +1242,7 @@ int UTIL_GetNumHives()
 	return iNum;
 }
 
-float UTIL_AngleDiff(float destAngle, float srcAngle)
+float UTIL_AngleDiff(const float destAngle, const float srcAngle)
 {
 	float delta = destAngle - srcAngle;
 	if (destAngle > srcAngle)
@@ -1262,7 +1258,7 @@ float UTIL_AngleDiff(float destAngle, float srcAngle)
 	return delta;
 }
 
-void UTIL_CountBuildingsInRange(Vector const& vOrigin, float fRange, int* iDefs, int* iOffs, int* iSens, int* iMovs)
+void UTIL_CountBuildingsInRange(const Vector& vOrigin, const float fRange, int* iDefs, int* iOffs, int* iSens, int* iMovs)
 {
 	edict_t* pEnt = nullptr;
 
@@ -1338,7 +1334,7 @@ bool UTIL_FuncResourceIsOccupied(const edict_t* pFuncResource)
 }
 
 // from old RCBOT
-Vector UTIL_LengthFromVector(Vector const& relation, float length)
+Vector UTIL_LengthFromVector(const Vector& relation, const float length)
 {
 	return relation / relation.Length() * length;
 }
@@ -1420,7 +1416,7 @@ int UTIL_CountEntities(const char* classname)
 	return iTotal;
 }
 
-int UTIL_CountEntitiesInRange(const char* classname, const Vector& vOrigin, float fRange)
+int UTIL_CountEntitiesInRange(const char* classname, const Vector& vOrigin, const float fRange)
 {
 	edict_t* pEnt = nullptr;
 	int iTotal = 0;
@@ -1517,7 +1513,7 @@ int UTIL_GetBuildWaypoint(Vector const& vSpawn, dataStack<int>* iFailedGoals)
 	return iWpt;
 }
 
-int UTIL_SpeciesOnTeam(int iSpecies, bool bIgnoreEmbryos)
+int UTIL_SpeciesOnTeam(const int iSpecies, const bool bIgnoreEmbryos)
 {
 	int iPlayers = 0;
 
@@ -1616,7 +1612,7 @@ void UTIL_SelectItem(edict_t* pEdict, char* item_name)
 
 //#ifndef RCBOT_META_BUILD
 
-void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, float magnitude, bool doDamage)
+void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, const float magnitude, const bool doDamage)
 {
 	/*if ( gBotGlobals.IsMod(MOD_SVENCOOP) )
 	{
@@ -1690,7 +1686,8 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 	}
 }
 
-void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, float flRadius, int iClassIgnore, int bitsDamageType)
+void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker, const float flDamage,
+                  const float flRadius, const int iClassIgnore, const int bitsDamageType)
 {
 	edict_t* pEdict = nullptr;
 
@@ -1810,7 +1807,7 @@ Vector AbsOrigin(const edict_t* pEdict)
 	return (pEdict->v.absmin + pEdict->v.absmax) / 2;
 }
 
-void UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, bool needmore, const char* pText)
+void UTIL_ShowMenu(edict_t* pEdict, const int slots, const int displaytime, const bool needmore, const char* pText)
 {
 	const char* szMsg = { "ShowMenu" };
 
@@ -1829,7 +1826,7 @@ void UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, bool needmore, c
 	}
 }
 
-bool UTIL_CanStand(Vector const& origin, Vector* v_floor)
+bool UTIL_CanStand(const Vector& origin, Vector* v_floor)
 {
 	TraceResult tr;
 
@@ -2070,19 +2067,19 @@ float UTIL_GetBestPushableDistance(const edict_t* pPushable)
 	return (pPushable->v.size.x + pPushable->v.size.y) / 3;
 }
 
-Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, edict_t* pPushable)
+Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, const edict_t* pPushable)
 {
 	const Vector vPushable = EntityOrigin(pPushable);
 
 	return vPushable - (vOrigin - vPushable).Normalize() * UTIL_GetBestPushableDistance(pPushable);
 }
 
-bool UTIL_AcceptablePushableVector(edict_t* pPushable, Vector const& vOrigin)
+bool UTIL_AcceptablePushableVector(const edict_t* pPushable, const Vector& vOrigin)
 {
 	return UTIL_EntityDistance2D(&pPushable->v, vOrigin) <= UTIL_GetBestPushableDistance(pPushable);
 }
 
-void HudText::SayMessage(const char* message, Vector const& colour1, Vector const& colour2, edict_t* pPlayer)
+void HudText::SayMessage(const char* message, const Vector& colour1, const Vector& colour2, edict_t* pPlayer)
 {
 	SetColour1(colour1, 75);
 	SetColour2(colour2, 75);
@@ -2199,21 +2196,21 @@ void UTIL_BotHudMessage(edict_t* pEntity, const hudtextparms_t& textparms, const
 	MESSAGE_END();
 }
 
-unsigned short FixedUnsigned16(float value, float scale)
+unsigned short FixedUnsigned16(const float value, const float scale)
 {
 	int output = static_cast<int>(value * scale);
+
 	output = std::max(output, 0);
 	output = std::min(output, 0xFFFF);
 
 	return static_cast<unsigned short>(output);
 }
 
-short FixedSigned16(float value, float scale)
+short FixedSigned16(const float value, const float scale)
 {
 	int output = static_cast<int>(value * scale);
 
 	output = std::min(output, 32767);
-
 	output = std::max(output, -32768);
 
 	return static_cast<short>(output);
@@ -2237,7 +2234,7 @@ short FixedSigned16(float value, float scale)
 	BOT_TOOL_TIP_MAX
 */
 
-void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
+void UTIL_BotToolTip(edict_t* pEntity, const eLanguage iLang, const eToolTip iTooltip)
 //
 // Show a Tooltip (message) to the pEntity
 //
@@ -2295,7 +2292,7 @@ void UTIL_BotToolTip(edict_t* pEntity, eLanguage iLang, eToolTip iTooltip)
 	}
 }
 
-edict_t* UTIL_UpdateSounds(entvars_t* pev)
+edict_t* UTIL_UpdateSounds(const entvars_t* pev)
 //
 // Return the entity that could be making a sound
 // nearest to "pev"
@@ -2376,7 +2373,7 @@ edict_t* UTIL_UpdateSounds(entvars_t* pev)
 	return pNearest;
 }
 
-bool UTIL_IsButton(edict_t* pButton)
+bool UTIL_IsButton(const edict_t* pButton)
 {
 	if (pButton == nullptr)
 		return false;
@@ -2429,7 +2426,7 @@ edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, const Vector& v
 	return pNearest;
 }
 
-int UTIL_NS_GetMaxArmour(edict_t* pEntity)
+int UTIL_NS_GetMaxArmour(const edict_t* pEntity)
 {
 	int armor = 25;
 
@@ -2525,7 +2522,7 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot)
 	return vPosition;
 }
 
-edict_t* UTIL_CheckTeleEntrance(Vector const& vOrigin, edict_t* pExit, edict_t* pOwner)
+edict_t* UTIL_CheckTeleEntrance(const Vector& vOrigin, edict_t* pExit, edict_t* pOwner)
 {
 	edict_t* pent = nullptr;
 
@@ -2580,7 +2577,7 @@ bool UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore)
 	return false;
 }
 
-edict_t* UTIL_CheckTeleExit(Vector const& vOrigin, edict_t* pOwner, edict_t* pEntrance)
+edict_t* UTIL_CheckTeleExit(const Vector& vOrigin, edict_t* pOwner, edict_t* pEntrance)
 {
 	edict_t* pent = nullptr;
 
@@ -2617,7 +2614,7 @@ edict_t* UTIL_CheckTeleExit(Vector const& vOrigin, edict_t* pOwner, edict_t* pEn
 	return nullptr;
 }
 
-int UTIL_SentryLevel(edict_t* pEntity)
+int UTIL_SentryLevel(const edict_t* pEntity)
 {
 	const char* model = const_cast<char*>(STRING(pEntity->v.model));
 

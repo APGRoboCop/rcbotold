@@ -89,13 +89,13 @@ public:
 	float getHeuristic() const;
 
 	short int getParent() const;
-	void setParent(int iWpt);
+	void setParent(short iWpt);
 
-	bool operator()(AStarNode* a, AStarNode* b) const;
+	bool operator()(const AStarNode* a, const AStarNode* b) const;
 
-	bool operator<(AStarNode* b) const;
+	bool operator<(const AStarNode* b) const;
 
-	bool precedes(AStarNode* b) const;
+	bool precedes(const AStarNode* b) const;
 
 	short int m_iWaypoint;
 
@@ -1106,18 +1106,11 @@ enum : std::uint8_t
 	VGUI_MENU_BG_SELECT_BRITISH_CLASS = 3,
 	VGUI_MENU_BG_SELECT_AMERICAN_CLASS = 4
 };
+constexpr bool TEAM_BLACK_MESA = false;
+constexpr bool TEAM_OPPOSING_FORCE = true;
 
-enum : std::uint8_t
-{
-	TEAM_BLACK_MESA = 0,
-	TEAM_OPPOSING_FORCE = 1
-};
-
-enum : std::uint8_t
-{
-	VGUI_MENU_WW_TEAM_SELECT = 0,
-	VGUI_MENU_WW_CLASS_SELECT = 1
-};
+constexpr bool VGUI_MENU_WW_TEAM_SELECT = false;
+constexpr bool VGUI_MENU_WW_CLASS_SELECT = true;
 
 //#define VGUI_MENU_TFC_TEAM_SELECT 2
 //#define VGUI_MENU_TFC_CLASS_SELECT 3

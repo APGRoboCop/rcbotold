@@ -8,7 +8,7 @@
 class CActionUtility
 {
 public:
-	CActionUtility(eCanDoStuff action, bool utility)
+	CActionUtility(eCanDoStuff action, float utility)
 	{
 		m_Action = action;
 		m_fUtility = utility;
@@ -26,7 +26,7 @@ public:
 
 private:
 	eCanDoStuff m_Action;
-	bool m_fUtility;
+	float m_fUtility;
 };
 
 class CActionUtilities

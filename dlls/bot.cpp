@@ -10663,12 +10663,11 @@ CBotSquad* CBotSquads::AddSquadMember(edict_t* pLeader, edict_t* pMember)
 
 	theSquad = new CBotSquad(pLeader, pMember);
 
-	if (theSquad != nullptr)
-	{
-		m_theSquads.Push(theSquad);
+	m_theSquads.Push(theSquad);
 
-		if ((pBot = UTIL_GetBotPointer(pLeader)) != nullptr)
-			pBot->SetSquad(theSquad);
+	if ((pBot = UTIL_GetBotPointer(pLeader)) != nullptr)
+	{
+		pBot->SetSquad(theSquad);
 	}
 
 	return theSquad;

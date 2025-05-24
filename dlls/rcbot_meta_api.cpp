@@ -395,7 +395,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS* pFunctionTable, m
 	return true; // returning true enables metamod to attach this plugin
 }
 
-C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
+C_DLLEXPORT int Meta_Detach(const PLUG_LOADTIME now, const PL_UNLOAD_REASON reason)
 {
 	// this function is called when metamod unloads the plugin. A basic check is made in order
 	// to prevent unloading the plugin if its processing should not be interrupted.
@@ -553,7 +553,7 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* inte
 }
 
 //#if defined(_WIN32) && !defined(__CYGWIN__)
-void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pGlobals)
+void WINAPI GiveFnptrsToDll(const enginefuncs_t* pengfuncsFromEngine, globalvars_t* pGlobals)
 //#else
 //extern "C" DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals )
 //#endif

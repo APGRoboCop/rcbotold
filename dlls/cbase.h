@@ -700,7 +700,7 @@ enum : std::uint8_t
 	GIB_ALWAYS = 2	// always gib ( Houndeye Shock, Barnacle Bite )
 };
 
-class CBaseMonster;
+//class CBaseMonster;
 class CCineMonster;
 class CSound;
 

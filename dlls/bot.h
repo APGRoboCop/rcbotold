@@ -127,7 +127,7 @@ void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner
 Vector UTIL_GetGroundVector(edict_t* pEdict);
 bool UTIL_EntityIsHive(const edict_t* pEdict);
 int UTIL_CountEntitiesInRange(const char* classname, const Vector& vOrigin, float fRange);
-int UTIL_SentryLevel(edict_t* pEntity);
+int UTIL_SentryLevel(const edict_t* pEntity);
 void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, float flRadius, int iClassIgnore, int bitsDamageType);
 void UTIL_BotScreenShake(const Vector& center, float amplitude, float frequency, float duration, float radius);
 edict_t* UTIL_GetPlayerByPlayerId(int id);
@@ -135,7 +135,7 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot);
 int UTIL_ClassOnTeam(int iClass, int iTeam);
 bool UTIL_EntityHasClassname(const edict_t* pEntity, const char* classname);
 float UTIL_GetPlayerEnergy(const entvars_t* pev);
-int UTIL_NS_GetMaxArmour(edict_t* pEntity);
+int UTIL_NS_GetMaxArmour(const edict_t* pEntity);
 edict_t* UTIL_GetCommander();
 int UTIL_CountEntities(const char* classname);
 edict_t* BotFunc_FindRandomEntity(const char* szClassname);
@@ -186,7 +186,7 @@ int strpos(char* pos, char* start);
 void ReadMapConfig();
 int RoundToNearestInteger(float fVal);
 int Ceiling(float fVal);
-bool UTIL_IsButton(edict_t* pButton);
+bool UTIL_IsButton(const edict_t* pButton);
 bool UTIL_CanStand(const Vector& origin, Vector* v_floor);
 
 void UTIL_GetArgFromString(char** szString, char* szArg);
@@ -199,11 +199,11 @@ edict_t* UTIL_FindEntityInSphere(edict_t* pentStart, const Vector& vecCenter,
 edict_t* UTIL_FindEntityByString(edict_t* pentStart, const char* szKeyword,
 	const char* szValue);
 
-bool UTIL_AcceptablePushableVector(edict_t* pPushable, const Vector& vOrigin);
+bool UTIL_AcceptablePushableVector(const edict_t* pPushable, const Vector& vOrigin);
 float UTIL_EntityDistance(const entvars_t* pev, const Vector& vOrigin);
 float UTIL_EntityDistance2D(const entvars_t* pev, const Vector& vOrigin);
 float UTIL_GetBestPushableDistance(const edict_t* pPushable);
-Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, edict_t* pPushable);
+Vector UTIL_GetDesiredPushableVector(const Vector& vOrigin, const edict_t* pPushable);
 
 //edict_t* UTIL_TFC_PlayerHasFlag(edict_t* pPlayer);
 
@@ -263,7 +263,7 @@ int		UTIL_GetNumHives();
 int		UTIL_CountBuiltEntities(const char* classname);
 edict_t* UTIL_GetRandomUnbuiltHive();
 edict_t* UTIL_FindRandomUnusedFuncResource(const CBot* pBot);
-edict_t* UTIL_UpdateSounds(entvars_t* pev);
+edict_t* UTIL_UpdateSounds(const entvars_t* pev);
 edict_t* UTIL_FindPlayerByTruncName(const char* name);
 void strlow(char* str);
 void strhigh(char* str);
@@ -460,7 +460,7 @@ public:
 		return nullptr;
 	}
 
-	int GetClientRep(CClient* pClient) const;
+	int GetClientRep(const CClient* pClient) const;
 
 	void IncreaseRep(int iPlayerRepId) const
 	{
@@ -6864,7 +6864,7 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, entvars_t* pDoor, Vect
 // NAVIGATION
 
 void BotTurnAtWall(const CBot* pBot, const TraceResult* tr);
-bool BotCantMoveForward(CBot* pBot, TraceResult* tr);
+bool BotCantMoveForward(const CBot* pBot, TraceResult* tr);
 bool BotCanJumpUp(const CBot* pBot); // BotCanJumpUp : By : Botman
 bool BotCanDuckUnder(const CBot* pBot);
 bool BotCheckWallOnLeft(CBot* pBot);

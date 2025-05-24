@@ -135,24 +135,24 @@ short int AStarNode::getParent() const
 	return m_iParent;
 }
 
-void AStarNode::setParent(const int iWpt)
+void AStarNode::setParent(const short iWpt)
 {
 	m_iParent = iWpt;
 	flags |= FL_ASTAR_PARENT;
 }
 
-bool AStarNode::precedes(AStarNode* b) const
+bool AStarNode::precedes(const AStarNode* b) const
 {
 	// lowest cost first
 	return m_fCost + getHeuristic() < b->m_fCost + b->getHeuristic();
 }
 
-bool AStarNode::operator()(AStarNode* a, AStarNode* b) const
+bool AStarNode::operator()(const AStarNode* a, const AStarNode* b) const
 {
 	return a < b;
 }
 
-bool AStarNode::operator<(AStarNode* b) const
+bool AStarNode::operator<(const AStarNode* b) const
 {
 	return precedes(b);
 }
@@ -713,7 +713,7 @@ void BotTurnAtWall(const CBot* pBot, const TraceResult* tr)
 	pEdict->v.ideal_yaw = Z;
 }
 
-bool BotCantMoveForward(CBot* pBot, TraceResult* tr)
+bool BotCantMoveForward(const CBot* pBot, TraceResult* tr)
 {
 	const edict_t* pEdict = pBot->m_pEdict;
 
