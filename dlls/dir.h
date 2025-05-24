@@ -52,7 +52,7 @@ HANDLE FindDirectory(HANDLE hFile, char* dirname, const char* dirspec);
 
 #else
 
-DIR* FindDirectory(DIR* directory, char* dirname, char* dirspec);
+DIR* FindDirectory(DIR* directory, char* dirname, const char* dirspec);
 
 #endif
 
