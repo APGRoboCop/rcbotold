@@ -58,6 +58,7 @@
 
 #include "bits.h"
 #include "gannconst.h"
+#include "waypoint.h"
 
 CBits::CBits(const unsigned int iNumBits)
 {
@@ -66,6 +67,7 @@ CBits::CBits(const unsigned int iNumBits)
 
 CBits::CBits(const CBits* copyBits)
 {
+	m_cBits = nullptr;
 	copy(copyBits);
 }
 
@@ -76,10 +78,10 @@ void CBits::freeMemory()
 	m_iNumBits = 0;
 }
 
-void CBits::setBit(const int iBit, const bool bSet) const
+void CBits::setBit(const unsigned iBit, const bool bSet) const
 {
-	const int iBitStart = iBit / 8;
-	const int iBitOffset = iBit % 8;
+	const unsigned iBitStart = iBit / 8;
+	const unsigned iBitOffset = iBit % 8;
 
 	unsigned char* c = &m_cBits[iBitStart];
 
@@ -89,10 +91,10 @@ void CBits::setBit(const int iBit, const bool bSet) const
 		*c &= ~(1 << iBitOffset);
 }
 
-bool CBits::getBit(const int iBit) const
+bool CBits::getBit(const unsigned iBit) const
 {
-	const int iBitStart = iBit / 8;
-	const int iBitOffset = iBit % 8;
+	const unsigned iBitStart = iBit / 8;
+	const unsigned iBitOffset = iBit % 8;
 
 	const unsigned char* c = &m_cBits[iBitStart];
 
@@ -101,7 +103,7 @@ bool CBits::getBit(const int iBit) const
 
 void CBits::load(std::FILE* bfp)
 {
-	CGenericHeader header = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
 	if (!CGenericHeader::read(bfp, header))
 	{
@@ -109,15 +111,16 @@ void CBits::load(std::FILE* bfp)
 		return;
 	}
 
+	// Read the number of bits
 	unsigned int iNumBits;
 
 	std::fread(&iNumBits, sizeof(unsigned int), 1, bfp);
-
+	// Update member variables
 	m_iNumBits = iNumBits;
 
 	if (m_cBits != nullptr)
 	{
-		delete m_cBits;
+		delete[] m_cBits; // Use delete[] for arrays
 		m_cBits = nullptr;
 	}
 
@@ -155,6 +158,7 @@ void CBits::save(std::FILE* bfp) const
 {
 	const CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
+	// Write the header
 	checkHeader.write(bfp);
 
 	std::fwrite(&m_iNumBits, sizeof(unsigned int), 1, bfp);

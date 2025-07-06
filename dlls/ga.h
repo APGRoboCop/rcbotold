@@ -81,7 +81,7 @@ public:
 	unsigned int size() const { return m_theIndividuals.size(); }
 
 	// get from population index
-	IIndividual* get(int iIndex) const;
+	IIndividual* get(unsigned iIndex) const;
 
 	// add individual to population
 	void add(IIndividual* individual);

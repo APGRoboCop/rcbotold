@@ -56,7 +56,7 @@ const float CGA::g_fMaxPerturbation = 0.3f;
 // POPULATION
 ////////////////////
 
-IIndividual* CPopulation::get(const int iIndex) const
+IIndividual* CPopulation::get(const unsigned iIndex) const
 {
 	return m_theIndividuals[iIndex];
 }
@@ -174,6 +174,7 @@ ga_value CPopulation::bestFitness() const
 
 ga_value CPopulation::averageFitness() const
 {
+	if (m_theIndividuals.empty()) return 0.0f;
 	return totalFitness() / static_cast<ga_value>(m_theIndividuals.size());
 }
 
@@ -364,7 +365,7 @@ IIndividual* CRouletteSelection::select(CPopulation* population)
 	const ga_value fFitnessSlice = RANDOM_FLOAT(0, population->totalFitness());
 	ga_value fFitnessSoFar = 0.0f;
 
-	for (unsigned int i = 0; i < population->size(); i++)
+	for (unsigned i = 0; i < population->size(); i++)
 	{
 		IIndividual* individual = population->get(i);
 
@@ -391,13 +392,13 @@ std::FILE* RCBOpenFile(const char* file, const char* readtype, const eGASaveType
 	else if (savedtype == SAVETYPE_TEAM)
 		snprintf(tmpfilename, sizeof(tmpfilename), "%dt%s.rce", iId, file); // iId = team id
 	else
-		throw std::invalid_argument("Invalid save type");
+		return nullptr; // Invalid save type
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmpfilename);
 
 	std::FILE* bfp = std::fopen(filename, readtype);
 	if (!bfp)
-		throw std::runtime_error("Failed to open file");
+		return nullptr; // Failed to open file
 
 	return bfp;
 }

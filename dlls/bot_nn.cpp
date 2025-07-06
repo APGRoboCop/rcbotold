@@ -137,7 +137,7 @@ void NN::execute(std::vector<ga_value>* outputs, const std::vector<ga_value>* in
 
 	outputs->clear();
 
-	for (NNLayer* const l : m_Layers)
+	for (const NNLayer* const l : m_Layers)
 	{
 		outputs->clear();
 

@@ -489,8 +489,8 @@ bool CBot::IsInVisibleList(edict_t* pEntity) const
 void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, float* pFloatInfo)
 // a type of event happens on the bot
 {
-	CClient* pClient = nullptr;
-	CClient* pExtClient = nullptr;
+	const CClient* pClient = nullptr;
+	const CClient* pExtClient = nullptr;
 
 	if (pInfo)
 		pClient = gBotGlobals.m_Clients.GetClientByEdict(pInfo);
@@ -1064,66 +1064,67 @@ void CBot::loadLearnedData() const
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmp_filename);
 
-	std::FILE* bfp = std::fopen(filename, "rb");//Possible Memory Leak? [APG]RoboCop[CL]
+	// Use std::unique_ptr with a custom deleter for FILE*
+	auto fileDeleter = [](std::FILE* file) {
+		if (file) {
+			std::fclose(file);
+		}
+	};
 
-	if (bfp == nullptr)
-		return;
+	const std::unique_ptr<std::FILE, decltype(fileDeleter)> bfp(std::fopen(filename, "rb"), fileDeleter);
+	if (!bfp) {
+		return; // File could not be opened
+	}
 
 	CLearnedHeader header = CLearnedHeader(m_Profile.m_iProfileId);
 	const CLearnedHeader checkheader = CLearnedHeader(m_Profile.m_iProfileId);
 
-	std::fread(&header, sizeof(CLearnedHeader), 1, bfp);
+	std::fread(&header, sizeof(CLearnedHeader), 1, bfp.get());
 
-	if (checkheader != header)
-	{
+	if (checkheader != header) {
 		BotMessage(nullptr, 0, "Bots learned data for %s (profile %d) header mismatch", tmp_filename, m_Profile.m_iProfileId);
-		std::fclose(bfp); // Close the file before returning
+
 		return;
 	}
 
-	if (std::feof(bfp))
-	{
-		std::fclose(bfp);
+	if (std::feof(bfp.get())) {
 		return;
 	}
-	// add new to the end plz!!!
+
+	// Load data
 	if (m_GASurvival != nullptr)
-		m_GASurvival->load(bfp, 16);
+		m_GASurvival->load(bfp.get(), 16);
 	if (dec_attackElectrified != nullptr)
-		dec_attackElectrified->load(bfp);
+		dec_attackElectrified->load(bfp.get());
 	if (dec_flapWings != nullptr)
-		dec_flapWings->load(bfp);
+		dec_flapWings->load(bfp.get());
 	if (dec_runForCover != nullptr)
-		dec_runForCover->load(bfp);
+		dec_runForCover->load(bfp.get());
 	if (dec_faceHurtOrigin != nullptr)
-		dec_faceHurtOrigin->load(bfp);
+		dec_faceHurtOrigin->load(bfp.get());
 	if (dec_jump != nullptr)
-		dec_jump->load(bfp);
+		dec_jump->load(bfp.get());
 	if (dec_duck != nullptr)
-		dec_duck->load(bfp);
+		dec_duck->load(bfp.get());
 	if (dec_strafe != nullptr)
-		dec_strafe->load(bfp);
+		dec_strafe->load(bfp.get());
 	if (m_pPersonalGAVals != nullptr)
-		m_pPersonalGAVals->load(bfp, 22);
+		m_pPersonalGAVals->load(bfp.get(), 22);
 	if (m_personalGA != nullptr)
-		m_personalGA->load(bfp, 22);
+		m_personalGA->load(bfp.get(), 22);
 	if (m_pFlyGA != nullptr)
-		m_pFlyGA->load(bfp, 6);
+		m_pFlyGA->load(bfp.get(), 6);
 	if (m_pFlyGAVals != nullptr)
-		m_pFlyGAVals->load(bfp, 6);
+		m_pFlyGAVals->load(bfp.get(), 6);
 	if (dec_followEnemy != nullptr)
-		dec_followEnemy->load(bfp);
+		dec_followEnemy->load(bfp.get());
 	if (m_pTSWeaponSelect != nullptr)
-		m_pTSWeaponSelect->load(bfp, 8/*+MAX_WEAPONS*/);
+		m_pTSWeaponSelect->load(bfp.get(), 8 /*+MAX_WEAPONS*/);
 	if (dec_stunt != nullptr)
-		dec_stunt->load(bfp);
+		dec_stunt->load(bfp.get());
 	if (m_pCombatBits != nullptr)
-		m_pCombatBits->load(bfp, 1);
-
-	//if ( dec_firepercent != NULL )
-	//	dec_firepercent->load(bfp);
-
-	std::fclose(bfp);
+		m_pCombatBits->load(bfp.get(), 1);
+	// No need to explicitly call std::fclose; std::unique_ptr will handle it
 }
 
 void CBot::saveLearnedData() const
@@ -1135,52 +1136,59 @@ void CBot::saveLearnedData() const
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmp_filename);
 
-	std::FILE* bfp = std::fopen(filename, "wb");
+	// Use std::unique_ptr with a custom deleter for FILE*
+	auto fileDeleter = [](std::FILE* file) {
+		if (file) {
+			std::fclose(file);
+		}
 
-	if (bfp == nullptr)
-		return;
+	};
+
+	const std::unique_ptr<std::FILE, decltype(fileDeleter)> bfp(std::fopen(filename, "wb"), fileDeleter);
+	if (!bfp) {
+		return; // File could not be opened
+	}
 
 	const CLearnedHeader header = CLearnedHeader(m_Profile.m_iProfileId);
 
-	std::fwrite(&header, sizeof(CLearnedHeader), 1, bfp);
+	std::fwrite(&header, sizeof(CLearnedHeader), 1, bfp.get());
 
 	// MUST BE IN SAME ORDER AS LOADING!
 	if (m_GASurvival != nullptr)
-		m_GASurvival->save(bfp);
+		m_GASurvival->save(bfp.get());
 	if (dec_attackElectrified != nullptr)
-		dec_attackElectrified->save(bfp);
+		dec_attackElectrified->save(bfp.get());
 	if (dec_flapWings != nullptr)
-		dec_flapWings->save(bfp);
+		dec_flapWings->save(bfp.get());
 	if (dec_runForCover != nullptr)
-		dec_runForCover->save(bfp);
+		dec_runForCover->save(bfp.get());
 	if (dec_faceHurtOrigin != nullptr)
-		dec_faceHurtOrigin->save(bfp);
+		dec_faceHurtOrigin->save(bfp.get());
 	if (dec_jump != nullptr)
-		dec_jump->save(bfp);
+		dec_jump->save(bfp.get());
 	if (dec_duck != nullptr)
-		dec_duck->save(bfp);
+		dec_duck->save(bfp.get());
 	if (dec_strafe != nullptr)
-		dec_strafe->save(bfp);
+		dec_strafe->save(bfp.get());
 	if (m_pPersonalGAVals != nullptr)
-		m_pPersonalGAVals->save(bfp);
+		m_pPersonalGAVals->save(bfp.get());
 	if (m_personalGA != nullptr)
-		m_personalGA->save(bfp);
+		m_personalGA->save(bfp.get());
 	if (m_pFlyGA != nullptr)
-		m_pFlyGA->save(bfp);
+		m_pFlyGA->save(bfp.get());
 	if (m_pFlyGAVals != nullptr)
-		m_pFlyGAVals->save(bfp);
+		m_pFlyGAVals->save(bfp.get());
 	if (dec_followEnemy != nullptr)
-		dec_followEnemy->save(bfp);
+		dec_followEnemy->save(bfp.get());
 	if (m_pTSWeaponSelect != nullptr)
-		m_pTSWeaponSelect->save(bfp);
+		m_pTSWeaponSelect->save(bfp.get());
 	if (dec_stunt != nullptr)
-		dec_stunt->save(bfp);
+		dec_stunt->save(bfp.get());
 	if (m_pCombatBits != nullptr)
-		m_pCombatBits->save(bfp);
+		m_pCombatBits->save(bfp.get());
 	//	if ( dec_firepercent != NULL )
-		//	dec_firepercent->save(bfp);
-
-	std::fclose(bfp);
+	//		dec_firepercent->save(bfp.get());
+	// No need to explicitly call std::fclose; std::unique_ptr will handle it
 }
 
 void CBot::FreeLocalMemory()
@@ -2005,7 +2013,7 @@ short CBot::SpeciesOnTeam(int species) const //TODO: Experimental [APG]RoboCop[C
 void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, const bool bSayNow)
 // pChatEdict will be NULL if not directly talking to someone
 {
-	CClient* pClient = nullptr;
+	const CClient* pClient = nullptr;
 	int iTeamOnly = 0;
 
 	if (!FBitSet(gBotGlobals.m_iConfigSettings, BOT_CONFIG_CHATTING))
@@ -6764,7 +6772,7 @@ bool CBot::CanAvoid(edict_t* pEntity, const float fDistanceToEntity, const float
 			}
 		}
 
-		Vector vEntOrigin = EntityOrigin(pEntity);
+		const Vector vEntOrigin = EntityOrigin(pEntity);
 		// only if in front of me
 		return DotProductFromOrigin(&vEntOrigin) > 0.9f;
 	}
@@ -8643,7 +8651,7 @@ bool CBot::CanPickup(const edict_t* pPickup) const
 
 bool CBot::Touch(edict_t* pentTouched)
 {
-	entvars_t* pentTouchedpev = &pentTouched->v;
+	const entvars_t* pentTouchedpev = &pentTouched->v;
 
 	char* szClassname = const_cast<char*>(STRING(pentTouched->v.classname));
 
@@ -9946,7 +9954,14 @@ void BotPrintTalkMessageOne(edict_t* pClient, const char* fmt, ...)
 
 void BotFile_Write(const char* string)
 {
-	std::FILE* fp = std::fopen(BOT_CRASHLOG_FILE, "a");
+	// Use std::unique_ptr with a custom deleter for FILE*
+	auto fileDeleter = [](std::FILE* file) {
+		if (file) {
+			std::fclose(file);
+		}
+	};
+
+	const std::unique_ptr<std::FILE, decltype(fileDeleter)> fp(std::fopen(BOT_CRASHLOG_FILE, "a"), fileDeleter);
 
 	if (fp)
 	{
@@ -9954,12 +9969,10 @@ void BotFile_Write(const char* string)
 		const time_t ltime = std::time(nullptr);
 		const tm* today = std::localtime(&ltime);
 
-		std::strftime(time_str, sizeof time_str, "%m/%d/%Y %H:%M:%S", today);
-
-		std::fprintf(fp, "%s => ", time_str);
-		std::fprintf(fp, "%s\n", string);
-
-		std::fclose(fp);
+		std::strftime(time_str, sizeof(time_str), "%m/%d/%Y %H:%M:%S", today);
+		std::fprintf(fp.get(), "%s => ", time_str);
+		std::fprintf(fp.get(), "%s\n", string);
+		// No need to explicitly call std::fclose; std::unique_ptr will handle it
 	}
 }
 
@@ -10446,7 +10459,7 @@ void CBot::AddVisitedResourceTower(edict_t* pEdict)
 	{
 		// Handle the case where the array is full (optional logic)
 		// Example: Replace a random entry (if needed)
-		int randomIndex = RANDOM_LONG(0, MAX_REMEMBER_POSITIONS - 1);
+		const int randomIndex = RANDOM_LONG(0, MAX_REMEMBER_POSITIONS - 1);
 		m_pVisitedFuncResources[randomIndex] = pEdict;
 	}
 }

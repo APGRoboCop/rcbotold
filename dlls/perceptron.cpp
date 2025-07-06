@@ -67,8 +67,9 @@ CPerceptron::CPerceptron(const int iInputs, ITransfer* transferFunction, const f
 
 void CPerceptron::setWeights(const CBotGAValues* vals, const int iFrom, const int iNum)
 {
-    const float bias = m_weights[0];
-    m_weights.assign(1, bias);
+    m_weights.clear();
+    m_weights.reserve(iNum + 1);
+    m_weights.emplace_back(m_Bias); // or vals->get(0) if bias is stored in vals
 
     for (int i = iFrom; i < iFrom + iNum; i++)
     {
@@ -79,15 +80,16 @@ void CPerceptron::setWeights(const CBotGAValues* vals, const int iFrom, const in
 void CPerceptron::setWeights(const std::vector<ga_value>& weights, const int iFrom, const int iNum)
 {
     if (iFrom < 0 || iNum < 0 || iFrom + iNum > static_cast<int>(weights.size())) {
-        throw std::out_of_range("Invalid range for setWeights");
+        BotMessage(nullptr, 0, "Invalid range for setWeights");
     }
     m_weights.assign(weights.begin() + iFrom, weights.begin() + iFrom + iNum);
 }
 
 void CPerceptron::randomize()
 {
-    for (float& m_weight : m_weights)
-        m_weight = RANDOM_FLOAT(0, 0.6f) - 0.3f;
+    std::generate(m_weights.begin(), m_weights.end(), []() {
+        return RANDOM_FLOAT(0, 0.6f) - 0.3f;
+        });
 }
 
 void CPerceptron::setWeights(const std::vector<ga_value>& weights)
@@ -102,6 +104,10 @@ void CPerceptron::input(const std::vector<ga_value>& inputs)
 
 ga_value CPerceptron::execute()
 {
+    if (m_weights.size() != m_inputs.size() + 1) {
+        BotMessage(nullptr, 0, "Weights and inputs size mismatch");
+    }
+
 	// bias weight
     ga_value fNetInput = m_weights[0];
 
@@ -127,6 +133,11 @@ ga_value CPerceptron::getOutput() const
 
 void CPerceptron::train(const ga_value expectedOutput)
 {
+    if (m_inputs.size() != static_cast<size_t>(m_iInputs))
+        BotMessage(nullptr, 0, "Cannot train: input size mismatch");
+    if (m_weights.size() != m_inputs.size() + 1)
+        BotMessage(nullptr, 0, "Cannot train: weights size mismatch");
+
     m_bTrained = true;
 
     // Update bias weight
@@ -142,7 +153,7 @@ void CPerceptron::train(const ga_value expectedOutput)
 void CPerceptron::save(std::FILE* bfp) const
 {
     if (!bfp)
-        throw std::runtime_error("File pointer is null");
+        BotMessage(nullptr, 0, "File pointer is null");
 
     const CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
 
@@ -152,9 +163,9 @@ void CPerceptron::save(std::FILE* bfp) const
     // Helper lambda for fwrite with error checking
     auto safe_write = [](const void* data, const size_t size, const size_t count, std::FILE* file) {
         if (std::fwrite(data, size, count, file) != count) {
-            throw std::runtime_error("Error writing to file");
+            BotMessage(nullptr, 0, "Error writing to file");
         }
-        };
+    };
 
     // Write perceptron data
     safe_write(&m_iInputs, sizeof(decltype(m_iInputs)), 1, bfp);
@@ -185,7 +196,7 @@ void CPerceptron::load(std::FILE* bfp)
     if (!bfp || std::feof(bfp))
         return;
 
-    CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
+    const CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
 
     if (!CGenericHeader::read(bfp, header))
     {
@@ -265,7 +276,7 @@ void CPerceptron::load(const char* filename, const int iProfileId)
     }
     else
     {
-        throw std::runtime_error("Failed to open file for reading");
+        BotMessage(nullptr, 0, "Failed to open file for reading");
     }
 }
 
@@ -278,6 +289,6 @@ void CPerceptron::save(const char* filename, const int iProfileId) const
     }
     else
     {
-        throw std::runtime_error("Failed to open file for writing");
+        BotMessage(nullptr, 0, "Failed to open file for writing");
     }
 }

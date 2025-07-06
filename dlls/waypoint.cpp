@@ -842,16 +842,22 @@ static std::FILE* fp;
 
 void WaypointDebug()
 {
-	//int y = 1, x = 1;
+	// Define a custom deleter for FILE*
+	auto fileDeleter = [](FILE* fp) {
+		if (fp) {
+			std::fclose(fp);
+		}
+	};
 
-	fp = std::fopen("bot.txt", "a");
-	std::fprintf(fp, "WaypointDebug: LINKED LIST ERROR!!!\n");
-	std::fclose(fp);
+	// Use std::unique_ptr with the custom deleter
+	const std::unique_ptr<FILE, decltype(fileDeleter)> fp(std::fopen("bot.txt", "a"), fileDeleter);
+	if (!fp) {
+		// Handle file opening error
+		std::fprintf(stderr, "Failed to open file: bot.txt\n");
+		return;
+	}
 
-	//x = x - 1;  // x is zero
-	//y = y / x;  // cause an divide by zero exception
-
-	//return;
+	std::fprintf(fp.get(), "WaypointDebug: LINKED LIST ERROR!!!\n");
 }
 
 // free the linked list of waypoint path nodes...

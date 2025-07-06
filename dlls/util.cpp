@@ -322,7 +322,7 @@ int NS_GetPlayerLevel(int exp)
 	return 1;
 }
 
-int RoundToNearestInteger(float fVal)
+/*int RoundToNearestInteger(float fVal)
 {
 	const int loVal = static_cast<int>(fVal);
 
@@ -344,6 +344,18 @@ int Ceiling(float fVal)
 		return loVal;
 
 	return loVal + 1;
+}*/
+
+int RoundToNearestInteger(const float fVal)
+{
+	const int loVal = static_cast<int>(fVal);
+	return (fVal - loVal >= 0.5f) ? loVal + 1 : loVal;
+}
+
+int Ceiling(const float fVal)
+{
+	const int loVal = static_cast<int>(fVal);
+	return (fVal == static_cast<float>(loVal)) ? loVal : loVal + 1;
 }
 
 Vector UTIL_VecToAngles(const Vector& vec)
@@ -369,7 +381,7 @@ void UTIL_MakeVectors(const Vector& vecAngles)
 	MAKE_VECTORS(vecAngles);
 }
 
-void strlow(char* str)
+/*void strlow(char* str)
 // lower a string to make it lower case.
 {
 	const size_t len = std::strlen(str);
@@ -389,6 +401,16 @@ void strhigh(char* str)
 	{
 		str[i] = static_cast<char>(std::toupper(static_cast<unsigned char>(str[i])));
 	}
+}*/
+
+void strlow(char* str)
+{
+	std::transform(str, str + std::strlen(str), str, [](const unsigned char c) { return std::tolower(c); });
+}
+
+void strhigh(char* str)
+{
+	std::transform(str, str + std::strlen(str), str, [](const unsigned char c) { return std::toupper(c); });
 }
 
 edict_t* UTIL_FindPlayerByTruncName(const char* name)
@@ -397,27 +419,28 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 {
 	// Calculate the length of the name once, before the loop
 	const size_t length = std::strlen(name);
+
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
 		edict_t* pent = INDEXENT(i);
 
-		if (pent != nullptr)
+		if (pent && !pent->free)
 		{
-			if (!pent->free)
+			std::array<char, 80> arg_lwr;
+			std::array<char, 80> pent_lwr;
+
+			std::strncpy(arg_lwr.data(), name, arg_lwr.size() - 1);
+			arg_lwr[arg_lwr.size() - 1] = '\0';
+
+			std::strncpy(pent_lwr.data(), STRING(pent->v.netname), pent_lwr.size() - 1);
+			pent_lwr[pent_lwr.size() - 1] = '\0';
+
+			strlow(arg_lwr.data());
+			strlow(pent_lwr.data());
+
+			if (std::strncmp(arg_lwr.data(), pent_lwr.data(), length) == 0)
 			{
-				char arg_lwr[80];
-				char pent_lwr[80];
-
-				std::strcpy(arg_lwr, name);
-				std::strcpy(pent_lwr, STRING(pent->v.netname));
-
-				strlow(arg_lwr);
-				strlow(pent_lwr);
-
-				if (std::strncmp(arg_lwr, pent_lwr, length) == 0)
-				{
-					return pent;
-				}
+				return pent;
 			}
 		}
 	}
@@ -428,12 +451,9 @@ edict_t* UTIL_FindPlayerByTruncName(const char* name)
 edict_t* UTIL_FindEntityInSphere(edict_t* pentStart, const Vector& vecCenter, const float flRadius)
 {
 	edict_t* pentEntity = FIND_ENTITY_IN_SPHERE(pentStart, vecCenter, flRadius);
-
-	if (!FNullEnt(pentEntity))
-		return pentEntity;
-
-	return nullptr;
+	return FNullEnt(pentEntity) ? nullptr : pentEntity;
 }
+
 /*
 int LookupActivity( void *pmodel, entvars_t *pev, int activity )
 {
@@ -2480,7 +2500,7 @@ Vector UTIL_FurthestVectorAroundYaw(CBot* pBot)
 
 		UTIL_MakeVectors(vAngles);
 
-		Vector vEnd = vStart + gpGlobals->v_forward * 4096;
+		Vector vEnd = vStart + gpGlobals->v_forward * 4096.0f;
 
 		UTIL_TraceLine(vStart, vEnd, ignore_monsters, ignore_glass, pBot->m_pEdict, &tr);
 

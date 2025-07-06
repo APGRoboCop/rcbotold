@@ -390,8 +390,8 @@ enum class WizWeapon : std::uint8_t
 	COMBOSPELL,
 };
 
-void GetNoWeaponArray(int* Array);
-void GetArrayOfExplosives(int* Array);
+void GetNoWeaponArray(short int* Array);
+void GetArrayOfExplosives(short int* Array);
 
 class CBot;
 /////////////////////////////////
@@ -778,7 +778,7 @@ public:
 		return false;
 	}
 
-	int PrimaryInRange(float fRange) const
+	int PrimaryInRange(const float fRange) const
 	{
 		if (m_pWeaponInfo->PrimaryInRange(fRange))
 			return 0;
@@ -799,7 +799,7 @@ public:
 		return 0;
 	}
 
-	bool SecondaryInRange(float fRange) const
+	bool SecondaryInRange(const float fRange) const
 	{
 		if (m_pWeaponInfo)
 			return m_pWeaponInfo->SecondaryInRange(fRange);
@@ -824,14 +824,14 @@ public:
 
 	bool IsPrimary() const
 	{
-		assert(m_pWeaponInfo != NULL);
+		assert(m_pWeaponInfo != nullptr);
 
 		return m_pWeaponInfo->IsPrimary();
 	}
 
 	bool IsSecondary() const
 	{
-		assert(m_pWeaponInfo != NULL);
+		assert(m_pWeaponInfo != nullptr);
 
 		return m_pWeaponInfo->IsSecondary();
 	}

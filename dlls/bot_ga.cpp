@@ -95,11 +95,13 @@ void CBotGAValues::mutate()
 
 float CBotGAValues::get(const unsigned int iIndex) const
 {
+	assert(iIndex < m_theValues.size());
 	return m_theValues[iIndex];
 }
 
 void CBotGAValues::set(const unsigned int iIndex, const ga_value fVal)
 {
+	assert(iIndex < m_theValues.size());
 	m_theValues[iIndex] = fVal;
 }
 
@@ -187,7 +189,7 @@ void CBotGAValues::load(std::FILE* bfp, const int req_size)
 	if (std::feof(bfp))
 		return;
 
-	CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, req_size);
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, req_size);
 
 	if (!CGenericHeader::read(bfp, header))
 	{
@@ -253,8 +255,7 @@ void CBitsGAValues::save(std::FILE* bfp)
 
 CBitsGAValues::CBitsGAValues(CBits* bits)
 {
-	//m_theBits = nullptr; //TODO: Not required? [APG]RoboCop[CL]
-	//delete m_theBits;
+	delete m_theBits;
 	m_theBits = bits;
 }
 

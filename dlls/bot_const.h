@@ -1160,10 +1160,10 @@ typedef enum : std::uint8_t
 ////////////////////////////////
 // AUTHOR SHIP & PLUGIN INFO
 
-#define BOT_NAME "RCBot"
-#define BOT_WEBSITE "http://rcbot.bots-united.com"
-#define BOT_DBG_MSG_TAG "[RCBOT] "
-#define BOT_DEBUG_TAG "[DEBUG]"
+constexpr const char* BOT_NAME = "RCBot";
+constexpr const char* BOT_WEBSITE = "http://rcbot.bots-united.com";
+constexpr const char* BOT_DBG_MSG_TAG = "[RCBOT] ";
+constexpr const char* BOT_DEBUG_TAG = "[DEBUG]";
 
 ///
 // combat stuff in NS, what bots want to get
@@ -1233,17 +1233,17 @@ enum : std::uint8_t
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b11_mm_debug"
+constexpr const char* BOT_VER = "1.51b11_mm_debug";
 #else
-#define BOT_VER "1.51b11_mm"
+constexpr const char* BOT_VER = "1.51b11_mm";
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b11_debug"
+constexpr const char* BOT_VER = "1.51b11_debug";
 #else
-#define BOT_VER "1.51b11"
+constexpr const char* BOT_VER = "1.51b11";
 #endif
 
 #endif
@@ -1257,17 +1257,17 @@ enum : std::uint8_t
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b11_mm_debug"
+constexpr const char* BOT_VER = "1.51b11_mm_debug";
 #else
-#define BOT_VER "1.51b11_mm"
+constexpr const char* BOT_VER = "1.51b11_mm";
 #endif
 
 #else
 
 #ifdef _DEBUG
-#define BOT_VER "1.51b11_debug"
+constexpr const char* BOT_VER = "1.51b11_debug";
 #else
-#define BOT_VER "1.51b11"
+constexpr const char* BOT_VER = "1.51b11";
 #endif
 
 #endif
@@ -1284,12 +1284,12 @@ enum : std::uint8_t
 constexpr int MAX_PLAYERS = 32;
 constexpr int RCBOT_ACCESS_FORCE_GRIP = 9;
 
-#define BOT_CRASHLOG_FILE "rcbot_crashlog.txt"
-#define BOT_PROFILES_FILE "bot_profiles.ini"
-#define BOT_WEAPON_PRESETS_FILE "bot_weapons.ini"
-#define BOT_PLAYER_ID_FILE "bot_playerids.ini"
+constexpr const char* BOT_CRASHLOG_FILE = "rcbot_crashlog.txt";
+constexpr const char* BOT_PROFILES_FILE = "bot_profiles.ini";
+constexpr const char* BOT_WEAPON_PRESETS_FILE = "bot_weapons.ini";
+constexpr const char* BOT_PLAYER_ID_FILE = "bot_playerids.ini";
 
-#define BOT_PLAYER_ID_FILE_HEADER "# Automatically generated, do not edit.\n# however this file is safe to delete\n# but will be re-generated.\n"
+constexpr const char* BOT_PLAYER_ID_FILE_HEADER = "# Automatically generated, do not edit.\n# however this file is safe to delete\n# but will be re-generated.\n";
 
 ////////////////////////////////////////////
 // BOT CONFIGURATION

@@ -5083,7 +5083,7 @@ public:
 		return strcmpi(szFolder, m_szModFolder) == 0;
 	}
 
-	int GetModId() const
+	short GetModId() const
 	{
 		return m_iModId;
 	}
@@ -6711,7 +6711,7 @@ public:
 
 	TraceResult m_tr;
 
-	int m_iCurrentMod;
+	short m_iCurrentMod;
 
 	CGA m_TSWeaponChoices;
 	CGA m_pCombatGA[2];

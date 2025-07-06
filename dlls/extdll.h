@@ -23,11 +23,17 @@
 // Global header file for extension DLLs
 //
 
+#include <array>
+#include <cassert>
+
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
 #include <cstdarg>
+#include <cctype>
+
+#include <memory>
 #include <string>
 
 // Allow "DEBUG" in addition to default "_DEBUG"

@@ -1058,7 +1058,7 @@ public:
 	{
 		if (iIndex >= Size() || iIndex < 0)
 		{
-			throw std::out_of_range("[RCBOT] dataUnconstarray[] Array exception: index out of bounds");
+			BotMessage(nullptr, 0, "[RCBOT] dataUnconstarray[] Array exception: index out of bounds");
 		}
 		return (buffer[iIndex]);
 	}

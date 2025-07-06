@@ -31,7 +31,8 @@ V 1.51-beta11
 * added: Linux bot slow-motion fix by w00tguy
 * added: Team DeathMatch mode supported for HLDM, Op4DM, DMC and TS
 * added: Weapon Switch tactic added for when their clips are empty
-* added: Smart pointers and modern C++ features to reduce potential memory leaks
+* added: Smart pointers, RAII and modern C++ features to reduce potential memory leaks and bug prone crashes
+* added: Assertions for debugging purposes and sanity checks
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
@@ -46,6 +47,7 @@ V 1.51-beta11
 * changed: Added returns for NS CAlienAction 
 * changed: NS Squad Menu repaired and should hopefully work
 * changed: Now using smart pointers for ClientCommand() to resolve memory leaks
+* changed: Modernised the weapon array code using C++ Array
 
 * TODO: To add support for Half-Life 25th Anniversary builds as it doesn't support Waypoints being displayed
 * TODO: To allow Skulk and Lerk Aliens to bite and attack properly

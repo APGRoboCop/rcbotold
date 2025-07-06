@@ -397,11 +397,11 @@ class CWhichbotConvert : public CWaypointConversion
 public:
 	CWhichbotConvert()
 	{
-		char str1[] = "Whichbot";
+		constexpr char str1[] = "Whichbot";
 		setName(str1);
-		char str2[] = "wpt";
+		constexpr char str2[] = "wpt";
 		setExtension(str2);
-		char str3[] = "HPB_bot";
+		constexpr char str3[] = "HPB_bot";
 		setHeader(str3);
 
 		setVersion(4);

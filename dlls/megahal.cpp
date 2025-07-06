@@ -412,7 +412,7 @@ void BotHALGenerateReply(CBot* pBot, char* output)
 	output_template[0] = 0; // first reset the reply string
 
 	HAL_DICTIONARY* keywords = BotHALMakeKeywords(pBot, pBot->m_Profile.m_HAL->input_words);
-	HAL_DICTIONARY* replywords = BotHALBuildReplyDictionary(pBot, keywords);
+	const HAL_DICTIONARY* replywords = BotHALBuildReplyDictionary(pBot, keywords);
 
 	const int last_entry = pBot->m_Profile.m_HAL->input_words->size - 1;
 	const int last_character = pBot->m_Profile.m_HAL->input_words->entry[last_entry].length - 1;
@@ -1677,8 +1677,8 @@ HAL_SWAP* HAL_InitializeSwap(const char* filename)
 		if (buffer[0] == '#' || buffer[0] == '\n')
 			continue;
 
-		char* from = std::strtok(buffer, "\t");
-		char* to = std::strtok(nullptr, "\t\n#");
+		const char* from = std::strtok(buffer, "\t");
+		const char* to = std::strtok(nullptr, "\t\n#");
 
 		HAL_AddSwap(list, from, to);
 	}

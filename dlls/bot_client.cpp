@@ -2249,7 +2249,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 
 				for (int i = 1; i <= gpGlobals->maxClients; i++)
 				{
-					edict_t* pPlayer = INDEXENT(i);
+					const edict_t* pPlayer = INDEXENT(i);
 
 					if (!pPlayer || FNullEnt(pPlayer))
 						continue;
