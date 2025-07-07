@@ -421,7 +421,7 @@ typedef struct
 	//TODO: Maybe add ammo count and to hold fire button? [APG]RoboCop[CL]
 	bool m_bIsMelee;
 
-	short int m_iModId;
+	int m_iModId;
 	int m_iPriority;
 }weapon_preset_t;
 
@@ -430,7 +430,7 @@ class CWeaponPresets
 public:
 	void ReadPresets();
 
-	weapon_preset_t* GetPreset(short int iModId, int iWeaponId) const
+	weapon_preset_t* GetPreset(const short iModId, const int iWeaponId) const
 	{
 		dataStack<weapon_preset_t> tempStack = m_Presets;
 
@@ -635,9 +635,19 @@ public:
 		m_iPriority = pPreset->m_iPriority;
 	}
 
-	void Init() override//replaced memset with std::fill_n [APG]RoboCop[CL]
+	void Init() override
 	{
-		std::fill_n(reinterpret_cast<char*>(this), sizeof(CWeaponPreset), 0);
+		CWeapon::Init(); // Call base class init
+
+		m_bCanFireUnderWater = false;
+		m_bHasPrimaryFire = false;
+		m_bHasSecondaryFire = false;
+		m_fPrimMinRange = 0.0f;
+		m_fPrimMaxRange = 0.0f;
+		m_fSecMinRange = 0.0f;
+		m_fSecMaxRange = 0.0f;
+		m_bIsMelee = false;
+		m_iPriority = 0;
 	}
 
 	bool CanBeUsedUnderWater() override
@@ -660,7 +670,7 @@ public:
 		return m_iPriority;
 	}
 
-	bool PrimaryInRange(float fRange) override
+	bool PrimaryInRange(const float fRange) override
 	{
 		return fRange >= m_fPrimMinRange &&
 			fRange <= m_fPrimMaxRange;
@@ -676,7 +686,7 @@ public:
 		return m_fPrimMaxRange;
 	}
 
-	bool SecondaryInRange(float fRange) override
+	bool SecondaryInRange(const float fRange) override
 	{
 		return fRange >= m_fSecMinRange &&
 			fRange <= m_fSecMaxRange;
@@ -697,17 +707,7 @@ public:
 		this->Init();
 	}
 
-	~CWeapons()
-	{
-		for (CWeapon*& m_Weapon : m_Weapons)
-		{
-			if (m_Weapon != nullptr)
-			{
-				delete m_Weapon;
-				m_Weapon = nullptr;
-			}
-		}
-	}
+	~CWeapons() = default;
 
 	void AddWeapon(int iId, const char* szClassname, int iPrimAmmoMax, int iSecAmmoMax, int iHudSlot, int iHudPosition, int iFlags, int iAmmoIndex1, int iAmmoIndex2);
 
@@ -720,7 +720,7 @@ public:
 		//std::memset(m_Weapons,0,sizeof(CWeapon)*MAX_WEAPONS);
 	}
 
-	CWeapon* GetWeapon(int iId) const
+	CWeapon* GetWeapon(const int iId) const
 	{
 		if (iId >= 0 && iId < MAX_WEAPONS)
 		{
@@ -872,7 +872,7 @@ public:
 		m_bHasWeapon = false;
 	}
 
-	void UpdateWeapon(int iClip)
+	void UpdateWeapon(const int iClip)
 	{
 		m_iClip = iClip;
 	}
@@ -920,7 +920,7 @@ public:
 			m_iAmmo2 = pAmmo2;
 	}
 
-	void setReserve(int iRes)
+	void setReserve(const int iRes)
 	{
 		m_iReserve = iRes;
 	}
@@ -935,7 +935,7 @@ public:
 		return m_iMaxClip;
 	}
 
-	void checkMaxClip(int clip)
+	void checkMaxClip(const int clip)
 	{
 		m_iMaxClip = std::max(clip, m_iMaxClip);
 	}
@@ -965,7 +965,7 @@ public:
 
 	int GetBestWeaponId(CBot* pBot, edict_t* pEnemy);
 
-	void RemoveWeapon(int iId)
+	void RemoveWeapon(const int iId)
 	{
 		m_Weapons[iId].RemoveWeapon();
 	}
@@ -978,19 +978,19 @@ public:
 
 	bool HasWeapon(edict_t* pEdict, const char* szClassname) const;
 
-	bool HasWeapon(edict_t* pEdict, int iId) const
+	bool HasWeapon(edict_t* pEdict, const int iId) const
 	{
 		if (iId > 0 && iId < MAX_WEAPONS)
 			return m_Weapons[iId].HasWeapon(pEdict);
 		return false;
 	}
 
-	void setHasWeapon(int id, bool bVal)
+	void setHasWeapon(const int id, const bool bVal)
 	{
 		for (CBotWeapon& m_Weapon : m_Weapons)
-		{
+	{
 			if (m_Weapon.GetID() == id)
-			{
+		{
 				m_Weapon.setHasWeapon(bVal);
 				return;
 			}
@@ -999,12 +999,12 @@ public:
 
 	void AddWeapon(int iId);
 
-	void UpdateWeapon(int iId, int iClip)
+	void UpdateWeapon(const int iId, const int iClip)
 	{
 		m_Weapons[iId].UpdateWeapon(iClip);
 	}
 
-	CBotWeapon* GetWeapon(int iId)
+	CBotWeapon* GetWeapon(const int iId)
 	{
 		if (iId >= 0 && iId < MAX_WEAPONS)
 			return &m_Weapons[iId];
@@ -1038,7 +1038,7 @@ public:
 		return 0;
 	}
 
-	void UpdateAmmo(int iIndex, int iAmount)
+	void UpdateAmmo(const int iIndex, const int iAmount)
 	{
 		if (iIndex >= 0 && iIndex < MAX_AMMO_SLOTS)
 			m_iAmmo[iIndex] = iAmount;

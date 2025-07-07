@@ -178,7 +178,7 @@ void CBotWeapons::AddWeapon(const int iId)
 }
 
 void CWeapons::AddWeapon(const int iId, const char* szClassname, const int iPrimAmmoMax, const int iSecAmmoMax,
-                         const int iHudSlot, const int iHudPosition, const int iFlags, const int iAmmoIndex1, const int iAmmoIndex2)
+	const int iHudSlot, const int iHudPosition, const int iFlags, const int iAmmoIndex1, const int iAmmoIndex2)
 {
 	if (iId >= 0 && iId < MAX_WEAPONS)
 	{
@@ -195,7 +195,7 @@ void CWeapons::AddWeapon(const int iId, const char* szClassname, const int iPrim
 			}
 
 			m_Weapons[iId]->SetWeapon(iId, szClassname, iPrimAmmoMax, iSecAmmoMax, iHudSlot, iHudPosition, iFlags,
-			                          iAmmoIndex1, iAmmoIndex2);
+				iAmmoIndex1, iAmmoIndex2);
 		}
 	}
 }
@@ -272,7 +272,7 @@ void CWeaponPresets::ReadPresets()
 			std::memset(&sWeaponPreset, 0, sizeof(weapon_preset_t));
 
 			sWeaponPreset.m_iId = iWeaponId;
-			sWeaponPreset.m_iModId = static_cast<short int>(iModId);
+			sWeaponPreset.m_iModId = iModId;
 			continue;
 		}
 		if (std::sscanf(buffer, "underwater=%d", &iValue) == 1) {
@@ -290,7 +290,7 @@ void CWeaponPresets::ReadPresets()
 			continue;
 		}
 		if (std::sscanf(buffer, "primary_min_range=%d", &iValue) == 1) {
-			sWeaponPreset.m_fPrimMaxRange = static_cast<float>(iValue);
+			sWeaponPreset.m_fPrimMinRange = static_cast<float>(iValue);
 			continue;
 		}
 		if (std::sscanf(buffer, "primary_max_range=%d", &iValue) == 1) {
@@ -624,7 +624,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		}
 	}
 
-	for (i = 1; i < 30; i++)
+	for (i = 1; i < MAX_WEAPONS; i++)
 	{
 		pWeapon = &m_Weapons[i];
 
