@@ -199,7 +199,7 @@ extern int mm_GetPlayerUserId(edict_t *e ); //! returns the server assigned user
 extern void mm_BuildSoundMsg(edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float *pOrigin, edict_t *ed);
 extern int mm_IsDedicatedServer();//! is this a dedicated server?
 extern cvar_t *mm_CVarGetPointer(const char *szVarName);
-extern unsigned int mm_GetPlayerWONId(edict_t *e); //! returns the server assigned WONid for this player. useful for logging frags, etc. returns -1 if the edict couldn't be found in the list of clients
+extern unsigned mm_GetPlayerWONId(edict_t *e); //! returns the server assigned WONid for this player. useful for logging frags, etc. returns -1 if the edict couldn't be found in the list of clients
 
 //! YWB 8/1/99 TFF Physics additions
 extern void mm_Info_RemoveKey( char *s, const char *key );
@@ -245,7 +245,7 @@ extern const char *mm_pfnGetPlayerAuthId(edict_t *e);
 extern void * mm_SequenceGet(const char* fileName, const char* entryName);
 extern void * mm_SequencePickSentence(const char* groupName, int pickMethod, int *picked);
 extern int mm_GetFileSize(char *filename);
-extern unsigned int mm_GetApproxWavePlayLen(const char *filepath);
+extern unsigned mm_GetApproxWavePlayLen(const char *filepath);
 extern int mm_IsCareerMatch();
 extern int mm_GetLocalizedStringLength(const char *label);
 extern void mm_RegisterTutorMessageShown(int mid);
@@ -374,7 +374,7 @@ typedef int (*FN_GETPLAYERUSERID) (edict_t *e );
 typedef void (*FN_BUILDSOUNDMSG) (edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float *pOrigin, edict_t *ed);
 typedef int (*FN_ISDEDICATEDSERVER) ();
 typedef cvar_t * (*FN_CVARGETPOINTER) (const char *szVarName);
-typedef unsigned int (*FN_GETPLAYERWONID) (edict_t *e);
+typedef unsigned (*FN_GETPLAYERWONID) (edict_t *e);
 typedef void (*FN_INFO_REMOVEKEY) ( char *s, const char *key );
 typedef const char * (*FN_GETPHYSICSKEYVALUE) ( const edict_t *pClient, const char *key );
 typedef void (*FN_SETPHYSICSKEYVALUE) ( const edict_t *pClient, const char *key, const char *value );
@@ -407,7 +407,7 @@ typedef const char * (*FN_GETPLAYERAUTHID) (edict_t *e);
 typedef void * (*FN_SEQUENCEGET) (const char* fileName, const char* entryName);
 typedef void * (*FN_SEQUENCEPICKSENTENCE) (const char* groupName, int pickMethod, int *picked);
 typedef int (*FN_GETFILESIZE) (char *filename);
-typedef unsigned int (*FN_GETAPPROXWAVEPLAYLEN) (const char *filepath);
+typedef unsigned (*FN_GETAPPROXWAVEPLAYLEN) (const char *filepath);
 typedef int (*FN_ISCAREERMATCH) ();
 typedef int (*FN_GETLOCALIZEDSTRINGLENGTH) (const char *label);
 typedef void (*FN_REGISTERTUTORMESSAGESHOWN) (int mid);

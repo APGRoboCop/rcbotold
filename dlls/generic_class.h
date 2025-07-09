@@ -939,9 +939,9 @@ public:
 		return size;
 	}
 
-	void RemoveByIndex(int index)
+	void RemoveByIndex(const int index)
 	{
-		for (unsigned int i = index; i < size - 1; i++)
+		for (unsigned i = index; i < size - 1; i++)
 			buffer[i] = buffer[i + 1];
 		size--;
 	}
@@ -951,7 +951,7 @@ public:
 		int index = 0;
 		T best = buffer[0];
 
-		for (unsigned int i = 1; i < size; i++)
+		for (unsigned i = 1; i < size; i++)
 		{
 			if (CompareFunction(buffer[i], best))
 			{
@@ -965,7 +965,7 @@ public:
 
 	void Remove(const T& obj)
 	{
-		for (unsigned int i = 0; i < size; i++)
+		for (unsigned i = 0; i < size; i++)
 		{
 			if (buffer[i] == obj)
 			{
@@ -977,7 +977,7 @@ public:
 
 	void RemoveByPointer(T* obj)
 	{
-		for (unsigned int i = 0; i < size; i++)
+		for (unsigned i = 0; i < size; i++)
 		{
 			if (&buffer[i] == obj)
 			{
@@ -1033,7 +1033,7 @@ public:
 
 			if (buffer != nullptr)
 			{
-			for (unsigned int i = 0; i < size - 1; i++)
+			for (unsigned i = 0; i < size - 1; i++)
 			{
 				new_buffer[i] = buffer[i];
 			}
@@ -1063,19 +1063,19 @@ public:
 		return (buffer[iIndex]);
 	}
 
-	unsigned int getExistingIndex(const T& obj)
+	unsigned getExistingIndex(const T& obj)
 	{
-		for (unsigned int i = 0; i < size; i++)
+		for (unsigned i = 0; i < size; i++)
 		{
 			if (buffer[i] == obj)
 				return i;
 		}
-		return std::numeric_limits<unsigned int>::max();
+		return std::numeric_limits<unsigned>::max();
 	}
 
 	T* getExisting(const T& Obj)
 	{
-		for (unsigned int i = 0; i < size; i++)
+		for (unsigned i = 0; i < size; i++)
 		{
 			if (buffer[i] == Obj)
 				return &(buffer[i]);
@@ -1086,7 +1086,7 @@ public:
 
 	bool IsMember(T Obj)
 	{
-		for (unsigned int i = 0; i < size; i++)
+		for (unsigned i = 0; i < size; i++)
 		{
 			if (buffer[i] == Obj)
 				return true;
@@ -1096,8 +1096,8 @@ public:
 	}
 private:
 	T* buffer;
-	unsigned int capacity;
-	unsigned int size;
+	unsigned capacity;
+	unsigned size;
 };
 /*
 #define D_HASH_TABLE_SETS 1

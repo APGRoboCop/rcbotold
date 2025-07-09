@@ -390,8 +390,8 @@ enum class WizWeapon : std::uint8_t
 	COMBOSPELL,
 };
 
-void GetNoWeaponArray(short int* Array);
-void GetArrayOfExplosives(short int* Array);
+void GetNoWeaponArray(short* Array);
+void GetArrayOfExplosives(short* Array);
 
 class CBot;
 /////////////////////////////////
@@ -608,7 +608,7 @@ public:
 
 	bool m_bIsMelee;
 
-	//short int m_iModId;
+	//short m_iModId;
 	int m_iPriority;
 
 	CWeaponPreset()

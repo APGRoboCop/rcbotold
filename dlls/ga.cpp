@@ -103,7 +103,7 @@ ga_value CPopulation::totalFitness() const
 
 void CPopulation::save(std::FILE* bfp) const
 {
-	const unsigned int iSize = m_theIndividuals.size();
+	const unsigned iSize = m_theIndividuals.size();
 
 	const CGenericHeader header = CGenericHeader(LEARNTYPE_POPULATION, m_ga->m_iMaxPopSize);
 
@@ -117,7 +117,7 @@ void CPopulation::save(std::FILE* bfp) const
 
 void CPopulation::load(std::FILE* bfp, const int chromosize, const int type)
 {
-	unsigned int iSize;
+	unsigned iSize;
 
 	if (std::feof(bfp))
 		return;
@@ -136,7 +136,7 @@ void CPopulation::load(std::FILE* bfp, const int chromosize, const int type)
 
 	m_theIndividuals.clear();
 
-	for (unsigned int i = 0; i < iSize; i++)
+	for (unsigned i = 0; i < iSize; i++)
 	{
 		// reliability check
 		if (std::feof(bfp))

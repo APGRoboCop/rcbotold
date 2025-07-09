@@ -137,8 +137,8 @@ inline entvars_t* VARS(edict_t* pent)
 
 inline entvars_t* VARS(EOFFSET eoffset) { return VARS(ENT(eoffset)); }
 inline int	  ENTINDEX(edict_t* pEdict) { return (*g_engfuncs.pfnIndexOfEdict)(pEdict); }
-inline edict_t* INDEXENT(int iEdictNum) { return (*g_engfuncs.pfnPEntityOfEntIndex)(iEdictNum); }
-inline void MESSAGE_BEGIN(int msg_dest, int msg_type, const float* pOrigin, entvars_t* ent) {
+inline edict_t* INDEXENT(const int iEdictNum) { return (*g_engfuncs.pfnPEntityOfEntIndex)(iEdictNum); }
+inline void MESSAGE_BEGIN(const int msg_dest, const int msg_type, const float* pOrigin, entvars_t* ent) {
 	(*g_engfuncs.pfnMessageBegin)(msg_dest, msg_type, pOrigin, ENT(ent));
 }
 
@@ -158,7 +158,7 @@ enum : std::uint8_t
 	iStringNull = 0
 };
 
-inline bool FStringNull(int iString) { return iString == iStringNull; }
+inline bool FStringNull(const int iString) { return iString == iStringNull; }
 
 enum : std::uint8_t
 {
@@ -578,12 +578,12 @@ enum : std::uint8_t
 void EMIT_SOUND_DYN(edict_t* entity, int channel, const char* sample, float volume, float attenuation,
 	int flags, int pitch);
 
-inline void EMIT_SOUND(edict_t* entity, int channel, const char* sample, float volume, float attenuation)
+inline void EMIT_SOUND(edict_t* entity, const int channel, const char* sample, const float volume, const float attenuation)
 {
 	EMIT_SOUND_DYN(entity, channel, sample, volume, attenuation, 0, PITCH_NORM);
 }
 
-inline void STOP_SOUND(edict_t* entity, int channel, const char* sample)
+inline void STOP_SOUND(edict_t* entity, const int channel, const char* sample)
 {
 	EMIT_SOUND_DYN(entity, channel, sample, 0, 0, SND_STOP, PITCH_NORM);
 }
@@ -625,8 +625,8 @@ private:
 void UTIL_SetGroupTrace(int groupmask, int op);
 void UTIL_UnsetGroupTrace();
 
-int UTIL_SharedRandomLong(unsigned int seed, int low, int high);
-float UTIL_SharedRandomFloat(unsigned int seed, float low, float high);
+int UTIL_SharedRandomLong(unsigned seed, int low, int high);
+float UTIL_SharedRandomFloat(unsigned seed, float low, float high);
 
 float UTIL_WeaponTimeBase();
 #endif // __UTIL_H__

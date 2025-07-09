@@ -1347,7 +1347,7 @@ int GetWeaponData(edict_s* player, weapon_data_s* info)
 #endif
 }
 
-void CmdStart(const edict_t* player, const usercmd_s* cmd, unsigned int random_seed)
+void CmdStart(const edict_t* player, const usercmd_s* cmd, unsigned random_seed)
 {
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1540,7 +1540,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 
 	va_list argptr;
 	static char command[256];
-	unsigned int fieldstop, i, stringindex = 0;
+	unsigned fieldstop, i, stringindex = 0;
 
 	if (!pFakeClient)
 	{
@@ -1580,7 +1580,7 @@ void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...)
 		g_argv[i - fieldstart] = 0; // terminate the string
 		stringindex++; // move the overall string index one step further to bypass the semicolon
 
-		unsigned int index = 0;
+		unsigned index = 0;
 		gBotGlobals.m_iFakeArgCount = 0; // let's now parse that command and count the different arguments
 
 		// count the number of arguments
@@ -1740,7 +1740,7 @@ void BotFunc_ReadProfile(std::FILE* fp, bot_profile_t* bpBotProfile)
 {
 	char szBuffer[128];
 
-	unsigned int i;
+	unsigned i;
 
 	char szTemp[64];
 	int j;
@@ -1982,7 +1982,7 @@ void ReadBotUsersConfig()
 			if (length == 0) // nothing on line
 				continue;
 
-			unsigned int i = 0;
+			unsigned i = 0;
 
 			while (i < length && buffer[i] != '"')
 				i++;
@@ -2207,6 +2207,7 @@ edict_t* BotFunc_NS_MarineBuild(const int iUser3, const char* szClassname, Vecto
 /////////////////////////////////////////
 // TODO: Make new BOTCAM.CPP soon!!!
 CBotCam::CBotCam()
+	: tr{}, vBotOrigin {}
 {
 	//tr = nullptr;
 	//vBotOrigin = nullptr;

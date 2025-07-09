@@ -1,22 +1,37 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-#define PLAYER_FATAL_FALL_SPEED		1024// approx 60 feet
-#define PLAYER_MAX_SAFE_FALL_SPEED	580// approx 20 feet
-#define DAMAGE_FOR_FALL_SPEED		(100.0f / ( PLAYER_FATAL_FALL_SPEED - PLAYER_MAX_SAFE_FALL_SPEED )// damage per unit per second.
-#define PLAYER_MIN_BOUNCE_SPEED		200
-#define PLAYER_FALL_PUNCH_THRESHHOLD 350.0f // won't punch player's screen/make scrape noise unless player falling at least this fast.
+#include <cstdint>
+
+#include "basemonster.h"
+#include "bot.h"
+#include "cbase.h"
+#include "cdll_dll.h"
+#include "const.h"
+#include "eiface.h"
+#include "progdefs.h"
+#include "util.h"
+#include "vector.h"
+
+constexpr int PLAYER_FATAL_FALL_SPEED = 1024; // approx 60 feet
+constexpr int PLAYER_MAX_SAFE_FALL_SPEED = 580; // approx 20 feet
+constexpr float DAMAGE_FOR_FALL_SPEED = 100.0f / (PLAYER_FATAL_FALL_SPEED - PLAYER_MAX_SAFE_FALL_SPEED); // damage per unit per second.
+constexpr int PLAYER_MIN_BOUNCE_SPEED = 200;
+constexpr float PLAYER_FALL_PUNCH_THRESHHOLD = 350.0f; // won't punch player's screen/make scrape noise unless player falling at least this fast.
 
 //
 // Player PHYSICS FLAGS bits
 //
-#define		PFLAG_ONLADDER		( 1<<0 )
-#define		PFLAG_ONSWING		( 1<<0 )
-#define		PFLAG_ONTRAIN		( 1<<1 )
-#define		PFLAG_ONBARNACLE	( 1<<2 )
-#define		PFLAG_DUCKING		( 1<<3 )		// In the process of ducking, but totally squatted yet
-#define		PFLAG_USING			( 1<<4 )		// Using a continuous entity
-#define		PFLAG_OBSERVER		( 1<<5 )		// player is locked in stationary cam mode. Spectators can move, observers can't.
+enum PlayerPhysicsFlags : unsigned
+{
+	PFLAG_ONLADDER = (1 << 0),
+	PFLAG_ONSWING = (1 << 0),
+	PFLAG_ONTRAIN = (1 << 1),
+	PFLAG_ONBARNACLE = (1 << 2),
+	PFLAG_DUCKING = (1 << 3),		// In the process of ducking, but totally squatted yet
+	PFLAG_USING = (1 << 4),		// Using a continuous entity
+	PFLAG_OBSERVER = (1 << 5),		// player is locked in stationary cam mode. Spectators can move, observers can't.
+};
 
 //
 // generic player
@@ -24,7 +39,7 @@
 //-----------------------------------------------------
 //This is Half-Life player entity
 //-----------------------------------------------------
-#define CSUITPLAYLIST	4		// max of 4 suit sentences queued up at any time
+constexpr int CSUITPLAYLIST = 4;		// max of 4 suit sentences queued up at any time
 
 constexpr bool SUIT_GROUP = true;
 constexpr bool SUIT_SENTENCE = false;
@@ -42,40 +57,27 @@ constexpr int CSUITNOREPEAT = 32;
 constexpr const char* SOUND_FLASHLIGHT_ON = "items/flashlight1.wav";
 constexpr const char* SOUND_FLASHLIGHT_OFF = "items/flashlight1.wav";
 
-#define TEAM_NAME_LENGTH	16
-#include <basemonster.h>
-#include <const.h>
-#include "cdll_dll.h"
-#include <util.h>
-#include <cbase.h>
-#include "vector.h"
-#include <progdefs.h>
-#include <eiface.h>
-#include "bot.h"
+constexpr int TEAM_NAME_LENGTH = 16;
 
-//#ifndef __linux__
-//#include <minwindef.h>
-//#endif
-
-typedef enum : std::uint8_t
+enum class PlayerAnim : std::uint8_t
 {
-	PLAYER_IDLE,
-	PLAYER_WALK,
-	PLAYER_JUMP,
-	PLAYER_SUPERJUMP,
-	PLAYER_DIE,
-	PLAYER_ATTACK1,
-} PLAYER_ANIM;
+	Idle,
+	Walk,
+	Jump,
+	SuperJump,
+	Die,
+	Attack1,
+};
 
 constexpr int MAX_ID_RANGE = 2048;
 constexpr int SBAR_STRING_SIZE = 128;
 
-enum sbar_data : std::uint8_t
+enum class SbarData : std::uint8_t
 {
-	SBAR_ID_TARGETNAME = 1,
-	SBAR_ID_TARGETHEALTH,
-	SBAR_ID_TARGETARMOR,
-	SBAR_END,
+	TargetName = 1,
+	TargetHealth,
+	TargetArmor,
+	End,
 };
 
 constexpr float CHAT_INTERVAL = 1.0f;
@@ -109,7 +111,7 @@ public:
 	int					m_fKnownItem;		// True when a new item needs to be added
 	int					m_fNewAmmo;			// True when a new item has been added
 
-	unsigned int		m_afPhysicsFlags;	// physics flags - set when 'normal' physics should be revisited or overriden
+	unsigned			m_afPhysicsFlags;	// physics flags - set when 'normal' physics should be revisited or overriden
 	float				m_fNextSuicideTime; // the time after which the player can next use the suicide command
 
 	// these are time-sensitive things that we keep track of
@@ -183,11 +185,11 @@ public:
 	void Pain();
 
 	//	virtual void Think( void );
-	virtual void Jump();
-	virtual void Duck();
-	virtual void PreThink();
-	virtual void PostThink();
-	virtual Vector GetGunPosition();
+	void Jump();
+	void Duck();
+	void PreThink();
+	void PostThink();
+	Vector GetGunPosition();
 	int TakeHealth(float flHealth, int bitsDamageType);
 	void TraceAttack(entvars_t* pevAttacker, float flDamage, Vector vecDir, TraceResult* ptr, int bitsDamageType);
 	int TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType);
@@ -195,25 +197,23 @@ public:
 
 	Vector BodyTarget(const Vector& posSrc)
 	{
-		int pev = 0;
+		//int pev = 0;
 		return Center() + pev->view_ofs * RANDOM_FLOAT(0.5f, 1.1f);
 	} // position to shoot at
 
 	void StartSneaking() { m_tSneaking = gpGlobals->time - 1; }
 	void StopSneaking() { m_tSneaking = gpGlobals->time + 30; }
 	bool IsSneaking() { return m_tSneaking <= gpGlobals->time; }
-
-	static bool IsAlive()
-
+	bool IsAlive()
 	{
-		bool pev = false;
+		//bool pev = false;
 		return pev->deadflag == DEAD_NO && pev->health > 0;
 	}
 
 	bool ShouldFadeOnDeath() override { return false; }
-	static bool IsPlayer() { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
+	bool IsPlayer() { return true; }			// Spectators should return false for this, they aren't "players" as far as game logic is concerned
 
-	static bool IsNetClient() { return true; }		// Bots should return false for this, they can't receive NET messages
+	virtual bool IsNetClient() { return true; }		// Bots should return false for this, they can't receive NET messages
 	// Spectators should return true for this
 	const char* TeamID();
 
@@ -225,7 +225,7 @@ public:
 	bool SwitchWeapon(CBasePlayerItem* pWeapon);
 
 	// JOHN:  sends custom messages if player HUD data has changed  (eg health, ammo)
-	virtual void UpdateClientData();
+	void UpdateClientData();
 
 	static	TYPEDESCRIPTION m_playerSaveData[];
 
@@ -241,12 +241,12 @@ public:
 	void DeathSound();
 
 	int Classify();
-	void SetAnimation(PLAYER_ANIM playerAnim);
+	void SetAnimation(PlayerAnim playerAnim);
 	void SetWeaponAnimType(const char* szExtention);
 	char m_szAnimExtention[32];
 
 	// custom player functions
-	virtual void ImpulseCommands();
+	void ImpulseCommands();
 	void CheatImpulseCommands(int iImpulse);
 
 	void StartDeathCam();
@@ -310,7 +310,7 @@ public:
 	//Player ID
 	void InitStatusBar();
 	void UpdateStatusBar();
-	int m_izSBarState[SBAR_END];
+	int m_izSBarState[static_cast<int>(SbarData::End)];
 	float m_flNextSBarUpdateTime;
 	float m_flStatusBarDisappearDelay;
 	char m_SbarString0[SBAR_STRING_SIZE];
@@ -319,10 +319,10 @@ public:
 	float m_flNextChatTime;
 };
 
-#define AUTOAIM_2DEGREES  0.0348994967025
-#define AUTOAIM_5DEGREES  0.08715574274766
-#define AUTOAIM_8DEGREES  0.1391731009601
-#define AUTOAIM_10DEGREES 0.1736481776669
+constexpr float AUTOAIM_2DEGREES = 0.0348994967025f;
+constexpr float AUTOAIM_5DEGREES = 0.08715574274766f;
+constexpr float AUTOAIM_8DEGREES = 0.1391731009601f;
+constexpr float AUTOAIM_10DEGREES = 0.1736481776669f;
 
 extern int	gmsgHudText;
 extern bool gInitHUD;

@@ -60,20 +60,54 @@
 #include "gannconst.h"
 #include "waypoint.h"
 
-CBits::CBits(const unsigned int iNumBits)
+CBits::CBits(const unsigned iNumBits)
 {
 	setup(iNumBits);
 }
 
-CBits::CBits(const CBits* copyBits)
+CBits::CBits(const CBits& other)
 {
 	m_cBits = nullptr;
-	copy(copyBits);
+	copy(other);
+}
+
+CBits& CBits::operator=(const CBits& other)
+{
+	if (this != &other)
+	{
+		freeMemory();
+		copy(other);
+	}
+	return *this;
+}
+
+CBits::CBits(CBits&& other) noexcept : m_iNumBits(other.m_iNumBits), m_cBits(other.m_cBits)
+{
+	other.m_iNumBits = 0;
+	other.m_cBits = nullptr;
+}
+
+CBits& CBits::operator=(CBits&& other) noexcept
+{
+	if (this != &other)
+	{
+		freeMemory();
+		m_iNumBits = other.m_iNumBits;
+		m_cBits = other.m_cBits;
+		other.m_iNumBits = 0;
+		other.m_cBits = nullptr;
+	}
+	return *this;
+}
+
+CBits::~CBits()
+{
+	freeMemory();
 }
 
 void CBits::freeMemory()
 {
-	delete m_cBits;
+	delete[] m_cBits;
 	m_cBits = nullptr;
 	m_iNumBits = 0;
 }
@@ -112,9 +146,10 @@ void CBits::load(std::FILE* bfp)
 	}
 
 	// Read the number of bits
-	unsigned int iNumBits;
+	unsigned iNumBits;
 
-	std::fread(&iNumBits, sizeof(unsigned int), 1, bfp);
+	std::fread(&iNumBits, sizeof(unsigned), 1, bfp);
+
 	// Update member variables
 	m_iNumBits = iNumBits;
 
@@ -137,11 +172,11 @@ void CBits::randomize() const
 	}
 }
 
-void CBits::setup(const unsigned int iNumBits)
+void CBits::setup(const unsigned iNumBits)
 {
 	m_iNumBits = iNumBits;
 
-	const int iSize = size();
+	const unsigned iSize = size();
 
 	m_cBits = new unsigned char[iSize];
 
@@ -149,9 +184,9 @@ void CBits::setup(const unsigned int iNumBits)
 }
 
 // memory size
-int CBits::size() const
+unsigned CBits::size() const
 {
-	return Ceiling(static_cast<float>(m_iNumBits) / 8);
+	return (m_iNumBits + 7) / 8;
 }
 
 void CBits::save(std::FILE* bfp) const
@@ -161,15 +196,15 @@ void CBits::save(std::FILE* bfp) const
 	// Write the header
 	checkHeader.write(bfp);
 
-	std::fwrite(&m_iNumBits, sizeof(unsigned int), 1, bfp);
+	std::fwrite(&m_iNumBits, sizeof(unsigned), 1, bfp);
 
 	std::fwrite(m_cBits, size(), 1, bfp);
 }
 
-void CBits::copy(const CBits* otherBits)
+void CBits::copy(const CBits& otherBits)
 {
-	m_iNumBits = numBits();
-	std::memcpy(m_cBits, otherBits->getBits(), size());
+	setup(otherBits.numBits());
+	std::memcpy(m_cBits, otherBits.getBits(), size());
 }
 
 void CBits::clear() const

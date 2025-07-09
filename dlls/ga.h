@@ -78,7 +78,7 @@ public:
 
 	void setGA(CGA* ga) { m_ga = ga; }
 	// size of population
-	unsigned int size() const { return m_theIndividuals.size(); }
+	unsigned size() const { return m_theIndividuals.size(); }
 
 	// get from population index
 	IIndividual* get(unsigned iIndex) const;
@@ -152,7 +152,7 @@ public:
 	// make new generation
 	void epoch();
 
-	void setSize(int iSize) { m_iMaxPopSize = iSize; }
+	void setSize(const int iSize) { m_iMaxPopSize = iSize; }
 
 	void addToPopulation(IIndividual* individual);
 
@@ -171,9 +171,9 @@ public:
 	//void loadBotGA ( char *szName, int iProfileId );
 	//void saveBotGA ( char *szName, int iProfileId );
 
-	void setPopType(int t) { m_iPopType = t; }
+	void setPopType(const int t) { m_iPopType = t; }
 
-	unsigned int m_iMaxPopSize;
+	unsigned m_iMaxPopSize;
 	static const int g_iDefaultMaxPopSize;
 	static const float g_fCrossOverRate;
 	static const float g_fMutateRate;
@@ -184,7 +184,7 @@ private:
 	CPopulation m_thePopulation;
 	CPopulation m_theNewPopulation;
 
-	unsigned int m_iNumGenerations;
+	unsigned m_iNumGenerations;
 	float m_fPrevAvgFitness;
 	int m_iPopType;
 

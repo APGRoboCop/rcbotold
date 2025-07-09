@@ -22,8 +22,8 @@
 // MD5 Hash
 typedef struct
 {
-	unsigned int buf[4];
-	unsigned int bits[2];
+	unsigned buf[4];
+	unsigned bits[2];
 	unsigned char in[64];
 } MD5Context_t;
 
@@ -37,13 +37,13 @@ unsigned char COM_BlockSequenceCRCByte(unsigned char* base, int length, int sequ
 
 void MD5Init(MD5Context_t* context);
 void MD5Update(MD5Context_t* context, unsigned char const* buf,
-	unsigned int len);
+	unsigned len);
 void MD5Final(unsigned char digest[16], MD5Context_t* context);
-void Transform(unsigned int buf[4], unsigned int const in[16]);
+void Transform(unsigned buf[4], unsigned const in[16]);
 
-int MD5_Hash_File(unsigned char digest[16], char* pszFileName, int bUsefopen, int bSeed, unsigned int seed[4]);
+int MD5_Hash_File(unsigned char digest[16], char* pszFileName, int bUsefopen, int bSeed, unsigned seed[4]);
 char* MD5_Print(unsigned char hash[16]);
-int MD5_Hash_CachedFile(unsigned char digest[16], unsigned char* pCache, int nFileSize, int bSeed, unsigned int seed[4]);
+int MD5_Hash_CachedFile(unsigned char digest[16], unsigned char* pCache, int nFileSize, int bSeed, unsigned seed[4]);
 
 int CRC_MapFile(CRC32_t* crcvalue, char* pszFileName);
 

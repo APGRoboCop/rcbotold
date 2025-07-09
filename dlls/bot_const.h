@@ -88,7 +88,7 @@ public:
 	void open();
 	float getHeuristic() const;
 
-	short int getParent() const;
+	short getParent() const;
 	void setParent(short iWpt);
 
 	bool operator()(const AStarNode* a, const AStarNode* b) const;
@@ -97,13 +97,13 @@ public:
 
 	bool precedes(const AStarNode* b) const;
 
-	short int m_iWaypoint;
+	short m_iWaypoint;
 
 	float m_fCost;
 private:
 	float m_fHeuristic;
-	short int m_iParent;
-	short int flags;
+	short m_iParent;
+	short flags;
 };
 
 typedef enum : std::uint8_t

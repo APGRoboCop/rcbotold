@@ -43,6 +43,7 @@
 #include "perceptron.h"
 #include "bot_ga.h"
 #include <memory>
+#include <numeric>
 #include <stdexcept>
 
 ga_value CPerceptron::m_fDefaultLearnRate = 0.5f;
@@ -108,13 +109,10 @@ ga_value CPerceptron::execute()
         BotMessage(nullptr, 0, "Weights and inputs size mismatch");
     }
 
-	// bias weight
+    // bias weight
     ga_value fNetInput = m_weights[0];
 
-    for (size_t i = 0; i < m_inputs.size(); i++)
-    {
-        fNetInput += m_weights[i + 1] * m_inputs[i];
-    }
+    fNetInput += std::inner_product(m_inputs.begin(), m_inputs.end(), m_weights.begin() + 1, 0.0f);
 
     m_output = m_transferFunction->transfer(fNetInput);
 
@@ -140,13 +138,15 @@ void CPerceptron::train(const ga_value expectedOutput)
 
     m_bTrained = true;
 
+    const ga_value error = expectedOutput - m_output;
+
     // Update bias weight
-    m_weights[0] += m_LearnRate * (expectedOutput - m_output) * m_Bias;
+    m_weights[0] += m_LearnRate * error * m_Bias;
 
     // Update weights for inputs
     for (size_t i = 1; i < m_weights.size(); i++)
     {
-        m_weights[i] += m_LearnRate * (expectedOutput - m_output) * m_inputs[i - 1];
+        m_weights[i] += m_LearnRate * error * m_inputs[i - 1];
     }
 }
 
@@ -173,18 +173,14 @@ void CPerceptron::save(std::FILE* bfp) const
     safe_write(&m_LearnRate, sizeof(decltype(m_LearnRate)), 1, bfp);
 
     // Write inputs
-    unsigned int inputCount = m_inputs.size();
-    safe_write(&inputCount, sizeof(decltype(inputCount)), 1, bfp);
-    for (const ga_value& input : m_inputs) {
-        safe_write(&input, sizeof(decltype(input)), 1, bfp);
-    }
+    const unsigned inputCount = m_inputs.size();
+    safe_write(&inputCount, sizeof(unsigned), 1, bfp);
+    safe_write(m_inputs.data(), sizeof(ga_value), inputCount, bfp);
 
     // Write weights
-    unsigned int weightCount = m_weights.size();
-    safe_write(&weightCount, sizeof(decltype(weightCount)), 1, bfp);
-    for (const ga_value& weight : m_weights) {
-        safe_write(&weight, sizeof(decltype(weight)), 1, bfp);
-    }
+    const unsigned weightCount = m_weights.size();
+    safe_write(&weightCount, sizeof(unsigned), 1, bfp);
+    safe_write(m_weights.data(), sizeof(ga_value), weightCount, bfp);
 
     // Write remaining data
     safe_write(&m_output, sizeof(decltype(m_output)), 1, bfp);
@@ -204,66 +200,40 @@ void CPerceptron::load(std::FILE* bfp)
         return;
     }
 
-    // Read and validate data
-    if (std::fread(&m_iInputs, sizeof(decltype(m_iInputs)), 1, bfp) != 1 ||
-        std::fread(&m_Bias, sizeof(decltype(m_Bias)), 1, bfp) != 1 ||
-        std::fread(&m_LearnRate, sizeof(decltype(m_LearnRate)), 1, bfp) != 1)
+    // Helper lambda for fread with error checking
+    auto safe_read = [](void* data, const size_t size, const size_t count, std::FILE* file) {
+        if (std::fread(data, size, count, file) != count) {
+            BotMessage(nullptr, 0, "Error reading from file");
+            return false;
+        }
+        return true;
+    };
+
+    // Read perceptron data
+    if (!safe_read(&m_iInputs, sizeof(decltype(m_iInputs)), 1, bfp) ||
+        !safe_read(&m_Bias, sizeof(decltype(m_Bias)), 1, bfp) ||
+        !safe_read(&m_LearnRate, sizeof(decltype(m_LearnRate)), 1, bfp))
     {
-        BotMessage(nullptr, 0, "Error reading perceptron data");
         return;
     }
 
     // Read inputs
-    m_inputs.clear();
-    unsigned int inputCount = 0;
-
-    if (std::fread(&inputCount, sizeof(decltype(inputCount)), 1, bfp) != 1)
-    {
-        BotMessage(nullptr, 0, "Error reading input count");
-        return;
-    }
-
-    m_inputs.reserve(inputCount);
-
-    for (unsigned int i = 0; i < inputCount; ++i)
-    {
-        ga_value value;
-        if (std::fread(&value, sizeof(decltype(value)), 1, bfp) != 1)
-        {
-            BotMessage(nullptr, 0, "Error reading input values");
-            return;
-        }
-        m_inputs.emplace_back(value);
-    }
+    unsigned inputCount = 0;
+    if (!safe_read(&inputCount, sizeof(unsigned), 1, bfp)) return;
+    m_inputs.resize(inputCount);
+    if (!safe_read(m_inputs.data(), sizeof(ga_value), inputCount, bfp)) return;
 
     // Read weights
-    m_weights.clear();
-    unsigned int weightCount = 0;
-
-    if (std::fread(&weightCount, sizeof(decltype(weightCount)), 1, bfp) != 1)
-    {
-        BotMessage(nullptr, 0, "Error reading weight count");
-        return;
-    }
-
-    m_weights.reserve(weightCount);
-
-    for (unsigned int i = 0; i < weightCount; ++i)
-    {
-        ga_value value;
-        if (std::fread(&value, sizeof(decltype(value)), 1, bfp) != 1)
-        {
-            BotMessage(nullptr, 0, "Error reading weight values");
-            return;
-        }
-        m_weights.emplace_back(value);
-    }
+    unsigned weightCount = 0;
+    if (!safe_read(&weightCount, sizeof(unsigned), 1, bfp)) return;
+    m_weights.resize(weightCount);
+    if (!safe_read(m_weights.data(), sizeof(ga_value), weightCount, bfp)) return;
 
     // Read remaining data
-    if (std::fread(&m_output, sizeof(decltype(m_output)), 1, bfp) != 1 ||
-        std::fread(&m_bTrained, sizeof(decltype(m_bTrained)), 1, bfp) != 1)
+    if (!safe_read(&m_output, sizeof(decltype(m_output)), 1, bfp) ||
+        !safe_read(&m_bTrained, sizeof(decltype(m_bTrained)), 1, bfp))
     {
-        BotMessage(nullptr, 0, "Error reading perceptron output or training status");
+        // Error reading remaining data
     }
 }
 

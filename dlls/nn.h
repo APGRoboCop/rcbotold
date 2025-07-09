@@ -33,12 +33,14 @@
 
 #include "gannconst.h"
 #include "perceptron.h"
+
 #include <cstdio>
 #include <memory>
 #include <vector>
 
 class CPerceptron;
 class CGA;
+class IIndividual;
 
 class CNNTrainSet
 {
@@ -50,23 +52,22 @@ public:
 class NNLayer
 {
 public:
-    NNLayer(std::FILE* bfp)
-	{
-        load(bfp);
-    }
+    explicit NNLayer(std::FILE* bfp);
 
     NNLayer(int iNumNeurons, int iNumInputs);
 
-    unsigned int numNeurons() const
-	{
+    unsigned numNeurons() const
+    {
         return m_Neurons.size();
     }
 
-    CPerceptron* getNeuron(unsigned int iNeuron) const {
+    CPerceptron* getNeuron(const unsigned iNeuron) {
         return m_Neurons[iNeuron].get();
     }
 
-    void freeMemory();
+    const CPerceptron* getNeuron(const unsigned iNeuron) const {
+        return m_Neurons[iNeuron].get();
+    }
 
     void save(std::FILE* bfp) const;
 
@@ -89,18 +90,16 @@ public:
 
     NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
 
-    void setWeights(const std::vector<ga_value>* weights) const;
+    void setWeights(const std::vector<ga_value>& weights) const;
 
-    void getWeights(std::vector<ga_value>* weights) const;
+    void getWeights(std::vector<ga_value>& weights) const;
 
-    void execute(std::vector<ga_value>* outputs, const std::vector<ga_value>* inputs) const;
-
-    void freeMemory();
+    void execute(std::vector<ga_value>& outputs, const std::vector<ga_value>& inputs) const;
 
     void randomize() const;
 
-    void getOutputs(std::vector<ga_value>* outputs) const;
-    void trainOutputs(const std::vector<ga_value>* wanted_outputs) const;
+    void getOutputs(std::vector<ga_value>& outputs) const;
+    void trainOutputs(const std::vector<ga_value>& wanted_outputs) const;
 
     void load(std::FILE* bfp);
 
@@ -111,7 +110,7 @@ public:
         //return;
     }
 private:
-	std::vector<NNLayer*> m_Layers;
+    std::vector<std::unique_ptr<NNLayer>> m_Layers;
     int m_iNumInputs;
 };
 
@@ -124,6 +123,6 @@ public:
 
     void train(const std::vector<CNNTrainSet>& trainingsets);
 private:
-	CGA* m_pGA;
-    IIndividual* m_pInd;
+    std::unique_ptr<CGA> m_pGA;
+    std::unique_ptr<IIndividual> m_pInd;
 };

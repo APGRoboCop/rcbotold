@@ -91,7 +91,7 @@ static unsigned char g_iFailedWaypoints[MAX_WAYPOINTS];
 
 extern CBotGlobals gBotGlobals;
 
-void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk)
+void CWaypointLocations::getMaxMins(const Vector& vOrigin, int& mini, int& minj, int& mink, int& maxi, int& maxj, int& maxk)
 {
 	const int iLoc = std::abs(static_cast<int>(vOrigin.x + 4096.0f) / 256);
 	const int jLoc = std::abs(static_cast<int>(vOrigin.y + 4096.0f) / 256);
@@ -135,7 +135,7 @@ void CWaypointLocations::getMaxMins(Vector const& vOrigin, int& mini, int& minj,
 
 ///////////////
 // return nearest waypoint that can be used to cover from vCoverFrom vector
-int CWaypointLocations::GetCoverWaypoint(Vector const& vPlayerOrigin, const Vector& vCoverFrom, dataStack<int>* iIgnoreWpts) const
+int CWaypointLocations::GetCoverWaypoint(const Vector& vPlayerOrigin, const Vector& vCoverFrom, dataStack<int>* iIgnoreWpts) const
 {
 	const int iWaypoint = this->NearestWaypoint(vCoverFrom, REACHABLE_RANGE, -1, false, true);
 
@@ -440,8 +440,8 @@ bool WaypointLoad(edict_t* pEntity)
 
 	WAYPOINT_HDR header;
 	char msg[80];
-	short int num;
-	short int path_index;
+	short num;
+	short path_index;
 
 	int iConvertFrom = 0;
 
@@ -671,6 +671,7 @@ std::FILE* CWaypointConversion::openWaypoint() const
 #else
 	snprintf(szFilename, sizeof(szFilename), "%s/%s/%s.%s", gBotGlobals.m_szModFolder, getFolder(), STRING(gpGlobals->mapname), getExtension());
 #endif
+	szFilename[sizeof(szFilename) - 1] = '\0'; // Ensure null-termination [APG]RoboCop[CL]
 	return std::fopen(szFilename, "wb");
 }
 
@@ -680,7 +681,7 @@ bool WaypointSave(const bool bVisibilityMade, const CWaypointConversion* theConv
 {
 	WAYPOINT_HDR header;
 	int index, i;
-	short int num;
+	short num;
 
 	if (theConverter != nullptr)
 	{
@@ -911,7 +912,7 @@ void WaypointInit()
 }
 
 // add a path from one waypoint (add_index) to another (path_index)...
-void WaypointAddPath(const short int add_index, const short int path_index)
+void WaypointAddPath(const short add_index, const short path_index)
 {
 	PATH* p = paths[add_index];
 	PATH* prev = nullptr;
@@ -967,7 +968,7 @@ void WaypointAddPath(const short int add_index, const short int path_index)
 }
 
 // delete all paths to this waypoint index...
-void WaypointDeletePath(const short int del_index)
+void WaypointDeletePath(const short del_index)
 {
 	// search all paths for this index...
 	for (int index = 0; index < num_waypoints; index++)
@@ -1002,7 +1003,7 @@ void WaypointDeletePath(const short int del_index)
 
 // delete a path from a waypoint (path_index) to another waypoint
 // (del_index)...
-void WaypointDeletePath(const short int path_index, const short int del_index)
+void WaypointDeletePath(const short path_index, const short del_index)
 {
 	PATH* p = paths[path_index];
 
@@ -1100,7 +1101,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 			int count = 0;
 			count++;
 			if (count > 100)
-				WaypointDebug();
+			WaypointDebug(); //TODO: Not implemented yet [APG]RoboCop[CL]
 #endif
 		}
 	}
@@ -1518,7 +1519,7 @@ void WaypointDrawBeam(edict_t* pEntity, const Vector& start, const Vector& end, 
 	MESSAGE_END();
 }
 
-int WaypointAddOrigin(Vector const& vOrigin, const int iFlags, edict_t* pEntity,
+int WaypointAddOrigin(const Vector& vOrigin, const int iFlags, edict_t* pEntity,
 	const bool bDraw, const bool bSound, const bool bAutoSetFlagsForPlayer)
 {
 	TraceResult tr;

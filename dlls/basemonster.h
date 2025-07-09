@@ -745,26 +745,26 @@ public:
 	void RadiusDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int iClassIgnore, int bitsDamageType);
 	void RadiusDamage(Vector vecSrc, entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int iClassIgnore, int bitsDamageType);
 
-	void	SetConditions(int iConditions) { m_afConditions |= iConditions; }
-	void	ClearConditions(int iConditions) { m_afConditions &= ~iConditions; }
+	void	SetConditions(const int iConditions) { m_afConditions |= iConditions; }
+	void	ClearConditions(const int iConditions) { m_afConditions &= ~iConditions; }
 
-	bool HasConditions(int iConditions) const
+	bool HasConditions(const int iConditions) const
 	{
 		if (m_afConditions & iConditions) return true; return false;
 	}
-	bool HasAllConditions(int iConditions) const
+	bool HasAllConditions(const int iConditions) const
 	{
 		if ((m_afConditions & iConditions) == iConditions) return true; return false;
 	}
 
-	void	Remember(int iMemory) { m_afMemory |= iMemory; }
-	void	Forget(int iMemory) { m_afMemory &= ~iMemory; }
+	void	Remember(const int iMemory) { m_afMemory |= iMemory; }
+	void	Forget(const int iMemory) { m_afMemory &= ~iMemory; }
 
-	bool HasMemory(int iMemory) const
+	bool HasMemory(const int iMemory) const
 	{
 		if (m_afMemory & iMemory) return true; return false;
 	}
-	bool HasAllMemories(int iMemory) const
+	bool HasAllMemories(const int iMemory) const
 	{
 		if ((m_afMemory & iMemory) == iMemory) return true; return false;
 	}

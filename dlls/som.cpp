@@ -31,6 +31,7 @@
  *
  */
 #include <ctime>
+#include <memory>
 
 #include "extdll.h"
 #include "enginecallback.h"
@@ -56,7 +57,7 @@ CSom::CSom(const int iW, const int iH, const int iIn)
 	for (int i = 0; i < iH; i++)
 	{
 		for (int j = 0; j < iW; j++)
-			m_Neurons.emplace_back(new CSomNeuron(iIn, static_cast<ga_value>(j), static_cast<ga_value>(i)));
+			m_Neurons.emplace_back(std::make_unique<CSomNeuron>(iIn, static_cast<ga_value>(j), static_cast<ga_value>(i)));
 	}
 
 	m_iEpochs = 0;
@@ -72,13 +73,13 @@ CSomNeuron* CSom::getBMU(const std::vector <ga_value>* inputs) const
 	CSomNeuron* winner = nullptr;
 	ga_value bestdistance = 0;
 
-	for (CSomNeuron* m_Neuron : m_Neurons)
+	for (const std::unique_ptr<CSomNeuron>& m_Neuron : m_Neurons)
 	{
 		const ga_value dist = m_Neuron->distance(inputs);
 
 		if (!winner || dist < bestdistance)
 		{
-			winner = m_Neuron;
+			winner = m_Neuron.get();
 			bestdistance = dist;
 		}
 	}
@@ -91,9 +92,9 @@ void CSom::updateAround(const std::vector<ga_value>* inputs, CSomNeuron* bmu) co
 	ga_value dist;
 	const ga_value nsiz = m_fNSize * m_fNSize;
 
-	for (const CSomNeuron* current : m_Neurons)
+	for (const std::unique_ptr<CSomNeuron>& current : m_Neurons)
 	{
-		if ((dist = bmu->neighbourDistance(current, nsiz)) <= nsiz)
+		if ((dist = bmu->neighbourDistance(current.get(), nsiz)) <= nsiz)
 		{
 			bmu->update(inputs, std::exp(-dist / (2 * nsiz)));
 		}
@@ -154,7 +155,7 @@ void CSom::display() const
 {
 	//std::printf("\nDisplaying...\n");
 
-	for (const CSomNeuron* m_Neuron : m_Neurons)
+	for (const std::unique_ptr<CSomNeuron>& m_Neuron : m_Neurons)
 	{
 		//std::printf("%d -- ",i);
 		m_Neuron->displayWeights();
@@ -164,7 +165,7 @@ void CSom::display() const
 
 void CSomNeuron::update(const std::vector<ga_value>* inputs, const ga_value inf)
 {
-	for (unsigned int i = 0; i < inputs->size(); i++)
+	for (unsigned i = 0; i < inputs->size(); i++)
 	{
 		const ga_value change = (*inputs)[i] - fWeights[i];
 
@@ -172,10 +173,7 @@ void CSomNeuron::update(const std::vector<ga_value>* inputs, const ga_value inf)
 	}
 }
 
-CSomNeuron :: ~CSomNeuron()
-{
-	fWeights.clear();
-}
+CSomNeuron :: ~CSomNeuron() = default;
 
 CSomNeuron::CSomNeuron()
 {
@@ -199,7 +197,7 @@ ga_value CSomNeuron::distance(const std::vector <ga_value>* inputs) const
 {
 	ga_value dist = 0;
 
-	for (unsigned int i = 0; i < inputs->size(); i++)
+	for (unsigned i = 0; i < inputs->size(); i++)
 	{
 		const ga_value comp = fWeights[i] - (*inputs)[i];
 

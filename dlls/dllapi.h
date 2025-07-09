@@ -107,7 +107,7 @@ extern int mm_AddToFullPack( struct entity_state_s *state, int e, edict_t *ent, 
 extern void mm_CreateBaseline( int player, int eindex, struct entity_state_s *baseline, struct edict_s *entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs );
 extern void mm_RegisterEncoders();
 extern int mm_GetWeaponData( struct edict_s *player, struct weapon_data_s *info );
-extern void mm_CmdStart( const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed );
+extern void mm_CmdStart( const edict_t *player, const struct usercmd_s *cmd, unsigned random_seed );
 extern void mm_CmdEnd ( const edict_t *player );
 extern int mm_ConnectionlessPacket( const struct netadr_s *net_from, const char *args, char *response_buffer, int *response_buffer_size );
 extern int mm_GetHullBounds( int hullnumber, float *mins, float *maxs );
@@ -169,7 +169,7 @@ typedef int (*FN_ADDTOFULLPACK) ( struct entity_state_s *state, int e, edict_t *
 typedef void (*FN_CREATEBASELINE) ( int player, int eindex, struct entity_state_s *baseline, struct edict_s *entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs );
 typedef void (*FN_REGISTERENCODERS) ();
 typedef int (*FN_GETWEAPONDATA) ( struct edict_s *player, struct weapon_data_s *info );
-typedef void (*FN_CMDSTART) ( const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed );
+typedef void (*FN_CMDSTART) ( const edict_t *player, const struct usercmd_s *cmd, unsigned random_seed );
 typedef void (*FN_CMDEND)  ( const edict_t *player );
 typedef int (*FN_CONNECTIONLESSPACKET) ( const struct netadr_s *net_from, const char *args, char *response_buffer, int *response_buffer_size );
 typedef int (*FN_GETHULLBOUNDS) ( int hullnumber, float *mins, float *maxs );

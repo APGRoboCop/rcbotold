@@ -2000,7 +2000,7 @@ int CBot::GetTeam() const
 	return UTIL_EvolveInto(m_pEdict, species);
 }*/
 
-short CBot::SpeciesOnTeam(int species) const //TODO: Experimental [APG]RoboCop[CL]
+short CBot::SpeciesOnTeam(const int species) const //TODO: Experimental [APG]RoboCop[CL]
 {
 	return UTIL_SpeciesOnTeam(species, GetTeam());
 }
@@ -9548,7 +9548,7 @@ bool CBot::IsEnemy(edict_t* pEntity)
 			{
 				return TEAM_BLACK_MESA;
 			}
-			else if (!std::strcmp(szClassname, "beret") || !std::strcmp(szClassname, "drill") || !std::strcmp(szClassname, "grunt") ||
+			if (!std::strcmp(szClassname, "beret") || !std::strcmp(szClassname, "drill") || !std::strcmp(szClassname, "grunt") ||
 				!std::strcmp(szClassname, "recruit") || !std::strcmp(szClassname, "shephard") || !std::strcmp(szClassname, "tower"))
 			{
 				return TEAM_OPPOSING_FORCE;
@@ -9556,7 +9556,7 @@ bool CBot::IsEnemy(edict_t* pEntity)
 			// different teams are enemies
 			return pEntity->v.flags & FL_CLIENT && GetTeam() != UTIL_GetTeam(pEntity);
 		}
-		else if (pEntity->v.flags & FL_CLIENT)  // different model for team play
+		if (pEntity->v.flags & FL_CLIENT)  // different model for team play
 		{
 			char* infobuffer1 = (*g_engfuncs.pfnGetInfoKeyBuffer)(m_pEdict);
 			char* infobuffer2 = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
@@ -11396,7 +11396,7 @@ void CBot::SayInPosition()
 	return gBotGlobals.IsMod(MOD_SVENCOOP) && m_pCurrentWeapon && m_pCurrentWeapon->GetID() == SVEN_WEAPON_MINIGUN;
 }*/
 
-void CBot::RunForCover(Vector const& vOrigin, const bool bDoItNow, int iScheduleId)
+void CBot::RunForCover(const Vector& vOrigin, const bool bDoItNow, int iScheduleId)
 {
 	const bool bCovering = m_Tasks.HasSchedule(BOT_SCHED_RUN_FOR_COVER);
 

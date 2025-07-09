@@ -175,9 +175,9 @@ void SetupNetMessages()
 	gBotGlobals.m_NetAllMessages.AddNetMessage(new BotClient_NS_HudText());
 }
 
-void BotClient_TS_Health::execute(void* p, int iIndex)
+void BotClient_TS_Health::execute(void* p, const int iIndex)
 {
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	if (p == nullptr || iIndex == -1)
 	{
@@ -197,7 +197,7 @@ void BotClient_TS_Health::execute(void* p, int iIndex)
 
 void BotClient_TS_TeamInfo::execute(void* p, const int iIndex)
 {
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	if (p == nullptr || iIndex == -1)
 	{
@@ -217,7 +217,7 @@ void BotClient_TS_TeamInfo::execute(void* p, const int iIndex)
 
 void BotClient_TS_State::execute(void* p, const int iIndex)
 {
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	if (p == nullptr || iIndex == -1)
 	{
@@ -238,7 +238,7 @@ void BotClient_TS_State::execute(void* p, const int iIndex)
 
 void BotClient_TS_Frags::execute(void* p, const int iIndex)
 {
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	if (p == nullptr || iIndex == -1)
 	{
@@ -258,7 +258,7 @@ void BotClient_TS_Frags::execute(void* p, const int iIndex)
 
 void BotClient_TS_RoundTime::execute(void* p, const int iIndex)
 {
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	if (p == nullptr || iIndex == -1)
 	{
@@ -280,7 +280,7 @@ void BotClient_TS_RoundTime::execute(void* p, const int iIndex)
 
 void BotClient_TS_Objective::execute(void* p, const int iIndex)
 {
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	static Vector origin;
 	static int id;
@@ -339,7 +339,7 @@ void BotClient_TS_WStatus::execute(void* p, const int iIndex)
 
 void BotClient_TS_ClipInfo::execute(void* p, const int iIndex)
 {
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	if (p == nullptr || iIndex == -1)
 	{
@@ -384,7 +384,7 @@ void BotClient_TS_ClipInfo::execute(void* p, const int iIndex)
 
 void BotClient_TS_DelObj::execute(void* p, int iIndex)
 {
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	if (p == nullptr)
 	{
@@ -493,7 +493,7 @@ void BotClient_NS_TechSlots::execute(void* p, const int iIndex)
 		return;
 	}
 
-	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_TO_INT(iState))
 	{
@@ -519,7 +519,7 @@ void BotClient_BG_MakeMessage::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	if (POINTER_TO_INT(iState) == 0)
 	{
@@ -603,7 +603,7 @@ void BotClient_SI_TeamCash::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	if (POINTER_TO_INT(iState) == 0)
 	{
@@ -624,7 +624,7 @@ void BotClient_SI_SciCount::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	if (POINTER_TO_INT(iState) == 0)
 	{
@@ -647,7 +647,7 @@ void BotClient_SI_CarryInfo::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	if (POINTER_TO_INT(iState) == 0)
 	{
@@ -678,7 +678,7 @@ void BotClient_SI_Goal::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	if (POINTER_TO_INT(iState) == 0)
 	{
@@ -709,7 +709,7 @@ void BotClient_SI_Notice::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	if (POINTER_TO_INT(iState) == 0)
 	{
@@ -740,7 +740,7 @@ void BotClient_SI_VoteInfo::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	if (POINTER_TO_INT(iState) == 0)
 	{
@@ -789,7 +789,7 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 		return;
 	}*/
 
-	switch (short int* iState = &gBotGlobals.m_iCurrentMessageState; POINTER_TO_INT(iState))
+	switch (short* iState = &gBotGlobals.m_iCurrentMessageState; POINTER_TO_INT(iState))
 	{
 	case 0:
 		POINTER_INCREMENT_VALUE(iState);
@@ -961,7 +961,7 @@ void BotClient_All_Generic_SayText::execute(void* p, int iIndex)
 {
 	static int iSenderId;
 	//	char *szMsg;
-	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	if (p == nullptr)
 		return;
@@ -982,7 +982,7 @@ void BotClient_Generic_SayText::execute(void* p, int iIndex)
 {
 	static int iSenderId;
 	//	char *szMsg;
-	short int* iState = &gBotGlobals.m_iCurrentMessageState;
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
 	if (p == nullptr)
 		return;
@@ -1093,7 +1093,7 @@ void BotClient_Generic_VGUIMenu::execute(void* p, const int iIndex)
   */
 void BotClient_NS_AlienInfo::execute(void* p, const int iIndex)
 {
-	static short int state = 0;
+	static short state = 0;
 	static int message_type = -1;
 	static int num_loops = 0;
 	static int got_loops = 0;
@@ -1425,7 +1425,7 @@ void BotClient_Generic_TeamScore::execute(void* p, int iIndex)
 
 void BotClient_NS_HudText::execute(void* p, int iIndex)
 {
-	static short int state = 0;
+	static short state = 0;
 	const char* msg;
 
 	if (p == nullptr /*|| (iIndex==-1) */)
@@ -1498,14 +1498,14 @@ void BotClient_NS_Commndr::execute(void* p, int iIndex)
 		gBotGlobals.SetCommander(nullptr);
 }
 
-void BotClient_NS_SetTech::execute(void* p, int iIndex)
+void BotClient_NS_SetTech::execute(void* p, const int iIndex)
 {
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	static AvHMessageID iImpulsemessage = static_cast<AvHMessageID>(0);
-	static short int iSlot = 0;
-	static short int iCost = 0;
-	static short int iRadius = 0;
+	static short iSlot = 0;
+	static short iCost = 0;
+	static short iRadius = 0;
 	/*
 
 	  WRITE_BYTE(43) // message "impulse" (& iuser2) 0
@@ -1571,8 +1571,8 @@ void BotClient_NS_SetOrder::execute(void* p, const int iIndex)
 	static int					iEntityUser3 = 0;
 	static edict_t* pEntity = nullptr;
 
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
-	short int* state2 = &gBotGlobals.m_iCurrentMessageState2;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state2 = &gBotGlobals.m_iCurrentMessageState2;
 
 	if (p == nullptr || iIndex == -1)
 	{
@@ -1789,7 +1789,7 @@ void BotClient_Generic_DeathMessage::execute(void* p, int iIndex)
 	if (p == nullptr)
 		return;
 
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{
@@ -1953,7 +1953,7 @@ void BotClient_Generic_WeaponList::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{
@@ -2023,7 +2023,7 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{
@@ -2114,7 +2114,7 @@ void BotClient_Generic_AmmoX::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{
@@ -2143,7 +2143,7 @@ void BotClient_Generic_AmmoPickup::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{
@@ -2315,7 +2315,7 @@ void BotClient_Generic_Damage::execute(void* p, const int iIndex)
 	if (p == nullptr || iIndex == -1)
 		return;
 
-	short int* state = &gBotGlobals.m_iCurrentMessageState;
+	short* state = &gBotGlobals.m_iCurrentMessageState;
 
 	switch (POINTER_VALUE(state))
 	{

@@ -221,7 +221,7 @@ public:
 	virtual void Think() { if (m_pfnThink) (this->*m_pfnThink)(); }
 	virtual void Touch(CBaseEntity* pOther) { if (m_pfnTouch) (this->*m_pfnTouch)(pOther); }
 
-	virtual void Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value)
+	virtual void Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, const float value)
 	{
 		if (m_pfnUse)
 			(this->*m_pfnUse)(pActivator, pCaller, useType, value);
@@ -282,7 +282,7 @@ public:
 #endif
 
 	static CBaseEntity* Instance(entvars_t* pev) { return Instance(ENT(pev)); }
-	static CBaseEntity* Instance(int eoffset) { return Instance(ENT(eoffset)); }
+	static CBaseEntity* Instance(const int eoffset) { return Instance(ENT(eoffset)); }
 
 	static CBaseMonster* GetMonsterPointer(entvars_t* pevMonster)
 	{
@@ -657,25 +657,25 @@ enum
 
 // NOTE: tweak these values based on gameplay feedback:
 
-constexpr unsigned int PARALYZE_DURATION = 2;       // number of 2 second intervals to take damage
+constexpr unsigned PARALYZE_DURATION = 2;       // number of 2 second intervals to take damage
 constexpr float PARALYZE_DAMAGE = 1.0f;    // damage to take each 2 second interval
 
-constexpr unsigned int NERVEGAS_DURATION = 2;
+constexpr unsigned NERVEGAS_DURATION = 2;
 constexpr float NERVEGAS_DAMAGE = 5.0f;
 
-constexpr unsigned int POISON_DURATION = 5;
+constexpr unsigned POISON_DURATION = 5;
 constexpr float POISON_DAMAGE = 2.0f;
 
-constexpr unsigned int RADIATION_DURATION = 2;
+constexpr unsigned RADIATION_DURATION = 2;
 constexpr float RADIATION_DAMAGE = 1.0f;
 
-constexpr unsigned int ACID_DURATION = 2;
+constexpr unsigned ACID_DURATION = 2;
 constexpr float ACID_DAMAGE = 5.0f;
 
-constexpr unsigned int SLOWBURN_DURATION = 2;
+constexpr unsigned SLOWBURN_DURATION = 2;
 constexpr float SLOWBURN_DAMAGE = 1.0f;
 
-constexpr unsigned int SLOWFREEZE_DURATION = 2;
+constexpr unsigned SLOWFREEZE_DURATION = 2;
 constexpr float SLOWFREEZE_DAMAGE = 1.0f;
 
 enum : std::uint8_t

@@ -27,11 +27,11 @@ public:
 	bool isDone() const { return m_bDone; }
 	// more priorty with those with more ticks required to complete
 	bool operator < (const CTickable* other) const { return m_iTicksLeft > other->ticksLeft(); }
-	unsigned int ticksLeft() const { return m_iTicksLeft; }
+	unsigned ticksLeft() const { return m_iTicksLeft; }
 
 private:
 	bool m_bDone;
-	unsigned int m_iTicksLeft;
+	unsigned m_iTicksLeft;
 };
 
 class CTickManager
@@ -44,7 +44,7 @@ public:
 
 	void run()
 	{
-		unsigned int iTicks = 300;
+		unsigned iTicks = 300;
 
 		// round robin
 		m_Tickables.sort();
@@ -54,7 +54,7 @@ public:
 			if (pCurrent->isDone())
 				continue;
 
-			for (unsigned int i = 0; i < iTicks; i++)
+			for (unsigned i = 0; i < iTicks; i++)
 				pCurrent->tick();
 
 			iTicks = iTicks / 2;

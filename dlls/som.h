@@ -93,16 +93,16 @@ public:
 
 	void display() const;
 
-	unsigned int epochs() const
+	unsigned epochs() const
 	{
 		return m_iEpochs;
 	}
 
 private:
-	std::vector<CSomNeuron*> m_Neurons;
+	std::vector<std::unique_ptr<CSomNeuron>> m_Neurons;
 	int m_iH;
 	int m_iW;
 	ga_value m_fNSize;
-	unsigned int m_iEpochs;
+	unsigned m_iEpochs;
 };
 #endif

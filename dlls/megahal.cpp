@@ -187,9 +187,9 @@ void HumanizeString(char* string)
 	constexpr int lower_percent = 2;
 
 	size_t length = std::strlen(string);
-	unsigned int i = 0;
-	unsigned int n = 0;
-	unsigned int rand;
+	unsigned i = 0;
+	unsigned n = 0;
+	unsigned rand;
 
 	while (i < length)
 	{
@@ -238,7 +238,7 @@ void HumanizeString(char* string)
 // from old rcbot
 void RemoveNameTags(const char* in_string, char* out_string)
 {
-	unsigned int i = 0; // index of in_string
+	unsigned i = 0; // index of in_string
 	int n = 0; // length of out_string
 
 	out_string[0] = 0;
@@ -855,7 +855,7 @@ HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, const int symbol)
 	return found;
 }
 
-void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, int position)
+void HAL_AddNode(HAL_TREE* tree, HAL_TREE* node, const int position)
 {
 	// this function attachs a new child node to the sub-tree of the tree specified
 

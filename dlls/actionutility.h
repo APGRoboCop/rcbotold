@@ -8,7 +8,7 @@
 class CActionUtility
 {
 public:
-	CActionUtility(eCanDoStuff action, float utility)
+	CActionUtility(eCanDoStuff action, const float utility)
 	{
 		m_Action = action;
 		m_fUtility = utility;
@@ -32,7 +32,7 @@ private:
 class CActionUtilities
 {
 public:
-	void add(eCanDoStuff action, bool CanDo, float utility)
+	void add(eCanDoStuff action, const bool CanDo, const float utility)
 	{
 		//m_Utilities.emplace_back(CActionUtility(action, (float)CanDo * utility));
 		m_Utilities.emplace_back(action, static_cast<float>(CanDo) * utility);

@@ -96,7 +96,7 @@ public:
 
 	CBotNetMessage(/*void (*fpBotFunction)(void *, int),*/const char* szMessageName, int iModId, bool bAllowHumans = false);
 
-	bool MessageForMod(int iModId) const
+	bool MessageForMod(const int iModId) const
 	{
 		return m_iModId == MOD_ANY || iModId == m_iModId;
 	}
@@ -137,19 +137,19 @@ public:
 		return std::strcmp(m_szMessageName, szMessage) == 0;
 	}
 
-	void UpdateMsgId(int iMessage)
+	void UpdateMsgId(const int iMessage)
 	{
 		m_iMessage = iMessage;
 	}
 
-	void UpdateMessageSize(int iSize)
+	void UpdateMessageSize(const int iSize)
 	{
 		m_iSize = iSize;
 	}
 
 	void setName(const char* szName);
 
-	void setMod(int iModId)
+	void setMod(const int iModId)
 	{
 		m_iModId = iModId;
 	}
@@ -187,7 +187,7 @@ public:
 
 	CBotNetMessage* GetMessage(int iMessage, const char* szName) const;
 
-	void UpdateMessage(const char* szMessageName, int iMessage, int iSize) const
+	void UpdateMessage(const char* szMessageName, const int iMessage, const int iSize) const
 	{
 		if (CBotNetMessage* l_Msg = GetMessage(iMessage, szMessageName))
 		{
@@ -712,16 +712,16 @@ class CBotStatedNetMessage : public CBotNetMessage
 public:
 	CBotStatedNetMessage();
 
-	void init(int index) { iState = 0; m_pEdict = nullptr; if (index) { m_pEdict = INDEXENT(index); } msg_init(); }
+	void init(const int index) { iState = 0; m_pEdict = nullptr; if (index) { m_pEdict = INDEXENT(index); } msg_init(); }
 
-	virtual void writeChar(char c) { write_char(c); iState++; }
-	virtual void writeByte(int b) { write_byte(b); iState++; }
-	virtual void writeShort(int s) { write_short(s); iState++; }
-	virtual void writeLong(int l) { write_long(l); iState++; }
+	virtual void writeChar(const char c) { write_char(c); iState++; }
+	virtual void writeByte(const int b) { write_byte(b); iState++; }
+	virtual void writeShort(const int s) { write_short(s); iState++; }
+	virtual void writeLong(const int l) { write_long(l); iState++; }
 	virtual void writeString(const char* s) { write_string(s); iState++; }
-	virtual void writeCoord(float f) { write_coord(f); iState++; }
+	virtual void writeCoord(const float f) { write_coord(f); iState++; }
 	virtual void writeEntity(edict_t* p) { write_entity(p); iState++; }
-	virtual void writeAngle(float f) { write_angle(f); iState++; }
+	virtual void writeAngle(const float f) { write_angle(f); iState++; }
 
 	virtual void messageEnd() { iState = 0; message_end(); }
 

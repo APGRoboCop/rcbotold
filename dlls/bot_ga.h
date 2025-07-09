@@ -33,6 +33,7 @@
 
 #include "ga.h"
 #include "gannconst.h"
+#include "nn.h"
 
 class CBits;
 
@@ -64,8 +65,8 @@ public:
 	void setVector(const std::vector<ga_value>& values);
 	void getVector(std::vector<ga_value>& values) const;
 
-	float get(unsigned int iIndex) const;
-	void set(unsigned int iIndex, ga_value fVal);
+	float get(unsigned iIndex) const;
+	void set(unsigned iIndex, ga_value fVal);
 
 	void clear() override;
 	void add(ga_value val) { m_theValues.emplace_back(val); }
@@ -171,7 +172,7 @@ private:
 class CBitsGAValues : public IIndividual
 {
 public:
-	explicit CBitsGAValues(unsigned int iNumBits);
+	explicit CBitsGAValues(unsigned iNumBits);
 
 	void load(std::FILE* bfp, int req_size) override;
 	void save(std::FILE* bfp) override;
@@ -180,7 +181,7 @@ public:
 	//void saveForBot ( char *file, int iProfile );
 
 	//~CBotGAValues();
-	void convert(unsigned int* iBits) const;
+	void convert(unsigned* iBits) const;
 	CBitsGAValues(CBits* bits);
 
 	// crossover with other individual
@@ -193,7 +194,7 @@ public:
 	// sub classes return their class with own values
 	IIndividual* copy() override;
 
-	unsigned int size() const;
+	unsigned size() const;
 
 	//void setBits ( CBits values );
 	//void getBits ( CBits *values );

@@ -35,11 +35,11 @@ class Vector2D
 {
 public:
 	Vector2D() = default;
-	Vector2D(float X, float Y) { x = X; y = Y; }
+	Vector2D(const float X, const float Y) { x = X; y = Y; }
 	Vector2D operator+(const Vector2D& v)	const { return { x + v.x, y + v.y }; }
 	Vector2D operator-(const Vector2D& v)	const { return { x - v.x, y - v.y }; }
-	Vector2D operator*(float fl)				const { return { x * fl, y * fl }; }
-	Vector2D operator/(float fl)				const { return { x / fl, y / fl }; }
+	Vector2D operator*(const float fl)				const { return { x * fl, y * fl }; }
+	Vector2D operator/(const float fl)				const { return { x / fl, y / fl }; }
 
 	float Length()						const { return std::pow(x * x + y * y, 0.5f); }//sqrt(x*x + y*y);		}
 
@@ -63,7 +63,7 @@ public:
 };
 
 inline float DotProduct(const Vector2D& a, const Vector2D& b) { return a.x * b.x + a.y * b.y; }
-inline Vector2D operator*(float fl, const Vector2D& v) { return v * fl; }
+inline Vector2D operator*(const float fl, const Vector2D& v) { return v * fl; }
 
 //=========================================================
 // 3D Vector
@@ -73,7 +73,7 @@ class Vector						// same data-layout as engine's vec3_t,
 public:
 	// Construction/destruction
 	Vector() = default;
-	Vector(float X, float Y, float Z) { x = X; y = Y; z = Z; }
+	Vector(const float X, const float Y, const float Z) { x = X; y = Y; z = Z; }
 	//inline Vector(double X, double Y, double Z)		{ x = (float)X; y = (float)Y; z = (float)Z;	}
 	//inline Vector(int X, int Y, int Z)				{ x = (float)X; y = (float)Y; z = (float)Z;	}
 	Vector(const Vector& v) { x = v.x; y = v.y; z = v.z; }
@@ -85,8 +85,8 @@ public:
 	int operator!=(const Vector& v) const { return !(*this == v); }
 	Vector operator+(const Vector& v) const { return { x + v.x, y + v.y, z + v.z }; }
 	Vector operator-(const Vector& v) const { return { x - v.x, y - v.y, z - v.z }; }
-	Vector operator*(float fl) const { return { x * fl, y * fl, z * fl }; }
-	Vector operator/(float fl) const { return { x / fl, y / fl, z / fl }; }
+	Vector operator*(const float fl) const { return { x * fl, y * fl, z * fl }; }
+	Vector operator/(const float fl) const { return { x / fl, y / fl, z / fl }; }
 
 	/////////////////////////////
 	// ADDED OPERATORS => / <=
@@ -127,7 +127,7 @@ public:
 	// Members
 	vec_t x, y, z;
 };
-inline Vector operator*(float fl, const Vector& v) { return v * fl; }
+inline Vector operator*(const float fl, const Vector& v) { return v * fl; }
 inline float DotProduct(const Vector& a, const Vector& b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
 inline Vector CrossProduct(const Vector& a, const Vector& b) {
 	return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x

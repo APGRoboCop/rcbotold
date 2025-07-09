@@ -1446,7 +1446,7 @@ void CBotGlobals::ReadConfig()
 
 		while (std::fgets(buffer, 127, fp) != nullptr)
 		{
-			unsigned int i = 0;
+			unsigned i = 0;
 
 			size_t length = std::strlen(buffer);
 

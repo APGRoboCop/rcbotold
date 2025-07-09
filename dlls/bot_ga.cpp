@@ -69,11 +69,16 @@ void CBotGAValues::clear()
 // crossover with other individual
 void CBotGAValues::crossOver(IIndividual* other)
 {
-	const unsigned int iPoint = RANDOM_LONG(0, m_theValues.size());
+	if (m_theValues.empty())
+	{
+		return;
+	}
+
+	const unsigned iPoint = RANDOM_LONG(0, m_theValues.size() - 1);
 
 	CBotGAValues* vother = static_cast<CBotGAValues*>(other);
 
-	for (unsigned int i = 0; i < iPoint; i++)
+	for (unsigned i = 0; i < iPoint; i++)
 	{
 		std::swap(m_theValues[i], vother->m_theValues[i]);
 	}
@@ -82,7 +87,7 @@ void CBotGAValues::crossOver(IIndividual* other)
 // mutate some values
 void CBotGAValues::mutate()
 {
-	for (unsigned int i = 0; i < m_theValues.size(); i++)
+	for (unsigned i = 0; i < m_theValues.size(); i++)
 	{
 		if (RANDOM_FLOAT(0, 1) < CGA::g_fMutateRate)
 		{
@@ -93,22 +98,17 @@ void CBotGAValues::mutate()
 	}
 }
 
-float CBotGAValues::get(const unsigned int iIndex) const
+float CBotGAValues::get(const unsigned iIndex) const
 {
 	assert(iIndex < m_theValues.size());
 	return m_theValues[iIndex];
 }
 
-void CBotGAValues::set(const unsigned int iIndex, const ga_value fVal)
+void CBotGAValues::set(const unsigned iIndex, const ga_value fVal)
 {
 	assert(iIndex < m_theValues.size());
 	m_theValues[iIndex] = fVal;
 }
-
-//CBotGAValues :: ~CBotGAValues ()
-//{/
-	//m_theValues.clear();
-//}
 
 // get new copy of this
 // sub classes return their class with own values
@@ -123,17 +123,12 @@ IIndividual* CBotGAValues::copy()
 
 void CBotGAValues::setVector(const std::vector<ga_value>& values)
 {
-	m_theValues.clear();
-	m_theValues.reserve(values.size());
-	for (const ga_value& value : values) // Use const reference for efficiency
-		m_theValues.emplace_back(value);
+	m_theValues = values;
 }
+
 void CBotGAValues::getVector(std::vector<ga_value>& values) const // Use reference instead of pointer
 {
-	values.clear();
-	values.reserve(m_theValues.size());
-	for (const ga_value& m_theValue : m_theValues) // Use const reference for efficiency
-		values.emplace_back(m_theValue);
+	values = m_theValues;
 }
 
 void CBotGAValues::freeMemory()
@@ -165,17 +160,17 @@ void CBotGAValues :: saveForBot (const char *file, const int iProfile)
 
 void CBotGAValues::save(std::FILE* bfp)
 {
-	const unsigned int iSize = m_theValues.size();
+	const unsigned iSize = m_theValues.size();
 
 	const CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, m_theValues.size());
 
 	header.write(bfp);
 
-	std::fwrite(&iSize, sizeof(unsigned int), 1, bfp);
+	std::fwrite(&iSize, sizeof(unsigned), 1, bfp);
 
-	for (unsigned int i = 0; i < iSize; i++)
+	if (iSize > 0)
 	{
-		std::fwrite(&m_theValues[i], sizeof(ga_value), 1, bfp);
+		std::fwrite(m_theValues.data(), sizeof(ga_value), iSize, bfp);
 	}
 
 	std::fwrite(&m_fFitness, sizeof(ga_value), 1, bfp);
@@ -183,8 +178,7 @@ void CBotGAValues::save(std::FILE* bfp)
 
 void CBotGAValues::load(std::FILE* bfp, const int req_size)
 {
-	unsigned int iSize;
-	ga_value fRead;
+	unsigned iSize;
 
 	if (std::feof(bfp))
 		return;
@@ -199,96 +193,111 @@ void CBotGAValues::load(std::FILE* bfp, const int req_size)
 
 	m_theValues.clear();
 
-	std::fread(&iSize, sizeof(unsigned int), 1, bfp);
-
-	for (unsigned int i = 0; i < iSize; i++)
+	if (std::fread(&iSize, sizeof(unsigned), 1, bfp) != 1)
 	{
-		// reliability check
-		if (std::feof(bfp))
-			return;
-
-		std::fread(&fRead, sizeof(ga_value), 1, bfp);
-		m_theValues.emplace_back(fRead);
+		BotMessage(nullptr, 0, "Learn data error - could not read size");
+		return;
 	}
 
-	std::fread(&m_fFitness, sizeof(ga_value), 1, bfp);
+
+	if (iSize > 0)
+	{
+		m_theValues.resize(iSize);
+		if (std::fread(m_theValues.data(), sizeof(ga_value), iSize, bfp) != iSize)
+		{
+			BotMessage(nullptr, 0, "Learn data error - unexpected end of file");
+			m_theValues.clear();
+			return;
+		}
+	}
+
+	if (std::fread(&m_fFitness, sizeof(ga_value), 1, bfp) != 1)
+	{
+		BotMessage(nullptr, 0, "Learn data error - could not read fitness");
+	}
 }
 //----------------------
 // bits
 //----------------------
 
-unsigned int CBitsGAValues::size() const
+unsigned CBitsGAValues::size() const
 {
 	return m_theBits->size();
 }
 
-void CBitsGAValues::convert(unsigned int* iBits) const
+void CBitsGAValues::convert(unsigned* iBits) const
 {
-	for (unsigned int i = 0; i < size(); i++)
+	for (unsigned i = 0; i < size(); i++)
 	{
 		if (m_theBits->getBit(i))
 			*iBits = *iBits + (1 << i);
 	}
 }
 
-CBitsGAValues::CBitsGAValues(const unsigned int iNumBits)
+CBitsGAValues::CBitsGAValues(const unsigned iNumBits)
 {
 	m_theBits = new CBits(iNumBits);
 }
 
-void CBitsGAValues::load(std::FILE* bfp, int req_size)
+void CBitsGAValues::load(std::FILE* bfp, const int req_size)
 {
 	// TODO : header
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, req_size);
+
+	if (!CGenericHeader::read(bfp, header))
+	{
+		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
+		return;
+	}
 	m_theBits->load(bfp);
+	if (std::fread(&m_fFitness, sizeof(ga_value), 1, bfp) != 1)
+	{
+		BotMessage(nullptr, 0, "Learn data error - could not read fitness");
+	}
 }
 
 void CBitsGAValues::save(std::FILE* bfp)
 {
 	// TODO : header
+	const CGenericHeader header = CGenericHeader(LEARNTYPE_GAVALUES, m_theBits->numBits());
+	header.write(bfp);
 	m_theBits->save(bfp);
+	std::fwrite(&m_fFitness, sizeof(ga_value), 1, bfp);
 }
 
 //void loadForBot ( char *file, int iProfile );
 //void saveForBot ( char *file, int iProfile );
 
-//~CBotGAValues();
-
 CBitsGAValues::CBitsGAValues(CBits* bits)
 {
-	delete m_theBits;
 	m_theBits = bits;
 }
 
 // crossover with other individual
 void CBitsGAValues::crossOver(IIndividual* other)
 {
-	int i;
+	CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
 
 	const int iNumBits = m_theBits->numBits();
-	const int iCrossoverPoint = RANDOM_LONG(0, iNumBits);
-	const CBits tempBits(iNumBits);
-
-	const CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
-
-	for (i = 0; i < iCrossoverPoint; i++)
+	if (iNumBits == 0)
 	{
-		tempBits.setBit(i, m_theBits->getBit(i));
-		m_theBits->setBit(i, otherBits->get(i));
-		otherBits->set(i, tempBits.getBit(i));
+		return;
 	}
+	const int iCrossoverPoint = RANDOM_LONG(0, iNumBits - 1);
 
-	for (i = iCrossoverPoint; i < iNumBits; i++)
+	// Swap the bits after the crossover point.
+	for (int i = iCrossoverPoint; i < iNumBits; i++)
 	{
-		tempBits.setBit(i, otherBits->get(i));
-		otherBits->set(i, m_theBits->getBit(i));
-		m_theBits->setBit(i, tempBits.getBit(i));
+		const bool temp = m_theBits->getBit(i);
+		m_theBits->setBit(i, otherBits->get(i));
+		otherBits->set(i, temp);
 	}
 }
 
 // mutate some values
 void CBitsGAValues::mutate()
 {
-	for (unsigned int i = 0; i < m_theBits->numBits(); i++)
+	for (unsigned i = 0; i < m_theBits->numBits(); i++)
 	{
 		if (RANDOM_FLOAT(0.0f, 1.0f) < CGA::g_fMutateRate)
 		{
@@ -301,9 +310,10 @@ void CBitsGAValues::mutate()
 // sub classes return their class with own values
 IIndividual* CBitsGAValues::copy()
 {
-	CBits* newBits = new CBits(m_theBits);
-
-	return new CBitsGAValues(newBits);
+	CBits* newBits = new CBits(*m_theBits);
+	IIndividual* individual = new CBitsGAValues(newBits);
+	individual->setFitness(getFitness());
+	return individual;
 }
 
 //void setBits ( CBits values );

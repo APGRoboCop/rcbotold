@@ -30,7 +30,7 @@ public:
 	int			EntityIndex(EOFFSET eoLookup);
 	int			EntityIndex(CBaseEntity* pEntity);
 
-	int			EntityFlags(int entityIndex, int flags) { return EntityFlagsSet(entityIndex, 0); }
+	int			EntityFlags(const int entityIndex, int flags) { return EntityFlagsSet(entityIndex, 0); }
 	int			EntityFlagsSet(int entityIndex, int flags);
 
 	edict_t* EntityFromIndex(int entityIndex);
@@ -40,7 +40,7 @@ public:
 protected:
 	SAVERESTOREDATA* m_pdata;
 	void		BufferRewind(int size);
-	unsigned int	HashString(const char* pszToken);
+	unsigned	HashString(const char* pszToken);
 };
 
 class CSave : public CSaveRestoreBuffer
@@ -91,8 +91,8 @@ public:
 	int		ReadNamedInt(const char* pName);
 	char* ReadNamedString(const char* pName);
 	int		Empty() const { return (m_pdata == nullptr) || ((m_pdata->pCurrentData - m_pdata->pBaseData) >= m_pdata->bufferSize); }
-	void	SetGlobalMode(int global) { m_global = global; }
-	void	PrecacheMode(bool mode) { m_precache = mode; }
+	void	SetGlobalMode(const int global) { m_global = global; }
+	void	PrecacheMode(const bool mode) { m_precache = mode; }
 
 private:
 	char* BufferPointer();

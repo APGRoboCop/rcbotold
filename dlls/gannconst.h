@@ -58,7 +58,7 @@ public:
 		m_szHeader[0] = 0;
 	}
 
-	CGenericHeader(const unsigned int iType, const unsigned int iSize)
+	CGenericHeader(const unsigned iType, const unsigned iSize)
 	{
 		snprintf(m_szHeader, sizeof(m_szHeader), "t-%d-s-%d", iType, iSize);
 	}

@@ -108,7 +108,7 @@ void safefree(void** p);
 int GetMessageID(const char* szMsg);
 
 #ifdef RCBOT_META_BUILD
-void GetGameDirectory(char* szDir);
+void GetGameDirectory(char* szDir); //TODO: Not implemented yet [APG]RoboCop[CL]
 #endif
 
 //void DebugMessage(int iDebugLevel, edict_t* pEntity, int errorlevel, const char* fmt, ...);
@@ -121,7 +121,7 @@ int GetPlayerEdictRepId(edict_t* pEdict);
 //////////////////////////////
 // BOT_H DEFINED FUNCTIONS
 void BotFunc_ChangeAngles(float* fSpeed, const float* fIdeal, float* fCurrent, float* fUpdate);
-bool UTIL_FriendlyHatesPlayer(edict_t* pEntity, edict_t* pPlayer);
+bool UTIL_FriendlyHatesPlayer(edict_t* pEntity, edict_t* pPlayer); //TODO: Not implemented yet [APG]RoboCop[CL]
 edict_t* UTIL_getEntityInFront(edict_t* pEntity);
 void ExplosionCreate(const Vector& center, const Vector& angles, edict_t* pOwner, float magnitude, bool doDamage);
 Vector UTIL_GetGroundVector(edict_t* pEdict);
@@ -241,7 +241,7 @@ Vector UTIL_LengthFromVector(const Vector& relation, float length);
 
 bool	BotFunc_FInViewCone(const Vector* pOrigin, const edict_t* pEdict);
 bool	BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict);
-Vector	Center(edict_t* pEdict);
+Vector	Center(edict_t* pEdict); //TODO: Not implemented yet [APG]RoboCop[CL]
 Vector	GetGunPosition(const edict_t* pEdict);
 Vector	EntityOrigin(const edict_t* pEdict);
 
@@ -250,7 +250,7 @@ edict_t* UTIL_CheckTeleExit(const Vector& vOrigin, edict_t* pOwner, edict_t* pEn
 
 Vector UTIL_AngleBetweenOrigin(const entvars_t* pev, const Vector& vOrigin);
 bool UTIL_OnGround(const entvars_t* pev);
-int     UTIL_TFC_getMaxArmor(edict_t* pEdict);
+//int     UTIL_TFC_getMaxArmor(edict_t* pEdict);
 void	ClientPrint(edict_t* pEdict, int msg_dest, const char* msg_name);
 float   UTIL_YawAngleBetweenOrigin(const entvars_t* pev, const Vector& vOrigin);
 bool	UTIL_IsFacingEntity(const entvars_t* pev, const entvars_t* pevEntity);
@@ -322,7 +322,7 @@ public:
 		return Rep.IsForPlayer(m_iPlayerRepId);
 	}
 
-	void UpdateRep(int iRep)
+	void UpdateRep(const int iRep)
 	{
 		m_iRep = iRep;
 	}
@@ -337,7 +337,7 @@ public:
 		return m_iPlayerRepId;
 	}
 
-	bool IsForPlayer(int iPlayerRepId) const
+	bool IsForPlayer(const int iPlayerRepId) const
 	{
 		return m_iPlayerRepId == iPlayerRepId;
 	}
@@ -380,7 +380,7 @@ public:
 
 	void AddLoadRep(int iBotProfile, int iPlayerRepId);
 
-	void NewRep(int iPlayerRepId)
+	void NewRep(const int iPlayerRepId)
 		// Create a NEW Reputation value for player name szPlayerName
 		// With a default Rep of a Mid way rep.
 	{
@@ -409,7 +409,7 @@ public:
 		return iTotal / iNum;
 	}
 
-	void AddRep(int iPlayerRepId, int iRep)
+	void AddRep(const int iPlayerRepId, const int iRep)
 		// Add a NEW Reputation WITH a reputation value
 	{
 		const CBotReputation* l_Rep = GetRep(iPlayerRepId);
@@ -418,7 +418,7 @@ public:
 			m_RepList.Push(CBotReputation(iPlayerRepId, iRep));
 	}
 
-	CBotReputation* GetCreateRep(int iPlayerRepId)
+	CBotReputation* GetCreateRep(const int iPlayerRepId)
 	{
 		dataStack<CBotReputation> tempStack = m_RepList;
 
@@ -440,7 +440,7 @@ public:
 		return m_RepList.GetHeadInfoPointer();
 	}
 
-	CBotReputation* GetRep(int iPlayerRepId) const
+	CBotReputation* GetRep(const int iPlayerRepId) const
 	{
 		dataStack<CBotReputation> tempStack = m_RepList;
 
@@ -462,7 +462,7 @@ public:
 
 	int GetClientRep(const CClient* pClient) const;
 
-	void IncreaseRep(int iPlayerRepId) const
+	void IncreaseRep(const int iPlayerRepId) const
 	{
 		if (iPlayerRepId == -1)
 			return;
@@ -484,7 +484,7 @@ public:
 		}
 	}
 
-	void DecreaseRep(int iPlayerRepId) const
+	void DecreaseRep(const int iPlayerRepId) const
 	{
 		if (iPlayerRepId == -1)
 			return;
@@ -756,12 +756,12 @@ public:
 		return m_fTimeToComplete - gpGlobals->time;
 	}
 
-	void SetVector(Vector const& vNewVector)
+	void SetVector(const Vector& vNewVector)
 	{
 		m_vInfo = vNewVector;
 	}
 
-	void SetFloat(float fNewFloat)
+	void SetFloat(const float fNewFloat)
 	{
 		m_fInfo = fNewFloat;
 	}
@@ -776,7 +776,7 @@ public:
 		return m_iScheduleDescription == iSchedDesc;
 	}
 
-	void SetInt(int iNewInt)
+	void SetInt(const int iNewInt)
 	{
 		m_iInfo = iNewInt;
 	}
@@ -816,12 +816,12 @@ public:
 		return m_bFoundPath;
 	}
 
-	void SetPathInfo(bool bPathFound)
+	void SetPathInfo(const bool bPathFound)
 	{
 		m_bFoundPath = bPathFound;
 	}
 
-	void SetScheduleId(int iScheduleId)
+	void SetScheduleId(const int iScheduleId)
 	{
 		m_iScheduleId = iScheduleId;
 	}
@@ -831,7 +831,7 @@ public:
 		return m_iScheduleId;
 	}
 
-	void SetTimeToComplete(float fTime)
+	void SetTimeToComplete(const float fTime)
 	{
 		//////// BIGGG Problem fixed (must add gpGlobals time, duuhhhh!!)
 		m_fTimeToComplete = gpGlobals->time + fTime;
@@ -1109,7 +1109,7 @@ class CBotTasks
 {
 public:
 
-	void SetTimeToCompleteSchedule(int iScheduleId, float fTime) const
+	void SetTimeToCompleteSchedule(const int iScheduleId, float fTime) const
 	{
 		dataQueue<CBotTask> tempStack = m_Tasks;
 
@@ -1128,7 +1128,7 @@ public:
 
 	// add a schedule (a list of tasks) of certain schedule type
 	// this was added quite recently so ins't used a lot, even though it's quite neat.
-	void AddNewSchedule(eScheduleDesc iScheduleDescription, CBotTask* pTasks, int iNumTasks)
+	void AddNewSchedule(eScheduleDesc iScheduleDescription, CBotTask* pTasks, const int iNumTasks)
 	{
 		const int iNewScheduleId = GetNewScheduleId();
 
@@ -1173,7 +1173,7 @@ public:
 		}
 	}
 
-	void GiveSchedIdDescription(int iSchedId, eScheduleDesc iSchedDesc) const
+	void GiveSchedIdDescription(const int iSchedId, eScheduleDesc iSchedDesc) const
 	{
 		dataQueue<CBotTask> tempStack = m_Tasks;
 
@@ -1352,7 +1352,7 @@ public:
 		*GotTask = CBotTask(BOT_TASK_NONE);
 	}
 
-	bool HasTask(CBotTask const& Task)
+	bool HasTask(const CBotTask& Task)
 	{
 		return m_Tasks.IsMember(Task);//changed
 	}
@@ -1404,7 +1404,7 @@ public:
 
 	//
 	// Removes all tasks from a schedule id number
-	bool FinishSchedule(int iScheduleId)
+	bool FinishSchedule(const int iScheduleId)
 		// Finish all tasks with ScheduleId as its schedule
 	{
 		dataQueue<CBotTask> tempStack = m_Tasks;
@@ -1513,7 +1513,7 @@ private:
 // connections between two points.  There is an array called "paths" that
 // contains head pointers to these structures for each waypoint index.
 typedef struct path {
-	short int index[MAX_PATH_INDEX];  // indexes of waypoints (index -1 means not used)
+	short index[MAX_PATH_INDEX];  // indexes of waypoints (index -1 means not used)
 	path* next;   // link to next structure
 } PATH;
 
@@ -1522,52 +1522,52 @@ typedef struct path {
 // TODO: those need to be initialised for Bot Profile to work? [APG]RoboCop[CL]
 typedef struct bot_profile_s
 {
-	int m_iProfileId;
+	int m_iProfileId = 0;
 
-	int m_iFavMod;
-	int m_iFavTeam;
-	int m_iSkill;
+	int m_iFavMod = 0;
+	int m_iFavTeam = 0;
+	int m_iSkill = 0;
 
-	const char* m_szFavMap;
-	const char* m_szSpray;
-	const char* m_szBotName;
+	const char* m_szFavMap = nullptr;
+	const char* m_szSpray = nullptr;
+	const char* m_szBotName = nullptr;
 
 	//////////////////////
 	// NS STUFF
 
-	int m_GorgePercent;
-	int m_LerkPercent;
-	int m_FadePercent;
-	int m_OnosPercent;
+	int m_GorgePercent = 0;
+	int m_LerkPercent = 0;
+	int m_FadePercent = 0;
+	int m_OnosPercent = 0;
 
-	int m_iNumGames;
+	int m_iNumGames = 0;
 
-	int m_iBottomColour;
-	int m_iTopColour;
+	int m_iBottomColour = 0;
+	int m_iTopColour = 0;
 
-	float m_fAimSpeed;
-	float m_fAimSkill;
-	float m_fAimTime;
+	float m_fAimSpeed = 0.0f;
+	float m_fAimSkill = 0.0f;
+	float m_fAimTime = 0.0f;
 
 	/////////////////////////////////////
 	// now made Individual for each bot
-	int m_iPathRevs;
-	int m_iVisionRevs;
-	float m_fVisionTime;
+	int m_iPathRevs = 0;
+	int m_iVisionRevs = 0;
+	float m_fVisionTime = 0.0f;
 	/////////////////////////////////////
 
-	char* m_szHAL_PreTrainFile;
-	char* m_szHAL_AuxFile;
-	char* m_szHAL_BanFile;
-	char* m_szHAL_SwapFile;
+	char* m_szHAL_PreTrainFile = nullptr;
+	char* m_szHAL_AuxFile = nullptr;
+	char* m_szHAL_BanFile = nullptr;
+	char* m_szHAL_SwapFile = nullptr;
 
-	HAL_bot_t* m_HAL;
+	HAL_bot_t* m_HAL = nullptr;
 
 	CBotReputations m_Rep;
 
-	int m_iClass;
+	int m_iClass = 0;
 
-	char* m_szModel;
+	char* m_szModel = nullptr;
 }bot_profile_t;
 
 class CBotFailedPath
@@ -1735,7 +1735,7 @@ protected:
 class CAutoWaypointCheck : public CTypeVector<float>
 {
 public:
-	void SetPoint(const Vector& vec, int iFlags)
+	void SetPoint(const Vector& vec, const int iFlags)
 	{
 		m_iFlags = iFlags;
 
@@ -1780,12 +1780,12 @@ public:
 		setEntity(pEntity);
 	}
 
-	void setFlags(int flags)
+	void setFlags(const int flags)
 	{
 		m_iFlags = flags;
 	}
 
-	bool hasFlags(int flags) const
+	bool hasFlags(const int flags) const
 	{
 		return (m_iFlags & flags) > 0;
 	}
@@ -1813,7 +1813,7 @@ public:
 		return m_vOrigin;
 	}
 
-	void setVisibleOrigin(Vector const& vVis)
+	void setVisibleOrigin(const Vector& vVis)
 	{
 		m_vVisibleOrigin = vVis;
 	}
@@ -1930,7 +1930,7 @@ public:
 			}
 		}*/
 
-	void addPosition(Vector const& vOrigin, edict_t* pEntity, int flags, const Vector& vVisibleOrigin)
+	void addPosition(const Vector& vOrigin, edict_t* pEntity, const int flags, const Vector& vVisibleOrigin)
 	{
 		CRememberPosition newPosition = CRememberPosition(vOrigin, pEntity);
 		newPosition.setFlags(flags);
@@ -2000,7 +2000,7 @@ public:
 		}*/
 	}
 
-	CRememberPosition* getLatestWFlags(int flags)
+	CRememberPosition* getLatestWFlags(const int flags)
 	{
 		for (int i = 0; i < m_Positions.Size(); i++)
 		{
@@ -2035,7 +2035,7 @@ public:
 					else
 						m_iNewest = 0;
 				}
-*/
+				*/
 				return;
 			}
 		}
@@ -2379,7 +2379,7 @@ public:
 		return m_fDesiredSpread;
 	}
 
-	void ChangeSpread(float fNewSpread)
+	void ChangeSpread(const float fNewSpread)
 	{
 		m_fDesiredSpread = fNewSpread;
 	}
@@ -2714,7 +2714,7 @@ public:
 		m_vOrigin = Vector(0, 0, 0);
 		m_szName = nullptr;
 	}
-	TSObjective(int id, const Vector& origin, char* name)
+	TSObjective(const int id, const Vector& origin, char* name)
 		: m_iId(id), m_vOrigin(origin), m_szName(name)
 	{}
 	/*guurk*/
@@ -2750,7 +2750,7 @@ private:
 
 	CBotVisibles* m_pVisibles;
 
-	CTypeVector<short int>  m_vNearestRememberPoint;
+	CTypeVector<short>  m_vNearestRememberPoint;
 	bool m_bNearestRememberPointVisible;
 	bool m_bLookingForEnemy;
 	CPerceptron* dec_runForCover;
@@ -2818,7 +2818,7 @@ private:
 
 	unsigned char m_iBoredom; // negative if really bored
 
-	CTypeVector<short int> m_seenFlagPos;
+	CTypeVector<short> m_seenFlagPos;
 
 	void decideJumpDuckStrafe(float fEnemyDist, const Vector& vEnemyOrigin);
 
@@ -2968,7 +2968,7 @@ private:
 
 	float m_fNextUseVGUI;
 
-	CTypeVector<short int>  m_vLastSeeEnemyPosition;
+	CTypeVector<short>  m_vLastSeeEnemyPosition;
 	// use short ints, only need from -4096 to + 4096,
 	// dont need to bother with much precision so use ints for less memory!
 
@@ -2985,12 +2985,12 @@ private:
 
 	CBotSquad* m_stSquad;
 
-	short int m_iWeaponsNeeded[MAX_WEAPONS];
+	short m_iWeaponsNeeded[MAX_WEAPONS];
 
 	//unsigned char m_iEnemyPositions;
 	//unsigned char m_iLastUsedEnemyPosition;
 
-	//CTypeVector<short int> m_vEnemyPositions[MAX_REMEMBER_POSITIONS];
+	//CTypeVector<short> m_vEnemyPositions[MAX_REMEMBER_POSITIONS];
 	CRememberedPositions m_vRememberedPositions;
 
 	// Store the last 5 visited resource fountains
@@ -3005,7 +3005,7 @@ private:
 		/////////////////////////
 		// TFC private stuff
 
-		CTypeVector<short int> m_fFeignPosition;
+		CTypeVector<short> m_fFeignPosition;
 	*/
 	float m_fHoldAttackTime;
 
@@ -3031,7 +3031,7 @@ private:
 	float m_f3dVelocity;
 	float m_f2dVelocity;
 
-	CTypeVector<short int> m_vSpawnPosition;
+	CTypeVector<short> m_vSpawnPosition;
 
 	void CheckStuck();
 
@@ -3307,9 +3307,9 @@ public:
 	//bool IsHoldingMiniGun();
 
 	// temporary storage to later pick up weapons needed
-	void SetWeaponsNeeded(short int* iArray)
+	void SetWeaponsNeeded(short* iArray)
 	{
-		std::memcpy(m_iWeaponsNeeded, iArray, sizeof(short int) * MAX_WEAPONS);
+		std::memcpy(m_iWeaponsNeeded, iArray, sizeof(short) * MAX_WEAPONS);
 	}
 
 	// returns player standing on the bot
@@ -3319,7 +3319,7 @@ public:
 	edict_t* StandingOnPlayer() const;
 
 	// store buttons while on ladder in case of think time clearing buttons
-	void SetLadderMovement(int iButtons)
+	void SetLadderMovement(const int iButtons)
 	{
 		m_iLadderButtons = iButtons;
 	}
@@ -3358,17 +3358,17 @@ public:
 		m_stSquad = theSquad;
 	}
 
-	void SetVGUIState(int iVguiMenu)
+	void SetVGUIState(const int iVguiMenu)
 	{
 		m_iVguiMenu = iVguiMenu;
 	}
 
-	bool BotWantsCombatItem(int iCombatItem) const
+	bool BotWantsCombatItem(const int iCombatItem) const
 	{
 		return (m_iCombatInfo & iCombatItem) > 0;
 	}
 
-	void SetWantCombatItem(int iCombatItem, bool bSet)
+	void SetWantCombatItem(const int iCombatItem, const bool bSet)
 	{
 		if (bSet)
 			m_iCombatInfo |= iCombatItem;
@@ -3409,7 +3409,7 @@ public:
 
 	// Goal origin, a somewhat nearby vector to
 	// where the bot wants to go
-	CTypeVector<short int> m_vGoalOrigin;
+	CTypeVector<short> m_vGoalOrigin;
 
 	// using crappy non-waypointed navigation?
 	bool m_bNotFollowingWaypoint;
@@ -3517,7 +3517,7 @@ public:
 	// keep bot facing one certain angle
 	// when climbing ladder so bot doesn't
 	// jerk around like crazy
-	void SetLadderAngles(Vector const& vAngles)
+	void SetLadderAngles(const Vector& vAngles)
 	{
 		m_vLadderAngles = vAngles;
 		m_bLadderAnglesSet = true;
@@ -3577,7 +3577,7 @@ public:
 	float m_fNextClearFailedGoals;
 
 	// Going up or down ?
-	short int m_siLadderDir;
+	short m_siLadderDir;
 
 	// Bots current waypoint goal INDEX
 	int m_iWaypointGoalIndex;
@@ -3652,9 +3652,9 @@ public:
 	////////////////////////////
 	// NATURAL SELECTION RELATED
 
-	short int m_iResources;
-	//		short int m_siLastGestationState;
-	//		short int m_siCurrentUpgrades;
+	short m_iResources;
+	//		short m_siLastGestationState;
+	//		short m_siCurrentUpgrades;
 
 	////////////////////////////
 	// CHAT RELATED
@@ -3711,7 +3711,7 @@ public:
 	// MISCELLANEOUS
 
 	int m_iCombatInfo;
-	//short int m_iCombatUpgrades;
+	//short m_iCombatUpgrades;
 
 	edict_t* m_pSquadLeader;
 	float    m_fFollowSquadTime;
@@ -3851,7 +3851,7 @@ public:
 
 	bool     SwitchWeapon(byte iId);
 
-	bool     IsCurrentWeapon(int iId) const
+	bool     IsCurrentWeapon(const int iId) const
 	{
 		if (m_pCurrentWeapon == nullptr)
 			return false;
@@ -3946,17 +3946,17 @@ public:
 	// Bot Conditions
 	// Functions for setting, checking and removing conditions
 
-	void     UpdateCondition(int iCondition)
+	void     UpdateCondition(const int iCondition)
 	{
 		m_ibBotConditions |= iCondition;
 	}
 
-	bool     HasCondition(int iCondition) const
+	bool     HasCondition(const int iCondition) const
 	{
 		return (m_ibBotConditions & iCondition) == iCondition;
 	}
 
-	void     RemoveCondition(int iCondition)
+	void     RemoveCondition(const int iCondition)
 	{
 		m_ibBotConditions &= ~iCondition;
 	}
@@ -4026,12 +4026,12 @@ public:
 		return ( pev->sequence == iReloadAnim );
 	}*/
 
-	void     Impulse(int impulse) const { pev->impulse = impulse; }
+	void     Impulse(const int impulse) const { pev->impulse = impulse; }
 	// BUTTONS - END
 
-	bool     EvolveInto(int species);
-	short int SpeciesOnTeam(int species) const;
-	short int EvolvedSpeciesOnTeam(int species);
+	bool     EvolveInto(int species); //TODO: Not implemented yet [APG]RoboCop[CL]
+	short    SpeciesOnTeam(int species) const;
+	short    EvolvedSpeciesOnTeam(int species); //TODO: Not implemented yet [APG]RoboCop[CL]
 
 	void	 BotChat(eBotChatType iChatType, edict_t* pChatEdict = nullptr, bool bSayNow = false);
 
@@ -4091,7 +4091,7 @@ public:
 	} 
 
 	bool     HasJetPack() const { return IsMarine() && (pev->iuser4 & MASK_UPGRADE_7) == MASK_UPGRADE_7; }
-	bool     HasUser4Mask(int iBits) const { return (pev->iuser4 & iBits) == iBits; }
+	bool     HasUser4Mask(const int iBits) const { return (pev->iuser4 & iBits) == iBits; }
 
 	/* Commander stuff */
 
@@ -4154,7 +4154,7 @@ public:
 	}
 
 	// setup hud text class for tool tip properties
-	HudText(bool tooltip) : m_textParms() // Use default constructor of m_textParms
+	HudText(const bool tooltip) : m_textParms() // Use default constructor of m_textParms
 	{
 		Initialise();
 
@@ -4172,7 +4172,7 @@ public:
 		}
 	}
 
-	void SetPosition(float x, float y)
+	void SetPosition(const float x, const float y)
 	{
 		// x(string) : "X (0 - 1.0 = left to right) (-1 centers)" : "-1"
 		// y(string) : "Y (0 - 1.0 = top to bottom) (-1 centers)" : "-1"
@@ -4181,7 +4181,7 @@ public:
 		m_textParms.y = y;
 	}
 
-	void SetEffect(int effect)
+	void SetEffect(const int effect)
 	{
 		//	0 : "Fade In/Out"
 		//	1 : "Credits"
@@ -4190,23 +4190,23 @@ public:
 		m_textParms.effect = effect;
 	}
 
-	void SetFadeTime(float fadein, float fadeout)
+	void SetFadeTime(const float fadein, const float fadeout)
 	{
 		m_textParms.fadeinTime = fadein;
 		m_textParms.fadeoutTime = fadeout;
 	}
 
-	void SetHoldTime(float holdtime)
+	void SetHoldTime(const float holdtime)
 	{
 		m_textParms.holdTime = holdtime;
 	}
 
-	void SetChannel(int channel)
+	void SetChannel(const int channel)
 	{
 		m_textParms.channel = channel;
 	}
 
-	void SetEffectTime(float time)
+	void SetEffectTime(const float time)
 	{
 		m_textParms.fxTime = time;
 	}
@@ -4214,14 +4214,14 @@ public:
 	void SayMessage(const char* message, edict_t* pPlayer);
 	void SayMessage(const char* message, const Vector& colour1, const Vector& colour2, edict_t* pPlayer);
 	void Initialise();
-	void SetColour1(Vector const& colours, int alpha)
+	void SetColour1(const Vector& colours, const int alpha)
 	{
 		m_textParms.r1 = static_cast<byte>(colours.x);
 		m_textParms.g1 = static_cast<byte>(colours.y);
 		m_textParms.b1 = static_cast<byte>(colours.z);
 		m_textParms.a1 = static_cast<byte>(alpha);
 	}
-	void SetColour2(Vector const& colours, int alpha)
+	void SetColour2(const Vector& colours, const int alpha)
 	{
 		m_textParms.r2 = static_cast<byte>(colours.x);
 		m_textParms.g2 = static_cast<byte>(colours.y);
@@ -4409,7 +4409,7 @@ public:
 		return m_pPlayer != nullptr;
 	}
 
-	void SetAccessLevel(int iAccessLevel)
+	void SetAccessLevel(const int iAccessLevel)
 	{
 		m_iAccessLevel = iAccessLevel;
 	}
@@ -4438,14 +4438,14 @@ public:
 		return std::strcmp(szPlayerName, STRING(m_pPlayer->v.netname)) == 0;
 	}
 
-	unsigned int GetWonId() const
+	unsigned GetWonId() const
 	{
 		return m_iWonId;
 	}
 
 	void SetEdict(edict_t* pPlayer);
 
-	void UpdatePlayerRepId(int iId)
+	void UpdatePlayerRepId(const int iId)
 	{
 		m_iPlayerId = iId;
 	}
@@ -4469,7 +4469,7 @@ public:
 
 	void setSteamID();
 
-	void SetTeleportVector(Vector const& vOrigin)
+	void SetTeleportVector(const Vector& vOrigin)
 	{
 		RemoveTeleportVector();
 		m_vTeleportVector = new Vector(vOrigin);
@@ -4480,10 +4480,10 @@ public:
 		return m_vTeleportVector;
 	}
 
-	void addCmd(int cmd) { m_iCmd |= cmd; }
-	void remCmd(int cmd) { m_iCmd &= ~cmd; }
-	bool hasCmd(int cmd) const { return (m_iCmd & cmd) == cmd; }
-	void toggleCmd(int cmd) { if (hasCmd(cmd)) remCmd(cmd); else addCmd(cmd); }
+	void addCmd(const int cmd) { m_iCmd |= cmd; }
+	void remCmd(const int cmd) { m_iCmd &= ~cmd; }
+	bool hasCmd(const int cmd) const { return (m_iCmd & cmd) == cmd; }
+	void toggleCmd(const int cmd) { if (hasCmd(cmd)) remCmd(cmd); else addCmd(cmd); }
 
 	void FreeGlobalMemory();
 
@@ -4537,7 +4537,7 @@ public:
 	}
 
 	// sets auto waypoint on/off or toggle
-	void AutoWaypoint(int state = -1)
+	void AutoWaypoint(const int state = -1)
 	{
 		m_bDebugAutoWaypoint = false;
 		m_bSetUpAutoWaypoint = false;
@@ -4622,7 +4622,7 @@ private:
 	char m_szPass[BOT_MAX_PASSWORD_LEN];
 
 	// players WON ID
-	unsigned int m_iWonId;
+	unsigned m_iWonId;
 
 	// players bit mask of access to bot commands
 	int m_iAccessLevel;
@@ -4644,7 +4644,7 @@ private:
 	bool m_bDebugAutoWaypoint;
 
 	float m_fCanPlaceJump;
-	short int m_iJumpType;
+	short m_iJumpType;
 	int  m_iLastButtons;
 
 	int m_iLastLadderWaypointIndex;
@@ -4703,7 +4703,7 @@ public:
 
 	static void ClientDisconnected(CClient* pClient);
 
-	CClient* GetClientByIndex(int iIndex)
+	CClient* GetClientByIndex(const int iIndex)
 	{
 		if (iIndex >= 0 && iIndex < MAX_PLAYERS)
 			return &m_Clients[iIndex];
@@ -4776,7 +4776,7 @@ public:
 		std::memset(this, 0, sizeof(CAllowedPlayer));
 	}
 
-	CAllowedPlayer(const char* szName, const char* szPass, int iAccessLevel, const char* szSteamId)
+	CAllowedPlayer(const char* szName, const char* szPass, const int iAccessLevel, const char* szSteamId)
 	{
 		std::strcpy(m_szName, szName);
 		std::strncpy(m_szPass, szPass, BOT_MAX_PASSWORD_LEN - 1);
@@ -4811,9 +4811,9 @@ public:
 		return std::strcmp(szName, m_szName) == 0;
 	}
 
-	bool IsForPass(const char* szPass /*const unsigned int iWonId*/) const
+	bool IsForPass(const char* szPass /*const unsigned iWonId*/) const
 	{
-		return FStrEq(m_szPass, szPass);//((unsigned int)m_iWonid == (unsigned int)iWonId);
+		return FStrEq(m_szPass, szPass);//((unsigned)m_iWonid == (unsigned)iWonId);
 	}
 
 	bool IsForClient(CClient* pClient) const;
@@ -4828,7 +4828,7 @@ public:
 		BotMessage(pEntity, 0, R"(name="%s", pass="%s", accesslevel=%d, steamID="%s")", m_szName, m_szPass, m_iAccessLevel, m_szSteamId);
 	}
 
-	//	unsigned int GetWonId ( void )
+	//	unsigned GetWonId ( void )
 	//	{
 	//		return m_iWonid;
 	//	}
@@ -4867,7 +4867,7 @@ public:
 		}
 	}
 
-	void AddPlayer(const char* szName, const char* szPass, int iAccessLevel, const char* szSteamId)
+	void AddPlayer(const char* szName, const char* szPass, const int iAccessLevel, const char* szSteamId)
 	{
 		const CAllowedPlayer PlayerToAdd = CAllowedPlayer(szName, szPass, iAccessLevel, szSteamId);
 
@@ -4945,7 +4945,7 @@ public:
 
 	void setupCommand(const char* szCvarName, int iAccessLevel, bool bCanUseOnDedicatedServer = true);
 
-	bool needAccess(int iAccessLevel) const
+	bool needAccess(const int iAccessLevel) const
 	{
 		if (m_iAccessLevel > 0)
 			return (iAccessLevel & m_iAccessLevel) == 0;
@@ -5071,7 +5071,7 @@ public:
 		m_iModId = 0;
 	}
 
-	CModInfo(const char* szModFolder, const char* szDllFile, int iModId)
+	CModInfo(const char* szModFolder, const char* szDllFile, const int iModId)
 	{
 		std::strcpy(m_szModFolder, szModFolder);
 		std::strcpy(m_szDllFile, szDllFile);
@@ -5106,7 +5106,7 @@ public:
 	// and the dll file name to hook
 	// and the mod id to set after successfully hooking the dll file.
 	//
-	void AddMod(const char* szModFolder, const char* szDllFile, int iModId)
+	void AddMod(const char* szModFolder, const char* szDllFile, const int iModId)
 	{
 		m_Mods.Push(CModInfo(szModFolder, szDllFile, iModId));
 	}
@@ -5232,7 +5232,7 @@ public:
 		return MASTER_NONE;
 	}
 
-	edict_t* GetButtonForEntity(edict_t* pEntity, Vector const& vOrigin) const
+	edict_t* GetButtonForEntity(edict_t* pEntity, const Vector& vOrigin) const
 	{
 		if (const CMasterEntity* pMaster = GetMaster(pEntity))
 			return pMaster->FindButton(vOrigin);
@@ -5354,7 +5354,7 @@ class CStructures
 {
 public:
 
-	void AddStructure(edict_t* pStructure, int iHashVal)
+	void AddStructure(edict_t* pStructure, const int iHashVal)
 	{
 		const int iIndex = iHashVal % ALIEN_STRUCT_HASH_MAX;
 
@@ -5476,7 +5476,7 @@ public:
 		m_iPriority = 0;
 	}
 
-	CStructToBuild(int iAmount, int iPriority)
+	CStructToBuild(const int iAmount, const int iPriority)
 	{
 		m_iAmountOf = iAmount;
 		m_iPriority = iPriority;
@@ -5497,7 +5497,7 @@ public:
 		m_iSens = CStructToBuild();
 	}
 
-	CThingToBuild(int iOffs, int iDefs, int iMovs, int iSens)
+	CThingToBuild(const int iOffs, const int iDefs, const int iMovs, const int iSens)
 	{
 		m_iOffs.m_iAmountOf = iOffs;
 		m_iDefs.m_iAmountOf = iDefs;
@@ -5629,22 +5629,22 @@ public:
 		return m_pEntity == pEdict;
 	}
 
-	void setTeam(int team)
+	void setTeam(const int team)
 	{
 		m_iTeam = team;
 	}
 
-	bool isForTeam(int team) const
+	bool isForTeam(const int team) const
 	{
 		return m_iTeam == team;
 	}
 
-	void setGoal(int goal)
+	void setGoal(const int goal)
 	{
 		m_iGoal = goal;
 	}
 
-	void setGroup(int group)
+	void setGroup(const int group)
 	{
 		m_iGroup = group;
 	}
@@ -5669,7 +5669,7 @@ public:
 		return m_iGroup;
 	}
 
-	bool isForGoal(int goal) const
+	bool isForGoal(const int goal) const
 	{
 		return m_iGoal == goal;
 	}
@@ -5784,7 +5784,7 @@ public:
 		return nullptr;
 	}
 
-	bool isFlag(edict_t* pFlag, int team, bool bEnemyFlag = false) const
+	bool isFlag(edict_t* pFlag, const int team, const bool bEnemyFlag = false) const
 	{
 		dataStack<CTFCGoal> tempStack = m_Flags;
 
@@ -5836,7 +5836,7 @@ public:
 		return false;
 	}
 
-	edict_t* getRandomHeldFlagByTeam(int team) const
+	edict_t* getRandomHeldFlagByTeam(const int team) const
 	{
 		dataStack<CTFCGoal> tempStack = m_Flags;
 
@@ -5974,7 +5974,7 @@ public:
 		m_CapPoints.Pop();
 	}
 
-	edict_t* getCapturePoint(int group, int goal, int team, bool noInfo = false);
+	edict_t* getCapturePoint(int group, int goal, int team, bool noInfo = false); //TODO: Not implemented yet [APG]RoboCop[CL]
 
 private:
 	dataStack<CTFCGoal> m_CapPoints;
@@ -6011,7 +6011,7 @@ public:
 		return;
 	}
 
-	CBotNSTech(AvHMessageID iId, short int iCost, short int bAvailable, short int iRadius, short int iSlot)
+	CBotNSTech(AvHMessageID iId, const short iCost, const short bAvailable, const short iRadius, const short iSlot)
 	{
 		m_iCost = iCost;
 		m_iSlot = iSlot;
@@ -6048,8 +6048,8 @@ public:
 
 private:
 	int m_iCost;
-	short int m_iSlot;
-	short int m_iRad;
+	short m_iSlot;
+	short m_iRad;
 	bool m_bAvailable;
 	AvHMessageID m_iMessageId;
 };
@@ -6070,7 +6070,7 @@ public:
 		}
 	}
 
-	void getTechs(int iMaxCost, dataUnconstArray<CBotNSTech*> pvTechs)
+	void getTechs(const int iMaxCost, dataUnconstArray<CBotNSTech*> pvTechs)
 	{
 		for (int i = 0; i < m_Techs.Size(); i++)
 		{
@@ -6096,7 +6096,7 @@ class CBotGlobals
 {
 public:
 
-	CBot* otherBotAtWaypoint(CBot* pBot, int iWpt)
+	CBot* otherBotAtWaypoint(CBot* pBot, const int iWpt)
 	{
 		for (CBot& m_Bot : m_Bots)
 		{
@@ -6140,14 +6140,14 @@ public:
 
 	void ReadThingsToBuild() const;
 
-	bool IsConfigSettingOn(int iConfigSetting) const
+	bool IsConfigSettingOn(const int iConfigSetting) const
 		// returns a True value if the config setting iConfigSetting
 		// is On, False if Off..
 	{
 		return (m_iConfigSettings & iConfigSetting) > 0;
 	}
 
-	void ChangeConfigSetting(int iConfigSetting, int State)
+	void ChangeConfigSetting(const int iConfigSetting, const int State)
 		// Put the config setting iConfigSetting on or off depending on iState
 	{
 		if (State == 0)
@@ -6504,7 +6504,7 @@ public:
 		UTIL_BotToolTip(pEntity, m_iLanguage, tooltip);
 	}
 
-	bool IsMod(int iMod) const
+	bool IsMod(const int iMod) const
 	{
 		return m_iCurrentMod == iMod;
 	}
@@ -6513,7 +6513,7 @@ public:
 
 	const char* GetModInfo();
 
-	bool IsDebugLevelOn(int iDebugLevel) const
+	bool IsDebugLevelOn(const int iDebugLevel) const
 	{
 		return (m_iDebugLevels & iDebugLevel) > 0;
 	}
@@ -6536,16 +6536,16 @@ public:
 	int TFC_getBestTeam(int team);
 	char* TFC_getClassName(int iClass);
 
-	//short int m_iNumHivesAdded;
+	//short m_iNumHivesAdded;
 
 	//dataStack<entity_master_t> m_EntityMasters;
 	//dataStack<entity_master_t> m_MultiManagers;
 
-	CTypeVector<short int> TFCGoals[MAX_TEAMS];
+	CTypeVector<short> TFCGoals[MAX_TEAMS];
 	*/
 	CBotSquads m_Squads;
 
-	short int m_sModelIndexFireball;
+	short m_sModelIndexFireball;
 
 	bool m_bWaypointsHavePaths;
 
@@ -6587,8 +6587,8 @@ public:
 
 	bool m_bNetMessageStarted;
 
-	short int m_iMinBots;
-	short int m_iMaxBots;
+	short m_iMinBots;
+	short m_iMaxBots;
 
 	bool m_bWelcomeMsg;
 
@@ -6620,16 +6620,16 @@ public:
 
 	float m_fReadConfigTime;
 
-	short int m_iBotChatPercent;
-	short int m_iBotChatReplyPercent;
+	short m_iBotChatPercent;
+	short m_iBotChatReplyPercent;
 	/////////////////////////////////
 	// NET MESSAGES
 
-	short int m_iBotMsgIndex;
+	short m_iBotMsgIndex;
 	// State Machines
-	short int m_iCurrentMessageState;
+	short m_iCurrentMessageState;
 	// May require another, for some messages (inside loops)
-	short int m_iCurrentMessageState2;
+	short m_iCurrentMessageState2;
 
 	int m_iMaxPathRevs;
 
@@ -6661,7 +6661,7 @@ public:
 	CMasterEntities m_Masters;
 
 	bool m_bIsFakeClientCommand;
-	short int m_iFakeArgCount;
+	short m_iFakeArgCount;
 
 	int m_iForceTeam;
 
@@ -6703,7 +6703,7 @@ public:
 	float m_fMapInitTime;
 	float m_fBotRejoinTime;
 
-	short int m_iNumBots;
+	short m_iNumBots;
 
 	bool m_bCanUpgradeDef;
 	bool m_bCanUpgradeSens;
@@ -6845,7 +6845,7 @@ private:
 	dataStack<char*> m_Messages[26];
 }*/
 
-const char* GetArg(const char* command, unsigned int arg_number);
+const char* GetArg(const char* command, unsigned arg_number);
 void FakeClientCommand(edict_t* pFakeClient, const char* fmt, ...);
 
 ///////////////////////////////////////////////////////////////////
@@ -6917,7 +6917,7 @@ int AddToFullPack(entity_state_s* state, int e, edict_t* ent, edict_t* host, int
 void CreateBaseline(int player, int eindex, entity_state_s* baseline, edict_s* entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs);
 void RegisterEncoders();
 int GetWeaponData(edict_s* player, weapon_data_s* info);
-void CmdStart(const edict_t* player, const usercmd_s* cmd, unsigned int random_seed);
+void CmdStart(const edict_t* player, const usercmd_s* cmd, unsigned random_seed);
 void CmdEnd(const edict_t* player);
 int ConnectionlessPacket(const netadr_s* net_from, const char* args, char* response_buffer, int* response_buffer_size);
 int GetHullBounds(int hullnumber, float* mins, float* maxs);
@@ -6925,7 +6925,7 @@ void CreateInstancedBaselines();
 int InconsistentFile(const edict_t* player, const char* filename, char* disconnect_message);
 int AllowLagCompensation();
 void RCBot_ServerCommand();
-int GetModId();
+int GetModId(); //TODO: Not implemented yet [APG]RoboCop[CL]
 float UTIL_GetAvoidAngle(const edict_t* pEdict, const Vector& origin);
 void ReadBotUsersConfig();
 void BotFunc_MakeSquad(CClient* pClient);

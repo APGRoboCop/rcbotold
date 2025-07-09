@@ -386,7 +386,7 @@ void UTIL_MakeVectors(const Vector& vecAngles)
 {
 	const size_t len = std::strlen(str);
 
-	for (unsigned int i = 0; i < len; i++)
+	for (unsigned i = 0; i < len; i++)
 	{
 		str[i] = static_cast<char>(std::tolower(static_cast<unsigned char>(str[i])));
 	}
@@ -397,7 +397,7 @@ void strhigh(char* str)
 {
 	const size_t len = std::strlen(str);
 
-	for (unsigned int i = 0; i < len; i++)
+	for (unsigned i = 0; i < len; i++)
 	{
 		str[i] = static_cast<char>(std::toupper(static_cast<unsigned char>(str[i])));
 	}
@@ -534,7 +534,7 @@ void UTIL_SetOrigin(const entvars_t* pev, const Vector& vecOrigin)
 	SET_ORIGIN(ENT(pev), vecOrigin);
 }
 
-void ClientPrint(edict_t* pEntity, int msg_dest, const char* msg_name)
+void ClientPrint(edict_t* pEntity, const int msg_dest, const char* msg_name)
 {
 	const char* szMsg = { "TextMsg" };
 
@@ -1485,7 +1485,7 @@ edict_t* UTIL_GetRandomUnbuiltHive()
 	return pEnt;
 }
 
-int UTIL_GetBuildWaypoint(Vector const& vSpawn, dataStack<int>* iFailedGoals)
+int UTIL_GetBuildWaypoint(const Vector& vSpawn, dataStack<int>* iFailedGoals)
 {
 	dataStack<int> iWaypoints;
 
@@ -2022,7 +2022,7 @@ void UTIL_FixFloatAngle(float* fAngle)
 {
 	// safety
 
-	short int iLoops = 0;
+	short iLoops = 0;
 
 	if (*fAngle < -180)
 	{
@@ -2123,9 +2123,9 @@ void HudText::InitMessage(const char* message)
 
 	m_sMessage[HUD_TEXT_LENGTH - 1] = 0;
 
-	const unsigned int length = std::strlen(m_sMessage);
+	const unsigned length = std::strlen(m_sMessage);
 
-	unsigned int i = 0;
+	unsigned i = 0;
 
 	while (i < length)
 	{
@@ -2289,7 +2289,10 @@ void UTIL_BotToolTip(edict_t* pEntity, const eLanguage iLang, const eToolTip iTo
 		{
 			char final_message[1024];
 
-			// Using snprintf instead of sprintf to prevent buffer overflows
+			// Ensure null-termination - [APG]RoboCop[CL]
+			final_message[sizeof(final_message) - 1] = '\0';
+
+			// Using snprintf instead of sprintf to prevent buffer overflows - [APG]RoboCop[CL]
 			snprintf(final_message, sizeof(final_message), "%s %s", BOT_DBG_MSG_TAG, tooltips[iLang][iTooltip]);
 
 			// name in message
@@ -2403,7 +2406,7 @@ bool UTIL_IsButton(const edict_t* pButton)
 	return std::strncmp(szClassname, "func_", 5) == 0;
 }
 
-edict_t* UTIL_FindNearestEntity(char** szClassnames, int iNames, const Vector& vOrigin, float fRange, bool bVisible, edict_t* pIgnore)
+edict_t* UTIL_FindNearestEntity(char** szClassnames, const int iNames, const Vector& vOrigin, float fRange, const bool bVisible, edict_t* pIgnore)
 {
 	TraceResult tr;
 
@@ -2569,7 +2572,7 @@ edict_t* UTIL_CheckTeleEntrance(const Vector& vOrigin, edict_t* pExit, edict_t* 
 	return nullptr;
 }
 
-bool UTIL_PlayerStandingOnEntity(edict_t* pEntity, int team, edict_t* pIgnore)
+bool UTIL_PlayerStandingOnEntity(edict_t* pEntity, const int team, edict_t* pIgnore)
 {
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{

@@ -1878,7 +1878,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		const char* teamlist = CVAR_GET_STRING("mp_teamlist");
 
 		int i = 0;
-		unsigned int j = 0;
+		unsigned j = 0;
 
 		const size_t len = std::strlen(teamlist);
 

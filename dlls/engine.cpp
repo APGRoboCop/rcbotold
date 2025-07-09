@@ -1548,7 +1548,7 @@ cvar_t* pfnCVarGetPointer(const char* szVarName)
 	return (*g_engfuncs.pfnCVarGetPointer)(szVarName);
 #endif
 }
-unsigned int pfnGetPlayerWONId(edict_t* e)
+unsigned pfnGetPlayerWONId(edict_t* e)
 {
 	if (gBotGlobals.IsMod(MOD_RC2))
 	{
@@ -1869,7 +1869,7 @@ const char* pfnCmd_Argv(int argc)
 #endif
 }
 
-const char* GetArg(const char* command, const unsigned int arg_number)
+const char* GetArg(const char* command, const unsigned arg_number)
 {
 	// the purpose of this function is to provide fakeclients (bots) with the same Cmd_Argv
 	// convenience the engine provides to real clients. This way the handling of real client
@@ -1878,7 +1878,7 @@ const char* GetArg(const char* command, const unsigned int arg_number)
 	// either to the actual engine functions (when the caller is a real client), either on
 	// our function here, which does the same thing, when the caller is a bot.
 
-	unsigned int i, index = 0, arg_count = 0, fieldstart, fieldstop;
+	unsigned i, index = 0, arg_count = 0, fieldstart, fieldstop;
 
 	static char arg[1024];
 

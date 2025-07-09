@@ -382,12 +382,12 @@ bool CBotWeapon::HasWeapon(const edict_t* pEdict) const
 // Fill arrays, each element represents a weapon id
 // 1 indicates available, 0 indicates that it is not
 // available...
-void GetNoWeaponArray(short int* Array)
+void GetNoWeaponArray(short* Array)
 {
 	std::fill_n(Array, MAX_WEAPONS, 0);
 }
 
-void GetArrayOfExplosives(short int* Array)
+void GetArrayOfExplosives(short* Array)
 {
 	std::fill_n(Array, MAX_WEAPONS, 0);
 	Array[VALVE_WEAPON_HANDGRENADE] = 1;
@@ -426,7 +426,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	const bool bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
 	bool bWantToMelee = false;
 
-	short int iAllowedWeapons[MAX_WEAPONS];
+	short iAllowedWeapons[MAX_WEAPONS];
 
 	for (i = 0; i < MAX_WEAPONS; i++)
 		iAllowedWeapons[i] = 1;

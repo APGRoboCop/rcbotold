@@ -216,7 +216,7 @@ typedef struct enginefuncs_s
 	void		(*pfnBuildSoundMsg)			(edict_t* entity, int channel, const char* sample, float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float* pOrigin, edict_t* ed);
 	int			(*pfnIsDedicatedServer)		();// is this a dedicated server?
 	cvar_t* (*pfnCVarGetPointer)		(const char* szVarName);
-	unsigned int (*pfnGetPlayerWONId)		(edict_t* e); // returns the server assigned WONid for this player.  useful for logging frags, etc.  returns -1 if the edict couldn't be found in the list of clients
+	unsigned	(*pfnGetPlayerWONId)		(edict_t* e); // returns the server assigned WONid for this player.  useful for logging frags, etc.  returns -1 if the edict couldn't be found in the list of clients
 
 	// YWB 8/1/99 TFF Physics additions
 	void		(*pfnInfo_RemoveKey)		(char* s, const char* key);
@@ -266,7 +266,7 @@ typedef struct enginefuncs_s
 	void* (*pfnSequenceGet)	(const char* fileName, const char* entryName);
 	void* (*pfnSequencePickSentence)(const char* groupName, int pickMethod, int* picked);
 	int                 (*pfnGetFileSize)	(char* filename);
-	unsigned int		(*pfnGetApproxWavePlayLen) (const char* filepath);
+	unsigned			(*pfnGetApproxWavePlayLen) (const char* filepath);
 	int                 (*pfnIsCareerMatch)	();
 	int                 (*pfnGetLocalizedStringLength)(const char* label);
 	void				(*pfnRegisterTutorMessageShown)(int mid);
@@ -461,7 +461,7 @@ typedef struct
 	void			(*pfnRegisterEncoders)	();
 	int				(*pfnGetWeaponData)		(edict_s* player, struct weapon_data_s* info);
 
-	void			(*pfnCmdStart)			(const edict_t* player, const struct usercmd_s* cmd, unsigned int random_seed);
+	void			(*pfnCmdStart)			(const edict_t* player, const struct usercmd_s* cmd, unsigned random_seed);
 	void			(*pfnCmdEnd)			(const edict_t* player);
 
 	// Return 1 if the packet is valid.  Set response_buffer_size if you want to send a response packet.  Incoming, it holds the max

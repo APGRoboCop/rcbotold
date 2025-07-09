@@ -225,14 +225,14 @@ public:
 
 	//virtual Vector getOrigin () { return origin; }
 
-	WAYPOINT(int f, const Vector& vec) : flags(f), origin(vec) {}
+	WAYPOINT(const int f, const Vector& vec) : flags(f), origin(vec) {}
 	WAYPOINT() : flags(0), origin(0, 0, 0) {}
 };
 
 class WAYPOINT2 : public WAYPOINT
 {
 public:
-	short int iAttachedIndex;
+	short iAttachedIndex;
 
 	//Vector getOrigin () { return pAttached->v.origin + origin; }
 };
@@ -293,14 +293,14 @@ public:
 		m_szHeader = strdup(szHeader);
 	}
 
-	void setVersion(int iVer)
+	void setVersion(const int iVer)
 	{
 		m_iVersion = iVer;
 	}
 
 	std::FILE* openWaypoint() const;
 
-	void setConvertBit(int iBit, int iFlag)
+	void setConvertBit(const int iBit, const int iFlag)
 	{
 		m_iConvertTo[iBit] = iFlag;
 	}
@@ -531,7 +531,7 @@ public:
 
 	bool ReadFromFile() const;
 
-	int GetVisibilityFromTo(int iFrom, int iTo) const
+	int GetVisibilityFromTo(const int iFrom, const int iTo) const
 	{
 		// work out the position
 		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
@@ -564,7 +564,7 @@ public:
 		}
 	}
 
-	void SetVisibilityFromTo(int iFrom, int iTo, bool bVisible) const
+	void SetVisibilityFromTo(const int iFrom, const int iTo, const bool bVisible) const
 	{
 		const int iPosition = iFrom * MAX_WAYPOINTS + iTo;
 
@@ -610,11 +610,11 @@ int  WaypointFindRandomGoal(edict_t* pEntity, int team, int flags, const dataSta
 int  WaypointFindRandomGoal(const Vector& v_src, edict_t* pEntity, float range, int team, int flags, const dataStack<int>* iIgnoreWpts);
 int  WaypointFindNearestAiming(const Vector& v_origin);
 void WaypointAdd(const CClient* pClient);
-void WaypointAddPath(short int add_index, short int path_index);
+void WaypointAddPath(short add_index, short path_index);
 void WaypointAddAiming(edict_t* pEntity);
 void WaypointDelete(CClient* pClient);
-void WaypointDeletePath(short int del_index);
-void WaypointDeletePath(short int path_index, short int del_index);//TODO: Duplicate? [APG]RoboCopCL]
+void WaypointDeletePath(short del_index);
+void WaypointDeletePath(short path_index, short del_index);//TODO: Duplicate? [APG]RoboCopCL]
 void WaypointCreatePath(CClient* pClient, int cmd);
 void WaypointRemovePath(CClient* pClient, int cmd);
 bool WaypointLoad(edict_t* pEntity);
@@ -630,7 +630,7 @@ int NearestWaypointToEdict(const edict_t* pEdict, int iIgnoreWpt, const dataStac
 int NearestWaypointToOrigin(const Vector& vOrigin, int iIgnoreWpt, dataStack<int>* iFailedWpts = nullptr);
 int WaypointFlags(int iWaypointIndex);
 int WaypointAddOrigin(const Vector& vOrigin, int iFlags, edict_t* pEntity, bool bDraw = true, bool bSound = true, bool bAutoSetFlagsForPlayer = true);
-void AutoWaypoint();
+void AutoWaypoint(); //TODO: Not implemented yet [APG]RoboCop[CL]
 Vector BotNavigate_ScanFOV(CBot* pBot);
 edict_t* PlayerNearVector(const Vector& vOrigin, float fRange);
 bool CheckLift(CBot* pBot, Vector vCheckOrigin, const Vector& vCheckToOrigin);

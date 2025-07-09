@@ -130,7 +130,7 @@ float AStarNode::getHeuristic() const
 	return m_fHeuristic;
 }
 
-short int AStarNode::getParent() const
+short AStarNode::getParent() const
 {
 	return m_iParent;
 }
@@ -1395,7 +1395,7 @@ bool BotNavigate_UpdateWaypoint(CBot* pBot)
 		else
 		{
 			float fMin;
-			short int siLadderDir = pBot->m_siLadderDir;
+			short siLadderDir = pBot->m_siLadderDir;
 
 			entvars_t *pev = &pBot->m_pEdict->v;
 
@@ -1700,7 +1700,7 @@ bool BotNavigate_UpdateWaypoint(CBot* pBot)
 	return true;
 }
 
-PATH* BotNavigate_FindPathFromTo(int iFrom, int iTo, int iTeam)
+PATH* BotNavigate_FindPathFromTo(int iFrom, const int iTo, const int iTeam)
 {
 	PATH* pPath = nullptr;
 	int iPathIndex = 0;
