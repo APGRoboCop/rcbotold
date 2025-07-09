@@ -50,7 +50,7 @@ V 1.51-beta11
 * changed: Modernised the weapon array code using C++ Array
 
 * TODO: To add support for Half-Life 25th Anniversary builds as it doesn't support Waypoints being displayed
-* TODO: To allow bots in Op4 should now use Deagle's Laser Sight to improve its accuracy
+* TODO: To allow bots in Op4 use Deagle's Laser Sight to improve its accuracy
 * TODO: To allow the Onos to be more aggressive and devour humans
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
 * TODO: To improve on how to allow bots climb ladders more properly
