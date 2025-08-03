@@ -2439,14 +2439,14 @@ bool CWaypointVisibilityTable::SaveToFile() const
 	char file[256];
 
 #ifdef __linux__
-	snprintf(file, sizeof(file), "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "visibility/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	snprintf(file, sizeof(file), "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "visibility\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	UTIL_BuildFileName(filename, file);
 
 	if (IS_DEDICATED_SERVER())
-		std::printf("loading waypoint file: %s\n", filename);
+		std::printf("saving visibility table file: %s\n", filename);
 
 	std::FILE* bfp = std::fopen(filename, "wb"); // binary file write
 
@@ -2472,14 +2472,14 @@ bool CWaypointVisibilityTable::ReadFromFile() const
 
 	// get the folder right.
 #ifdef __linux__
-	snprintf(file, sizeof(file), "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "visibility/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	snprintf(file, sizeof(file), "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "visibility\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	UTIL_BuildFileName(filename, file);
 
 	if (IS_DEDICATED_SERVER())
-		std::printf("loading waypoint file: %s\n", filename);
+		std::printf("loading visibility table file: %s\n", filename);
 
 	std::FILE* bfp = std::fopen(filename, "rb"); // binary file write
 
