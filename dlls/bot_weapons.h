@@ -759,7 +759,7 @@ public:
 	void SetWeapon(int iId, int* iAmmoList);
 
 	void Reset();
-	
+
 	void setHasWeapon(bool bVal);
 
 	bool LowOnAmmo() const
@@ -988,9 +988,9 @@ public:
 	void setHasWeapon(const int id, const bool bVal)
 	{
 		for (CBotWeapon& m_Weapon : m_Weapons)
-	{
-			if (m_Weapon.GetID() == id)
 		{
+			if (m_Weapon.GetID() == id)
+			{
 				m_Weapon.setHasWeapon(bVal);
 				return;
 			}

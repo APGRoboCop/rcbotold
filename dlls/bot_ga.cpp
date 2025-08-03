@@ -222,7 +222,7 @@ void CBotGAValues::load(std::FILE* bfp, const int req_size)
 
 unsigned CBitsGAValues::size() const
 {
-	return m_theBits->size();
+	return m_theBits->numBits();
 }
 
 void CBitsGAValues::convert(unsigned* iBits) const
@@ -285,12 +285,35 @@ void CBitsGAValues::crossOver(IIndividual* other)
 	}
 	const int iCrossoverPoint = RANDOM_LONG(0, iNumBits - 1);
 
-	// Swap the bits after the crossover point.
-	for (int i = iCrossoverPoint; i < iNumBits; i++)
+	// For performance, we can swap raw bytes up to the crossover point's byte boundary,
+	// then handle the remaining bits in the crossover byte, and finally swap the rest of the bytes [APG]RoboCop[CL]
+	const int cross_byte = iCrossoverPoint / 8;
+	const int cross_bit = iCrossoverPoint % 8;
+
+	unsigned char* p1 = m_theBits->getBits();
+	unsigned char* p2 = otherBits->m_theBits->getBits();
+
+	// Swap whole bytes before the crossover point
+	for (int i = 0; i < cross_byte; i++)
 	{
-		const bool temp = m_theBits->getBit(i);
-		m_theBits->setBit(i, otherBits->get(i));
-		otherBits->set(i, temp);
+		std::swap(p1[i], p2[i]);
+	}
+
+	// Swap the bits within the crossover byte
+	if (cross_bit > 0)
+	{
+		const unsigned char mask1 = (1 << cross_bit) - 1;
+		const unsigned char mask2 = ~mask1;
+		const unsigned char b1 = p1[cross_byte];
+		const unsigned char b2 = p2[cross_byte];
+		p1[cross_byte] = (b1 & mask2) | (b2 & mask1);
+		p2[cross_byte] = (b2 & mask2) | (b1 & mask1);
+	}
+
+	// Swap the remaining whole bytes
+	for (unsigned i = cross_byte + 1; i < m_theBits->size(); i++)
+	{
+		std::swap(p1[i], p2[i]);
 	}
 }
 

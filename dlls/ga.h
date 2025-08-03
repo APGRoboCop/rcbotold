@@ -73,6 +73,7 @@ class CGA;
 class CPopulation
 {
 public:
+	~CPopulation();
 
 	void freeMemory();
 

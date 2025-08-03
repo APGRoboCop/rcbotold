@@ -72,7 +72,7 @@ int BotFunc_GetRepArrayNum(const int iRep)
 {
 	if (iRep == -1)
 	{
-		BugMessage(nullptr, "GetRepArrayNum: Bad rep recieved (%d)", iRep);
+		BugMessage(nullptr, "GetRepArrayNum: Bad rep received (%d)", iRep);
 		return 1;
 	}
 
@@ -170,7 +170,7 @@ void CBotReputations::SaveAllRep(const int iBotProfile) const
 		}
 	}
 
-	return;
+	//return;
 }
 
 void CBotReputations::AddLoadRep(const int iBotProfile, const int iPlayerRepId)
@@ -436,7 +436,7 @@ int CBotReputations::GetClientRep(const CClient* pClient) const
 {
 	if (pClient == nullptr)
 	{
-		BotMessage(nullptr, 0, "warning: GetClientRep(): Bad pClient recieved (NULL) (returning default)");
+		BotMessage(nullptr, 0, "warning: GetClientRep(): Bad pClient received (NULL) (returning default)");
 		return BOT_MID_REP;
 	}
 

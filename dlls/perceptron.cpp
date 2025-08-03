@@ -45,6 +45,8 @@
 #include <memory>
 #include <numeric>
 #include <stdexcept>
+#include <algorithm>
+#include <iterator>
 
 ga_value CPerceptron::m_fDefaultLearnRate = 0.5f;
 ga_value CPerceptron::m_fDefaultBias = 1.0f;
@@ -56,14 +58,13 @@ ga_value CSigmoidTransfer::transfer(const ga_value netInput)
 
 CPerceptron::CPerceptron(const int iInputs, ITransfer* transferFunction, const float fLearnRate)
     : m_iInputs(iInputs), m_Bias(m_fDefaultBias), m_LearnRate(fLearnRate == 0.0f ? m_fDefaultLearnRate : fLearnRate),
-      m_output(0), m_transferFunction(transferFunction ? std::unique_ptr<ITransfer>(transferFunction)
-	                         : std::make_unique<CSigmoidTransfer>()), m_bTrained(false)
+    m_output(0), m_transferFunction(transferFunction ? std::unique_ptr<ITransfer>(transferFunction)
+        : std::make_unique<CSigmoidTransfer>()), m_bTrained(false)
 {
     m_weights.reserve(iInputs + 1);
-    m_weights.emplace_back(RANDOM_FLOAT(0, 0.6f) - 0.3f);
-
-    for (int i = 0; i < m_iInputs; i++)
-        m_weights.emplace_back(RANDOM_FLOAT(0, 0.6f) - 0.3f);
+    auto weight_generator = []() { return RANDOM_FLOAT(0, 0.6f) - 0.3f; };
+    m_weights.emplace_back(weight_generator());
+    std::generate_n(std::back_inserter(m_weights), iInputs, weight_generator);
 }
 
 void CPerceptron::setWeights(const CBotGAValues* vals, const int iFrom, const int iNum)
@@ -144,9 +145,9 @@ void CPerceptron::train(const ga_value expectedOutput)
     m_weights[0] += m_LearnRate * error * m_Bias;
 
     // Update weights for inputs
-    for (size_t i = 1; i < m_weights.size(); i++)
+    for (size_t i = 0; i < m_inputs.size(); ++i)
     {
-        m_weights[i] += m_LearnRate * error * m_inputs[i - 1];
+        m_weights[i + 1] += m_LearnRate * error * m_inputs[i];
     }
 }
 
@@ -165,7 +166,7 @@ void CPerceptron::save(std::FILE* bfp) const
         if (std::fwrite(data, size, count, file) != count) {
             BotMessage(nullptr, 0, "Error writing to file");
         }
-    };
+        };
 
     // Write perceptron data
     safe_write(&m_iInputs, sizeof(decltype(m_iInputs)), 1, bfp);
@@ -207,7 +208,7 @@ void CPerceptron::load(std::FILE* bfp)
             return false;
         }
         return true;
-    };
+        };
 
     // Read perceptron data
     if (!safe_read(&m_iInputs, sizeof(decltype(m_iInputs)), 1, bfp) ||

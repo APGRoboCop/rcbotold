@@ -82,7 +82,7 @@ public:
 
 	CPerceptron(int iInputs, ITransfer* transferFunction = nullptr, float fLearnRate = 0.0f);
 
-	CPerceptron(std::FILE* bfp)
+	explicit CPerceptron(std::FILE* bfp)
 	{
 		load(bfp);
 	}
@@ -103,9 +103,9 @@ public:
 
 	ga_value execute();
 
-	bool fired() const;
+	[[nodiscard]] bool fired() const;
 
-	ga_value getOutput() const;
+	[[nodiscard]] ga_value getOutput() const;
 
 	void train(ga_value expectedOutput);
 

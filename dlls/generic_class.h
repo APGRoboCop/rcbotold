@@ -1018,31 +1018,31 @@ public:
 		return buffer[RANDOM_LONG(0, size - 1)];
 	}
 
-	void Add(const T& pObj)
-	{
-		size++;
+    void Add(const T& pObj)  
+    {  
+        size++;  
 
-		if (size > capacity)
-		{
-			if (capacity == 0)
-				capacity = 1;
-			else
-				capacity *= 2;
+        if (size > capacity)  
+        {  
+            if (capacity == 0)  
+                capacity = 1;  
+            else  
+                capacity *= 2;  
 
-			T* new_buffer = new T[capacity];
+            T* new_buffer = new T[capacity];  
 
-			if (buffer != nullptr)
-			{
-			for (unsigned i = 0; i < size - 1; i++)
-			{
-				new_buffer[i] = buffer[i];
-			}
-				delete[] buffer;
-			}
-			buffer = new_buffer;
-		}
-		buffer[size - 1] = pObj;
-	}
+            if (buffer != nullptr)  
+            {  
+				for (unsigned i = 0; i < size - 1 && i < capacity; i++) // Ensure 'i' does not exceed 'capacity' [APG]RoboCop[CL]
+                {  
+                    new_buffer[i] = buffer[i];  
+                }  
+                delete[] buffer;  
+            }  
+            buffer = new_buffer;  
+        }  
+        buffer[size - 1] = pObj;  
+    }
 
 	T ReturnValueFromIndex(int iIndex)
 	{

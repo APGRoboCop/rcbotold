@@ -70,7 +70,7 @@ NN::NN(const int iNumHiddenLayers, const int iNumInputs, const int iNumNeuronsPe
 	m_Layers.emplace_back(std::make_unique<NNLayer>(iNumOutputs, iNumNeuronsPerHiddenLayer));
 }
 
-void NN::setWeights(const std::vector<ga_value>& weights) const
+void NN::setWeights(const std::vector<ga_value>& weights)
 {
 	unsigned w = 0;
 
@@ -108,7 +108,7 @@ void NN::getWeights(std::vector<ga_value>& weights) const
 	}
 }
 
-void NN::trainOutputs(const std::vector<ga_value>& wanted_outputs) const
+void NN::trainOutputs(const std::vector<ga_value>& wanted_outputs)
 {
 	unsigned w = 0;
 

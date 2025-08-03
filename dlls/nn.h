@@ -90,7 +90,7 @@ public:
 
     NN(int iNumHiddenLayers, int iNumInputs, int iNumNeuronsPerHiddenLayer, int iNumOutputs);
 
-    void setWeights(const std::vector<ga_value>& weights) const;
+    void setWeights(const std::vector<ga_value>& weights);
 
     void getWeights(std::vector<ga_value>& weights) const;
 
@@ -99,7 +99,7 @@ public:
     void randomize() const;
 
     void getOutputs(std::vector<ga_value>& outputs) const;
-    void trainOutputs(const std::vector<ga_value>& wanted_outputs) const;
+    void trainOutputs(const std::vector<ga_value>& wanted_outputs);
 
     void load(std::FILE* bfp);
 

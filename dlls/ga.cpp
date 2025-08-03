@@ -43,7 +43,9 @@
 
 #include "ga.h"
 
+#include <algorithm>
 #include <memory>
+#include <numeric>
 #include <stdexcept>
 #include <vector>
 
@@ -55,6 +57,10 @@ const float CGA::g_fMaxPerturbation = 0.3f;
 ////////////////////
 // POPULATION
 ////////////////////
+CPopulation::~CPopulation()
+{
+	freeMemory();
+}
 
 IIndividual* CPopulation::get(const unsigned iIndex) const
 {
@@ -63,15 +69,19 @@ IIndividual* CPopulation::get(const unsigned iIndex) const
 
 IIndividual* CPopulation::getBestIndividual() const
 {
-	IIndividual* best = nullptr;
-
-	for (IIndividual* const& curr : m_theIndividuals)
+	if (m_theIndividuals.empty())
 	{
-		if (!best || curr->getFitness() > best->getFitness())
-			best = curr;
+		return nullptr;
 	}
 
-	return best;
+	const std::vector<IIndividual*>::const_iterator best = std::max_element(
+		m_theIndividuals.cbegin(), m_theIndividuals.cend(),
+		[](const IIndividual* a, const IIndividual* b)
+		{
+			return a->getFitness() < b->getFitness();
+		});
+
+	return *best;
 }
 
 void CPopulation::add(IIndividual* individual)
@@ -81,24 +91,25 @@ void CPopulation::add(IIndividual* individual)
 
 void CPopulation::freeMemory()
 {
+	for (IIndividual* individual : m_theIndividuals)
+	{
+		delete individual;
+	}
+
 	m_theIndividuals.clear();
 }
 
 void CPopulation::clear()
 {
-	m_theIndividuals.clear();
+	freeMemory();
 }
 
 ga_value CPopulation::totalFitness() const
 {
-	float fTotalFitness = 0.0f;
-
-	for (IIndividual* const& individual : m_theIndividuals)
-	{
-		fTotalFitness += individual->getFitness();
-	}
-
-	return fTotalFitness;
+	return std::accumulate(m_theIndividuals.cbegin(), m_theIndividuals.cend(), 0.0f,
+		[](ga_value sum, const IIndividual* individual) {
+			return sum + individual->getFitness();
+		});
 }
 
 void CPopulation::save(std::FILE* bfp) const
@@ -155,21 +166,19 @@ void CPopulation::load(std::FILE* bfp, const int chromosize, const int type)
 
 ga_value CPopulation::bestFitness() const
 {
-	bool gotBestFitness = false;
-	float fBestFitness = 0.0f;
-
-	for (IIndividual* const& individual : m_theIndividuals)
+	if (m_theIndividuals.empty())
 	{
-		const float fFitness = individual->getFitness();
-
-		if (!gotBestFitness || fFitness > fBestFitness)
-		{
-			fBestFitness = fFitness;
-			gotBestFitness = true;
-		}
+		return 0.0f;
 	}
 
-	return fBestFitness;
+	const std::vector<IIndividual*>::const_iterator best = std::max_element(
+		m_theIndividuals.cbegin(), m_theIndividuals.cend(),
+		[](const IIndividual* a, const IIndividual* b)
+		{
+			return a->getFitness() < b->getFitness();
+		});
+
+	return (*best)->getFitness();
 }
 
 ga_value CPopulation::averageFitness() const

@@ -56,11 +56,11 @@ public:
 		return m_iY;
 	}
 
-	void update(const std::vector<ga_value>* inputs, ga_value inf);
+	void update(const std::vector<ga_value>& inputs, ga_value inf);
 
-	ga_value distance(const std::vector <ga_value>* inputs) const;
+	ga_value distance(const std::vector <ga_value>& inputs) const;
 
-	std::vector <ga_value>* weights();
+	const std::vector <ga_value>& weights() const;
 
 	void displayWeights() const;
 
@@ -81,15 +81,15 @@ public:
 
 	~CSom();
 
-	CSomNeuron* getBMU(const std::vector <ga_value>* inputs) const;
+	CSomNeuron* getBMU(const std::vector <ga_value>& inputs) const;
 
-	void updateAround(const std::vector<ga_value>* inputs, CSomNeuron* bmu) const;
+	void updateAround(const std::vector<ga_value>& inputs, CSomNeuron* bmu) const;
 
-	CSomNeuron* input(const std::vector < std::vector <ga_value> >* inputs);
+	CSomNeuron* input(const std::vector < std::vector <ga_value> >& inputs);
 
-	CSomNeuron* inputOne(const std::vector < ga_value >* inputs);
+	CSomNeuron* inputOne(const std::vector < ga_value >& inputs);
 
-	static void input(const std::vector <std::vector <ga_value> >* inputs, int epochs);
+	void input(const std::vector <std::vector <ga_value> >& inputs, int epochs);
 
 	void display() const;
 

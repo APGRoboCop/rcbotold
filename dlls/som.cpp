@@ -63,12 +63,9 @@ CSom::CSom(const int iW, const int iH, const int iIn)
 	m_iEpochs = 0;
 }
 
-CSom :: ~CSom()
-{
-	m_Neurons.clear();
-}
+CSom :: ~CSom() = default;
 
-CSomNeuron* CSom::getBMU(const std::vector <ga_value>* inputs) const
+CSomNeuron* CSom::getBMU(const std::vector <ga_value>& inputs) const
 {
 	CSomNeuron* winner = nullptr;
 	ga_value bestdistance = 0;
@@ -87,7 +84,7 @@ CSomNeuron* CSom::getBMU(const std::vector <ga_value>* inputs) const
 	return winner;
 }
 
-void CSom::updateAround(const std::vector<ga_value>* inputs, CSomNeuron* bmu) const
+void CSom::updateAround(const std::vector<ga_value>& inputs, CSomNeuron* bmu) const
 {
 	ga_value dist;
 	const ga_value nsiz = m_fNSize * m_fNSize;
@@ -96,12 +93,12 @@ void CSom::updateAround(const std::vector<ga_value>* inputs, CSomNeuron* bmu) co
 	{
 		if ((dist = bmu->neighbourDistance(current.get(), nsiz)) <= nsiz)
 		{
-			bmu->update(inputs, std::exp(-dist / (2 * nsiz)));
+			current->update(inputs, std::exp(-dist / (2 * nsiz)));
 		}
 	}
 }
 
-CSomNeuron* CSom::inputOne(const std::vector <ga_value>* inputs)
+CSomNeuron* CSom::inputOne(const std::vector <ga_value>& inputs)
 {
 	CSomNeuron* winner = getBMU(inputs);
 
@@ -114,16 +111,16 @@ CSomNeuron* CSom::inputOne(const std::vector <ga_value>* inputs)
 	return winner;
 }
 
-void CSom::input(const std::vector<std::vector<ga_value>>* inputs, const int epochs)//TODO: Experimental [APG]RoboCop[CL]
+void CSom::input(const std::vector<std::vector<ga_value>>& inputs, const int epochs)//TODO: Experimental [APG]RoboCop[CL]
 {
 	// Check if the inputs vector is not empty and the number of epochs is valid
-	if (inputs == nullptr || inputs->empty() || epochs <= 0) {
+	if (inputs.empty() || epochs <= 0) {
 		// Handle invalid input and return (e.g., throw an exception, log an error)
 		return;
 	}
 
 	// Get the number of input vectors and the length of each input vector
-	const size_t inputVectorSize = (*inputs)[0].size();
+	const size_t inputVectorSize = inputs[0].size();
 
 	// Initialize the self-organizing map with random initial weights
 	// This step is not shown in the provided code snippet and requires initialization logic
@@ -146,9 +143,9 @@ void CSom::input(const std::vector<std::vector<ga_value>>* inputs, const int epo
 	}
 }
 
-CSomNeuron* CSom::input(const std::vector <std::vector <ga_value> >* inputs)
+CSomNeuron* CSom::input(const std::vector <std::vector <ga_value> >& inputs)
 {
-	return inputOne(&(*inputs)[RANDOM_LONG(0, static_cast<int>(inputs->size()) - 1)]);
+	return inputOne(inputs[RANDOM_LONG(0, static_cast<int>(inputs.size()) - 1)]);
 }
 
 void CSom::display() const
@@ -163,11 +160,11 @@ void CSom::display() const
 	}
 }
 
-void CSomNeuron::update(const std::vector<ga_value>* inputs, const ga_value inf)
+void CSomNeuron::update(const std::vector<ga_value>& inputs, const ga_value inf)
 {
-	for (unsigned i = 0; i < inputs->size(); i++)
+	for (unsigned i = 0; i < inputs.size(); i++)
 	{
-		const ga_value change = (*inputs)[i] - fWeights[i];
+		const ga_value change = inputs[i] - fWeights[i];
 
 		fWeights[i] += change * CSom::m_fLearnRate * inf;
 	}
@@ -193,13 +190,13 @@ CSomNeuron::CSomNeuron(const int iInp, const ga_value iX, const ga_value iY)
 
 //void CSomNeuron::update(std::vector<ga_value>* inputs, ga_value inf);
 
-ga_value CSomNeuron::distance(const std::vector <ga_value>* inputs) const
+ga_value CSomNeuron::distance(const std::vector <ga_value>& inputs) const
 {
 	ga_value dist = 0;
 
-	for (unsigned i = 0; i < inputs->size(); i++)
+	for (unsigned i = 0; i < inputs.size(); i++)
 	{
-		const ga_value comp = fWeights[i] - (*inputs)[i];
+		const ga_value comp = fWeights[i] - inputs[i];
 
 		dist += comp * comp;
 	}
@@ -207,9 +204,9 @@ ga_value CSomNeuron::distance(const std::vector <ga_value>* inputs) const
 	return dist;
 }
 
-std::vector <ga_value>* CSomNeuron::weights()
+const std::vector <ga_value>& CSomNeuron::weights() const
 {
-	return &fWeights;
+	return fWeights;
 }
 
 void CSomNeuron::displayWeights() const
