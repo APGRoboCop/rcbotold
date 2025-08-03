@@ -879,7 +879,7 @@ void WaypointFree()
 #ifdef _DEBUG
 				int count = 0;
 				count++;
-				if (count > 1000) WaypointDebug();
+				if (count > 100) WaypointDebug();
 #endif
 			}
 
@@ -2439,9 +2439,9 @@ bool CWaypointVisibilityTable::SaveToFile() const
 	char file[256];
 
 #ifdef __linux__
-	snprintf(file, sizeof(file), "visibility/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	snprintf(file, sizeof(file), "visibility\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	UTIL_BuildFileName(filename, file);
 
@@ -2472,9 +2472,9 @@ bool CWaypointVisibilityTable::ReadFromFile() const
 
 	// get the folder right.
 #ifdef __linux__
-	snprintf(file, sizeof(file), "visibility/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "waypoints/%s/%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #else
-	snprintf(file, sizeof(file), "visibility\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+	snprintf(file, sizeof(file), "waypoints\\%s\\%s.rcv", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
 #endif
 	UTIL_BuildFileName(filename, file);
 
