@@ -6156,6 +6156,7 @@ public:
 			m_iConfigSettings |= iConfigSetting;
 	}
 
+	void StartFrame_NS(int& iIndex, CBot*& pBot);
 	void StartFrame();
 
 	void ReadConfig();

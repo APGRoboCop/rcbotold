@@ -33,12 +33,16 @@ V 1.51-beta11
 * added: Weapon Switch tactic added for when their clips are empty
 * added: Smart pointers, RAII and modern C++ features to reduce potential memory leaks and bug prone crashes
 * added: Assertions for debugging purposes and sanity checks
+* added: NS Marine troops can ditch their LMGs for better weapons
+* added: A /visibility folder to store visibility table files away from /waypoints folder
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
 * changed: Replaced most of the #define Marcos with Enumerators and constexpr
 * changed: Strings and enums optimised and modernised
+* changed: NeuralNet & General Algorithms tweaked
 * changed: Reduced redundant coding and risks of buffer overflow crashes
+* changed: StartFrame() now split for improved readability and maintainability
 * changed: Reverted basemonster.h that was modified for Sven Coop
 * changed: Increasing bot's viewing angle to detect enemies better
 * changed: Reduced further Sven Co-op and TFC support
@@ -54,7 +58,6 @@ V 1.51-beta11
 * TODO: To allow the Onos to be more aggressive and devour humans
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
 * TODO: To improve on how to allow bots climb ladders more properly
-* TODO: To allow NS Marine troops to ditch their LMGs for better weapons - bot_weapons.ini are typed in but maybe needs adjusting and to drop their LMGs
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors - maybe allow them to instantly switch weapons?
 * TODO: To allow bots in Op4 to use Grapple by using the "Fly" waypoint
 * TODO: To allow proper TDM and CTF support for DMQ2 - plus they don't seem to attack the same model regardless if Deathmatch is on

@@ -137,11 +137,11 @@ typedef enum : std::uint8_t
 // macros
 
 #ifdef __linux__
-#define NS_PLAYER_EXPERIENCE_OFFSET 1554
-#define NS_PLAYER_POINTS_OFFSET (NS_PLAYER_EXPERIENCE_OFFSET + 2)
+constexpr int NS_PLAYER_EXPERIENCE_OFFSET = 1554;
+constexpr int NS_PLAYER_POINTS_OFFSET = NS_PLAYER_EXPERIENCE_OFFSET + 2;
 #else
-#define NS_PLAYER_EXPERIENCE_OFFSET 1579
-#define NS_PLAYER_POINTS_OFFSET (NS_PLAYER_EXPERIENCE_OFFSET + 2)
+constexpr int NS_PLAYER_EXPERIENCE_OFFSET = 1579;
+constexpr int NS_PLAYER_POINTS_OFFSET = NS_PLAYER_EXPERIENCE_OFFSET + 2;
 #endif
 
 //#define NS_GET_PLAYER_POINTS(player) (int)((char*)(player)+NS_PLAYER_POINTS_OFFSET)
@@ -237,6 +237,7 @@ enum : std::uint8_t
 
 #define BOT_USERS_FILE "bot_users.ini"
 //#define BOT_PASSWORD_KEY "rcbot_pass"
+
 // Bot Sounds
 // different sound types the bot might hear
 typedef enum : std::uint8_t

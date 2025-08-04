@@ -1941,6 +1941,9 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	else
 		(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "_vgui_menus", "1");
 
+	if (gBotGlobals.IsMod(MOD_NS)) //To allow bots to drop lame LMG [APG]RoboCop[CL]
+		(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "cl_weaponswap", "2");
+
 	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "_ah", "0");
 	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "dm", "0");
 	(*g_engfuncs.pfnSetClientKeyValue)(index, sInfoBuffer, "tracker", "0");

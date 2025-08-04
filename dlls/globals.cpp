@@ -71,6 +71,8 @@
 #include <string>
 #include <cstdio>
 #include <cstring>
+#include <fstream>
+#include <filesystem>
 
 extern CWaypointVisibilityTable WaypointVisibility;
 extern CWaypointLocations WaypointLocations;
@@ -103,22 +105,16 @@ void CBotGlobals::ReadBotFolder()
 
 	snprintf(filename, sizeof(filename), "%s/rcbot_folder.ini", m_szModFolder);
 
-	std::FILE* fp = std::fopen(filename, "r");
-
-	char rcbot_folder[256];
-
-	//default
-
-	if (fp)
+	std::ifstream file(filename);
+	if (file.is_open())
 	{
-		if (std::fscanf(fp, "%255s", rcbot_folder) == 1)
+		std::string folder;
+		if (file >> folder)
 		{
-			std::strncpy(m_szBotFolder, rcbot_folder, sizeof(m_szBotFolder) - 1);
+			std::strncpy(m_szBotFolder, folder.c_str(), sizeof(m_szBotFolder) - 1);
 			m_szBotFolder[sizeof(m_szBotFolder) - 1] = '\0';
 		}
-
 		BotMessage(nullptr, 0, "Found Bot Folder file : %s", m_szBotFolder);
-		std::fclose(fp);
 	}
 	else
 	{
@@ -158,9 +154,12 @@ bool CBotGlobals::NetMessageStarted(const int msg_dest, const int msg_type, cons
 	{
 		if (debug_engine)
 		{
-			fp = std::fopen("bot.txt", "a");
-			std::fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", static_cast<void*>(ed), msg_dest, msg_type);
-			std::fclose(fp);
+			std::ofstream log_file("bot.txt", std::ios_base::app);
+			if (log_file.is_open())
+			{
+				log_file << "pfnMessageBegin: edict=" << ed
+					<< " dest=" << msg_dest << " type=" << msg_type << "\n";
+			}
 		}
 
 		m_CurrentMessage = nullptr;
@@ -256,6 +255,183 @@ bool CBotGlobals::NetMessageStarted(const int msg_dest, const int msg_type, cons
 	return true;
 }
 
+void CBotGlobals::StartFrame_NS(int& iIndex, CBot*& pBot)
+{
+	int iNumHivesUp = 0;
+	int iNumUpgrades = 0;
+	//hive_info_t *pHiveInfo;
+
+	m_bHasDefTech = false;
+	m_bHasMovTech = false;
+	m_bHasSensTech = false;
+
+	// update who is commander
+	SetCommander(UTIL_GetCommander());
+
+	if (!IsCombatMap() && IsConfigSettingOn(BOT_CONFIG_MARINE_AUTO_BUILD) && (!m_bAutoBuilt && (m_fAutoBuildTime != 0.0f && m_fAutoBuildTime < gpGlobals->time)))
+	{
+		edict_t* pEntity = nullptr;
+
+		// Find the marine command console
+
+		pEntity = UTIL_FindEntityByClassname(pEntity, "team_command");
+
+		if (pEntity)
+		{
+			// Found a comm console
+			Vector vOrigin = pEntity->v.origin;
+
+			// find a nearby waypoint
+			int iWpt = WaypointLocations.NearestWaypoint(vOrigin, REACHABLE_RANGE, -1, false);
+
+			if (iWpt == -1)
+				BotMessage(nullptr, 0, "No waypoints for auto-build!!!");
+			else
+			{
+				// find another waypoint but ignire the nearest one to comm console
+				iWpt = WaypointLocations.NearestWaypoint(WaypointOrigin(iWpt), REACHABLE_RANGE, iWpt, false);
+
+				if (iWpt == -1)
+					BotMessage(nullptr, 0, "No waypoints for auto-build!!!");
+				else
+				{
+					TraceResult tr;
+
+					vOrigin = WaypointOrigin(iWpt);
+
+					// get right position for infantry portal
+					UTIL_TraceLine(vOrigin, vOrigin - Vector(0, 0, 100), ignore_monsters, pEntity, &tr);
+
+					vOrigin = tr.vecEndPos + Vector(0, 0, 8);
+
+					//build
+
+					BotFunc_NS_MarineBuild(AVH_USER3_INFANTRYPORTAL, "team_infportal", vOrigin);
+				}
+			}
+		}
+		else
+			BotMessage(nullptr, 0, "No marine spawn found for auto-build!!!");
+
+		m_bAutoBuilt = true;
+	}
+
+	for (iIndex = 0; iIndex < BOT_MAX_HIVES; iIndex++)
+	{
+		const hive_info_t* pHiveInfo = &m_Hives[iIndex];
+
+		// mTechnology wont work :(
+		//mTechnology = pHiveInfo->mTechnology;
+
+		if (IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL)) //Needed for ENSL? [APG]RoboCop[CL]
+		{
+			if (pHiveInfo->pHive && (pHiveInfo->pHive->v.fuser1 > 0))
+			{
+				iNumHivesUp++;
+			}
+		}
+		else
+		{
+			if (pHiveInfo->pHive && (pHiveInfo->pHive->v.fuser2 > 0))
+			{
+				iNumHivesUp++;
+			}
+		}
+	}
+
+	// see if we have technology by checking the upgrades, if hives = amount of upgrades
+	// else then we have a choice of what to build so we can build anything until it is built
+
+	if (m_bCanUpgradeDef)
+		iNumUpgrades++;
+	if (m_bCanUpgradeMov)
+		iNumUpgrades++;
+	if (m_bCanUpgradeSens)
+		iNumUpgrades++;
+
+	if (UTIL_GetNumHives() == iNumUpgrades)
+	{
+		m_bHasDefTech = m_bCanUpgradeDef;
+		m_bHasMovTech = m_bCanUpgradeMov;
+		m_bHasSensTech = m_bCanUpgradeSens;
+	}
+	else
+	{
+		m_bHasDefTech = true;
+		m_bHasMovTech = true;
+		m_bHasSensTech = true;
+	}
+
+	if (IsCombatMap() && m_pMarineStart)
+	{
+		if (m_CommConsole.IsUnderAttack())
+		{
+			CBotTask m_NewSchedule[3] = { CBotTask(BOT_TASK_FIND_PATH,0, nullptr,-1,0,m_pMarineStart->v.origin),
+				CBotTask(BOT_TASK_SEARCH_FOR_ENEMY),
+				CBotTask(BOT_TASK_SENSE_ENEMY) };
+
+			for (CBot& m_Bot : m_Bots)
+			{
+				pBot = &m_Bot;
+
+				if (pBot->IsUsed())
+				{
+					if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_NS_CHECK_STRUCTURE))
+					{
+						// get some alien bots to check out the hive
+						if (pBot->IsMarine())
+						{
+							pBot->m_Tasks.FlushTasks();
+							pBot->m_Tasks.AddNewSchedule(BOT_SCHED_NS_CHECK_STRUCTURE, m_NewSchedule, 3);
+						}
+					}
+				}
+			}
+		}
+		else
+			m_CommConsole.Update();
+	}
+	int iBuildingPriority = 0;
+
+	if (const edict_t* pBuildingUnderAttack = m_HiveMind.Tick(&iBuildingPriority))
+	{
+		CBotTask m_NewSchedule[3] = { CBotTask(BOT_TASK_FIND_PATH,0, nullptr,-1,0,pBuildingUnderAttack->v.origin),
+									 CBotTask(BOT_TASK_SEARCH_FOR_ENEMY),
+									 CBotTask(BOT_TASK_SENSE_ENEMY) };
+
+		for (CBot& m_Bot : m_Bots)
+		{
+			pBot = &m_Bot;
+
+			if (pBot->IsUsed())
+			{
+				const int iGotoChance = static_cast<int>(static_cast<float>(iBuildingPriority) / 6 * 100);
+
+				if (pBuildingUnderAttack->v.iuser3 == AVH_USER3_HIVE)
+				{
+					if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_NS_CHECK_HIVE))
+					{
+						// get some alien bots to check out the hive
+						if (pBot->IsAlien() && !pBot->IsGorge() && RANDOM_LONG(0, 100) < iGotoChance)
+						{
+							pBot->m_Tasks.FlushTasks();
+							pBot->m_Tasks.AddNewSchedule(BOT_SCHED_NS_CHECK_HIVE, m_NewSchedule, 3);
+						}
+					}
+				}
+				else if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_NS_CHECK_STRUCTURE))
+				{
+					// get some alien bots to check out the hive
+					if (pBot->IsAlien() && !pBot->IsGorge() && RANDOM_LONG(0, 100) < iGotoChance)
+					{
+						pBot->m_Tasks.FlushTasks();
+						pBot->m_Tasks.AddNewSchedule(BOT_SCHED_NS_CHECK_STRUCTURE, m_NewSchedule, 3);
+					}
+				}
+			}
+		}
+	}
+}
 
 void CBotGlobals::StartFrame()
 {
@@ -323,180 +499,7 @@ void CBotGlobals::StartFrame()
 		// Also check out the auto build stuff
 		if (m_iCurrentMod == MOD_NS)
 		{
-			int iNumHivesUp = 0;
-			int iNumUpgrades = 0;
-			//hive_info_t *pHiveInfo;
-
-			m_bHasDefTech = false;
-			m_bHasMovTech = false;
-			m_bHasSensTech = false;
-
-			// update who is commander
-			SetCommander(UTIL_GetCommander());
-
-			if (!IsCombatMap() && IsConfigSettingOn(BOT_CONFIG_MARINE_AUTO_BUILD) && (!m_bAutoBuilt && (m_fAutoBuildTime != 0.0f && m_fAutoBuildTime < gpGlobals->time)))
-			{
-				edict_t* pEntity = nullptr;
-
-				// Find the marine command console
-
-				pEntity = UTIL_FindEntityByClassname(pEntity, "team_command");
-
-				if (pEntity)
-				{
-					// Found a comm console
-					Vector vOrigin = pEntity->v.origin;
-
-					// find a nearby waypoint
-					int iWpt = WaypointLocations.NearestWaypoint(vOrigin, REACHABLE_RANGE, -1, false);
-
-					if (iWpt == -1)
-						BotMessage(nullptr, 0, "No waypoints for auto-build!!!");
-					else
-					{
-						// find another waypoint but ignire the nearest one to comm console
-						iWpt = WaypointLocations.NearestWaypoint(WaypointOrigin(iWpt), REACHABLE_RANGE, iWpt, false);
-
-						if (iWpt == -1)
-							BotMessage(nullptr, 0, "No waypoints for auto-build!!!");
-						else
-						{
-							TraceResult tr;
-
-							vOrigin = WaypointOrigin(iWpt);
-
-							// get right position for infantry portal
-							UTIL_TraceLine(vOrigin, vOrigin - Vector(0, 0, 100), ignore_monsters, pEntity, &tr);
-
-							vOrigin = tr.vecEndPos + Vector(0, 0, 8);
-
-							//build
-
-							BotFunc_NS_MarineBuild(AVH_USER3_INFANTRYPORTAL, "team_infportal", vOrigin);
-						}
-					}
-				}
-				else
-					BotMessage(nullptr, 0, "No marine spawn found for auto-build!!!");
-
-				m_bAutoBuilt = true;
-			}
-
-			for (iIndex = 0; iIndex < BOT_MAX_HIVES; iIndex++)
-			{
-				const hive_info_t* pHiveInfo = &m_Hives[iIndex];
-
-				// mTechnology wont work :(
-				//mTechnology = pHiveInfo->mTechnology;
-
-				if (IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL)) //Needed for ENSL? [APG]RoboCop[CL]
-				{
-					if (pHiveInfo->pHive && (pHiveInfo->pHive->v.fuser1 > 0))
-					{
-						iNumHivesUp++;
-					}
-				}
-				else
-				{
-					if (pHiveInfo->pHive && (pHiveInfo->pHive->v.fuser2 > 0))
-					{
-						iNumHivesUp++;
-					}
-				}
-			}
-
-			// see if we have technology by checking the upgrades, if hives = amount of upgrades
-			// else then we have a choice of what to build so we can build anything until it is built
-
-			if (m_bCanUpgradeDef)
-				iNumUpgrades++;
-			if (m_bCanUpgradeMov)
-				iNumUpgrades++;
-			if (m_bCanUpgradeSens)
-				iNumUpgrades++;
-
-			if (UTIL_GetNumHives() == iNumUpgrades)
-			{
-				m_bHasDefTech = m_bCanUpgradeDef;
-				m_bHasMovTech = m_bCanUpgradeMov;
-				m_bHasSensTech = m_bCanUpgradeSens;
-			}
-			else
-			{
-				m_bHasDefTech = true;
-				m_bHasMovTech = true;
-				m_bHasSensTech = true;
-			}
-
-			if (IsCombatMap() && m_pMarineStart)
-			{
-				if (m_CommConsole.IsUnderAttack())
-				{
-					CBotTask m_NewSchedule[3] = { CBotTask(BOT_TASK_FIND_PATH,0, nullptr,-1,0,m_pMarineStart->v.origin),
-						CBotTask(BOT_TASK_SEARCH_FOR_ENEMY),
-						CBotTask(BOT_TASK_SENSE_ENEMY) };
-
-					for (CBot& m_Bot : m_Bots)
-					{
-						pBot = &m_Bot;
-
-						if (pBot->IsUsed())
-						{
-							if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_NS_CHECK_STRUCTURE))
-							{
-								// get some alien bots to check out the hive
-								if (pBot->IsMarine())
-								{
-									pBot->m_Tasks.FlushTasks();
-									pBot->m_Tasks.AddNewSchedule(BOT_SCHED_NS_CHECK_STRUCTURE, m_NewSchedule, 3);
-								}
-							}
-						}
-					}
-				}
-				else
-					m_CommConsole.Update();
-			}
-			int iBuildingPriority = 0;
-
-			if (const edict_t* pBuildingUnderAttack = m_HiveMind.Tick(&iBuildingPriority))
-			{
-				CBotTask m_NewSchedule[3] = { CBotTask(BOT_TASK_FIND_PATH,0, nullptr,-1,0,pBuildingUnderAttack->v.origin),
-											 CBotTask(BOT_TASK_SEARCH_FOR_ENEMY),
-											 CBotTask(BOT_TASK_SENSE_ENEMY) };
-
-				for (CBot& m_Bot : m_Bots)
-				{
-					pBot = &m_Bot;
-
-					if (pBot->IsUsed())
-					{
-						const int iGotoChance = static_cast<int>(static_cast<float>(iBuildingPriority) / 6 * 100);
-
-						if (pBuildingUnderAttack->v.iuser3 == AVH_USER3_HIVE)
-						{
-							if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_NS_CHECK_HIVE))
-							{
-								// get some alien bots to check out the hive
-								if (pBot->IsAlien() && !pBot->IsGorge() && RANDOM_LONG(0, 100) < iGotoChance)
-								{
-									pBot->m_Tasks.FlushTasks();
-									pBot->m_Tasks.AddNewSchedule(BOT_SCHED_NS_CHECK_HIVE, m_NewSchedule, 3);
-								}
-							}
-						}
-						else if (!pBot->m_Tasks.HasSchedule(BOT_SCHED_NS_CHECK_STRUCTURE))
-						{
-							// get some alien bots to check out the hive
-							if (pBot->IsAlien() && !pBot->IsGorge() && RANDOM_LONG(0, 100) < iGotoChance)
-							{
-								pBot->m_Tasks.FlushTasks();
-								pBot->m_Tasks.AddNewSchedule(BOT_SCHED_NS_CHECK_STRUCTURE, m_NewSchedule, 3);
-							}
-						}
-					}
-				}
-			}
+			StartFrame_NS(iIndex, pBot);
 		}
 
 		m_iNumBots = 0;
@@ -1234,7 +1237,7 @@ void CBotGlobals::MapInit()
 	}
 	else if (IsMod(MOD_GEARBOX))
 	{
-		if (std::strncmp(mapname, "op4ctf_", 7) == 0 || 
+		if (std::strncmp(mapname, "op4ctf_", 7) == 0 ||
 			std::strncmp(mapname, "op4cp_", 6) == 0)
 		{
 			setMapType(NON_TS_TEAMPLAY);
@@ -1360,71 +1363,34 @@ void CBotGlobals::LoadBotModels()
 // Load bot model names in bot globals botModels array
 // Most done By Botman :-)
 {
-	char path[MAX_PATH];
-	char search_path[MAX_PATH];
-	char dirname[MAX_PATH];
+	namespace fs = std::filesystem;
+	std::string models_path = m_szModFolder;
+	models_path += "/models/player";
 
-	//   int index;
-	struct stat stat_str;
-#ifndef __linux__
-	HANDLE directory = nullptr;
-#else
-	DIR* directory = nullptr;
-#endif
-
-	// find the directory name of the currently running MOD...
-	std::strcpy(path, m_szModFolder);
-
-#ifdef __linux__
-	std::strcat(path, "/models/player");
-#else
-	std::strcat(path, "\\models\\player");
-#endif
-
-	if (stat(path, &stat_str) != 0)
+	if (!fs::exists(models_path))
 	{
-		// use the valve/models/player directory if no MOD models/player
-#ifdef __linux__
-		std::strcpy(path, "valve/models/player");
-#else
-		std::strcpy(path, "valve\\models\\player");
-#endif
+		models_path = "valve/models/player";
 	}
-
-	std::strcpy(search_path, path);
-
-#ifndef __linux__
-	std::strcat(search_path, "/*");
-#endif
 
 	m_uaBotModels.Init();
 
-	// Looking for model files (.mdl) in player directory
-	// search_path = <search folder> (in windows)
-	// or search_path = <search folder>
-
-	while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr)
+	if (!fs::exists(models_path) || !fs::is_directory(models_path))
 	{
-		char filename[MAX_PATH];
+		return;
+	}
 
-		// don't want to get stuck looking in the same directory again and again (".")
-		// don't wan't to search parent directories ("..")
-		if (std::strcmp(dirname, ".") == 0 || std::strcmp(dirname, "..") == 0)
-			continue;
-
-		// looking for .mdl file inside a folder of same name
-		std::strcpy(filename, path);
-		std::strcat(filename, "/");
-		std::strcat(filename, dirname);
-		std::strcat(filename, "/");
-		std::strcat(filename, dirname);
-		std::strcat(filename, ".mdl");
-
-		// seeing if file exists (if foldername = model name)
-		if (stat(filename, &stat_str) == 0)
+	for (const std::filesystem::directory_entry& entry : fs::directory_iterator(models_path))
+	{
+		if (entry.is_directory())
 		{
-			// ok, we only need to add directory name into list then.
-			m_uaBotModels.Add(m_Strings.GetString(dirname));
+			const std::filesystem::path& dir_path = entry.path();
+			const std::string dirname = dir_path.filename().string();
+			fs::path model_file = dir_path / (dirname + ".mdl");
+
+			if (fs::exists(model_file))
+			{
+				m_uaBotModels.Add(m_Strings.GetString(dirname.c_str()));
+			}
 		}
 	}
 }
