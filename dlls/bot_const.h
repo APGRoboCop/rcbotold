@@ -184,7 +184,7 @@ constexpr int MAX_REMEMBER_POSITIONS = 8;
 constexpr int STEAM_ID_LEN = 32;
 
 ///////////////////////////////////////////////////////////////////////
-// BOT CONTANTS
+// BOT CONSTANTS
 // (constants that bot structures may depend on below)
 
 constexpr float MAX_JUMP_HEIGHT = 45.0f;
@@ -1234,17 +1234,17 @@ enum : std::uint8_t
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b11_mm_debug";
+constexpr const char* BOT_VER = "1.51b12_mm_debug";
 #else
-constexpr const char* BOT_VER = "1.51b11_mm";
+constexpr const char* BOT_VER = "1.51b12_mm";
 #endif
 
 #else
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b11_debug";
+constexpr const char* BOT_VER = "1.51b12_debug";
 #else
-constexpr const char* BOT_VER = "1.51b11";
+constexpr const char* BOT_VER = "1.51b12";
 #endif
 
 #endif
@@ -1258,17 +1258,17 @@ constexpr const char* BOT_VER = "1.51b11";
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b11_mm_debug";
+constexpr const char* BOT_VER = "1.51b12_mm_debug";
 #else
-constexpr const char* BOT_VER = "1.51b11_mm";
+constexpr const char* BOT_VER = "1.51b12_mm";
 #endif
 
 #else
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b11_debug";
+constexpr const char* BOT_VER = "1.51b12_debug";
 #else
-constexpr const char* BOT_VER = "1.51b11";
+constexpr const char* BOT_VER = "1.51b12";
 #endif
 
 #endif

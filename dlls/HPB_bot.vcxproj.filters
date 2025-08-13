@@ -310,6 +310,9 @@
     <ClInclude Include="support_meta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bot_ns.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

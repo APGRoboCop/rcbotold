@@ -360,6 +360,7 @@
     <ClInclude Include="bot_const.h" />
     <ClInclude Include="bot_ga.h" />
     <ClInclude Include="bot_menu.h" />
+    <ClInclude Include="bot_ns.h" />
     <ClInclude Include="bot_tick.h" />
     <ClInclude Include="bot_visibles.h" />
     <ClInclude Include="bot_weapons.h" />

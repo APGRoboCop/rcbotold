@@ -816,7 +816,7 @@ enum : std::uint8_t
 };
 
 // contents of a spot in the world
-enum: std::int8_t
+enum : std::int8_t
 {
 	CONTENTS_EMPTY = (-1),
 	CONTENTS_SOLID = (-2),
