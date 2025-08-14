@@ -962,8 +962,6 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 		{
 			CBot* pBot = &m_Bot;
 
-			if (pBot == nullptr)
-				continue;
 			if (!pBot->m_bIsUsed || !pBot->m_pEdict)
 				continue;
 			if (pBot->m_pEdict == pPlayer)
@@ -1066,8 +1064,6 @@ void CClients::ClientDisconnected(CClient* pClient)
 		{
 			CBot* pBot = &m_Bot;
 
-			if (!pBot)
-				continue;
 			if (!pBot->m_bIsUsed || !pBot->m_pEdict)
 				continue;
 

@@ -42,8 +42,8 @@
  //////////////////////////////////////////////////
  //
  // Natural Selection definitions header
-#ifndef __BOT_NS_H__
-#define __BOT_NS_H__
+#ifndef BOT_NS_H
+#define BOT_NS_H
 
 // TODO: Experimental and NS AlienAction may need to be tested [APG]RoboCop[CL]
 typedef enum : std::uint8_t

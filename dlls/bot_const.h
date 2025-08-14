@@ -188,6 +188,8 @@ constexpr int STEAM_ID_LEN = 32;
 // (constants that bot structures may depend on below)
 
 constexpr float MAX_JUMP_HEIGHT = 45.0f;
+constexpr float BOT_STUCK_CLIMB_SPEED = 10.0f;
+constexpr float BOT_STUCK_SWIM_SPEED = 32.0f;
 
 constexpr int MAX_TEAMS = 4;
 constexpr int BOT_MIN_SOUND_DIST = 128;

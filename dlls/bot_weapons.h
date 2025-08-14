@@ -1,4 +1,4 @@
-/*
+	/*
  *    This file is part of RCBot.
  *
  *    RCBot by Paul Murphy adapted from botman's template 3.
@@ -394,6 +394,9 @@ void GetNoWeaponArray(short* Array);
 void GetArrayOfExplosives(short* Array);
 
 class CBot;
+
+void GetAllowedWeapons(CBot* pBot, edict_t* pEnemy, float fEnemyDist, short* iAllowedWeapons);
+
 /////////////////////////////////
 // WEAPON CLASSES
 
@@ -418,7 +421,6 @@ typedef struct
 	float m_fSecMinRange;
 	float m_fSecMaxRange;
 
-	//TODO: Maybe add ammo count and to hold fire button? [APG]RoboCop[CL]
 	bool m_bIsMelee;
 
 	int m_iModId;

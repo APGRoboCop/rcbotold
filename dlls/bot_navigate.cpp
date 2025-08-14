@@ -1706,7 +1706,7 @@ PATH* BotNavigate_FindPathFromTo(int iFrom, const int iTo, const int iTeam)
 	int iPathIndex = 0;
 	int iIndex;
 
-	while ((iIndex = WaypointFindPath(&pPath, &iPathIndex, iFrom, iTeam)) != -1)//TODO: triggers crash? [APG]RoboCopCL]
+	while ((iIndex = WaypointFindPath(&pPath, &iPathIndex, iFrom, iTeam)) != -1)
 	{
 		if (iIndex == iTo)
 		{

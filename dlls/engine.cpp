@@ -505,8 +505,6 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 		{
 			CBot* pBot = &m_Bot;
 
-			if (pBot == nullptr) //TODO: Not required? [APG]RoboCop[CL]
-				continue;
 			if (pBot->m_pEdict == nullptr)
 				continue;
 			if (pBot->m_pEdict == pEntityOwner)

@@ -562,9 +562,6 @@ void CBotGlobals::StartFrame()
 		{
 			pBot = &m_Bots[iIndex];
 
-			if (!pBot)//TODO: Not required? [APG]RoboCop[CL]
-				continue;
-
 			if (pBot->m_iRespawnState != RESPAWN_IDLE)
 			{
 				// ---------------------------------------

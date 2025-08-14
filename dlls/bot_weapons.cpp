@@ -65,6 +65,7 @@
 #include "perceptron.h"
 
 #include <queue>
+#include <string_view>
 
 // begin -- TS metamod weapon restriction plugin
 
@@ -396,6 +397,79 @@ void GetArrayOfExplosives(short* Array)
 	Array[VALVE_WEAPON_SATCHEL] = 1;
 }
 
+void GetAllowedWeapons(CBot* pBot, edict_t* pEnemy, const float fEnemyDist, short* iAllowedWeapons)
+{
+	if (!pEnemy)
+		return;
+
+	switch (gBotGlobals.m_iCurrentMod)
+	{
+	case MOD_NS:
+		if (pBot->IsAlien())
+		{
+			if (pEnemy->v.iuser3 == AVH_USER3_BREAKABLE || EntityIsMarineStruct(pEnemy))
+			{
+				iAllowedWeapons[static_cast<int>(NSWeapon::UMBRA)] = 0;
+				iAllowedWeapons[static_cast<int>(NSWeapon::SPORES)] = 0;
+				iAllowedWeapons[static_cast<int>(NSWeapon::WEBSPINNER)] = 0;
+				iAllowedWeapons[static_cast<int>(NSWeapon::METABOLIZE)] = 0;
+				iAllowedWeapons[static_cast<int>(NSWeapon::PARASITE)] = 0;
+				iAllowedWeapons[static_cast<int>(NSWeapon::BLINK)] = 0;
+				iAllowedWeapons[static_cast<int>(NSWeapon::LEAP)] = 0;
+				iAllowedWeapons[static_cast<int>(NSWeapon::CHARGE)] = 0;
+				iAllowedWeapons[static_cast<int>(NSWeapon::PRIMALSCREAM)] = 0;
+				iAllowedWeapons[static_cast<int>(NSWeapon::HEALINGSPRAY)] = 0;
+				iAllowedWeapons[static_cast<int>(NSWeapon::STOMP)] = 0;
+				iAllowedWeapons[static_cast<int>(NSWeapon::DEVOUR)] = 0;
+			}
+			else if (pEnemy->v.iuser3 == AVH_USER3_MARINE_PLAYER)
+			{
+				iAllowedWeapons[static_cast<int>(NSWeapon::BILEBOMB)] = 0;
+				if (pEnemy->v.iuser4 & MASK_UPGRADE_13)
+					iAllowedWeapons[static_cast<int>(NSWeapon::SPORES)] = 0;
+				if (pEnemy->v.iuser4 & MASK_PLAYER_STUNNED)
+					iAllowedWeapons[static_cast<int>(NSWeapon::STOMP)] = 0;
+			}
+		}
+		else // Marine
+		{
+			iAllowedWeapons[static_cast<int>(NSWeapon::MINE)] = 0;
+		}
+		break;
+
+	case MOD_GEARBOX:
+		if (FStrEq("func_breakable", STRING(pEnemy->v.classname)))
+		{
+			iAllowedWeapons[static_cast<int>(GearboxWeapon::GRAPPLE)] = 0;
+
+			if (pEnemy->v.spawnflags & 512) // Explosive breakable
+			{
+				GetNoWeaponArray(iAllowedWeapons);
+				GetArrayOfExplosives(iAllowedWeapons);
+				if (pBot->HasWeapon(static_cast<int>(GearboxWeapon::MP5)))
+				{
+					const CBotWeapon* weapon = pBot->m_Weapons.GetWeapon(static_cast<int>(GearboxWeapon::MP5));
+					if (weapon->SecondaryAmmo() > 0 && weapon->SecondaryInRange(fEnemyDist))
+						iAllowedWeapons[static_cast<int>(GearboxWeapon::MP5)] = 1;
+				}
+			}
+			else if (pEnemy->v.spawnflags & 256) // Melee breakable
+			{
+				const bool hasInstantBreakWep = pBot->HasWeapon(static_cast<int>(GearboxWeapon::PIPEWRENCH));
+				if (hasInstantBreakWep || pEnemy->v.health > 1000) {
+					GetNoWeaponArray(iAllowedWeapons);
+					iAllowedWeapons[static_cast<int>(GearboxWeapon::PIPEWRENCH)] = 1;
+				}
+			}
+		}
+		else if (FStrEq("ammo_spore", STRING(pEnemy->v.classname)))
+		{
+			iAllowedWeapons[static_cast<int>(GearboxWeapon::GRAPPLE)] = 1;
+		}
+		break;
+	}
+}
+
 //
 // Get the best weapon Id number for a bot facing an enemy pEnemy.
 //
@@ -442,6 +516,8 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		vEnemyOrigin = pBot->pev->origin;
 		fEnemyDist = 0;
 	}
+
+	GetAllowedWeapons(pBot, pEnemy, fEnemyDist, iAllowedWeapons);
 
 	switch (gBotGlobals.m_iCurrentMod)
 	{
@@ -557,40 +633,6 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 					}
 				}
 				break;*/
-		case MOD_GEARBOX: //w00tguy
-			if (FStrEq("func_breakable", STRING(pEnemy->v.classname)))
-			{
-				iAllowedWeapons[static_cast<int>(GearboxWeapon::GRAPPLE)] = 0; // grapple can't damage breakables
-
-				if (pEnemy->v.spawnflags & 512)
-				{
-					GetNoWeaponArray(iAllowedWeapons);
-					GetArrayOfExplosives(iAllowedWeapons);//bExplosives = pEnemy->v.spawnflags & 512;
-
-					if (pBot->HasWeapon(static_cast<int>(GearboxWeapon::MP5)))
-					{
-						const CBotWeapon* weapon = pBot->m_Weapons.GetWeapon(static_cast<int>(GearboxWeapon::MP5));
-
-						if (weapon->SecondaryAmmo() > 0 && weapon->SecondaryInRange(fEnemyDist))
-							iAllowedWeapons[static_cast<int>(GearboxWeapon::MP5)] = 1;
-					}
-				}
-				if (pEnemy->v.spawnflags & 256)
-				{
-					const bool hasInstantBreakWep = pBot->HasWeapon(static_cast<int>(GearboxWeapon::PIPEWRENCH));
-
-					if (hasInstantBreakWep || pEnemy->v.health > 1000) {
-						GetNoWeaponArray(iAllowedWeapons);
-						iAllowedWeapons[static_cast<int>(GearboxWeapon::PIPEWRENCH)] = 1;
-					}
-				}
-			}
-			//TODO: To allow bots to grapple onto spore making entities in order to be Batman [APG]RoboCop[CL]
-			else if (FStrEq("ammo_spore", STRING(pEnemy->v.classname)))
-			{
-				iAllowedWeapons[static_cast<int>(GearboxWeapon::GRAPPLE)] = 1; // Leech onto alien zit walls!
-			}
-			break;
 		case MOD_NS:
 			if (pBot->IsMarine())
 			{
@@ -734,18 +776,15 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		}
 
 		//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
-		if (pWeapon != nullptr) // Ensure pWeapon is valid
+		if (pWeapon->NeedToReload()) // Allow bots to reload when needed
 		{
-			if (pWeapon->NeedToReload()) // Allow bots to reload when needed
-			{
-				Weapons.emplace(pWeapon); // Add weapon to reload list
-				continue;
-			}
+			Weapons.emplace(pWeapon); // Add weapon to reload list
+			continue;
+		}
 
-			if (pWeapon->OutOfAmmo()) // Skip weapons that are out of ammo
-			{
-				continue;
-			}
+		if (pWeapon->OutOfAmmo()) // Skip weapons that are out of ammo
+		{
+			continue;
 		}
 
 		Weapons.emplace(pWeapon);//.Add(i);
@@ -861,25 +900,25 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 
 bool CBotWeapon::NeedToReload() const
 {
+	if (IsMelee())
+		return false;
+
 	switch (gBotGlobals.m_iCurrentMod)
 	{
 	case MOD_TS: //TODO: Add BOT_TASK_RELOAD to allow bots to reload sooner when attacking and running on a empty clip
+	case MOD_HL_DM:
+	case MOD_GEARBOX:
 		return !m_iClip && m_iReserve > 0;
 	case MOD_BUMPERCARS:
 	case MOD_DMC:
 		return false;
-	case MOD_GEARBOX:
-		return !m_iClip && m_iReserve > 0;
 	default:
-		break;
+		if (m_iAmmo1)
+		{
+			return !m_iClip && *m_iAmmo1 > 0;
+		}
+		return false;
 	}
-
-	if (m_iAmmo1)
-	{
-		return !m_iClip && *m_iAmmo1 > 0;
-	}
-
-	return false;
 }
 
 bool CBotWeapon::CanShootPrimary(const edict_t* pEdict, const float flFireDist, const float flWallDist) const
@@ -890,44 +929,41 @@ bool CBotWeapon::CanShootPrimary(const edict_t* pEdict, const float flFireDist, 
 	if (gBotGlobals.m_iCurrentMod == MOD_DMC)
 		return this->PrimaryAmmo() > 0;
 
-	if (this->OutOfAmmo())//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
-		return false;
-	if (pEdict->v.waterlevel == 3 && CanBeUsedUnderWater() == false)
-		return false;
-
-	if (!m_pWeaponInfo->CanUsePrimary())
-		return false;
-
-	if (gBotGlobals.IsMod(MOD_GEARBOX))
+	if (this->OutOfAmmo() ||
+		(pEdict->v.waterlevel == 3 && !CanBeUsedUnderWater()) ||
+		!m_pWeaponInfo->CanUsePrimary() ||
+		!m_pWeaponInfo->PrimaryInRange(flFireDist))
 	{
-		if (GetID() == VALVE_WEAPON_RPG)
-		{
-			if (!m_pWeaponInfo->PrimaryInRange(flWallDist))
-				return false;
-		}
+		return false;
 	}
 
-	if (!m_pWeaponInfo->PrimaryInRange(flFireDist))
-		return false;
+	if (gBotGlobals.IsMod(MOD_GEARBOX) && GetID() == VALVE_WEAPON_RPG)
+	{
+		if (!m_pWeaponInfo->PrimaryInRange(flWallDist))
+			return false;
+	}
 
 	return true;
 }
 
 bool CBotWeapons::HasWeapon(edict_t* pEdict, const char* szClassname) const
 {
-	const char* pClassname;
-
-	for (int i = 1; i < MAX_WEAPONS; i++)
-	{
-		if (HasWeapon(pEdict, i))
-		{
-			if ((pClassname = m_Weapons[i].GetClassname()) != nullptr)
-			{
-				if (FStrEq(pClassname, szClassname))
-					return true;
-			}
-		}
+	if (!szClassname) {
+		return false;
 	}
 
-	return false;
+	const CBotWeapon* const it = std::find_if(
+		&m_Weapons[1], &m_Weapons[MAX_WEAPONS],
+		[&](const CBotWeapon& weapon)
+		{
+			if (!HasWeapon(pEdict, weapon.GetID()))
+			{
+				return false;
+			}
+
+			const char* pClassname = weapon.GetClassname();
+			return pClassname && std::string_view(pClassname) == szClassname;
+		});
+
+	return it != &m_Weapons[MAX_WEAPONS];
 }

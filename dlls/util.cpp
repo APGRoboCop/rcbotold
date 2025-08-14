@@ -884,6 +884,41 @@ edict_t* DBG_EntOfVars(const entvars_t* pev)
 }*/
 
 // return team number 0 through 3 based what MOD uses for team numbers
+
+// Helper function to determine team from model info
+static int GetTeamFromModelInfo(edict_t* pEntity)
+{
+	if (!gBotGlobals.m_bTeamPlay)
+		return -1;
+
+	char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+	if (!infobuffer)
+		return -1;
+
+	const char* model = g_engfuncs.pfnInfoKeyValue(infobuffer, const_cast<char*>("model"));
+	if (!model || !*model)
+		return -1;
+
+	const char* teamlist = CVAR_GET_STRING("mp_teamlist");
+	if (!teamlist)
+		return -1;
+
+	const char* pos = std::strstr(teamlist, model);
+	if (!pos)
+		return -1; // Model not found in team list
+
+	int team = 0;
+	for (const char* current = teamlist; current < pos; ++current)
+	{
+		if (*current == ';')
+		{
+			team++;
+		}
+	}
+
+	return team;
+}
+
 int UTIL_GetTeam(edict_t* pEntity)
 {
 	switch (gBotGlobals.m_iCurrentMod)
@@ -892,47 +927,19 @@ int UTIL_GetTeam(edict_t* pEntity)
 		return pEntity->v.team;
 	case MOD_TS:
 	{
-		char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-
-		char model[64];
-
-		std::strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, const_cast<char*>("model")));
-
 		// Check if the map name starts with "tm_"
 		if (std::strncmp("tm_", STRING(gpGlobals->mapname), 3) == 0)
 		{
+			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+			char model[64];
+			std::strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, const_cast<char*>("model")));
+
 			if (FStrEq(model, "merc"))
 				return 0;
 			if (FStrEq(model, "seal"))
 				return 1;
 		}
-		else if (gBotGlobals.m_bTeamPlay)
-		{
-			const char* teamlist = CVAR_GET_STRING("mp_teamlist");
-
-			const char* pos = std::strstr(teamlist, model);
-			char* sofar = const_cast<char*>(teamlist);
-
-			int team = 0;
-
-			if (sofar == nullptr)
-				team = -1; // Model not found in team list, team not assigned
-			else
-			{
-				// count ";"s to determine the team index
-				while (sofar < pos)
-				{
-					if (*sofar == ';')
-						team++;
-
-					sofar = sofar + 1;
-				}
-			}
-
-			return team; // Return the determined team index
-		}
-
-		return -1; // Default return value if no specific team was assigned or detected
+		return GetTeamFromModelInfo(pEntity);
 	}
 	case MOD_BG:
 		return pEntity->v.team;
@@ -960,42 +967,8 @@ int UTIL_GetTeam(edict_t* pEntity)
 			return 0;
 		}
 		//TODO: May only attack models that don't match with themselves? [APG]RoboCop[CL]
-		if (gBotGlobals.m_bTeamPlay)
-		{
-			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-
-			char model[64];
-
-			std::strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, const_cast<char*>("model")));
-
-			const char* teamlist = CVAR_GET_STRING("mp_teamlist");
-
-			const char* pos = std::strstr(teamlist, model);
-			char* sofar = const_cast<char*>(teamlist);
-
-			int team = 0;
-
-			if (sofar == nullptr)
-				team = -1; // Model not found in team list, team not assigned
-			else
-			{
-				// count ";"s to determine the team index
-				while (sofar < pos)
-				{
-					if (*sofar == ';')
-						team++;
-
-					sofar = sofar + 1;
-				}
-			}
-
-			return team; // Return the determined team index
-		}
+		return GetTeamFromModelInfo(pEntity);
 	}
-
-	return -1;
-
-	//}
 	/*case MOD_TFC:
 		return pEntity->v.team - 1;
 	case MOD_SVENCOOP:
@@ -1004,39 +977,7 @@ int UTIL_GetTeam(edict_t* pEntity)
 		// And to add CTF support for DMC
 	case MOD_DMC:
 	case MOD_HL_DM:
-		if (gBotGlobals.m_bTeamPlay)
-		{
-			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-
-			char model[64];
-
-			std::strcpy(model, g_engfuncs.pfnInfoKeyValue(infobuffer, const_cast<char*>("model")));
-
-			const char* teamlist = CVAR_GET_STRING("mp_teamlist");
-
-			const char* pos = std::strstr(teamlist, model);
-			char* sofar = const_cast<char*>(teamlist);
-
-			int team = 0;
-
-			if (sofar == nullptr)
-				team = -1; // Model not found in team list, team not assigned
-			else
-			{
-				// count ";"s to determine the team index
-				while (sofar < pos)
-				{
-					if (*sofar == ';')
-						team++;
-
-					sofar = sofar + 1;
-				}
-			}
-
-			return team; // Return the determined team index
-		}
-
-		return -1;
+		return GetTeamFromModelInfo(pEntity);
 	case MOD_SI: //TODO: Science and Industry support [APG]RoboCop[CL]
 		return pEntity->v.team - 1;
 	case MOD_WW: //TODO: Wizard Wars support [APG]RoboCop[CL]

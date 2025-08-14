@@ -114,31 +114,20 @@ CSomNeuron* CSom::inputOne(const std::vector <ga_value>& inputs)
 void CSom::input(const std::vector<std::vector<ga_value>>& inputs, const int epochs)//TODO: Experimental [APG]RoboCop[CL]
 {
 	// Check if the inputs vector is not empty and the number of epochs is valid
-	if (inputs.empty() || epochs <= 0) {
+	if (inputs.empty() || epochs <= 0)
+	{
 		// Handle invalid input and return (e.g., throw an exception, log an error)
 		return;
 	}
 
-	// Get the number of input vectors and the length of each input vector
-	const size_t inputVectorSize = inputs[0].size();
-
-	// Initialize the self-organizing map with random initial weights
-	// This step is not shown in the provided code snippet and requires initialization logic
-
 	// Training loop for the specified number of epochs
-	for (int epoch = 0; epoch < epochs; ++epoch) {
-		// Iterate through each input vector
-		for (size_t i = 0; i < inputVectorSize; ++i) {
-			// Get the current input vector
-			//*inputs)[i];
-
-			// Find the best matching unit (BMU) in the self-organizing map for the current input
-			// This involves calculating the distances between the input and each unit in the map
-
-			// Update the weights of the BMU and its neighbors based on a learning rate and neighborhood function
-			// This step involves adjusting the weights of the BMU and its neighbors to better match the input
-
-			// Repeat the above steps for all input vectors in the epoch
+	for (int epoch = 0; epoch < epochs; ++epoch)
+	{
+		// Iterate through each input vector by selecting one randomly
+		for (size_t i = 0; i < inputs.size(); ++i)
+		{
+			// Get a random input vector and train the network with it
+			inputOne(inputs[RANDOM_LONG(0, static_cast<int>(inputs.size()) - 1)]);
 		}
 	}
 }

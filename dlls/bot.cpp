@@ -251,135 +251,6 @@ void CBot::BotCommand()
 			m_Tasks.FinishedCurrentTask();
 		}
 		break;
-		/*
-	case BOT_TASK_USE_TANK:
-		break;
-	case BOT_TASK_WAIT_FOR_LIFT:
-		break;
-	case BOT_TASK_RELOAD:
-		break;
-	case BOT_TASK_LISTEN_TO_SOUND:
-		break;
-	case BOT_TASK_FIND_ENEMY_PATH:
-		break;
-	case BOT_TASK_FOLLOW_ENEMY:
-		break;
-	case BOT_TASK_FOLLOW_LEADER:
-		break;
-	case BOT_TASK_FIND_WEAPON:
-		break;
-	case BOT_TASK_FIND_PATH:
-		break;
-	case BOT_TASK_RUN_PATH:
-		break;
-	case BOT_TASK_PICKUP_ITEM:
-		break;
-	case BOT_TASK_WAIT_FOR_RESOURCES:
-		break;
-	case BOT_TASK_GOTO_FLANK_POSITION:
-		break;
-	case BOT_TASK_RANGE_ATTACK:
-		break;
-	case BOT_TASK_NORMAL_ATTACK:
-		break;
-	case BOT_TASK_HIDE:
-		break;
-	case BOT_TASK_ASSEMBLE_SQUAD:
-		break;
-	case BOT_TASK_WAIT_FOR_ORDERS:
-		break;
-	case BOT_TASK_SOLO_RUN:
-		break;
-	case BOT_TASK_ATTACK_ENEMY:
-		break;
-	case BOT_TASK_CHANGE_WEAPON:
-		break;
-	case BOT_TASK_MOVE_TO_VECTOR:
-		break;
-	case BOT_TASK_WELD_OBJECT:
-		break;
-	case BOT_TASK_GOTO_OBJECT:
-		break;
-	case BOT_TASK_HEAL_PLAYER:
-		break;
-	case BOT_TASK_ALIEN_UPGRADE:
-		break;
-	case BOT_TASK_BUILD_ALIEN_STRUCTURE:
-		break;
-	case BOT_TASK_FACE_VECTOR:
-		break;
-	case BOT_TASK_FACE_EDICT:
-		break;
-	case BOT_TASK_WAIT_AND_FACE_VECTOR:
-		break;
-	case BOT_TASK_AVOID_OBJECT:
-		break;
-	case BOT_TASK_BUILD:
-		break;
-	case BOT_TASK_USE:
-		break;
-	case BOT_TASK_DEFEND:
-		break;
-	case BOT_TASK_DEPLOY_MINES:
-		break;
-	case BOT_TASK_USE_AMMO_DISP:
-		break;
-	case BOT_TASK_WALK_PATH:
-		break;
-	case BOT_TASK_TYPE_MESSAGE:
-		break;
-	case BOT_TASK_WAIT_FOR_ENTITY:
-		break;
-	case BOT_TASK_USE_DOOR_BUTTON:
-		break;
-	case BOT_TASK_SEARCH_FOR_ENEMY:
-		break;
-	case BOT_TASK_ALIEN_EVOLVE:
-		break;
-	case BOT_TASK_USE_HEV_CHARGER:
-		break;
-	case BOT_TASK_USE_HEALTH_CHARGER:
-		break;
-	case BOT_TASK_HUMAN_TOWER:
-		break;
-	case BOT_TASK_THROW_GRENADE:
-		break;
-	case BOT_TASK_PUSH_PUSHABLE:
-		break;
-	case BOT_TASK_SECONDARY_ATTACK:
-		break;
-	case BOT_TASK_WAIT_FOR_FLAG:
-		break;
-	case BOT_COMMAND_TASK_SELECT_PLAYERS:
-		break;
-	case BOT_COMMAND_TASK_ISSUE_ORDER:
-		break;
-	case BOT_TASK_FIND_COVER_POS:
-		break;
-	case BOT_TASK_COMBAT_UPGRADE:
-		break;
-	case BOT_TASK_CROUCH:
-		break;
-	case BOT_TASK_ACCEPT_HEALTH:
-		break;
-	case BOT_TASK_WAIT_FOR_BOT_AT_WPT:
-		break;
-	case BOT_TASK_BLINK:
-		break;
-	case BOT_TASK_WEB:
-		break;
-	case BOT_TASK_USE_TELEPORTER:
-		break;
-	case BOT_TASK_WAIT_FOR_RESOURCE_TOWER_BUILD:
-		break;
-	case BOT_TASK_IMPULSE:
-		break;
-	case BOT_TASK_DROP_WEAPON:
-		break;
-	case BOT_TASK_SENSE_ENEMY:
-		break;
-	case BOT_TASK_NONE:
-		break;*/
 		default:
 			break;
 		}
@@ -427,235 +298,180 @@ bool CBot::IsInVisibleList(edict_t* pEntity) const
 	return m_pVisibles->isVisible(ENTINDEX(pEntity));
 }
 
-float CBot::CommanderUtility(eCommanderAction action, Vector vLocation)
+void CBot::BotEvent_Leaving()
 {
-	switch (action)
-	{
-	case CMD_ACT_BUILD_TURRET_FACTORY:
+	BotChat(BOT_CHAT_LEAVEGAME, nullptr, true);
+}
 
-	case CMD_ACT_BUILD_TURRET:
-	case CMD_ACT_UPGRADE_TURRET_FACTORY:
+void CBot::BotEvent_TaskFail() const
+{
+	if (m_CurrentTask && gBotGlobals.IsDebugLevelOn(BOT_DEBUG_THINK_LEVEL))
+	{
+		DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0,
+			R"(%s failed task "%s" part of schedule "%s")", m_szBotName,
+			m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
 	}
 }
 
-float CBot::CommanderProbability(eCommanderHappen happen, vector<comm_evid_t*> evd)
+void CBot::BotEvent_TaskComplete() const
 {
-	switch (happen)
+	if (m_CurrentTask && gBotGlobals.IsDebugLevelOn(BOT_DEBUG_THINK_LEVEL))
 	{
+		DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0,
+			R"(%s finished task "%s" part of schedule "%s")", m_szBotName,
+			m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
 	}
-}*/
-
-bool CBot::FacingIdeal() const
-{
-	// looking within "2.0" degrees of target?
-	return std::fabs(UTIL_AngleDiff(pev->ideal_yaw, pev->v_angle.y)) < 2.0f &&
-		std::fabs(UTIL_AngleDiff(pev->idealpitch, pev->v_angle.x)) < 2.0f;
 }
 
-// get distance between edict1 and edict2
-float BotFunc_DistanceBetweenEdicts(const edict_t* pEdict1, const edict_t* pEdict2)
+void CBot::BotEvent_HearTeammateDie(edict_t* pInfo)
 {
-	return (pEdict1->v.origin - pEdict2->v.origin).Length();
+	if (!m_pEnemy)
+		AddPriorityTask(CBotTask(BOT_TASK_FACE_EDICT, 0, pInfo, 0, 1.0f));
 }
 
-bool CBot::IsInVisibleList(edict_t* pEntity) const
+void CBot::BotEvent_SeeTeammateDie(edict_t* pInfo, edict_t* pExtInfo)
 {
-	return m_pVisibles->isVisible(ENTINDEX(pEntity));
-}
+	const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pInfo);
+	const CClient* pExtClient = gBotGlobals.m_Clients.GetClientByEdict(pExtInfo);
 
-void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, float* pFloatInfo)
-// a type of event happens on the bot
-{
-	const CClient* pClient = nullptr;
-	const CClient* pExtClient = nullptr;
-
-	if (pInfo)
-		pClient = gBotGlobals.m_Clients.GetClientByEdict(pInfo);
-	if (pExtInfo)
-		pExtClient = gBotGlobals.m_Clients.GetClientByEdict(pExtInfo);
-
-	switch (iEvent)
+	// Can I see the guy that killed my teammate?
+	if (IsInVisibleList(pExtInfo))
 	{
-	case BOT_EVENT_LEAVING:
-		BotChat(BOT_CHAT_LEAVEGAME, nullptr, true);
-		break;
-	case BOT_EVENT_FAIL_TASK:
-		if (m_CurrentTask && gBotGlobals.IsDebugLevelOn(BOT_DEBUG_THINK_LEVEL))
+		// is it an enemy?
+		if (IsEnemy(pExtInfo))
 		{
-			DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0,
-				R"(%s failed task "%s" part of schedule "%s")", m_szBotName,
-				m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
-		}
-		break;
-	case BOT_EVENT_COMPLETE_TASK:
-		if (m_CurrentTask && gBotGlobals.IsDebugLevelOn(BOT_DEBUG_THINK_LEVEL))
-		{
-			DebugMessage(BOT_DEBUG_THINK_LEVEL, gBotGlobals.m_pListenServerEdict, 0,
-				R"(%s finished task "%s" part of schedule "%s")", m_szBotName,
-				m_CurrentTask->getTaskDescription(), m_CurrentTask->getScheduleDescription());
-		}
-		break;
-	case BOT_EVENT_HEAR_TEAMMATE_DIE:
-		// Didn't see the team mate but was near by and is visible from bot
-	{
-		if (!m_pEnemy)
-			AddPriorityTask(CBotTask(BOT_TASK_FACE_EDICT, 0, pInfo, 0, 1.0f));
-	}
-	break;
-	case BOT_EVENT_SEE_TEAMMATE_DIE:
-	{
-		// Saw a team-mate die
-
-		// Can I see the guy that killed my teammate?
-		if (IsInVisibleList(pExtInfo))
-		{
-			// is it an enemy?
-			if (IsEnemy(pExtInfo))
-			{
-				// Attack the enemy
-				m_pEnemy = pInfo;
-				AddPriorityTask(CBotTask(BOT_TASK_NORMAL_ATTACK, m_Tasks.GetNewScheduleId(), pInfo));
-			}
-			// team kill
-			else
-			{
-				// like the team mate
-				if (m_Profile.m_Rep.GetClientRep(pClient) > BOT_MID_REP)
-				{
-					const int iRep = m_Profile.m_Rep.GetClientRep(pExtClient);
-
-					// like the team killer less
-					if (BotFunc_DecreaseRep(iRep))
-					{
-						m_Profile.m_Rep.DecreaseRep(pExtClient->GetPlayerRepId());
-						//BotChat(BOT_CHAT_KILLED,pInfo);
-					}
-				}
-			}
-		}
-		else
-		{
-			// cant see the enemy, remember it.
-			RememberPosition(EntityOrigin(pExtInfo), pExtInfo, BOT_REMEMBER_LOST_ENEMY);
-		}
-	}
-	break;
-	case BOT_EVENT_KILL_SELF:
-	{
-		//RememberPosition(EntityOrigin(pExtInfo), pExtInfo, BOT_REMEMBER_POSITION);
-
-		//edict_t* pEntity = NULL;
-		//m_pAvoidEntity = pEntity;
-
-		if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
-		{
-			// I like a lot of people on the server so lets laugh
-			if (m_Profile.m_Rep.AverageRepOnServer() >= BOT_MID_REP)
-			{
-				BotChat(BOT_CHAT_LAUGH);
-
-				havingFun();
-			}
-			else // I don't think laughing would help my esteem... curse!
-			{
-				BotChat(BOT_CHAT_KILLED);
-
-				gettingBored();
-			}
-		}
-	}
-	break;
-	case BOT_EVENT_SEE_PLAYER_DIE:
-	case BOT_EVENT_SEE_ENEMY_DIE:
-	{
-		if (!pClient || !pExtClient)
-			return;
-
-		const int iRep = m_Profile.m_Rep.GetClientRep(pExtClient);
-
-		// dont like this player much
-		if (m_Profile.m_Rep.GetClientRep(pClient) < BOT_MID_REP)
-		{
-			//const int iRep = m_Profile.m_Rep.GetClientRep(pExtClient);
-
-			if (BotFunc_IncreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), static_cast<float>(m_Profile.m_iSkill)))
-			{
-				m_Profile.m_Rep.IncreaseRep(pExtClient->GetPlayerRepId());
-				BotChat(BOT_CHAT_LAUGH, pInfo);
-
-				// fun fun
-				havingFun();
-			}
-		}
-		// like this player a bit
-		else if (m_Profile.m_Rep.GetClientRep(pClient) > BOT_MID_REP)
-		{
-			// decrease rep upon killer
-			if (BotFunc_DecreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), static_cast<float>(m_Profile.m_iSkill)))
-			{
-				m_Profile.m_Rep.DecreaseRep(pExtClient->GetPlayerRepId());
-				BotChat(BOT_CHAT_LAUGH, pInfo);
-
-				// ya-ya-yay much killage
-				havingFun();
-			}
-		}
-	}
-	break;
-	case BOT_EVENT_SEE_TEAMMATE_KILL:
-		break;
-	case BOT_EVENT_SEE_ENEMY_KILL:
-	{
-		// saw an enemy kill another player or one of my team
-		// attack this guy
-
-		if (IsEnemy(pInfo))
-		{
+			// Attack the enemy
 			m_pEnemy = pInfo;
 			AddPriorityTask(CBotTask(BOT_TASK_NORMAL_ATTACK, m_Tasks.GetNewScheduleId(), pInfo));
 		}
-
-		if (!pClient || !pExtClient)
-			return;
-
-		const int iRep = m_Profile.m_Rep.GetClientRep(pExtClient);
-
-		if (m_Profile.m_Rep.GetClientRep(pClient) > BOT_MID_REP)
+		// team kill
+		else
 		{
-			// enemy killed a player i liked
-			if (BotFunc_DecreaseRep(iRep))
+			// like the team mate
+			if (m_Profile.m_Rep.GetClientRep(pClient) > BOT_MID_REP)
 			{
-				m_Profile.m_Rep.DecreaseRep(pExtClient->GetPlayerRepId());
+				const int iRep = m_Profile.m_Rep.GetClientRep(pExtClient);
 
-				gettingBored();
+				// like the team killer less
+				if (BotFunc_DecreaseRep(iRep))
+				{
+					m_Profile.m_Rep.DecreaseRep(pExtClient->GetPlayerRepId());
+					//BotChat(BOT_CHAT_KILLED,pInfo);
+				}
 			}
 		}
 	}
-	break;
-	case BOT_EVENT_KILL:
+	else
+	{
+		// cant see the enemy, remember it.
+		RememberPosition(EntityOrigin(pExtInfo), pExtInfo, BOT_REMEMBER_LOST_ENEMY);
+	}
+}
 
-		// make bot taunt or something
-
-		m_pKilledEdict = pInfo;
-
-		if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
+void CBot::BotEvent_KillSelf()
+{
+	if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
+	{
+		// I like a lot of people on the server so lets laugh
+		if (m_Profile.m_Rep.AverageRepOnServer() >= BOT_MID_REP)
 		{
-			BotChat(BOT_CHAT_KILLS, pInfo);
-
+			BotChat(BOT_CHAT_LAUGH);
 			havingFun();
 		}
-		else
+		else // I don't think laughing would help my esteem... curse!
 		{
-			if (m_fNextUseSayMessage > gpGlobals->time)
-				return;
+			BotChat(BOT_CHAT_KILLED);
+			gettingBored();
+		}
+	}
+}
 
+void CBot::BotEvent_SeePlayerDie(edict_t* pInfo, edict_t* pExtInfo)
+{
+	const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pInfo);
+	const CClient* pExtClient = gBotGlobals.m_Clients.GetClientByEdict(pExtInfo);
+
+	if (!pClient || !pExtClient)
+		return;
+
+	const int iRep = m_Profile.m_Rep.GetClientRep(pExtClient);
+
+	// dont like this player much
+	if (m_Profile.m_Rep.GetClientRep(pClient) < BOT_MID_REP)
+	{
+		if (BotFunc_IncreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), static_cast<float>(m_Profile.m_iSkill)))
+		{
+			m_Profile.m_Rep.IncreaseRep(pExtClient->GetPlayerRepId());
+			BotChat(BOT_CHAT_LAUGH, pInfo);
+			havingFun();
+		}
+	}
+	// like this player a bit
+	else if (m_Profile.m_Rep.GetClientRep(pClient) > BOT_MID_REP)
+	{
+		// decrease rep upon killer
+		if (BotFunc_DecreaseRep(iRep, BotFunc_DistanceBetweenEdicts(pInfo, pExtInfo), static_cast<float>(m_Profile.m_iSkill)))
+		{
+			m_Profile.m_Rep.DecreaseRep(pExtClient->GetPlayerRepId());
+			BotChat(BOT_CHAT_LAUGH, pInfo);
+			havingFun();
+		}
+	}
+}
+
+void CBot::BotEvent_SeeEnemyKill(edict_t* pInfo, edict_t* pExtInfo)
+{
+	const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pInfo);
+	const CClient* pExtClient = gBotGlobals.m_Clients.GetClientByEdict(pExtInfo);
+
+	// saw an enemy kill another player or one of my team
+	// attack this guy
+
+	if (IsEnemy(pInfo))
+	{
+		m_pEnemy = pInfo;
+		AddPriorityTask(CBotTask(BOT_TASK_NORMAL_ATTACK, m_Tasks.GetNewScheduleId(), pInfo));
+	}
+
+	if (!pClient || !pExtClient)
+		return;
+
+	const int iRep = m_Profile.m_Rep.GetClientRep(pExtClient);
+
+	if (m_Profile.m_Rep.GetClientRep(pClient) > BOT_MID_REP)
+	{
+		// enemy killed a player i liked
+		if (BotFunc_DecreaseRep(iRep))
+		{
+			m_Profile.m_Rep.DecreaseRep(pExtClient->GetPlayerRepId());
+			gettingBored();
+		}
+	}
+}
+
+void CBot::BotEvent_Kill(edict_t* pInfo)
+{
+	const CClient* pClient = gBotGlobals.m_Clients.GetClientByEdict(pInfo);
+
+	// make bot taunt or something
+	m_pKilledEdict = pInfo;
+
+	if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
+	{
+		BotChat(BOT_CHAT_KILLS, pInfo);
+
+		havingFun();
+	}
+	else
+	{
+		if (m_fNextUseSayMessage < gpGlobals->time)
+		{
 			m_fNextUseSayMessage = gpGlobals->time + RANDOM_FLOAT(10, 20);
 
 			switch (gBotGlobals.m_iCurrentMod)
 			{
 			case MOD_BUMPERCARS:
-				// taunt message
-				pev->impulse = 108;
+				pev->impulse = 108; // taunt message
 				break;
 			case MOD_NS:
 				if (IsAlien())
@@ -665,192 +481,121 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 				break;
 			}
 		}
+	}
 
-		if (m_pKilledEdict && pClient && m_Profile.m_Rep.GetClientRep(pClient) < BOT_MID_REP)
+	if (m_pKilledEdict && pClient && m_Profile.m_Rep.GetClientRep(pClient) < BOT_MID_REP)
+	{
+		const int iRep = m_Profile.m_Rep.GetClientRep(pClient);
+		// killed a player i didn't like, are we even?
+
+		// if i got him (by making him want to decrease his rep)
+		if (BotFunc_IncreaseRep(iRep, DistanceFromEdict(m_pKilledEdict), static_cast<float>(m_Profile.m_iSkill)))
 		{
-			const int iRep = m_Profile.m_Rep.GetClientRep(pClient);
-			// killed a player i didn't like, are we even?
-
-			// if i got him (by making him want to decrease his rep)
-			if (BotFunc_IncreaseRep(iRep, DistanceFromEdict(m_pKilledEdict), static_cast<float>(m_Profile.m_iSkill)))
-			{
-				m_Profile.m_Rep.IncreaseRep(pClient->GetPlayerRepId());
-			}
+			m_Profile.m_Rep.IncreaseRep(pClient->GetPlayerRepId());
 		}
-		break;
-	case BOT_EVENT_DIED:
+	}
+}
 
-		m_pKillerEdict = pInfo;
+void CBot::BotEvent_Died(edict_t* pInfo)
+{
+	m_pKillerEdict = pInfo;
+	gettingBored(); // argh why did i put this in
 
-		/*	if ( m_pElectricEnemy )
-			{
-				dec_attackElectrified->train(1.0f-(m_pElectricEnemy->v.health/m_pElectricEnemy->v.max_health));
-			}*/
-
-		gettingBored(); // argh why did i put this in
-
-		if (gBotGlobals.IsNS() && IsGorge() /*|| gBotGlobals.IsMod(MOD_TFC) && (pev->playerclass == TFC_CLASS_ENGINEER || pev->playerclass == TFC_CLASS_SNIPER || pev->playerclass == TFC_CLASS_SCOUT)*/)
+	if (gBotGlobals.IsNS() && IsGorge())
+	{
+		// if bot is a gorge, try ignoring part of the path ..
+		// as it can dodge areas where it died next time.
+		if (m_iCurrentWaypointIndex != -1 && m_iPrevWaypointIndex != -1)
 		{
-			// if bot is a gorge, try ignoring part of the path ..
-			// as it can dodge areas where it died next time.
-			if (m_iCurrentWaypointIndex != -1 && m_iPrevWaypointIndex != -1)
-			{
-				PATH* pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, GetTeam());
+			PATH* pPath = BotNavigate_FindPathFromTo(m_iPrevWaypointIndex, m_iCurrentWaypointIndex, GetTeam());
 
-				if (pPath)
-					m_stFailedPaths.AddFailedPath(pPath);
-			}
+			if (pPath)
+				m_stFailedPaths.AddFailedPath(pPath);
 		}
+	}
 
-		if (gBotGlobals.IsMod(MOD_GEARBOX))
+	if (gBotGlobals.IsMod(MOD_GEARBOX))
+	{
+		if (m_bHasFlag && m_pFlag)
 		{
-			if (m_bHasFlag && m_pFlag)
-			{
-				RememberPosition(m_pFlag->v.origin, nullptr);
-				m_seenFlagPos.SetVector(m_pFlag->v.origin);
-			}
+			RememberPosition(m_pFlag->v.origin, nullptr);
+			m_seenFlagPos.SetVector(m_pFlag->v.origin);
 		}
+	}
 
-		// got killed off someone
-		if (m_pKillerEdict)
+	// got killed off someone
+	if (m_pKillerEdict)
+	{
+		// chat to the guy
+		if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
+			BotChat(BOT_CHAT_KILLED, pInfo);
+
+		const CClient* pKillerClient = gBotGlobals.m_Clients.GetClientByEdict(m_pKillerEdict);
+
+		if (pKillerClient)
 		{
-			// chat to the guy
-			if (RANDOM_LONG(0, 100) < gBotGlobals.m_iBotChatPercent)
-				BotChat(BOT_CHAT_KILLED, pInfo);
-
-			const CClient* pKillerClient = gBotGlobals.m_Clients.GetClientByEdict(m_pKillerEdict);
-
-			if (pKillerClient)
+			if (m_pKillerEdict->v.team != 0 && m_pKillerEdict->v.team == pev->team)
 			{
-				if (m_pKillerEdict->v.team != 0 && m_pKillerEdict->v.team == pev->team)
+				m_Profile.m_Rep.DecreaseRep(pKillerClient->GetPlayerRepId());
+			}
+			else
+			{
+				if (m_pKillerEdict != m_pEdict)
 				{
-					m_Profile.m_Rep.DecreaseRep(pKillerClient->GetPlayerRepId());
-				}
-				else
-				{
-					if (m_pKillerEdict != m_pEdict)
+					const int iRep = m_Profile.m_Rep.GetClientRep(pKillerClient);
+					if (BotFunc_DecreaseRep(iRep, DistanceFromEdict(m_pKillerEdict), static_cast<float>(m_Profile.m_iSkill)))
 					{
-						const CBotReputation* pRep = m_Profile.m_Rep.GetRep(pKillerClient->GetPlayerRepId());
-
-						if (pRep)
-						{
-							const int iRep = pRep->CurrentRep();
-
-							if (BotFunc_DecreaseRep(iRep, DistanceFrom(EntityOrigin(m_pKillerEdict)), static_cast<float>(m_Profile.m_iSkill)))
-								m_Profile.m_Rep.DecreaseRep(pKillerClient->GetPlayerRepId());
-						}
+						m_Profile.m_Rep.DecreaseRep(pKillerClient->GetPlayerRepId());
 					}
 				}
 			}
 		}
 	}
+}
 
+void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, float* pFloatInfo)
+// a type of event happens on the bot
+{
+	switch (iEvent)
+	{
+	case BOT_EVENT_LEAVING:
+		BotEvent_Leaving();
+		break;
+	case BOT_EVENT_FAIL_TASK:
+		BotEvent_TaskFail();
+		break;
+	case BOT_EVENT_COMPLETE_TASK:
+		BotEvent_TaskComplete();
+		break;
+	case BOT_EVENT_HEAR_TEAMMATE_DIE:
+		BotEvent_HearTeammateDie(pInfo);
+		break;
+	case BOT_EVENT_SEE_TEAMMATE_DIE:
+		BotEvent_SeeTeammateDie(pInfo, pExtInfo);
+		break;
+	case BOT_EVENT_KILL_SELF:
+		BotEvent_KillSelf();
+		break;
+	case BOT_EVENT_SEE_PLAYER_DIE:
+	case BOT_EVENT_SEE_ENEMY_DIE:
+		BotEvent_SeePlayerDie(pInfo, pExtInfo);
+		break;
+	case BOT_EVENT_SEE_TEAMMATE_KILL:
+		break;
+	case BOT_EVENT_SEE_ENEMY_KILL:
+		BotEvent_SeeEnemyKill(pInfo, pExtInfo);
+		break;
+	case BOT_EVENT_KILL:
+		BotEvent_Kill(pInfo);
+		break;
+	case BOT_EVENT_DIED:
+		BotEvent_Died(pInfo);
 		break;
 	case BOT_EVENT_HURT:
-
-		if (m_fNextUpdateHealth < gpGlobals->time)
-		{
-			m_fNextUpdateHealth = gpGlobals->time + 1.0f;
-
-			const float fHealthLost = m_fPrevHealth - pev->health;
-
-			std::vector<ga_value> inputs;
-
-			// percentage of health now
-			inputs.emplace_back(pev->health / pev->max_health);
-			// percentage of health lost
-			inputs.emplace_back(fHealthLost / pev->max_health);
-
-			if (pFloatInfo)
-			{
-				// distance from
-				inputs.emplace_back(DistanceFrom(Vector(pFloatInfo)));
-			}
-			else
-				inputs.emplace_back(1);
-
-			dec_runForCover->input(inputs);
-			dec_faceHurtOrigin->input(inputs);
-
-			std::vector<ga_value> weights;
-
-			//
-			// crap way of getting values from an individual !!!
-			// (improved in rcbot 2 source!)
-
-			// bias weight
-			weights.emplace_back(m_GASurvival->get(4));
-			// health weight
-			weights.emplace_back(m_GASurvival->get(5));
-			// health lost weight
-			weights.emplace_back(m_GASurvival->get(6));
-			// distance weight
-			weights.emplace_back(m_GASurvival->get(7));
-
-			dec_runForCover->setWeights(weights);
-
-			weights.clear();
-			// bias weight
-			weights.emplace_back(m_GASurvival->get(8));
-			// health weight
-			weights.emplace_back(m_GASurvival->get(9));
-			// health lost weight
-			weights.emplace_back(m_GASurvival->get(10));
-			// distance
-			weights.emplace_back(m_GASurvival->get(11));
-
-			dec_faceHurtOrigin->setWeights(weights);
-
-			dec_runForCover->execute();
-			dec_faceHurtOrigin->execute();
-
-			m_fPrevHealth = pev->health;
-
-			inputs.clear();
-			weights.clear();
-		}
-
-		if (pFloatInfo)
-		{
-			if (dec_runForCover->fired())
-			{
-				// getting pummelled so keep trying to run for cover somewhere!!
-				RunForCover(Vector(pFloatInfo), true);
-			}
-			// !!!dont break , drop down to the light damage stuff
-			if (!dec_faceHurtOrigin->fired())
-				break;
-			//case BOT_EVENT_LIGHT_DAMAGE:
-			bool bAdd = false;
-			if (!bAdd)
-			{
-				if (!m_Tasks.HasTask(BOT_TASK_FACE_VECTOR))
-				{
-					// if no enemy or shooting a breakable...
-					if (!m_pEnemy || std::strcmp("func_breakable", STRING(m_pEnemy->v.classname)) == 0)
-						bAdd = true;
-				}
-			}
-			// face origin of damage
-			if (bAdd)
-				AddPriorityTask(CBotTask(BOT_TASK_FACE_VECTOR, 0, nullptr, 0, RANDOM_FLOAT(2.0f, 3.0f), Vector(pFloatInfo)));
-		}
-
-		if (gBotGlobals.IsNS() && IsGorge())
-		{
-			const CBotWeapon* pBileBomb = m_Weapons.GetWeapon(static_cast<int>(NSWeapon::BILEBOMB));
-
-			if (!pBileBomb->HasWeapon(m_pEdict))
-			{
-				// not got a good weapon to defend with..
-				if (m_fChatMessageTime < gpGlobals->time)
-				{
-					BotChat(BOT_CHAT_HELP);
-					// ask for help
-					m_fChatMessageTime = gpGlobals->time + RANDOM_FLOAT(10.0f, 12.0f);
-				}
-			}
-		}
+		// got hurt
+		m_pHurtEdict = pInfo;
+		break;
+	default:
 		break;
 	}
 }
@@ -1950,7 +1695,7 @@ void CBot::SpawnInit(const bool bInit)
 
 	m_pAvoidEntity = nullptr;
 
-	m_bNeedToInit = false; //TODO: Mixed up? [APG]RoboCop[CL]
+	m_bNeedToInit = false;
 
 	//Vector m_vCurrentLookDir = Vector(0, 0, 0);
 	//    m_bCurrentLookDirIsValid = false;
@@ -1978,7 +1723,7 @@ int CBot::GetTeam() const
 	return UTIL_EvolveInto(m_pEdict, species);
 }*/
 
-short CBot::SpeciesOnTeam(const int species) const //TODO: Experimental [APG]RoboCop[CL]
+int CBot::SpeciesOnTeam(const int species) const //TODO: Experimental [APG]RoboCop[CL]
 {
 	return UTIL_SpeciesOnTeam(species, GetTeam());
 }
@@ -6699,7 +6444,7 @@ Vector CBot::GetAimVector(const edict_t* pBotEnemy)
 			}
 		}
 		break;
-	case MOD_NS: //TODO: Add support for rockets, nades, spores to aim at feet
+	case MOD_NS:
 		break;
 	default:
 		break;
@@ -7637,7 +7382,7 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 	Vector vComponent;
 	Vector vAngles;
 
-	float fTurnSpeed = m_fTurnSpeed;
+	float fTurnSpeed;
 
 	bool bUsePitch = false;
 	const eClimbType iClimbType = GetClimbType();
@@ -7658,7 +7403,7 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 		// stay facing the wall
 
 		// let "move up" and "move down" do the work
-		vAngles.x = 0;
+		//vAngles.x = 0;
 
 		vComponent = m_vMoveToVector - GetGunPosition();
 		vAngles = UTIL_VecToAngles(vComponent);
@@ -7682,8 +7427,8 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 		// ladder angles
 		if (bCanClimb && m_CurrentLookTask == BOT_LOOK_TASK_NEXT_WAYPOINT)
 		{
-			constexpr float LADDER_ANGLE_UP = 80.0f;   // Angle of elevation
-			constexpr float LADDER_ANGLE_DOWN = -80.0f; // Angle of depression
+			constexpr float LADDER_ANGLE_UP = 40.0f;   // Angle of elevation
+			constexpr float LADDER_ANGLE_DOWN = -40.0f; // Angle of depression
 
 			const int iLadderDir = GetLadderDir(); // Ladder Direction
 
@@ -7706,8 +7451,8 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 	m_CurrentTask = m_Tasks.CurrentTask();
 
 	// get the current task name
-	if (m_CurrentTask != nullptr)
-		eBotTask iCurrentTask = m_CurrentTask->Task(); //iCurrentTask unused? [APG]RoboCop[CL]
+	//if (m_CurrentTask != nullptr)
+	//	eBotTask iCurrentTask = m_CurrentTask->Task();
 
 	vAngles.z = 0;
 	pev->v_angle.z = 0;
@@ -7763,30 +7508,18 @@ void CBot::SetViewAngles(const Vector& pOrigin)
 	pev->ideal_yaw = vAngles.y;
 
 	// change angles smoothly
+	const float yaw_diff = UTIL_AngleDiff(pev->ideal_yaw, pev->v_angle.y);
+	fTurnSpeed = std::fabs(yaw_diff) / m_fTurnSpeed;
+	ChangeAngles(&fTurnSpeed, &pev->ideal_yaw, &pev->v_angle.y, &pev->angles.y);
 
-	//temp = 1/1+exp(-fabs((pev->ideal_yaw+180.0f)-(pev->v_angle.y+180.0f))/180);
-	float temp = std::fabs(pev->ideal_yaw + 180.0f - (pev->v_angle.y + 180.0f));
-
-	fTurnSpeed = temp / m_fTurnSpeed;//fabs((pev->ideal_yaw+180.0f)-(pev->v_angle.y+180.0f))/20;//m_fTurnSpeed;
-	// change yaw
-	ChangeAngles(&fTurnSpeed, &pev->ideal_yaw, &pev->v_angle.y, &pev->angles.y); // 5 degrees
-
-	//temp = 1/1+exp(-fabs((pev->idealpitch+180.0f)-(pev->v_angle.x+180.0f))/180);
-	temp = std::fabs(pev->idealpitch + 180.0f - (pev->v_angle.x + 180.0f));
-
-	// set by ChangeAngles... remove this functionality soon...
-	fTurnSpeed = temp / m_fTurnSpeed;
-	//fTurnSpeed = fabs((pev->idealpitch+180.0f)-(pev->v_angle.x+180.0f))/20;//m_fTurnSpeed;
-
-	// change pitch
+	const float pitch_diff = UTIL_AngleDiff(pev->idealpitch, pev->v_angle.x);
+	fTurnSpeed = std::fabs(pitch_diff) / m_fTurnSpeed;
 	ChangeAngles(&fTurnSpeed, &pev->idealpitch, &pev->v_angle.x, &pev->angles.x);
 
 	// reset turn speed
-	m_fTurnSpeed = gBotGlobals.m_fTurnSpeed;//BOT_DEFAULT_TURN_SPEED;
-	//pev->v_angle.x = -pev->v_angle.x;
+	m_fTurnSpeed = gBotGlobals.m_fTurnSpeed;
 	pev->angles.x = -pev->v_angle.x / 3;
-
-	pev->angles.y = pev->v_angle.y;//*/
+	pev->angles.y = pev->v_angle.y;
 }
 
 void CBot::touchedWpt()
@@ -8797,9 +8530,9 @@ bool CBot::ThrowingGrenade() const
 
 void CBot::UpdateMsec()
 {
-	m_iMsecVal = static_cast<int>((gpGlobals->time - m_fLastCallRunPlayerMove) * 1000);
+	m_iMsecVal = static_cast<unsigned char>((gpGlobals->time - m_fLastCallRunPlayerMove) * 1000);
 
-	m_iMsecVal = std::min(m_iMsecVal, 255);
+    m_iMsecVal = std::min(m_iMsecVal, static_cast<decltype(m_iMsecVal)>(255));
 }
 
 edict_t* CBot::FindEnemy()
@@ -8929,6 +8662,14 @@ edict_t* CBot::FindEnemy()
 					else if (EntityIsMarineStruct(pEntity))
 						iPriority = 8;
 					break;
+					/*case MOD_GEARBOX: //TODO: Allow bots to focus attacking capper [APG]RoboCop[CL]
+					if (pEntity->v.flags & FL_CLIENT)
+					{
+						// flag carrier
+						if (m_bHasFlag(pEntity))
+							iPriority = 12;
+					}
+					break;*/
 					/*case MOD_TFC:
 						// Teleporter/disp/sentry gun (quick check)
 						if (pEntity->v.flags & FL_MONSTER)
@@ -9309,10 +9050,10 @@ bool CBot::IsEnemy(edict_t* pEntity)
 	{
 		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-		if (std::strcmp(szClassname, "func_breakable") == 0)
+		/*if (std::strcmp(szClassname, "func_breakable") == 0)
 		{
 			return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
-		}
+		}*/
 
 		if (!EntityIsAlive(pEntity))
 			return false;
@@ -9355,10 +9096,11 @@ bool CBot::IsEnemy(edict_t* pEntity)
 	{
 		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-		if (std::strcmp(szClassname, "func_breakable") == 0)
+		/*if (std::strcmp(szClassname, "func_breakable") == 0)
 		{
 			return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
-		}
+		}*/
+
 		if (!EntityIsAlive(pEntity))
 			return false;
 		if (!gBotGlobals.m_bTeamPlay)
@@ -9506,7 +9248,7 @@ bool BotFunc_IsLongRangeWeapon(const int iId)
 	case MOD_NS:
 		switch (static_cast<int>(iId))
 		{
-		case static_cast<int>(NSWeapon::CLAWS): //Required to prevent aliens from attacking too far away? [APG]RoboCop[CL]
+		case static_cast<int>(NSWeapon::CLAWS):
 		case static_cast<int>(NSWeapon::SPIT):
 		case static_cast<int>(NSWeapon::SPIKE):
 		case static_cast<int>(NSWeapon::BITE):
@@ -10506,108 +10248,65 @@ bool CBot::RemoveMySquad()
 	return false;
 }
 
-//TODO: Maybe need to be revised and is disabled until further notice [APG]RoboCop[CL]
-/*
-void CBot :: BotOnLadder ()
+//TODO: Maybe need to be revised [APG]RoboCop[CL]
+void CBot::FaceLadderWall() const
 {
 	TraceResult tr;
+	Vector v_src = pev->origin + pev->view_ofs;
 
+	float f_min_dist = -1.0f;
+	constexpr float EPSILON = 1e-6f; // Define a small tolerance value
+
+	Vector v_best_plane_normal;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		Vector v_dir;
+		switch (i)
+		{
+		case 0: v_dir = gpGlobals->v_forward; break; // Forward
+		case 1: v_dir = -gpGlobals->v_forward; break; // Backward
+		case 2: v_dir = gpGlobals->v_right; break; // Right
+		case 3: v_dir = -gpGlobals->v_right; break; // Left
+		}
+
+		Vector v_dest = v_src + v_dir * 32;
+		UTIL_TraceLine(v_src, v_dest, dont_ignore_monsters, pev->pContainingEntity, &tr);
+
+		if (tr.flFraction < 1.0f && tr.pHit && std::strcmp("func_wall", STRING(tr.pHit->v.classname)) == 0)
+		{
+			const float f_dist = (tr.vecEndPos - v_src).Length();
+			if (std::fabs(f_min_dist - (-1.0f)) < EPSILON || f_dist < f_min_dist)
+			{
+				f_min_dist = f_dist;
+				v_best_plane_normal = tr.vecPlaneNormal;
+			}
+		}
+	}
+
+	if (std::fabs(f_min_dist - (-1.0f)) > EPSILON) // Use std::fabs for absolute difference
+	{
+		Vector view_angles = UTIL_VecToAngles(v_best_plane_normal);
+		view_angles.y += 180.0f; // Flip to face the wall
+
+		pev->ideal_yaw = view_angles.y;
+		UTIL_FixFloatAngle(&pev->ideal_yaw);
+	}
+	else
+	{
+		// If no wall is found, maintain the current yaw to prevent spinning.
+		pev->ideal_yaw = pev->v_angle.y;
+		UTIL_FixFloatAngle(&pev->ideal_yaw);
+	}
+}
+
+void CBot::BotOnLadder()
+{
 	// check if the bot has JUST touched this ladder...
 	if (m_siLadderDir == LADDER_UNKNOWN)
 	{
-		float angle = 0.0f;
-		bool done = false;
-		// try to square up the bot on the ladder...
-		while (!done && angle < 180.0f)
-		{
-			// try looking in one direction (forward + angle)
-			Vector view_angles = pev->v_angle;
-			view_angles.y = pev->v_angle.y + angle;
-
-			if (view_angles.y < 0.0f)
-				view_angles.y += 360.0f;
-			if (view_angles.y > 360.0f)
-				view_angles.y -= 360.0f;
-
-			UTIL_MakeVectors(view_angles);
-
-			Vector v_src = pev->origin + pev->view_ofs;
-			Vector v_dest = v_src + gpGlobals->v_forward * 30;
-
-			UTIL_TraceLine(v_src, v_dest, dont_ignore_monsters,
-				pev->pContainingEntity, &tr);
-
-			if (tr.flFraction < 1.0f)  // hit something?
-			{
-				if (std::strcmp("func_wall", STRING(tr.pHit->v.classname)) == 0)
-				{
-					// square up to the wall...
-					view_angles = UTIL_VecToAngles(tr.vecPlaneNormal);
-
-					// Normal comes OUT from wall, so flip it around...
-					view_angles.y += 180.0f;
-
-					if (view_angles.y > 180.0f)
-						view_angles.y -= 360.0f;
-
-					pev->ideal_yaw = view_angles.y;
-
-					UTIL_FixFloatAngle(&pev->ideal_yaw);
-
-					done = true;
-				}
-			}
-			else
-			{
-				// try looking in the other direction (forward - angle)
-				view_angles = pev->v_angle;
-				view_angles.y = pev->v_angle.y - angle;
-
-				if (view_angles.y < 0.0f)
-					view_angles.y += 360.0f;
-				if (view_angles.y > 360.0f)
-					view_angles.y -= 360.0f;
-
-				UTIL_MakeVectors(view_angles);
-
-				v_src = pev->origin + pev->view_ofs;
-				v_dest = v_src + gpGlobals->v_forward * 30;
-
-				UTIL_TraceLine(v_src, v_dest, dont_ignore_monsters,
-					pev->pContainingEntity, &tr);
-
-				if (tr.flFraction < 1.0f)  // hit something?
-				{
-					if (std::strcmp("func_wall", STRING(tr.pHit->v.classname)) == 0)
-					{
-						// square up to the wall...
-						view_angles = UTIL_VecToAngles(tr.vecPlaneNormal);
-
-						// Normal comes OUT from wall, so flip it around...
-						view_angles.y += 180.0f;
-
-						if (view_angles.y > 180.0f)
-							view_angles.y -= 360.0f;
-
-						pev->ideal_yaw = view_angles.y;
-
-						UTIL_FixFloatAngle(&pev->ideal_yaw);
-
-						done = true;
-					}
-				}
-			}
-
-			angle += 10;
-		}
-
-		if (!done)  // if didn't find a wall, just reset ideal_yaw...
-		{
-			// set ideal_yaw to current yaw (so bot won't keep turning)
-			pev->ideal_yaw = pev->v_angle.y;
-
-			UTIL_FixFloatAngle(&pev->ideal_yaw);
-		}
+		// Square up to the nearest wall.
+		FaceLadderWall();
 	}
 
 	// moves the bot up or down a ladder.  if the bot can't move
@@ -10627,7 +10326,7 @@ void CBot :: BotOnLadder ()
 			//pev->v_angle.x = 80.0f;  // look downwards
 			//m_siLadderDir = LADDER_DOWN;
 		//}
-		}
+	}
 	else if (m_siLadderDir == LADDER_DOWN)  // is the bot currently going down?
 	{
 		pev->v_angle.x = 80.0f;  // look downwards
@@ -10640,7 +10339,7 @@ void CBot :: BotOnLadder ()
 			//pev->v_angle.x = -80;  // look upwards
 			//m_siLadderDir = LADDER_UP;
 		//}
-		}
+	}
 	else  // the bot hasn't picked a direction yet, try going up...
 	{
 		pev->v_angle.x = -80.0f;  // look upwards
@@ -10650,7 +10349,6 @@ void CBot :: BotOnLadder ()
 	// move forward (i.e. in the direction the bot is looking, up or down)
 	pev->button |= IN_FORWARD;
 }
-*/
 
 eMasterType CMasterEntity::CanFire(edict_t* pActivator) const
 {
@@ -10662,8 +10360,8 @@ eMasterType CMasterEntity::CanFire(edict_t* pActivator) const
 			{
 				if (!pentMaster->IsTriggered(pentActivator))
 					return MASTER_NOT_TRIGGERED;
-				else
-					return MASTER_TRIGGERED;
+
+				return MASTER_TRIGGERED;
 			}
 		}
 	}
@@ -10996,60 +10694,6 @@ bool BotFunc_GetStructuresToBuildForEntity(const AvHUser3 iBuildingType, int* iD
 	case AVH_USER3_SENSORY_CHAMBER:
 		theThingsToBuild = &gBotGlobals.m_ThingsToBuild->m_forSensoryChamber;
 		break;
-		/*case AVH_USER3_NONE: break;
-		case AVH_USER3_MARINE_PLAYER: break;
-		case AVH_USER3_COMMANDER_PLAYER: break;
-		case AVH_USER3_ALIEN_PLAYER1: break;
-		case AVH_USER3_ALIEN_PLAYER2: break;
-		case AVH_USER3_ALIEN_PLAYER3: break;
-		case AVH_USER3_ALIEN_PLAYER4: break;
-		case AVH_USER3_ALIEN_PLAYER5: break;
-		case AVH_USER3_ALIEN_EMBRYO: break;
-		case AVH_USER3_SPAWN_TEAMA: break;
-		case AVH_USER3_SPAWN_TEAMB: break;
-		case AVH_USER3_PARTICLE_ON: break;
-		case AVH_USER3_PARTICLE_OFF: break;
-		case AVH_USER3_WELD: break;
-		case AVH_USER3_ALPHA: break;
-		case AVH_USER3_MARINEITEM: break;
-		case AVH_USER3_WAYPOINT: break;
-		case AVH_USER3_NOBUILD: break;
-		case AVH_USER3_USEABLE: break;
-		case AVH_USER3_AUDIO_ON: break;
-		case AVH_USER3_AUDIO_OFF: break;
-		case AVH_USER3_FUNC_RESOURCE: break;
-		case AVH_USER3_COMMANDER_STATION: break;
-		case AVH_USER3_TURRET_FACTORY: break;
-		case AVH_USER3_ARMORY: break;
-		case AVH_USER3_ADVANCED_ARMORY: break;
-		case AVH_USER3_ARMSLAB: break;
-		case AVH_USER3_PROTOTYPE_LAB: break;
-		case AVH_USER3_OBSERVATORY: break;
-		case AVH_USER3_CHEMLAB: break;
-		case AVH_USER3_MEDLAB: break;
-		case AVH_USER3_NUKEPLANT: break;
-		case AVH_USER3_TURRET: break;
-		case AVH_USER3_SIEGETURRET: break;
-		case AVH_USER3_RESTOWER: break;
-		case AVH_USER3_PLACEHOLDER: break;
-		case AVH_USER3_INFANTRYPORTAL: break;
-		case AVH_USER3_NUKE: break;
-		case AVH_USER3_BREAKABLE: break;
-		case AVH_USER3_UMBRA: break;
-		case AVH_USER3_PHASEGATE: break;
-		case AVH_USER3_HEAVY: break;
-		case AVH_USER3_JETPACK: break;
-		case AVH_USER3_ADVANCED_TURRET_FACTORY: break;
-		case AVH_USER3_SPAWN_READYROOM: break;
-		case AVH_USER3_CLIENT_COMMAND: break;
-		case AVH_USER3_FUNC_ILLUSIONARY: break;
-		case AVH_USER3_MENU_BUILD: break;
-		case AVH_USER3_MENU_BUILD_ADVANCED: break;
-		case AVH_USER3_MENU_ASSIST: break;
-		case AVH_USER3_MENU_EQUIP: break;
-		case AVH_USER3_MINE: break;
-		case AVH_USER3_UNKNOWN: break;
-		case AVH_USER3_MAX: break;*/
 	default:
 		break;
 	}
@@ -16327,14 +15971,14 @@ void CBot::CheckStuck()
 					// moving up
 				{
 					// If not moving very fast up the way we are stuck
-					if (pev->velocity.z < 10.0f)
+					if (pev->velocity.z < BOT_STUCK_CLIMB_SPEED)
 						m_fStuckTime = gpGlobals->time;
 				}
 				else if (iLadderDir == -1)
 					// going down
 				{
 					// If not moving very fast down the way we are stuck
-					if (pev->velocity.z > -10.0f)
+					if (pev->velocity.z > -BOT_STUCK_CLIMB_SPEED)
 						m_fStuckTime = gpGlobals->time;
 				}
 			}
@@ -16352,7 +15996,7 @@ void CBot::CheckStuck()
 		{
 			// swimming
 			// moving slow (3d velocity since we are swimming)
-			if (m_f3dVelocity < 32)
+			if (m_f3dVelocity < BOT_STUCK_SWIM_SPEED)
 			{
 				m_fStuckTime = gpGlobals->time;
 			}
@@ -16452,7 +16096,7 @@ void CBot::CheckStuck()
 			// swimming
 		{
 			// we're going faster than stuck speed, reset stuck time
-			if (m_f3dVelocity >= 32)
+			if (m_f3dVelocity >= BOT_STUCK_SWIM_SPEED)
 			{
 				m_fStuckTime = 0.0f;
 			}
@@ -16466,14 +16110,14 @@ void CBot::CheckStuck()
 				// going up
 			{
 				// we're going faster than stuck speed, reset stuck time.
-				if (pev->velocity.z >= 10.0f)
+				if (pev->velocity.z >= BOT_STUCK_CLIMB_SPEED)
 					m_fStuckTime = 0.0f;
 			}
 			else if (iLadderDir == -1)
 				// going down
 			{
 				// we're going faster than stuck speed, reset stuck time..
-				if (pev->velocity.z <= -10.0f)
+				if (pev->velocity.z <= -BOT_STUCK_CLIMB_SPEED)
 					m_fStuckTime = 0.0f;
 			}
 		}

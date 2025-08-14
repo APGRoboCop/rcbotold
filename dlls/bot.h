@@ -1519,7 +1519,6 @@ typedef struct path {
 
 ////////////////////////////
 // Bot Profile Info
-// TODO: those need to be initialised for Bot Profile to work? [APG]RoboCop[CL]
 typedef struct bot_profile_s
 {
 	int m_iProfileId = 0;
@@ -2871,7 +2870,7 @@ private:
 	float m_fUpgradeTime;
 
 	// the list of visible entities
-//	dataStack<edict_t*>	m_stBotVisibles;
+	// dataStack<edict_t*>	m_stBotVisibles;
 
 	// Bitmask of conditions the bot has
 	int                 m_ibBotConditions;
@@ -3644,8 +3643,8 @@ public:
 
 	// used for working out MSEC
 	float m_fLastCallRunPlayerMove;
-	int m_iMsecVal;
-	int m_iMsecNum;
+	unsigned char m_iMsecVal;
+	//unsigned char m_iMsecNum;
 	float m_fMsecDel;
 	float m_fSecDelTime;
 
@@ -3663,6 +3662,7 @@ public:
 	//float    m_fLaughEdictTime;
 	edict_t* m_pKilledEdict;
 	edict_t* m_pKillerEdict;
+	edict_t* m_pHurtEdict;
 
 	bool m_bSaidGreetings;
 
@@ -3821,7 +3821,8 @@ public:
 
 	//void MapInit(); //Duplicate? [APG]RoboCop[CL]
 
-	//void BotOnLadder(); //TODO: Needs revised [APG]RoboCop[CL]
+	void FaceLadderWall() const;
+	void BotOnLadder();
 
 	void UseTank(edict_t* pTank);
 
@@ -3894,7 +3895,7 @@ public:
 		return pev->movetype == MOVETYPE_FLY;
 	}
 
-	void     Jump() const
+	void Jump() const
 	{
 		pev->button |= IN_JUMP;
 	}
@@ -4015,6 +4016,17 @@ public:
 	// get the distance from vector vec
 	float    DistanceFrom(const Vector& vOrigin, bool twoD = false) const;
 
+	void     BotEvent_Leaving();
+	void     BotEvent_TaskFail() const;
+	void     BotEvent_TaskComplete() const;
+	void     BotEvent_HearTeammateDie(edict_t* pInfo);
+	void     BotEvent_SeeTeammateDie(edict_t* pInfo, edict_t* pExtInfo);
+	void     BotEvent_KillSelf();
+	void     BotEvent_SeePlayerDie(edict_t* pInfo, edict_t* pExtInfo);
+	void     BotEvent_SeeEnemyKill(edict_t* pInfo, edict_t* pExtInfo);
+	void     BotEvent_Kill(edict_t* pInfo);
+	void     BotEvent_Died(edict_t* pInfo);
+
 	// set up tasks so bot runs from the origin
 	void	 RunForCover(const Vector& vOrigin, bool bDoItNow = false, int iScheduleId = 0);
 
@@ -4030,7 +4042,7 @@ public:
 	// BUTTONS - END
 
 	bool     EvolveInto(int species); //TODO: Not implemented yet [APG]RoboCop[CL]
-	short    SpeciesOnTeam(int species) const;
+	int SpeciesOnTeam(int species) const;
 	short    EvolvedSpeciesOnTeam(int species); //TODO: Not implemented yet [APG]RoboCop[CL]
 
 	void	 BotChat(eBotChatType iChatType, edict_t* pChatEdict = nullptr, bool bSayNow = false);
@@ -4104,7 +4116,7 @@ public:
 	//bool     SelectPlayersForOrder     ( edict_t *pent );
 
 	// returns true when bot can follow the player pEdict
-	/*/bool CanFollow(const edict_t* pEdict) //TODO: Experimental [APG]RoboCop[CL]
+	/*bool CanFollow(const edict_t* pEdict) //TODO: Experimental [APG]RoboCop[CL]
 	{
 		//if ( pEdict == m_pEdict )
 		//	return false;
