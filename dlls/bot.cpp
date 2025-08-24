@@ -1718,19 +1718,19 @@ int CBot::GetTeam() const
 	return UTIL_GetTeam(m_pEdict);
 }
 
-/*bool CBot::EvolveInto(int species)
+/*bool CBot::EvolveInto(const int iSpecies) const
 {
-	return UTIL_EvolveInto(m_pEdict, species);
+	return UTIL_EvolveInto(m_pEdict, iSpecies);
 }*/
 
-int CBot::SpeciesOnTeam(const int species) const //TODO: Experimental [APG]RoboCop[CL]
+int CBot::SpeciesOnTeam(const int iSpecies) const
 {
-	return UTIL_SpeciesOnTeam(species, GetTeam());
+	return UTIL_SpeciesOnTeam(iSpecies, GetTeam());
 }
 
-/*short CBot::EvolvedSpeciesOnTeam(int species)
+/*int CBot::EvolvedSpeciesOnTeam(const int iSpecies) const
 {
-	return UTIL_EvolvedSpeciesOnTeam(species, GetTeam());
+	return UTIL_EvolvedSpeciesOnTeam(iSpecies, GetTeam(), true);
 }*/
 
 void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, const bool bSayNow)
@@ -1976,15 +1976,15 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, const bool bSayN
 	}
 }
 
-bool CBot::BotCanUseBuiltStructure(const edict_t* structure) const //TODO: Experimental [APG]RoboCop[CL]
+bool CBot::BotCanUseBuiltStructure(const edict_t* structure) const // TODO: Experimental [APG]RoboCop[CL]
 {
-	if (structure == nullptr || FNullEnt(structure))
+	if (!structure || FNullEnt(structure))
 		return false;
 
-	if (structure->v.owner == nullptr || structure->v.owner != m_pEdict)
+	if (structure->v.owner != m_pEdict)
 		return false;
 
-	if (structure->v.health <= 0)
+	if (structure->v.health <= 0.0f)
 		return false;
 
 	return true;
@@ -2199,20 +2199,19 @@ edict_t* CBot::getTeleporterExit() const
 }
 
 int CBot::GetLadderDir(const bool bCheckWaypoint) const
-// Get ladder dir, simply find if the bot
-// wants to go up or down..
-//return -1 (down), 0 (jump off), 1 (up)
+// Get ladder direction: determines if the bot
+// wants to go up, down, or stay.
+// Returns -1 (down), 0 (stay), 1 (up).
 {
-	//TODO: To adjust the 8 units for bots to climb properly [APG]RoboCop[CL]
 	constexpr float CLIMB_THRESHOLD = 8.0f; // Threshold for climbing adjustments
+	constexpr int INVALID_WAYPOINT = -1;    // Invalid waypoint identifier
 
 	// Helper lambda to determine direction based on z-coordinates
 	auto getDirection = [](const float targetZ, const float currentZ, const float threshold) -> int {
 		if (targetZ > currentZ - threshold)
 			return 1; // Up
 		if (targetZ < currentZ)
-			return -1;
-		// Down
+			return -1; // Down
 		return 0; // Stay
 		};
 
@@ -2220,7 +2219,7 @@ int CBot::GetLadderDir(const bool bCheckWaypoint) const
 	if (bCheckWaypoint)
 	{
 		const int iNextWaypoint = GetNextWaypoint();
-		if (iNextWaypoint != -1)
+		if (iNextWaypoint != INVALID_WAYPOINT)
 		{
 			const Vector& vNextWptOrigin = waypoints[iNextWaypoint].origin;
 			return getDirection(vNextWptOrigin.z, pev->origin.z, CLIMB_THRESHOLD);
@@ -3339,8 +3338,11 @@ void CBot::Think()
 				UTIL_MakeVectors(pev->v_angle);
 
 				// make origin behind bot so it looks around
-				Vector lookBehindOrigin = GetGunPosition() - gpGlobals->v_forward * 128.0f;
+				constexpr float lookBehindDistance = 128.0f;
 
+				Vector lookBehindOrigin = GetGunPosition() - gpGlobals->v_forward * lookBehindDistance;
+
+				// Trigger a hurt event with the calculated position
 				BotEvent(BOT_EVENT_HURT, nullptr, nullptr, lookBehindOrigin);
 			}
 		}
@@ -3459,11 +3461,14 @@ void CBot::Think()
 		if (IsSquadLeader())
 			BotSquadLeaderThink();
 
+		// Check if it's time to update the waypoint
 		if (m_fUpdateWaypointTime < gpGlobals->time)
 		{
-			if (!BotNavigate_UpdateWaypoint(this))//TODO: triggers crash? [APG]RoboCopCL]
+			if (const bool waypointUpdated = BotNavigate_UpdateWaypoint(this); !waypointUpdated)
 			{
-				//StopMoving();
+				// TODO: Investigate potential crash here [APG]RoboCopCL]
+				// Consider enabling StopMoving() if necessary to prevent further issues
+				// StopMoving();
 				m_fUpdateWaypointTime = gpGlobals->time + 0.5f;
 			}
 		}
@@ -3835,21 +3840,19 @@ void CBot::LookForNewTasks()
 				{
 					if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
 					{
-						if (std::strcmp(szClassname, "func_recharge") == 0)
+						if (std::string(szClassname) == "func_recharge")
 						{
 							fNearestHEVchargerDist = fDistance;
 							pNearestHEVcharger = pEntity;
-							continue;
 						}
 					}
 
 					if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
 					{
-						if (std::strcmp(szClassname, "func_healthcharger") == 0)
+						if (std::string(szClassname) == "func_healthcharger")
 						{
 							fNearestHealthchargerDist = fDistance;
 							pNearestHealthcharger = pEntity;
-							continue;
 						}
 					}
 
@@ -3909,21 +3912,19 @@ void CBot::LookForNewTasks()
 			{
 				if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
 				{
-					if (std::strcmp(szClassname, "func_recharge") == 0)
+					if (std::string(szClassname) == "func_recharge")
 					{
 						fNearestHEVchargerDist = fDistance;
 						pNearestHEVcharger = pEntity;
-						continue;
 					}
 				}
 
 				if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
 				{
-					if (std::strcmp(szClassname, "func_healthcharger") == 0)
+					if (std::string(szClassname) == "func_healthcharger")
 					{
 						fNearestHealthchargerDist = fDistance;
 						pNearestHealthcharger = pEntity;
-						continue;
 					}
 				}
 
@@ -3934,7 +3935,6 @@ void CBot::LookForNewTasks()
 					{
 						fNearestButtonDist = fDistance;
 						pNearestButton = pEntity;
-						continue;
 					}
 				}
 			}
@@ -3951,7 +3951,7 @@ void CBot::LookForNewTasks()
 				}
 			}
 		}
-		//break;
+		break;
 		case MOD_SI:
 			if (!pNearestPickupEntity || fDistance < fNearestPickupEntityDist)
 			{
@@ -3967,21 +3967,19 @@ void CBot::LookForNewTasks()
 			{
 				if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
 				{
-					if (std::strcmp(szClassname, "func_recharge") == 0)
+					if (std::string(szClassname) == "func_recharge")
 					{
 						fNearestHEVchargerDist = fDistance;
 						pNearestHEVcharger = pEntity;
-						continue;
 					}
 				}
 
 				if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
 				{
-					if (std::strcmp(szClassname, "func_healthcharger") == 0)
+					if (std::string(szClassname) == "func_healthcharger")
 					{
 						fNearestHealthchargerDist = fDistance;
 						pNearestHealthcharger = pEntity;
-						continue;
 					}
 				}
 
@@ -3992,7 +3990,6 @@ void CBot::LookForNewTasks()
 					{
 						fNearestButtonDist = fDistance;
 						pNearestButton = pEntity;
-						continue;
 					}
 				}
 			}
@@ -6519,9 +6516,9 @@ float CBot::DistanceFrom(const Vector& vOrigin, const bool twoD) const
 	return (vOrigin - GetGunPosition()).Length();
 }
 
-edict_t* CBot::BotCheckForWeldables() //TODO: Experimental [APG]RoboCop[CL]
+edict_t* CBot::BotCheckForWeldables()
 {
-	constexpr float MAX_WELDABLE_DISTANCE = 100.0f; // Define a meaningful constant
+	constexpr float MAX_WELDABLE_DISTANCE = 80.0f;
 	edict_t* pWeldable = nullptr;
 
 	// Iterate through all entities of type "func_weldable"
@@ -6862,19 +6859,19 @@ void CBot::WorkViewAngles()
 	{
 		// face entity
 		// get the edict
-		//edict_t* pEdict = m_CurrentTask->TaskEdict();
+		edict_t* pEdict = m_CurrentTask->TaskEdict();
 
-		// check if the edict is valid
-		/*if (pEdict != nullptr)
+		// check if the edict is valid and not a null entity
+		if (pEdict && !FNullEnt(pEdict))
 		{
 			// if it is, face it
-			FacePosition(pEdict->v.origin);
+			SetViewAngles(pEdict->v.origin);
 		}
 		else
 		{
 			// if not, clear the task
 			m_CurrentLookTask = BOT_LOOK_TASK_NONE;
-		}*/
+		}
 	}
 	break;
 	case BOT_LOOK_TASK_FACE_NEAREST_REMEMBER_POS:
@@ -6969,11 +6966,11 @@ void CBot::WorkViewAngles()
 			// only set the view direction every few seconds
 			// mainly dependant on bots skill.
 
-			Vector vBaseLookDir, vBaseLookOrigin;
+			Vector vBaseLookOrigin;
 
 			if (m_pLastEnemy != nullptr && EntityIsAlive(m_pLastEnemy))
 			{
-				//				m_fTurnSpeed = 20.0f;
+				//m_fTurnSpeed = 20.0f;
 
 				vBaseLookOrigin = m_vLastSeeEnemyPosition.GetVector();
 			}
@@ -8669,7 +8666,7 @@ edict_t* CBot::FindEnemy()
 						if (m_bHasFlag(pEntity))
 							iPriority = 12;
 					}
-					break;*/
+					break;
 					/*case MOD_TFC:
 						// Teleporter/disp/sentry gun (quick check)
 						if (pEntity->v.flags & FL_MONSTER)
@@ -9050,10 +9047,14 @@ bool CBot::IsEnemy(edict_t* pEntity)
 	{
 		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-		/*if (std::strcmp(szClassname, "func_breakable") == 0)
+		// bot cant see next waypoint, breakable could be blocking it
+		if (!HasCondition(BOT_CONDITION_SEE_NEXT_WAYPOINT))
 		{
-			return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
-		}*/
+			if (std::strcmp(szClassname, "func_breakable") == 0)
+			{
+				return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
+			}
+		}
 
 		if (!EntityIsAlive(pEntity))
 			return false;
@@ -9096,10 +9097,14 @@ bool CBot::IsEnemy(edict_t* pEntity)
 	{
 		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
 
-		/*if (std::strcmp(szClassname, "func_breakable") == 0)
+		// bot cant see next waypoint, breakable could be blocking it
+		if (!HasCondition(BOT_CONDITION_SEE_NEXT_WAYPOINT))
 		{
-			return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
-		}*/
+			if (std::strcmp(szClassname, "func_breakable") == 0)
+			{
+				return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
+			}
+		}
 
 		if (!EntityIsAlive(pEntity))
 			return false;
@@ -10068,7 +10073,7 @@ void CBotSquads::ChangeLeader(CBotSquad* theSquad)
 
 Vector CBotSquad::GetFormationVector(edict_t* pEdict) const
 {
-	Vector vBase;
+	Vector vBase = Vector(0, 0, 0);
 	// vBase = first : offset from leader origin without taking into consideration spread and position
 
 	edict_t* pLeader = GetLeader();
@@ -10255,13 +10260,15 @@ void CBot::FaceLadderWall() const
 	Vector v_src = pev->origin + pev->view_ofs;
 
 	float f_min_dist = -1.0f;
-	constexpr float EPSILON = 1e-6f; // Define a small tolerance value
+	constexpr float EPSILON = 1e-6f; // Small tolerance value
 
 	Vector v_best_plane_normal;
 
 	for (int i = 0; i < 4; ++i)
 	{
+		constexpr float TRACE_DISTANCE = 32.0f;
 		Vector v_dir;
+
 		switch (i)
 		{
 		case 0: v_dir = gpGlobals->v_forward; break; // Forward
@@ -10269,8 +10276,7 @@ void CBot::FaceLadderWall() const
 		case 2: v_dir = gpGlobals->v_right; break; // Right
 		case 3: v_dir = -gpGlobals->v_right; break; // Left
 		}
-
-		Vector v_dest = v_src + v_dir * 32;
+		Vector v_dest = v_src + v_dir * TRACE_DISTANCE;
 		UTIL_TraceLine(v_src, v_dest, dont_ignore_monsters, pev->pContainingEntity, &tr);
 
 		if (tr.flFraction < 1.0f && tr.pHit && std::strcmp("func_wall", STRING(tr.pHit->v.classname)) == 0)
@@ -10286,9 +10292,10 @@ void CBot::FaceLadderWall() const
 
 	if (std::fabs(f_min_dist - (-1.0f)) > EPSILON) // Use std::fabs for absolute difference
 	{
-		Vector view_angles = UTIL_VecToAngles(v_best_plane_normal);
-		view_angles.y += 180.0f; // Flip to face the wall
+		constexpr float FLIP_ANGLE = 180.0f;
 
+		Vector view_angles = UTIL_VecToAngles(v_best_plane_normal);
+		view_angles.y += FLIP_ANGLE; // Flip to face the wall
 		pev->ideal_yaw = view_angles.y;
 		UTIL_FixFloatAngle(&pev->ideal_yaw);
 	}
@@ -11859,9 +11866,8 @@ void CBot::DoTasks()
 				{
 					if (IsInVisibleList(pSound))
 					{
-						Vector vOrigin;
-						Vector vSrc;
-						TraceResult tr;
+						//Vector vSrc;
+						//TraceResult tr;
 
 						if (!IsEnemy(pSound))
 						{
@@ -14620,7 +14626,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 					}
 
 					// Check if a weapon has not been chosen yet or if the current weapon ID is different
-					if (m_CurrentTask->TaskInt() == 0 || m_CurrentTask->TaskInt() != m_pCurrentWeapon->GetID()) {
+					if (m_pCurrentWeapon == nullptr || m_CurrentTask->TaskInt() == 0 || m_CurrentTask->TaskInt() != m_pCurrentWeapon->GetID()) {
 						bChangeWeapon = true;
 					}
 
@@ -15850,6 +15856,7 @@ bool CBot::PrimaryAttack() const
 	{
 		switch (m_pCurrentWeapon->GetID())
 		{
+			// TODO: Should this not be used as PrimaryAttack? [APG]RoboCop[CL]
 			// clamitius (whichbot)
 		case static_cast<int>(NSWeapon::LEAP):
 			Impulse(ALIEN_ABILITY_LEAP);
@@ -15881,7 +15888,6 @@ void CBot::CheckStuck()
 
 	// Stuck speed not invalid
 	if (constexpr float epsilon = 0.00001f; std::abs(gBotGlobals.m_fBotStuckSpeed - -1.0f) > epsilon)
-
 	{
 		// check current task incase we dont want to check if stuck
 		// i.e. dont want to kill ourselves if gestating in NS like what used to happen O_o
@@ -16213,7 +16219,7 @@ void CBot::workEnemyCosts(edict_t* pEntity, const Vector& vOrigin, const float f
 	if (fDistance > 768.0f)
 		return;
 
-	Vector lowest;
+	//Vector lowest;
 	constexpr int mid = BOT_COST_BUCKETS / 2;
 	int enemyState;
 
@@ -16328,6 +16334,25 @@ bool CBot::isFriendly(const edict_t* pEntity) const
 void CBot::clearEnemyCosts()
 {
 	std::memset(fRangeCosts, 0, sizeof(float) * (BOT_COST_BUCKETS * BOT_COST_BUCKETS));
+
 	m_fLowestEnemyCost = 99999.0f;
 	m_vLowestEnemyCostVec = pev->origin;
+
+	// Find an enemy
+	if (WantToFindEnemy())
+	{
+		// we can find an enemy...
+		edict_t* pOldEnemy = m_pEnemy;
+		m_pEnemy = FindEnemy();
+
+		if (pOldEnemy != m_pEnemy)
+		{
+			if (pOldEnemy)
+				EnemyDown(pOldEnemy);
+			if (m_pEnemy)
+				EnemyFound(m_pEnemy);
+		}
+	}
+	else
+		m_pEnemy = nullptr;
 }

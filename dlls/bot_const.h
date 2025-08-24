@@ -1236,17 +1236,17 @@ enum : std::uint8_t
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b12_mm_debug";
+constexpr const char* BOT_VER = "1.51b13_mm_debug";
 #else
-constexpr const char* BOT_VER = "1.51b12_mm";
+constexpr const char* BOT_VER = "1.51b13_mm";
 #endif
 
 #else
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b12_debug";
+constexpr const char* BOT_VER = "1.51b13_debug";
 #else
-constexpr const char* BOT_VER = "1.51b12";
+constexpr const char* BOT_VER = "1.51b13";
 #endif
 
 #endif
@@ -1260,17 +1260,17 @@ constexpr const char* BOT_VER = "1.51b12";
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b12_mm_debug";
+constexpr const char* BOT_VER = "1.51b13_mm_debug";
 #else
-constexpr const char* BOT_VER = "1.51b12_mm";
+constexpr const char* BOT_VER = "1.51b13_mm";
 #endif
 
 #else
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b12_debug";
+constexpr const char* BOT_VER = "1.51b13_debug";
 #else
-constexpr const char* BOT_VER = "1.51b12";
+constexpr const char* BOT_VER = "1.51b13";
 #endif
 
 #endif
@@ -1333,7 +1333,7 @@ enum
 
 ////////////////////////////////////////////
 // BOT CHAT
-// TODO: those need to be declared for bot_chat.ini to work [APG]RoboCop[CL]
+// TODO: those need to be declared for bot_chat.ini to work? [APG]RoboCop[CL]
 #define BOT_CHAT_FILE "bot_chat.ini"
 
 enum eBotChatType : std::int8_t

@@ -2187,14 +2187,16 @@ void BotClient_Generic_WeaponPickup::execute(void* p, const int iIndex)
 	}
 	else if (gBotGlobals.IsMod(MOD_GEARBOX))
 	{
-		switch (iWeaponIndex)
+		switch (static_cast<int>(iWeaponIndex))
 		{
 		case static_cast<int>(GearboxWeapon::EAGLE):
 			if (!pBot->HasWeapon(static_cast<int>(GearboxWeapon::EAGLE)))
 			{
-				// make bot use laser
+				//TODO: make bot use laser
 				pBot->UseRPGLaser();
 			}
+			break;
+		default:
 			break;
 		}
 	}

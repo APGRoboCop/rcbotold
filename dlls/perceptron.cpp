@@ -166,7 +166,7 @@ void CPerceptron::save(std::FILE* bfp) const
         if (std::fwrite(data, size, count, file) != count) {
             BotMessage(nullptr, 0, "Error writing to file");
         }
-        };
+    };
 
     // Write perceptron data
     safe_write(&m_iInputs, sizeof(decltype(m_iInputs)), 1, bfp);

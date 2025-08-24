@@ -22,7 +22,7 @@ constexpr float PLAYER_FALL_PUNCH_THRESHHOLD = 350.0f; // won't punch player's s
 //
 // Player PHYSICS FLAGS bits
 //
-enum PlayerPhysicsFlags : unsigned
+enum PlayerPhysicsFlags : std::uint8_t
 {
 	PFLAG_ONLADDER = (1 << 0),
 	PFLAG_ONSWING = (1 << 0),

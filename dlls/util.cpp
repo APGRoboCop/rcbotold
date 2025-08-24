@@ -1075,12 +1075,18 @@ int UTIL_GetBotIndex(const edict_t* pEdict)
 
 int UTIL_MasterTriggered(const string_t sMaster, const CBaseEntity* pActivator) //TODO: Required? [APG]RoboCop[CL]
 {
+	// Ensure pActivator is valid
+	if (!pActivator)
+		return 0;
+
 	edict_t* pent = nullptr;
 
 	while ((pent = (*g_engfuncs.pfnFindEntityByString)(pent, "targetname", STRING(sMaster))) != nullptr)
 	{
 		if (pent->v.owner == pActivator->edict())
+		{
 			return 1;
+		}
 	}
 
 	return 0;
@@ -1184,9 +1190,10 @@ bool UTIL_CanEvolveInto(const int iSpecies)
 	case ALIEN_LIFEFORM_FOUR:
 	case ALIEN_LIFEFORM_FIVE:
 		return UTIL_GetNumHives() > 1;
-	}
 
-	return false;
+	default:
+		return false;
+	}
 }
 
 int UTIL_GetNumHives()
@@ -1484,12 +1491,13 @@ int UTIL_SpeciesOnTeam(const int iSpecies, const bool bIgnoreEmbryos)
 
 		if (FNullEnt(pPlayer))
 			continue;
-		if (pPlayer->v.iuser3 == iSpecies)
-			iPlayers++;
+
 		// Add gestating players to it, since we dont know what they're
 		// transforming into
-		if (!bIgnoreEmbryos && pPlayer->v.iuser3 == AVH_USER3_ALIEN_EMBRYO)
+		if (pPlayer->v.iuser3 == iSpecies || (!bIgnoreEmbryos && pPlayer->v.iuser3 == AVH_USER3_ALIEN_EMBRYO))
+		{
 			iPlayers++;
+		}
 	}
 	return iPlayers;
 }

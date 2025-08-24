@@ -109,6 +109,9 @@ void CBotWeapon::Reset() //TODO: Experimental [APG]RoboCop[CL]
 	m_bHasWeapon = false;
 	m_iAmmo1 = nullptr;
 	m_iAmmo2 = nullptr;
+	m_iClip = 0;
+	m_iReserve = 0;
+	m_iMaxClip = 0;
 }
 
 bool CBotWeapon::CanReload() const
@@ -175,7 +178,7 @@ void CBotWeapon::setHasWeapon(const bool bVal)
 
 void CBotWeapons::AddWeapon(const int iId)
 {
-	m_Weapons[iId].SetWeapon(iId, m_iAmmo);
+	m_Weapons[iId].SetWeapon(iId, m_iAmmo.data());
 }
 
 void CWeapons::AddWeapon(const int iId, const char* szClassname, const int iPrimAmmoMax, const int iSecAmmoMax,
@@ -188,11 +191,11 @@ void CWeapons::AddWeapon(const int iId, const char* szClassname, const int iPrim
 			if (weapon_preset_t* pPreset = gBotGlobals.m_WeaponPresets.GetPreset(gBotGlobals.m_iCurrentMod,
 				iId); pPreset == nullptr)
 			{
-				m_Weapons[iId] = new CWeapon();
+				m_Weapons[iId] = std::make_unique<CWeapon>();
 			}
 			else
 			{
-				m_Weapons[iId] = new CWeaponPreset(pPreset);
+				m_Weapons[iId] = std::make_unique<CWeaponPreset>(pPreset);
 			}
 
 			m_Weapons[iId]->SetWeapon(iId, szClassname, iPrimAmmoMax, iSecAmmoMax, iHudSlot, iHudPosition, iFlags,
@@ -312,6 +315,10 @@ void CWeaponPresets::ReadPresets()
 		}
 		if (std::sscanf(buffer, "priority=%d", &iValue) == 1) {
 			sWeaponPreset.m_iPriority = iValue;
+			continue;
+		}
+		if (std::sscanf(buffer, "maxclip=%d", &iValue) == 1) {
+			sWeaponPreset.m_iMaxClip = iValue;
 			continue;
 		}
 
@@ -776,14 +783,14 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		}
 
 		//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
-		if (pWeapon->NeedToReload()) // Allow bots to reload when needed
+		if (pWeapon->OutOfAmmo()) // Skip weapons that are out of ammo
 		{
-			Weapons.emplace(pWeapon); // Add weapon to reload list
 			continue;
 		}
 
-		if (pWeapon->OutOfAmmo()) // Skip weapons that are out of ammo
+		if (pWeapon->NeedToReload()) // Allow bots to reload when needed
 		{
+			Weapons.emplace(pWeapon); // Add weapon to reload list
 			continue;
 		}
 
@@ -900,18 +907,17 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 
 bool CBotWeapon::NeedToReload() const
 {
-	if (IsMelee())
+	if (IsMelee() || m_iMaxClip == 0) // Melee weapons or weapons without a clip don't need to reload
 		return false;
 
 	switch (gBotGlobals.m_iCurrentMod)
 	{
-	case MOD_TS: //TODO: Add BOT_TASK_RELOAD to allow bots to reload sooner when attacking and running on a empty clip
-	case MOD_HL_DM:
-	case MOD_GEARBOX:
-		return !m_iClip && m_iReserve > 0;
 	case MOD_BUMPERCARS:
 	case MOD_DMC:
 		return false;
+	case MOD_TS: //TODO: Add BOT_TASK_RELOAD to allow bots to reload sooner when attacking and running on a empty clip
+	case MOD_HL_DM:
+	case MOD_GEARBOX:
 	default:
 		if (m_iAmmo1)
 		{
@@ -952,8 +958,8 @@ bool CBotWeapons::HasWeapon(edict_t* pEdict, const char* szClassname) const
 		return false;
 	}
 
-	const CBotWeapon* const it = std::find_if(
-		&m_Weapons[1], &m_Weapons[MAX_WEAPONS],
+	const std::_Array_const_iterator<CBotWeapon, 37> it = std::find_if(
+		m_Weapons.begin() + 1, m_Weapons.end(),
 		[&](const CBotWeapon& weapon)
 		{
 			if (!HasWeapon(pEdict, weapon.GetID()))
@@ -965,5 +971,5 @@ bool CBotWeapons::HasWeapon(edict_t* pEdict, const char* szClassname) const
 			return pClassname && std::string_view(pClassname) == szClassname;
 		});
 
-	return it != &m_Weapons[MAX_WEAPONS];
+	return it != m_Weapons.end();
 }

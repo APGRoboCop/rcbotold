@@ -45,8 +45,10 @@
 #ifndef BOT_NS_H
 #define BOT_NS_H
 
+#include <cstdint>
+
 // TODO: Experimental and NS AlienAction may need to be tested [APG]RoboCop[CL]
-typedef enum : std::uint8_t
+enum class eAlienAction : std::uint8_t
 {
 	ACTION_BUILD_DEF,
 	ACTION_BUILD_OFF,
@@ -56,9 +58,9 @@ typedef enum : std::uint8_t
 	ACTION_BUILD_HIVE,
 	ACTION_HEAL_PLAYER,
 	ACTION_MAX
-}eAlienAction;
+};
 
-typedef enum : std::uint8_t
+enum class eMaskAlienActionResult : std::uint8_t
 {
 	ACTION_RES_FASTER_RESOURCES = 1,
 	ACTION_RES_MORE_HEALTH = 2,
@@ -67,9 +69,9 @@ typedef enum : std::uint8_t
 	ACTION_RES_MORE_DEFENCES = 16,
 	ACTION_RES_MORE_TRAITS = 32,
 	ACTION_RES_CLOACKED = 64
-}eMaskAlienActionResult;
+};
 
-typedef enum
+enum class eAlienMaskEvidence : std::uint32_t
 {
 	MASK_EVD_SLOW_RESOURCES = 1, // 1
 	MASK_EVD_NORM_RESOURCES = 2, // 2
@@ -88,7 +90,18 @@ typedef enum
 	MASK_EVD_MANY_OFFS = 16384,
 	MASK_EVD_MANY_SENS = 32768,
 	MASK_EVD_MANY_MOVS = 65536
-}eAlienMaskEvidence;
+};
+
+// Helper operators for bitwise operations on enum classes
+template<typename T>
+constexpr T operator|(T a, T b) {
+	return static_cast<T>(static_cast<std::underlying_type_t<T>>(a) | static_cast<std::underlying_type_t<T>>(b));
+}
+
+template<typename T>
+constexpr bool operator&(T a, T b) {
+	return (static_cast<std::underlying_type_t<T>>(a) & static_cast<std::underlying_type_t<T>>(b)) != 0;
+}
 
 class CAlienAction
 {
@@ -103,17 +116,17 @@ public:
 	{
 		float fUtility = 1.0f;
 
-		if (m_result & ACTION_RES_FASTER_RESOURCES)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_FASTER_RESOURCES)
 			fUtility *= 1.1f;
-		if (m_result & ACTION_RES_MORE_HEALTH)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_MORE_HEALTH)
 			fUtility *= 0.8f;
-		if (m_result & ACTION_RES_MORE_ABILITIES)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_MORE_ABILITIES)
 			fUtility *= 1.05f;
-		if (m_result & ACTION_RES_MORE_SPAWNPOINTS)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_MORE_SPAWNPOINTS)
 			fUtility *= 1.1f;
-		if (m_result & ACTION_RES_MORE_DEFENCES)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_MORE_DEFENCES)
 			fUtility *= 0.9f;
-		if (m_result & ACTION_RES_CLOACKED)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_CLOACKED)
 			fUtility *= 0.5f;
 		return fUtility;
 	}
@@ -122,83 +135,82 @@ public:
 	{
 		float fProbability = 1.0f;
 
-		if (m_result & ACTION_RES_FASTER_RESOURCES)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_FASTER_RESOURCES)
 		{
-			if (evd & MASK_EVD_SLOW_RESOURCES)
+			if (evd & eAlienMaskEvidence::MASK_EVD_SLOW_RESOURCES)
 				fProbability *= 1.0f;
-			if (evd & MASK_EVD_NORM_RESOURCES)
+			if (evd & eAlienMaskEvidence::MASK_EVD_NORM_RESOURCES)
 				fProbability *= 0.6f;
-			if (evd & MASK_EVD_FAST_RESOURCES)
+			if (evd & eAlienMaskEvidence::MASK_EVD_FAST_RESOURCES)
 				fProbability *= 0.3f;
-			if (evd & MASK_EVD_LOSING)
+			if (evd & eAlienMaskEvidence::MASK_EVD_LOSING)
 				fProbability *= 0.9f;
 		}
-		if (m_result & ACTION_RES_MORE_HEALTH)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_MORE_HEALTH)
 		{
-			if (evd & MASK_EVD_LOW_HEALTH)
+			if (evd & eAlienMaskEvidence::MASK_EVD_LOW_HEALTH)
 				fProbability *= 1.0f;
-			if (evd & MASK_EVD_BALANCED)
+			if (evd & eAlienMaskEvidence::MASK_EVD_BALANCED)
 				fProbability *= 0.6f;
-			if (evd & MASK_EVD_LOSING)
+			if (evd & eAlienMaskEvidence::MASK_EVD_LOSING)
 				fProbability *= 0.9f;
 		}
-		if (m_result & ACTION_RES_MORE_ABILITIES)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_MORE_ABILITIES)
 		{
-			if (evd & MASK_EVD_SLOW_RESOURCES)
+			if (evd & eAlienMaskEvidence::MASK_EVD_SLOW_RESOURCES)
 				fProbability *= 1.0f;
-			if (evd & MASK_EVD_NORM_RESOURCES)
+			if (evd & eAlienMaskEvidence::MASK_EVD_NORM_RESOURCES)
 				fProbability *= 0.6f;
-			if (evd & MASK_EVD_NORM_RESOURCES)
+			if (evd & eAlienMaskEvidence::MASK_EVD_FAST_RESOURCES)
 				fProbability *= 0.3f;
-			if (evd & MASK_EVD_LOSING)
+			if (evd & eAlienMaskEvidence::MASK_EVD_LOSING)
 				fProbability *= 0.9f;
 		}
-		if (m_result & ACTION_RES_MORE_SPAWNPOINTS)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_MORE_SPAWNPOINTS)
 		{
-			if (evd & MASK_EVD_MIN_HIVES_UP)
+			if (evd & eAlienMaskEvidence::MASK_EVD_MIN_HIVES_UP)
 				fProbability *= 1.0f;
-			else if (evd & MASK_EVD_MAX_HIVES_UP)
+			else if (evd & eAlienMaskEvidence::MASK_EVD_MAX_HIVES_UP)
 				fProbability *= 0.0f;
 			else
 				fProbability *= 0.5f;
 
-			if (evd & MASK_EVD_FAST_RESOURCES)
+			if (evd & eAlienMaskEvidence::MASK_EVD_FAST_RESOURCES)
 				fProbability *= 0.9f;
-			if (evd & MASK_EVD_NORM_RESOURCES)
+			if (evd & eAlienMaskEvidence::MASK_EVD_NORM_RESOURCES)
 				fProbability *= 0.7f;
-			if (evd & MASK_EVD_SLOW_RESOURCES)
+			if (evd & eAlienMaskEvidence::MASK_EVD_SLOW_RESOURCES)
 				fProbability *= 0.2f;
 		}
-		if (m_result & ACTION_RES_MORE_DEFENCES)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_MORE_DEFENCES)
 		{
-			if (evd & MASK_EVD_NORM_RESOURCES)
+			if (evd & eAlienMaskEvidence::MASK_EVD_NORM_RESOURCES)
 				fProbability *= 0.6f;
-			if (evd & MASK_EVD_NORM_RESOURCES)
+			if (evd & eAlienMaskEvidence::MASK_EVD_FAST_RESOURCES)
 				fProbability *= 0.3f;
-			if (evd & MASK_EVD_LOSING)
+			if (evd & eAlienMaskEvidence::MASK_EVD_LOSING)
 				fProbability *= 0.9f;
 		}
-		if (m_result & ACTION_RES_CLOACKED)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_CLOACKED)
 		{
-			if (evd & MASK_EVD_BALANCED)
+			if (evd & eAlienMaskEvidence::MASK_EVD_BALANCED)
 				fProbability *= 0.7f;
-			if (evd & MASK_EVD_WINNING)
+			if (evd & eAlienMaskEvidence::MASK_EVD_WINNING)
 				fProbability *= 0.9f;
-			if (evd & MASK_EVD_MANY_SENS)
+			if (evd & eAlienMaskEvidence::MASK_EVD_MANY_SENS)
 				fProbability *= 0.1f;
 		}
 
-		if (m_result & ACTION_RES_MORE_TRAITS)
+		if (m_result & eMaskAlienActionResult::ACTION_RES_MORE_TRAITS)
 		{
-			if (evd & MASK_EVD_MANY_DEFS)
+			if (evd & eAlienMaskEvidence::MASK_EVD_MANY_DEFS)
 				fProbability *= 0.66f;
-			if (evd & MASK_EVD_MANY_SENS)
+			if (evd & eAlienMaskEvidence::MASK_EVD_MANY_SENS)
 				fProbability *= 0.66f;
-			if (evd & MASK_EVD_MANY_MOVS)
+			if (evd & eAlienMaskEvidence::MASK_EVD_MANY_MOVS)
 				fProbability *= 0.66f;
-			return fProbability;
 		}
-		return 0;
+		return fProbability;
 	}
 private:
 	eAlienAction m_action;
@@ -210,13 +222,13 @@ class CAlienActions
 public:
 	void setup()
 	{
-		m_Actions.emplace_back(ACTION_BUILD_DEF, eMaskAlienActionResult(ACTION_RES_MORE_DEFENCES | ACTION_RES_MORE_TRAITS | ACTION_RES_MORE_HEALTH));
-		m_Actions.emplace_back(ACTION_BUILD_OFF, eMaskAlienActionResult(ACTION_RES_MORE_DEFENCES));
-		m_Actions.emplace_back(ACTION_BUILD_SENS, eMaskAlienActionResult(ACTION_RES_CLOACKED | ACTION_RES_MORE_TRAITS));
-		m_Actions.emplace_back(ACTION_BUILD_MOV, eMaskAlienActionResult(ACTION_RES_MORE_TRAITS));
-		m_Actions.emplace_back(ACTION_BUILD_RESTOWER, eMaskAlienActionResult(ACTION_RES_FASTER_RESOURCES));
-		m_Actions.emplace_back(ACTION_BUILD_HIVE, eMaskAlienActionResult(ACTION_RES_MORE_SPAWNPOINTS + ACTION_RES_MORE_ABILITIES));
-		m_Actions.emplace_back(ACTION_HEAL_PLAYER, eMaskAlienActionResult(ACTION_RES_MORE_HEALTH));
+		m_Actions.emplace_back(eAlienAction::ACTION_BUILD_DEF, eMaskAlienActionResult::ACTION_RES_MORE_DEFENCES | eMaskAlienActionResult::ACTION_RES_MORE_TRAITS | eMaskAlienActionResult::ACTION_RES_MORE_HEALTH);
+		m_Actions.emplace_back(eAlienAction::ACTION_BUILD_OFF, eMaskAlienActionResult::ACTION_RES_MORE_DEFENCES);
+		m_Actions.emplace_back(eAlienAction::ACTION_BUILD_SENS, eMaskAlienActionResult::ACTION_RES_CLOACKED | eMaskAlienActionResult::ACTION_RES_MORE_TRAITS);
+		m_Actions.emplace_back(eAlienAction::ACTION_BUILD_MOV, eMaskAlienActionResult::ACTION_RES_MORE_TRAITS);
+		m_Actions.emplace_back(eAlienAction::ACTION_BUILD_RESTOWER, eMaskAlienActionResult::ACTION_RES_FASTER_RESOURCES);
+		m_Actions.emplace_back(eAlienAction::ACTION_BUILD_HIVE, static_cast<eMaskAlienActionResult>(static_cast<int>(eMaskAlienActionResult::ACTION_RES_MORE_SPAWNPOINTS) + static_cast<int>(eMaskAlienActionResult::ACTION_RES_MORE_ABILITIES)));
+		m_Actions.emplace_back(eAlienAction::ACTION_HEAL_PLAYER, eMaskAlienActionResult::ACTION_RES_MORE_HEALTH);
 	}
 
 	CAlienAction* getBestAction(eAlienMaskEvidence evd)

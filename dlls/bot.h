@@ -241,7 +241,7 @@ Vector UTIL_LengthFromVector(const Vector& relation, float length);
 
 bool	BotFunc_FInViewCone(const Vector* pOrigin, const edict_t* pEdict);
 bool	BotFunc_FVisible(const Vector& vecOrigin, edict_t* pEdict);
-Vector	Center(edict_t* pEdict); //TODO: Not implemented yet [APG]RoboCop[CL]
+Vector	Center(edict_t* pEdict);
 Vector	GetGunPosition(const edict_t* pEdict);
 Vector	EntityOrigin(const edict_t* pEdict);
 
@@ -258,7 +258,9 @@ float   UTIL_AngleBetweenVectors(const Vector& vec1, const Vector& vec2);
 float	UTIL_AnglesBetweenEdictOrigin(const edict_t* pEdict, const Vector& origin);
 
 int		UTIL_PlayersOnTeam(int iTeam);
+//int		UTIL_EvolveInto(edict_t* m_pEdict, int iSpecies);
 int		UTIL_SpeciesOnTeam(int iSpecies, bool bIgnoreEmbryos = false);
+//int		UTIL_EvolvedSpeciesOnTeam(int iSpecies, int iTeam, bool bIgnoreEmbryos = false);
 int		UTIL_GetNumHives();
 int		UTIL_CountBuiltEntities(const char* classname);
 edict_t* UTIL_GetRandomUnbuiltHive();
@@ -405,6 +407,9 @@ public:
 			iTotal += pRep->CurrentRep();
 			iNum++;
 		}
+
+		if (iNum == 0)
+			return 0;
 
 		return iTotal / iNum;
 	}
@@ -1758,10 +1763,10 @@ private:
 enum : std::uint8_t
 {
 	BOT_REMEMBER_POSITION = 0,
-	BOT_REMEMBER_SENTRY = (1<<0),
-	BOT_REMEMBER_LOST_ENEMY = (1<<1),
-	BOT_REMEMBER_SOUND = (1<<2),
-	BOT_REMEMBER_1ST_SEE_ENEMY = (1<<3)
+	BOT_REMEMBER_SENTRY = (1 << 0),
+	BOT_REMEMBER_LOST_ENEMY = (1 << 1),
+	BOT_REMEMBER_SOUND = (1 << 2),
+	BOT_REMEMBER_1ST_SEE_ENEMY = (1 << 3)
 };
 
 class CRememberPosition
@@ -2715,7 +2720,8 @@ public:
 	}
 	TSObjective(const int id, const Vector& origin, char* name)
 		: m_iId(id), m_vOrigin(origin), m_szName(name)
-	{}
+	{
+	}
 	/*guurk*/
 	int operator ==(TSObjective& comp) const
 	{
@@ -3292,7 +3298,7 @@ public:
 	}
 
 	// Use secondary attack for one time only..
-	// not a worky??!
+	// TODO: not a worky??!
 	void UseRPGLaser()
 	{
 		AddPriorityTask(CBotTask(BOT_TASK_SECONDARY_ATTACK, 0));
@@ -4041,9 +4047,9 @@ public:
 	void     Impulse(const int impulse) const { pev->impulse = impulse; }
 	// BUTTONS - END
 
-	bool     EvolveInto(int species); //TODO: Not implemented yet [APG]RoboCop[CL]
-	int SpeciesOnTeam(int species) const;
-	short    EvolvedSpeciesOnTeam(int species); //TODO: Not implemented yet [APG]RoboCop[CL]
+	//bool		EvolveInto(int iSpecies) const;
+	int		SpeciesOnTeam(int iSpecies) const;
+	//int		EvolvedSpeciesOnTeam(int iSpecies) const;
 
 	void	 BotChat(eBotChatType iChatType, edict_t* pChatEdict = nullptr, bool bSayNow = false);
 
@@ -4100,7 +4106,7 @@ public:
 	bool LowOnAmmo() const //TODO: Required for TS and Op4CTF? [APG]RoboCop[CL]
 	{
 		return m_weapon.LowOnAmmo();
-	} 
+	}
 
 	bool     HasJetPack() const { return IsMarine() && (pev->iuser4 & MASK_UPGRADE_7) == MASK_UPGRADE_7; }
 	bool     HasUser4Mask(const int iBits) const { return (pev->iuser4 & iBits) == iBits; }

@@ -1580,23 +1580,33 @@ int WaypointAddOrigin(const Vector& vOrigin, const int iFlags, edict_t* pEntity,
 
 		if (tr.flFraction >= 1.0f || tr.pHit == pEnt)
 		{
-			const char* szClassname = const_cast<char*>(STRING(pEnt->v.classname));
+			const char* szClassname = STRING(pEnt->v.classname);
 
-			if (std::strncmp("ammo_", szClassname, 5) == 0)
+			if (!szClassname) 
+				return false; // Ensure szClassname is not null
+
+			if (std::strncmp(szClassname, "ammo_", 5) == 0)
+			{
 				new_waypoint->flags |= W_FL_AMMO;
-
-			else if (std::strncmp("weapon_", szClassname, 7) == 0)
+			}
+			else if (std::strncmp(szClassname, "weapon_", 7) == 0)
+			{
 				new_waypoint->flags |= W_FL_WEAPON;
-
-			else if (std::strncmp("item_health", szClassname, 11) == 0 ||
-				std::strncmp("item_healthkit", szClassname, 14) == 0 ||
-				std::strncmp("func_healthcharger", szClassname, 18) == 0)
+			}
+			else if (std::strncmp(szClassname, "item_health", 11) == 0 ||
+				std::strncmp(szClassname, "item_healthkit", 14) == 0 ||
+				std::strncmp(szClassname, "func_healthcharger", 18) == 0)
+			{
 				new_waypoint->flags |= W_FL_HEALTH;
-
-			else if (std::strncmp("item_armor", szClassname, 10) == 0 ||
-				std::strncmp("item_battery", szClassname, 12) == 0 ||
-				std::strncmp("func_recharge", szClassname, 13) == 0)
+			}
+			else if (std::strncmp(szClassname, "item_armor", 10) == 0 ||
+				std::strncmp(szClassname, "item_battery", 12) == 0 ||
+				std::strncmp(szClassname, "func_recharge", 13) == 0)
+			{
 				new_waypoint->flags |= W_FL_ARMOR;
+			}
+
+			return true; // Return true to indicate success
 		}
 	}
 

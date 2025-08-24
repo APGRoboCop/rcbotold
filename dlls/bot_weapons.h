@@ -62,6 +62,8 @@
 #define __BOT_WEAPONS_H__
 
 #include <algorithm>
+#include <array>
+#include <memory>
 
 #include "generic_class.h"
 #include "weaponinfo.h"
@@ -425,6 +427,8 @@ typedef struct
 
 	int m_iModId;
 	int m_iPriority;
+
+	int m_iMaxClip;       // TODO: Add Max clip size for TS
 }weapon_preset_t;
 
 class CWeaponPresets
@@ -610,8 +614,10 @@ public:
 
 	bool m_bIsMelee;
 
-	//short m_iModId;
+	//int m_iModId;
 	int m_iPriority;
+
+	int m_iMaxClip;       // TODO: Add Max clip size for TS
 
 	CWeaponPreset()
 	{
@@ -635,6 +641,7 @@ public:
 
 		//m_iModId;
 		m_iPriority = pPreset->m_iPriority;
+		m_iMaxClip = pPreset->m_iMaxClip;
 	}
 
 	void Init() override
@@ -650,6 +657,7 @@ public:
 		m_fSecMaxRange = 0.0f;
 		m_bIsMelee = false;
 		m_iPriority = 0;
+		m_iMaxClip = 0;       // TODO: Add Max clip size for TS
 	}
 
 	bool CanBeUsedUnderWater() override
@@ -715,9 +723,9 @@ public:
 
 	void Init()
 	{
-		for (CWeapon*& m_Weapon : m_Weapons)
+		for (std::unique_ptr<CWeapon>& weapon : m_Weapons)
 		{
-			m_Weapon = nullptr;
+			weapon.reset();
 		}
 		//std::memset(m_Weapons,0,sizeof(CWeapon)*MAX_WEAPONS);
 	}
@@ -727,13 +735,13 @@ public:
 		if (iId >= 0 && iId < MAX_WEAPONS)
 		{
 			//if ( m_Weapons[iId].IsRegistered() )
-			return m_Weapons[iId];
+			return m_Weapons[iId].get();
 		}
 		return nullptr;
 	}
 
 private:
-	CWeapon* m_Weapons[MAX_WEAPONS];
+	std::unique_ptr<CWeapon> m_Weapons[MAX_WEAPONS];
 };
 
 class CBotWeapon
@@ -754,8 +762,9 @@ public:
 	}
 
 	CBotWeapon()
+		: m_iId(0), m_iClip(0), m_iReserve(0), m_iAmmo1(nullptr), m_iAmmo2(nullptr),
+		m_iMaxClip(0), m_pWeaponInfo(nullptr), m_bHasWeapon(false)
 	{
-		std::memset(this, 0, sizeof(CBotWeapon));
 	}
 
 	void SetWeapon(int iId, int* iAmmoList);
@@ -916,7 +925,7 @@ public:
 		if (pAmmo1)
 		{
 			m_iAmmo1 = pAmmo1;
-			m_iAmmo2 = pAmmo1;
+			m_iAmmo2 = pAmmo1; //TODO: Is this intentional? [APG]RoboCop[CL]
 		}
 		if (pAmmo2)
 			m_iAmmo2 = pAmmo2;
@@ -1042,20 +1051,19 @@ public:
 
 	void UpdateAmmo(const int iIndex, const int iAmount)
 	{
-		if (iIndex >= 0 && iIndex < MAX_AMMO_SLOTS)
+		if (iIndex >= 0 && static_cast<std::size_t>(iIndex) < m_iAmmo.size())
 			m_iAmmo[iIndex] = iAmount;
 	}
 
 private:
-	CBotWeapon m_Weapons[MAX_WEAPONS];
-
-	int m_iAmmo[MAX_AMMO_SLOTS] = {};
+	std::array<CBotWeapon, MAX_WEAPONS> m_Weapons;
+	std::array<int, MAX_AMMO_SLOTS> m_iAmmo = {};
 };
 
 class CompareBotWeapon
 {
 public:
-	bool operator()(CBotWeapon* a, CBotWeapon* b) const
+	bool operator()(const CBotWeapon* a, const CBotWeapon* b) const
 	{
 		return a->GetPriority() < b->GetPriority();
 	}

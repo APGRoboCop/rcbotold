@@ -20,7 +20,7 @@ Supported Mods
 RCBot versions
 --------------
 
-V 1.51-beta12
+V 1.51-beta13
 ---------
 
 * added: Enhanced performance and stability
@@ -36,6 +36,7 @@ V 1.51-beta12
 * added: Improved on how to allow bots climb ladders more properly
 * added: NS Marine troops can ditch their LMGs for better weapons
 * added: A /visibility folder to store visibility table files away from /waypoints folder
+* added: Max ammo assigned to specific weapons in order for bots to understand when to reload
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
@@ -56,7 +57,7 @@ V 1.51-beta12
 
 * TODO: To add support for Half-Life 25th Anniversary builds as it doesn't support Waypoints being displayed
 * TODO: To allow bots in Op4 use Deagle's Laser Sight to improve its accuracy
-* TODO: To allow the Onos to be more aggressive and devour humans, and to allow Skulks to pounce attack
+* TODO: To allow the Onos to be more aggressive and devour humans, Gorges to properly attack structures, and to allow Skulks to pounce attack
 * TODO: To allow bots to use first aid mounted on the wall or `func_healthcharger`
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors - maybe allow them to instantly switch weapons?
 * TODO: To allow bots in Op4 to use Grapple by using the "Fly" waypoint

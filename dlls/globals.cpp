@@ -1505,6 +1505,7 @@ void CBotGlobals::saveLearnedData() const
 		//this->m_TFCspiesForTeam[i].freeLocalMemory();
 	}
 
+	//TODO: Maybe add learned data by noting the ammo count? [APG]RoboCop[CL]
 	snprintf(tmpFilename, sizeof(tmpFilename), "tsweaps.rld");
 	UTIL_BuildFileName(szFilename, tmpFilename);
 
