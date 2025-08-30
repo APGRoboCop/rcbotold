@@ -957,8 +957,8 @@ bool CBotWeapons::HasWeapon(edict_t* pEdict, const char* szClassname) const
 	if (!szClassname) {
 		return false;
 	}
-
-	const std::_Array_const_iterator<CBotWeapon, 37> it = std::find_if(
+	// Use auto to deduce the iterator type and don't make `it` const - [APG]RoboCop[CL]
+	auto it = std::find_if(
 		m_Weapons.begin() + 1, m_Weapons.end(),
 		[&](const CBotWeapon& weapon)
 		{

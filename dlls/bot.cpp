@@ -8666,7 +8666,7 @@ edict_t* CBot::FindEnemy()
 						if (m_bHasFlag(pEntity))
 							iPriority = 12;
 					}
-					break;
+					break;*/
 					/*case MOD_TFC:
 						// Teleporter/disp/sentry gun (quick check)
 						if (pEntity->v.flags & FL_MONSTER)
