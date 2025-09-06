@@ -66,10 +66,14 @@
 
 #include <queue>
 #include <string_view>
+#include <array>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 // begin -- TS metamod weapon restriction plugin
 
-const char* pszTSWeaponModels[] = { "0","models/w_glock18.mdl","2 No gun","models/w_uzi.mdl"
+constexpr std::array<std::string_view, 36> pszTSWeaponModels = { "0","models/w_glock18.mdl","2 No gun","models/w_uzi.mdl"
 ,"models/w_m3.mdl","models/w_m4.mdl","models/w_mp5sd.mdl","models/w_mp5k.mdl"
 ,"models/w_berettas.mdl","models/w_mk23.mdl","models/w_mk23_akimbo.mdl","models/w_usas.mdl"
 ,"models/w_desert.mdl","models/w_ak47.mdl","models/w_fnh.mdl","models/w_aug.mdl"
@@ -206,124 +210,65 @@ void CWeapons::AddWeapon(const int iId, const char* szClassname, const int iPrim
 
 void CWeaponPresets::ReadPresets()
 {
-	weapon_preset_t sWeaponPreset;
-
 	char filename[512];
-
 	UTIL_BuildFileName(filename, BOT_WEAPON_PRESETS_FILE);
 
-	// Use std::unique_ptr with a custom deleter for managing std::FILE*
-	auto fileDeleter = [](std::FILE* fp) {
-		if (fp) {
-			std::fclose(fp);
-		}
-	};
-
-	const std::unique_ptr<std::FILE, decltype(fileDeleter)> fp(std::fopen(filename, "r"), fileDeleter);
-	if (!fp) {
+	std::ifstream file(filename);
+	if (!file.is_open()) {
 		return;
 	}
 
-	char buffer[256];
-
+	std::string line;
+	weapon_preset_t sWeaponPreset{};
 	int iModId = 0;
-	int iWeaponId = 0;
-	int iValue;
-
-	// bSkipMod will be true when the weapons are not for the current mod
-	// and do not need to be loaded
 	bool bSkipMod = false;
 
-	std::memset(&sWeaponPreset, 0, sizeof(weapon_preset_t));
-	while (std::fgets(buffer, 255, fp.get()) != nullptr) // Use fp.get() to access the raw pointer [APG]RoboCop[CL]
+	while (std::getline(file, line))
 	{
-		if (buffer[0] == '#')
-			continue;
-
-		size_t iLength = std::strlen(buffer);
-
-		if (iLength <= 0) // blank line...
-			continue;
-		if (buffer[iLength - 1] == '\n') {
-			buffer[--iLength] = 0;
-		}
-
-		if (iLength == 0) // blank line...
-			continue;
-
-#ifdef __linux__
-		if (buffer[iLength - 1] == '\r') {
-			buffer[--iLength] = 0;
-		}
-
-		if (iLength == 0) // blank line...
-			continue;
-#endif
-		if (std::sscanf(buffer, "[mod_id=%d]", &iValue) == 1) {
-			bSkipMod = iValue != gBotGlobals.m_iCurrentMod;
-
-			if (!bSkipMod)
-				iModId = iValue;
-
+		if (line.empty() || line[0] == '#') {
 			continue;
 		}
 
-		if (bSkipMod)
+		// Trim whitespace and carriage returns
+		line.erase(line.find_last_not_of(" \n\r\t") + 1);
+
+		if (line.empty()) {
 			continue;
-		if (std::sscanf(buffer, "[weapon_id=%d]", &iValue) == 1) {
-			iWeaponId = iValue;
+		}
 
-			std::memset(&sWeaponPreset, 0, sizeof(weapon_preset_t));
-
-			sWeaponPreset.m_iId = iWeaponId;
+		if (line.rfind("[mod_id=", 0) == 0) {
+			iModId = std::stoi(line.substr(8, line.length() - 9));
+			bSkipMod = (iModId != gBotGlobals.m_iCurrentMod);
+		}
+		else if (bSkipMod) {
+			continue;
+		}
+		else if (line.rfind("[weapon_id=", 0) == 0) {
+			sWeaponPreset = {}; // Reset for new weapon
 			sWeaponPreset.m_iModId = iModId;
-			continue;
+			sWeaponPreset.m_iId = std::stoi(line.substr(11, line.length() - 12));
 		}
-		if (std::sscanf(buffer, "underwater=%d", &iValue) == 1) {
-			sWeaponPreset.m_bCanFireUnderWater = iValue;
-
-			continue;
-		}
-		if (std::sscanf(buffer, "primaryfire=%d", &iValue) == 1) {
-			sWeaponPreset.m_bHasPrimaryFire = iValue;
-
-			continue;
-		}
-		if (std::sscanf(buffer, "secondaryfire=%d", &iValue) == 1) {
-			sWeaponPreset.m_bHasSecondaryFire = iValue;
-			continue;
-		}
-		if (std::sscanf(buffer, "primary_min_range=%d", &iValue) == 1) {
-			sWeaponPreset.m_fPrimMinRange = static_cast<float>(iValue);
-			continue;
-		}
-		if (std::sscanf(buffer, "primary_max_range=%d", &iValue) == 1) {
-			sWeaponPreset.m_fPrimMaxRange = static_cast<float>(iValue);
-			continue;
-		}
-		if (std::sscanf(buffer, "secondary_min_range=%d", &iValue) == 1) {
-			sWeaponPreset.m_fSecMinRange = static_cast<float>(iValue);
-			continue;
-		}
-		if (std::sscanf(buffer, "secondary_max_range=%d", &iValue) == 1) {
-			sWeaponPreset.m_fSecMaxRange = static_cast<float>(iValue);
-			continue;
-		}
-		if (std::sscanf(buffer, "is_melee=%d", &iValue) == 1) {
-			sWeaponPreset.m_bIsMelee = iValue;
-			continue;
-		}
-		if (std::sscanf(buffer, "priority=%d", &iValue) == 1) {
-			sWeaponPreset.m_iPriority = iValue;
-			continue;
-		}
-		if (std::sscanf(buffer, "maxclip=%d", &iValue) == 1) {
-			sWeaponPreset.m_iMaxClip = iValue;
-			continue;
-		}
-
-		if (std::strcmp(buffer, "[/weapon]") == 0)
+		else if (line == "[/weapon]") {
 			m_Presets.Push(sWeaponPreset);
+		}
+		else {
+			const size_t equals_pos = line.find('=');
+			if (equals_pos != std::string::npos) {
+				const std::string_view key = std::string_view(line).substr(0, equals_pos);
+				const int value = std::stoi(line.substr(equals_pos + 1));
+
+				if (key == "underwater") sWeaponPreset.m_bCanFireUnderWater = value;
+				else if (key == "primaryfire") sWeaponPreset.m_bHasPrimaryFire = value;
+				else if (key == "secondaryfire") sWeaponPreset.m_bHasSecondaryFire = value;
+				else if (key == "primary_min_range") sWeaponPreset.m_fPrimMinRange = static_cast<float>(value);
+				else if (key == "primary_max_range") sWeaponPreset.m_fPrimMaxRange = static_cast<float>(value);
+				else if (key == "secondary_min_range") sWeaponPreset.m_fSecMinRange = static_cast<float>(value);
+				else if (key == "secondary_max_range") sWeaponPreset.m_fSecMaxRange = static_cast<float>(value);
+				else if (key == "is_melee") sWeaponPreset.m_bIsMelee = value;
+				else if (key == "priority") sWeaponPreset.m_iPriority = value;
+				else if (key == "maxclip") sWeaponPreset.m_iMaxClip = value;
+			}
+		}
 	}
 }
 
@@ -482,427 +427,173 @@ void GetAllowedWeapons(CBot* pBot, edict_t* pEnemy, const float fEnemyDist, shor
 //
 int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 {
-	int i;
-
 	std::priority_queue<CBotWeapon*, std::vector<CBotWeapon*>, CompareBotWeapon> Weapons;
 	std::priority_queue<CBotWeapon*, std::vector<CBotWeapon*>, CompareBotWeapon> otherWeapons;
-	//	dataQueue<int> Weapons;
-	//	dataQueue<int> otherWeapons;
-
-	CBotWeapon* pWeapon;
-	//CWeapon *pWeaponInfo;
 
 	const edict_t* pEdict = pBot->m_pEdict;
 
-	Vector vEnemyOrigin;
-	float fEnemyDist;
-
-	//TODO: This prevents bots from zapping themselves underwater with Lightning Gun in DMC? [APG]RoboCop[CL]
-	bool bEnemyIsElectrified = false;
-	bool bEnemyTooHigh = false;
+	Vector vEnemyOrigin = pEnemy ? EntityOrigin(pEnemy) : pBot->pev->origin;
+	const float fEnemyDist = pEnemy ? pBot->DistanceFrom(vEnemyOrigin) : 0.0f;
+	const bool bEnemyTooHigh = pEnemy ? (vEnemyOrigin.z > pBot->pev->origin.z + MAX_JUMP_HEIGHT) : false;
 
 	const bool bUnderwater = pEdict->v.waterlevel == 3;
 	const bool bIsDMC = gBotGlobals.m_iCurrentMod == MOD_DMC;
-
 	const bool bIsBattleGrounds = gBotGlobals.m_iCurrentMod == MOD_BG;
 	bool bWantToMelee = false;
 
 	short iAllowedWeapons[MAX_WEAPONS];
-
-	for (i = 0; i < MAX_WEAPONS; i++)
-		iAllowedWeapons[i] = 1;
-
-	if (pEnemy)
-	{
-		vEnemyOrigin = EntityOrigin(pEnemy);
-		fEnemyDist = pBot->DistanceFrom(vEnemyOrigin);
-		bEnemyTooHigh = vEnemyOrigin.z > pBot->pev->origin.z + MAX_JUMP_HEIGHT;
-	}
-	else
-	{
-		vEnemyOrigin = pBot->pev->origin;
-		fEnemyDist = 0;
-	}
+	std::fill_n(iAllowedWeapons, MAX_WEAPONS, 1);
 
 	GetAllowedWeapons(pBot, pEnemy, fEnemyDist, iAllowedWeapons);
 
-	switch (gBotGlobals.m_iCurrentMod)
+	if (bIsBattleGrounds)
 	{
-	case MOD_NS:
-		if (pBot->IsAlien())
-		{
-			if (pEnemy)
-			{
-				if (pEnemy->v.iuser3 == AVH_USER3_BREAKABLE || EntityIsMarineStruct(pEnemy))
-				{
-					// cant leap structures etc...
-					iAllowedWeapons[static_cast<int>(NSWeapon::UMBRA)] = 0;
-					iAllowedWeapons[static_cast<int>(NSWeapon::SPORES)] = 0;
-					iAllowedWeapons[static_cast<int>(NSWeapon::WEBSPINNER)] = 0;
-					iAllowedWeapons[static_cast<int>(NSWeapon::METABOLIZE)] = 0;
-					iAllowedWeapons[static_cast<int>(NSWeapon::PARASITE)] = 0;
-					iAllowedWeapons[static_cast<int>(NSWeapon::BLINK)] = 0;
-
-					// Abilities
-					iAllowedWeapons[static_cast<int>(NSWeapon::LEAP)] = 0;
-					iAllowedWeapons[static_cast<int>(NSWeapon::CHARGE)] = 0;
-					iAllowedWeapons[static_cast<int>(NSWeapon::PRIMALSCREAM)] = 0;
-					iAllowedWeapons[static_cast<int>(NSWeapon::HEALINGSPRAY)] = 0;
-					iAllowedWeapons[static_cast<int>(NSWeapon::STOMP)] = 0;
-					iAllowedWeapons[static_cast<int>(NSWeapon::DEVOUR)] = 0;
-				}
-				else if (pEnemy->v.iuser3 == AVH_USER3_MARINE_PLAYER)
-				{
-					iAllowedWeapons[static_cast<int>(NSWeapon::BILEBOMB)] = 0;
-
-					// heavy armour
-					if (pEnemy->v.iuser4 & MASK_UPGRADE_13)
-					{
-						iAllowedWeapons[static_cast<int>(NSWeapon::SPORES)] = 0;
-					}
-
-					if (pEnemy->v.iuser4 & MASK_PLAYER_STUNNED)
-						iAllowedWeapons[static_cast<int>(NSWeapon::STOMP)] = 0;
-				}
-			}
-		}
-		else
-			iAllowedWeapons[static_cast<int>(NSWeapon::MINE)] = 0;
-
-		break;
-		/*case MOD_TFC:
-			if (pEnemy && pEnemy->v.flags & FL_MONSTER)
-			{
-				iAllowedWeapons[TF_WEAPON_MEDIKIT] = 0;
-			}
-			if (pBot->hasFlag())
-			{
-				iAllowedWeapons[TF_WEAPON_KNIFE] = 0;
-				iAllowedWeapons[TF_WEAPON_AXE] = 0;
-				iAllowedWeapons[TF_WEAPON_SPANNER] = 0;
-			}
-			break;*/
-	case MOD_BG:
 		if (pBot->m_pCurrentWeapon != nullptr)
 		{
-			// want to melee true if needing to reload OR enemy within melee range
-			// AND random factor due to skill
 			const bool bMeleeRangeCheck = pEnemy && fEnemyDist < 80.0f;
 			const bool bMaxRangeCheck = pEnemy && fEnemyDist < 512.0f;
 
-			bWantToMelee = (pBot->m_pCurrentWeapon->NeedToReload() && RANDOM_LONG(MIN_BOT_SKILL, MAX_BOT_SKILL) < pBot->
-				m_Profile.m_iSkill || bMeleeRangeCheck) && bMaxRangeCheck;
+			bWantToMelee = (pBot->m_pCurrentWeapon->NeedToReload() && RANDOM_LONG(MIN_BOT_SKILL, MAX_BOT_SKILL) < pBot->m_Profile.m_iSkill || bMeleeRangeCheck) && bMaxRangeCheck;
 		}
 
-		if (pEnemy != nullptr)
+		if (pEnemy != nullptr && FStrEq(STRING(pEnemy->v.classname), "func_breakable"))
 		{
-			// melee breakables.
-			if (FStrEq(STRING(pEnemy->v.classname), "func_breakable"))
-				bWantToMelee = true;
-		}
-		break;
-	}
-
-	if (pEnemy)
-	{
-		switch (gBotGlobals.m_iCurrentMod)
-		{
-			/*case MOD_SVENCOOP:
-				if (FStrEq("func_breakable", STRING(pEnemy->v.classname)))
-				{
-					if (pEnemy->v.spawnflags & 512)
-					{
-						GetNoWeaponArray(iAllowedWeapons);
-						GetArrayOfExplosives(iAllowedWeapons);//bExplosives = pEnemy->v.spawnflags & 512;
-
-						if (pBot->HasWeapon(VALVE_WEAPON_MP5))
-						{
-							CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(VALVE_WEAPON_MP5);
-
-							if (pWeapon->SecondaryAmmo() > 0)
-								iAllowedWeapons[VALVE_WEAPON_MP5] = 1;
-						}
-					}
-				}
-				else if (FStrEq("monster_gargantua", STRING(pEnemy->v.classname)))
-				{
-					// only use explosives & egon on garg
-					GetNoWeaponArray(iAllowedWeapons);
-					GetArrayOfExplosives(iAllowedWeapons);
-					iAllowedWeapons[VALVE_WEAPON_EGON] = 1;
-
-					if (pBot->HasWeapon(VALVE_WEAPON_MP5))
-					{
-						CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(VALVE_WEAPON_MP5);
-
-						if (pWeapon->SecondaryAmmo() > 0)
-							iAllowedWeapons[VALVE_WEAPON_MP5] = 1;
-					}
-				}
-				break;*/
-		case MOD_NS:
-			if (pBot->IsMarine())
-			{
-				switch (pEnemy->v.iuser3)
-				{
-					// Use knife or welder(better) for things you dont want to waste ammo on it
-				case AVH_USER3_DEFENSE_CHAMBER:
-				case AVH_USER3_ALIENRESTOWER:
-				case AVH_USER3_MOVEMENT_CHAMBER:
-					if (fEnemyDist < REACHABLE_RANGE)
-					{
-						// Ignore using Welder in combat is best? [APG]RoboCop[CL]
-						//if (pBot->HasWeapon(static_cast<int>(NSWeapon::WELDER)))
-						//	return static_cast<int>(NSWeapon::WELDER);
-
-						return static_cast<int>(NSWeapon::KNIFE);
-					}
-					break;
-				default:
-					break;
-				}
-			}
-			else
-			{
-				// probably electrified
-				bEnemyIsElectrified = pEnemy->v.iuser4 & MASK_UPGRADE_11;
-			}
-			break;
-		default:
-			break;
+			bWantToMelee = true;
 		}
 	}
 
-	for (i = 1; i < MAX_WEAPONS; i++)
+	bool bEnemyIsElectrified = false;
+	if (pEnemy && gBotGlobals.m_iCurrentMod == MOD_NS)
 	{
-		pWeapon = &m_Weapons[i];
-
-		if (iAllowedWeapons[i] == 0)
-			continue;
-		/*
-		if ( bExplosives )
+		if (pBot->IsMarine())
 		{
-			switch ( gBotGlobals.m_iCurrentMod )
-				// ignore weapons that dont do explosive damage to enemies
+			switch (pEnemy->v.iuser3)
 			{
-			case MOD_SVENCOOP:
-				if ( ( i != VALVE_WEAPON_HANDGRENADE ) && (i != VALVE_WEAPON_RPG) )
-					continue;
+			case AVH_USER3_DEFENSE_CHAMBER:
+			case AVH_USER3_ALIENRESTOWER:
+			case AVH_USER3_MOVEMENT_CHAMBER:
+				if (fEnemyDist < REACHABLE_RANGE)
+				{
+					return static_cast<int>(NSWeapon::KNIFE);
+				}
+				break;
 			default:
 				break;
 			}
-		}*/
+		}
+		else
+		{
+			bEnemyIsElectrified = pEnemy->v.iuser4 & MASK_UPGRADE_11;
+		}
+	}
 
-		// use the weapon code to see if we have the weapon in DMC
+	for (int i = 1; i < MAX_WEAPONS; i++)
+	{
+		CBotWeapon* pWeapon = &m_Weapons[i];
+
+		if (iAllowedWeapons[i] == 0)
+			continue;
+
 		if (!bIsDMC && !pBot->HasWeapon(i) || !pWeapon->HasWeapon(pBot->m_pEdict))
 			continue;
 
 		if (gBotGlobals.IsNS())
 		{
-			if (pWeapon->GetID() == static_cast<int>(NSWeapon::STOMP))
+			if (pWeapon->GetID() == static_cast<int>(NSWeapon::STOMP) && pEnemy && pEnemy->v.velocity.Length() < 1)
 			{
-				if (pEnemy)
-				{
-					if (pEnemy->v.velocity.Length() < 1)
-						continue;
-				}
+				continue;
 			}
-			else if (pWeapon->GetID() == static_cast<int>(NSWeapon::PARASITE))
+			if (pWeapon->GetID() == static_cast<int>(NSWeapon::PARASITE) && pEnemy && (pEnemy->v.iuser4 & MASK_PARASITED))
 			{
-				if (pEnemy)
-				{
-					// already parasited
-					if (pEnemy->v.iuser4 & MASK_PARASITED)
-						continue;
-				}
+				continue;
 			}
 		}
 
-		if (bUnderwater)
+		if (bUnderwater && !pWeapon->CanBeUsedUnderWater())
 		{
-			if (!pWeapon->CanBeUsedUnderWater())
-				continue;
+			continue;
 		}
 
 		if (pWeapon->IsMelee())
 		{
-			if (bEnemyTooHigh)
-			{
-				// too high to hit...
-				continue;
-			}
+			if (bEnemyTooHigh) continue;
+
 			if (pEnemy && bEnemyIsElectrified)
 			{
 				std::vector<ga_value> inputs;
-
-				int iweap = 0;
-
-				if (pBot->m_pCurrentWeapon)
-					iweap = pBot->m_pCurrentWeapon->GetID();
-
 				inputs.emplace_back(pBot->pev->health / pBot->pev->max_health);
 				inputs.emplace_back(pEnemy->v.health / pEnemy->v.max_health);
 				inputs.emplace_back(pBot->pev->size.Length() / pEnemy->v.size.Length());
 				inputs.emplace_back(pBot->NS_AmountOfEnergy() / 100);
-				inputs.emplace_back(iweap / MAX_WEAPONS);
+				inputs.emplace_back((pBot->m_pCurrentWeapon ? pBot->m_pCurrentWeapon->GetID() : 0) / static_cast<float>(MAX_WEAPONS));
 				inputs.emplace_back(pBot->onGround());
 				inputs.emplace_back(pBot->pev->velocity.Length() / pBot->pev->maxspeed);
 
 				pBot->dec_attackElectrified->input(inputs);
 				pBot->dec_attackElectrified->execute();
-
 				pBot->m_pElectricEnemy = pEnemy;
 
-				inputs.clear();
-
-				if (pBot->dec_attackElectrified->trained() && !pBot->dec_attackElectrified->fired())//pBot->IsSkulk() )
+				if (pBot->dec_attackElectrified->trained() && !pBot->dec_attackElectrified->fired())
 				{
-					// will be electrified if I try to attack...
 					continue;
 				}
 			}
 
 			otherWeapons.push(pWeapon);
-			Weapons.push(pWeapon);//.Add(i);
+			Weapons.push(pWeapon);
 			continue;
 		}
 
 		if (!pWeapon->CanShootPrimary(pEdict, fEnemyDist, pBot->m_fDistanceFromWall))
 		{
-			//if ( !pWeapon->CanShootSecondary() )
 			continue;
 		}
 
-		otherWeapons.push(pWeapon);//.Add(i);
+		otherWeapons.push(pWeapon);
 
-		if (bIsBattleGrounds)
-		{
-			// dont want to do other stuff except melee
-			if (bWantToMelee)
-				continue;
-		}
-
-		//TODO: to allow bots to reload in TS [APG]RoboCop[CL]
-		if (pWeapon->OutOfAmmo()) // Skip weapons that are out of ammo
-		{
-			continue;
-		}
-
-		if (pWeapon->NeedToReload()) // Allow bots to reload when needed
-		{
-			Weapons.emplace(pWeapon); // Add weapon to reload list
-			continue;
-		}
-
-		Weapons.emplace(pWeapon);//.Add(i);
-	}
-
-	if (Weapons.empty())//.IsEmpty() )
-	{
 		if (bIsBattleGrounds && bWantToMelee)
 		{
-			//Weapons._delete();
-			//Weapons = otherWeapons;
-
-			if (otherWeapons.empty())//.IsEmpty() )
-			{
-				if (gBotGlobals.IsMod(MOD_TS))
-					return 36;
-				return 0;
-			}
-			pWeapon = otherWeapons.top();
-
-			return pWeapon->GetID();
+			continue;
 		}
+
+		if (pWeapon->OutOfAmmo())
+		{
+			continue;
+		}
+
+		if (pWeapon->NeedToReload())
+		{
+			Weapons.emplace(pWeapon); // Add to a list of weapons that could be reloaded
+			continue; // But don't select it for immediate firing
+		}
+
+		Weapons.emplace(pWeapon); // Add usable weapon to the main selection list
+	}
+
+	if (!Weapons.empty())
+	{
+		return Weapons.top()->GetID();
+	}
+
+	if (bIsBattleGrounds && bWantToMelee)
+	{
+		if (!otherWeapons.empty())
+		{
+			return otherWeapons.top()->GetID();
+		}
+	}
+	else
+	{
 		pBot->SetWeaponsNeeded(iAllowedWeapons);
 		pBot->UpdateCondition(BOT_CONDITION_NEED_WEAPONS);
-		//otherWeapons._delete();
 
 		if (!otherWeapons.empty())
 		{
-			pWeapon = otherWeapons.top();
-
-			return pWeapon->GetID();
-		}
-
-		if (gBotGlobals.IsMod(MOD_TS))
-			return 36;
-		return 0;
-	}
-
-	pWeapon = Weapons.top();
-
-	return pWeapon->GetID();
-
-	/*
-
-	//dataStack<int> WeaponChoice;
-	dataQueue<int> tempQueue = Weapons;
-
-	int iHighestMeleePriority = -1;
-	int iHighestNonMeleePriority = -1;
-
-	int iPriority;
-
-	int iBestMeleeWeaponId = 0;
-	int iBestNonMeleeWeaponId = 0;
-
-	while ( !tempQueue.IsEmpty() )
-	{
-		i = tempQueue.ChooseFrom();
-
-		pWeaponInfo = gBotGlobals.m_Weapons.GetWeapon(i);
-
-		if ( pWeaponInfo )
-		{
-			iPriority = pWeaponInfo->GetPriority();
-
-			if ( pWeaponInfo->IsMelee() )
-			{
-				if ( iPriority > iHighestMeleePriority )
-				{
-					iHighestMeleePriority = iPriority;
-					iBestMeleeWeaponId = i;
-				}
-			}
-			else
-			{
-				if ( iPriority > iHighestNonMeleePriority )
-				{
-					iHighestNonMeleePriority = iPriority;
-					iBestNonMeleeWeaponId = i;
-				}
-			}
+			return otherWeapons.top()->GetID();
 		}
 	}
 
-	Weapons._delete();
-
-//	if ( !otherWeapons.IsEmpty() )
-//		otherWeapons._delete();
-
-	if ( iBestNonMeleeWeaponId != 0 )
-	{
-		// see if melee has higher priority than this
-		if ( (!gBotGlobals.IsMod(MOD_TFC)||(pBot->pev->playerclass==TFC_CLASS_SPY)) && iBestMeleeWeaponId != 0 )
-		{
-			CWeapon *pMeleeWeapon = gBotGlobals.m_Weapons.GetWeapon(iBestMeleeWeaponId);
-			CWeapon *pNonMeleeWeapon = gBotGlobals.m_Weapons.GetWeapon(iBestNonMeleeWeaponId);
-
-			if ( pMeleeWeapon && pNonMeleeWeapon )
-			{
-				if ( pMeleeWeapon->PrimaryInRange(fEnemyDist) && (pMeleeWeapon->GetPriority() > pNonMeleeWeapon->GetPriority()) )
-					return iBestMeleeWeaponId;
-			}
-		}
-
-		return iBestNonMeleeWeaponId;
-	}
-
-	if ( gBotGlobals.IsMod(MOD_TS) )
-		return 36;
-
-	return iBestMeleeWeaponId;*/
+	return gBotGlobals.IsMod(MOD_TS) ? 36 : 0;
 }
 
 bool CBotWeapon::NeedToReload() const
