@@ -64,12 +64,12 @@
 #include "bot_weapons.h"
 #include "perceptron.h"
 
-#include <queue>
 #include <string_view>
 #include <array>
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <vector>
 
 // begin -- TS metamod weapon restriction plugin
 
@@ -236,38 +236,52 @@ void CWeaponPresets::ReadPresets()
 			continue;
 		}
 
-		if (line.rfind("[mod_id=", 0) == 0) {
-			iModId = std::stoi(line.substr(8, line.length() - 9));
-			bSkipMod = (iModId != gBotGlobals.m_iCurrentMod);
-		}
-		else if (bSkipMod) {
-			continue;
-		}
-		else if (line.rfind("[weapon_id=", 0) == 0) {
-			sWeaponPreset = {}; // Reset for new weapon
-			sWeaponPreset.m_iModId = iModId;
-			sWeaponPreset.m_iId = std::stoi(line.substr(11, line.length() - 12));
-		}
-		else if (line == "[/weapon]") {
-			m_Presets.Push(sWeaponPreset);
-		}
-		else {
-			const size_t equals_pos = line.find('=');
-			if (equals_pos != std::string::npos) {
-				const std::string_view key = std::string_view(line).substr(0, equals_pos);
-				const int value = std::stoi(line.substr(equals_pos + 1));
-
-				if (key == "underwater") sWeaponPreset.m_bCanFireUnderWater = value;
-				else if (key == "primaryfire") sWeaponPreset.m_bHasPrimaryFire = value;
-				else if (key == "secondaryfire") sWeaponPreset.m_bHasSecondaryFire = value;
-				else if (key == "primary_min_range") sWeaponPreset.m_fPrimMinRange = static_cast<float>(value);
-				else if (key == "primary_max_range") sWeaponPreset.m_fPrimMaxRange = static_cast<float>(value);
-				else if (key == "secondary_min_range") sWeaponPreset.m_fSecMinRange = static_cast<float>(value);
-				else if (key == "secondary_max_range") sWeaponPreset.m_fSecMaxRange = static_cast<float>(value);
-				else if (key == "is_melee") sWeaponPreset.m_bIsMelee = value;
-				else if (key == "priority") sWeaponPreset.m_iPriority = value;
-				else if (key == "maxclip") sWeaponPreset.m_iMaxClip = value;
+		try
+		{
+			if (line.rfind("[mod_id=", 0) == 0) {
+				iModId = std::stoi(line.substr(8, line.length() - 9));
+				bSkipMod = (iModId != gBotGlobals.m_iCurrentMod);
 			}
+			else if (bSkipMod) {
+				continue;
+			}
+			else if (line.rfind("[weapon_id=", 0) == 0) {
+				sWeaponPreset = {}; // Reset for new weapon
+				sWeaponPreset.m_iModId = iModId;
+				sWeaponPreset.m_iId = std::stoi(line.substr(11, line.length() - 12));
+			}
+			else if (line == "[/weapon]") {
+				m_Presets.Push(sWeaponPreset);
+			}
+			else {
+				const size_t equals_pos = line.find('=');
+				if (equals_pos != std::string::npos) {
+					const std::string_view key = std::string_view(line).substr(0, equals_pos);
+					const int value = std::stoi(line.substr(equals_pos + 1));
+
+					if (key == "underwater") sWeaponPreset.m_bCanFireUnderWater = value;
+					else if (key == "primaryfire") sWeaponPreset.m_bHasPrimaryFire = value;
+					else if (key == "secondaryfire") sWeaponPreset.m_bHasSecondaryFire = value;
+					else if (key == "primary_min_range") sWeaponPreset.m_fPrimMinRange = static_cast<float>(value);
+					else if (key == "primary_max_range") sWeaponPreset.m_fPrimMaxRange = static_cast<float>(value);
+					else if (key == "secondary_min_range") sWeaponPreset.m_fSecMinRange = static_cast<float>(value);
+					else if (key == "secondary_max_range") sWeaponPreset.m_fSecMaxRange = static_cast<float>(value);
+					else if (key == "is_melee") sWeaponPreset.m_bIsMelee = value;
+					else if (key == "priority") sWeaponPreset.m_iPriority = value;
+					else if (key == "maxclip") sWeaponPreset.m_iMaxClip = value;
+				}
+			}
+		}
+
+		catch (const std::invalid_argument& ia)
+		{
+			// Log the error for invalid number format - [APG]RoboCop[CL]
+			BotMessage(nullptr, 0, "Invalid argument in weapon preset file. Line: '%s' (%s)", line.c_str(), ia.what());
+		}
+		catch (const std::out_of_range& oor)
+		{
+			// Log the error for out-of-range number - [APG]RoboCop[CL]
+			BotMessage(nullptr, 0, "Out of range value in weapon preset file. Line: '%s' (%s)", line.c_str(), oor.what());
 		}
 	}
 }
@@ -427,8 +441,8 @@ void GetAllowedWeapons(CBot* pBot, edict_t* pEnemy, const float fEnemyDist, shor
 //
 int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 {
-	std::priority_queue<CBotWeapon*, std::vector<CBotWeapon*>, CompareBotWeapon> Weapons;
-	std::priority_queue<CBotWeapon*, std::vector<CBotWeapon*>, CompareBotWeapon> otherWeapons;
+	std::vector<CBotWeapon*> usableWeapons;
+	std::vector<CBotWeapon*> otherWeapons;
 
 	const edict_t* pEdict = pBot->m_pEdict;
 
@@ -539,8 +553,8 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 				}
 			}
 
-			otherWeapons.push(pWeapon);
-			Weapons.push(pWeapon);
+			otherWeapons.push_back(pWeapon);
+			usableWeapons.push_back(pWeapon);
 			continue;
 		}
 
@@ -549,7 +563,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 			continue;
 		}
 
-		otherWeapons.push(pWeapon);
+		otherWeapons.push_back(pWeapon);
 
 		if (bIsBattleGrounds && bWantToMelee)
 		{
@@ -563,23 +577,27 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 
 		if (pWeapon->NeedToReload())
 		{
-			Weapons.emplace(pWeapon); // Add to a list of weapons that could be reloaded
+			usableWeapons.emplace_back(pWeapon); // Add to a list of weapons that could be reloaded
 			continue; // But don't select it for immediate firing
 		}
 
-		Weapons.emplace(pWeapon); // Add usable weapon to the main selection list
+		usableWeapons.emplace_back(pWeapon); // Add usable weapon to the main selection list
 	}
 
-	if (!Weapons.empty())
+	if (!usableWeapons.empty())
 	{
-		return Weapons.top()->GetID();
+		const auto bestWeapon = std::max_element(
+			usableWeapons.begin(), usableWeapons.end(), CompareBotWeapon());
+		return (*bestWeapon)->GetID();
 	}
 
 	if (bIsBattleGrounds && bWantToMelee)
 	{
 		if (!otherWeapons.empty())
 		{
-			return otherWeapons.top()->GetID();
+			const auto bestWeapon = std::max_element(
+				otherWeapons.begin(), otherWeapons.end(), CompareBotWeapon());
+			return (*bestWeapon)->GetID();
 		}
 	}
 	else
@@ -589,7 +607,9 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 
 		if (!otherWeapons.empty())
 		{
-			return otherWeapons.top()->GetID();
+			const std::vector<CBotWeapon*>::iterator bestWeapon = std::max_element(
+				otherWeapons.begin(), otherWeapons.end(), CompareBotWeapon());
+			return (*bestWeapon)->GetID();
 		}
 	}
 
@@ -648,12 +668,12 @@ bool CBotWeapons::HasWeapon(edict_t* pEdict, const char* szClassname) const
 	if (!szClassname) {
 		return false;
 	}
-	// Use auto to deduce the iterator type and don't make `it` const - [APG]RoboCop[CL]
-	auto it = std::find_if(
+	// Use auto to deduce the iterator type - [APG]RoboCop[CL]
+	const auto it = std::find_if(
 		m_Weapons.begin() + 1, m_Weapons.end(),
 		[&](const CBotWeapon& weapon)
 		{
-			if (!HasWeapon(pEdict, weapon.GetID()))
+			if (!weapon.HasWeapon(pEdict))
 			{
 				return false;
 			}
