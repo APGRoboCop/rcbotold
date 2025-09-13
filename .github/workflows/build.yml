@@ -84,11 +84,16 @@ jobs:
         submodules: recursive
 
     - name: Build Files
+      shell: bash
       working-directory: rcbot
       run: |
         mkdir post
         cd post
+        
+        export AM_ARCH=${{ matrix.am_arch }}
+
         python3 ../configure.py --symbol-files --enable-optimize
+        
         ambuild
 
     - uses: benjlevesque/short-sha@v2.2
@@ -99,7 +104,7 @@ jobs:
       with:
         name: rcbot-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
         path: |
-            rcbot/post/package/*
+            rcbot/post/*
 
     - name: Upload Debug Symbols
       uses: actions/upload-artifact@v4
