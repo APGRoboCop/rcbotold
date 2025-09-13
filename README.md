@@ -460,3 +460,4 @@ iii. Post in forum or e-mail me with :
 - w00tguy : For Linux bot slow-motion fix
 - Tovasritch : For repairing some waypoints
 - jukivili : For sharing the code to allow bots to toggle Op4's Deagle Laser Sight
+- jpiolho : For DMC default model fix directory
