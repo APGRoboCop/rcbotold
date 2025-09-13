@@ -1360,34 +1360,69 @@ void CBotGlobals::LoadBotModels()
 // Load bot model names in bot globals botModels array
 // Most done By Botman :-)
 {
-	namespace fs = std::filesystem;
-	std::string models_path = m_szModFolder;
-	models_path += "/models/player";
+	char path[MAX_PATH];
+	char search_path[MAX_PATH];
+	char dirname[MAX_PATH];
+	char filename[MAX_PATH];
+	//   int index;
+	struct stat stat_str;
+#ifndef __linux__
+	HANDLE directory = nullptr;
+#else
+	DIR* directory = nullptr;
+#endif
 
-	if (!fs::exists(models_path))
+	// find the directory name of the currently running MOD...
+	std::strcpy(path, m_szModFolder);
+
+#ifdef __linux__
+	std::strcat(path, "/models/player");
+#else
+	std::strcat(path, "\\models\\player");
+#endif
+
+	if (stat(path, &stat_str) != 0)
 	{
-		models_path = "valve/models/player";
+		// use the valve/models/player directory if no MOD models/player
+#ifdef __linux__
+		std::strcpy(path, "valve/models/player");
+#else
+		std::strcpy(path, "valve\\models\\player");
+#endif
 	}
+
+	std::strcpy(search_path, path);
+
+#ifndef __linux__
+	std::strcat(search_path, "/*");
+#endif
 
 	m_uaBotModels.Init();
 
-	if (!fs::exists(models_path) || !fs::is_directory(models_path))
-	{
-		return;
-	}
+	// Looking for model files (.mdl) in player directory
+	// search_path = <search folder> (in windows)
+	// or search_path = <search folder>
 
-	for (const std::filesystem::directory_entry& entry : fs::directory_iterator(models_path))
+	while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr)
 	{
-		if (entry.is_directory())
+		// don't want to get stuck looking in the same directory again and again (".")
+		// don't wan't to search parent directories ("..")
+		if (std::strcmp(dirname, ".") == 0 || std::strcmp(dirname, "..") == 0)
+			continue;
+
+		// looking for .mdl file inside a folder of same name
+		std::strcpy(filename, path);
+		std::strcat(filename, "/");
+		std::strcat(filename, dirname);
+		std::strcat(filename, "/");
+		std::strcat(filename, dirname);
+		std::strcat(filename, ".mdl");
+
+		// seeing if file exists (if foldername = model name)
+		if (stat(filename, &stat_str) == 0)
 		{
-			const std::filesystem::path& dir_path = entry.path();
-			const std::string dirname = dir_path.filename().string();
-			fs::path model_file = dir_path / (dirname + ".mdl");
-
-			if (fs::exists(model_file))
-			{
-				m_uaBotModels.Add(m_Strings.GetString(dirname.c_str()));
-			}
+			// ok, we only need to add directory name into list then.
+			m_uaBotModels.Add(m_Strings.GetString(dirname));
 		}
 	}
 }
