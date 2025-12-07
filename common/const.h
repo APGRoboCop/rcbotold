@@ -14,6 +14,9 @@
 ****/
 #ifndef CONST_H
 #define CONST_H
+
+#include <cstdint>
+
 //
 // Constants shared by the engine and dlls
 // This header file included by engine files and DLL files.
