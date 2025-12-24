@@ -118,7 +118,7 @@ HANDLE FindDirectory(HANDLE hFile, char* dirname, const char* dirspec)
 /// <summary>
 /// Returns true if the path has any sub-directories
 /// </summary>
-bool HasSubDirectories(char* path) {
+bool HasSubDirectories(const char* path) {
 	char search_path[MAX_PATH];
 	char dirname[MAX_PATH];
 #ifndef __linux__
@@ -126,10 +126,7 @@ bool HasSubDirectories(char* path) {
 #else
 	DIR* directory = nullptr;
 #endif
-
-
 	std::strcpy(search_path, path);
-
 #ifndef __linux__
 	std::strcat(search_path, "/*");
 #endif

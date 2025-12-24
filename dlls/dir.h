@@ -56,6 +56,6 @@ DIR* FindDirectory(DIR* directory, char* dirname, const char* dirspec);
 
 #endif
 
-bool HasSubDirectories(char* path);
+bool HasSubDirectories(const char* path);
 
 #endif
