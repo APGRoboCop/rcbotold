@@ -344,7 +344,7 @@ void InitMessage ( const char *message );
 	{
 		edict_t* pEntity = nullptr;
 
-		//Vector v_other; //Not used? [APG]RoboCop[CL]
+		Vector v_other; //Not used? [APG]RoboCop[CL]
 		Vector v_comp;
 		Vector v_origin = m_pPlayer->v.origin - Vector(0, 0, m_pPlayer->v.size.z * 0.5f);
 		Vector v_original_vel;
