@@ -1379,7 +1379,7 @@ void CBotGlobals::LoadBotModels()
 	std::strcat(path, "\\models\\player");
 #endif
 
-	if (stat(path, &stat_str) != 0 || !HasSubDirectories(path))
+	if (stat(path, &stat_str) != 0)
 	{
 		// use the valve/models/player directory if no valid MOD models/player
 #ifdef __linux__

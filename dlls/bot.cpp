@@ -9789,7 +9789,7 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, const entvars_t* pDoor
 // finds the nearest button to the door pDoor
 {
 	float fNearest = 0.0f;
-	//float fDist = 0.0f; // Not used? [APG]RoboCop[CL]
+	float fDist = 0.0f; // Not used? [APG]RoboCop[CL]
 
 	edict_t* pBestTarget = nullptr;
 
@@ -9822,7 +9822,7 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, const entvars_t* pDoor
 				if (tr.pHit == pTarget || tr.flFraction >= 1.0f)
 				{
 					pBestTarget = pTarget;
-					//fNearest = fDist; // Not used? [APG]RoboCop[CL]
+					fNearest = fDist; // Not used? [APG]RoboCop[CL]
 
 					if (vFoundOrigin)
 						*vFoundOrigin = vEntityOrigin;
@@ -9836,7 +9836,7 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, const entvars_t* pDoor
 				if (tr.pHit == pTarget || tr.flFraction >= 1.0f)
 				{
 					pBestTarget = pTarget;
-					//fNearest = fDist; // Not used? [APG]RoboCop[CL]
+					fNearest = fDist; // Not used? [APG]RoboCop[CL]
 
 					if (vFoundOrigin)
 						*vFoundOrigin = vEntityOrigin + pTarget->v.size;
@@ -9849,7 +9849,7 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, const entvars_t* pDoor
 				if (tr.pHit == pTarget || tr.flFraction >= 1.0f)
 				{
 					pBestTarget = pTarget;
-					//fNearest = fDist; // Not used? [APG]RoboCop[CL]
+					fNearest = fDist; // Not used? [APG]RoboCop[CL]
 
 					if (vFoundOrigin)
 						*vFoundOrigin = vEntityOrigin - pTarget->v.size;
