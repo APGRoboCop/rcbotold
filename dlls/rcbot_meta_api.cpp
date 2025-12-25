@@ -336,19 +336,19 @@ C_DLLEXPORT int Meta_Query(char* interfaceVersion, plugin_info_t** plinfo, mutil
 		{
 			LOG_CONSOLE(PLID, "metamod version is too old for this plugin; update metamod");
 			LOG_ERROR(PLID, "metamod version is too old for this plugin; update metamod");
-			return false;
+			return 0;
 		}
 
 		// if plugin has older major interface version, it's incompatible (update plugin)
-		else if (pmajor < mmajor)
+		if (pmajor < mmajor)
 		{
 			LOG_CONSOLE(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
 			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
-			return false;
+			return 0;
 		}
 	}
 
-	return true; // tell metamod this plugin looks safe
+	return 1; // tell metamod this plugin looks safe
 }
 
 C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS* pFunctionTable, meta_globals_t* pMGlobals, gamedll_funcs_t* pGamedllFuncs)
@@ -362,13 +362,13 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS* pFunctionTable, m
 	{
 		LOG_CONSOLE(PLID, "%s: plugin NOT attaching (can't load plugin right now)", Plugin_info.name);
 		LOG_ERROR(PLID, "%s: plugin NOT attaching (can't load plugin right now)", Plugin_info.name);
-		return false; // returning false prevents metamod from attaching this plugin
+		return 0; // returning false prevents metamod from attaching this plugin
 	}
 
 	if (pFunctionTable == nullptr)
 	{
 		BotMessage(nullptr, 2, "Err: Received NULL pFunctionTable from Metamod... not my fault... check running plugins!!!");
-		return false; // Return an error code [APG]RoboCop[CL]
+		return 0; // Return an error code [APG]RoboCop[CL]
 	}
 
 	// keep track of the pointers to engine function tables metamod gives us
@@ -392,7 +392,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS* pFunctionTable, m
 
 	REG_SVR_COMMAND(BOT_COMMAND_ACCESS, RCBot_ServerCommand);
 
-	return true; // returning true enables metamod to attach this plugin
+	return 1; // returning true enables metamod to attach this plugin
 }
 
 C_DLLEXPORT int Meta_Detach(const PLUG_LOADTIME now, const PL_UNLOAD_REASON reason)
@@ -405,12 +405,12 @@ C_DLLEXPORT int Meta_Detach(const PLUG_LOADTIME now, const PL_UNLOAD_REASON reas
 	{
 		LOG_CONSOLE(PLID, "%s: plugin NOT detaching (can't unload plugin right now)", Plugin_info.name);
 		LOG_ERROR(PLID, "%s: plugin NOT detaching (can't unload plugin right now)", Plugin_info.name);
-		return false; // returning false prevents metamod from unloading this plugin
+		return 0; // returning false prevents metamod from unloading this plugin
 	}
 
 	gBotGlobals.FreeGlobalMemory();
 
-	return true; // returning true enables metamod to unload this plugin
+	return 1; // returning true enables metamod to unload this plugin
 }
 
 C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* interfaceVersion)
@@ -549,7 +549,7 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* inte
 	// copy the whole table for metamod to know which functions we are using here
 	std::memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
 
-	return true; // alright
+	return 1; // alright
 }
 
 //#if defined(_WIN32) && !defined(__CYGWIN__)

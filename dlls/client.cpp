@@ -393,7 +393,7 @@ void InitMessage ( const char *message );
 		iCurrentWaypoint = m_iCurrentWaypoint;
 		/////////////////////////////////////////////////////////////////
 		// DRAW WAYPOINTS
-		WaypointLocations.DrawWaypoints(pPlayer, vOrigin, 600);
+		WaypointLocations.DrawWaypoints(pPlayer, vOrigin, 600.0f);
 		/////////////////////////////////////////////////////////////////
 
 		if (m_bWaypointPathsOn)
@@ -401,10 +401,9 @@ void InitMessage ( const char *message );
 			iCurrentWaypoint = WaypointLocations.NearestWaypoint(vOrigin, BOT_WAYPOINT_TOUCH_DIST, -1);
 
 			if (iCurrentWaypoint != -1)
+			{
 				m_iCurrentWaypoint = iCurrentWaypoint;
 
-			if (iCurrentWaypoint != -1)
-			{
 				int n;
 				// check if path waypointing is on...
 

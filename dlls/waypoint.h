@@ -546,7 +546,7 @@ public:
 			return (*ToReturn & 1 << iBit) > 0;
 		}
 
-		return false;
+		return 0;
 	}
 
 	void ClearVisibilityTable() const

@@ -1701,7 +1701,6 @@ void CBot::SpawnInit(const bool bInit)
 	//    m_bCurrentLookDirIsValid = false;
 
 	m_vMoveToVector = Vector(0, 0, 0);
-	m_bMoveToIsValid = false;
 
 	m_CurrentLookTask = BOT_LOOK_TASK_NEXT_WAYPOINT;
 	m_fLastLookTime = 0.0f;

@@ -925,7 +925,7 @@ public:
 		if (pAmmo1)
 		{
 			m_iAmmo1 = pAmmo1;
-			m_iAmmo2 = pAmmo1; //TODO: Is this intentional? [APG]RoboCop[CL]
+			m_iAmmo2 = pAmmo2; //TODO: Is this intentional? [APG]RoboCop[CL]
 		}
 		if (pAmmo2)
 			m_iAmmo2 = pAmmo2;

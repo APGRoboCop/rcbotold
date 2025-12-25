@@ -82,7 +82,8 @@ public:
 
 	CPerceptron(int iInputs, ITransfer* transferFunction = nullptr, float fLearnRate = 0.0f);
 
-	explicit CPerceptron(std::FILE* bfp)
+	CPerceptron(std::FILE* bfp)
+		: m_iInputs(0), m_Bias(0.0f), m_LearnRate(0.0f), m_output(0.0f), m_bTrained(false)
 	{
 		load(bfp);
 	}

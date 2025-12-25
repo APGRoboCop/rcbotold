@@ -206,7 +206,7 @@ void HumanizeString(char* string)
 		}
 
 		if ((rand = RANDOM_LONG(0, 100)) < drop_percent ||
-			string[n] < '0' && string[n] > '9' && rand < drop_percent * 2)
+			(string[n] < '0' && string[n] > '9' && rand < drop_percent * 2))
 		{
 			n = i;
 

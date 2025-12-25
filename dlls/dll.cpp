@@ -909,7 +909,7 @@ void ClientCommand(edict_t* pEntity)
 					{
 						CBot* pBot = &m_Bot;
 
-						if (pBot && pBot->IsUsed())
+						if (pBot->IsUsed())
 						{
 							// say message, everyone can see, team message only team mates can see
 							if (bSayTeamMsg && UTIL_GetTeam(pEntity) == pBot->GetTeam() || bSayMsg)
@@ -2595,20 +2595,20 @@ C_DLLEXPORT int GetEntityAPI2(DLL_FUNCTIONS* pFunctionTable, int* interfaceVersi
 	// this is one of the initialization functions hooked by metamod in the gamedll API
 	if (!pFunctionTable) {
 		UTIL_LogPrintf("GetEntityAPI2 called with null pFunctionTable");
-		return false;
+		return 0;
 	}
-	else if (*interfaceVersion != INTERFACE_VERSION) {
+	if (*interfaceVersion != INTERFACE_VERSION) {
 		UTIL_LogPrintf("GetEntityAPI2 version mismatch; requested=%d ours=%d", *interfaceVersion, INTERFACE_VERSION);
 		//! Tell engine what version we had, so it can figure out who is out of date.
 		*interfaceVersion = INTERFACE_VERSION;
-		return false;
+		return 0;
 	}
 
 	// gFunctionTable defined in dll.cpp
 	// copy the whole table for metamod to know which functions we are using here
 	std::memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
 
-	return true; // alright
+	return 1; // alright
 }
 
 #endif

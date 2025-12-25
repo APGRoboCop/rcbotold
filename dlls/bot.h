@@ -6029,7 +6029,7 @@ public:
 		return;
 	}
 
-	CBotNSTech(AvHMessageID iId, const short iCost, const short bAvailable, const short iRadius, const short iSlot)
+	CBotNSTech(AvHMessageID iId, const short iCost, const bool bAvailable, const short iRadius, const short iSlot)
 	{
 		m_iCost = iCost;
 		m_iSlot = iSlot;

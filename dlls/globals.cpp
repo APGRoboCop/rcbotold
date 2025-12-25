@@ -146,8 +146,6 @@ bool CBotGlobals::NetMessageStarted(const int msg_dest, const int msg_type, cons
 		//	MESSAGE_END();
 	}
 
-	m_CurrentMessage = nullptr;
-
 	m_bNetMessageStarted = true;
 
 	if (gpGlobals->deathmatch)

@@ -1583,7 +1583,7 @@ int WaypointAddOrigin(const Vector& vOrigin, const int iFlags, edict_t* pEntity,
 			const char* szClassname = STRING(pEnt->v.classname);
 
 			if (!szClassname) 
-				return false; // Ensure szClassname is not null
+				return 0; // Ensure szClassname is not null
 
 			if (std::strncmp(szClassname, "ammo_", 5) == 0)
 			{
@@ -1606,7 +1606,7 @@ int WaypointAddOrigin(const Vector& vOrigin, const int iFlags, edict_t* pEntity,
 				new_waypoint->flags |= W_FL_ARMOR;
 			}
 
-			return true; // Return true to indicate success
+			return 1; // Return true to indicate success
 		}
 	}
 
