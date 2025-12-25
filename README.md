@@ -9,6 +9,7 @@ Supported Mods
 - Bumpercars
 - Battlegrounds
 - Deathmatch Classic
+- Half-Life: Deathmatch, Arena
 - Opposing Force
 - Natural Selection
 - Rocket Crowbar
@@ -101,8 +102,7 @@ V 1.3
 * added: support for half-life deathmatch.
 * added: megaHAL bot chatting [thanks pierre at racc bot (racc.bots-united.com)].
 * added: new command "rcbot config chat_percent" and "rcbot config chat_reply_percent" (See commands text file)
-* added: new command "rcbot config marine_auto_build". If set to 1, an infantry portal
-       will automatically be built nearby the command console when a bot joins the server.
+* added: new command "rcbot config marine_auto_build". If set to 1, an infantry portal will automatically be built nearby the command console when a bot joins the server.
 * added: program does not allow clients to join if min bots has not been reached (if bots still need to join).
 * added: new config command reserve_bot_slots (to configure above addition).
 * added: ability to kick bots from certain team in natural selection in bot menu.
