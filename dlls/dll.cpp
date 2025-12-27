@@ -1511,7 +1511,7 @@ int EXPORT GetNewDLLFunctions(NEW_DLL_FUNCTIONS* pFunctionTable, int* interfaceV
 extern "C" EXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS* pFunctionTable, int* interfaceVersion)
 #endif
 {
-	if (other_GetNewDLLFunctions == NULL)
+	if (other_GetNewDLLFunctions == nullptr)
 		return false;
 
 	// pass other DLLs engine callbacks to function table...

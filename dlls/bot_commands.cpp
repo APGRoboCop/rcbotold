@@ -76,10 +76,10 @@ void player(entvars_t* pev)
 #else
 	extern void* h_Library;
 #endif
-	static LINK_ENTITY_FUNC otherClassName = NULL;
-	if (otherClassName == NULL)
+	static LINK_ENTITY_FUNC otherClassName = nullptr;
+	if (otherClassName == nullptr)
 		otherClassName = (LINK_ENTITY_FUNC)GetProcAddress(h_Library, "player");
-	if (otherClassName != NULL)
+	if (otherClassName != nullptr)
 	{
 		(*otherClassName)(pev);
 	}
@@ -235,7 +235,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 				if (arg3 && *arg3)
 					iWpt = std::atoi(arg3);
 				else
-					iWpt = WaypointLocations.NearestWaypoint(pClient->GetPlayer()->v.origin, 100, -1);
+					iWpt = WaypointLocations.NearestWaypoint(pClient->GetPlayer()->v.origin, 100.0f, -1);
 
 				pBot->ClearTasks();
 

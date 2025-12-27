@@ -577,7 +577,7 @@ int GetMessageID(const char* szMsg)
 	int msg_id = -1;
 
 #ifndef RCBOT_META_BUILD
-	CBotNetMessage* msg = NULL;
+	CBotNetMessage* msg = nullptr;
 	msg = gBotGlobals.m_NetEntityMessages.GetMessage(0, szMsg);
 	if (msg)
 		msg_id = msg->MessageNum();
@@ -859,11 +859,11 @@ int UTIL_GetNumClients(const bool bReport)
 #ifdef   DEBUG
 edict_t* DBG_EntOfVars(const entvars_t* pev)
 {
-	if (pev->pContainingEntity != NULL)
+	if (pev->pContainingEntity != nullptr)
 		return pev->pContainingEntity;
 	ALERT(at_console, "entvars_t pContainingEntity is NULL, calling into engine");
 	edict_t* pent = (*g_engfuncs.pfnFindEntityByVars)((entvars_t*)pev);
-	if (pent == NULL)
+	if (pent == nullptr)
 		ALERT(at_console, "DAMN!  Even the engine couldn't FindEntityByVars!");
 	((entvars_t*)pev)->pContainingEntity = pent;
 	return pent;

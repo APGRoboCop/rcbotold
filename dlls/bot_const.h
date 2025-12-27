@@ -1236,17 +1236,17 @@ enum : std::uint8_t
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b13_mm_debug";
+constexpr const char* BOT_VER = "1.51b14_mm_debug";
 #else
-constexpr const char* BOT_VER = "1.51b13_mm";
+constexpr const char* BOT_VER = "1.51b14_mm";
 #endif
 
 #else
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b13_debug";
+constexpr const char* BOT_VER = "1.51b14_debug";
 #else
-constexpr const char* BOT_VER = "1.51b13";
+constexpr const char* BOT_VER = "1.51b14";
 #endif
 
 #endif
@@ -1260,17 +1260,17 @@ constexpr const char* BOT_VER = "1.51b13";
 #ifdef RCBOT_META_BUILD
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b13_mm_debug";
+constexpr const char* BOT_VER = "1.51b14_mm_debug";
 #else
-constexpr const char* BOT_VER = "1.51b13_mm";
+constexpr const char* BOT_VER = "1.51b14_mm";
 #endif
 
 #else
 
 #ifdef _DEBUG
-constexpr const char* BOT_VER = "1.51b13_debug";
+constexpr const char* BOT_VER = "1.51b14_debug";
 #else
-constexpr const char* BOT_VER = "1.51b13";
+constexpr const char* BOT_VER = "1.51b14";
 #endif
 
 #endif
