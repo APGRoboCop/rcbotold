@@ -263,6 +263,7 @@
       <ObjectFileName>.\HPB_bot___Win32_MetaMod_Debug\</ObjectFileName>
       <ProgramDataBaseFileName>.\HPB_bot___Win32_MetaMod_Debug\</ProgramDataBaseFileName>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>

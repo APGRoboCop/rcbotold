@@ -1574,52 +1574,38 @@ int WaypointAddOrigin(const Vector& vOrigin, const int iFlags, edict_t* pEntity,
 		if (pEnt->v.owner != nullptr)
 			continue;
 
-		Vector vEntOrigin = EntityOrigin(pEnt);
+		const Vector vEntOrigin = EntityOrigin(pEnt);
 
 		UTIL_TraceLine(vOrigin, vEntOrigin, ignore_monsters, pEntity, &tr);
 
-		if (tr.flFraction >= 1.0f || tr.pHit == pEnt)
-		{
-			const char* szClassname = STRING(pEnt->v.classname);
+		if (tr.flFraction < 1.0f && tr.pHit != pEnt)
+			continue; // Entity not visible, skip
 
-			if (!szClassname) 
-				return 0; // Ensure szClassname is not null
+		const char* szClassname = STRING(pEnt->v.classname);
 
-			if (std::strncmp(szClassname, "ammo_", 5) == 0)
-			{
-				new_waypoint->flags |= W_FL_AMMO;
-			}
-			else if (std::strncmp(szClassname, "weapon_", 7) == 0)
-			{
-				new_waypoint->flags |= W_FL_WEAPON;
-			}
-			else if (std::strncmp(szClassname, "item_health", 11) == 0 ||
-				std::strncmp(szClassname, "item_healthkit", 14) == 0 ||
-				std::strncmp(szClassname, "func_healthcharger", 18) == 0)
-			{
-				new_waypoint->flags |= W_FL_HEALTH;
-			}
-			else if (std::strncmp(szClassname, "item_armor", 10) == 0 ||
-				std::strncmp(szClassname, "item_battery", 12) == 0 ||
-				std::strncmp(szClassname, "func_recharge", 13) == 0)
-			{
-				new_waypoint->flags |= W_FL_ARMOR;
-			}
+		if (!szClassname || !szClassname[0])
+			continue; // Skip invalid classnames, don't abort
 
-			return 1; // Return true to indicate success
-		}
-	}
-
-	if (pEntity && bSound)
-	{
-		UTIL_PlaySound(pEntity, "weapons/xbow_hit1.wav");
-		//UTIL_PlaySound(pEntity,"weapons/xbow_hit1.wav");
-		//
+		if (std::strncmp(szClassname, "ammo_", 5) == 0)
+			new_waypoint->flags |= W_FL_AMMO;
+		else if (std::strncmp(szClassname, "weapon_", 7) == 0)
+			new_waypoint->flags |= W_FL_WEAPON;
+		else if (std::strncmp(szClassname, "item_health", 11) == 0 ||
+			std::strncmp(szClassname, "item_healthkit", 14) == 0 ||
+			std::strncmp(szClassname, "func_healthcharger", 18) == 0)
+			new_waypoint->flags |= W_FL_HEALTH;
+		else if (std::strncmp(szClassname, "item_armor", 10) == 0 ||
+			std::strncmp(szClassname, "item_battery", 12) == 0 ||
+			std::strncmp(szClassname, "func_recharge", 13) == 0)
+			new_waypoint->flags |= W_FL_ARMOR;
 	}
 
 	// increment total number of waypoints if adding at end of array...
 	if (index == num_waypoints)
 		num_waypoints++;
+
+	if (pEntity && bSound)
+		UTIL_PlaySound(pEntity, "weapons/xbow_hit1.wav");
 
 	if (gBotGlobals.m_bAutoPathWaypoint)
 	{
@@ -1636,27 +1622,22 @@ int WaypointAddOrigin(const Vector& vOrigin, const int iFlags, edict_t* pEntity,
 
 			UTIL_TraceLine(vOrigin, temp_waypoint->origin, ignore_monsters, ignore_glass, nullptr, &tr);
 
-			WaypointVisibility.SetVisibilityFromTo(index, i, tr.flFraction >= 1.0f);
-			WaypointVisibility.SetVisibilityFromTo(i, index, tr.flFraction >= 1.0f);
+			const bool bVisible = tr.flFraction >= 1.0f;
+			WaypointVisibility.SetVisibilityFromTo(index, i, bVisible);
+			WaypointVisibility.SetVisibilityFromTo(i, index, bVisible);
 
 			// check if the waypoint is reachable from the new one (one-way)
 			if (WaypointReachable(vOrigin, temp_waypoint->origin))
-			{
 				WaypointAddPath(static_cast<short>(index), static_cast<short>(i));
-			}
 
 			// check if the new one is reachable from the waypoint (other way)
 			if (WaypointReachable(temp_waypoint->origin, vOrigin))
-			{
 				WaypointAddPath(static_cast<short>(i), static_cast<short>(index));
-			}
 		}
 	}
 
 	if (pEntity && bDraw)
-	{
 		WaypointDrawIndex(pEntity, index);
-	}
 
 	WaypointLocations.AddWptLocation(index, vOrigin);
 
@@ -2377,9 +2358,7 @@ Vector WaypointOrigin(const int iWaypointIndex)
 
 int WaypointFlags(const int iWaypointIndex)
 {
-	//assert ( iWaypointIndex != -1 );
-
-	if (iWaypointIndex < 0 || iWaypointIndex > MAX_WAYPOINTS)
+	if (iWaypointIndex < 0 || iWaypointIndex >= MAX_WAYPOINTS)
 	{
 		//BotMessage(NULL,0,"Caution: WaypointFlags() received invalid waypoint index!");
 		return 0;
