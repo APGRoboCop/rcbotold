@@ -428,7 +428,7 @@ typedef struct
 	int m_iModId;
 	int m_iPriority;
 
-	int m_iMaxClip;       // TODO: Add Max clip size for TS
+	int m_iMaxClip;
 }weapon_preset_t;
 
 class CWeaponPresets
@@ -617,7 +617,7 @@ public:
 	//int m_iModId;
 	int m_iPriority;
 
-	int m_iMaxClip;       // TODO: Add Max clip size for TS
+	int m_iMaxClip;
 
 	CWeaponPreset()
 	{
@@ -657,7 +657,7 @@ public:
 		m_fSecMaxRange = 0.0f;
 		m_bIsMelee = false;
 		m_iPriority = 0;
-		m_iMaxClip = 0;       // TODO: Add Max clip size for TS
+		m_iMaxClip = 0;
 	}
 
 	bool CanBeUsedUnderWater() override
