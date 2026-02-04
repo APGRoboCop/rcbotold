@@ -114,6 +114,9 @@ void CBits::freeMemory()
 
 void CBits::setBit(const unsigned iBit, const bool bSet) const
 {
+	if (iBit >= m_iNumBits || m_cBits == nullptr)
+		return;
+
 	const unsigned iBitStart = iBit / 8;
 	const unsigned iBitOffset = iBit % 8;
 
@@ -127,46 +130,47 @@ void CBits::setBit(const unsigned iBit, const bool bSet) const
 
 bool CBits::getBit(const unsigned iBit) const
 {
+	if (iBit >= m_iNumBits || m_cBits == nullptr)
+		return false;
+
 	const unsigned iBitStart = iBit / 8;
 	const unsigned iBitOffset = iBit % 8;
 
 	const unsigned char* c = &m_cBits[iBitStart];
 
-	return (*c & 1 << iBitOffset) == 1 << iBitOffset;
+	return (*c & (1 << iBitOffset)) != 0;
 }
 
 void CBits::load(std::FILE* bfp)
 {
+	if (bfp == nullptr)
+		return;
+
 	const CGenericHeader header = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
 	if (!CGenericHeader::read(bfp, header))
 	{
 		BotMessage(nullptr, 0, "Learn data version mismatch - wiping");
+		clear(); // Clear existing data instead of continuing
 		return;
 	}
 
-	// Read the number of bits
 	unsigned iNumBits;
+	if (std::fread(&iNumBits, sizeof(unsigned), 1, bfp) != 1)
+		return;
 
-	std::fread(&iNumBits, sizeof(unsigned), 1, bfp);
+	freeMemory();
+	setup(iNumBits);
 
-	// Update member variables
-	m_iNumBits = iNumBits;
-
-	if (m_cBits != nullptr)
+	if (std::fread(m_cBits, size(), 1, bfp) != 1)
 	{
-		delete[] m_cBits; // Use delete[] for arrays
-		m_cBits = nullptr;
+		clear(); // Handle read failure
 	}
-
-	setup(m_iNumBits);
-
-	std::fread(m_cBits, size(), 1, bfp);
 }
 
 void CBits::randomize() const
 {
-	for (int i = 0; i < static_cast<int>(m_iNumBits); i++)
+	for (unsigned i = 0; i < m_iNumBits; i++)
 	{
 		setBit(i, RANDOM_FLOAT(0.0f, 1.0f) >= 0.5f);
 	}
@@ -191,13 +195,14 @@ unsigned CBits::size() const
 
 void CBits::save(std::FILE* bfp) const
 {
+	if (bfp == nullptr || m_cBits == nullptr)
+		return;
+
 	const CGenericHeader checkHeader = CGenericHeader(LEARNTYPE_BITS, m_iNumBits);
 
-	// Write the header
 	checkHeader.write(bfp);
 
 	std::fwrite(&m_iNumBits, sizeof(unsigned), 1, bfp);
-
 	std::fwrite(m_cBits, size(), 1, bfp);
 }
 

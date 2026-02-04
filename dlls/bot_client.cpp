@@ -350,33 +350,24 @@ void BotClient_TS_ClipInfo::execute(void* p, const int iIndex)
 	{
 	case 0:
 	{
-		try
-		{
-			CBot* pBot = &gBotGlobals.m_Bots[iIndex];
+		CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 
-			if (pBot->m_pCurrentWeapon)
+		// Remove try-catch with empty handler - validate data instead
+		if (pBot && pBot->m_pCurrentWeapon)
+		{
+			const int clipValue = *static_cast<int*>(p);
+			pBot->m_pCurrentWeapon->UpdateWeapon(clipValue);
+			pBot->m_fLastBulletFired = gpGlobals->time;
+
+			if (!clipValue && pBot->m_pCurrentWeapon->getReserve() <= pBot->m_pCurrentWeapon->getMaxClip())
 			{
-				pBot->m_pCurrentWeapon->UpdateWeapon(*static_cast<int*>(p));
-				pBot->m_fLastBulletFired = gpGlobals->time;
-
-				if (!*static_cast<int*>(p) && pBot->m_pCurrentWeapon->getReserve() <= pBot->m_pCurrentWeapon->getMaxClip())
-				{				// drop weapon
-					gBotGlobals.m_Bots[iIndex].AddPriorityTask(CBotTask(BOT_TASK_DROP_WEAPON));
-				}
+				gBotGlobals.m_Bots[iIndex].AddPriorityTask(CBotTask(BOT_TASK_DROP_WEAPON));
 			}
-		}
-
-		catch (...)
-		{
-			//blah
-			return;
 		}
 	}
 	break;
 	case 1:
-	{
-	}
-	break;
+		break;
 	}
 
 	POINTER_INCREMENT_VALUE(state);
@@ -439,16 +430,15 @@ void BotClient_TS_WeaponInfo::execute(void* p, const int iIndex)
 	{
 		return;
 	}
-	//from tsxmod
+
 	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
+
 	switch (gBotGlobals.m_iCurrentMessageState)
 	{
 	case 0:
 		id = *static_cast<int*>(p);
-
 		if (!id)
 			id = 36; // kung fu
-
 		break;
 	case 1:
 		clip = *static_cast<int*>(p);
@@ -458,25 +448,27 @@ void BotClient_TS_WeaponInfo::execute(void* p, const int iIndex)
 		break;
 	case 3:
 	{
-		static int wpn;
-		int mode = *static_cast<int*>(p);
-
 		gBotGlobals.m_Weapons.AddWeapon(id, "tsweapon", ammo, ammo, 0, 0, 0, 0, 0);
 
 		pBot->m_Weapons.AddWeapon(id);
-		pBot->m_pCurrentWeapon = pBot->m_Weapons.GetWeapon(wpn);
-		pBot->m_pCurrentWeapon->UpdateWeapon(clip);
-		pBot->m_pCurrentWeapon->SetWeapon(id, nullptr);
-		pBot->m_iBotWeapons |= id;
-		pBot->m_pCurrentWeapon->setHasWeapon(true);
-		pBot->m_pCurrentWeapon->setReserve(ammo);
-		pBot->m_pCurrentWeapon->checkMaxClip(clip);
+		CBotWeapon* pWeapon = pBot->m_Weapons.GetWeapon(id);
+
+		// Add null check before dereferencing
+		if (pWeapon)
+		{
+			pBot->m_pCurrentWeapon = pWeapon;
+			pWeapon->UpdateWeapon(clip);
+			pWeapon->SetWeapon(id, nullptr);
+			pBot->m_iBotWeapons |= id;
+			pWeapon->setHasWeapon(true);
+			pWeapon->setReserve(ammo);
+			pWeapon->checkMaxClip(clip);
+		}
 
 		if (!ammo && !clip)
-		{				// drop weapon
-			gBotGlobals.m_Bots[iIndex].AddPriorityTask(CBotTask(BOT_TASK_DROP_WEAPON));
+		{
+			pBot->AddPriorityTask(CBotTask(BOT_TASK_DROP_WEAPON));
 		}
-		//pBot->m_pCurrentWeapon->setAmmoArray(ammo);
 	}
 	break;
 	}
@@ -514,7 +506,7 @@ void BotClient_NS_TechSlots::execute(void* p, const int iIndex)
 void BotClient_BG_MakeMessage::execute(void* p, const int iIndex)
 {
 	static int iSenderId = 0;
-	static int iMsg = 0;
+	//static int iMsg = 0; //Unused? [APG]RoboCop[CL]
 
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -1436,7 +1428,7 @@ void BotClient_NS_HudText::execute(void* p, int iIndex)
 
 	if (state == 0)
 	{
-		msg = static_cast<char*>(p);
+		msg = static_cast<const char*>(p);
 
 		if (msg)
 		{
@@ -2064,7 +2056,7 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 		}
 		else if (iId < MAX_WEAPONS)
 		{
-			int st = iState;
+			//int st = iState; //Unused? [APG]RoboCop[CL]
 			/*WEAPON_ON_TARGET    = 0x01,
 			WEAPON_IS_CURRENT    = 0x02,
 			WEAPON_IS_ENABLED    = 0x04*/
@@ -2240,14 +2232,14 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 	const int iHealth = POINTER_TO_INT(p);
 
-	if (static_cast<float>(iHealth) > pBot->m_fPrevHealth) // more health
+	if (static_cast<float>(iHealth) > pBot->m_fPrevHealth)
 	{
 		if (pBot->m_bAcceptHealth)
 		{
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_ACCEPT_HEALTH))
 			{
 				edict_t* pSupplier = nullptr;
-				constexpr float nearest = 96.0f;
+				float nearest = 96.0f;  // Remove constexpr - it's modified in logic below
 
 				for (int i = 1; i <= gpGlobals->maxClients; i++)
 				{

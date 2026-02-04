@@ -46,6 +46,7 @@
 #endif
 
 #include "dir.h"
+#include <cstring>
 
 /////////////////////////////////////////////
 // DIRECTORY ROUTINES...
@@ -55,133 +56,138 @@
 // Windows OS Routine...
 // MS-DOS directory wildcard routines...
 
-// Call Find Directory with dirspec = the starting directory you want to look in
+// Helper function to find next directory entry
+static bool FindNextDirectoryEntry(HANDLE hFile, WIN32_FIND_DATA* pFindFileData)
+{
+	while (FindNextFile(hFile, pFindFileData) != 0)
+	{
+		if ((pFindFileData->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == FILE_ATTRIBUTE_DIRECTORY)
+			return true;
+	}
+	return false;
+}
 
+// Call Find Directory with dirspec = the starting directory you want to look in
 HANDLE FindDirectory(HANDLE hFile, char* dirname, const char* dirspec)
 {
-	WIN32_FIND_DATA pFindFileData;
+	WIN32_FIND_DATA FindFileData;
 
-	dirname[0] = 0;
+	dirname[0] = '\0';
 
 	if (hFile == nullptr)
 	{
-		hFile = FindFirstFile(dirspec, &pFindFileData);
+		hFile = FindFirstFile(dirspec, &FindFileData);
 
 		if (hFile == INVALID_HANDLE_VALUE)
-		{
-			// PM : bugfix
 			return nullptr;
-		}
 
-		while ((pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY)
+		// Check if the first entry is a directory
+		if ((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY)
 		{
-			if (FindNextFile(hFile, &pFindFileData) == 0)
+			if (!FindNextDirectoryEntry(hFile, &FindFileData))
 			{
 				FindClose(hFile);
-				hFile = nullptr;
-				return hFile;
+				return nullptr;
 			}
 		}
-
-		std::strcpy(dirname, pFindFileData.cFileName);
-
-		return hFile;
 	}
 	else
 	{
-		if (FindNextFile(hFile, &pFindFileData) == 0)
+		if (!FindNextDirectoryEntry(hFile, &FindFileData))
 		{
 			FindClose(hFile);
-			hFile = nullptr;
-			return hFile;
+			return nullptr;
 		}
-
-		// BUGGG FIXXX....!!!
-
-		// Fixes bots only choosing OTIS and HELMET in svencoop with some peoples half-life!
-		while ((pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY)
-		{
-			if (FindNextFile(hFile, &pFindFileData) == 0)
-			{
-				FindClose(hFile);
-				hFile = nullptr;
-				return hFile;
-			}
-		}
-
-		std::strcpy(dirname, pFindFileData.cFileName);
-
-		return hFile;
-	}
-}
-
-/// <summary>
-/// Returns true if the path has any sub-directories
-/// </summary>
-bool HasSubDirectories(const char* path) {
-	char search_path[MAX_PATH];
-	char dirname[MAX_PATH];
-#ifndef __linux__
-	HANDLE directory = nullptr;
-#else
-	DIR* directory = nullptr;
-#endif
-	std::strcpy(search_path, path);
-#ifndef __linux__
-	std::strcat(search_path, "/*");
-#endif
-
-	// check if there's any sub-directories in the MOD models/player
-	while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr) {
-		// don't want to get stuck looking in the same directory again and again (".")
-		// don't wan't to search parent directories ("..")
-		if (std::strcmp(dirname, ".") == 0 || std::strcmp(dirname, "..") == 0)
-			continue;
-
-		return true;
 	}
 
-	return false;
+	strncpy_s(dirname, MAX_PATH, FindFileData.cFileName, _TRUNCATE);
+	return hFile;
 }
 
 #else
 
 // Linux directory wildcard routines...
 
+constexpr size_t MAX_PATHNAME_LENGTH = 256;
+
 DIR* FindDirectory(DIR* directory, char* dirname, const char* dirspec)
 {
-	char pathname[256];
+	char pathname[MAX_PATHNAME_LENGTH];
 	struct stat stat_str;
 
 	if (directory == nullptr)
 	{
-		if ((directory = opendir(dirspec)) == nullptr)
+		directory = opendir(dirspec);
+		if (directory == nullptr)
 			return nullptr;
 	}
 
 	while (true)
 	{
-		struct dirent* dirent = readdir(directory);
+		struct dirent* entry = readdir(directory);
 
-		if (dirent == nullptr)  // at end of directory?
+		if (entry == nullptr)
 		{
 			closedir(directory);
 			return nullptr;
 		}
 
+		// Build full pathname safely
+		const size_t dirspec_len = std::strlen(dirspec);
+		const size_t name_len = std::strlen(entry->d_name);
+		
+		if (dirspec_len + 1 + name_len >= MAX_PATHNAME_LENGTH)
+			continue; // Skip entries that would overflow
+
 		std::strcpy(pathname, dirspec);
 		std::strcat(pathname, "/");
-		std::strcat(pathname, dirent->d_name);
+		std::strcat(pathname, entry->d_name);
 
-		if (stat(pathname, &stat_str) == 0)
+		if (stat(pathname, &stat_str) == 0 && S_ISDIR(stat_str.st_mode))
 		{
-			if (stat_str.st_mode & S_IFDIR)
-			{
-				std::strcpy(dirname, dirent->d_name);
-				return directory;
-			}
+			std::strcpy(dirname, entry->d_name);
+			return directory;
 		}
 	}
 }
 
 #endif
+
+/// <summary>
+/// Returns true if the path has any sub-directories
+/// </summary>
+bool HasSubDirectories(const char* path)
+{
+#ifndef __linux__
+	char search_path[MAX_PATH];
+	char dirname[MAX_PATH];
+	HANDLE directory = nullptr;
+
+	strncpy_s(search_path, MAX_PATH, path, _TRUNCATE);
+	strncat_s(search_path, MAX_PATH, "/*", _TRUNCATE);
+#else
+	char search_path[MAX_PATHNAME_LENGTH];
+	char dirname[MAX_PATHNAME_LENGTH];
+	DIR* directory = nullptr;
+
+	std::strncpy(search_path, path, MAX_PATHNAME_LENGTH - 1);
+	search_path[MAX_PATHNAME_LENGTH - 1] = '\0';
+#endif
+
+	while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr)
+	{
+		// Skip current and parent directory entries
+		if (dirname[0] == '.' && (dirname[1] == '\0' || (dirname[1] == '.' && dirname[2] == '\0')))
+			continue;
+
+		// Found a valid subdirectory - clean up and return
+#ifndef __linux__
+		FindClose(directory);
+#else
+		closedir(directory);
+#endif
+		return true;
+	}
+
+	return false;
+}

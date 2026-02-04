@@ -398,7 +398,7 @@ void CBotMenu::Render(CClient* pClient)
 
 	pClient->m_pMenu = this;
 
-	std::sprintf(szMenuText, "%s\n-----\nOptions:\n", m_szCaption);
+	snprintf(szMenuText, sizeof(szMenuText), "%s\n-----\nOptions:\n", m_szCaption);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -410,11 +410,11 @@ void CBotMenu::Render(CClient* pClient)
 				iSlots |= 1 << (i - 1);
 
 			if (m_Menus[i]->HasNextMenu())
-				std::sprintf(szMenuItemText, "%d. %s...\n", i, m_Menus[i]->GetCaption());
+				snprintf(szMenuItemText, sizeof(szMenuItemText), "%d. %s...\n", i, m_Menus[i]->GetCaption());
 			else
-				std::sprintf(szMenuItemText, "%d. %s\n", i, m_Menus[i]->GetCaption());
+				snprintf(szMenuItemText, sizeof(szMenuItemText), "%d. %s\n", i, m_Menus[i]->GetCaption());
 
-			std::strcat(szMenuText, szMenuItemText);
+			std::strncat(szMenuText, szMenuItemText, sizeof(szMenuText) - std::strlen(szMenuText) - 1);
 		}
 	}
 
@@ -782,6 +782,8 @@ void BotMenu_Func_AddBotToTeam(CClient* pClient)
 	case 3:
 		BotFunc_AddBot(pClient, "5", nullptr, nullptr, nullptr);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -1053,7 +1055,7 @@ void BotMenu_Func_KickBotFromTeam(CClient* pClient)
 		theBots.Clear();
 	}
 
-	return;
+	//return;
 }
 
 void BotMenu_Func_Pushable_Waypoint(CClient* pClient)

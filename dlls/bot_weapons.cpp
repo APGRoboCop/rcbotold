@@ -47,6 +47,9 @@
  // including ammo info etc.
  //
 
+#include <functional>
+#include <unordered_map>
+
 #include "extdll.h"
 
 #ifndef RCBOT_META_BUILD
@@ -257,18 +260,25 @@ void CWeaponPresets::ReadPresets()
 				const size_t equals_pos = line.find('=');
 				if (equals_pos != std::string::npos) {
 					const std::string_view key = std::string_view(line).substr(0, equals_pos);
-					const int value = std::stoi(line.substr(equals_pos + 1));
+					const std::string_view valueStr = std::string_view(line).substr(equals_pos + 1);
+					const int value = std::stoi(std::string(valueStr));
 
-					if (key == "underwater") sWeaponPreset.m_bCanFireUnderWater = value;
-					else if (key == "primaryfire") sWeaponPreset.m_bHasPrimaryFire = value;
-					else if (key == "secondaryfire") sWeaponPreset.m_bHasSecondaryFire = value;
-					else if (key == "primary_min_range") sWeaponPreset.m_fPrimMinRange = static_cast<float>(value);
-					else if (key == "primary_max_range") sWeaponPreset.m_fPrimMaxRange = static_cast<float>(value);
-					else if (key == "secondary_min_range") sWeaponPreset.m_fSecMinRange = static_cast<float>(value);
-					else if (key == "secondary_max_range") sWeaponPreset.m_fSecMaxRange = static_cast<float>(value);
-					else if (key == "is_melee") sWeaponPreset.m_bIsMelee = value;
-					else if (key == "priority") sWeaponPreset.m_iPriority = value;
-					else if (key == "maxclip") sWeaponPreset.m_iMaxClip = value;
+					static const std::unordered_map<std::string_view, std::function<void(weapon_preset_t&, int)>> keyHandlers = {
+						{"underwater", [](weapon_preset_t& p, int v) { p.m_bCanFireUnderWater = v; }},
+						{"primaryfire", [](weapon_preset_t& p, int v) { p.m_bHasPrimaryFire = v; }},
+						{"secondaryfire", [](weapon_preset_t& p, int v) { p.m_bHasSecondaryFire = v; }},
+						{"primary_min_range", [](weapon_preset_t& p, int v) { p.m_fPrimMinRange = static_cast<float>(v); }},
+						{"primary_max_range", [](weapon_preset_t& p, int v) { p.m_fPrimMaxRange = static_cast<float>(v); }},
+						{"secondary_min_range", [](weapon_preset_t& p, int v) { p.m_fSecMinRange = static_cast<float>(v); }},
+						{"secondary_max_range", [](weapon_preset_t& p, int v) { p.m_fSecMaxRange = static_cast<float>(v); }},
+						{"is_melee", [](weapon_preset_t& p, int v) { p.m_bIsMelee = v; }},
+						{"priority", [](weapon_preset_t& p, int v) { p.m_iPriority = v; }},
+						{"maxclip", [](weapon_preset_t& p, int v) { p.m_iMaxClip = v; }}
+					};
+
+					if (auto it = keyHandlers.find(key); it != keyHandlers.end()) {
+						it->second(sWeaponPreset, value);
+					}
 				}
 			}
 		}
@@ -444,6 +454,9 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	std::vector<CBotWeapon*> usableWeapons;
 	std::vector<CBotWeapon*> otherWeapons;
 
+	usableWeapons.reserve(MAX_WEAPONS);
+	otherWeapons.reserve(MAX_WEAPONS);
+
 	const edict_t* pEdict = pBot->m_pEdict;
 
 	Vector vEnemyOrigin = pEnemy ? EntityOrigin(pEnemy) : pBot->pev->origin;
@@ -508,7 +521,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		if (iAllowedWeapons[i] == 0)
 			continue;
 
-		if (!bIsDMC && !pBot->HasWeapon(i) || !pWeapon->HasWeapon(pBot->m_pEdict))
+		if ((!bIsDMC && !pBot->HasWeapon(i)) || !pWeapon->HasWeapon(pBot->m_pEdict))
 			continue;
 
 		if (gBotGlobals.IsNS())

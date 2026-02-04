@@ -46,15 +46,8 @@ public:
 
 	CSomNeuron(int iInp, ga_value iX, ga_value iY);
 
-	ga_value getX() const
-	{
-		return m_iX;
-	}
-
-	ga_value getY() const
-	{
-		return m_iY;
-	}
+	ga_value getX() const noexcept { return m_iX; }
+	ga_value getY() const noexcept { return m_iY; }
 
 	void update(const std::vector<ga_value>& inputs, ga_value inf);
 
@@ -64,7 +57,7 @@ public:
 
 	void displayWeights() const;
 
-	ga_value neighbourDistance(const CSomNeuron* other, ga_value fDistance) const;
+	ga_value neighbourDistance(const CSomNeuron* other) const;
 
 private:
 	std::vector<ga_value> fWeights;

@@ -60,19 +60,30 @@
 #include "bits.h"
 
 CBotVisibles::CBotVisibles()
+	: m_iVisibles(nullptr)
+	, m_iIter(0)
 {
-	m_iVisibles = new CBits(gpGlobals->maxEntities + 1);
-	m_iIter = 0;
 	m_iVisibleList.Clear();
+
+	if (gpGlobals && gpGlobals->maxEntities > 0)
+	{
+		m_iVisibles = new CBits(gpGlobals->maxEntities + 1);
+	}
 }
 
 bool CBotVisibles::isVisible(const int iIndex) const
 {
+	if (!m_iVisibles || iIndex < 0 || iIndex > gpGlobals->maxEntities)
+		return false;
+
 	return m_iVisibles->getBit(iIndex);
 }
 
 void CBotVisibles::setVisible(const int iIndex, const bool bVisible)
 {
+	if (!m_iVisibles || iIndex < 0 || iIndex > gpGlobals->maxEntities)
+		return;
+
 	const bool bCurrentlyVisible = isVisible(iIndex);
 
 	if (bCurrentlyVisible && !bVisible)
@@ -92,27 +103,29 @@ void CBotVisibles::freeMemory()
 {
 	m_iVisibleList.Destroy();
 	m_iVisibleList.Clear();
-	m_iVisibles->freeMemory();
-	delete m_iVisibles;
-	m_iVisibles = nullptr;
+
+	if (m_iVisibles)
+	{
+		m_iVisibles->freeMemory();
+		delete m_iVisibles;
+		m_iVisibles = nullptr;
+	}
 }
 
 edict_t* CBotVisibles::nextVisible()
 {
-	if (m_iIter < m_iVisibleList.Size())
+	while (m_iIter < m_iVisibleList.Size())
 	{
 		const int iEntityIndex = m_iVisibleList.ReturnValueFromIndex(m_iIter);
-
 		m_iIter++;
 
-		// reliability checks
-		if (!iEntityIndex || iEntityIndex > gpGlobals->maxEntities)
-			m_iVisibleList.Clear();
-		else
-			return INDEXENT(iEntityIndex);
+		// Skip invalid indices instead of clearing entire list
+		if (iEntityIndex <= 0 || iEntityIndex > gpGlobals->maxEntities)
+			continue;
+
+		return INDEXENT(iEntityIndex);
 	}
 
 	resetIter();
-
 	return nullptr;
 }

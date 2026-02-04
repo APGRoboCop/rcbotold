@@ -83,6 +83,7 @@ void CPerceptron::setWeights(const std::vector<ga_value>& weights, const int iFr
 {
     if (iFrom < 0 || iNum < 0 || iFrom + iNum > static_cast<int>(weights.size())) {
         BotMessage(nullptr, 0, "Invalid range for setWeights");
+        return; // Add early return to prevent undefined behavior
     }
     m_weights.assign(weights.begin() + iFrom, weights.begin() + iFrom + iNum);
 }
@@ -108,6 +109,7 @@ ga_value CPerceptron::execute()
 {
     if (m_weights.size() != m_inputs.size() + 1) {
         BotMessage(nullptr, 0, "Weights and inputs size mismatch");
+        return 0.0f; // Add early return with default value
     }
 
     // bias weight
@@ -132,23 +134,26 @@ ga_value CPerceptron::getOutput() const
 
 void CPerceptron::train(const ga_value expectedOutput)
 {
-    if (m_inputs.size() != static_cast<size_t>(m_iInputs))
+    if (m_inputs.size() != static_cast<size_t>(m_iInputs)) {
         BotMessage(nullptr, 0, "Cannot train: input size mismatch");
-    if (m_weights.size() != m_inputs.size() + 1)
+        return;
+    }
+    if (m_weights.size() != m_inputs.size() + 1) {
         BotMessage(nullptr, 0, "Cannot train: weights size mismatch");
+        return;
+    }
 
     m_bTrained = true;
-
     const ga_value error = expectedOutput - m_output;
+    const ga_value delta = m_LearnRate * error;
 
     // Update bias weight
-    m_weights[0] += m_LearnRate * error * m_Bias;
+    m_weights[0] += delta * m_Bias;
 
-    // Update weights for inputs
-    for (size_t i = 0; i < m_inputs.size(); ++i)
-    {
-        m_weights[i + 1] += m_LearnRate * error * m_inputs[i];
-    }
+    // Update weights for inputs using transform
+    std::transform(m_weights.begin() + 1, m_weights.end(), m_inputs.begin(),
+        m_weights.begin() + 1,
+        [delta](ga_value w, ga_value inp) { return w + delta * inp; });
 }
 
 void CPerceptron::save(std::FILE* bfp) const

@@ -54,6 +54,7 @@ class CBotVisibles
 {
 public:
 	CBotVisibles();
+	~CBotVisibles() { freeMemory(); }
 
 	bool isVisible(int iIndex) const;
 
@@ -64,6 +65,10 @@ public:
 	edict_t* nextVisible();
 
 	void freeMemory();
+
+	// Prevent copying (or implement properly)
+	CBotVisibles(const CBotVisibles&) = delete;
+	CBotVisibles& operator=(const CBotVisibles&) = delete;
 private:
 	CBits* m_iVisibles;
 	dataUnconstArray<int> m_iVisibleList;

@@ -37,13 +37,27 @@ if builder.cxx.target.platform == 'linux':
     '-msse4.2',
     '-mfpmath=sse',
     '-fno-strict-aliasing',
+    '-fstack-protector-strong',
+    '-fstack-clash-protection',
+    '-fcf-protection',
     '-Wall',
-    '-Werror',
+    #'-Werror',
+    '-Wextra',
+    '-Wshadow',
+    '-Wnon-virtual-dtor',
+    '-Wold-style-cast',
+    '-Wcast-align',
+    '-Wunused',
+    '-Woverloaded-virtual',
+    '-Wpedantic',
+    '-Wconversion',
+    '-Wsign-conversion',
+    '-Wnull-dereference',
+    '-Wdouble-promotion',
+    '-Wformat-security',
     '-Wno-uninitialized',
     '-Wno-unused',
     '-Wno-switch',
-    '-Wno-format',
-    '-Wno-format-security',
     '-Wno-unknown-attributes',
     '-Wno-logical-op-parentheses',
     '-Wno-return-stack-address',
@@ -56,7 +70,14 @@ if builder.cxx.target.platform == 'linux':
     '-std=c++17',
   ]
   # Linux linker flags
-  builder.cxx.linkflags += ['-m32', '-ldl', '-lm', '-flto']
+  builder.cxx.linkflags += [
+    '-m32',
+    '-ldl',
+    '-lm',
+    '-Wl,--gc-sections',
+    '-Wl,--as-needed',
+    '-Wl,--no-undefined',
+  ]
 elif builder.cxx.target.platform == 'windows':
   # Windows defines
   builder.cxx.defines += [
@@ -68,14 +89,17 @@ elif builder.cxx.target.platform == 'windows':
     '_WINDOWS'
   ]
   # Windows compiler C flags
-  builder.cxx.cflags += []
+  builder.cxx.cflags += [
+    '/W4',
+  ]
   # Windows compiler C++ flags
   builder.cxx.cxxflags += [
     '/std:c++17',
     '/arch:SSE2',
     '/fp:precise',
     '/Qspectre',
-    '/EHsc'
+    '/EHsc',
+    '/GS'
   ]
   # Windows linker flags
   builder.cxx.linkflags += [
@@ -91,7 +115,7 @@ elif builder.cxx.target.platform == 'windows':
     'oleaut32.lib',
     'uuid.lib',
     '/SECTION:.data,RW',
-    '/MACHINE:X86'
+    '/MACHINE:X86',
   ]
 
 # Compiler options for optimization ( --enable-optimize )
@@ -100,12 +124,12 @@ if builder.options.optimize:
   builder.cxx.defines += ['NDEBUG']
   if builder.cxx.target.platform == 'linux':
     # Linux optimization flags
-    builder.cxx.cflags += ['-O3']
-	# Linux optimization link flags #TODO
-	#builder.cxx.linkflags += ['-flto']
+    builder.cxx.cflags += ['-O3', '-flto=auto']
+	# Linux optimization link flags - LTO must be in link flags too - [APG]RoboCop[CL]
+    builder.cxx.linkflags += ['-flto=auto', '-s', '-Wl,-z,relro,-z,now', '-Wl,-z,noexecstack',]
   elif builder.cxx.target.platform == 'windows':
     # Windows optimization flags - /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
-    builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GL']
+    builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GL', '/MD']
     # Windows optimization link flags
     builder.cxx.linkflags += ['/OPT:ICF', '/OPT:REF', '/LTCG']
     # This needs to be after our optimization flags which could otherwise disable it.
@@ -117,7 +141,7 @@ if builder.options.debug:
   builder.cxx.defines += ['DEBUG', '_DEBUG']
   if builder.cxx.target.platform == 'linux':
     # Linux debug flags
-    builder.cxx.cflags += ['-g3', '-Og', '-ggdb3']
+    builder.cxx.cflags += ['-g3', '-Og', '-ggdb3', '-fsanitize=address', '-fsanitize=undefined', '-fsanitize=leak']
   elif builder.cxx.target.platform == 'windows':
     # Windows debug flags
     builder.cxx.cflags += ['/Od', '/RTC1', '/MTd']

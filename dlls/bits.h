@@ -58,6 +58,8 @@ public:
 	CBits& operator=(CBits&& other) noexcept;
 	~CBits();
 
+	CBits() : m_iNumBits(0), m_cBits(nullptr) {}
+
 	void setBit(unsigned iBit, bool bSet) const;
 
 	bool getBit(unsigned iBit) const;

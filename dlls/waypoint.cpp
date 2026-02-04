@@ -839,7 +839,7 @@ bool WaypointSave(const bool bVisibilityMade, const CWaypointConversion* theConv
 	return true;
 }
 
-static std::FILE* fp;
+//static std::FILE* fp;
 
 void WaypointDebug()
 {
@@ -864,6 +864,9 @@ void WaypointDebug()
 // free the linked list of waypoint path nodes...
 void WaypointFree()
 {
+#ifdef _DEBUG
+	int count = 0;
+#endif
 	for (PATH*& i : paths)
 	{
 		if (i)
@@ -872,17 +875,14 @@ void WaypointFree()
 
 			while (p)  // free the linked list
 			{
-				PATH* p_next = p->next;  // save the link to next
-				std::free(p);
+				PATH* p_next = p->next;
+				delete p;
 				p = p_next;
-
 #ifdef _DEBUG
-				int count = 0;
 				count++;
 				if (count > 100) WaypointDebug();
 #endif
 			}
-
 			i = nullptr;
 		}
 	}
@@ -945,13 +945,12 @@ void WaypointAddPath(const short add_index, const short path_index)
 #endif
 	}
 
-	p = static_cast<PATH*>(std::malloc(sizeof(PATH)));
+	p = new (std::nothrow) PATH{};
 
 	if (p == nullptr)
 	{
-		constexpr char errorMsg[] = "HPB_bot - Error allocating memory for path!";
-		ALERT(at_error, errorMsg);
-		return; // or throw an exception
+		ALERT(at_error, "HPB_bot - Error allocating memory for path!");
+		return;
 	}
 
 	p->index[0] = path_index;
@@ -1544,20 +1543,14 @@ int WaypointAddOrigin(const Vector& vOrigin, const int iFlags, edict_t* pEntity,
 
 	WAYPOINT* new_waypoint = &waypoints[index];
 
-	if (iFlags)
-		new_waypoint->flags = iFlags;
-	else
-		new_waypoint->flags = 0;
-
 	// store the origin (location) of this waypoint (use entity origin)
+	new_waypoint->flags = iFlags;
 	new_waypoint->origin = vOrigin;
 
 	if (pEntity && bAutoSetFlagsForPlayer)
 	{
-		if ((pEntity->v.flags & FL_DUCKING) == FL_DUCKING)
-		{
+		if (pEntity->v.flags & FL_DUCKING)
 			new_waypoint->flags |= W_FL_CROUCH;  // crouching waypoint
-		}
 
 		if (pEntity->v.movetype == MOVETYPE_FLY)
 			new_waypoint->flags |= W_FL_LADDER;  // waypoint on a ladder
@@ -1566,7 +1559,6 @@ int WaypointAddOrigin(const Vector& vOrigin, const int iFlags, edict_t* pEntity,
 	//********************************************************
 	// look for lift, ammo, flag, health, armor, etc.
 	//********************************************************
-
 	edict_t* pEnt = nullptr;
 
 	while ((pEnt = UTIL_FindEntityInSphere(pEnt, vOrigin, 72.0f)) != nullptr)
