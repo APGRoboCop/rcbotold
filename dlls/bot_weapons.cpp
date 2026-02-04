@@ -639,7 +639,7 @@ bool CBotWeapon::NeedToReload() const
 	case MOD_BUMPERCARS:
 	case MOD_DMC:
 		return false;
-	case MOD_TS: //TODO: Add BOT_TASK_RELOAD to allow bots to reload sooner when attacking and running on a empty clip
+	case MOD_TS:
 	case MOD_HL_DM:
 	case MOD_GEARBOX:
 	default:
