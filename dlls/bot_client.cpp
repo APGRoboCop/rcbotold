@@ -459,7 +459,16 @@ void BotClient_TS_WeaponInfo::execute(void* p, const int iIndex)
 			pBot->m_pCurrentWeapon = pWeapon;
 			pWeapon->UpdateWeapon(clip);
 			pWeapon->SetWeapon(id, nullptr);
-			pBot->m_iBotWeapons |= id;
+			//pBot->m_iBotWeapons |= id;	// Weapon ID total is over 32 and can overflow in 32-bit bitfield.
+			// Sucks that Valve dropped hlds_amd64 support near 2006 and that ts_amd64.so doesn't exist eh? [APG]RoboCop[CL]
+			
+			// Use proper bit-setting and handle IDs > 31 safely
+			if (id < 32)
+			{
+				pBot->m_iBotWeapons |= (1 << id);
+			}
+			// For TS mod, rely on CBotWeapon::HasWeapon() which uses m_bHasWeapon flag
+
 			pWeapon->setHasWeapon(true);
 			pWeapon->setReserve(ammo);
 			pWeapon->checkMaxClip(clip);

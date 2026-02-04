@@ -1015,7 +1015,8 @@ public:
 
 	T Random()
 	{
-		return buffer[RANDOM_LONG(0, size - 1)];
+		const int idx = RANDOM_LONG(0, static_cast<int>(size) - 1);
+		return buffer[idx];
 	}
 
     void Add(const T& pObj)  

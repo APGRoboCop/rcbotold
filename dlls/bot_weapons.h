@@ -789,6 +789,15 @@ public:
 		return false;
 	}
 
+	// Returns true if the current clip is empty - [APG]RoboCop[CL]
+	bool ClipIsEmpty() const
+	{
+		if (IsMelee() || m_iMaxClip == 0) // Melee weapons or weapons without clips
+			return false;
+
+		return m_iClip <= 0;
+	}
+
 	int PrimaryInRange(const float fRange) const
 	{
 		if (m_pWeaponInfo->PrimaryInRange(fRange))
@@ -1015,7 +1024,17 @@ public:
 		m_Weapons[iId].UpdateWeapon(iClip);
 	}
 
+	// Non-const version - returns mutable pointer (for modifying weapons) - [APG]RoboCop[CL]
 	CBotWeapon* GetWeapon(const int iId)
+	{
+		if (iId >= 0 && iId < MAX_WEAPONS)
+			return &m_Weapons[iId];
+
+		return nullptr;
+	}
+
+	// Const overload - returns const pointer (for use in const member functions) - [APG]RoboCop[CL]
+	const CBotWeapon* GetWeapon(const int iId) const
 	{
 		if (iId >= 0 && iId < MAX_WEAPONS)
 			return &m_Weapons[iId];

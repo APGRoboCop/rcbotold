@@ -290,6 +290,12 @@ bool CBot::FacingIdeal() const
 // get distance between edict1 and edict2
 float BotFunc_DistanceBetweenEdicts(const edict_t* pEdict1, const edict_t* pEdict2)
 {
+	// Check if either pointer is null - [APG]RoboCop[CL]
+	if (pEdict1 == nullptr || pEdict2 == nullptr)
+	{
+		// Handle the error case, e.g., return a special value or throw an exception
+		return -1.0f; // Returning -1.0f as an indication of an error
+	}
 	return (pEdict1->v.origin - pEdict2->v.origin).Length();
 }
 
@@ -341,8 +347,8 @@ void CBot::BotEvent_SeeTeammateDie(edict_t* pInfo, edict_t* pExtInfo)
 		if (IsEnemy(pExtInfo))
 		{
 			// Attack the enemy
-			m_pEnemy = pInfo;
-			AddPriorityTask(CBotTask(BOT_TASK_NORMAL_ATTACK, m_Tasks.GetNewScheduleId(), pInfo));
+			m_pEnemy = pExtInfo;
+			AddPriorityTask(CBotTask(BOT_TASK_NORMAL_ATTACK, m_Tasks.GetNewScheduleId(), pExtInfo));
 		}
 		// team kill
 		else
@@ -757,7 +763,9 @@ void CBot::ReplyToMessage(char* szMessage, edict_t* pSender, const int iTeamOnly
 	// got a reply?
 	if (m_TempMessage[0])
 	{
-		std::strcpy(m_szChatString, m_TempMessage);
+		std::strncpy(m_szChatString, m_TempMessage, sizeof(m_szChatString) - 1);
+		m_szChatString[sizeof(m_szChatString) - 1] = '\0'; // Ensure null-termination - [APG]RoboCop[CL]
+
 		AddPriorityTask(CBotTask(BOT_TASK_TYPE_MESSAGE, 0, pSender, iTeamOnly));
 	}
 }
@@ -1088,7 +1096,7 @@ bool CBot::WantToLeaveGame() const
 void CBot::Init()
 // Initialise everything required.
 {
-	std::memset(this, 0, sizeof(CBot));
+	//std::memset(this, 0, sizeof(CBot)); //Not required? [APG]RoboCop[CL]
 	//*this = CBot();
 
 	m_iBoredom = 127;
@@ -2105,7 +2113,8 @@ bool BotFunc_FillString(char* string, const char* fill_point, const char* fill_w
 		std::memset(before, 0, len);
 		std::memset(after, 0, len);
 
-		const int start = reinterpret_cast<int>(ptr) - reinterpret_cast<int>(string);
+		//const int start = reinterpret_cast<int>(ptr) - reinterpret_cast<int>(string);
+		const ptrdiff_t start = ptr - string;
 		std::strncpy(before, string, start);
 
 		// always null terminate the last possible character
@@ -3307,17 +3316,6 @@ void CBot::Think()
 	break;
 	case MOD_TS: //TODO: Add BOT_TASK_RELOAD to allow bots to reload sooner when attacking and running on a empty clip
 	{
-		/*if ( gBotGlobals.m_iForceTeam != -1 )
-		{
-			if ( !m_bSelectedCar ) // "hack"
-			{
-				FakeClientCommand(m_pEdict,"changeteam");
-				FakeClientCommand(m_pEdict,"menuselect %d",gBotGlobals.m_iForceTeam);
-
-				m_bSelectedCar = true;
-			}
-		}*/
-
 		// keep checking for cover
 		if (m_pAvoidEntity && m_fNextCheckCover < gpGlobals->time)
 		{
@@ -3335,17 +3333,52 @@ void CBot::Think()
 			if (!m_pEnemy && pev->health < m_fPrevHealth)
 			{
 				UTIL_MakeVectors(pev->v_angle);
-
-				// make origin behind bot so it looks around
 				constexpr float lookBehindDistance = 128.0f;
-
 				Vector lookBehindOrigin = GetGunPosition() - gpGlobals->v_forward * lookBehindDistance;
-
-				// Trigger a hurt event with the calculated position
 				BotEvent(BOT_EVENT_HURT, nullptr, nullptr, lookBehindOrigin);
 			}
 		}
+
+		// Handle weapon reload/switch during combat
+		if (m_pCurrentWeapon && !m_pCurrentWeapon->IsMelee())
+		{
+			const bool bClipEmpty = m_pCurrentWeapon->ClipIsEmpty();
+			const bool bCanReload = m_pCurrentWeapon->CanReload();
+			const bool bOutOfAmmo = m_pCurrentWeapon->OutOfAmmo();
+
+			// If current weapon's clip is empty
+			if (bClipEmpty)
+			{
+				// Try to switch to another weapon with ammo first during combat
+				if (m_pEnemy)
+				{
+					const int iBestWeapon = m_Weapons.GetBestWeaponId(this, m_pEnemy);
+
+					// Found a different weapon that's ready to fire
+					if (iBestWeapon != 0 && iBestWeapon != m_pCurrentWeapon->GetID())
+					{
+						SwitchWeapon(static_cast<byte>(iBestWeapon));
+					}
+					// No alternative weapon, must reload current
+					else if (bCanReload && !bOutOfAmmo)
+					{
+						pev->button |= IN_RELOAD;
+					}
+				}
+				// Not in combat, safe to reload
+				else if (bCanReload && !bOutOfAmmo)
+				{
+					pev->button |= IN_RELOAD;
+				}
+			}
+			// Proactive reload: low on ammo and not in combat
+			else if (!m_pEnemy && m_pCurrentWeapon->LowOnAmmo() && bCanReload)
+			{
+				pev->button |= IN_RELOAD;
+			}
+		}
 	}
+	break;
 	default:
 		break;
 	}
@@ -9789,7 +9822,7 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, const entvars_t* pDoor
 // finds the nearest button to the door pDoor
 {
 	float fNearest = 0.0f;
-	float fDist = 0.0f; // Not used? [APG]RoboCop[CL]
+	//float fDist = 0.0f; // Not used? [APG]RoboCop[CL]
 
 	edict_t* pBestTarget = nullptr;
 
@@ -10041,7 +10074,20 @@ bool CBot::HasWeapon(const int iWeapon) const
 	//	if ( gBotGlobals.IsMod(MOD_DMC) )
 	//		return ((m_iBotWeapons) & (1<<(iWeapon-1))) != 0;
 
-	return (m_iBotWeapons & 1 << iWeapon) != 0;
+	// For TS mod, use CBotWeapon's internal tracking since weapon IDs can exceed 31 - [APG]RoboCop[CL]
+	if (gBotGlobals.IsMod(MOD_TS))
+	{
+		const CBotWeapon* pWeapon = m_Weapons.GetWeapon(iWeapon);
+		return pWeapon && pWeapon->HasWeapon(m_pEdict);
+	}
+
+	// For other mods with weapon IDs < 32, use the bitfield
+	if (iWeapon >= 0 && iWeapon < 32)
+	{
+		return (m_iBotWeapons & (1 << iWeapon)) != 0;
+	}
+
+	return false;
 }
 
 // Change a leader of a squad, this can cause lots of effects
