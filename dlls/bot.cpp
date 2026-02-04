@@ -3314,7 +3314,7 @@ void CBot::Think()
 		}
 	}
 	break;
-	case MOD_TS: //TODO: Add BOT_TASK_RELOAD to allow bots to reload sooner when attacking and running on a empty clip
+	case MOD_TS:
 	{
 		// keep checking for cover
 		if (m_pAvoidEntity && m_fNextCheckCover < gpGlobals->time)
