@@ -56,6 +56,7 @@ V 1.51-beta13
 * changed: NS Squad Menu repaired and should hopefully work
 * changed: Now using smart pointers for ClientCommand() to resolve memory leaks
 * changed: Modernised the weapon array code using C++ Array
+* changed: TS Bots should now reload properly
 
 * TODO: To allow bots in Op4 use Deagle's Laser Sight to improve its accuracy
 * TODO: To allow the Onos to be more aggressive and devour humans, Gorges to properly attack structures, and to allow Skulks to pounce attack
