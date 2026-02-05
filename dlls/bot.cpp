@@ -12366,7 +12366,7 @@ void CBot::DoTasks()
 				{
 					Vector vOrigin = EntityOrigin(pFuncResource);
 					TraceResult tr;
-					bBuild = true;
+					//bBuild = true;
 
 					UTIL_TraceLine(GetGunPosition(), vOrigin, dont_ignore_monsters, ignore_glass, m_pEdict, &tr);
 

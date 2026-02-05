@@ -659,7 +659,8 @@ bool CBotWeapon::CanShootPrimary(const edict_t* pEdict, const float flFireDist, 
 	if (gBotGlobals.m_iCurrentMod == MOD_DMC)
 		return this->PrimaryAmmo() > 0;
 
-	if (this->OutOfAmmo() ||
+	// Check if clip is empty or completely out of ammo - [APG]RoboCop[CL]
+	if (this->OutOfAmmo() || this->ClipIsEmpty() ||
 		(pEdict->v.waterlevel == 3 && !CanBeUsedUnderWater()) ||
 		!m_pWeaponInfo->CanUsePrimary() ||
 		!m_pWeaponInfo->PrimaryInRange(flFireDist))
