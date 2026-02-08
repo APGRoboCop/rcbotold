@@ -98,6 +98,23 @@ void CBotGAValues::mutate()
 	}
 }
 
+// Replace the inline stub with a proper implementation
+void CBotGAValues::mutateWithRate(const float rate)
+{
+	for (unsigned i = 0; i < m_theValues.size(); i++)
+	{
+		if (RANDOM_FLOAT(0, 1) < rate)
+		{
+			const float fCurrentVal = get(i);
+
+			const float perturbScale = rate / CGA::g_fMutateRate;
+			const float perturbation = CGA::g_fMaxPerturbation * perturbScale;
+
+			set(i, fCurrentVal + fCurrentVal * (-1 + RANDOM_FLOAT(0, 2)) * perturbation);
+		}
+	}
+}
+
 float CBotGAValues::get(const unsigned iIndex) const
 {
 	assert(iIndex < m_theValues.size());

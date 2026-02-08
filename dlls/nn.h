@@ -37,6 +37,7 @@
 #include <cstdio>
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 class CPerceptron;
 class CGA;
@@ -47,6 +48,182 @@ class CNNTrainSet
 public:
     std::vector<ga_value> inputs;
     std::vector<ga_value> outputs;
+};
+
+///////////////////////////////////////////////
+// Enhanced Combat NN Input Structure
+// Provides normalized inputs for combat decision neural networks
+///////////////////////////////////////////////
+constexpr int COMBAT_NN_NUM_INPUTS = 8;
+constexpr int COMBAT_NN_NUM_OUTPUTS = 4;  // attack, retreat, strafe, jump
+constexpr float COMBAT_MAX_DISTANCE = 2048.0f;
+constexpr float COMBAT_MAX_HEALTH = 100.0f;
+constexpr float COMBAT_MAX_TEAMMATES = 5.0f;
+
+class CCombatNNInputs
+{
+public:
+    ga_value enemyDistance;      // Normalized 0-1 (distance / max distance)
+    ga_value enemyHealth;        // Normalized 0-1 (health / max health)
+    ga_value selfHealth;         // Normalized 0-1 (health / max health)
+    ga_value selfAmmo;           // Normalized 0-1 (current / max ammo)
+    ga_value enemyVisible;       // 0 or 1
+    ga_value coverNearby;        // 0 or 1 (from waypoint flags)
+    ga_value heightAdvantage;    // -1 to 1 (positive = bot is higher)
+    ga_value teammatesNearby;    // Normalized 0-1 (count / max count)
+
+    CCombatNNInputs()
+        : enemyDistance(0.5f)
+        , enemyHealth(1.0f)
+        , selfHealth(1.0f)
+        , selfAmmo(1.0f)
+        , enemyVisible(0.0f)
+        , coverNearby(0.0f)
+        , heightAdvantage(0.0f)
+        , teammatesNearby(0.0f)
+    {
+    }
+
+    // Set enemy distance (automatically normalizes)
+    void setEnemyDistance(float distance)
+    {
+        enemyDistance = std::clamp(distance / COMBAT_MAX_DISTANCE, 0.0f, 1.0f);
+    }
+
+    // Set enemy health (automatically normalizes)
+    void setEnemyHealth(float health, float maxHealth = COMBAT_MAX_HEALTH)
+    {
+        enemyHealth = (maxHealth > 0.0f) ? std::clamp(health / maxHealth, 0.0f, 1.0f) : 0.0f;
+    }
+
+    // Set self health (automatically normalizes)
+    void setSelfHealth(float health, float maxHealth = COMBAT_MAX_HEALTH)
+    {
+        selfHealth = (maxHealth > 0.0f) ? std::clamp(health / maxHealth, 0.0f, 1.0f) : 0.0f;
+    }
+
+    // Set self ammo (automatically normalizes)
+    void setSelfAmmo(int currentAmmo, int maxAmmo)
+    {
+        selfAmmo = (maxAmmo > 0) ? std::clamp(static_cast<float>(currentAmmo) / static_cast<float>(maxAmmo), 0.0f, 1.0f) : 0.0f;
+    }
+
+    // Set enemy visibility
+    void setEnemyVisible(bool visible)
+    {
+        enemyVisible = visible ? 1.0f : 0.0f;
+    }
+
+    // Set cover availability
+    void setCoverNearby(bool hasCover)
+    {
+        coverNearby = hasCover ? 1.0f : 0.0f;
+    }
+
+    // Set height advantage from Z difference (positive = bot is higher)
+    void setHeightAdvantage(float botZ, float enemyZ)
+    {
+        constexpr float MAX_HEIGHT_DIFF = 200.0f;
+        const float diff = botZ - enemyZ;
+        heightAdvantage = std::clamp(diff / MAX_HEIGHT_DIFF, -1.0f, 1.0f);
+    }
+
+    // Set teammates nearby count (automatically normalizes)
+    void setTeammatesNearby(int count)
+    {
+        teammatesNearby = std::clamp(static_cast<float>(count) / COMBAT_MAX_TEAMMATES, 0.0f, 1.0f);
+    }
+
+    // Convert to vector for NN input
+    void toVector(std::vector<ga_value>& inputs) const
+    {
+        inputs.clear();
+        inputs.reserve(COMBAT_NN_NUM_INPUTS);
+        inputs.emplace_back(enemyDistance);
+        inputs.emplace_back(enemyHealth);
+        inputs.emplace_back(selfHealth);
+        inputs.emplace_back(selfAmmo);
+        inputs.emplace_back(enemyVisible);
+        inputs.emplace_back(coverNearby);
+        inputs.emplace_back(heightAdvantage);
+        inputs.emplace_back(teammatesNearby);
+    }
+
+    // Get number of inputs
+    static constexpr int numInputs() { return COMBAT_NN_NUM_INPUTS; }
+};
+
+///////////////////////////////////////////////
+// Combat NN Output Interpretation
+///////////////////////////////////////////////
+enum eCombatAction : std::uint8_t
+{
+    COMBAT_ACTION_ATTACK = 0,
+    COMBAT_ACTION_RETREAT = 1,
+    COMBAT_ACTION_STRAFE = 2,
+    COMBAT_ACTION_JUMP = 3
+};
+
+class CCombatNNOutputs
+{
+public:
+    ga_value attackWeight;
+    ga_value retreatWeight;
+    ga_value strafeWeight;
+    ga_value jumpWeight;
+
+    CCombatNNOutputs()
+        : attackWeight(0.0f)
+        , retreatWeight(0.0f)
+        , strafeWeight(0.0f)
+        , jumpWeight(0.0f)
+    {
+    }
+
+    // Parse outputs from NN result vector
+    void fromVector(const std::vector<ga_value>& outputs)
+    {
+        if (outputs.size() >= COMBAT_NN_NUM_OUTPUTS)
+        {
+            attackWeight = outputs[COMBAT_ACTION_ATTACK];
+            retreatWeight = outputs[COMBAT_ACTION_RETREAT];
+            strafeWeight = outputs[COMBAT_ACTION_STRAFE];
+            jumpWeight = outputs[COMBAT_ACTION_JUMP];
+        }
+    }
+
+    // Get the best action based on highest weight
+    eCombatAction getBestAction() const
+    {
+        ga_value maxWeight = attackWeight;
+        eCombatAction bestAction = COMBAT_ACTION_ATTACK;
+
+        if (retreatWeight > maxWeight)
+        {
+            maxWeight = retreatWeight;
+            bestAction = COMBAT_ACTION_RETREAT;
+        }
+        if (strafeWeight > maxWeight)
+        {
+            maxWeight = strafeWeight;
+            bestAction = COMBAT_ACTION_STRAFE;
+        }
+        if (jumpWeight > maxWeight)
+        {
+            bestAction = COMBAT_ACTION_JUMP;
+        }
+
+        return bestAction;
+    }
+
+    // Check if a specific action should be taken (threshold-based)
+    bool shouldAttack(ga_value threshold = 0.5f) const { return attackWeight > threshold; }
+    bool shouldRetreat(ga_value threshold = 0.5f) const { return retreatWeight > threshold; }
+    bool shouldStrafe(ga_value threshold = 0.3f) const { return strafeWeight > threshold; }
+    bool shouldJump(ga_value threshold = 0.4f) const { return jumpWeight > threshold; }
+
+    // Get number of outputs
+    static constexpr int numOutputs() { return COMBAT_NN_NUM_OUTPUTS; }
 };
 
 class NNLayer

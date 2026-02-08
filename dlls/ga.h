@@ -59,6 +59,9 @@ public:
 	// mutate some values
 	virtual void mutate() = 0;
 
+	// mutate with adaptive rate
+	virtual void mutateWithRate(float rate) { mutate(); }  // Default falls back to standard mutate
+
 	virtual void clear() = 0;
 
 	// get new copy of this
@@ -97,6 +100,9 @@ public:
 
 	ga_value averageFitness() const;
 
+	// Calculate population diversity (0 = converged, 1 = diverse)
+	ga_value diversity() const;
+
 	void load(std::FILE* bfp, int chromosize, int type = TYPE_BOTGAVALS);
 
 	void save(std::FILE* bfp) const;
@@ -122,6 +128,31 @@ class CRouletteSelection : public ISelection
 	IIndividual* select(CPopulation* population) override;
 };
 
+class CTournamentSelection : public ISelection
+{
+public:
+	explicit CTournamentSelection(const int tournamentSize = 3)
+		: m_iTournamentSize(tournamentSize) {
+	}
+
+	IIndividual* select(CPopulation* population) override
+	{
+		IIndividual* best = nullptr;
+
+		for (int i = 0; i < m_iTournamentSize; i++)
+		{
+			const unsigned idx = RANDOM_LONG(0, population->size() - 1);
+			IIndividual* candidate = population->get(idx);
+
+			if (!best || candidate->getFitness() > best->getFitness())
+				best = candidate;
+		}
+		return best;
+	}
+private:
+	int m_iTournamentSize;
+};
+
 class CGA
 {
 public:
@@ -135,6 +166,7 @@ public:
 
 		m_iNumGenerations = 0;
 		m_fPrevAvgFitness = 0.0f;
+		m_bUseAdaptiveMutation = true;  // Enable by default
 
 		m_iMaxPopSize = iMaxPopSize;
 		m_bestIndividual = nullptr;
@@ -174,6 +206,16 @@ public:
 
 	void setPopType(const int t) { m_iPopType = t; }
 
+	// Adaptive mutation rate control
+	void setAdaptiveMutation(bool enable) { m_bUseAdaptiveMutation = enable; }
+	bool isAdaptiveMutationEnabled() const { return m_bUseAdaptiveMutation; }
+
+	// Get the current adaptive mutation rate based on population state
+	float getAdaptiveMutateRate() const;
+
+	// Get generation count
+	unsigned getNumGenerations() const { return m_iNumGenerations; }
+
 	unsigned m_iMaxPopSize;
 	static const int g_iDefaultMaxPopSize;
 	static const float g_fCrossOverRate;
@@ -188,6 +230,7 @@ private:
 	unsigned m_iNumGenerations;
 	float m_fPrevAvgFitness;
 	int m_iPopType;
+	bool m_bUseAdaptiveMutation;
 
 	ISelection* m_theSelectFunction;
 

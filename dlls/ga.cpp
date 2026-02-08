@@ -43,6 +43,11 @@
 
 #include "ga.h"
 
+#include <sys/stat.h>
+#ifdef _WIN32
+#include <direct.h>
+#endif
+
 #include <algorithm>
 #include <memory>
 #include <numeric>
@@ -198,6 +203,33 @@ IIndividual* CPopulation::pick()
 	return to_return;
 }
 
+ga_value CPopulation::diversity() const
+{
+	if (m_theIndividuals.size() < 2)
+		return 0.0f;
+
+	const ga_value avgFit = averageFitness();
+	const ga_value bestFit = bestFitness();
+
+	// If best fitness is 0 or very small, return high diversity
+	if (bestFit < 0.0001f)
+		return 1.0f;
+
+	// Calculate coefficient of variation (normalized standard deviation)
+	ga_value variance = 0.0f;
+	for (const IIndividual* individual : m_theIndividuals)
+	{
+		const ga_value diff = individual->getFitness() - avgFit;
+		variance += diff * diff;
+	}
+	variance /= static_cast<ga_value>(m_theIndividuals.size());
+
+	// Return diversity as ratio of std dev to best fitness
+	// Higher values = more diverse population
+	const ga_value stdDev = std::sqrt(variance);
+	return std::min(stdDev / bestFit, 1.0f);
+}
+
 ////////////////////
 // GENETIC ALGORITHM
 ////////////////////
@@ -303,6 +335,28 @@ void CGA::epoch()
 {
 	m_theNewPopulation.freeMemory();
 
+	constexpr int ELITE_COUNT = 2;
+	std::vector<IIndividual*> elite;
+
+	for (int i = 0; i < ELITE_COUNT && i < static_cast<int>(m_thePopulation.size()); i++)
+	{
+		IIndividual* best = m_thePopulation.getBestIndividual();
+
+		if (best)
+		{
+			elite.push_back(best->copy());
+		}
+	}
+
+	// Add elite to new population unchanged (no mutation)
+	for (IIndividual* e : elite)
+	{
+		m_theNewPopulation.add(e);
+	}
+
+	// Get adaptive mutation rate for this generation
+	const float currentMutateRate = getAdaptiveMutateRate();
+
 	while (m_theNewPopulation.size() < m_iMaxPopSize)
 	{
 		IIndividual* mum = m_theSelectFunction->select(&m_thePopulation);
@@ -314,27 +368,25 @@ void CGA::epoch()
 		if (RANDOM_FLOAT(0, 1) < g_fCrossOverRate)
 			baby1->crossOver(baby2);
 
-		baby1->mutate();
-		baby2->mutate();
+		// Use adaptive mutation rate
+		baby1->mutateWithRate(currentMutateRate);
+		baby2->mutateWithRate(currentMutateRate);
 
 		m_theNewPopulation.add(baby1);
 		m_theNewPopulation.add(baby2);
 	}
 
+	m_fPrevAvgFitness = m_thePopulation.averageFitness();
 	m_iNumGenerations++;
+
 	/*
-		BotMessage(NULL,0,"-----GENERATION %d------",m_iNumGenerations);
-		BotMessage(NULL,0,"Previous fitnesses :");
-		BotMessage(NULL,0,"Best fitness : %0.4f",m_thePopulation.bestFitness());
-		float fCurAvgFitness = m_thePopulation.averageFitness();
-		BotMessage(NULL,0,"Average fitness : %0.4f",fCurAvgFitness);
-		BotMessage(NULL,0,"Prev Average fitness = %0.4f",m_fPrevAvgFitness);
-		if (fCurAvgFitness > m_fPrevAvgFitness )
-			BotMessage(NULL,0,"Getting Better! :)");
-		else
-			BotMessage(NULL,0,"Getting Worse! :(");
-		m_fPrevAvgFitness = fCurAvgFitness;
-		BotMessage(NULL,0,"------------------------");*/
+	BotMessage(NULL,0,"-----GENERATION %d------",m_iNumGenerations);
+	BotMessage(NULL,0,"Adaptive Mutation Rate: %0.4f", currentMutateRate);
+	BotMessage(NULL,0,"Population Diversity: %0.4f", m_thePopulation.diversity());
+	BotMessage(NULL,0,"Best fitness : %0.4f",m_thePopulation.bestFitness());
+	BotMessage(NULL,0,"Average fitness : %0.4f",m_fPrevAvgFitness);
+	BotMessage(NULL,0,"------------------------");
+	*/
 }
 
 void CGA::freeLocalMemory()
@@ -365,6 +417,43 @@ IIndividual* CGA::pick()
 	return m_theNewPopulation.pick();
 }
 
+float CGA::getAdaptiveMutateRate() const
+{
+	if (!m_bUseAdaptiveMutation)
+		return g_fMutateRate;
+
+	const ga_value avgFitness = m_thePopulation.averageFitness();
+	const ga_value bestFitness = m_thePopulation.bestFitness();
+
+	// If no valid fitness data, use default rate
+	if (bestFitness <= 0.0f)
+		return g_fMutateRate;
+
+	// Calculate population diversity (how spread out the fitness values are)
+	const ga_value diversity = m_thePopulation.diversity();
+
+	// When population converges (low diversity), increase mutation to explore more
+	// When population is diverse, decrease mutation to exploit good solutions
+	// Base rate is g_fMutateRate (0.1), can range from 0.05 to 0.3
+
+	constexpr float MIN_MUTATION = 0.05f;
+	constexpr float MAX_MUTATION = 0.30f;
+
+	// Invert diversity: low diversity = high mutation need
+	const float mutationNeed = 1.0f - diversity;
+
+	// Scale mutation rate based on diversity
+	float adaptiveRate = MIN_MUTATION + (MAX_MUTATION - MIN_MUTATION) * mutationNeed;
+
+	// Also consider generational progress - early generations need more exploration
+	if (m_iNumGenerations < 10)
+	{
+		adaptiveRate = std::max(adaptiveRate, 0.15f);
+	}
+
+	return adaptiveRate;
+}
+
 ///////////////
 // SELECTION
 ///////////////
@@ -389,25 +478,40 @@ IIndividual* CRouletteSelection::select(CPopulation* population)
 
 ///////////////
 // SAVING
-//TODO: To allow the experience data to be saved properly [APG]RoboCop[CL]
-// Maybe it needs to be implemented in bot.cpp?
+// TODO: not functional and may need to be redesigned to support team and bot saves properly - [APG]RoboCop[CL]
 std::FILE* RCBOpenFile(const char* file, const char* readtype, const eGASaveType savedtype, const int iId)
 {
 	char filename[256];
 	char tmpfilename[256];
+	char dirpath[256];
 
 	if (savedtype == SAVETYPE_BOT)
 		snprintf(tmpfilename, sizeof(tmpfilename), "%dp%s.rce", iId, file); // iId = profileid
 	else if (savedtype == SAVETYPE_TEAM)
 		snprintf(tmpfilename, sizeof(tmpfilename), "%dt%s.rce", iId, file); // iId = team id
 	else
-		return nullptr; // Invalid save type
+	{
+		BotMessage(nullptr, 0, "RCBOpenFile: Invalid save type %d", savedtype);
+		return nullptr;
+	}
+
+	// Ensure the profiles directory exists before attempting to write
+	UTIL_BuildFileName(dirpath, BOT_PROFILES_FOLDER, nullptr);
+
+#ifdef _WIN32
+	_mkdir(dirpath);
+#else
+	mkdir(dirpath, 0755);
+#endif
 
 	UTIL_BuildFileName(filename, BOT_PROFILES_FOLDER, tmpfilename);
 
 	std::FILE* bfp = std::fopen(filename, readtype);
-	if (!bfp)
-		return nullptr; // Failed to open file
+
+	if (!bfp && readtype[0] == 'w')
+	{
+		BotMessage(nullptr, 0, "RCBOpenFile: Failed to create %s", filename);
+	}
 
 	return bfp;
 }

@@ -35,7 +35,153 @@
 #include "gannconst.h"
 #include "nn.h"
 
+#include <algorithm>
+
 class CBits;
+
+///////////////////////////////////////////////
+// Combat Fitness Metrics
+// Multi-objective fitness calculation for combat performance
+///////////////////////////////////////////////
+class CCombatFitnessMetrics
+{
+public:
+	float damageDealt = 0.0f;
+	float damageTaken = 0.0f;
+	float accuracy = 0.0f;       // hits / shots fired (0-1)
+	float survivalTime = 0.0f;   // seconds survived
+	int kills = 0;
+	int deaths = 0;
+	int assists = 0;
+	int objectivesCompleted = 0; // flags captured, objectives done, etc.
+
+	// Weights for fitness calculation (can be tuned)
+	static constexpr float WEIGHT_DAMAGE_RATIO = 0.25f;
+	static constexpr float WEIGHT_KD_RATIO = 0.25f;
+	static constexpr float WEIGHT_ACCURACY = 0.15f;
+	static constexpr float WEIGHT_SURVIVAL = 0.15f;
+	static constexpr float WEIGHT_OBJECTIVES = 0.20f;
+
+	CCombatFitnessMetrics() = default;
+
+	void reset()
+	{
+		damageDealt = 0.0f;
+		damageTaken = 0.0f;
+		accuracy = 0.0f;
+		survivalTime = 0.0f;
+		kills = 0;
+		deaths = 0;
+		assists = 0;
+		objectivesCompleted = 0;
+	}
+
+	// Record a hit on enemy
+	void recordHit(float damage)
+	{
+		damageDealt += damage;
+	}
+
+	// Record damage taken
+	void recordDamageTaken(float damage)
+	{
+		damageTaken += damage;
+	}
+
+	// Record accuracy from shots
+	void recordAccuracy(int hits, int shotsFired)
+	{
+		if (shotsFired > 0)
+		{
+			accuracy = static_cast<float>(hits) / static_cast<float>(shotsFired);
+		}
+	}
+
+	// Record a kill
+	void recordKill()
+	{
+		kills++;
+	}
+
+	// Record a death
+	void recordDeath()
+	{
+		deaths++;
+	}
+
+	// Record an assist
+	void recordAssist()
+	{
+		assists++;
+	}
+
+	// Record objective completion
+	void recordObjective()
+	{
+		objectivesCompleted++;
+	}
+
+	// Update survival time
+	void updateSurvivalTime(float deltaTime)
+	{
+		survivalTime += deltaTime;
+	}
+
+	// Calculate weighted multi-objective fitness score
+	ga_value calculateFitness() const
+	{
+		// Damage ratio: how much damage dealt vs taken
+		// Avoid division by zero, reward dealing damage even if none taken
+		const ga_value damageRatio = (damageTaken > 0.0f)
+			? std::min(damageDealt / damageTaken, 10.0f) / 10.0f  // Normalize to 0-1
+			: (damageDealt > 0.0f ? 1.0f : 0.0f);
+
+		// K/D ratio: kills vs deaths, with assists counting as partial kills
+		const float effectiveKills = static_cast<float>(kills) + static_cast<float>(assists) * 0.5f;
+		const ga_value kdRatio = (deaths > 0)
+			? std::min(effectiveKills / static_cast<float>(deaths), 5.0f) / 5.0f  // Normalize to 0-1
+			: (effectiveKills > 0.0f ? 1.0f : 0.0f);
+
+		// Accuracy: already 0-1
+		const ga_value accuracyScore = std::clamp(accuracy, 0.0f, 1.0f);
+
+		// Survival time: normalize to 0-1 (assuming 300 seconds = 5 min is excellent)
+		constexpr float MAX_SURVIVAL_TIME = 300.0f;
+		const ga_value survivalScore = std::min(survivalTime / MAX_SURVIVAL_TIME, 1.0f);
+
+		// Objectives: normalize (assuming 5 objectives is excellent)
+		constexpr float MAX_OBJECTIVES = 5.0f;
+		const ga_value objectiveScore = std::min(static_cast<float>(objectivesCompleted) / MAX_OBJECTIVES, 1.0f);
+
+		// Calculate weighted fitness
+		const ga_value fitness =
+			(damageRatio * WEIGHT_DAMAGE_RATIO) +
+			(kdRatio * WEIGHT_KD_RATIO) +
+			(accuracyScore * WEIGHT_ACCURACY) +
+			(survivalScore * WEIGHT_SURVIVAL) +
+			(objectiveScore * WEIGHT_OBJECTIVES);
+
+		return fitness;
+	}
+
+	// Get individual component scores for debugging/analysis
+	void getComponentScores(ga_value& outDamage, ga_value& outKD, ga_value& outAcc,
+		ga_value& outSurvival, ga_value& outObjective) const
+	{
+		outDamage = (damageTaken > 0.0f)
+			? std::min(damageDealt / damageTaken, 10.0f) / 10.0f
+			: (damageDealt > 0.0f ? 1.0f : 0.0f);
+
+		const float effectiveKills = static_cast<float>(kills) + static_cast<float>(assists) * 0.5f;
+		outKD = (deaths > 0)
+			? std::min(effectiveKills / static_cast<float>(deaths), 5.0f) / 5.0f
+			: (effectiveKills > 0.0f ? 1.0f : 0.0f);
+
+		outAcc = std::clamp(accuracy, 0.0f, 1.0f);
+		outSurvival = std::min(survivalTime / 300.0f, 1.0f);
+		outObjective = std::min(static_cast<float>(objectivesCompleted) / 5.0f, 1.0f);
+	}
+};
 
 class CBotGAValues : public IIndividual
 {
@@ -57,6 +203,9 @@ public:
 
 	// mutate some values
 	void mutate() override;
+
+	// mutate with custom rate (for adaptive mutation)
+	void mutateWithRate(float rate) override;
 
 	// get new copy of this
 	// sub classes return their class with own values
@@ -98,54 +247,42 @@ public:
 
 		std::fread(&check, sizeof(int), 1, bfp);
 
-		if (check == 1)
-			std::fread(&m_Value, sizeof(int), 1, bfp);
-		else
+		if (check == req_size)
 		{
-			std::fread(&check, sizeof(int), 1, bfp);
-			//m_Value = RANDOM_LONG(0, 4294967295); // Too long? [APG]RoboCop[CL]
-			m_Value = RANDOM_LONG(0, 429496729);
+			std::fread(&m_Value, sizeof(int), 1, bfp);
+			std::fread(&m_fFitness, sizeof(ga_value), 1, bfp);
 		}
 	}
 
 	void save(std::FILE* bfp) override
 	{
-		constexpr int iSiz = 1;
-		std::fwrite(&iSiz, sizeof(int), 1, bfp);
+		constexpr int check = sizeof(int);
+		std::fwrite(&check, sizeof(int), 1, bfp);
 		std::fwrite(&m_Value, sizeof(int), 1, bfp);
+		std::fwrite(&m_fFitness, sizeof(ga_value), 1, bfp);
 	}
 
-	// crossover with other individual
 	void crossOver(IIndividual* other) override
 	{
-		CIntGAValues* p = static_cast<CIntGAValues*>(other);
+		CIntGAValues* pOther = static_cast<CIntGAValues*>(other);
+		const int iMask = RANDOM_LONG(0, 32);
+		const int iTemp = m_Value;
 
-		int iOther = p->get();
-
-		// unform/mixed crossover
-
-		for (unsigned i = 0; i < 32; i++)
-		{
-			if (RANDOM_FLOAT(0, 1) >= 0.5f)
-			{
-				m_Value |= iOther & 1 << i;
-				p->set(iOther |= m_Value & 1 << i);
-			}
-		}
+		m_Value = (m_Value & iMask) | (pOther->m_Value & ~iMask);
+		pOther->m_Value = (pOther->m_Value & iMask) | (iTemp & ~iMask);
 	}
 
-	// mutate some values
 	void mutate() override
 	{
-		for (int i = 0; i < 32; i++)
+		mutateWithRate(CGA::g_fMutateRate);
+	}
+
+	void mutateWithRate(const float rate) override
+	{
+		if (RANDOM_FLOAT(0, 1) < rate)
 		{
-			if (RANDOM_FLOAT(0, 1) <= 0.1f)
-			{
-				if (m_Value & 1 << i)
-					m_Value &= ~(1 << i);
-				else
-					m_Value |= i << i;
-			}
+			const int iBit = RANDOM_LONG(0, 31);
+			m_Value ^= (1 << iBit);  // Flip a random bit
 		}
 	}
 
@@ -158,31 +295,32 @@ public:
 	// sub classes return their class with own values
 	IIndividual* copy() override
 	{
-		IIndividual* p = new CIntGAValues(m_Value);
-		p->setFitness(getFitness());
-		return p;
+		CIntGAValues* pCopy = new CIntGAValues(m_Value);
+		pCopy->setFitness(m_fFitness);
+		return pCopy;
 	}
 
 	int get() const { return m_Value; }
-	void set(const int value) { m_Value = value; }
+	void set(int val) { m_Value = val; }
+
 private:
-	int m_Value = 0;
+	int m_Value;
 };
+
+/////////////////////////////////////////////////
 
 class CBitsGAValues : public IIndividual
 {
 public:
 	explicit CBitsGAValues(unsigned iNumBits);
+	explicit CBitsGAValues(CBits* bits);  // ADD THIS MISSING CONSTRUCTOR
+
+	void clear() override;
 
 	void load(std::FILE* bfp, int req_size) override;
 	void save(std::FILE* bfp) override;
 
-	//void loadForBot ( char *file, int iProfile );
-	//void saveForBot ( char *file, int iProfile );
-
 	//~CBotGAValues();
-	void convert(unsigned* iBits) const;
-	CBitsGAValues(CBits* bits);
 
 	// crossover with other individual
 	void crossOver(IIndividual* other) override;
@@ -195,21 +333,14 @@ public:
 	IIndividual* copy() override;
 
 	unsigned size() const;
+	void convert(unsigned* iBits) const;
 
-	//void setBits ( CBits values );
-	//void getBits ( CBits *values );
-
+	// ADD THESE MISSING DECLARATIONS
 	bool get(int iIndex) const;
-
 	void set(int iIndex, bool bSet) const;
-
-	void clear() override;
 	void random() const;
-
-	CBits* returnBits() const { return m_theBits; }
-
 	void freeMemory();
 
 private:
-	CBits* m_theBits = nullptr;
+	CBits* m_theBits;
 };
