@@ -45,7 +45,7 @@ V 1.51-beta13
 * changed: Avoid using welder in NS Combat
 * changed: Replaced most of the #define Marcos with Enumerators and constexpr
 * changed: Strings and enums optimised and modernised
-* changed: NeuralNet & General Algorithms tweaked
+* changed: NeuralNet & Genetic Algorithms tweaked
 * changed: Reduced redundant coding and risks of buffer overflow crashes
 * changed: StartFrame() now split for improved readability and maintainability
 * changed: Reverted basemonster.h that was modified for Sven Coop
