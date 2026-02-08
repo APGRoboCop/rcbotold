@@ -39,7 +39,7 @@ V 1.51-beta13
 * added: A /visibility folder to store visibility table files away from /waypoints folder
 * added: Max ammo assigned to specific weapons in order for bots to understand when to reload
 * added: Half-Life: Arena support for 3 additional weapons and stock map waypoints provided
-* added: Memory leak fix for the MwgaHAL code by adding temporary pointers for realloc() calls 
+* added: Memory leak fix for the MegaHAL code by adding temporary pointers for realloc() calls 
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
