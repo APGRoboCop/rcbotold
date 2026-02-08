@@ -137,17 +137,18 @@ public:
     // Convert to vector for NN input
     void toVector(std::vector<ga_value>& inputs) const
     {
-        inputs.clear();
-        inputs.reserve(COMBAT_NN_NUM_INPUTS);
-        inputs.emplace_back(enemyDistance);
-        inputs.emplace_back(enemyHealth);
-        inputs.emplace_back(selfHealth);
-        inputs.emplace_back(selfAmmo);
-        inputs.emplace_back(enemyVisible);
-        inputs.emplace_back(coverNearby);
-        inputs.emplace_back(heightAdvantage);
-        inputs.emplace_back(teammatesNearby);
+        inputs.assign({
+            enemyDistance,
+            enemyHealth,
+            selfHealth,
+            selfAmmo,
+            enemyVisible,
+            coverNearby,
+            heightAdvantage,
+            teammatesNearby
+        });
     }
+
 
     // Get number of inputs
     static constexpr int numInputs() { return COMBAT_NN_NUM_INPUTS; }
@@ -183,13 +184,14 @@ public:
     // Parse outputs from NN result vector
     void fromVector(const std::vector<ga_value>& outputs)
     {
-        if (outputs.size() >= COMBAT_NN_NUM_OUTPUTS)
+        if (outputs.size() != COMBAT_NN_NUM_OUTPUTS)
         {
-            attackWeight = outputs[COMBAT_ACTION_ATTACK];
-            retreatWeight = outputs[COMBAT_ACTION_RETREAT];
-            strafeWeight = outputs[COMBAT_ACTION_STRAFE];
-            jumpWeight = outputs[COMBAT_ACTION_JUMP];
+            return;  // Or log an error
         }
+        attackWeight = outputs[COMBAT_ACTION_ATTACK];
+        retreatWeight = outputs[COMBAT_ACTION_RETREAT];
+        strafeWeight = outputs[COMBAT_ACTION_STRAFE];
+        jumpWeight = outputs[COMBAT_ACTION_JUMP];
     }
 
     // Get the best action based on highest weight
