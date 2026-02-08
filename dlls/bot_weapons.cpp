@@ -459,7 +459,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 
 	const edict_t* pEdict = pBot->m_pEdict;
 
-	Vector vEnemyOrigin = pEnemy ? EntityOrigin(pEnemy) : pBot->pev->origin;
+	const Vector vEnemyOrigin = pEnemy ? EntityOrigin(pEnemy) : pBot->pev->origin;
 	const float fEnemyDist = pEnemy ? pBot->DistanceFrom(vEnemyOrigin) : 0.0f;
 	const bool bEnemyTooHigh = pEnemy ? (vEnemyOrigin.z > pBot->pev->origin.z + MAX_JUMP_HEIGHT) : false;
 
@@ -599,7 +599,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 
 	if (!usableWeapons.empty())
 	{
-		const auto bestWeapon = std::max_element(
+		const std::vector<CBotWeapon*>::iterator bestWeapon = std::max_element(
 			usableWeapons.begin(), usableWeapons.end(), CompareBotWeapon());
 		return (*bestWeapon)->GetID();
 	}
@@ -608,7 +608,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 	{
 		if (!otherWeapons.empty())
 		{
-			const auto bestWeapon = std::max_element(
+			const std::vector<CBotWeapon*>::iterator bestWeapon = std::max_element(
 				otherWeapons.begin(), otherWeapons.end(), CompareBotWeapon());
 			return (*bestWeapon)->GetID();
 		}
