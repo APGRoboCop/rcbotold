@@ -42,6 +42,7 @@
 #include "mreg.h"				// MRegCmdList, etc
 #include "conf_meta.h"			// MConfig
 #include "osdep.h"				// NAME_MAX, etc
+#include "progdefs.h"
 #include "types_meta.h"			// mBOOL
 
 // file that lists plugins to load at startup

@@ -90,7 +90,7 @@ void do_exit(int exitval) noexcept;
 // Technique 3: use inline
 inline char* STRNCPY(char* dst, const char* src, const int size) noexcept {
     std::fill_n(dst, size, '\0');
-    std::copy_n(src, std::min(size - 1, static_cast<int>(std::strlen(src))), dst);
+    std::copy_n(src, min(size - 1, static_cast<int>(std::strlen(src))), dst);
     return dst;
 }
 

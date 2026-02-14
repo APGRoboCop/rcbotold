@@ -39,6 +39,8 @@
 #ifndef CONF_META_H
 #define CONF_META_H
 
+#include <cstdint>
+
 #include "types_meta.h"		// mBOOL
 
 // Max length of line in config file.

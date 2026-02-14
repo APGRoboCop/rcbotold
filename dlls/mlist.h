@@ -37,6 +37,7 @@
 #ifndef MLIST_H
 #define MLIST_H
 
+#include "const.h"
 #include "types_meta.h"		// mBOOL
 #include "mplugin.h"		// class MPlugin
 #include "plinfo.h"			// plid_t, etc

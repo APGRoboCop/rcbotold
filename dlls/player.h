@@ -203,7 +203,7 @@ public:
 
 	void StartSneaking() { m_tSneaking = gpGlobals->time - 1; }
 	void StopSneaking() { m_tSneaking = gpGlobals->time + 30; }
-	bool IsSneaking() { return m_tSneaking <= gpGlobals->time; }
+	bool IsSneaking() const { return m_tSneaking <= gpGlobals->time; }
 	bool IsAlive()
 	{
 		//bool pev = false;
