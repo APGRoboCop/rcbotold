@@ -567,12 +567,23 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 			}
 
 			otherWeapons.push_back(pWeapon);
+
+			// Only consider melee as a primary choice at close range for TS [APG]RoboCop[CL]
+			if (gBotGlobals.IsMod(MOD_TS) && pEnemy && fEnemyDist > 40.0f)
+				continue;
+
 			usableWeapons.push_back(pWeapon);
 			continue;
 		}
 
 		if (!pWeapon->CanShootPrimary(pEdict, fEnemyDist, pBot->m_fDistanceFromWall))
 		{
+			// Gun can't fire right now but may just need a reload [APG]RoboCop[CL]
+			if (pWeapon->NeedToReload())
+			{
+				otherWeapons.push_back(pWeapon);
+				usableWeapons.emplace_back(pWeapon);
+			}
 			continue;
 		}
 
@@ -640,6 +651,8 @@ bool CBotWeapon::NeedToReload() const
 	case MOD_DMC:
 		return false;
 	case MOD_TS:
+		// TS tracks reserve ammo per-weapon in m_iReserve [APG]RoboCop[CL]
+		return m_iClip <= 0 && m_iReserve > 0;
 	case MOD_HL_DM:
 	case MOD_GEARBOX:
 	default:

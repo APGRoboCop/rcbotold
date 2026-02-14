@@ -2186,21 +2186,6 @@ void BotClient_Generic_WeaponPickup::execute(void* p, const int iIndex)
 			pBot->m_bCanUseAmmoDispenser = true;
 		}
 	}
-	else if (gBotGlobals.IsMod(MOD_GEARBOX))
-	{
-		switch (static_cast<int>(iWeaponIndex))
-		{
-		case static_cast<int>(GearboxWeapon::EAGLE):
-			if (!pBot->HasWeapon(static_cast<int>(GearboxWeapon::EAGLE)))
-			{
-				//TODO: make bot use laser
-				pBot->UseRPGLaser();
-			}
-			break;
-		default:
-			break;
-		}
-	}
 
 	/*else if (gBotGlobals.IsMod(MOD_SVENCOOP))
 	{

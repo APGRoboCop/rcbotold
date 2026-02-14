@@ -287,6 +287,30 @@ bool CBot::FacingIdeal() const
 		std::fabs(UTIL_AngleDiff(pev->idealpitch, pev->v_angle.x)) < 2.0f;
 }
 
+void CBot::ProcessLaserToggle()
+{
+	// Handle delayed laser toggle for Eagle weapon in Opposing Force
+	if (m_bNeedToToggleLaser && m_fToggleLaserTime < gpGlobals->time)
+	{
+		// Verify the Eagle is actually the current weapon before toggling
+		if (m_pCurrentWeapon &&
+			m_pCurrentWeapon->GetID() == static_cast<int>(GearboxWeapon::EAGLE))
+		{
+			// Use +attack2/-attack2 commands for more reliable input -JK-Botti
+			FakeClientCommand(m_pEdict, "+attack2");
+			FakeClientCommand(m_pEdict, "-attack2");
+		}
+		m_bNeedToToggleLaser = false;
+	}
+}
+
+void CBot::UseWeaponLaser()
+{
+	// Schedule a laser toggle after weapon deploy animation completes
+	m_bNeedToToggleLaser = true;
+	m_fToggleLaserTime = gpGlobals->time + 1.0f; // Increased from 0.3s to 1.0s -JK-Botti
+}
+
 // get distance between edict1 and edict2
 float BotFunc_DistanceBetweenEdicts(const edict_t* pEdict1, const edict_t* pEdict2)
 {
@@ -1343,6 +1367,9 @@ void CBot::setupDataStructures()
 
 void CBot::SpawnInit(const bool bInit)
 {
+	m_bNeedToToggleLaser = false;
+	m_fToggleLaserTime = 0.0f;
+
 	m_fLastPlaceDetpack = 0.0f;
 	m_fNextShootButton = 0.0f;
 	m_bNearestRememberPointVisible = false;
@@ -2738,6 +2765,10 @@ void CBot::Think()
 	// resetting (for ladder climbing etc)
 	m_iLastButtons = pev->button;
 
+	// Process laser toggle AFTER saving last buttons, so the IN_ATTACK2
+	// it sets won't be captured and wiped by the button reset check later
+	ProcessLaserToggle();
+
 	// Bots must have this flag set at all times
 	pev->flags |= FL_FAKECLIENT;
 
@@ -3379,6 +3410,19 @@ void CBot::Think()
 		}
 	}
 	break;
+	case MOD_GEARBOX:
+	{
+		// Auto-toggle Desert Eagle laser sight ON after spawn.
+		// The laser defaults to OFF; toggle it once per life for better accuracy.
+		if (m_pCurrentWeapon &&
+			m_pCurrentWeapon->GetID() == static_cast<int>(GearboxWeapon::EAGLE) &&
+			!m_bNeedToToggleLaser &&
+			m_fToggleLaserTime < 0.1f) // Use threshold instead of == 0.0f
+		{
+			UseWeaponLaser();
+		}
+	}
+	break;
 	default:
 		break;
 	}
@@ -3639,7 +3683,7 @@ void CBot::Think()
 		if ( bAimStopMoving )
 			StopMoving();
 	*/
-	return;
+	//return;
 }
 
 bool CBot::WantToFindEnemy() const
@@ -12439,12 +12483,10 @@ void CBot::DoTasks()
 			FakeClientCommand(m_pEdict, "drop");
 			bDone = true;
 			break;
-		case BOT_TASK_SECONDARY_ATTACK:
-
-			SecondaryAttack();
-
-			bDone = true;
-			break;
+		//case BOT_TASK_SECONDARY_ATTACK: //Unused? [APG]RoboCop[CL]
+		//	SecondaryAttack();
+		//	bDone = true;
+		//	break;
 		case BOT_TASK_ALIEN_UPGRADE:
 		{
 			int iDesiredUpgrade = m_CurrentTask->TaskInt();
@@ -13771,6 +13813,21 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 			if (!SwitchWeapon(m_CurrentTask->TaskInt()))
 				bTaskFailed = true;
+			else
+			{
+				// Toggle laser sight when switching to Eagle in Opposing Force
+				if (gBotGlobals.IsMod(MOD_GEARBOX))
+				{
+					if (m_CurrentTask->TaskInt() == static_cast<int>(GearboxWeapon::EAGLE))
+					{
+						// Check if laser needs to be toggled
+						if (!m_bNeedToToggleLaser && m_fToggleLaserTime + 2.0f < gpGlobals->time)
+						{
+							UseWeaponLaser();
+						}
+					}
+				}
+			}
 
 			bDone = true;//done
 			break;

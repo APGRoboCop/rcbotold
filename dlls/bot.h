@@ -2818,6 +2818,9 @@ private:
 	int m_iPrevTeamScore;
 	float m_fNextCheckFeignTime;
 
+	bool m_bNeedToToggleLaser = false;
+	float m_fToggleLaserTime = 0.0f;
+
 	bool m_bUsedMelee;
 	CBotWeapon m_weapon; // The bot's weapon
 
@@ -2879,10 +2882,10 @@ private:
 	// dataStack<edict_t*>	m_stBotVisibles;
 
 	// Bitmask of conditions the bot has
-	int                 m_ibBotConditions;
+	int m_ibBotConditions;
 
 	// time of last updating the conditions
-	float				m_fLastUpdateConditions;
+	float m_fLastUpdateConditions;
 
 	// amount of entities to update vision of per frame
 	int m_iVisUpdateRevs;
@@ -3297,12 +3300,11 @@ public:
 		return true;
 	}
 
-	// Use secondary attack for one time only..
-	// TODO: not a worky??!
-	void UseRPGLaser()
-	{
-		AddPriorityTask(CBotTask(BOT_TASK_SECONDARY_ATTACK, 0));
-	}
+	// Toggle weapon laser (Eagle in OP4, RPG in other mods) - [APG]RoboCop[CL]
+	void UseWeaponLaser();
+
+	// Process laser toggle - call this in Think()
+	void ProcessLaserToggle();
 
 	bool IsSquadLeader() const
 	{

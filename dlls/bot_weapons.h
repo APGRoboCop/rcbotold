@@ -783,10 +783,15 @@ public:
 	{
 		if (m_iAmmo1)
 		{
+			// If the shared ammo array has no data, fall back to per-weapon reserve [APG]RoboCop[CL]
+			if (!*m_iAmmo1 && m_iReserve > 0)
+				return false;
+
 			return m_iClip <= 0 && !*m_iAmmo1;
 		}
 
-		return false;
+		// No ammo pointer - use reserve tracking (TS weapons) [APG]RoboCop[CL]
+		return m_iClip <= 0 && m_iReserve <= 0;
 	}
 
 	// Returns true if the current clip is empty - [APG]RoboCop[CL]
