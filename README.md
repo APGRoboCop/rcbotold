@@ -463,3 +463,4 @@ iii. Post in forum or e-mail me with :
 - Tovasritch : For repairing some waypoints
 - jukivili : For sharing the code to allow bots to toggle Op4's Deagle Laser Sight
 - jpiolho : For DMC default model fix directory
+- Rich Geldreich : Mini compression for visibility and learned data
