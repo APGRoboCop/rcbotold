@@ -457,8 +457,8 @@ void BotClient_TS_WeaponInfo::execute(void* p, const int iIndex)
 		if (pWeapon)
 		{
 			pBot->m_pCurrentWeapon = pWeapon;
-			pWeapon->UpdateWeapon(clip);
 			pWeapon->SetWeapon(id, nullptr);
+			pWeapon->UpdateWeapon(clip);
 			//pBot->m_iBotWeapons |= id;	// Weapon ID total is over 32 and can overflow in 32-bit bitfield.
 			// Sucks that Valve dropped hlds_amd64 support near 2006 and that ts_amd64.so doesn't exist eh? [APG]RoboCop[CL]
 			
