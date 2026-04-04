@@ -66,6 +66,7 @@
 #include "bot_visibles.h"
 //#include "megahal.h"
 #include "actionutility.h"
+#include "rc_compress.h"
 
 #include "usercmd.h"
 
@@ -826,6 +827,76 @@ void CBot::loadLearnedData() const
 		}
 	};
 
+	// Try reading as compressed file first
+	if (RCZ_IsCompressedFile(filename))
+	{
+		unsigned char* pDecompressed = nullptr;
+		uint32_t decompSize = 0;
+
+		if (!RCZ_DecompressFileToMemory(filename, &pDecompressed, &decompSize))
+			return;
+
+		// Create a temporary file from decompressed data for the existing load logic
+		const std::unique_ptr<std::FILE, decltype(fileDeleter)> tmpfp(std::tmpfile(), fileDeleter);
+		if (!tmpfp)
+		{
+			std::free(pDecompressed);
+			return;
+		}
+
+		std::fwrite(pDecompressed, 1, decompSize, tmpfp.get());
+		std::fseek(tmpfp.get(), 0, SEEK_SET);
+		std::free(pDecompressed);
+
+		CLearnedHeader header = CLearnedHeader(m_Profile.m_iProfileId);
+		const CLearnedHeader checkheader = CLearnedHeader(m_Profile.m_iProfileId);
+
+		std::fread(&header, sizeof(CLearnedHeader), 1, tmpfp.get());
+
+		if (checkheader != header) {
+			BotMessage(nullptr, 0, "Bots learned data for %s (profile %d) header mismatch", tmp_filename, m_Profile.m_iProfileId);
+			return;
+		}
+
+		if (std::feof(tmpfp.get()))
+			return;
+
+		if (m_GASurvival != nullptr)
+			m_GASurvival->load(tmpfp.get(), 16);
+		if (dec_attackElectrified != nullptr)
+			dec_attackElectrified->load(tmpfp.get());
+		if (dec_flapWings != nullptr)
+			dec_flapWings->load(tmpfp.get());
+		if (dec_runForCover != nullptr)
+			dec_runForCover->load(tmpfp.get());
+		if (dec_faceHurtOrigin != nullptr)
+			dec_faceHurtOrigin->load(tmpfp.get());
+		if (dec_jump != nullptr)
+			dec_jump->load(tmpfp.get());
+		if (dec_duck != nullptr)
+			dec_duck->load(tmpfp.get());
+		if (dec_strafe != nullptr)
+			dec_strafe->load(tmpfp.get());
+		if (m_pPersonalGAVals != nullptr)
+			m_pPersonalGAVals->load(tmpfp.get(), 22);
+		if (m_personalGA != nullptr)
+			m_personalGA->load(tmpfp.get(), 22);
+		if (m_pFlyGA != nullptr)
+			m_pFlyGA->load(tmpfp.get(), 6);
+		if (m_pFlyGAVals != nullptr)
+			m_pFlyGAVals->load(tmpfp.get(), 6);
+		if (dec_followEnemy != nullptr)
+			dec_followEnemy->load(tmpfp.get());
+		if (m_pTSWeaponSelect != nullptr)
+			m_pTSWeaponSelect->load(tmpfp.get(), 8 /*+MAX_WEAPONS*/);
+		if (dec_stunt != nullptr)
+			dec_stunt->load(tmpfp.get());
+		if (m_pCombatBits != nullptr)
+			m_pCombatBits->load(tmpfp.get(), 1);
+		return;
+	}
+
+	// Fall back to reading uncompressed file
 	const std::unique_ptr<std::FILE, decltype(fileDeleter)> bfp(std::fopen(filename, "rb"), fileDeleter);
 	if (!bfp) {
 		return; // File could not be opened
@@ -899,51 +970,78 @@ void CBot::saveLearnedData() const
 
 	};
 
-	const std::unique_ptr<std::FILE, decltype(fileDeleter)> bfp(std::fopen(filename, "wb"), fileDeleter);
-	if (!bfp) {
-		return; // File could not be opened
+	// Write all data to a temporary file first, then compress
+	const std::unique_ptr<std::FILE, decltype(fileDeleter)> tmpfp(std::tmpfile(), fileDeleter);
+	if (!tmpfp) {
+		return;
 	}
 
 	const CLearnedHeader header = CLearnedHeader(m_Profile.m_iProfileId);
 
-	std::fwrite(&header, sizeof(CLearnedHeader), 1, bfp.get());
+	std::fwrite(&header, sizeof(CLearnedHeader), 1, tmpfp.get());
 
 	// MUST BE IN SAME ORDER AS LOADING!
 	if (m_GASurvival != nullptr)
-		m_GASurvival->save(bfp.get());
+		m_GASurvival->save(tmpfp.get());
 	if (dec_attackElectrified != nullptr)
-		dec_attackElectrified->save(bfp.get());
+		dec_attackElectrified->save(tmpfp.get());
 	if (dec_flapWings != nullptr)
-		dec_flapWings->save(bfp.get());
+		dec_flapWings->save(tmpfp.get());
 	if (dec_runForCover != nullptr)
-		dec_runForCover->save(bfp.get());
+		dec_runForCover->save(tmpfp.get());
 	if (dec_faceHurtOrigin != nullptr)
-		dec_faceHurtOrigin->save(bfp.get());
+		dec_faceHurtOrigin->save(tmpfp.get());
 	if (dec_jump != nullptr)
-		dec_jump->save(bfp.get());
+		dec_jump->save(tmpfp.get());
 	if (dec_duck != nullptr)
-		dec_duck->save(bfp.get());
+		dec_duck->save(tmpfp.get());
 	if (dec_strafe != nullptr)
-		dec_strafe->save(bfp.get());
+		dec_strafe->save(tmpfp.get());
 	if (m_pPersonalGAVals != nullptr)
-		m_pPersonalGAVals->save(bfp.get());
+		m_pPersonalGAVals->save(tmpfp.get());
 	if (m_personalGA != nullptr)
-		m_personalGA->save(bfp.get());
+		m_personalGA->save(tmpfp.get());
 	if (m_pFlyGA != nullptr)
-		m_pFlyGA->save(bfp.get());
+		m_pFlyGA->save(tmpfp.get());
 	if (m_pFlyGAVals != nullptr)
-		m_pFlyGAVals->save(bfp.get());
+		m_pFlyGAVals->save(tmpfp.get());
 	if (dec_followEnemy != nullptr)
-		dec_followEnemy->save(bfp.get());
+		dec_followEnemy->save(tmpfp.get());
 	if (m_pTSWeaponSelect != nullptr)
-		m_pTSWeaponSelect->save(bfp.get());
+		m_pTSWeaponSelect->save(tmpfp.get());
 	if (dec_stunt != nullptr)
-		dec_stunt->save(bfp.get());
+		dec_stunt->save(tmpfp.get());
 	if (m_pCombatBits != nullptr)
-		m_pCombatBits->save(bfp.get());
-	//	if ( dec_firepercent != NULL )
-	//		dec_firepercent->save(bfp.get());
-	// No need to explicitly call std::fclose; std::unique_ptr will handle it
+		m_pCombatBits->save(tmpfp.get());
+
+	// Get the size of the uncompressed data
+	const long dataSize = std::ftell(tmpfp.get());
+	if (dataSize <= 0)
+		return;
+
+	std::fseek(tmpfp.get(), 0, SEEK_SET);
+
+	// Read all data into a buffer
+	unsigned char* pData = static_cast<unsigned char*>(std::malloc(static_cast<size_t>(dataSize)));
+	if (!pData)
+		return;
+
+	if (std::fread(pData, 1, static_cast<size_t>(dataSize), tmpfp.get()) != static_cast<size_t>(dataSize))
+	{
+		std::free(pData);
+		return;
+	}
+
+	// Write compressed file
+	if (!RCZ_CompressToFile(filename, pData, static_cast<uint32_t>(dataSize)))
+	{
+		// Fall back to uncompressed write
+		const std::unique_ptr<std::FILE, decltype(fileDeleter)> bfp(std::fopen(filename, "wb"), fileDeleter);
+		if (bfp)
+			std::fwrite(pData, 1, static_cast<size_t>(dataSize), bfp.get());
+	}
+
+	std::free(pData);
 }
 
 void CBot::FreeLocalMemory()
@@ -2718,6 +2816,16 @@ eClimbType CBot::GetClimbType() const
 				if (m_iCurrentWaypointFlags & W_FL_WALL_STICK)
 					return BOT_CLIMB_FLYING;
 			}
+		}
+		break;
+	case MOD_GEARBOX:
+		// Op4 Grapple: treat Fly waypoints as flying when bot has the Grapple weapon - [APG]RoboCop[CL]
+		if (m_iCurrentWaypointIndex != -1 && m_iCurrentWaypointFlags & W_FL_FLY)
+		{
+			if (HasWeapon(static_cast<int>(GearboxWeapon::GRAPPLE)))
+				return BOT_CLIMB_FLYING;
+
+			return BOT_CLIMB_NOT_FLYING;
 		}
 		break;
 	default:
@@ -5100,6 +5208,34 @@ void CBot::LookForNewTasks()
 			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestPickupEntity));
 			AddTask(CBotTask(BOT_TASK_PICKUP_ITEM, iNewScheduleId, pNearestPickupEntity));
 			break;
+		}
+
+		// HEV charger nearby and bot needs armour
+		if (pNearestHEVcharger)
+		{
+			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHEVcharger));
+			AddTask(CBotTask(BOT_TASK_USE_HEV_CHARGER, iNewScheduleId, pNearestHEVcharger));
+			break;
+		}
+
+		// Health charger (func_healthcharger) nearby and bot needs health
+		if (pNearestHealthcharger)
+		{
+			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHealthcharger));
+			AddTask(CBotTask(BOT_TASK_USE_HEALTH_CHARGER, iNewScheduleId, pNearestHealthcharger));
+			break;
+		}
+
+		// need health and a health waypoint nearby ?
+		if (bNeedHealth)
+		{
+			int iHealthWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 2000.0f, -1, W_FL_HEALTH, &m_FailedGoals);
+
+			if (m_iCurrentWaypointIndex != iHealthWpt && iHealthWpt != -1)
+			{
+				AddTask(CBotTask(BOT_TASK_FIND_PATH, 0, nullptr, iHealthWpt, -1));
+				break;
+			}
 		}
 
 		bRoam = m_Tasks.NoTasksLeft(); //Important in order for bots to keep capping [APG]RoboCop[CL]
@@ -14304,25 +14440,31 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						else
 							StopMoving();
 
-						decideJumpDuckStrafe(fEnemyDist, vEnemyOrigin);
-
-						/*
-						if ( IsSkulk() )
+						// Skulk pounce attack: use LEAP at medium range then bite
+						if (IsSkulk() && HasWeapon(static_cast<int>(NSWeapon::LEAP)))
 						{
-							float m_fSkillJumpTime = ((float)(MAX_BOT_SKILL-m_Profile.m_iSkill)/MAX_BOT_SKILL)*1.0;
-
-							if ( (m_f2dVelocity > 200.0f) && (fEnemyDist < 400.0f) && (m_fStartJumpTime < gpGlobals->time && (m_fEndJumpTime + 1.0f) < gpGlobals->time) )
+							if (fEnemyDist > 200.0f && fEnemyDist < 600.0f
+								&& pev->flags & FL_ONGROUND && NS_AmountOfEnergy() > 30)
 							{
-								m_fStartJumpTime = gpGlobals->time + 0.5f;
-								m_fEndJumpTime = gpGlobals->time + RANDOM_FLOAT(0.75f,1.5f) + m_fSkillJumpTime;;
+								// Leap toward the enemy
+								Impulse(ALIEN_ABILITY_LEAP);
+								Jump();
+								PrimaryAttack();
 							}
+						}
 
-							if ( (m_fStrafeTime + 0.75f) < gpGlobals->time )
+						// Onos devour: use DEVOUR against marine players when close
+						if (IsOnos() && HasWeapon(static_cast<int>(NSWeapon::DEVOUR))
+							&& m_pEnemy && m_pEnemy->v.iuser3 == AVH_USER3_MARINE_PLAYER
+							&& fEnemyDist < 90.0f && NS_AmountOfEnergy() > 40)
+						{
+							if (RANDOM_LONG(0, 100) < 60)
 							{
-								m_fStrafeTime = gpGlobals->time + (1.0f + RANDOM_FLOAT(m_fSkillJumpTime-0.25f,m_fSkillJumpTime+0.25f));
-								m_fStrafeSpeed = (RANDOM_FLOAT(0,2.0f) - 1.0f) * m_fMaxSpeed;
+								SecondaryAttack();
 							}
-						}*/
+						}
+
+						decideJumpDuckStrafe(fEnemyDist, vEnemyOrigin);
 					}
 					else if (m_pCurrentWeapon->PrimaryInRange(fEnemyDist) == -1)
 					{

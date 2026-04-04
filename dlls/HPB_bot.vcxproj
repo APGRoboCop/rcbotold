@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -331,6 +331,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</TreatWarningAsError>
     </ClCompile>
+    <ClCompile Include="rc_compress.cpp" />
+    <ClCompile Include="miniz.c" />
+    <ClCompile Include="miniz_tdef.c" />
+    <ClCompile Include="miniz_tinfl.c" />
+    <ClCompile Include="miniz_zip.c" />
     <ClCompile Include="som.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="waypoint.cpp" />
@@ -372,6 +377,7 @@
     <ClInclude Include="conf_meta.h" />
     <ClInclude Include="dir.h" />
     <ClInclude Include="dllapi.h" />
+    <ClInclude Include="rc_compress.h" />
     <ClInclude Include="enginecallback.h" />
     <ClInclude Include="engine_api.h" />
     <ClInclude Include="extdll.h" />
@@ -405,6 +411,11 @@
     <ClInclude Include="util.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="waypoint.h" />
+    <ClInclude Include="miniz.h" />
+    <ClInclude Include="miniz_common.h" />
+    <ClInclude Include="miniz_tdef.h" />
+    <ClInclude Include="miniz_tinfl.h" />
+    <ClInclude Include="miniz_zip.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

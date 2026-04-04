@@ -69,6 +69,7 @@
 
 #include "bot.h"
 #include "waypoint.h"
+#include "rc_compress.h"
 
 extern DLL_FUNCTIONS gFunctionTable;
 
@@ -2429,27 +2430,23 @@ bool CWaypointVisibilityTable::SaveToFile() const
 	if (IS_DEDICATED_SERVER())
 		std::printf("saving visibility table file: %s\n", filename);
 
-	std::FILE* bfp = std::fopen(filename, "wb"); // binary file write
+	const uint32_t dataSize = static_cast<uint32_t>(Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8));
 
-	if (bfp == nullptr)
+	if (RCZ_CompressToFile(filename, m_VisTable, dataSize))
 	{
-		BotMessage(nullptr, 0, "Can't open Waypoint Visibility table for writing!");
-		return false;
+		if (IS_DEDICATED_SERVER())
+			std::printf("Saved compressed visibility table (%u bytes)\n", dataSize);
+		return true;
 	}
 
-	std::fwrite(m_VisTable, sizeof(unsigned char), Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8), bfp);
-
-	std::fclose(bfp);
-
-	return true;
+	BotMessage(nullptr, 0, "Can't save compressed Waypoint Visibility table!");
+	return false;
 }
 
 bool CWaypointVisibilityTable::ReadFromFile() const
 {
 	char filename[512];
 	char file[256];
-	int iSize;
-	int iDesiredSize;
 
 	// get the folder right.
 #ifdef __linux__
@@ -2462,7 +2459,27 @@ bool CWaypointVisibilityTable::ReadFromFile() const
 	if (IS_DEDICATED_SERVER())
 		std::printf("loading visibility table file: %s\n", filename);
 
-	std::FILE* bfp = std::fopen(filename, "rb"); // binary file write
+	const int iDesiredSize = Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8);
+
+	// clear table
+	std::memset(m_VisTable, 0, g_iMaxVisibilityByte);
+
+	// Try reading as compressed file first
+	if (RCZ_IsCompressedFile(filename))
+	{
+		if (RCZ_DecompressFromFile(filename, m_VisTable, static_cast<uint32_t>(iDesiredSize)))
+		{
+			if (IS_DEDICATED_SERVER())
+				std::printf("Read compressed Waypoint Visibility File Successfully\n");
+			return true;
+		}
+
+		BotMessage(nullptr, 0, "Compressed visibility file found but failed to decompress");
+		return false;
+	}
+
+	// Fall back to reading uncompressed file for backward compatibility
+	std::FILE* bfp = std::fopen(filename, "rb");
 
 	if (bfp == nullptr)
 	{
@@ -2470,10 +2487,8 @@ bool CWaypointVisibilityTable::ReadFromFile() const
 		return false;
 	}
 
-	std::fseek(bfp, 0, SEEK_END); // seek at end
-
-	iSize = std::ftell(bfp); // get file size
-	iDesiredSize = Ceiling(static_cast<float>(num_waypoints * num_waypoints) / 8);
+	std::fseek(bfp, 0, SEEK_END);
+	const int iSize = std::ftell(bfp);
 
 	// size not right, return false to re workout table
 	if (iSize != iDesiredSize)
@@ -2482,12 +2497,8 @@ bool CWaypointVisibilityTable::ReadFromFile() const
 		return false;
 	}
 
-	std::fseek(bfp, 0, SEEK_SET); // seek at start
+	std::fseek(bfp, 0, SEEK_SET);
 
-	// clear table
-	std::memset(m_VisTable, 0, sizeof g_iMaxVisibilityByte);
-
-	// read vis table
 	std::fread(m_VisTable, sizeof(unsigned char), iDesiredSize, bfp);
 
 	std::fclose(bfp);

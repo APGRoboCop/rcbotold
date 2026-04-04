@@ -191,6 +191,11 @@ library.sources += [
   'dlls/perceptron.cpp',
   'dlls/rcbot_meta_api.cpp',
   'dlls/util.cpp',
+  'dlls/rc_compress.cpp',
+  'dlls/miniz.c',
+  'dlls/miniz_tdef.c',
+  'dlls/miniz_tinfl.c',
+  'dlls/miniz_zip.c',
   'dlls/waypoint.cpp',
 ]
 
