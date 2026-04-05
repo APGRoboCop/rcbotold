@@ -443,6 +443,25 @@ void GetAllowedWeapons(CBot* pBot, edict_t* pEnemy, const float fEnemyDist, shor
 			iAllowedWeapons[static_cast<int>(GearboxWeapon::GRAPPLE)] = 1;
 		}
 		break;
+
+	case MOD_WW:
+		// Disallow utility/defensive spells when fighting enemies
+		iAllowedWeapons[static_cast<int>(WizWeapon::SHIELD)] = 0;
+		iAllowedWeapons[static_cast<int>(WizWeapon::SEAL)] = 0;
+		iAllowedWeapons[static_cast<int>(WizWeapon::LEVITATE)] = 0;
+		iAllowedWeapons[static_cast<int>(WizWeapon::BEANSTALK)] = 0;
+		iAllowedWeapons[static_cast<int>(WizWeapon::THORNBLAST)] = 0;
+
+		// Life wizard: don't use Whiteray on enemies (it's a healing spell)
+		if (pBot->pev->playerclass == WWCLASS_LIFE)
+		{
+			const int enemy_team = UTIL_GetTeam(pEnemy);
+			const int bot_team = pBot->GetTeam();
+
+			if (bot_team != enemy_team)
+				iAllowedWeapons[static_cast<int>(WizWeapon::WHITERAY)] = 0;
+		}
+		break;
 	}
 }
 

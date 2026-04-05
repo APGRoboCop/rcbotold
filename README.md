@@ -16,7 +16,7 @@ Supported Mods
 - Front Line Force (WIP)
 - Science and Industry (WIP)
 - The Specialists
-- Wizard Wars (WIP)
+- Wizard Wars
 
 RCBot versions
 --------------
@@ -41,6 +41,7 @@ V 1.51-beta13
 * added: Half-Life: Arena support for 3 additional weapons and stock map waypoints provided
 * added: Memory leak fix for the MegaHAL code by adding temporary pointers for realloc() calls 
 * added: Miniz to compress the visibility and learned data
+* added: Wizard Wars now supported! (Use v1.2.9 for now)
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat

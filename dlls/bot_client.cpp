@@ -143,6 +143,8 @@ void SetupNetMessages()
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_DMC_QuakeItem());
 	// get vgui message
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_Generic_VGUIMenu());
+	// Wizard Wars VGUIMenu: handles 2-arg class menu correctly
+	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_WW_VGUIMenu());
 	// ns 3.0 tech upgrades??
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_NS_TechSlots());
 	// need to catch message to show a menu
@@ -1081,6 +1083,29 @@ void BotClient_Generic_VGUIMenu::execute(void* p, const int iIndex)
 	CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 
 	pBot->SetVGUIState(POINTER_TO_INT(p));
+}
+
+// Wizard Wars VGUIMenu handler.
+// Team menu sends 1 arg (menu ID 2). Class menu sends 2 args (menu ID 3,
+// then team number).  Only the first arg should update the bot's VGUI state;
+// the second arg of the class menu must be skipped so it doesn't overwrite
+// the menu type.
+void BotClient_WW_VGUIMenu::execute(void* p, const int iIndex)
+{
+	if (p == nullptr || iIndex == -1)
+	{
+		m_iState = 0; // reset on message end
+		return;
+	}
+
+	// Only process the first arg (the menu type ID)
+	if (m_iState == 0)
+	{
+		CBot* pBot = &gBotGlobals.m_Bots[iIndex];
+		pBot->SetVGUIState(POINTER_TO_INT(p));
+	}
+
+	m_iState++;
 }
 
 /*

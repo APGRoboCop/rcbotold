@@ -2407,6 +2407,14 @@ bool CBot::NotStartedGame()
 		return IsInReadyRoom();
 	case MOD_BG:
 		return !pev->playerclass && !pev->team;
+	case MOD_WW:
+		// If bot ended up in observer mode after joining, force re-join (HPB #22)
+		if (pev->iuser1)
+		{
+			m_bStartedGame = false;
+			return true;
+		}
+		return false;
 	case MOD_TS:
 		return false;
 		//case MOD_COUNTERSTRIKE:
@@ -2679,13 +2687,43 @@ void CBot::StartGame()
 		m_bStartedGame = true;
 		return;
 	case MOD_WW:
-		//std::sprintf(c_class, "%d", pBot->bot_class);
-		//FakeClientCommand(m_pEdict, "classmenu", RANDOM_LONG(1, 9), nullptr);
-		//FakeClientCommand(m_pEdict, "menuselect 1");
-		FakeClientCommand(m_pEdict, "teammenu 5");
-		FakeClientCommand(m_pEdict, "classmenu 0");
-		m_bStartedGame = true;
-		return;
+	{
+		if (m_fNextUseVGUI > gpGlobals->time)
+			break;
+
+		m_fNextUseVGUI = gpGlobals->time + 1.0f;
+
+		switch (this->m_iVguiMenu)
+		{
+		case VGUI_MENU_WW_TEAM_SELECT:
+		{
+			// Let the mod auto-assign if no preferred team, else pick 1-4 or 5 (auto)
+			int iTeam = m_Profile.m_iFavTeam;
+			if (iTeam < 1 || iTeam > 5)
+				iTeam = 5;
+			FakeClientCommand(m_pEdict, "jointeam %d", iTeam);
+		}
+		break;
+		case VGUI_MENU_WW_CLASS_SELECT:
+		{
+			// Pick a random Wizard Wars class (1=Wind .. 10=Archmage)
+			int iClass = m_Profile.m_iClass;
+			if (iClass < 1 || iClass > static_cast<int>(WWCLASS_ARCHMAGE))
+				iClass = RANDOM_LONG(1, static_cast<int>(WWCLASS_ARCHMAGE));
+			FakeClientCommand(m_pEdict, "changeclass %d", iClass);
+			m_bStartedGame = true;
+		}
+		break;
+		default:
+			// No VGUI menu yet; wait for the mod to send one, nudge with team select
+			if (m_fJoinServerTime + 3.0f < gpGlobals->time)
+			{
+				FakeClientCommand(m_pEdict, "jointeam 5");
+			}
+			break;
+		}
+	}
+	break;
 	case MOD_SI:
 		/*if (m_fJoinServerTime + 1.0f < gpGlobals->time)
 		{
@@ -9349,6 +9387,53 @@ bool CBot::IsEnemy(edict_t* pEntity)
 		// different teams are enemies
 		return pEntity->v.flags & FL_CLIENT && GetTeam() != UTIL_GetTeam(pEntity);
 	}
+	case MOD_WW:
+	{
+		if (!EntityIsAlive(pEntity))
+			return false;
+
+		if (pEntity->v.flags & FL_CLIENT)
+		{
+			// In DM (single team or no teams), everyone is an enemy
+			if (!gBotGlobals.m_bTeamPlay)
+				return true;
+
+			const int player_team = UTIL_GetTeam(pEntity);
+			const int bot_team = GetTeam();
+
+			// Don't target teammates
+			if (bot_team == player_team)
+				return false;
+
+			// Ice wizard invisibility check: nearly invisible ice wizards can't be seen
+			if (pEntity->v.playerclass == WWCLASS_ICE)
+			{
+				if (pEntity->v.rendermode == kRenderTransColor && pEntity->v.renderamt >= 240.0f)
+					return false;
+
+				// Disguised ice wizard on same skin
+				if (pEntity->v.skin == pev->skin)
+					return false;
+			}
+
+			return true;
+		}
+
+		// Wizard Wars monsters/clones can also be enemies
+		if (pEntity->v.flags & FL_MONSTER)
+		{
+			if (gBotGlobals.m_bTeamPlay)
+			{
+				const int monster_team = UTIL_GetTeam(pEntity);
+				const int bot_team = GetTeam();
+
+				if (bot_team == monster_team)
+					return false;
+			}
+			return true;
+		}
+	}
+	break;
 	/*case MOD_SVENCOOP:
 	{
 		char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));

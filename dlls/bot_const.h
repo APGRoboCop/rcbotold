@@ -1095,7 +1095,7 @@ enum : std::uint8_t
 	MOD_HL_RALLY = 12,  // half-life rally (game crashes when adding a bot!!)
 	MOD_HL_DM = 13,		// half-life deathmatch
 	MOD_RS = 14,		// rival species meh...
-	MOD_WW = 15,		// TODO: Wizard Wars
+	MOD_WW = 15,		// Wizard Wars
 	MOD_FLF = 16,		// TODO: Front Line Force
 };
 
@@ -1112,8 +1112,25 @@ enum : std::uint8_t
 constexpr bool TEAM_BLACK_MESA = false;
 constexpr bool TEAM_OPPOSING_FORCE = true;
 
-constexpr bool VGUI_MENU_WW_TEAM_SELECT = false;
-constexpr bool VGUI_MENU_WW_CLASS_SELECT = true;
+constexpr int VGUI_MENU_WW_TEAM_SELECT = 2;
+constexpr int VGUI_MENU_WW_CLASS_SELECT = 3;
+
+// Wizard Wars class IDs
+enum : std::uint8_t
+{
+	WWCLASS_NONE = 0,
+	WWCLASS_WIND,
+	WWCLASS_LIGHTNING,
+	WWCLASS_FIRE,
+	WWCLASS_DEATH,
+	WWCLASS_LIFE,
+	WWCLASS_EARTH,
+	WWCLASS_DRAGON,
+	WWCLASS_ICE,
+	WWCLASS_NATURE,
+	WWCLASS_ARCHMAGE,
+	WWCLASS_MAX
+};
 
 //#define VGUI_MENU_TFC_TEAM_SELECT 2
 //#define VGUI_MENU_TFC_CLASS_SELECT 3

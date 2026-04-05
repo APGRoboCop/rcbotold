@@ -1182,7 +1182,6 @@ void CBotGlobals::MapInit()
 	prevFlagInvalid = false;
 
 	const char* mapname = STRING(gpGlobals->mapname);
-	//TODO: Wizard Wars may require this code [APG]RoboCop[CL]
 	/*if (IsMod(MOD_TFC))
 	{
 		  MAP_UNKNOWN,		// unknown map type
@@ -1238,6 +1237,12 @@ void CBotGlobals::MapInit()
 			setMapType(NON_TS_TEAMPLAY);
 			m_bTeamPlay = true;
 		}
+	}
+	else if (IsMod(MOD_WW))
+	{
+		// Wizard Wars: team play maps typically use "ww_" prefix with team goals
+		// Default to team play; DM maps will have max_teams <= 1
+		m_bTeamPlay = true;
 	}
 
 	PRECACHE_MODEL("models/mechgibs.mdl");
@@ -1404,13 +1409,17 @@ void CBotGlobals::LoadBotModels()
 	while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr)
 	{
 		// don't want to get stuck looking in the same directory again and again (".")
-		// don't wan't to search parent directories ("..")
+		// don't want to search parent directories ("..")
 		if (std::strcmp(dirname, ".") == 0 || std::strcmp(dirname, "..") == 0)
 			continue;
 
 		// looking for .mdl file inside a folder of same name
 		std::strcpy(filename, path);
+#ifdef __linux__
 		std::strcat(filename, "/");
+#else
+		std::strcat(filename, "\\");
+#endif
 		std::strcat(filename, dirname);
 		std::strcat(filename, "/");
 		std::strcat(filename, dirname);

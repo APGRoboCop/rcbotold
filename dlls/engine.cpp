@@ -398,22 +398,14 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 
 		eSoundType iSound = SOUND_UNKNOWN;
 
-		/*if (gBotGlobals.IsMod(MOD_SVENCOOP))
+		if (gBotGlobals.IsMod(MOD_WW))
 		{
 			if (entity->v.flags & FL_CLIENT)
 			{
 				if (std::strncmp(sample, "speech/saveme", 13) == 0)
 					iSound = SOUND_NEEDHEALTH;
-				else if (std::strncmp(sample, "speech/grenade", 14) == 0)
-					iSound = SOUND_TAKE_COVER;
 			}
 		}
-		//TODO: Add this similar speech for WizWars [APG]RoboCop[CL]
-		else if (gBotGlobals.IsMod(MOD_TFC))
-		{
-			if (std::strncmp(sample, "speech/saveme", 13) == 0)
-				iSound = SOUND_NEEDHEALTH;
-		}*/
 
 		if ((sample[0] == 'd' && !std::strncmp(sample, "doors/", 6)) ||
 			(sample[0] == 'p' && !std::strncmp(sample, "plats/", 6))) {

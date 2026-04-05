@@ -396,6 +396,21 @@ public:
 	}
 	void execute(void* p, int iIndex) override; // override base function
 };
+// Wizard Wars VGUIMenu: class menu sends 2 args (menu ID, then team),
+// only the first arg (menu type) should update the bot's VGUI state.
+class BotClient_WW_VGUIMenu : public CBotNetMessage
+{
+public:
+	BotClient_WW_VGUIMenu()
+	{
+		m_iState = 0;
+		setName("VGUIMenu");
+		setMod(MOD_WW);
+	}
+	void execute(void* p, int iIndex) override;
+private:
+	int m_iState;
+};
 // ns 3.0 tech upgrades??
 class BotClient_NS_TechSlots : public CBotNetMessage
 {
