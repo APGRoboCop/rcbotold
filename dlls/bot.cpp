@@ -8796,7 +8796,6 @@ edict_t* CBot::FindEnemy()
 		{
 			if (EntityIsAlienStruct(m_pEnemy) || EntityIsMarineStruct(m_pEnemy))
 			{
-				pOldEnemy = m_pEnemy;
 				m_pEnemy = nullptr;
 
 				m_fNextGetEnemyTime = gpGlobals->time + RANDOM_FLOAT(0.75f, 1.25f);
@@ -8804,7 +8803,6 @@ edict_t* CBot::FindEnemy()
 		}
 		else if (gBotGlobals.IsMod(MOD_TS))
 		{
-			pOldEnemy = m_pEnemy;
 			m_pEnemy = nullptr;
 
 			m_fNextGetEnemyTime = gpGlobals->time + RANDOM_FLOAT(0.75f, 1.25f);
@@ -15694,7 +15692,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						}
 					}
 
-					m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_EDICT;
+					//m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_EDICT;
 
 					if (iState == -1 || DistanceFrom(vEntityOrigin) < 72)
 					{

@@ -496,9 +496,10 @@ void BotClient_NS_TechSlots::execute(void* p, const int iIndex)
 		return;
 	}
 
-	short* iState = &gBotGlobals.m_iCurrentMessageState;
+	// Use an integer pointer instead of short* for alignment safety
+	int* iState = reinterpret_cast<int*>(&gBotGlobals.m_iCurrentMessageState);
 
-	switch (POINTER_TO_INT(iState))
+	switch (*iState) // Dereference the pointer to get the value directly
 	{
 	case 0:
 		iSlots = POINTER_TO_INT(p);
@@ -510,8 +511,8 @@ void BotClient_NS_TechSlots::execute(void* p, const int iIndex)
 	}
 
 	iSlots = POINTER_TO_INT(p);
-
-	POINTER_INCREMENT_VALUE(iState);
+	// Increment the value pointed to by iState
+	(*iState)++;
 }
 
 void BotClient_BG_MakeMessage::execute(void* p, const int iIndex)
