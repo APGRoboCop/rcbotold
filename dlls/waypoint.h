@@ -444,68 +444,52 @@ public:
 		#define W_FL_DELETED     (1<<31) // used by waypoint allocation code*/
 	}
 };
-/*//TODO: Allow multiple conversion for various bots [APG]RoboCop[CL]
-class CWhichbotConvert : public CWaypointConversion
+
+class CGraveBotConvert : public CWaypointConversion
 {
 public:
-  CWhichbotConvert()
-  {
-	  setName("Whichbot");
-	  setExtension("wpt");
-	  setHeader("HPB_bot");
-	  setVersion(4);
+	CGraveBotConvert()
+	{
+		constexpr char str1[] = "GraveBot";
+		setName(str1);
+		constexpr char str2[] = "gbw";
+		setExtension(str2);
+		constexpr char str3[] = "[Grave]";
+		setHeader(str3);
+
+		setVersion(4);
 
 #ifndef __linux__
-	  setFolder("addons\\whichbot\\data");
+		char str4[] = "maps";
+		setFolder(str4);
 #else
-	  setFolder("addons/whichbot/data");
+		char str4[] = "maps";
+		setFolder(str4);
 #endif
 
-	  setConvertBit(10,(1<<30));
+		// RCBot -> GraveBot flag conversion (reverse of load conversion)
+		// Bits 0-9: identical (team, team_specific, crouch, ladder, lift, door, health, armor, ammo)
+		for (int i = 0; i <= 9; i++)
+			setConvertBit(i, 1 << i);
 
-	  setConvertBit(1,(1<<1));
-	  setConvertBit(2,(1<<2));
-	  setConvertBit(3,W_FL_CROUCH);
-	  setConvertBit(4,W_FL_LADDER);
-	  setConvertBit(5,W_FL_WAIT_FOR_LIFT);
-	  setConvertBit(6,W_FL_DOOR);
-	  setConvertBit(7,W_FL_HEALTH);
-	  setConvertBit(8,W_FL_ARMOR);
-	  setConvertBit(9,W_FL_AMMO);
-	  setConvertBit(18,W_FL_JUMP);
-	  setConvertBit(9,W_FL_LIFT);
-	  setConvertBit(18,W_FL_CHECK_LIFT);
-	  setConvertBit(31,W_FL_DELETED);
-
-#define W_FL_TEAM        ((1<<0) + (1<<1))  // allow for 4 teams (0-3) //
-#define W_FL_TEAM_SPECIFIC (1<<2)  // waypoint only for specified team //
-#define W_FL_CROUCH      (1<<3)  // must crouch to reach this waypoint //
-#define W_FL_LADDER      (1<<4)  // waypoint on a ladder //
-#define W_FL_LIFT        (1<<5)  // wait for lift to be down before approaching this waypoint //
-#define W_FL_DOOR        (1<<6)  // wait for door to open //
-#define W_FL_HEALTH      (1<<7)  // health kit (or wall mounted) location //
-#define W_FL_ARMOR       (1<<8)  // armor (or HEV) location //
-#define W_FL_AMMO        (1<<9)  //ammo location //
-#define W_FL_SNIPER      (1<<10) // sniper waypoint (a good sniper spot) //
-
-#define W_FL_FLAG        (1<<11) /// flag position (or hostage or president) //
-#define W_FL_FLF_CAP     (1<<11) // Front Line Force capture point //
-
-#define W_FL_FLAG_GOAL   (1<<12) // flag return position (or rescue zone) //
-#define W_FL_FLF_DEFEND  (1<<12) // Front Line Force defend point //
-
-#define W_FL_PRONE       (1<<13) // go prone (laying down) //
-#define W_FL_AIMING      (1<<14) // aiming waypoint //
-
-#define W_FL_SENTRYGUN   (1<<15) // sentry gun waypoint for TFC //
-#define W_FL_DISPENSER   (1<<16) // dispenser waypoint for TFC //
-
-#define W_FL_WEAPON      (1<<17) // weapon_ entity location //
-#define W_FL_JUMP        (1<<18) // jump waypoint //
-
-#define W_FL_DELETED     (1<<31) // used by waypoint allocation code //
-  }
-};*/
+		// Bit 11: RCBot W_FL_IMPORTANT -> GraveBot W_FL_FLAG (same bit)
+		setConvertBit(11, 1 << 11);
+		// Bit 12: RCBot W_FL_RESCUE -> GraveBot W_FL_FLAG_GOAL (same bit)
+		setConvertBit(12, 1 << 12);
+		// Bit 13: RCBot W_FL_DEFEND_ZONE -> GraveBot W_FL_DEFEND (bit 21)
+		setConvertBit(13, 1 << 21);
+		// Bit 14: W_FL_AIMING -> identical
+		setConvertBit(14, 1 << 14);
+		// Bit 16: RCBot W_FL_CROUCHJUMP -> GraveBot W_FL_DUCKJUMP (bit 20)
+		setConvertBit(16, 1 << 20);
+		// Bit 19: RCBot W_FL_JUMP -> GraveBot W_FL_JUMP (bit 18)
+		setConvertBit(19, 1 << 18);
+		// Bit 20: RCBot W_FL_WEAPON -> GraveBot W_FL_WEAPON (bit 17)
+		setConvertBit(20, 1 << 17);
+		// Bit 31: W_FL_DELETED -> identical
+		setConvertBit(31, 1 << 31);
+	}
+};
 ///////////////////////
 
 constexpr int g_iMaxVisibilityByte = MAX_WAYPOINTS * MAX_WAYPOINTS / 8;

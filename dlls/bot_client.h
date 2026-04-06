@@ -597,6 +597,17 @@ public:
 };
 
 //TODO: Science and Industry - Experimental [APG]RoboCop[CL]
+class BotClient_SI_WeaponList : public CBotNetMessage
+{
+public:
+	BotClient_SI_WeaponList()
+	{
+		setName("WeaponList");
+		setMod(MOD_SI);
+	}
+	void execute(void* p, int iIndex) override; // override base function
+};
+
 class BotClient_SI_TeamCash : public CBotNetMessage
 {
 public:
@@ -658,6 +669,17 @@ public:
 	BotClient_SI_VoteInfo()
 	{
 		setName("VoteInfo");
+		setMod(MOD_SI);
+	}
+	void execute(void* p, int iIndex) override; // override base function
+};
+
+class BotClient_SI_Battery : public CBotNetMessage
+{
+public:
+	BotClient_SI_Battery()
+	{
+		setName("Battery");
 		setMod(MOD_SI);
 	}
 	void execute(void* p, int iIndex) override; // override base function

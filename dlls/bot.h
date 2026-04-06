@@ -4144,10 +4144,15 @@ public:
 	// Does bot have ANY weapons?
 	bool     HasWeapons() const
 	{
-		return m_iBotWeapons == 0;
+		return m_iBotWeapons != 0;
 	}
 
 	//edict_t *m_pTeleExit;
+
+	/////////////////////////////////////////
+	// Science and Industry per-bot state
+	int m_iSICarryType;    // what the bot is carrying (SI_CARRY_NONE, SI_CARRY_SCI, SI_CARRY_RSRC)
+	int m_iSIMaxArmor;     // max armor this bot can have (from Battery message)
 };
 
 constexpr int HUD_TEXT_LENGTH = 256;

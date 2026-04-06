@@ -1512,11 +1512,15 @@ void CBot::SpawnInit(const bool bInit)
 	m_bSaidMoveOut = false;
 	m_fNextClearFailedGoals = 0.0f;
 
+	// Science and Industry per-bot state
+	m_iSICarryType = SI_CARRY_NONE;
+	m_iSIMaxArmor = 0;
+
 	// bInit is true upon constructors (DONT DESTROY ANYTHING!)
 	if (!bInit)
 	{
 		m_bHasAskedForOrder = false;
-		m_fRespawnTime = 0;
+		m_fRespawnTime = 0.0f;
 		CBotTask TypeMessageTask;
 
 		if (!m_Tasks.NoTasksLeft())
@@ -1545,47 +1549,18 @@ void CBot::SpawnInit(const bool bInit)
 			if (pev && pev->maxspeed > m_fMaxSpeed)
 				m_fMaxSpeed = pev->maxspeed;
 		}
-		/*else if (gBotGlobals.IsMod(MOD_SI))
-		{	// get longjump
-			if (g_Researched[UTIL_GetTeam(m_pEdict)][RESEARCH_LEGS_2].researched ||
-				g_Researched[UTIL_GetTeam(m_pEdict)][RESEARCH_LEGS_2].stolen)
-				m_bHasLongJump = true;
+		else if (gBotGlobals.IsMod(MOD_SI))
+		{
+			const int iTeam = UTIL_GetTeam(m_pEdict);
 
-			// get our max armor
-			if ((g_Researched[UTIL_PlayersOnTeam(iTeam)][RESEARCH_ARMOR_100].researched ||
-				g_Researched[pBot->team][RESEARCH_ARMOR_100].stolen) &&
-				!g_Researched[pBot->team][RESEARCH_ARMOR_100].disabled &&
-				pBot->armorvalue < 100.0f)
-				pBot->armorvalue = 100.0f;
-			else if ((g_Researched[pBot->team][RESEARCH_ARMOR_75].researched ||
-				g_Researched[pBot->team][RESEARCH_ARMOR_75].stolen) &&
-				!g_Researched[pBot->team][RESEARCH_ARMOR_75].disabled &&
-				pBot->armorvalue < 75.0f)
-				pBot->armorvalue = 75.0f;
-			else if ((g_Researched[pBot->team][RESEARCH_ARMOR_50].researched ||
-				g_Researched[pBot->team][RESEARCH_ARMOR_50].stolen) &&
-				!g_Researched[pBot->team][RESEARCH_ARMOR_50].disabled &&
-				pBot->armorvalue < 50.0f)
-				pBot->armorvalue = 50.0f;
-			else if ((g_Researched[pBot->team][RESEARCH_ARMOR_25].researched ||
-				g_Researched[pBot->team][RESEARCH_ARMOR_25].stolen) &&
-				!g_Researched[pBot->team][RESEARCH_ARMOR_25].disabled &&
-				pBot->armorvalue < 25.0f)
-				pBot->armorvalue = 25.0f;
-
-			// get our max health
-			if ((g_Researched[pBot->team][RESEARCH_STRENGTH2].researched ||
-				g_Researched[pBot->team][RESEARCH_STRENGTH2].stolen) &&
-				!g_Researched[pBot->team][RESEARCH_STRENGTH2].disabled &&
-				pBot->max_health < 150.0f)
-				pBot->max_health = 150.0f;
-			else if ((g_Researched[pBot->team][RESEARCH_STRENGTH].researched ||
-				g_Researched[pBot->team][RESEARCH_STRENGTH].stolen) &&
-				!g_Researched[pBot->team][RESEARCH_STRENGTH].disabled &&
-				pBot->max_health < 125.0f)
-				pBot->max_health = 125.0f;
+			if (iTeam >= 0 && iTeam <= 1)
+			{
+				// get longjump from research
+				if (g_Researched[iTeam][RESEARCH_LEGS_2].researched ||
+					g_Researched[iTeam][RESEARCH_LEGS_2].stolen)
+					m_bHasLongJump = true;
+			}
 		}
-		*/
 		else if (gBotGlobals.IsNS()) // quicker check
 		{
 			if (m_OrderTask.Task() != BOT_TASK_NONE)
@@ -2415,6 +2390,14 @@ bool CBot::NotStartedGame()
 			return true;
 		}
 		return false;
+	case MOD_SI:
+		// If bot ended up in observer/spectator after joining, force re-join
+		if (pev->iuser1 || FBitSet(pev->flags, FL_SPECTATOR))
+		{
+			m_bStartedGame = false;
+			return true;
+		}
+		return false;
 	case MOD_TS:
 		return false;
 		//case MOD_COUNTERSTRIKE:
@@ -2725,84 +2708,66 @@ void CBot::StartGame()
 	}
 	break;
 	case MOD_SI:
-		/*if (m_fJoinServerTime + 1.0f < gpGlobals->time)
-		{
-			// go into spectator mode if we're not already, to fix rejoin bug
-			if (m_pEdict->v.view_ofs != g_vecZero)
-				FakeClientCommand(m_pEdict, "spectate");
-			break;
-		}*/
-		FakeClientCommand(m_pEdict, "setteam 3");
-		FakeClientCommand(m_pEdict, "setmodel 3");
-		m_bStartedGame = true;
-		return;
-
-		/*switch (this->m_iVguiMenu)
+	{
+		// Use a state machine for joining, matching GraveBot's approach
+		// m_iVguiMenu starts at 0, so first entry goes to default -> set to MSG_SI_IDLE
+		switch (this->m_iVguiMenu)
 		{
 		case MSG_SI_IDLE:
 		{
-			// go into spectator mode if we're not already, to fix rejoin bug
+			// Go into spectator mode first to fix rejoin bug
 			if (m_pEdict->v.view_ofs != g_vecZero)
 				FakeClientCommand(m_pEdict, "spectate");
-			if (m_fJoinServerTime + 1.0f < gpGlobals->time)
-				this->m_iVguiMenu = MSG_SI_TEAM_SELECT;  // force team selection
+
+			// Wait 1 second after creation before selecting team
+			if (m_fJoinServerTime + 1.0f <= gpGlobals->time)
+				this->m_iVguiMenu = MSG_SI_TEAM_SELECT;
 			break;
 		}
 		case MSG_SI_TEAM_SELECT:
 		{
-			this->m_iVguiMenu = MSG_SI_MODEL_SELECT;  // force model selection
+			this->m_iVguiMenu = MSG_SI_MODEL_SELECT;
 
 			int iTeam = m_Profile.m_iFavTeam;
-			// if team isn't valid then make iTeam 5. (keep it 1, 2 or 3 )
-			if (iTeam < 1 || iTeam > 5 || iTeam == 3 || iTeam == 4)
-				iTeam = 3;
 
-			if (iTeam == -1)
+			// If preferred team isn't valid (1=MCL, 2=AFD, 3=auto), default to auto
+			if (iTeam < 1 || iTeam > 3)
 			{
-				// choose a random team
-				if (iTeam[0] == iTeam[1])
-					snprintf(iTeam, sizeof(iTeam), "%i", 3);
-				// join team with least players
-				else if (team[0] < team[1])
-					snprintf(iTeam, sizeof(iTeam), "%i", 1);
-				else if (team[0] > team[1])
-					snprintf(iTeam, sizeof(iTeam), "%i", 2);
-			}
-			else    // forced to join a certain team
-			{
-				if (bot_team < 1)
-					bot_team = 1;
-				else if (bot_team > 3)
-					bot_team = 3;
-				snprintf(iTeam, sizeof(iTeam), "%i", bot_team);
-			}
-			//SERVER_PRINT( "%s will join team %s...\n", pBot->name, iTeam);
-			// save our team
-			bot_team = std::atoi(iTeam) - 1;
-			FakeClientCommand(m_pEdict, "setteam");
+				// Pick team with fewest players
+				const int iTeam1Players = UTIL_PlayersOnTeam(0);
+				const int iTeam2Players = UTIL_PlayersOnTeam(1);
 
-			FakeClientCommand(m_pEdict, "setteam 3");
+				if (iTeam1Players == iTeam2Players)
+					iTeam = 3; // auto-assign
+				else if (iTeam1Players < iTeam2Players)
+					iTeam = 1;
+				else
+					iTeam = 2;
+			}
+
+			FakeClientCommand(m_pEdict, "setteam %d", iTeam);
 			break;
 		}
 		case MSG_SI_MODEL_SELECT:
 		{
-			this->m_iVguiMenu = MSG_SI_IDLE;  // switch back to idle
+			this->m_iVguiMenu = MSG_SI_IDLE;
 
-			f_create_time = gpGlobals->time;  // reset
-			if (bot_class == -1)
-			{   // random model for now
-				sprintf(c_model, "%i", 3);
-			}
-			else
-				sprintf(c_model, "%i", pBot->bot_class);
-			bot_class = std::atoi(c_model) - 1;
-			FakeClientCommand(m_pEdict, "setmodel");
+			// Random model (1-6)
+			const int iModel = RANDOM_LONG(1, 6);
+			FakeClientCommand(m_pEdict, "setmodel %d", iModel);
 
 			m_fJoinServerTime = gpGlobals->time;
-			FakeClientCommand(m_pEdict, "setmodel 3");
 			m_bStartedGame = true;
 			break;
-		}*/
+		}
+		default:
+			// First entry - initialize the state machine
+			this->m_iVguiMenu = MSG_SI_IDLE;
+			break;
+		}
+		return;
+	}
+	break;
 	}
 
 	// generic case, just press fire :)
@@ -4062,7 +4027,7 @@ void CBot::LookForNewTasks()
 				{
 					if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
 					{
-						if (std::string(szClassname) == "func_recharge")
+						if (std::strcmp(szClassname, "func_recharge") == 0)
 						{
 							fNearestHEVchargerDist = fDistance;
 							pNearestHEVcharger = pEntity;
@@ -4071,7 +4036,7 @@ void CBot::LookForNewTasks()
 
 					if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
 					{
-						if (std::string(szClassname) == "func_healthcharger")
+						if (std::strcmp(szClassname, "func_healthcharger") == 0)
 						{
 							fNearestHealthchargerDist = fDistance;
 							pNearestHealthcharger = pEntity;
@@ -4134,7 +4099,7 @@ void CBot::LookForNewTasks()
 			{
 				if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
 				{
-					if (std::string(szClassname) == "func_recharge")
+					if (std::strcmp(szClassname, "func_recharge") == 0)
 					{
 						fNearestHEVchargerDist = fDistance;
 						pNearestHEVcharger = pEntity;
@@ -4143,7 +4108,7 @@ void CBot::LookForNewTasks()
 
 				if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
 				{
-					if (std::string(szClassname) == "func_healthcharger")
+					if (std::strcmp(szClassname, "func_healthcharger") == 0)
 					{
 						fNearestHealthchargerDist = fDistance;
 						pNearestHealthcharger = pEntity;
@@ -4185,25 +4150,44 @@ void CBot::LookForNewTasks()
 				}
 			}
 
-			if (pEntity->v.frame == 0.0f)
+			// Detect enemy scientists to steal (not on our team, alive)
+			if (bCanUseScientist && m_fNextUseScientist < gpGlobals->time)
 			{
-				if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
+				if (FStrEq(szClassname, "monster_scientist"))
 				{
-					if (std::string(szClassname) == "func_recharge")
-					{
-						fNearestHEVchargerDist = fDistance;
-						pNearestHEVcharger = pEntity;
-					}
-				}
+					const int iSciTeam = UTIL_GetTeam(pEntity);
+					const int iBotTeam = GetTeam();
 
-				if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
-				{
-					if (std::string(szClassname) == "func_healthcharger")
+					// Only target enemy scientists (different team) that are alive
+					if (iSciTeam != iBotTeam && EntityIsAlive(pEntity))
 					{
-						fNearestHealthchargerDist = fDistance;
-						pNearestHealthcharger = pEntity;
-					}
-				}
+						if (!pNearestScientist || fDistance < fNearestPickupEntityDist)
+						{
+									pNearestScientist = pEntity;
+										}
+									}
+								}
+							}
+
+							if (pEntity->v.frame == 0.0f)
+							{
+								if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
+								{
+									if (std::strcmp(szClassname, "func_recharge") == 0)
+									{
+										fNearestHEVchargerDist = fDistance;
+										pNearestHEVcharger = pEntity;
+									}
+								}
+
+								if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
+								{
+									if (std::strcmp(szClassname, "func_healthcharger") == 0)
+									{
+										fNearestHealthchargerDist = fDistance;
+										pNearestHealthcharger = pEntity;
+									}
+								}
 
 				if (m_fUseButtonTime < gpGlobals->time && (!pNearestButton || (fNearestButtonDist < fDistance)))
 				{
@@ -5300,6 +5284,126 @@ void CBot::LookForNewTasks()
 		}
 		bRoam = true;
 		break;
+	case MOD_SI:
+	{
+		// SI core gameplay: steal enemy scientists and bring them to own GMan (info_administrator)
+		// Also: use health/armour chargers, pick up weapons - [APG]RoboCop[CL]
+
+		// If carrying a scientist or resource, find our team's GMan to deliver it
+		if (m_iSICarryType == SI_CARRY_SCI || m_iSICarryType == SI_CARRY_RSRC)
+		{
+			// Find our team's GMan (info_administrator) waypoint — uses W_FL_BARNEY_POINT
+			// Team-specific: bot delivers to its OWN team's GMan
+			const int iBotTeam = GetTeam();
+			const int iGmanWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 8192.0f, iBotTeam, W_FL_BARNEY_POINT, &m_FailedGoals);
+
+			if (iGmanWpt != -1 && m_iCurrentWaypointIndex != iGmanWpt)
+			{
+				AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iGmanWpt, -1));
+				break;
+			}
+		}
+
+		// A button nearby?
+		if (pNearestButton)
+		{
+			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestButton));
+			AddTask(CBotTask(BOT_TASK_USE, iNewScheduleId, pNearestButton));
+			m_fUseButtonTime = gpGlobals->time + 5.0f;
+			break;
+		}
+
+		// Haven't got a weapon? Find one
+		if (!HasCondition(BOT_CONDITION_HAS_WEAPON))
+		{
+			const int iWeaponWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 4096.0f, -1, W_FL_WEAPON, &m_FailedGoals);
+
+			if (m_iCurrentWaypointIndex != iWeaponWpt && iWeaponWpt != -1)
+			{
+				AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iWeaponWpt, -1));
+				break;
+			}
+		}
+
+		// Found an enemy scientist nearby — go steal it with briefcase
+		if (pNearestScientist)
+		{
+			m_fNextUseScientist = gpGlobals->time + RANDOM_FLOAT(10.0f, 20.0f);
+
+			// Navigate to the scientist — combat system handles briefcase attack
+			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestScientist));
+
+			m_Tasks.GiveSchedIdDescription(iNewScheduleId, BOT_SCHED_USING_SCIENTIST);
+			break;
+		}
+
+		// No scientist visible — try navigating to an enemy scientist waypoint
+		if (bCanUseScientist && m_fNextUseScientist < gpGlobals->time)
+		{
+			// Team-specific: bot goes to the ENEMY team's scientist area
+			const int iEnemyTeam = (GetTeam() == 0) ? 1 : 0;
+			const int iSciWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 8192.0f, iEnemyTeam, W_FL_SCIENTIST_POINT, &m_FailedGoals);
+
+			if (iSciWpt != -1 && m_iCurrentWaypointIndex != iSciWpt)
+			{
+				AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, nullptr, iSciWpt, -1));
+				m_fNextUseScientist = gpGlobals->time + RANDOM_FLOAT(15.0f, 30.0f);
+				break;
+			}
+		}
+
+		// Pickup nearby items (weapons, etc.)
+		if (pNearestPickupEntity)
+		{
+			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestPickupEntity));
+			AddTask(CBotTask(BOT_TASK_PICKUP_ITEM, iNewScheduleId, pNearestPickupEntity));
+			break;
+		}
+
+		// Only use chargers when actually low — not just slightly depleted
+		// Use health charger if critically low (below 40%)
+		if (pNearestHealthcharger && pev->health < pev->max_health * 0.4f)
+		{
+			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHealthcharger));
+			AddTask(CBotTask(BOT_TASK_USE_HEALTH_CHARGER, iNewScheduleId, pNearestHealthcharger));
+			break;
+		}
+
+		// Use armor charger if critically low (below 25%)
+		if (pNearestHEVcharger && pev->armorvalue < static_cast<float>(VALVE_MAX_NORMAL_BATTERY) * 0.25f)
+		{
+			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHEVcharger));
+			AddTask(CBotTask(BOT_TASK_USE_HEV_CHARGER, iNewScheduleId, pNearestHEVcharger));
+			break;
+		}
+
+		// Need health? Go to health waypoint
+		if (bNeedHealth)
+		{
+			const int iHealthWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 2000.0f, -1, W_FL_HEALTH, &m_FailedGoals);
+
+			if (m_iCurrentWaypointIndex != iHealthWpt && iHealthWpt != -1)
+			{
+				AddTask(CBotTask(BOT_TASK_FIND_PATH, 0, nullptr, iHealthWpt, -1));
+				break;
+			}
+		}
+
+		// Need armor? Go to armor waypoint
+		if (bNeedArmor)
+		{
+			const int iArmorWpt = WaypointFindNearestGoal(pev->origin, m_pEdict, 2000.0f, -1, W_FL_ARMOR, &m_FailedGoals);
+
+			if (m_iCurrentWaypointIndex != iArmorWpt && iArmorWpt != -1)
+			{
+				AddTask(CBotTask(BOT_TASK_FIND_PATH, 0, nullptr, iArmorWpt, -1));
+				break;
+			}
+		}
+
+		bRoam = m_Tasks.NoTasksLeft();
+		break;
+	}
 	default:
 		bRoam = true;
 	}
@@ -8405,6 +8509,44 @@ bool CBot::CanPickup(const edict_t* pPickup) const
 			return true;
 	}
 	break;
+	case MOD_SI:
+	{
+		const char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
+
+		// Pick up weapons we don't already have
+		if (std::strncmp(szClassname, "weapon_", 7) == 0)
+		{
+			return !m_Weapons.HasWeapon(m_pEdict, szClassname);
+		}
+		// Pick up ammo
+		if (std::strncmp(szClassname, "ammo_", 5) == 0)
+			return true;
+		// Pick up health kits if we need health
+		if (FStrEq(szClassname, "item_healthkit"))
+			return pev->health < pev->max_health;
+		// Pick up generic items
+		if (FStrEq(szClassname, "weapon_generic"))
+			return true;
+	}
+	break;
+	case MOD_WW:
+	{
+		const char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
+
+		// Spell books (mana/ammo pickups on the ground and in spawn rooms)
+		if (FStrEq(szClassname, "ammo_spellbook"))
+			return true;
+		// Health kits
+		if (FStrEq(szClassname, "item_healthkit"))
+			return pev->health < pev->max_health;
+		// Armor
+		if (std::strncmp(szClassname, "item_armor", 10) == 0)
+			return pev->armorvalue < 100;
+		// CTF-style flags (item_tfgoal)
+		if (FStrEq(szClassname, "item_tfgoal"))
+			return true;
+	}
+	break;
 	default:
 		return false;
 	}
@@ -9432,6 +9574,52 @@ bool CBot::IsEnemy(edict_t* pEntity)
 		}
 	}
 	break;
+	case MOD_SI:
+	{
+		if (!EntityIsAlive(pEntity))
+			return false;
+
+		const char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
+
+		// Enemy players on a different team
+		if (pEntity->v.flags & FL_CLIENT)
+		{
+			const int bot_team = GetTeam();
+			const int player_team = UTIL_GetTeam(pEntity);
+
+			// Different teams are enemies
+			return bot_team != player_team && bot_team >= 0 && player_team >= 0;
+		}
+
+		// Scientists: attack enemy scientists to steal them (whack with briefcase)
+		// Don't attack our own team's scientists
+		if (FStrEq(szClassname, "monster_scientist"))
+		{
+			// Already carrying something — don't target more scientists
+			if (m_iSICarryType != SI_CARRY_NONE)
+				return false;
+
+			const int bot_team = GetTeam();
+			const int sci_team = pEntity->v.team - 1;
+
+			// Enemy scientists are targets (bot will use briefcase via weapon selection)
+			return sci_team >= 0 && sci_team != bot_team;
+		}
+
+		// Breakables can be enemies (tech breakables, etc.)
+		if (std::strcmp(szClassname, "func_breakable") == 0)
+		{
+			// Only attack breakables belonging to the enemy team
+			const int bot_team = GetTeam();
+			const int ent_team = pEntity->v.team - 1;
+
+			if (ent_team >= 0 && ent_team != bot_team)
+				return BotFunc_BreakableIsEnemy(pEntity, m_pEdict);
+
+			return false;
+		}
+	}
+	break;
 	/*case MOD_SVENCOOP:
 	{
 		char* szClassname = const_cast<char*>(STRING(pEntity->v.classname));
@@ -9573,6 +9761,24 @@ bool BotFunc_IsLongRangeWeapon(const int iId)
 		case static_cast<int>(NSWeapon::GRENADE):
 		case static_cast<int>(NSWeapon::STOMP):
 		case static_cast<int>(NSWeapon::DEVOUR):
+			return true;
+		default:
+			return false;
+		}
+	case MOD_SI:
+		switch (static_cast<int>(iId))
+		{
+		case static_cast<int>(SIWeapon::BRIEFCASE):
+		case static_cast<int>(SIWeapon::VOMIT):
+			return false; // melee / short range
+		case static_cast<int>(SIWeapon::COLT):
+		case static_cast<int>(SIWeapon::SHOTGUN):
+		case static_cast<int>(SIWeapon::TOMMYGUN):
+		case static_cast<int>(SIWeapon::SNUZI):
+		case static_cast<int>(SIWeapon::CROSSBOW):
+		case static_cast<int>(SIWeapon::GAUSS):
+		case static_cast<int>(SIWeapon::EMPCANNON):
+		case static_cast<int>(SIWeapon::ROCKETPISTOL):
 			return true;
 		default:
 			return false;
@@ -16353,10 +16559,13 @@ void CBot::CheckStuck()
 		else
 		{
 			/// Bot is STUCK.
-			// Climbing.. reset view angle
+			// Climbing.. give more time before resetting, as ladder transitions are slow
 			if (iCurrentClimbState != BOT_CLIMB_NONE)
 			{
-				UnSetLadderAngleAndMovement();
+				if (m_fStuckTime + 4.0f < gpGlobals->time)
+					UnSetLadderAngleAndMovement();
+				else
+					return; // still on ladder, give it more time
 			}
 			else // jump (maybe hit an obstacle)
 				JumpAndDuck();

@@ -355,4 +355,7 @@
     <Text Include="todo.txt" />
     <Text Include="version.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bot_weapons.ini" />
+  </ItemGroup>
 </Project>

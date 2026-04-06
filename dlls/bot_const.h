@@ -210,6 +210,39 @@ enum : std::uint8_t
 	MSG_SI_MODEL_SELECT = 3
 };
 
+// Science and Industry carry types
+enum SICarryType : std::uint8_t
+{
+	SI_CARRY_NONE = 0,
+	SI_CARRY_SCI,
+	SI_CARRY_RSRC
+};
+
+// Science and Industry bot roles
+enum SIRole : std::uint8_t
+{
+	SI_ROLE_NONE = 0,
+	SI_ROLE_DEFEND,
+	SI_ROLE_ATTACK
+};
+
+// Science and Industry bot sub-roles
+enum SISubRole : std::uint8_t
+{
+	SI_ROLE_SUB_NONE = 0,
+	SI_ROLE_SUB_ATT_GET_SCI,
+	SI_ROLE_SUB_ATT_RTRN_SCI,
+	SI_ROLE_SUB_ATT_KILL_SCI,
+	SI_ROLE_SUB_ATT_GET_RSRC,
+	SI_ROLE_SUB_ATT_RTRN_RSRC,
+	SI_ROLE_SUB_ATT_BREAK,
+	SI_ROLE_SUB_DEF_ALLY,
+	SI_ROLE_SUB_DEF_SCIS,
+	SI_ROLE_SUB_DEF_BASE,
+	SI_ROLE_SUB_DEF_RSRC,
+	SI_ROLE_SUB_DEF_BREAK
+};
+
 ////////////////////////////////
 // NATURAL SELECTION TEAMS
 enum : std::uint8_t
@@ -1086,7 +1119,7 @@ enum : std::uint8_t
 	MOD_BUMPERCARS = 3,
 	MOD_RC = 4,			// rocket crowbar
 	MOD_RC2 = 5,		// rocket crowbar 2
-	MOD_SI = 6,			// TODO: Science and Industry
+	MOD_SI = 6,			// Science and Industry
 	MOD_DMC = 7,		// deathmatch classic
 	MOD_TS = 8,			// the specialists
 	MOD_GEARBOX = 9,	// Opposing Force [APG]RoboCop[CL]

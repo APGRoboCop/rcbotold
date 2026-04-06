@@ -65,6 +65,7 @@
 
 extern CBotGlobals gBotGlobals;
 extern CWaypointLocations WaypointLocations;
+extern WAYPOINTS waypoints;
 
 #ifndef RCBOT_META_BUILD
 
@@ -1451,6 +1452,8 @@ void CWaypointCommand::showHelp(edict_t* pEntity)
 	BotMessage(pEntity, 0, "\"waypoint off\" (stops displaying waypoints)");
 	BotMessage(pEntity, 0, "\"waypoint load\" (loads waypoints for current map)");
 	BotMessage(pEntity, 0, "\"waypoint save\" (saves waypoints to disk for future use)");
+	BotMessage(pEntity, 0, "\"waypoint flag <name>\" (toggle a flag on nearest waypoint)");
+	BotMessage(pEntity, 0, "\"waypoint setteam <1-4|clear>\" (assign/clear team on nearest waypoint)");
 }
 
 eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const char* arg2, const char* arg3, const char* arg4)
@@ -1485,7 +1488,9 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 		if (arg2 && *arg2)
 		{
 			if (FStrEq(arg2, "wb"))
-				theConverter = new CWhichbotConvert(); //GravebotConvert(); //TODO: Allow Gravebot waypoints conversion [APG]RoboCop[CL]
+				theConverter = new CWhichbotConvert();
+			else if (FStrEq(arg2, "gb"))
+				theConverter = new CGraveBotConvert();
 		}
 
 		if (WaypointSave(false, theConverter))
@@ -1525,6 +1530,134 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 			const int iWpt = std::atoi(arg2);
 
 			SET_ORIGIN(pClient->GetPlayer(), WaypointOrigin(iWpt));
+		}
+	}
+	else if (FStrEq(arg1, "flag"))
+	{
+		// Toggle waypoint flags by name via console - [APG]RoboCop[CL]
+		// Usage: rcbot waypoint flag <flagname>
+		// Must be standing near a waypoint
+
+		const int iWpt = WaypointLocations.NearestWaypoint(EntityOrigin(pEntity), 50.0f, -1, false, true);
+
+		if (iWpt == -1)
+		{
+			BotMessage(pEntity, 0, "Error: You are not standing close enough to a waypoint!");
+			return BOT_CVAR_ERROR;
+		}
+
+		if (!arg2 || !*arg2)
+		{
+			BotMessage(pEntity, 0, "Usage: rcbot waypoint flag <flagname>");
+			BotMessage(pEntity, 0, "Flags: jump, crouch, crouchjump, lift, wallstick, fly,");
+			BotMessage(pEntity, 0, "       teleport, tank, waitlift, endlevel, stayclose,");
+			BotMessage(pEntity, 0, "       openslater, humantower, unreachable, ladder,");
+			BotMessage(pEntity, 0, "       important, scientist, barney (or gman),");
+			BotMessage(pEntity, 0, "       pushable, checklift, defend");
+			return BOT_CVAR_ERROR;
+		}
+
+		int iFlag = 0;
+
+		if (FStrEq(arg2, "jump"))
+			iFlag = W_FL_JUMP;
+		else if (FStrEq(arg2, "crouch"))
+			iFlag = W_FL_CROUCH;
+		else if (FStrEq(arg2, "crouchjump"))
+			iFlag = W_FL_CROUCHJUMP;
+		else if (FStrEq(arg2, "lift"))
+			iFlag = W_FL_LIFT;
+		else if (FStrEq(arg2, "wallstick"))
+			iFlag = W_FL_WALL_STICK;
+		else if (FStrEq(arg2, "fly"))
+			iFlag = W_FL_FLY;
+		else if (FStrEq(arg2, "teleport"))
+			iFlag = W_FL_TELEPORT;
+		else if (FStrEq(arg2, "tank"))
+			iFlag = W_FL_TANK;
+		else if (FStrEq(arg2, "waitlift"))
+			iFlag = W_FL_WAIT_FOR_LIFT;
+		else if (FStrEq(arg2, "endlevel"))
+			iFlag = W_FL_ENDLEVEL;
+		else if (FStrEq(arg2, "stayclose"))
+			iFlag = W_FL_STAY_NEAR;
+		else if (FStrEq(arg2, "openslater"))
+			iFlag = W_FL_OPENS_LATER;
+		else if (FStrEq(arg2, "humantower"))
+			iFlag = W_FL_HUMAN_TOWER;
+		else if (FStrEq(arg2, "unreachable"))
+			iFlag = W_FL_UNREACHABLE;
+		else if (FStrEq(arg2, "ladder"))
+			iFlag = W_FL_LADDER;
+		else if (FStrEq(arg2, "important") || FStrEq(arg2, "scientist"))
+			iFlag = W_FL_SCIENTIST_POINT;
+		else if (FStrEq(arg2, "barney") || FStrEq(arg2, "gman"))
+			iFlag = W_FL_BARNEY_POINT;
+		else if (FStrEq(arg2, "pushable"))
+			iFlag = W_FL_PUSHABLE;
+		else if (FStrEq(arg2, "checklift"))
+			iFlag = W_FL_CHECK_LIFT;
+		else if (FStrEq(arg2, "defend"))
+			iFlag = W_FL_DEFEND_ZONE;
+		else
+		{
+			BotMessage(pEntity, 0, "Error: Unknown flag '%s'", arg2);
+			return BOT_CVAR_ERROR;
+		}
+
+		if (waypoints[iWpt].flags & iFlag)
+		{
+			waypoints[iWpt].flags &= ~iFlag;
+			BotMessage(pEntity, 0, "Removed flag '%s' from waypoint %d", arg2, iWpt);
+		}
+		else
+		{
+			waypoints[iWpt].flags |= iFlag;
+			BotMessage(pEntity, 0, "Added flag '%s' to waypoint %d", arg2, iWpt);
+		}
+	}
+	else if (FStrEq(arg1, "setteam"))
+	{
+		// Set or clear team-specific flag on nearest waypoint
+		// Usage: rcbot waypoint setteam <1-4|clear>
+
+		const int iWpt = WaypointLocations.NearestWaypoint(EntityOrigin(pEntity), 50.0f, -1, false, true);
+
+		if (iWpt == -1)
+		{
+			BotMessage(pEntity, 0, "Error: You are not standing close enough to a waypoint!");
+			return BOT_CVAR_ERROR;
+		}
+
+		if (!arg2 || !*arg2)
+		{
+			BotMessage(pEntity, 0, "Usage: rcbot waypoint setteam <1-4|clear>");
+			BotMessage(pEntity, 0, "  1-4 = assign to team (SI: 1=MCL, 2=AFD)");
+			BotMessage(pEntity, 0, "  clear = remove team restriction");
+			return BOT_CVAR_ERROR;
+		}
+
+		if (FStrEq(arg2, "clear"))
+		{
+			waypoints[iWpt].flags &= ~W_FL_TEAM;
+			waypoints[iWpt].flags &= ~W_FL_TEAM_SPECIFIC;
+			BotMessage(pEntity, 0, "Cleared team restriction on waypoint %d", iWpt);
+		}
+		else
+		{
+			const int iTeam = std::atoi(arg2);
+
+			if (iTeam < 1 || iTeam > 4)
+			{
+				BotMessage(pEntity, 0, "Error: Team must be 1-4 or 'clear'");
+				return BOT_CVAR_ERROR;
+			}
+
+			// Clear old team bits, set new ones
+			waypoints[iWpt].flags &= ~W_FL_TEAM;
+			waypoints[iWpt].flags |= (iTeam - 1); // store as 0-3 in bits 0-1
+			waypoints[iWpt].flags |= W_FL_TEAM_SPECIFIC;
+			BotMessage(pEntity, 0, "Set waypoint %d to team %d", iWpt, iTeam);
 		}
 	}
 	else

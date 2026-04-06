@@ -14,7 +14,7 @@ Supported Mods
 - Natural Selection
 - Rocket Crowbar
 - Front Line Force (WIP)
-- Science and Industry (WIP)
+- Science and Industry
 - The Specialists
 - Wizard Wars
 
@@ -42,6 +42,7 @@ V 1.51-beta13
 * added: Memory leak fix for the MegaHAL code by adding temporary pointers for realloc() calls 
 * added: Miniz to compress the visibility and learned data
 * added: Wizard Wars now supported! (Use v1.2.9 for now)
+* added: Science and Industry now supported too!
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat

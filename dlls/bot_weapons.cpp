@@ -462,6 +462,36 @@ void GetAllowedWeapons(CBot* pBot, edict_t* pEnemy, const float fEnemyDist, shor
 				iAllowedWeapons[static_cast<int>(WizWeapon::WHITERAY)] = 0;
 		}
 		break;
+
+	case MOD_SI:
+		// Mindray is for recruiting scientists, not fighting enemies
+		iAllowedWeapons[static_cast<int>(SIWeapon::MINDRAY)] = 0;
+		// Cloak is not a combat weapon
+		iAllowedWeapons[static_cast<int>(SIWeapon::CLOAK)] = 0;
+		// Resource pickup is not a weapon
+		iAllowedWeapons[static_cast<int>(SIWeapon::RESOURCE)] = 0;
+		// Transistor (radio) is not a combat weapon
+		iAllowedWeapons[static_cast<int>(SIWeapon::TRANSISTOR)] = 0;
+
+		// Against scientists: ONLY use briefcase (to steal, not kill)
+		if (pEnemy && FStrEq("monster_scientist", STRING(pEnemy->v.classname)))
+		{
+			// Disable all weapons except briefcase when targeting a scientist
+			for (int w = 0; w < MAX_WEAPONS; w++)
+				iAllowedWeapons[w] = 0;
+			iAllowedWeapons[static_cast<int>(SIWeapon::BRIEFCASE)] = 1;
+		}
+		else
+		{
+			// Don't use briefcase in combat against players if we have other weapons
+			if (pBot->HasWeapons())
+				iAllowedWeapons[static_cast<int>(SIWeapon::BRIEFCASE)] = 0;
+
+			// Don't use vomit if enemy is too far away (short range weapon)
+			if (fEnemyDist > 170.0f)
+				iAllowedWeapons[static_cast<int>(SIWeapon::VOMIT)] = 0;
+		}
+		break;
 	}
 }
 

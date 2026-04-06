@@ -110,6 +110,10 @@
 
 extern CBotGlobals gBotGlobals;
 
+// Science and Industry research state
+extern bot_research_t g_Researched[2][NUM_RESEARCH_OPTIONS];
+extern int g_iResearchGoal[2];
+
 void SetupNetMessages()
 {
 #ifdef _DEBUG
@@ -156,12 +160,14 @@ void SetupNetMessages()
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_NS_AlienInfo());
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_BG_MakeMessage());
 	// Science and Industry
+	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_WeaponList());
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_TeamCash());
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_SciCount());
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_CarryInfo());
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_Goal());
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_Notice());
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_VoteInfo());
+	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_SI_Battery());
 
 	gBotGlobals.m_NetEntityMessages.AddNetMessage(new BotClient_Generic_ScreenShake());
 	//gBotGlobals.m_NetEntityMessages.AddNetMessage(BotClient_NS_Progress,			"Progress",		MOD_NS);
@@ -600,6 +606,56 @@ void BotClient_BG_MakeMessage::execute(void* p, const int iIndex)
 }
 
 //TODO: Science and Industry - Experimental [APG]RoboCop[CL]
+void BotClient_SI_WeaponList::execute(void* p, const int iIndex)
+{
+	// SI WeaponList has 7 fields (no slot/position):
+	// classname, ammo1_index, ammo1_max, ammo2_index, ammo2_max, weapon_id, flags
+	static char* szClassname;
+	static int iAmmo1;
+	static int iAmmo1Max;
+	static int iAmmo2;
+	static int iAmmo2Max;
+	static int iId;
+
+	if (p == nullptr || iIndex == -1)
+		return;
+
+	short* state = &gBotGlobals.m_iCurrentMessageState;
+
+	switch (POINTER_VALUE(state))
+	{
+	case 0:
+		szClassname = gBotGlobals.m_Strings.GetString(static_cast<char*>(p));
+		break;
+	case 1:
+		iAmmo1 = POINTER_TO_INT(p);
+		break;
+	case 2:
+		iAmmo1Max = POINTER_TO_INT(p);
+		break;
+	case 3:
+		iAmmo2 = POINTER_TO_INT(p);
+		break;
+	case 4:
+		iAmmo2Max = POINTER_TO_INT(p);
+		break;
+	case 5:
+		iId = POINTER_TO_INT(p);
+		break;
+	case 6:
+	{
+		const int iFlags = POINTER_TO_INT(p);
+		// Register weapon with slot=0, position=0 since SI doesn't send these
+		gBotGlobals.m_Weapons.AddWeapon(iId, szClassname, iAmmo1Max, iAmmo2Max, 0, 0, iFlags, iAmmo1, iAmmo2);
+		break;
+	}
+	default:
+		break;
+	}
+
+	POINTER_INCREMENT_VALUE(state);
+}
+
 void BotClient_SI_TeamCash::execute(void* p, const int iIndex)
 {
 	static int iCash = 0;
@@ -645,8 +701,6 @@ void BotClient_SI_SciCount::execute(void* p, const int iIndex)
 void BotClient_SI_CarryInfo::execute(void* p, const int iIndex)
 {
 	static int iCarry = 0;
-	static int iCarryTeam = 0;
-	static int iCarryClass = 0;
 
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -656,18 +710,20 @@ void BotClient_SI_CarryInfo::execute(void* p, const int iIndex)
 	if (POINTER_TO_INT(iState) == 0)
 	{
 		iCarry = POINTER_TO_INT(p);
+
+		// Update per-bot carry type
+		CBot* pBot = &gBotGlobals.m_Bots[iIndex];
+
+		if (pBot->IsUsed())
+		{
+			pBot->m_iSICarryType = iCarry;
+		}
+
+		gBotGlobals.m_iCarry = iCarry;
 	}
 	else if (POINTER_TO_INT(iState) == 1)
 	{
-		iCarryTeam = POINTER_TO_INT(p);
-	}
-	else
-	{
-		iCarryClass = POINTER_TO_INT(p);
-
-		gBotGlobals.m_iCarry = iCarry;
-		gBotGlobals.m_iCarryTeam = iCarryTeam;
-		gBotGlobals.m_iCarryClass = iCarryClass;
+		// Second field is the carry name (string) — just consume it
 	}
 
 	POINTER_INCREMENT_VALUE(iState);
@@ -677,7 +733,6 @@ void BotClient_SI_Goal::execute(void* p, const int iIndex)
 {
 	static int iGoal = 0;
 	static int iGoalTeam = 0;
-	static int iGoalClass = 0;
 
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -691,14 +746,15 @@ void BotClient_SI_Goal::execute(void* p, const int iIndex)
 	else if (POINTER_TO_INT(iState) == 1)
 	{
 		iGoalTeam = POINTER_TO_INT(p);
-	}
-	else
-	{
-		iGoalClass = POINTER_TO_INT(p);
+
+		// Update the global research goal tracker
+		if (iGoal >= 0 && iGoalTeam >= 0 && iGoalTeam <= 1)
+		{
+			g_iResearchGoal[iGoalTeam] = iGoal;
+		}
 
 		gBotGlobals.m_iGoal = iGoal;
 		gBotGlobals.m_iGoalTeam = iGoalTeam;
-		gBotGlobals.m_iGoalClass = iGoalClass;
 	}
 
 	POINTER_INCREMENT_VALUE(iState);
@@ -706,9 +762,7 @@ void BotClient_SI_Goal::execute(void* p, const int iIndex)
 
 void BotClient_SI_Notice::execute(void* p, const int iIndex)
 {
-	static int iNotice = 0;
-	static int iNoticeTeam = 0;
-	static int iNoticeClass = 0;
+	static int iNotice = -1;
 
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -719,17 +773,27 @@ void BotClient_SI_Notice::execute(void* p, const int iIndex)
 	{
 		iNotice = POINTER_TO_INT(p);
 	}
-	else if (POINTER_TO_INT(iState) == 1)
+	else if (POINTER_TO_INT(iState) == 3)
 	{
-		iNoticeTeam = POINTER_TO_INT(p);
-	}
-	else
-	{
-		iNoticeClass = POINTER_TO_INT(p);
+		// After reading all 4 fields (notice + 3 string params), process the notice
+		const CBot* pBot = &gBotGlobals.m_Bots[iIndex];
+
+		if (pBot->IsUsed())
+		{
+			const int team = UTIL_GetTeam(pBot->m_pEdict);
+
+			if (team >= 0 && team <= 1)
+			{
+				// Mark the current research goal as completed
+				if (iNotice == Notice_Research_Completed)
+				{
+					g_Researched[team][g_iResearchGoal[team]].researched = true;
+				}
+			}
+		}
 
 		gBotGlobals.m_iNotice = iNotice;
-		gBotGlobals.m_iNoticeTeam = iNoticeTeam;
-		gBotGlobals.m_iNoticeClass = iNoticeClass;
+		iNotice = -1;
 	}
 
 	POINTER_INCREMENT_VALUE(iState);
@@ -737,9 +801,80 @@ void BotClient_SI_Notice::execute(void* p, const int iIndex)
 
 void BotClient_SI_VoteInfo::execute(void* p, const int iIndex)
 {
-	static int iVote = 0;
-	static int iVoteTeam = 0;
-	static int iVoteClass = 0;
+	// The VoteInfo message sends 4 "chunks" of data (researched, candidate, stolen, disabled).
+	// Each chunk is a LONG (32 bits) + BYTE (remaining bits) to cover all research options.
+	// We parse these to fill the g_Researched array so bots know their team's capabilities.
+	static int data[4][2];
+	static int sec = 0;
+	static int byte = 0;
+
+	if (p == nullptr || iIndex == -1)
+		return;
+
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
+	const int state = POINTER_TO_INT(iState);
+
+	// Determine the team from the entity this message is sent to
+	const CBot* pBot = &gBotGlobals.m_Bots[iIndex];
+	const int team = UTIL_GetTeam(pBot->m_pEdict);
+
+	if (team < 0 || team > 1)
+	{
+		POINTER_INCREMENT_VALUE(iState);
+		return;
+	}
+
+	if (state >= 0 && state <= 7)
+	{
+		data[sec][byte] = POINTER_TO_INT(p);
+
+		if (byte > 0)
+		{
+			sec++;
+			byte = 0;
+		}
+		else
+			byte++;
+	}
+
+	if (state == 7)
+	{
+		sec = byte = 0;
+
+		// Parse the 4 chunks: researched, candidate, stolen, disabled
+		for (int i = 0; i < 4; i++)
+		{
+			// LONG data: bits 0-31
+			constexpr int iLongBits = (NUM_RESEARCH_OPTIONS < 32) ? NUM_RESEARCH_OPTIONS : 32;
+			for (int r = 0; r < iLongBits; r++)
+			{
+				const bool yes = (data[i][0] & (1 << r)) != 0;
+
+				if (i == 0) g_Researched[team][r].researched = yes;
+				else if (i == 1) g_Researched[team][r].canidate = yes;
+				else if (i == 2) g_Researched[team][r].stolen = yes;
+				else if (i == 3) g_Researched[team][r].disabled = yes;
+			}
+			// BYTE data: bits 32+
+			for (int r = 32; r < NUM_RESEARCH_OPTIONS; r++)
+			{
+				const bool yes = (data[i][1] & (1 << (r - 32))) != 0;
+
+				if (i == 0) g_Researched[team][r].researched = yes;
+				else if (i == 1) g_Researched[team][r].canidate = yes;
+				else if (i == 2) g_Researched[team][r].stolen = yes;
+				else if (i == 3) g_Researched[team][r].disabled = yes;
+			}
+		}
+	}
+
+	POINTER_INCREMENT_VALUE(iState);
+}
+
+void BotClient_SI_Battery::execute(void* p, const int iIndex)
+{
+	// SI Battery message: 2 fields - current battery (armour) and max battery
+	static int iMaxBattery = -1;
 
 	if (p == nullptr || iIndex == -1)
 		return;
@@ -748,19 +883,20 @@ void BotClient_SI_VoteInfo::execute(void* p, const int iIndex)
 
 	if (POINTER_TO_INT(iState) == 0)
 	{
-		iVote = POINTER_TO_INT(p);
+		// First field: current battery (armour) value — just consume it
 	}
 	else if (POINTER_TO_INT(iState) == 1)
 	{
-		iVoteTeam = POINTER_TO_INT(p);
-	}
-	else
-	{
-		iVoteClass = POINTER_TO_INT(p);
+		iMaxBattery = POINTER_TO_INT(p);
 
-		gBotGlobals.m_iVote = iVote;
-		gBotGlobals.m_iVoteTeam = iVoteTeam;
-		gBotGlobals.m_iVoteClass = iVoteClass;
+		CBot* pBot = &gBotGlobals.m_Bots[iIndex];
+
+		if (pBot->IsUsed() && iMaxBattery >= 0)
+		{
+			pBot->m_iSIMaxArmor = iMaxBattery;
+		}
+
+		iMaxBattery = -1;
 	}
 
 	POINTER_INCREMENT_VALUE(iState);
@@ -2109,7 +2245,7 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 					pWeapon->UpdateWeapon(iClip);
 
 				pBot->m_pCurrentWeapon = pWeapon;
-				pBot->m_iBotWeapons |= iId;
+				pBot->m_iBotWeapons |= (1 << iId);
 			}
 			if (gBotGlobals.IsNS() && !gBotGlobals.IsConfigSettingOn(BOT_CONFIG_NOT_NS3_FINAL))
 			{
@@ -2124,6 +2260,11 @@ void BotClient_Generic_CurrentWeapon::execute(void* p, const int iIndex)
 		{
 			const int enabled = POINTER_TO_INT(p);
 			pBot->m_Weapons.setHasWeapon(iId, enabled == 1);
+		}
+		else if (gBotGlobals.IsMod(MOD_SI))
+		{
+			// SI CurWeapon has a 4th field: secondary clip
+			// Just consume it; the primary weapon tracking is already done in case 2
 		}
 	default:
 		break;

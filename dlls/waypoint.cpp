@@ -433,6 +433,64 @@ void CWaypointLocations::DrawWaypoints(edict_t* pEntity, const Vector& vOrigin, 
 
 constexpr int WPT_CONVERT_FROM_HPBBOT = 1;
 constexpr int WPT_CONVERT_FROM_WHICHBOT = 2;
+constexpr int WPT_CONVERT_FROM_GRAVEBOT = 3;
+
+// GraveBot waypoint struct (larger than RCBot's - has extra item field)
+typedef struct {
+	int    flags;
+	Vector origin;
+	char   item[19];
+} GRAVEBOT_WAYPOINT;
+
+// Convert GraveBot waypoint flags to RCBot waypoint flags
+static int ConvertGraveBotFlags(const int iGraveFlags)
+{
+	int iRCFlags = 0;
+
+	// Bits 0-9: team, team_specific, crouch, ladder, lift, door, health, armor, ammo
+	// These are identical between GraveBot and RCBot
+	iRCFlags |= (iGraveFlags & 0x3FF); // bits 0-9
+
+	// Bit 10: GraveBot W_FL_SNIPER - no direct RCBot equivalent, drop it
+
+	// Bit 11: GraveBot W_FL_FLAG -> RCBot W_FL_IMPORTANT (same bit)
+	if (iGraveFlags & (1 << 11))
+		iRCFlags |= W_FL_IMPORTANT;
+
+	// Bit 12: GraveBot W_FL_FLAG_GOAL -> RCBot W_FL_RESCUE (same bit)
+	if (iGraveFlags & (1 << 12))
+		iRCFlags |= W_FL_RESCUE;
+
+	// Bit 13: GraveBot W_FL_PRONE - no direct RCBot equivalent, drop it
+
+	// Bit 14: W_FL_AIMING - identical
+	if (iGraveFlags & (1 << 14))
+		iRCFlags |= W_FL_AIMING;
+
+	// Bit 17: GraveBot W_FL_WEAPON -> RCBot W_FL_WEAPON (bit 20)
+	if (iGraveFlags & (1 << 17))
+		iRCFlags |= W_FL_WEAPON;
+
+	// Bit 18: GraveBot W_FL_JUMP -> RCBot W_FL_JUMP (bit 19)
+	if (iGraveFlags & (1 << 18))
+		iRCFlags |= W_FL_JUMP;
+
+	// Bit 19: GraveBot W_FL_ITEM - no direct RCBot equivalent, drop it
+
+	// Bit 20: GraveBot W_FL_DUCKJUMP -> RCBot W_FL_CROUCHJUMP (bit 16)
+	if (iGraveFlags & (1 << 20))
+		iRCFlags |= W_FL_CROUCHJUMP;
+
+	// Bit 21: GraveBot W_FL_DEFEND -> RCBot W_FL_DEFEND_ZONE (bit 13)
+	if (iGraveFlags & (1 << 21))
+		iRCFlags |= W_FL_DEFEND_ZONE;
+
+	// Bit 31: W_FL_DELETED - identical
+	if (iGraveFlags & (1 << 31))
+		iRCFlags |= W_FL_DELETED;
+
+	return iRCFlags;
+}
 
 bool WaypointLoad(edict_t* pEntity)
 {
@@ -480,10 +538,29 @@ bool WaypointLoad(edict_t* pEntity)
 
 		bfp = std::fopen(filename, "rb");
 
-		if (gBotGlobals.IsMod(MOD_NS))
-			iConvertFrom = WPT_CONVERT_FROM_WHICHBOT;
-		else
-			iConvertFrom = WPT_CONVERT_FROM_HPBBOT;
+		if (bfp != nullptr)
+		{
+			if (gBotGlobals.IsMod(MOD_NS))
+				iConvertFrom = WPT_CONVERT_FROM_WHICHBOT;
+			else
+				iConvertFrom = WPT_CONVERT_FROM_HPBBOT;
+		}
+	}
+
+	// If .rcw and .wpt not found, try loading a GraveBot .gbw file
+	if (bfp == nullptr)
+	{
+		// GraveBot stores waypoints in <moddir>/maps/<mapname>.gbw
+#ifdef __linux__
+		snprintf(filename, sizeof(filename), "%s/maps/%s.gbw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+#else
+		snprintf(filename, sizeof(filename), "%s\\maps\\%s.gbw", gBotGlobals.m_szModFolder, STRING(gpGlobals->mapname));
+#endif
+
+		bfp = std::fopen(filename, "rb");
+
+		if (bfp != nullptr)
+			iConvertFrom = WPT_CONVERT_FROM_GRAVEBOT;
 	}
 
 	// if file exists, read the waypoint structure from it
@@ -495,12 +572,14 @@ bool WaypointLoad(edict_t* pEntity)
 
 		bool bWorkOutVisibility = (header.waypoint_file_flags & W_FILE_FL_READ_VISIBILITY) == W_FILE_FL_READ_VISIBILITY;
 
-		if (std::strcmp(header.filetype, "RCBot") == 0 || std::strcmp(header.filetype, "HPB_bot") == 0)
+		const bool bIsGraveBot = (std::strcmp(header.filetype, "[Grave]") == 0 || std::strcmp(header.filetype, "Crabbed") == 0);
+
+		if (std::strcmp(header.filetype, "RCBot") == 0 || std::strcmp(header.filetype, "HPB_bot") == 0 || bIsGraveBot)
 		{
 			if (header.waypoint_file_version != WAYPOINT_VERSION)
 			{
 				if (pEntity)
-					ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible RCBot waypoint file version!\nWaypoints not loaded!\n");
+					ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible waypoint file version!\nWaypoints not loaded!\n");
 
 				std::fclose(bfp);
 				return false;
@@ -513,28 +592,57 @@ bool WaypointLoad(edict_t* pEntity)
 				int i;
 				WaypointInit();  // remove any existing waypoints
 
-				for (i = 0; i < header.number_of_waypoints; i++)
+				if (bIsGraveBot)
 				{
-					std::fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
+					// GraveBot uses a larger waypoint struct with an extra item[19] field
+					BotMessage(pEntity, 0, "Converting GraveBot waypoints to RCBot format...");
 
-					//TODO: Experimental optimisation using waypoint_origin [APG]RoboCop[CL]
-					const Vector& waypoint_origin = waypoints[i].origin;
-
-					if (waypoint_origin.x > 4096.0f || waypoint_origin.y > 4096.0f || waypoint_origin.z > 4096.0f)
+					for (i = 0; i < header.number_of_waypoints; i++)
 					{
-						BotMessage(pEntity, 0, "ERROR!!! Invalid waypoint (id: %d) origin outside map !!!", i);
-						waypoints[i].flags |= W_FL_DELETED;
-						waypoints[i].origin = Vector(0, 0, 0);
-						continue;
+						GRAVEBOT_WAYPOINT gbwpt;
+						std::fread(&gbwpt, sizeof(GRAVEBOT_WAYPOINT), 1, bfp);
+
+						waypoints[i].origin = gbwpt.origin;
+						waypoints[i].flags = ConvertGraveBotFlags(gbwpt.flags);
+
+						const Vector& waypoint_origin = waypoints[i].origin;
+
+						if (waypoint_origin.x > 4096.0f || waypoint_origin.y > 4096.0f || waypoint_origin.z > 4096.0f)
+						{
+							BotMessage(pEntity, 0, "ERROR!!! Invalid waypoint (id: %d) origin outside map !!!", i);
+							waypoints[i].flags |= W_FL_DELETED;
+							waypoints[i].origin = Vector(0, 0, 0);
+							continue;
+						}
+
+						WaypointLocations.AddWptLocation(i, waypoints[i].origin);
+						num_waypoints++;
 					}
-
-					WaypointLocations.AddWptLocation(i, waypoints[i].origin);
-
-					if (iConvertFrom == WPT_CONVERT_FROM_HPBBOT)
+				}
+				else
+				{
+					for (i = 0; i < header.number_of_waypoints; i++)
 					{
-					}
+						std::fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
 
-					num_waypoints++;
+						const Vector& waypoint_origin = waypoints[i].origin;
+
+						if (waypoint_origin.x > 4096.0f || waypoint_origin.y > 4096.0f || waypoint_origin.z > 4096.0f)
+						{
+							BotMessage(pEntity, 0, "ERROR!!! Invalid waypoint (id: %d) origin outside map !!!", i);
+							waypoints[i].flags |= W_FL_DELETED;
+							waypoints[i].origin = Vector(0, 0, 0);
+							continue;
+						}
+
+						WaypointLocations.AddWptLocation(i, waypoints[i].origin);
+
+						if (iConvertFrom == WPT_CONVERT_FROM_HPBBOT)
+						{
+						}
+
+						num_waypoints++;
+					}
 				}
 
 				// read and add waypoint paths...
@@ -552,11 +660,14 @@ bool WaypointLoad(edict_t* pEntity)
 				}
 
 				gBotGlobals.m_bWaypointsHavePaths = true;  // keep track so path can be freed
+
+				if (bIsGraveBot)
+					BotMessage(pEntity, 0, "GraveBot waypoints converted and loaded successfully (%d waypoints)", num_waypoints);
 			}
 			else
 			{
 				{
-					snprintf(msg, sizeof(msg), "%s RCBot waypoints are not for this map!\n", filename);
+					snprintf(msg, sizeof(msg), "%s waypoints are not for this map!\n", filename);
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 				}
 

@@ -160,7 +160,13 @@ void SetupMenus()
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(2, "Sentry Point", BotMenu_Func_Pushable_Waypoint);
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(3, "Flag Point", BotMenu_Func_Sci_Waypoint);
 	}*/
-	if (gBotGlobals.IsMod(MOD_GEARBOX))
+	if (gBotGlobals.IsMod(MOD_SI))
+	{
+		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(1, "Scientist Spawn", BotMenu_Func_Sci_Waypoint);
+		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(2, "GMan (Human Resources)", BotMenu_Func_Barney_Waypoint);
+		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(3, "Defend Zone", BotMenu_Func_Defend_Waypoint);
+	}
+	else if (gBotGlobals.IsMod(MOD_GEARBOX))
 	{
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(1, "Flag Point Op4", BotMenu_Func_Sci_Waypoint);
 		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS6].AddMenuItem(2, "Capture Point Op4", BotMenu_Func_Barney_Waypoint);
@@ -191,7 +197,10 @@ void SetupMenus()
 	//if (gBotGlobals.IsMod(MOD_TFC))
 	//	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(1, "Capture Point", BotMenu_Func_Barney_Waypoint);
 	//else
-	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(1, "Barney Point", BotMenu_Func_Barney_Waypoint);
+	if (gBotGlobals.IsMod(MOD_SI))
+		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(1, "GMan (Human Resources)", BotMenu_Func_Barney_Waypoint);
+	else
+		gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(1, "Barney Point", BotMenu_Func_Barney_Waypoint);
 
 	gBotGlobals.m_Menus[BOT_MENU_WAYPOINT_GIVE_FLAGS7].AddMenuItem(2, "Check for lift", BotMenu_CheckForLift_Waypoint);
 

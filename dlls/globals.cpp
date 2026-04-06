@@ -79,6 +79,11 @@ extern CWaypointLocations WaypointLocations;
 
 extern int debug_engine;
 
+// Science and Industry research state (per team, per research option)
+bot_research_t g_Researched[2][NUM_RESEARCH_OPTIONS] = {};
+// Science and Industry current research goal per team
+int g_iResearchGoal[2] = { 0, 0 };
+
 extern std::FILE* fpMapConfig;
 static std::FILE* fp;
 /*
@@ -1243,6 +1248,16 @@ void CBotGlobals::MapInit()
 		// Wizard Wars: team play maps typically use "ww_" prefix with team goals
 		// Default to team play; DM maps will have max_teams <= 1
 		m_bTeamPlay = true;
+	}
+	else if (IsMod(MOD_SI))
+	{
+		// Science and Industry is always team play
+		m_bTeamPlay = true;
+
+		// Reset research state for new map
+		std::memset(g_Researched, 0, sizeof(g_Researched));
+		g_iResearchGoal[0] = 0;
+		g_iResearchGoal[1] = 0;
 	}
 
 	PRECACHE_MODEL("models/mechgibs.mdl");
