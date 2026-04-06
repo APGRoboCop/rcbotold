@@ -43,9 +43,13 @@ V 1.51-beta13
 * added: Miniz to compress the visibility and learned data
 * added: Wizard Wars now supported! (Use v1.2.9 for now)
 * added: Science and Industry now supported too!
+* added: Can import/export waypoints for GraveBot (S&I bots)
+* added: "rcbot waypoint setteam" and "rcbot waypoint setflag <WPT-TYPE>" for S&I that doesn't support "rcbot waypoint_menu" GUI
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
+* changed: HasWeapons() logic repaired for "m_iBotWeapons"
+* changed: Improved on it's ladder climbing method
 * changed: Replaced most of the #define Marcos with Enumerators and constexpr
 * changed: Strings and enums optimised and modernised
 * changed: NeuralNet & Genetic Algorithms tweaked
