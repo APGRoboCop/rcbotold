@@ -34,7 +34,6 @@ V 1.51-beta13
 * added: Weapon Switch tactic added for when their clips are empty
 * added: Smart pointers, RAII and modern C++ features to reduce potential memory leaks and bug prone crashes
 * added: Assertions for debugging purposes and sanity checks
-* added: Improved on how to allow bots climb ladders more properly
 * added: NS Marine troops can ditch their LMGs for better weapons
 * added: A /visibility folder to store visibility table files away from /waypoints folder
 * added: Max ammo assigned to specific weapons in order for bots to understand when to reload
