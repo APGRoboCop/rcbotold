@@ -43,7 +43,7 @@ V 1.51-beta13
 * added: Wizard Wars now supported! (Use v1.2.9 for now)
 * added: Science and Industry now supported too!
 * added: Can import/export waypoints for GraveBot (S&I bots)
-* added: "rcbot waypoint setteam" and "rcbot waypoint setflag <WPT-TYPE>" for S&I that doesn't support "rcbot waypoint_menu" GUI
+* added: "rcbot waypoint setteam" and "rcbot waypoint flag <WPT-TYPE>" for S&I that doesn't support "rcbot waypoint_menu" GUI
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
