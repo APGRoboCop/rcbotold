@@ -1565,6 +1565,10 @@ eBotCvarState CWaypointCommand::action(CClient* pClient, const char* arg1, const
 			iFlag = W_FL_CROUCH;
 		else if (FStrEq(arg2, "crouchjump"))
 			iFlag = W_FL_CROUCHJUMP;
+		else if (FStrEq(arg2, "health"))
+			iFlag = W_FL_HEALTH;
+		else if (FStrEq(arg2, "armor") || /*UK English:*/ FStrEq(arg2, "armour"))
+			iFlag = W_FL_ARMOR;
 		else if (FStrEq(arg2, "lift"))
 			iFlag = W_FL_LIFT;
 		else if (FStrEq(arg2, "wallstick"))
