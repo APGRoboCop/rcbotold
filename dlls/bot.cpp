@@ -1543,9 +1543,12 @@ void CBot::SpawnInit(const bool bInit)
 
 		m_fChatMessageTime = gpGlobals->time + RANDOM_FLOAT(10, 20);//Use RANDOM_FLOAT instead? [APG]RoboCop[CL]
 
-		if (gBotGlobals.IsMod(MOD_BG))
+		if (gBotGlobals.IsMod(MOD_BG) || gBotGlobals.IsMod(MOD_AHL))
 		{
-			// possible max speed fix.
+			// Sync the bot's internal max-speed to whatever the mod set on pev->maxspeed.
+			// AHL changes maxspeed for stunt-dive / sprint states; without this sync
+			// the bot moves out-of-step with what the engine expects and produces
+			// jittery / speedhack-looking movement on the client. [APG]RoboCop[CL]
 			if (pev && pev->maxspeed > m_fMaxSpeed)
 				m_fMaxSpeed = pev->maxspeed;
 		}
@@ -2399,6 +2402,7 @@ bool CBot::NotStartedGame()
 		}
 		return false;
 	case MOD_TS:
+	case MOD_AHL: // AHL behaves like TS for join/observer flow
 		return false;
 		//case MOD_COUNTERSTRIKE:
 		//	break;
@@ -2625,6 +2629,7 @@ void CBot::StartGame()
 	}
 	break;
 	case MOD_TS:
+	case MOD_AHL: // AHL auto-joins like TS
 	{
 		m_bStartedGame = true;
 	}
@@ -2920,6 +2925,9 @@ void CBot::Think()
 				{
 				case MOD_NS:
 					Impulse(SAYING_8);
+					break;
+				case MOD_AHL:
+					// AHL's Host_Say crashes on fake clients (segfault in ahl_i386.so) [APG]RoboCop[CL]
 					break;
 				default:
 					FakeClientCommand(m_pEdict, "say_team \"Let's go!\"");
@@ -3944,7 +3952,7 @@ void CBot::LookForNewTasks()
 				{
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					continue;
+					//continue;
 				}
 			}
 		}
@@ -3954,7 +3962,7 @@ void CBot::LookForNewTasks()
 				if (CanPickup(pEntity)) {
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					continue;
+					//continue;
 				}
 			}
 			break;
@@ -4074,13 +4082,14 @@ void CBot::LookForNewTasks()
 
 				break;*/
 		case MOD_TS:
+		case MOD_AHL: // AHL shares TS-like ground-pickup behaviour
 			if (!pNearestPickupEntity || fDistance < fNearestPickupEntityDist)
 			{
 				if (CanPickup(pEntity))
 				{
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					continue;
+					//continue;
 				}
 			}
 			break;
@@ -4134,7 +4143,7 @@ void CBot::LookForNewTasks()
 				{
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					continue;
+					//continue;
 				}
 			}
 		}
@@ -4163,31 +4172,31 @@ void CBot::LookForNewTasks()
 					{
 						if (!pNearestScientist || fDistance < fNearestPickupEntityDist)
 						{
-									pNearestScientist = pEntity;
-										}
-									}
-								}
-							}
+							pNearestScientist = pEntity;
+						}
+					}
+				}
+			}
 
-							if (pEntity->v.frame == 0.0f)
-							{
-								if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
-								{
-									if (std::strcmp(szClassname, "func_recharge") == 0)
-									{
-										fNearestHEVchargerDist = fDistance;
-										pNearestHEVcharger = pEntity;
-									}
-								}
+			if (pEntity->v.frame == 0.0f)
+			{
+				if (bNeedArmor && (!pNearestHEVcharger || fDistance < fNearestHEVchargerDist))
+				{
+					if (std::strcmp(szClassname, "func_recharge") == 0)
+					{
+						fNearestHEVchargerDist = fDistance;
+						pNearestHEVcharger = pEntity;
+					}
+				}
 
-								if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
-								{
-									if (std::strcmp(szClassname, "func_healthcharger") == 0)
-									{
-										fNearestHealthchargerDist = fDistance;
-										pNearestHealthcharger = pEntity;
-									}
-								}
+				if (bNeedHealth && (!pNearestHealthcharger || fDistance < fNearestHealthchargerDist))
+				{
+					if (std::strcmp(szClassname, "func_healthcharger") == 0)
+					{
+						fNearestHealthchargerDist = fDistance;
+						pNearestHealthcharger = pEntity;
+					}
+				}
 
 				if (m_fUseButtonTime < gpGlobals->time && (!pNearestButton || (fNearestButtonDist < fDistance)))
 				{
@@ -5712,7 +5721,15 @@ void CBot::LookForNewTasks()
 						gBotGlobals.m_iCurrentMod != MOD_TS &&
 						gBotGlobals.m_iCurrentMod != MOD_WW &&
 						gBotGlobals.m_iCurrentMod != MOD_FLF &&
-						gBotGlobals.m_iCurrentMod != MOD_GEARBOX);
+						gBotGlobals.m_iCurrentMod != MOD_GEARBOX &&
+						gBotGlobals.m_iCurrentMod != MOD_HL_DM &&  // pure DM - no teams [APG]RoboCop[CL]
+						gBotGlobals.m_iCurrentMod != MOD_AHL);     // AHL DM - teams may not exist [APG]RoboCop[CL]
+
+					// Belt & braces: even in mods we allow above, never form squads when teamplay is off.
+					// Without teamplay, UTIL_GetTeam returns 0 for everyone so the squad-search treats
+					// the human player and rival bots as friends. [APG]RoboCop[CL]
+					if (bCanMakeSquad && !gBotGlobals.m_bTeamPlay && !gBotGlobals.isMapType(NON_TS_TEAMPLAY))
+						bCanMakeSquad = false;
 					//gBotGlobals.m_iCurrentMod != MOD_TFC
 
 				/*if ( gBotGlobals.IsMod(MOD_TFC) )
@@ -8509,6 +8526,28 @@ bool CBot::CanPickup(const edict_t* pPickup) const
 			return true;
 	}
 	break;
+	case MOD_AHL:
+	{
+		// Action Half-Life pickups [APG]RoboCop[CL]
+		// TODO: confirm AHL entity classnames against a live server
+		const char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
+
+		// Standard HL-style weapons
+		if (std::strncmp(szClassname, "weapon_", 7) == 0)
+			return !m_Weapons.HasWeapon(m_pEdict, szClassname);
+		// Ammo
+		if (std::strncmp(szClassname, "ammo_", 5) == 0)
+			return true;
+		// Bandages — central to AHL gameplay (heals bleeding); pick up if not full health
+		if (FStrEq(szClassname, "item_bandage"))
+			return pev->health < pev->max_health;
+		// Generic health/armor
+		if (FStrEq(szClassname, "item_healthkit"))
+			return pev->health < pev->max_health;
+		if (std::strncmp(szClassname, "item_armor", 10) == 0 || FStrEq(szClassname, "item_battery"))
+			return pev->armorvalue < 100;
+	}
+	break;
 	case MOD_SI:
 	{
 		const char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
@@ -8526,6 +8565,9 @@ bool CBot::CanPickup(const edict_t* pPickup) const
 			return pev->health < pev->max_health;
 		// Pick up generic items
 		if (FStrEq(szClassname, "weapon_generic"))
+			return true;
+		// S&I core: loose resources on the floor (free for either team to grab and run home)
+		if (FStrEq(szClassname, "item_resource"))
 			return true;
 	}
 	break;
@@ -8842,6 +8884,17 @@ void CBot::RunPlayerMove()
 	}
 	//}}
 
+	// AHL stunt-dive prevention: pressing IN_DUCK + IN_JUMP together while moving
+	// triggers AHL's stunt-dive in pm_shared, which applies a huge velocity boost
+	// (visible as "speedhacking" — bot warps forward at 700+ vel against maxs=280).
+	// When both buttons are set on the same tick in MOD_AHL, drop IN_DUCK so we
+	// only get a regular jump. The bot's nav rarely needs both simultaneously
+	// — anywhere it does, JUMP is the more important nav input. [APG]RoboCop[CL]
+	if (gBotGlobals.IsMod(MOD_AHL) && (pev->button & IN_JUMP) && (pev->button & IN_DUCK))
+	{
+		pev->button &= ~IN_DUCK;
+	}
+
 	if (m_fHoldAttackTime > gpGlobals->time) {
 		PrimaryAttack();
 	}
@@ -8866,6 +8919,13 @@ void CBot::RunPlayerMove()
 	//otherwise TS bots won't stunt dive [APG]RoboCop[CL]
 	(*g_engfuncs.pfnRunPlayerMove)(m_pEdict, pev->angles, m_fMoveSpeed, m_fStrafeSpeed, m_fUpSpeed, pev->button,
 		pev->impulse, m_iMsecVal);
+
+	// Diagnostic: uncomment to see per-tick movement values for the first bot only.
+	// Useful for chasing AHL-style stutter / speedhack symptoms. [APG]RoboCop[CL]
+	//if (this == &gBotGlobals.m_Bots[0])
+	//	BotMessage(nullptr, 0, "move t=%.2f msec=%u vel=%.0f maxs=%.0f move=%.0f strafe=%.0f btn=0x%X",
+	//		gpGlobals->time, m_iMsecVal, pev->velocity.Length(), pev->maxspeed,
+	//		m_fMoveSpeed, m_fStrafeSpeed, pev->button);
 }
 
 void CBot::ThrowGrenade(const edict_t* pEnemy, int preference, const bool bDontPrime)
@@ -8919,7 +8979,13 @@ bool CBot::ThrowingGrenade() const
 
 void CBot::UpdateMsec()
 {
-	m_iMsecVal = static_cast<unsigned char>((gpGlobals->time - m_fLastCallRunPlayerMove) * 1000);
+	// Clamp BEFORE the cast — static_cast<unsigned char> on a float > 255 wraps,
+	// turning e.g. a 256 ms gap into 0 ms (bot doesn't move) or 300 ms into 44 ms.
+	// That manifests as occasional teleport-style stutters / "speedhacking". [APG]RoboCop[CL]
+	float fMsec = (gpGlobals->time - m_fLastCallRunPlayerMove) * 1000.0f;
+	if (fMsec < 0.0f) fMsec = 0.0f;
+	if (fMsec > 255.0f) fMsec = 255.0f;
+	m_iMsecVal = static_cast<unsigned char>(fMsec);
 
     m_iMsecVal = std::min(m_iMsecVal, static_cast<decltype(m_iMsecVal)>(255));
 }
@@ -11329,6 +11395,9 @@ void CBot::SayInPosition()
 		case MOD_NS:
 			Impulse(SAYING_6);
 			break;
+		case MOD_AHL:
+			// AHL's Host_Say crashes on fake clients [APG]RoboCop[CL]
+			break;
 		default:
 			FakeClientCommand(m_pEdict, "say_team \"In Position!\"");
 			break;
@@ -13046,10 +13115,15 @@ void CBot::DoTasks()
 				{
 					HumanizeString(m_szChatString);
 
-					if (m_CurrentTask->TaskInt() == 1) // team only
-						FakeClientCommand(m_pEdict, "say_team \"%s\"", m_szChatString);
-					else
-						FakeClientCommand(m_pEdict, "say \"%s\"", m_szChatString);
+					// AHL's Host_Say segfaults on fake clients (engine/mod bug, not RCBot) [APG]RoboCop[CL]
+					// Skip the FakeClientCommand entirely so the task still completes and the bot moves on.
+					if (!gBotGlobals.IsMod(MOD_AHL))
+					{
+						if (m_CurrentTask->TaskInt() == 1) // team only
+							FakeClientCommand(m_pEdict, "say_team \"%s\"", m_szChatString);
+						else
+							FakeClientCommand(m_pEdict, "say \"%s\"", m_szChatString);
+					}
 
 					m_szChatString[0] = '\0';
 

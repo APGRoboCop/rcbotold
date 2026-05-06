@@ -1122,7 +1122,7 @@ enum : std::uint8_t
 	MOD_SI = 6,			// Science and Industry
 	MOD_DMC = 7,		// deathmatch classic
 	MOD_TS = 8,			// the specialists
-	MOD_GEARBOX = 9,	// Opposing Force [APG]RoboCop[CL]
+	MOD_GEARBOX = 9,	// Opposing Force
 	MOD_IOS = 10,		// international online soccer (gave up :p)
 	MOD_BG = 11,		// battlegrounds
 	MOD_HL_RALLY = 12,  // half-life rally (game crashes when adding a bot!!)
@@ -1130,6 +1130,7 @@ enum : std::uint8_t
 	MOD_RS = 14,		// rival species meh...
 	MOD_WW = 15,		// Wizard Wars
 	MOD_FLF = 16,		// TODO: Front Line Force
+	MOD_AHL = 17,		// Action Half-Life
 };
 
 enum : std::uint8_t

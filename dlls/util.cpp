@@ -95,6 +95,12 @@ bool UTIL_EntityHasClassname(const edict_t* pEntity, const char* classname)
 	return std::strcmp(STRING(pEntity->v.classname), classname) == 0;
 }
 
+// Science & Industry: returns true for carry_scientist / carry_resource
+bool IsCarryEnt(const edict_t* pEntity)
+{
+	return std::strncmp(STRING(pEntity->v.classname), "carry_", 6) == 0;
+}
+
 bool UTIL_IsGrenadeRocket(const edict_t* pEntity)
 {
 	const char* szClassname = STRING(pEntity->v.classname);

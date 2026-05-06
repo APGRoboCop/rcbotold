@@ -5,7 +5,7 @@ RCbot created by Cheeseh
 Supported Mods
 --------------
 
-- Action Half-Life (WIP)
+- Action Half-Life
 - Bumpercars
 - Battlegrounds
 - Deathmatch Classic

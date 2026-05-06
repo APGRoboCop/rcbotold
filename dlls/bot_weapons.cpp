@@ -191,6 +191,10 @@ void CBotWeapons::AddWeapon(const int iId)
 void CWeapons::AddWeapon(const int iId, const char* szClassname, const int iPrimAmmoMax, const int iSecAmmoMax,
 	const int iHudSlot, const int iHudPosition, const int iFlags, const int iAmmoIndex1, const int iAmmoIndex2)
 {
+	// One-shot diagnostic for finding mod-specific weapon IDs (e.g. AHL).
+	// Uncomment, connect once, copy the console output, then re-comment. [APG]RoboCop[CL]
+	//BotMessage(nullptr, 0, "Weapon registered: iId=%d cls=%s slot=%d pos=%d primAmmo=%d secAmmo=%d", iId, szClassname, iHudSlot, iHudPosition, iPrimAmmoMax, iSecAmmoMax);
+
 	if (iId >= 0 && iId < MAX_WEAPONS)
 	{
 		if (m_Weapons[iId] == nullptr)

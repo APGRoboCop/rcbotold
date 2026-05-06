@@ -134,6 +134,7 @@ edict_t* UTIL_GetPlayerByPlayerId(int id);
 Vector UTIL_FurthestVectorAroundYaw(CBot* pBot);
 int UTIL_ClassOnTeam(int iClass, int iTeam);
 bool UTIL_EntityHasClassname(const edict_t* pEntity, const char* classname);
+bool IsCarryEnt(const edict_t* pEntity);
 float UTIL_GetPlayerEnergy(const entvars_t* pev);
 int UTIL_NS_GetMaxArmour(const edict_t* pEntity);
 edict_t* UTIL_GetCommander();
@@ -6286,12 +6287,13 @@ public:
 		m_Mods.AddMod("rspecies", "hl", MOD_RS); // rival species meh..
 		m_Mods.AddMod("gearbox", "opfor", MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 		m_Mods.AddMod("wizardwars_beta", "wizardwars", MOD_WW); // Support for Wiz Wars v1.3.0 [APG]RoboCop[CL]
-		m_Mods.AddMod("wizwars", "hl", MOD_WW); // Support for Wiz Wars v1.2.9
+		m_Mods.AddMod("wizwars", "hl", MOD_WW); // Support for Wiz Wars v1.2.9 [APG]RoboCop[CL]
 		m_Mods.AddMod("wizardwars", "wizardwars", MOD_WW); // Support for Wiz Wars v1.2.7 [APG]RoboCop[CL]
 		m_Mods.AddMod("si", "si", MOD_SI); // Support for Science and Industry [APG]RoboCop[CL]
 		m_Mods.AddMod("frontline", "frontline", MOD_FLF); // Support for Front Line Force [APG]RoboCop[CL]
 		m_Mods.AddMod("arena", "hl", MOD_GEARBOX); // Support for HL: Arena [APG]RoboCop[CL]
 		m_Mods.AddMod("hlc", "foundation", MOD_HL_DM); // Support for HL: Legacy [APG]RoboCop[CL]
+		m_Mods.AddMod("action", "ahl", MOD_AHL); // Support for Action Half-Life [APG]RoboCop[CL]
 
 #else
 		// LINUX
@@ -6316,12 +6318,13 @@ public:
 		m_Mods.AddMod("rspecies", "hl", MOD_RS);
 		m_Mods.AddMod("gearbox", "opfor", MOD_GEARBOX); // Support for OP4CTF [APG]RoboCop[CL]
 		m_Mods.AddMod("wizardwars_beta", "wizardwars", MOD_WW); // Support for Wiz Wars v1.3.0 [APG]RoboCop[CL]
-		m_Mods.AddMod("wizwars", "mp", MOD_WW); // Support for Wiz Wars v1.2.9
+		m_Mods.AddMod("wizwars", "mp", MOD_WW); // Support for Wiz Wars v1.2.9 [APG]RoboCop[CL]
 		m_Mods.AddMod("wizardwars", "wizardwars", MOD_WW); // Support for Wiz Wars v1.2.7 [APG]RoboCop[CL]
 		m_Mods.AddMod("si", "si", MOD_SI); // Support for Science and Industry [APG]RoboCop[CL]
 		m_Mods.AddMod("frontline", "front", MOD_FLF); // Support for Front Line Force [APG]RoboCop[CL]
 		m_Mods.AddMod("arena", "hl", MOD_GEARBOX); // Support for HL: Arena [APG]RoboCop[CL]
 		m_Mods.AddMod("hlc", "foundation", MOD_HL_DM); // Support for HL: Legacy [APG]RoboCop[CL]
+		m_Mods.AddMod("action", "ahl", MOD_AHL); // Support for Action Half-Life [APG]RoboCop[CL]
 
 #endif
 		// same for linux & windows
