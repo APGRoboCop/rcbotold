@@ -983,7 +983,7 @@ void WaypointFree()
 	{
 		if (i)
 		{
-			PATH* p = i;
+			const PATH* p = i;
 
 			while (p)  // free the linked list
 			{

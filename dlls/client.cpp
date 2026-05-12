@@ -409,6 +409,41 @@ void InitMessage ( const char *message );
 
 				PATH* p;
 
+				// Copied from RedFox's FoXBot and adapted for RCBot
+				// reverse paths: draw a yellow beam from any waypoint whose path
+				// leads to the one the player is standing on. Render as two
+				// segments with a symmetric gap in the middle so the dashed look
+				// reads as "incoming" without overlapping the outgoing whites.
+				// [APG]RoboCop[CL]
+				for (int ii = 0; ii < num_waypoints; ii++)
+				{
+					if ((waypoints[iCurrentWaypoint].origin - waypoints[ii].origin).Length() >= 800.0f)
+						continue;
+
+					p = paths[ii];
+
+					while (p != nullptr)
+					{
+						n = 0;
+
+						while (n < MAX_PATH_INDEX)
+						{
+							if (p->index[n] == iCurrentWaypoint)
+							{
+								// raised toward the waypoint centre (small drop only),
+								// continuous from A to B
+								Vector v_src = waypoints[ii].origin - Vector(0, 0, 4);
+								Vector v_dest = waypoints[iCurrentWaypoint].origin - Vector(0, 0, 4);
+								WaypointDrawBeam(pPlayer, v_src, v_dest, 10, 2, 200, 200, 0, 200, 10);
+							}
+
+							n++;
+						}
+
+						p = p->next;
+					}
+				}
+
 				p = paths[iCurrentWaypoint];
 
 				while (p != nullptr)
@@ -419,8 +454,13 @@ void InitMessage ( const char *message );
 					{
 						if (p->index[n] != -1)
 						{
-							// draw a white line to this index's waypoint
-							WaypointDrawBeam(pPlayer, waypoints[iCurrentWaypoint].origin, waypoints[p->index[n]].origin, 10, 2, 250, 250, 250, 200, 10);
+							// Code copied from RedFox's FoXBot and adapted for RCBot [APG]RoboCop[CL]
+							// draw a white line to this index's waypoint, raised
+							// above the centre so the yellow incoming beam has
+							// clear vertical separation
+							Vector v_white_src = waypoints[iCurrentWaypoint].origin + Vector(0, 0, 16);
+							Vector v_white_dest = waypoints[p->index[n]].origin + Vector(0, 0, 16);
+							WaypointDrawBeam(pPlayer, v_white_src, v_white_dest, 10, 2, 250, 250, 250, 200, 10);
 						}
 
 						n++;
