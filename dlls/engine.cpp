@@ -1,4 +1,4 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /*
  *    This file is part of RCBot.
@@ -63,6 +63,8 @@
 
 #include "waypoint.h"
 
+#include <cstdarg>
+
 #ifdef RCBOT_META_BUILD
 extern globalvars_t* gpGlobals;
 #endif
@@ -72,7 +74,19 @@ extern CBotGlobals gBotGlobals;
 extern int debug_engine;
 extern CWaypointLocations WaypointLocations;
 
-static std::FILE* fp;
+void DebugLogf(const char* fmt, ...)
+{
+	if (!debug_engine)
+		return;
+	std::FILE* f = std::fopen("bot.txt", "a");
+	if (!f)
+		return;
+	std::va_list ap;
+	va_start(ap, fmt);
+	std::vfprintf(f, fmt, ap);
+	va_end(ap);
+	std::fclose(f);
+}
 /*
 void pfnAlertMessage( ALERT_TYPE atype, char *szFmt, ... )
 {
@@ -87,7 +101,7 @@ void pfnAlertMessage( ALERT_TYPE atype, char *szFmt, ... )
 */
 int pfnPrecacheModel(const char* s)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnPrecacheModel: %s\n", s); std::fclose(fp); }
+	DebugLogf("pfnPrecacheModel: %s\n", s);
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
@@ -97,7 +111,7 @@ int pfnPrecacheModel(const char* s)
 }
 int pfnPrecacheSound(const char* s)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnPrecacheSound: %s\n", s); std::fclose(fp); }
+	DebugLogf("pfnPrecacheSound: %s\n", s);
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
@@ -107,11 +121,7 @@ int pfnPrecacheSound(const char* s)
 }
 void pfnSetModel(edict_t* e, const char* m)
 {
-	if (debug_engine) {
-		fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "pfnSetModel: edict=%x %s\n", unsigned(e), m);
-		std::fclose(fp);
-	}
+	DebugLogf("pfnSetModel: edict=%x %s\n", unsigned(e), m);
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -130,7 +140,7 @@ int pfnModelIndex(const char* m)
 }
 int pfnModelFrames(int modelIndex)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnModelFrames:\n"); std::fclose(fp); }
+	DebugLogf("pfnModelFrames:\n");
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
@@ -140,11 +150,7 @@ int pfnModelFrames(int modelIndex)
 }
 void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 {
-	if (debug_engine) {
-		fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "pfnSetSize: %x\n", unsigned(e));
-		std::fclose(fp);
-	}
+	DebugLogf("pfnSetSize: %x\n", unsigned(e));
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -153,7 +159,7 @@ void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 }
 void pfnChangeLevel(char* s1, char* s2)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnChangeLevel:\n"); std::fclose(fp); }
+	DebugLogf("pfnChangeLevel:\n");
 
 	// kick any bot off of the server after time/frag limit...
 	for (CBot& m_Bot : gBotGlobals.m_Bots)
@@ -180,7 +186,7 @@ void pfnChangeLevel(char* s1, char* s2)
 }
 void pfnGetSpawnParms(edict_t* ent)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnGetSpawnParms:\n"); std::fclose(fp); }
+	DebugLogf("pfnGetSpawnParms:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -189,7 +195,7 @@ void pfnGetSpawnParms(edict_t* ent)
 }
 void pfnSaveSpawnParms(edict_t* ent)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnSaveSpawnParms:\n"); std::fclose(fp); }
+	DebugLogf("pfnSaveSpawnParms:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -216,7 +222,7 @@ void pfnVecToAngles(const float* rgflVectorIn, float* rgflVectorOut)
 }
 void pfnMoveToOrigin(edict_t* ent, const float* pflGoal, float dist, int iMoveType)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnMoveToOrigin:\n"); std::fclose(fp); }
+	DebugLogf("pfnMoveToOrigin:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -252,7 +258,7 @@ edict_t* pfnFindEntityByString(edict_t* pEdictStartSearchAfter, const char* pszF
 }
 int pfnGetEntityIllum(edict_t* pEnt)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnGetEntityIllum:\n"); std::fclose(fp); }
+	DebugLogf("pfnGetEntityIllum:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -261,7 +267,7 @@ int pfnGetEntityIllum(edict_t* pEnt)
 }
 edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org, float rad)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnFindEntityInSphere:\n"); std::fclose(fp); }
+	DebugLogf("pfnFindEntityInSphere:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -270,7 +276,7 @@ edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org
 }
 edict_t* pfnFindClientInPVS(edict_t* pEdict)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnFindClientInPVS:\n"); std::fclose(fp); }
+	DebugLogf("pfnFindClientInPVS:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -279,7 +285,7 @@ edict_t* pfnFindClientInPVS(edict_t* pEdict)
 }
 edict_t* pfnEntitiesInPVS(edict_t* pplayer)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnEntitiesInPVS:\n"); std::fclose(fp); }
+	DebugLogf("pfnEntitiesInPVS:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -310,21 +316,16 @@ edict_t* pfnCreateEntity()
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
 	edict_t* pent = (*g_engfuncs.pfnCreateEntity)();
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCreateEntity: %x\n", pent); std::fclose(fp); }
+	DebugLogf("pfnCreateEntity: %x\n", pent);
 	return pent;
 #endif
 }
 void pfnRemoveEntity(edict_t* e)
 {
 	//   if (debug_engine) { fp=std::fopen("bot.txt","a"); std::fprintf(fp,"pfnRemoveEntity: %x\n",e); std::fclose(fp); }
-	if (debug_engine)
-	{
-		fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "pfnRemoveEntity: %x\n", unsigned(e));
-		if (e->v.model != 0)
-			std::fprintf(fp, " model=%s\n", STRING(e->v.model));
-		std::fclose(fp);
-	}
+	DebugLogf("pfnRemoveEntity: %x\n", unsigned(e));
+	if (e->v.model != 0)
+		DebugLogf(" model=%s\n", STRING(e->v.model));
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -340,14 +341,14 @@ edict_t* pfnCreateNamedEntity(int className)
 
 	edict_t* pent = (*g_engfuncs.pfnCreateNamedEntity)(className);
 
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCreateNamedEntity: edict=%x name=%s\n", pent, STRING(className)); std::fclose(fp); }
+	DebugLogf("pfnCreateNamedEntity: edict=%x name=%s\n", pent, STRING(className));
 
 	return pent;
 #endif
 }
 void pfnMakeStatic(edict_t* ent)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnMakeStatic:\n"); std::fclose(fp); }
+	DebugLogf("pfnMakeStatic:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -356,7 +357,7 @@ void pfnMakeStatic(edict_t* ent)
 }
 int pfnEntIsOnFloor(edict_t* e)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnEntIsOnFloor:\n"); std::fclose(fp); }
+	DebugLogf("pfnEntIsOnFloor:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -365,7 +366,7 @@ int pfnEntIsOnFloor(edict_t* e)
 }
 int pfnDropToFloor(edict_t* e)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnDropToFloor:\n"); std::fclose(fp); }
+	DebugLogf("pfnDropToFloor:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -374,7 +375,7 @@ int pfnDropToFloor(edict_t* e)
 }
 int pfnWalkMove(edict_t* ent, float yaw, float dist, int iMode)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnWalkMove:\n"); std::fclose(fp); }
+	DebugLogf("pfnWalkMove:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -383,7 +384,7 @@ int pfnWalkMove(edict_t* ent, float yaw, float dist, int iMode)
 }
 void pfnSetOrigin(edict_t* e, const float* rgflOrigin)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnSetOrigin:\n"); std::fclose(fp); }
+	DebugLogf("pfnSetOrigin:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -513,7 +514,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 		}
 	}
 
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnEmitSound:\n"); std::fclose(fp); }
+	DebugLogf("pfnEmitSound:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -522,7 +523,7 @@ void pfnEmitSound(edict_t* entity, int channel, const char* sample, /*int*/float
 }
 void pfnEmitAmbientSound(edict_t* entity, float* pos, const char* samp, float vol, float attenuation, int fFlags, int pitch)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnEmitAmbientSound:\n"); std::fclose(fp); }
+	DebugLogf("pfnEmitAmbientSound:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -603,7 +604,7 @@ void pfnGetAimVector(edict_t* ent, float speed, float* rgflReturn)
 }
 void pfnServerCommand(char* str)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnServerCommand: %s\n", str); std::fclose(fp); }
+	DebugLogf("pfnServerCommand: %s\n", str);
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -612,7 +613,7 @@ void pfnServerCommand(char* str)
 }
 void pfnServerExecute()
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnServerExecute:\n"); std::fclose(fp); }
+	DebugLogf("pfnServerExecute:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -621,7 +622,7 @@ void pfnServerExecute()
 }
 void pfnClientCommand(edict_t* pEdict, char* szFmt, ...)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnClientCommand=%s\n", szFmt); std::fclose(fp); }
+	DebugLogf("pfnClientCommand=%s\n", szFmt);
 #ifdef RCBOT_META_BUILD
 	if (pEdict->v.flags & FL_FAKECLIENT)
 		RETURN_META(MRES_SUPERCEDE);
@@ -683,7 +684,7 @@ void pfnMessageEnd()
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnMessageEnd:\n"); std::fclose(fp); }
+		DebugLogf("pfnMessageEnd:\n");
 
 		if (gBotGlobals.m_CurrentMessage)
 		{
@@ -715,7 +716,7 @@ void pfnWriteByte(int iValue)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnWriteByte: %d\n", iValue); std::fclose(fp); }
+		DebugLogf("pfnWriteByte: %d\n", iValue);
 
 		// if this message is for a bot, call the client message function...
 		if (gBotGlobals.m_CurrentMessage)
@@ -763,7 +764,7 @@ void pfnWriteShort(int iValue)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnWriteShort: %d\n", iValue); std::fclose(fp); }
+		DebugLogf("pfnWriteShort: %d\n", iValue);
 
 		// if this message is for a bot, call the client message function...
 		if (gBotGlobals.m_CurrentMessage)
@@ -787,7 +788,7 @@ void pfnWriteLong(int iValue)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnWriteLong: %d\n", iValue); std::fclose(fp); }
+		DebugLogf("pfnWriteLong: %d\n", iValue);
 
 		// if this message is for a bot, call the client message function...
 		if (gBotGlobals.m_CurrentMessage)
@@ -812,7 +813,7 @@ void pfnWriteAngle(float flValue)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnWriteAngle: %f\n", flValue); std::fclose(fp); }
+		DebugLogf("pfnWriteAngle: %f\n", flValue);
 
 		// if this message is for a bot, call the client message function...
 		if (gBotGlobals.m_CurrentMessage)
@@ -837,7 +838,7 @@ void pfnWriteCoord(float flValue)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnWriteCoord: %f\n", flValue); std::fclose(fp); }
+		DebugLogf("pfnWriteCoord: %f\n", flValue);
 
 		// if this message is for a bot, call the client message function...
 		if (gBotGlobals.m_CurrentMessage)
@@ -862,7 +863,7 @@ void pfnWriteString(const char* sz)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnWriteString: %s\n", sz); std::fclose(fp); }
+		DebugLogf("pfnWriteString: %s\n", sz);
 
 		// if this message is for a bot, call the client message function...
 		if (gBotGlobals.m_CurrentMessage)
@@ -887,7 +888,7 @@ void pfnWriteEntity(int iValue)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnWriteEntity: %d\n", iValue); std::fclose(fp); }
+		DebugLogf("pfnWriteEntity: %d\n", iValue);
 
 		// if this message is for a bot, call the client message function...
 		if (gBotGlobals.m_CurrentMessage)
@@ -910,7 +911,7 @@ void pfnWriteEntity(int iValue)
 }
 void pfnCVarRegister(cvar_t* pCvar)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCVarRegister:\n"); std::fclose(fp); }
+	DebugLogf("pfnCVarRegister:\n");
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -956,7 +957,7 @@ void pfnCVarSetString(const char* szVarName, const char* szValue)
 }
 void* pfnPvAllocEntPrivateData(edict_t* pEdict, long cb)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnPvAllocEntPrivateData:\n"); std::fclose(fp); }
+	DebugLogf("pfnPvAllocEntPrivateData:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -965,7 +966,7 @@ void* pfnPvAllocEntPrivateData(edict_t* pEdict, long cb)
 }
 void* pfnPvEntPrivateData(edict_t* pEdict)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnPvEntPrivateData:\n"); std::fclose(fp); }
+	DebugLogf("pfnPvEntPrivateData:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -976,7 +977,7 @@ void pfnFreeEntPrivateData(edict_t* pEdict)
 {
 	BotMessage(nullptr, 0, "Free ent provate data:");
 
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnFreeEntPrivateData:\n"); std::fclose(fp); }
+	DebugLogf("pfnFreeEntPrivateData:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -985,7 +986,7 @@ void pfnFreeEntPrivateData(edict_t* pEdict)
 }
 const char* pfnSzFromIndex(int iString)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnSzFromIndex:\n"); std::fclose(fp); }
+	DebugLogf("pfnSzFromIndex:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -994,7 +995,7 @@ const char* pfnSzFromIndex(int iString)
 }
 int pfnAllocString(const char* szValue)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnAllocString:\n"); std::fclose(fp); }
+	DebugLogf("pfnAllocString:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1003,7 +1004,7 @@ int pfnAllocString(const char* szValue)
 }
 entvars_t* pfnGetVarsOfEnt(edict_t* pEdict)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnGetVarsOfEnt:\n"); std::fclose(fp); }
+	DebugLogf("pfnGetVarsOfEnt:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -1081,7 +1082,7 @@ int pfnRegUserMsg(const char* pszName, int iSize)
 	if (gpGlobals->deathmatch)
 	{
 #ifdef _DEBUG
-		fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnRegUserMsg: pszName=%s msg=%d\n", pszName, msg); std::fclose(fp);
+		DebugLogf("pfnRegUserMsg: pszName=%s msg=%d\n", pszName, msg);
 #endif
 	}
 #endif
@@ -1118,7 +1119,7 @@ void pfnGetBonePosition(const edict_t* pEdict, int iBone, float* rgflOrigin, flo
 
 unsigned long pfnFunctionFromName(const char* pName)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnFunctionFromName:\n"); std::fclose(fp); }
+	DebugLogf("pfnFunctionFromName:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1128,7 +1129,7 @@ unsigned long pfnFunctionFromName(const char* pName)
 
 const char* pfnNameForFunction(unsigned long function)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnNameForFunction:\n"); std::fclose(fp); }
+	DebugLogf("pfnNameForFunction:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -1138,7 +1139,7 @@ const char* pfnNameForFunction(unsigned long function)
 
 void pfnClientPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnClientPrintf:\n"); std::fclose(fp); }
+	DebugLogf("pfnClientPrintf:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1148,7 +1149,7 @@ void pfnClientPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg)
 
 void pfnServerPrint(const char* szMsg)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnServerPrint: %s\n", szMsg); std::fclose(fp); }
+	DebugLogf("pfnServerPrint: %s\n", szMsg);
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1166,7 +1167,7 @@ void pfnGetAttachment(const edict_t* pEdict, int iAttachment, float* rgflOrigin,
 }
 void pfnCRC32_Init(CRC32_t* pulCRC)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCRC32_Init:\n"); std::fclose(fp); }
+	DebugLogf("pfnCRC32_Init:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1175,7 +1176,7 @@ void pfnCRC32_Init(CRC32_t* pulCRC)
 }
 void pfnCRC32_ProcessBuffer(CRC32_t* pulCRC, void* p, int len)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCRC32_ProcessBuffer:\n"); std::fclose(fp); }
+	DebugLogf("pfnCRC32_ProcessBuffer:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1184,7 +1185,7 @@ void pfnCRC32_ProcessBuffer(CRC32_t* pulCRC, void* p, int len)
 }
 void pfnCRC32_ProcessByte(CRC32_t* pulCRC, unsigned char ch)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCRC32_ProcessByte:\n"); std::fclose(fp); }
+	DebugLogf("pfnCRC32_ProcessByte:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1193,7 +1194,7 @@ void pfnCRC32_ProcessByte(CRC32_t* pulCRC, unsigned char ch)
 }
 CRC32_t pfnCRC32_Final(CRC32_t pulCRC)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCRC32_Final:\n"); std::fclose(fp); }
+	DebugLogf("pfnCRC32_Final:\n");
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, pulCRC);
@@ -1221,7 +1222,7 @@ float pfnRandomFloat(float flLow, float flHigh)
 }
 void pfnSetView(const edict_t* pClient, const edict_t* pViewent)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnSetView:\n"); std::fclose(fp); }
+	DebugLogf("pfnSetView:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1230,7 +1231,7 @@ void pfnSetView(const edict_t* pClient, const edict_t* pViewent)
 }
 float pfnTime()
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnTime:\n"); std::fclose(fp); }
+	DebugLogf("pfnTime:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1239,7 +1240,7 @@ float pfnTime()
 }
 void pfnCrosshairAngle(const edict_t* pClient, float pitch, float yaw)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCrosshairAngle:\n"); std::fclose(fp); }
+	DebugLogf("pfnCrosshairAngle:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1248,7 +1249,7 @@ void pfnCrosshairAngle(const edict_t* pClient, float pitch, float yaw)
 }
 byte* pfnLoadFileForMe(char* filename, int* pLength)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnLoadFileForMe: filename=%s\n", filename); std::fclose(fp); }
+	DebugLogf("pfnLoadFileForMe: filename=%s\n", filename);
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, nullptr);
 #else
@@ -1257,7 +1258,7 @@ byte* pfnLoadFileForMe(char* filename, int* pLength)
 }
 void pfnFreeFile(void* buffer)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnFreeFile:\n"); std::fclose(fp); }
+	DebugLogf("pfnFreeFile:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1266,7 +1267,7 @@ void pfnFreeFile(void* buffer)
 }
 void pfnEndSection(const char* pszSectionName)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnEndSection:\n"); std::fclose(fp); }
+	DebugLogf("pfnEndSection:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1275,7 +1276,7 @@ void pfnEndSection(const char* pszSectionName)
 }
 int pfnCompareFileTime(char* filename1, char* filename2, int* iCompare)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCompareFileTime:\n"); std::fclose(fp); }
+	DebugLogf("pfnCompareFileTime:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1284,7 +1285,7 @@ int pfnCompareFileTime(char* filename1, char* filename2, int* iCompare)
 }
 void pfnGetGameDir(char* szGetGameDir)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnGetGameDir:\n"); std::fclose(fp); }
+	DebugLogf("pfnGetGameDir:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1293,7 +1294,7 @@ void pfnGetGameDir(char* szGetGameDir)
 }
 void pfnCvar_RegisterVariable(cvar_t* variable)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCvar_RegisterVariable:\n"); std::fclose(fp); }
+	DebugLogf("pfnCvar_RegisterVariable:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1302,7 +1303,7 @@ void pfnCvar_RegisterVariable(cvar_t* variable)
 }
 void pfnFadeClientVolume(const edict_t* pEdict, int fadePercent, int fadeOutSeconds, int holdTime, int fadeInSeconds)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnFadeClientVolume:\n"); std::fclose(fp); }
+	DebugLogf("pfnFadeClientVolume:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1318,11 +1319,7 @@ void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 		pBot->m_fMaxSpeed = fNewMaxspeed;
 	}
 
-	if (debug_engine) {
-		fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "pfnSetClientMaxspeed: edict=%x %f\n", unsigned(pEdict), fNewMaxspeed);
-		std::fclose(fp);
-	}
+	DebugLogf("pfnSetClientMaxspeed: edict=%x %f\n", unsigned(pEdict), fNewMaxspeed);
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1331,7 +1328,7 @@ void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 }
 edict_t* pfnCreateFakeClient(const char* netname)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCreateFakeClient:\n"); std::fclose(fp); }
+	DebugLogf("pfnCreateFakeClient:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -1340,7 +1337,7 @@ edict_t* pfnCreateFakeClient(const char* netname)
 }
 void pfnRunPlayerMove(edict_t* fakeclient, const float* viewangles, float forwardmove, float sidemove, float upmove, unsigned short buttons, byte impulse, byte msec)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnRunPlayerMove:\n"); std::fclose(fp); }
+	DebugLogf("pfnRunPlayerMove:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1349,7 +1346,7 @@ void pfnRunPlayerMove(edict_t* fakeclient, const float* viewangles, float forwar
 }
 int pfnNumberOfEntities()
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnNumberOfEntities:\n"); std::fclose(fp); }
+	DebugLogf("pfnNumberOfEntities:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1358,7 +1355,7 @@ int pfnNumberOfEntities()
 }
 char* pfnGetInfoKeyBuffer(edict_t* e)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnGetInfoKeyBuffer:\n"); std::fclose(fp); }
+	DebugLogf("pfnGetInfoKeyBuffer:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -1367,7 +1364,7 @@ char* pfnGetInfoKeyBuffer(edict_t* e)
 }
 char* pfnInfoKeyValue(char* infobuffer, char* key)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnInfoKeyValue: %s %s\n", infobuffer, key); std::fclose(fp); }
+	DebugLogf("pfnInfoKeyValue: %s %s\n", infobuffer, key);
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -1376,7 +1373,7 @@ char* pfnInfoKeyValue(char* infobuffer, char* key)
 }
 void pfnSetKeyValue(char* infobuffer, char* key, char* value)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnSetKeyValue: %s %s\n", key, value); std::fclose(fp); }
+	DebugLogf("pfnSetKeyValue: %s %s\n", key, value);
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1440,7 +1437,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 		}
 	}
 
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnSetClientKeyValue: %s %s\n", key, value); std::fclose(fp); }
+	DebugLogf("pfnSetClientKeyValue: %s %s\n", key, value);
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1449,7 +1446,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 }
 int pfnIsMapValid(char* filename)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnIsMapValid:\n"); std::fclose(fp); }
+	DebugLogf("pfnIsMapValid:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1458,7 +1455,7 @@ int pfnIsMapValid(char* filename)
 }
 void pfnStaticDecal(const float* origin, int decalIndex, int entityIndex, int modelIndex)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnStaticDecal:\n"); std::fclose(fp); }
+	DebugLogf("pfnStaticDecal:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1467,7 +1464,7 @@ void pfnStaticDecal(const float* origin, int decalIndex, int entityIndex, int mo
 }
 int pfnPrecacheGeneric(char* s)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnPrecacheGeneric: %s\n", s); std::fclose(fp); }
+	DebugLogf("pfnPrecacheGeneric: %s\n", s);
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1478,11 +1475,7 @@ int pfnGetPlayerUserId(edict_t* e)
 {
 	if (gpGlobals->deathmatch)
 	{
-		if (debug_engine) {
-			fp = std::fopen("bot.txt", "a");
-			std::fprintf(fp, "pfnGetPlayerUserId: %x\n", unsigned(e));
-			std::fclose(fp);
-		}
+		DebugLogf("pfnGetPlayerUserId: %x\n", unsigned(e));
 	}
 
 #ifdef RCBOT_META_BUILD
@@ -1495,7 +1488,7 @@ int pfnGetPlayerUserId(edict_t* e)
 const char* pfnGetPlayerAuthId(edict_t* e)
 {
 	static const char* BOT_STEAM_ID = "BOT";
-	bool bIsBot = UTIL_GetBotPointer(e) != nullptr;
+	const bool bIsBot = UTIL_GetBotPointer(e) != nullptr;
 #ifdef RCBOT_META_BUILD
 
 	if (bIsBot)
@@ -1513,7 +1506,7 @@ const char* pfnGetPlayerAuthId(edict_t* e)
 
 void pfnBuildSoundMsg(edict_t* entity, int channel, const char* sample, /*int*/float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnBuildSoundMsg:\n"); std::fclose(fp); }
+	DebugLogf("pfnBuildSoundMsg:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1522,7 +1515,7 @@ void pfnBuildSoundMsg(edict_t* entity, int channel, const char* sample, /*int*/f
 }
 int pfnIsDedicatedServer()
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnIsDedicatedServer:\n"); std::fclose(fp); }
+	DebugLogf("pfnIsDedicatedServer:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1531,7 +1524,7 @@ int pfnIsDedicatedServer()
 }
 cvar_t* pfnCVarGetPointer(const char* szVarName)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCVarGetPointer: %s\n", szVarName); std::fclose(fp); }
+	DebugLogf("pfnCVarGetPointer: %s\n", szVarName);
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -1552,11 +1545,7 @@ unsigned pfnGetPlayerWONId(edict_t* e)
 		}
 	}
 
-	if (debug_engine) {
-		fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "pfnGetPlayerWONId: %x\n", unsigned(e));
-		std::fclose(fp);
-	}
+	DebugLogf("pfnGetPlayerWONId: %x\n", unsigned(e));
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1568,7 +1557,7 @@ unsigned pfnGetPlayerWONId(edict_t* e)
 
 void pfnInfo_RemoveKey(char* s, const char* key)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnInfo_RemoveKey:\n"); std::fclose(fp); }
+	DebugLogf("pfnInfo_RemoveKey:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1577,7 +1566,7 @@ void pfnInfo_RemoveKey(char* s, const char* key)
 }
 const char* pfnGetPhysicsKeyValue(const edict_t* pClient, const char* key)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnGetPhysicsKeyValue:\n"); std::fclose(fp); }
+	DebugLogf("pfnGetPhysicsKeyValue:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -1586,7 +1575,7 @@ const char* pfnGetPhysicsKeyValue(const edict_t* pClient, const char* key)
 }
 void pfnSetPhysicsKeyValue(const edict_t* pClient, const char* key, const char* value)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnSetPhysicsKeyValue:\n"); std::fclose(fp); }
+	DebugLogf("pfnSetPhysicsKeyValue:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1595,7 +1584,7 @@ void pfnSetPhysicsKeyValue(const edict_t* pClient, const char* key, const char* 
 }
 const char* pfnGetPhysicsInfoString(const edict_t* pClient)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnGetPhysicsInfoString:\n"); std::fclose(fp); }
+	DebugLogf("pfnGetPhysicsInfoString:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -1604,7 +1593,7 @@ const char* pfnGetPhysicsInfoString(const edict_t* pClient)
 }
 unsigned short pfnPrecacheEvent(int type, const char* psz)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnPrecacheEvent:\n"); std::fclose(fp); }
+	DebugLogf("pfnPrecacheEvent:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1614,7 +1603,7 @@ unsigned short pfnPrecacheEvent(int type, const char* psz)
 void pfnPlaybackEvent(int flags, const edict_t* pInvoker, unsigned short eventindex, float delay,
 	float* origin, float* angles, float fparam1, float fparam2, int iparam1, int iparam2, int bparam1, int bparam2)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnPlaybackEvent:\n"); std::fclose(fp); }
+	DebugLogf("pfnPlaybackEvent:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1623,7 +1612,7 @@ void pfnPlaybackEvent(int flags, const edict_t* pInvoker, unsigned short eventin
 }
 unsigned char* pfnSetFatPVS(float* org)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnSetFatPVS:\n"); std::fclose(fp); }
+	DebugLogf("pfnSetFatPVS:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -1632,7 +1621,7 @@ unsigned char* pfnSetFatPVS(float* org)
 }
 unsigned char* pfnSetFatPAS(float* org)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnSetFatPAS:\n"); std::fclose(fp); }
+	DebugLogf("pfnSetFatPAS:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 #else
@@ -1678,7 +1667,7 @@ void pfnDeltaAddEncoder(char* name, void (*conditionalencode)(delta_s* pFields, 
 }
 int pfnGetCurrentPlayer()
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnGetCurrentPlayer:\n"); std::fclose(fp); }
+	DebugLogf("pfnGetCurrentPlayer:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1687,7 +1676,7 @@ int pfnGetCurrentPlayer()
 }
 int pfnCanSkipPlayer(const edict_t* player)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCanSkipPlayer:\n"); std::fclose(fp); }
+	DebugLogf("pfnCanSkipPlayer:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1705,7 +1694,7 @@ int pfnDeltaFindField(delta_s* pFields, const char* fieldname)
 }
 void pfnDeltaSetFieldByIndex(delta_s* pFields, int fieldNumber)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnDeltaSetFieldByIndex:\n"); std::fclose(fp); }
+	DebugLogf("pfnDeltaSetFieldByIndex:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1723,7 +1712,7 @@ void pfnDeltaUnsetFieldByIndex(delta_s* pFields, int fieldNumber)
 }
 void pfnSetGroupMask(int mask, int op)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnSetGroupMask:\n"); std::fclose(fp); }
+	DebugLogf("pfnSetGroupMask:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1732,7 +1721,7 @@ void pfnSetGroupMask(int mask, int op)
 }
 int pfnCreateInstancedBaseline(int classname, entity_state_s* baseline)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCreateInstancedBaseline:\n"); std::fclose(fp); }
+	DebugLogf("pfnCreateInstancedBaseline:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 #else
@@ -1741,7 +1730,7 @@ int pfnCreateInstancedBaseline(int classname, entity_state_s* baseline)
 }
 void pfnCvar_DirectSet(cvar_s* var, char* value)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnCvar_DirectSet:\n"); std::fclose(fp); }
+	DebugLogf("pfnCvar_DirectSet:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1750,7 +1739,7 @@ void pfnCvar_DirectSet(cvar_s* var, char* value)
 }
 void pfnForceUnmodified(FORCE_TYPE type, float* mins, float* maxs, const char* filename)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnForceUnmodified:\n"); std::fclose(fp); }
+	DebugLogf("pfnForceUnmodified:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else
@@ -1759,7 +1748,7 @@ void pfnForceUnmodified(FORCE_TYPE type, float* mins, float* maxs, const char* f
 }
 void pfnGetPlayerStats(const edict_t* pClient, int* ping, int* packet_loss)
 {
-	if (debug_engine) { fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "pfnGetPlayerStats:\n"); std::fclose(fp); }
+	DebugLogf("pfnGetPlayerStats:\n");
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
 #else

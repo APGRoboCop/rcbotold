@@ -109,7 +109,6 @@ LINK_ENTITY_TO_FUNC(info_checkpoint);
 LINK_ENTITY_TO_FUNC(info_camera);
 LINK_ENTITY_TO_FUNC(bot);
 LINK_ENTITY_TO_FUNC(weapon_grenade);
-LINK_ENTITY_TO_FUNC(weapon_bite2gun);
 LINK_ENTITY_TO_FUNC(item_catalyst);
 LINK_ENTITY_TO_FUNC(item_ammopack);
 LINK_ENTITY_TO_FUNC(weapon_uziakimbo);

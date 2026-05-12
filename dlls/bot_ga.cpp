@@ -293,7 +293,7 @@ CBitsGAValues::CBitsGAValues(CBits* bits)
 // crossover with other individual
 void CBitsGAValues::crossOver(IIndividual* other)
 {
-	CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
+	const CBitsGAValues* otherBits = static_cast<CBitsGAValues*>(other);
 
 	const int iNumBits = m_theBits->numBits();
 	if (iNumBits == 0)

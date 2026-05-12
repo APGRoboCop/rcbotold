@@ -96,7 +96,7 @@ void CPopulation::add(IIndividual* individual)
 
 void CPopulation::freeMemory()
 {
-	for (IIndividual* individual : m_theIndividuals)
+	for (const IIndividual* individual : m_theIndividuals)
 	{
 		delete individual;
 	}
@@ -240,6 +240,7 @@ CGA::CGA(ISelection* selectFunction) : m_theSelectFunction(selectFunction)
 	m_iNumGenerations = 0;
 	m_fPrevAvgFitness = 0.0f;
 	m_iPopType = 0;
+	m_bUseAdaptiveMutation = true;
 
 	m_bestIndividual = nullptr;
 	m_thePopulation.clear();

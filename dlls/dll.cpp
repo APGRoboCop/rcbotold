@@ -187,14 +187,9 @@ int DispatchSpawn(edict_t* pent)
 	{
 		char* pClassname = const_cast<char*>(STRING(pent->v.classname));
 
-		if (debug_engine)
-		{
-			std::FILE* fp = std::fopen("bot.txt", "a");
-			std::fprintf(fp, "DispatchSpawn: %p %s\n", pent, pClassname);
-			if (pent->v.model != 0)
-				std::fprintf(fp, " model=%s\n", STRING(pent->v.model));
-			std::fclose(fp);
-		}
+		DebugLogf("DispatchSpawn: %p %s\n", pent, pClassname);
+		if (pent->v.model != 0)
+			DebugLogf(" model=%s\n", STRING(pent->v.model));
 
 		if (std::strcmp(pClassname, "worldspawn") == 0)
 		{
@@ -431,7 +426,7 @@ int ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress,
 			pClient->Init();
 		}
 
-		if (debug_engine) { std::FILE* fp = std::fopen("bot.txt", "a"); std::fprintf(fp, "ClientConnect: pent=%p name=%s\n", pEntity, pszName); std::fclose(fp); }
+		DebugLogf("ClientConnect: pent=%p name=%s\n", pEntity, pszName);
 
 		if (!IS_DEDICATED_SERVER())
 		{
@@ -671,11 +666,7 @@ void ClientDisconnect(edict_t* pEntity)
 ///////////////////////////////////////////////////////////////////////////
 void ClientKill(edict_t* pEntity)
 {
-	if (debug_engine) {
-		std::FILE* fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "ClientKill: %x\n", unsigned(pEntity));
-		std::fclose(fp);
-	}
+	DebugLogf("ClientKill: %x\n", unsigned(pEntity));
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -686,11 +677,7 @@ void ClientKill(edict_t* pEntity)
 ///////////////////////////////////////////////////////////////////////////
 void ClientPutInServer(edict_t* pEntity)
 {
-	if (debug_engine) {
-		std::FILE* fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "ClientPutInServer: %x\n", unsigned(pEntity));
-		std::fclose(fp);
-	}
+	DebugLogf("ClientPutInServer: %x\n", unsigned(pEntity));
 
 	gBotGlobals.m_Clients.ClientConnected(pEntity);
 
@@ -805,7 +792,7 @@ void ClientCommand(edict_t* pEntity)
 		if (bSayTeamMsg)
 		{
 			// player wants to lead squad?
-			if (std::strncmp(arg1, "form", 4) == 0 &&
+			if (arg1 && std::strncmp(arg1, "form", 4) == 0 &&
 				(std::strncmp(&arg1[4], " up", 3) == 0 || (arg2 && std::strncmp(arg2, "up", 2) == 0)))
 			{
 				// loop through bots in team
@@ -1055,11 +1042,7 @@ void ClientCommand(edict_t* pEntity)
 ///////////////////////////////////////////////////////////////////////////
 void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
 {
-	if (debug_engine) {
-		std::FILE* fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", unsigned(pEntity), infobuffer);
-		std::fclose(fp);
-	}
+	DebugLogf("ClientUserInfoChanged: pEntity=%x infobuffer=%s\n", unsigned(pEntity), infobuffer);
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1210,11 +1193,7 @@ const char* GetGameDescription()
 
 void PlayerCustomization(edict_t* pEntity, customization_t* pCust)
 {
-	if (debug_engine) {
-		std::FILE* fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "PlayerCustomization: %x\n", unsigned(pEntity));
-		std::fclose(fp);
-	}
+	DebugLogf("PlayerCustomization: %x\n", unsigned(pEntity));
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META(MRES_IGNORED);
@@ -1394,11 +1373,7 @@ void CreateInstancedBaselines()
 
 int InconsistentFile(const edict_t* player, const char* filename, char* disconnect_message)
 {
-	if (debug_engine) {
-		std::FILE* fp = std::fopen("bot.txt", "a");
-		std::fprintf(fp, "InconsistentFile: %x filename=%s\n", unsigned(player), filename);
-		std::fclose(fp);
-	}
+	DebugLogf("InconsistentFile: %x filename=%s\n", unsigned(player), filename);
 
 #ifdef RCBOT_META_BUILD
 	RETURN_META_VALUE(MRES_IGNORED, 0);

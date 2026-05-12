@@ -444,6 +444,11 @@ public:
 		{
 			weapon_preset_t* pPreset = tempStack.ChoosePointerFromStack();
 
+			if (pPreset == nullptr)
+			{
+				continue;
+			}
+
 			if (pPreset->m_iId == iWeaponId &&
 				pPreset->m_iModId == iModId)
 			{

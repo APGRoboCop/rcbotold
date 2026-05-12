@@ -1704,8 +1704,6 @@ void CBot::SpawnInit(const bool bInit)
 
 	m_pLastEnemy = nullptr;
 
-	m_bHasLongJump = false;
-
 	//m_pNearestAmmoDisp = NULL;
 
 	m_iLastFailedWaypoint = -1;
@@ -2772,7 +2770,7 @@ void CBot::StartGame()
 		}
 		return;
 	}
-	break;
+	//break;
 	}
 
 	// generic case, just press fire :)
@@ -7230,7 +7228,7 @@ void CBot::WorkViewAngles()
 	{
 		// face entity
 		// get the edict
-		edict_t* pEdict = m_CurrentTask->TaskEdict();
+		const edict_t* pEdict = m_CurrentTask->TaskEdict();
 
 		// check if the edict is valid and not a null entity
 		if (pEdict && !FNullEnt(pEdict))
@@ -10837,7 +10835,7 @@ bool CBot::RemoveMySquad()
 void CBot::FaceLadderWall() const
 {
 	TraceResult tr;
-	Vector v_src = pev->origin + pev->view_ofs;
+	const Vector v_src = pev->origin + pev->view_ofs;
 
 	float f_min_dist = -1.0f;
 	constexpr float EPSILON = 1e-6f; // Small tolerance value
@@ -13141,7 +13139,7 @@ void CBot::DoTasks()
 				else
 				{
 					bTaskFailed = true;
-					m_szChatString[0] = 0;
+					//m_szChatString[0] = 0;
 				}
 			}
 		}

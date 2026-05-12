@@ -102,9 +102,9 @@ typedef int BOOL;
 //
 #ifdef DEBUG
 extern edict_t* DBG_EntOfVars(const entvars_t* pev);
-inline edict_t* ENT(const entvars_t* pev) { return DBG_EntOfVars(pev); }
+inline edict_t* ENT(const entvars_t* pev) { return pev ? DBG_EntOfVars(pev) : nullptr; }
 #else
-inline edict_t* ENT(const entvars_t* pev) { return pev->pContainingEntity; }
+inline edict_t* ENT(const entvars_t* pev) { return pev ? pev->pContainingEntity : nullptr; }
 #endif
 inline edict_t* ENT(edict_t* pent) { return pent; }
 inline edict_t* ENT(EOFFSET eoffset) { return (*g_engfuncs.pfnPEntityOfEntOffset)(eoffset); }
@@ -206,12 +206,19 @@ typedef enum : std::uint8_t
 // Misc useful
 inline bool FStrEq(const char* sz1, const char* sz2)
 {
+	if (sz1 == nullptr || sz2 == nullptr)
+		return sz1 == sz2; // both null = equal, one null = not equal
 	return (std::strcmp(sz1, sz2) == 0);
 }
 inline bool FClassnameIs(edict_t* pent, const char* szClassname)
 {
-	return FStrEq(STRING(VARS(pent)->classname), szClassname);
+	if (pent == nullptr)
+	{
+		return false;
+	}
+	return FStrEq(STRING(pent->v.classname), szClassname);
 }
+
 inline bool FClassnameIs(entvars_t* pev, const char* szClassname)
 {
 	return FStrEq(STRING(pev->classname), szClassname);

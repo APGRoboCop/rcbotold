@@ -1,4 +1,4 @@
-/*
+﻿/*
  *    This file is part of RCBot.
  *
  *    RCBot by Paul Murphy adapted from botman's template 3.
@@ -364,6 +364,9 @@ public:
 		{
 			const CBotReputation* pRep = tempStack.ChoosePointerFromStack();
 
+			if (!pRep)
+				continue;
+
 			pRep->printRep(forBot, pPrintTo);
 		}
 	}
@@ -404,6 +407,9 @@ public:
 		{
 			const CBotReputation* pRep = tempStack.ChoosePointerFromStack();
 
+			if (!pRep)
+				continue;
+
 			// bug fixed... didn't add :-P
 			iTotal += pRep->CurrentRep();
 			iNum++;
@@ -432,6 +438,9 @@ public:
 		{
 			CBotReputation* l_Rep = tempStack.ChoosePointerFromStack();
 
+			if (!l_Rep)
+				continue;
+
 			if (l_Rep->IsForPlayer(iPlayerRepId))
 			{
 				// Fool pointer, dont free memory
@@ -453,6 +462,9 @@ public:
 		while (!tempStack.IsEmpty())
 		{
 			CBotReputation* l_Rep = tempStack.ChoosePointerFromStack();
+
+			if (!l_Rep)
+				continue;
 
 			if (l_Rep->IsForPlayer(iPlayerRepId))
 			{
@@ -1125,6 +1137,9 @@ public:
 		{
 			CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
+			if (!tempTask)
+				continue;
+
 			if (tempTask->GetScheduleId() == iScheduleId)
 			{
 				tempTask->SetTimeToComplete(fTime);
@@ -1162,6 +1177,9 @@ public:
 		{
 			const CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
+			if (!tempTask)
+				continue;
+
 			const int iFailSchedule = tempTask->GetScheduleId();
 
 			if (tempTask->TimedOut())
@@ -1187,6 +1205,9 @@ public:
 		{
 			CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
+			if (!tempTask)
+				continue;
+
 			if (tempTask->GetScheduleId() == iSchedId)
 			{
 				tempTask->ChangeScheduleDesc(iSchedDesc);
@@ -1207,6 +1228,9 @@ public:
 		while (!tempStack.IsEmpty())
 		{
 			const CBotTask* tempTask = tempStack.ChoosePointerFrom();
+
+			if (!tempTask)
+				continue;
 
 			if (tempTask->IsOfSchedule(iSchedDesc))
 			{
@@ -1259,6 +1283,9 @@ public:
 			{
 				const CBotTask* pTask = tempStack.ChoosePointerFrom();
 
+				if (!pTask)
+					continue;
+
 				if (*pTask == Task)
 				{
 					tempStack.Init();
@@ -1290,6 +1317,9 @@ public:
 		while (!tempStack.IsEmpty())
 		{
 			const CBotTask* pTask = tempStack.ChoosePointerFrom();
+
+			if (!pTask)
+				continue;
 
 			if (pTask->Task() == iTask)
 			{
@@ -1327,6 +1357,9 @@ public:
 		{
 			const CBotTask* tempTask = tempStack.ChoosePointerFrom();
 
+			if (!tempTask)
+				continue;
+
 			if (tempTask->Task() == iTask)
 			{
 				tempStack.Init();
@@ -1346,6 +1379,9 @@ public:
 		while (!tempStack.IsEmpty())
 		{
 			const CBotTask* pTask = tempStack.ChoosePointerFrom();
+
+			if (!pTask)
+				continue;
 
 			if (pTask->Task() == iTask)
 			{
@@ -1398,6 +1434,9 @@ public:
 		{
 			const CBotTask* pTask = tempStack.ChoosePointerFrom();
 
+			if (!pTask)
+				continue;
+
 			if (iScheduleId == pTask->GetScheduleId())
 			{
 				tempStack = m_Tasks;
@@ -1420,6 +1459,9 @@ public:
 		{
 			const CBotTask* pTask = tempStack.ChoosePointerFrom();
 
+			if (!pTask)
+				continue;
+
 			if (pTask->GetScheduleId() == iScheduleId)
 			{
 				m_Tasks.RemoveByPointer(pTask);
@@ -1441,6 +1483,9 @@ public:
 		while (!tempStack.IsEmpty())
 		{
 			const CBotTask* pTask = tempStack.ChoosePointerFrom();
+
+			if (!pTask)
+				continue;
 
 			if (pTask->IsOfSchedule(iSchedDesc))
 			{
@@ -1627,6 +1672,9 @@ public:
 		{
 			CBotFailedPath* pFailedPath = tempStack.ChoosePointerFromStack();
 
+			if (!pFailedPath)
+				continue;
+
 			if (pFailedPath->IsForPath(pPath))
 			{
 				pFailedPath->Violate();
@@ -1652,6 +1700,9 @@ public:
 		{
 			const CBotFailedPath* pFailedPath = tempStack.ChoosePointerFromStack();
 
+			if (!pFailedPath)
+				continue;
+
 			if (pFailedPath->IsViolated())
 			{
 				m_FailedPaths.RemoveByPointer(pFailedPath);
@@ -1675,6 +1726,9 @@ public:
 		while (!tempStack.IsEmpty())
 		{
 			const CBotFailedPath* pFailedPath = tempStack.ChoosePointerFromStack();
+
+			if (!pFailedPath)
+				continue;
 
 			if (pFailedPath->IsForPath(pPath))
 			{
@@ -2309,6 +2363,9 @@ public:
 		{
 			const MyEHandle* temp = tempStack.ChoosePointerFromStack();
 
+			if (!temp)
+				continue;
+
 			if (temp->Get() == pMember)
 			{
 				m_theSquad.RemoveByPointer(temp);
@@ -2416,7 +2473,7 @@ public:
 	{
 		const edict_t* pLeader = GetLeader();
 
-		if (pLeader->v.velocity.Length2D() != 0.0f)
+		if (pLeader && pLeader->v.velocity.Length2D() != 0.0f)
 		{
 			m_vLeaderAngle = UTIL_VecToAngles(pLeader->v.velocity);
 		}
@@ -4586,8 +4643,8 @@ public:
 
 	void TFCTeleExitDestroyed()
 	{
-		if (m_pTFCTeleEntrance.Get())
-			m_pTFCTeleEntrance.Get()->v.euser1 = nullptr;
+		if (edict_t* pEntrance = m_pTFCTeleEntrance.Get())
+			pEntrance->v.euser1 = nullptr;
 
 		m_pTFCTeleExit.Set(nullptr);
 	}
@@ -4703,8 +4760,11 @@ class CClients
 public:
 	CClients()
 	{
-		std::memset(m_Clients, 0, sizeof(CClient) * 32);
-		//m_Clients.SetSize(32);
+		for (CClient& m_Client : m_Clients)
+			m_Client = CClient();
+		// or, if CClient has a Reset() method:
+		// for (int i = 0; i < MAX_PLAYERS; ++i)
+		//     m_Clients[i].Reset();
 	}
 
 	edict_t* FindClient(const char* szPlayerName) const
@@ -4889,6 +4949,9 @@ public:
 		{
 			CAllowedPlayer* pPlayer = tempStack.ChoosePointerFromStack();
 
+			if (!pPlayer)
+				continue;
+
 			pPlayer->ShowUser(pEntity);
 		}
 	}
@@ -4916,6 +4979,9 @@ public:
 		while (!tempStack.IsEmpty())
 		{
 			CAllowedPlayer* Player = tempStack.ChoosePointerFromStack();
+
+			if (!Player)
+				continue;
 
 			if (Player->IsForClient(pClient))
 			{
@@ -5146,6 +5212,9 @@ public:
 		while (!tempStack.IsEmpty())
 		{
 			CModInfo* pInfo = tempStack.ChoosePointerFromStack();
+
+			if (!pInfo)
+				continue;
 
 			if (pInfo->IsForMod(szModFolder))
 			{
@@ -5408,6 +5477,9 @@ public:
 			while (!tempStack.IsEmpty())
 			{
 				CStructure* pStructure = tempStack.ChoosePointerFromStack();
+
+				if (!pStructure)
+					continue;
 
 				if (pStructure->IsValid())
 				{
@@ -5818,6 +5890,9 @@ public:
 		{
 			const CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
 
+			if (!pGotFlag)
+				continue;
+
 			if (pGotFlag->isEdict(pFlag))
 			{
 				bool bValid;
@@ -5847,6 +5922,9 @@ public:
 		{
 			const CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
 
+			if (!pGotFlag)
+				continue;
+
 			if (pGotFlag->isEdict(pFlag))
 			{
 				*group = pGotFlag->getGroup();
@@ -5870,6 +5948,9 @@ public:
 		{
 			const CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
 
+			if (!pGotFlag)
+				continue;
+
 			edict_t* pFlag = pGotFlag->edict();
 
 			if (pFlag->v.owner && UTIL_GetTeam(pFlag->v.owner) == team)
@@ -5889,6 +5970,9 @@ public:
 		while (!tempStack.IsEmpty())
 		{
 			const CTFCGoal* pGotFlag = tempStack.ChoosePointerFromStack();
+
+			if (!pGotFlag)
+				continue;
 
 			const edict_t* pFlag = pGotFlag->edict();
 

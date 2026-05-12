@@ -616,6 +616,9 @@ float UTIL_AnglesBetweenEdictOrigin(const edict_t* pEdict, const Vector& origin)
 
 edict_t* UTIL_getEntityInFront(edict_t* pEntity)
 {
+	if (pEntity == nullptr)
+		return nullptr;
+
 	//angles = UTIL_VecToAngles(angles);
 	Vector v_viewpoint = pEntity->v.v_angle;
 
@@ -1753,6 +1756,9 @@ CBaseEntity* CreateEnt(char* szName, const Vector& vecOrigin, const Vector& vecA
 		pent = ENT(0);
 	CBaseEntity* pEntity = static_cast<CBaseEntity*>(GET_PRIVATE(pent));
 
+	if (!pEntity || !pEntity->pev)
+		return nullptr;
+
 	pEntity->pev->owner = pentOwner;
 	pEntity->pev->origin = vecOrigin;
 	pEntity->pev->angles = vecAngles;
@@ -1769,6 +1775,9 @@ Vector EntityOrigin(const edict_t* pEdict)
 {
 	//if ( pEdict->v.flags & FL_WORLDBRUSH )
 
+	if (pEdict == nullptr)
+		return Vector(0, 0, 0);
+
 	if (/*gBotGlobals.m_iCurrentMod == MOD_SVENCOOP &&*/ pEdict->v.flags & FL_MONSTER)
 		return pEdict->v.origin + pEdict->v.view_ofs / 2;
 
@@ -1779,6 +1788,9 @@ Vector EntityOrigin(const edict_t* pEdict)
 
 Vector AbsOrigin(const edict_t* pEdict)
 {
+	if (pEdict == nullptr)
+		return Vector(0, 0, 0);
+
 	return (pEdict->v.absmin + pEdict->v.absmax) / 2;
 }
 

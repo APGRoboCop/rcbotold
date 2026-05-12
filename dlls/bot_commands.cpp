@@ -477,7 +477,7 @@ eBotCvarState CUtilCommand::action(CClient* pClient, const char* arg1, const cha
 		else
 			BotMessage(pEntity, 0, "Error: No teleport destination set, use \"set_teleport\"");
 	}
-	else if (pEntity && FStrEq("notouch", arg1))
+	else if (pClient && pEntity && FStrEq("notouch", arg1))
 	{
 		pClient->m_bNoTouch = !pClient->m_bNoTouch;
 
@@ -611,7 +611,7 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 		{
 			CClient* pPlayerClient = gBotGlobals.m_Clients.GetClientByIndex(i);
 
-			if (pPlayerClient->IsUsed())
+			if (pPlayerClient && pPlayerClient->IsUsed())
 			{
 				pPlayerClient->SetAccessLevel(0);
 				pPlayerClient->m_bRecheckAuth = true;
@@ -637,6 +637,12 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 			if (pPlayer)
 			{
 				CClient* pPlayerClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer);
+
+				if (!pPlayerClient)
+				{
+					BotMessage(pEntity, 0, "Player not found!!");
+					return BOT_CVAR_ERROR;
+				}
 
 				const int iLev = std::atoi(arg3);
 
@@ -680,6 +686,12 @@ eBotCvarState CUsersCommand::action(CClient* pClient, const char* arg1, const ch
 				}
 
 				CClient* pPlayerClient = gBotGlobals.m_Clients.GetClientByEdict(pPlayer);
+
+				if (!pPlayerClient)
+				{
+					BotMessage(pEntity, 0, "Player not found!!");
+					return BOT_CVAR_ERROR;
+				}
 
 				gBotGlobals.m_BotUsers.RemovePlayer(STRING(pPlayer->v.netname), pPlayerClient->GetPass(), pPlayerClient->steamID());
 
@@ -1693,7 +1705,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 	int iTeam = -1;
 	int iClass = -1;
 
-	char* szName = nullptr;
+	const char* szName = nullptr;
 
 	int iSkill = DEF_BOT_SKILL;
 

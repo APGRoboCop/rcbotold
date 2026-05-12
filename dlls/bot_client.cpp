@@ -844,8 +844,8 @@ void BotClient_SI_VoteInfo::execute(void* p, const int iIndex)
 		// Parse the 4 chunks: researched, candidate, stolen, disabled
 		for (int i = 0; i < 4; i++)
 		{
-			// LONG data: bits 0-31
-			constexpr int iLongBits = (NUM_RESEARCH_OPTIONS < 32) ? NUM_RESEARCH_OPTIONS : 32;
+         // LONG data: bits 0-31
+			const int iLongBits = (NUM_RESEARCH_OPTIONS < 32) ? NUM_RESEARCH_OPTIONS : 32;
 			for (int r = 0; r < iLongBits; r++)
 			{
 				const bool yes = (data[i][0] & (1 << r)) != 0;
@@ -2400,7 +2400,7 @@ void BotClient_Generic_Health::execute(void* p, const int iIndex)
 			if (!pBot->m_Tasks.HasTask(BOT_TASK_ACCEPT_HEALTH))
 			{
 				edict_t* pSupplier = nullptr;
-				float nearest = 96.0f;  // Remove constexpr - it's modified in logic below
+				const float nearest = 96.0f;  // Remove constexpr - it's modified in logic below
 
 				for (int i = 1; i <= gpGlobals->maxClients; i++)
 				{

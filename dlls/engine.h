@@ -9,6 +9,9 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+// Debug logger - writes to bot.txt when debug_engine is set. Safe vs null fopen.
+void DebugLogf(const char* fmt, ...);
+
 // engine prototypes (from engine\eiface.h)...
 int pfnPrecacheModel( const char* s );
 int pfnPrecacheSound( const char* s );
