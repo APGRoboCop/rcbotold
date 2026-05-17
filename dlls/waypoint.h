@@ -460,10 +460,10 @@ public:
 		setVersion(4);
 
 #ifndef __linux__
-		char str4[] = "maps";
+		constexpr char str4[] = "maps";
 		setFolder(str4);
 #else
-		char str4[] = "maps";
+		constexpr char str4[] = "maps";
 		setFolder(str4);
 #endif
 

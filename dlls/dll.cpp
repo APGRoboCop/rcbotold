@@ -97,7 +97,7 @@ CBotGlobals gBotGlobals;
 extern CWaypointVisibilityTable WaypointVisibility;
 extern CWaypointLocations WaypointLocations;
 
-cvar_t bot_ver_cvar = { BOT_VER_CVAR,BOT_VER,FCVAR_SERVER };
+cvar_t bot_ver_cvar = { BOT_VER_CVAR,BOT_VER, FCVAR_SERVER, 0.0f, nullptr };
 
 std::FILE* fpMapConfig = nullptr;
 
