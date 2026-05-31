@@ -1218,7 +1218,16 @@ bool CBot::WantToLeaveGame() const
 void CBot::Init()
 // Initialise everything required.
 {
-	//std::memset(this, 0, sizeof(CBot)); //Not required? [APG]RoboCop[CL]
+	// Zero the whole object before re-initialising. This is load-bearing on
+	// changelevel: ServerDeactivate() calls Init() to recycle a used CBot slot,
+	// and Init() does NOT explicitly re-assign every member — so without this,
+	// stale state (entity/model pointers, m_szBotName, m_iRespawnState, current
+	// weapon, etc.) carries over to the next map, making rejoined bots spawn
+	// wrong: invisible bodies, "unnamed", broken spawns. Was wrongly commented
+	// out as "Not required?". Safe: CBot has no STL members or vtable, so a
+	// flat zero is well-defined (this matches b13, which shipped it working).
+	// [APG]RoboCop[CL]
+	std::memset(this, 0, sizeof(CBot));
 	//*this = CBot();
 
 	m_iBoredom = 127;

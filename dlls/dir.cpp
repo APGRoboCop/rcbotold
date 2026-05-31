@@ -154,40 +154,82 @@ DIR* FindDirectory(DIR* directory, char* dirname, const char* dirspec)
 #endif
 
 /// <summary>
-/// Returns true if the path has any sub-directories
+/// Returns true if the path has at least one sub-directory.
+///
+/// Self-contained on purpose: it does NOT reuse the stateful FindDirectory()
+/// iterator. The previous version walked FindDirectory() and bailed out early,
+/// which on dedicated servers conflated "directory I couldn't read" with
+/// "directory is empty" and risked leaving shared iteration state dangling.
+/// Here we own the opendir/closedir (or FindFirstFile/FindClose) pair, always
+/// close it, and a directory we can't open simply reports "no subdirs". The
+/// real safety net for an empty result is the fallback + empty-list guard in
+/// CBotGlobals::LoadBotModels(). [APG]RoboCop[CL]
 /// </summary>
 bool HasSubDirectories(const char* path)
 {
 #ifndef __linux__
 	char search_path[MAX_PATH];
-	char dirname[MAX_PATH];
-	HANDLE directory = nullptr;
 
 	strncpy_s(search_path, MAX_PATH, path, _TRUNCATE);
-	strncat_s(search_path, MAX_PATH, "/*", _TRUNCATE);
-#else
-	char search_path[MAX_PATHNAME_LENGTH];
-	char dirname[MAX_PATHNAME_LENGTH];
-	DIR* directory = nullptr;
+	strncat_s(search_path, MAX_PATH, "\\*", _TRUNCATE);
 
-	std::strncpy(search_path, path, MAX_PATHNAME_LENGTH - 1);
-	search_path[MAX_PATHNAME_LENGTH - 1] = '\0';
-#endif
+	WIN32_FIND_DATA find_data;
+	HANDLE directory = FindFirstFile(search_path, &find_data);
 
-	while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr)
+	if (directory == INVALID_HANDLE_VALUE)
+		return false;
+
+	bool found = false;
+
+	do
 	{
-		// Skip current and parent directory entries
-		if (dirname[0] == '.' && (dirname[1] == '\0' || (dirname[1] == '.' && dirname[2] == '\0')))
+		if (std::strcmp(find_data.cFileName, ".") == 0 || std::strcmp(find_data.cFileName, "..") == 0)
 			continue;
 
-		// Found a valid subdirectory - clean up and return
-#ifndef __linux__
-		FindClose(directory);
+		if (find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+		{
+			found = true;
+			break;
+		}
+	} while (FindNextFile(directory, &find_data) != 0);
+
+	FindClose(directory);
+	return found;
 #else
-		closedir(directory);
-#endif
-		return true;
+	DIR* directory = opendir(path);
+
+	if (directory == nullptr)
+		return false;
+
+	bool found = false;
+	struct dirent* entry;
+
+	while ((entry = readdir(directory)) != nullptr)
+	{
+		if (std::strcmp(entry->d_name, ".") == 0 || std::strcmp(entry->d_name, "..") == 0)
+			continue;
+
+		// Confirm it's actually a sub-directory. Some filesystems don't populate
+		// dirent::d_type, so stat() the full path rather than trusting d_type.
+		if (std::strlen(path) + 1 + std::strlen(entry->d_name) >= MAX_PATHNAME_LENGTH)
+			continue;
+
+		char pathname[MAX_PATHNAME_LENGTH];
+
+		std::strcpy(pathname, path);
+		std::strcat(pathname, "/");
+		std::strcat(pathname, entry->d_name);
+
+		struct stat stat_str;
+
+		if (stat(pathname, &stat_str) == 0 && S_ISDIR(stat_str.st_mode))
+		{
+			found = true;
+			break;
+		}
 	}
 
-	return false;
+	closedir(directory);
+	return found;
+#endif
 }

@@ -1390,62 +1390,91 @@ void CBotGlobals::LoadBotModels()
 	DIR* directory = nullptr;
 #endif
 
-	// find the directory name of the currently running MOD...
-	std::strcpy(path, m_szModFolder);
-
-#ifdef __linux__
-	std::strcat(path, "/models/player");
-#else
-	std::strcat(path, "\\models\\player");
-#endif
-
-	if (stat(path, &stat_str) != 0 /*|| !HasSubDirectories(path)*/) //TODO: HasSubDirectories(path) fails on dedi servers? [APG]RoboCop[CL]
-	{
-		// use the valve/models/player directory if no valid MOD models/player
-#ifdef __linux__
-		std::strcpy(path, "valve/models/player");
-#else
-		std::strcpy(path, "valve\\models\\player");
-#endif
-	}
-
-	std::strcpy(search_path, path);
-
-#ifndef __linux__
-	std::strcat(search_path, "/*");
-#endif
-
 	m_uaBotModels.Init();
 
-	// Looking for model files (.mdl) in player directory
-	// search_path = <search folder> (in windows)
-	// or search_path = <search folder>
-
-	while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr)
+	// Build the model list from the MOD's models/player; if that directory is
+	// missing, unreadable, or has no valid model sub-directories (e.g. DMC,
+	// which ships an empty models/player), fall back to valve/models/player.
+	//
+	// We count models added per attempt rather than trusting the dir scan alone,
+	// because an empty model list is fatal: when a bot is later assigned a random
+	// model it indexes this list, so leaving it empty crashes the server (this is
+	// the "HasSubDirectories fails on dedi servers" crash). If neither location
+	// yields a model the list stays empty and the caller in BotFunc_AddBot() must
+	// skip model assignment. [APG]RoboCop[CL]
+	for (int iAttempt = 0; iAttempt < 2; iAttempt++)
 	{
-		// don't want to get stuck looking in the same directory again and again (".")
-		// don't want to search parent directories ("..")
-		if (std::strcmp(dirname, ".") == 0 || std::strcmp(dirname, "..") == 0)
-			continue;
-
-		// looking for .mdl file inside a folder of same name
-		std::strcpy(filename, path);
-#ifdef __linux__
-		std::strcat(filename, "/");
-#else
-		std::strcat(filename, "\\");
-#endif
-		std::strcat(filename, dirname);
-		std::strcat(filename, "/");
-		std::strcat(filename, dirname);
-		std::strcat(filename, ".mdl");
-
-		// seeing if file exists (if foldername = model name)
-		if (stat(filename, &stat_str) == 0)
+		if (iAttempt == 0)
 		{
-			// ok, we only need to add directory name into list then.
-			m_uaBotModels.Add(m_Strings.GetString(dirname));
+			// find the directory name of the currently running MOD...
+			std::strcpy(path, m_szModFolder);
+
+#ifdef __linux__
+			std::strcat(path, "/models/player");
+#else
+			std::strcat(path, "\\models\\player");
+#endif
+
+			// Skip straight to the valve fallback if the MOD dir is absent or
+			// has no model sub-directories.
+			if (stat(path, &stat_str) != 0 || !HasSubDirectories(path))
+				continue;
 		}
+		else
+		{
+			// use the valve/models/player directory as a fallback
+#ifdef __linux__
+			std::strcpy(path, "valve/models/player");
+#else
+			std::strcpy(path, "valve\\models\\player");
+#endif
+		}
+
+		std::strcpy(search_path, path);
+
+#ifndef __linux__
+		std::strcat(search_path, "/*");
+#endif
+
+		int iModelsAdded = 0;
+		directory = nullptr;
+
+		// Looking for model files (.mdl) in player directory
+		// search_path = <search folder> (in windows)
+		// or search_path = <search folder>
+
+		while ((directory = FindDirectory(directory, dirname, search_path)) != nullptr)
+		{
+			// don't want to get stuck looking in the same directory again and again (".")
+			// don't want to search parent directories ("..")
+			if (std::strcmp(dirname, ".") == 0 || std::strcmp(dirname, "..") == 0)
+				continue;
+
+			// looking for .mdl file inside a folder of same name
+			std::strcpy(filename, path);
+#ifdef __linux__
+			std::strcat(filename, "/");
+#else
+			std::strcat(filename, "\\");
+#endif
+			std::strcat(filename, dirname);
+			std::strcat(filename, "/");
+			std::strcat(filename, dirname);
+			std::strcat(filename, ".mdl");
+
+			// seeing if file exists (if foldername = model name)
+			if (stat(filename, &stat_str) == 0)
+			{
+				// ok, we only need to add directory name into list then.
+				m_uaBotModels.Add(m_Strings.GetString(dirname));
+				iModelsAdded++;
+			}
+		}
+
+		// Got at least one model on this attempt — done. Otherwise loop round
+		// and try the valve fallback.
+		if (iModelsAdded > 0)
+			break;
 	}
 }
 
