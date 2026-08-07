@@ -2878,6 +2878,7 @@ private:
 
 	bool m_bNeedToToggleLaser = false;
 	float m_fToggleLaserTime = 0.0f;
+	float m_fLaserPressTime = 0.0f;
 
 	bool m_bUsedMelee;
 	CBotWeapon m_weapon; // The bot's weapon

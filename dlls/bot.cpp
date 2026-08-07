@@ -290,19 +290,31 @@ bool CBot::FacingIdeal() const
 
 void CBot::ProcessLaserToggle()
 {
-	// Handle delayed laser toggle for Eagle weapon in Opposing Force
-	if (m_bNeedToToggleLaser && m_fToggleLaserTime < gpGlobals->time)
+	// Handle delayed laser toggle for Eagle weapon in Opposing Force.
+	if (!m_bNeedToToggleLaser || m_fToggleLaserTime >= gpGlobals->time)
+		return;
+
+	// Verify the Eagle is actually the current weapon before toggling - the bot
+	// may well have switched away during the deploy delay.
+	if (!m_pCurrentWeapon ||
+		m_pCurrentWeapon->GetID() != static_cast<int>(GearboxWeapon::EAGLE))
 	{
-		// Verify the Eagle is actually the current weapon before toggling
-		if (m_pCurrentWeapon &&
-			m_pCurrentWeapon->GetID() == static_cast<int>(GearboxWeapon::EAGLE))
-		{
-			// Use +attack2/-attack2 commands for more reliable input -JK-Botti
-			FakeClientCommand(m_pEdict, "+attack2");
-			FakeClientCommand(m_pEdict, "-attack2");
-		}
 		m_bNeedToToggleLaser = false;
+		m_fLaserPressTime = 0.0f;
+		return;
 	}
+
+	if (m_fLaserPressTime > 0.0f && m_fLastCallRunPlayerMove >= m_fLaserPressTime)
+	{
+		m_bNeedToToggleLaser = false;
+		m_fLaserPressTime = 0.0f;
+		return;
+	}
+
+	pev->button |= IN_ATTACK2;
+
+	if (m_fLaserPressTime <= 0.0f)
+		m_fLaserPressTime = gpGlobals->time;
 }
 
 void CBot::UseWeaponLaser()
@@ -1476,6 +1488,8 @@ void CBot::SpawnInit(const bool bInit)
 {
 	m_bNeedToToggleLaser = false;
 	m_fToggleLaserTime = 0.0f;
+	m_fLaserPressTime = 0.0f;
+	m_bHasLongJump = false;
 
 	m_fLastPlaceDetpack = 0.0f;
 	m_fNextShootButton = 0.0f;
@@ -2888,10 +2902,6 @@ void CBot::Think()
 	// resetting (for ladder climbing etc)
 	m_iLastButtons = pev->button;
 
-	// Process laser toggle AFTER saving last buttons, so the IN_ATTACK2
-	// it sets won't be captured and wiped by the button reset check later
-	ProcessLaserToggle();
-
 	// Bots must have this flag set at all times
 	pev->flags |= FL_FAKECLIENT;
 
@@ -3804,6 +3814,9 @@ void CBot::Think()
 		// this is so we can check if we have evolved successfully.
 		m_iLastSpecies = pev->iuser3;
 	}
+
+	// Last thing before RunPlayerMove hands pev->button to the engine.
+	ProcessLaserToggle();
 
 	/*
 		if ( bAimStopMoving )
@@ -8578,6 +8591,14 @@ bool CBot::CanPickup(const edict_t* pPickup) const
 			return true;
 	}
 	break;
+	case MOD_GEARBOX:
+	{
+		const char* szClassname = STRING(pPickup->v.classname);
+
+		if (FStrEq(szClassname, "item_ctflongjump") || FStrEq(szClassname, "item_longjump"))
+			return !m_bHasLongJump;
+	}
+	break;
 	case MOD_WW:
 	{
 		const char* szClassname = const_cast<char*>(STRING(pPickup->v.classname));
@@ -8633,8 +8654,9 @@ bool CBot::Touch(edict_t* pentTouched)
 
 	if (pentTouched->v.solid == SOLID_TRIGGER)
 	{
-		// update our long jump state so we know we have it
-		if (std::strcmp(szClassname, "item_longjump") == 0)
+		// update our long jump state so we know we have it.
+		if (std::strcmp(szClassname, "item_longjump") == 0 ||
+			std::strcmp(szClassname, "item_ctflongjump") == 0)
 			m_bHasLongJump = true;
 		else if (!m_bHasFlag && std::strcmp(szClassname, "item_tfgoal") == 0)
 			m_bHasFlag = true;
