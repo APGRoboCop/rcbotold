@@ -45,6 +45,7 @@ V 1.51-beta13
 * added: Can import/export waypoints for GraveBot (S&I bots)
 * added: "rcbot waypoint setteam" and "rcbot waypoint flag <WPT-TYPE>" for S&I that doesn't support "rcbot waypoint_menu" GUI
 * added: Improved on the CBot::Init(), model loading, and directory checks
+* added: SeedTSWeaponSelectValues() helper
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat

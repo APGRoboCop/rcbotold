@@ -3178,6 +3178,8 @@ public:
 	void setupDataStructures();
 	// seeds m_pFlyGAVals with its 6 starting values (lerk hold/flap tuning)
 	void SeedFlyGAValues() const;
+	// seeds m_pTSWeaponSelect with its 8 starting values (TS weapon choice + stunt)
+	void SeedTSWeaponSelectValues() const;
 	//void freeDataStructures ();
 
 	CPerceptron* dec_attackElectrified;

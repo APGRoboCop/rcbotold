@@ -1357,6 +1357,26 @@ void CBot::SeedFlyGAValues() const
 		m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6));
 }
 
+// Seed the TS weapon-select GA with its 8 starting values. The count must stay
+// in step with m_pTSWeaponSelect->load(fp, 8) in loadLearnedData(), and the same
+// seed is needed again when a bot re-picks its loadout. [APG]RoboCop[CL]
+void CBot::SeedTSWeaponSelectValues() const
+{
+	if (m_pTSWeaponSelect == nullptr)
+		return;
+
+	m_pTSWeaponSelect->clear();
+
+	for (int i = 0; i < 3; i++) // 0-2 : max 3 weapons
+		m_pTSWeaponSelect->add(RANDOM_FLOAT(0, 1));
+
+	for (int i = 0; i < 5; i++) // 3-7 : stunt (TS)
+		m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1));
+
+	//for ( int i = 0; i < MAX_WEAPONS; i ++ )
+	//	m_pTSWeaponSelect->add(RANDOM_FLOAT(0,1)); // start 8 num 37, 7+37 = 44 (45)// fire percent
+}
+
 void CBot::setupDataStructures()
 {
 	/*
@@ -1477,18 +1497,7 @@ void CBot::setupDataStructures()
 		m_pTSWeaponSelect = new CBotGAValues();
 	}
 
-	// 8 values total - must stay in step with the count passed to
-	// m_pTSWeaponSelect->load() in loadLearnedData()
-	m_pTSWeaponSelect->clear();
-
-	for (int i = 0; i < 3; i++) // 0-2
-		m_pTSWeaponSelect->add(RANDOM_FLOAT(0, 1));
-
-	for (int i = 0; i < 5; i++) // 3-7
-		m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1));
-
-	//for ( int i = 0; i < MAX_WEAPONS; i ++ )
-		//	m_pTSWeaponSelect->add(RANDOM_FLOAT(0,1)); //7+37 = 44 (45)// fire percent
+	SeedTSWeaponSelectValues();
 
 	/*	if ( m_pAiming == NULL )
 	{
@@ -3181,22 +3190,7 @@ void CBot::Think()
 			}
 			else
 			{
-				m_pTSWeaponSelect->clear();
-
-				// max 3 weapons
-				m_pTSWeaponSelect->add(RANDOM_FLOAT(0, 1)); // 0
-				m_pTSWeaponSelect->add(RANDOM_FLOAT(0, 1));
-				m_pTSWeaponSelect->add(RANDOM_FLOAT(0, 1));
-
-				// stunt (TS)
-				m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1)); // 3
-				m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1)); // 4
-				m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1)); // 5
-				m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1)); // 6
-				m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1)); // 7
-
-				//for ( int i = 0; i < MAX_WEAPONS; i ++ )
-				//	m_pTSWeaponSelect->add(RANDOM_FLOAT(0,1)); // start 8 num 37, 7+37 = 44 (45)// fire percent
+				SeedTSWeaponSelectValues();
 			}
 
 			if (!gBotGlobals.IsConfigSettingOn(BOT_CONFIG_TS_KUNGFU))
