@@ -63,6 +63,7 @@ meta_globals_t* gpMetaGlobals;      // metamod globals
 
 // From SDK dlls/h_export.cpp:
 extern cvar_t bot_ver_cvar;
+extern cvar_t bot_eagle_laser_cvar;
 //! Holds engine functionality callbacks
 enginefuncs_t g_engfuncs;
 globalvars_t* gpGlobals;
@@ -381,6 +382,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS* pFunctionTable, m
 	LOG_MESSAGE(PLID, "%s: plugin attaching", Plugin_info.name);
 
 	CVAR_REGISTER(&bot_ver_cvar);
+	CVAR_REGISTER(&bot_eagle_laser_cvar);
 	// ask the engine to register the CVARs this plugin uses
 	/*CVAR_REGISTER (&cheesys_cvar_1);
 	CVAR_REGISTER (&cheesys_cvar_2);

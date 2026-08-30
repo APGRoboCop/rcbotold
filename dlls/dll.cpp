@@ -98,6 +98,7 @@ extern CWaypointVisibilityTable WaypointVisibility;
 extern CWaypointLocations WaypointLocations;
 
 cvar_t bot_ver_cvar = { BOT_VER_CVAR,BOT_VER, FCVAR_SERVER, 0.0f, nullptr };
+cvar_t bot_eagle_laser_cvar = { BOT_EAGLE_LASER_CVAR,"0", FCVAR_SERVER, 0.0f, nullptr };
 
 std::FILE* fpMapConfig = nullptr;
 
@@ -163,6 +164,7 @@ void GameDLLInit()
 
 #ifndef RCBOT_META_BUILD
 	CVAR_REGISTER(&bot_ver_cvar); // need to be done here for NON-metamod only...
+	CVAR_REGISTER(&bot_eagle_laser_cvar);
 	(*g_engfuncs.pfnAddServerCommand)(BOT_COMMAND_ACCESS, RCBot_ServerCommand);
 #endif
 

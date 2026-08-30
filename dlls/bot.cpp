@@ -87,6 +87,9 @@ extern CWaypointLocations WaypointLocations;
 
 extern CBotGlobals gBotGlobals; // defined in DLL.CPP
 
+// Op4 Desert Eagle laser sight toggle, off by default - see BOT_EAGLE_LASER_CVAR
+extern cvar_t bot_eagle_laser_cvar; // defined in DLL.CPP [APG]RoboCop[CL]
+
 // all waypoints
 extern WAYPOINTS waypoints;
 
@@ -319,6 +322,10 @@ void CBot::ProcessLaserToggle()
 
 void CBot::UseWeaponLaser()
 {
+	// See BOT_EAGLE_LASER_CVAR. [APG]RoboCop[CL]
+	if (bot_eagle_laser_cvar.value <= 0.0f)
+		return;
+
 	// Schedule a laser toggle after weapon deploy animation completes
 	m_bNeedToToggleLaser = true;
 	m_fToggleLaserTime = gpGlobals->time + 1.0f; // Increased from 0.3s to 1.0s -JK-Botti
