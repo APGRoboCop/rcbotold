@@ -1029,6 +1029,10 @@ void WaypointAddPath(const short add_index, const short path_index)
 	PATH* p = paths[add_index];
 	PATH* prev = nullptr;
 
+#ifdef _DEBUG
+	int count = 0;
+#endif
+
 	// find an empty slot for new path_index...
 	while (p != nullptr)
 	{
@@ -1050,8 +1054,6 @@ void WaypointAddPath(const short add_index, const short path_index)
 		p = p->next;  // go to next node in linked list
 
 #ifdef _DEBUG
-		int count = 0;
-
 		count++;
 		if (count > 100) WaypointDebug();
 #endif
@@ -1086,6 +1088,10 @@ void WaypointDeletePath(const short del_index)
 	{
 		PATH* p = paths[index];
 
+#ifdef _DEBUG
+		int count = 0;
+#endif
+
 		// search linked list for del_index...
 		while (p != nullptr)
 		{
@@ -1104,7 +1110,6 @@ void WaypointDeletePath(const short del_index)
 			p = p->next;  // go to next node in linked list
 
 #ifdef _DEBUG
-			int count = 0;
 			count++;
 			if (count > 100) WaypointDebug();
 #endif
@@ -1117,6 +1122,10 @@ void WaypointDeletePath(const short del_index)
 void WaypointDeletePath(const short path_index, const short del_index)
 {
 	PATH* p = paths[path_index];
+
+#ifdef _DEBUG
+	int count = 0;
+#endif
 
 	// search linked list for del_index...
 	while (p != nullptr)
@@ -1136,7 +1145,6 @@ void WaypointDeletePath(const short path_index, const short del_index)
 		p = p->next;  // go to next node in linked list
 
 #ifdef _DEBUG
-		int count = 0;
 		count++;
 		if (count > 100) WaypointDebug();
 #endif
@@ -1167,11 +1175,15 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 		}
 	}
 
+#ifdef _DEBUG
+	int count = 0;
+#endif
+
 	while (*pPath != nullptr)
 	{
-		while (*path_index < MAX_PATH_INDEX)
+		while (*path_index >= 0 && *path_index < MAX_PATH_INDEX)
 		{
-			if ((*pPath)->index[*path_index] != -1 && (*pPath)->index[*path_index] < num_waypoints)//TODO: triggers crash? [APG]RoboCopCL]
+			if ((*pPath)->index[*path_index] != -1 && (*pPath)->index[*path_index] < num_waypoints)
 			{
 				// save the return value
 				if (const int index = (*pPath)->index[*path_index]; index >= 0 && index < MAX_WAYPOINTS)
@@ -1209,10 +1221,9 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 				break;
 			}
 #ifdef _DEBUG
-			int count = 0;
 			count++;
 			if (count > 100)
-			WaypointDebug(); //TODO: Not implemented yet [APG]RoboCop[CL]
+				WaypointDebug();
 #endif
 		}
 	}
@@ -1860,14 +1871,17 @@ void WaypointDelete(CClient* pClient)
 	{
 		PATH* p = paths[index];
 
+#ifdef _DEBUG
+		int count = 0;
+#endif
+
 		while (p)  // free the linked list
 		{
 			PATH* p_next = p->next;  // save the link to next
-			std::free(p);
+			delete p;  // allocated with new in WaypointAddPath() - [APG]RoboCop[CL]
 			p = p_next;
 
 #ifdef _DEBUG
-			int count = 0;
 			count++;
 			if (count > 100) WaypointDebug();
 #endif
