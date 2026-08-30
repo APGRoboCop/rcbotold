@@ -66,6 +66,7 @@ V 1.51-beta13
 * changed: Modernised the weapon array code using C++ Array
 * changed: Removed redundant null checks in HAL_FreeTree() and redundant nullptr assignments
 * changed: Fixed the waypoint loop counters and delete usage
+* changed: Extracted the SeedFlyGAValues() and simplified the GA init
 
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors - maybe allow them to instantly switch weapons?
 * TODO: To allow bots in Op4 use Deagle's Laser Sight to improve its accuracy - In Progress

@@ -1339,6 +1339,24 @@ void CBot::Init()
 	SpawnInit(true);
 }
 
+// Seed the lerk fly GA with its 6 starting values. Kept in one place because
+// the count must stay in step with m_pFlyGAVals->load(fp, 6) in loadLearnedData()
+// and the same seed is needed whenever a fly run is restarted. [APG]RoboCop[CL]
+void CBot::SeedFlyGAValues() const
+{
+	if (m_pFlyGAVals == nullptr)
+		return;
+
+	m_pFlyGAVals->clear();
+
+	// custom : lerk hold & flap time
+	m_pFlyGAVals->add(RANDOM_FLOAT(0.0f, 0.2f)); // 0
+	m_pFlyGAVals->add(RANDOM_FLOAT(0.0f, 0.2f)); // 1
+
+	for (int i = 0; i < 4; i++) // 2-5
+		m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6));
+}
+
 void CBot::setupDataStructures()
 {
 	/*
@@ -1444,15 +1462,7 @@ void CBot::setupDataStructures()
 		m_pFlyGAVals = new CBotGAValues();
 	}
 
-	m_pFlyGAVals->clear();
-	// custom : lerk hold & flap time
-	m_pFlyGAVals->add(RANDOM_FLOAT(0.0f, 0.2f)); // 0
-	m_pFlyGAVals->add(RANDOM_FLOAT(0.0f, 0.2f)); // 1
-
-	m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 2
-	m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 3
-	m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 4
-	m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 5
+	SeedFlyGAValues();
 
 	//m_pFlyGAVals->loadForBot("fgaval",m_Profile.m_iProfileId);
 
@@ -1467,16 +1477,15 @@ void CBot::setupDataStructures()
 		m_pTSWeaponSelect = new CBotGAValues();
 	}
 
+	// 8 values total - must stay in step with the count passed to
+	// m_pTSWeaponSelect->load() in loadLearnedData()
 	m_pTSWeaponSelect->clear();
-	m_pTSWeaponSelect->add(RANDOM_FLOAT(0, 1)); //0
-	m_pTSWeaponSelect->add(RANDOM_FLOAT(0, 1));
-	m_pTSWeaponSelect->add(RANDOM_FLOAT(0, 1));
 
-	m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1)); // 3
-	m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1));
-	m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1));
-	m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1));
-	m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1));
+	for (int i = 0; i < 3; i++) // 0-2
+		m_pTSWeaponSelect->add(RANDOM_FLOAT(0, 1));
+
+	for (int i = 0; i < 5; i++) // 3-7
+		m_pTSWeaponSelect->add(RANDOM_FLOAT(-1, 1));
 
 	//for ( int i = 0; i < MAX_WEAPONS; i ++ )
 		//	m_pTSWeaponSelect->add(RANDOM_FLOAT(0,1)); //7+37 = 44 (45)// fire percent
@@ -7965,15 +7974,7 @@ void CBot::touchedWpt()
 			}
 			else
 			{
-				m_pFlyGAVals->clear();
-				// custom : lerk hold & flap time
-				m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2f)); // 0
-				m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2f)); // 1
-
-				m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 2
-				m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 3
-				m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 4
-				m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 5
+				SeedFlyGAValues();
 			}
 		}
 	}
@@ -8089,15 +8090,7 @@ void CBot::WorkMoveDirection()
 							}
 							else
 							{
-								m_pFlyGAVals->clear();
-								// custom : lerk hold & flap time
-								m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2f)); // 0
-								m_pFlyGAVals->add(RANDOM_FLOAT(0, 0.2f)); // 1
-
-								m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 2
-								m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 3
-								m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 4
-								m_pFlyGAVals->add(0.3f - RANDOM_FLOAT(0, 6)); // 5
+								SeedFlyGAValues();
 							}
 						}
 

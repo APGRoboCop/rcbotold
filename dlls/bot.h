@@ -3176,6 +3176,8 @@ public:
 	}
 
 	void setupDataStructures();
+	// seeds m_pFlyGAVals with its 6 starting values (lerk hold/flap tuning)
+	void SeedFlyGAValues() const;
 	//void freeDataStructures ();
 
 	CPerceptron* dec_attackElectrified;
