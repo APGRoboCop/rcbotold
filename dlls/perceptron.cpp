@@ -159,7 +159,10 @@ void CPerceptron::train(const ga_value expectedOutput)
 void CPerceptron::save(std::FILE* bfp) const
 {
     if (!bfp)
+    {
         BotMessage(nullptr, 0, "File pointer is null");
+        return; // don't write through a null file pointer
+    }
 
     const CGenericHeader header = CGenericHeader(LEARNTYPE_PERCEPTRON, m_iInputs);
 
