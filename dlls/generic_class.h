@@ -189,6 +189,14 @@ public:
 
 	T* GetFrontPointer()
 	{
+		// m_NodeData is the first member of dataNode<T>, so &m_Head->m_NodeData
+		// happened to evaluate to NULL on an empty queue - but forming that
+		// address through a NULL m_Head is undefined behaviour, and lets the
+		// optimiser delete the callers' NULL checks. Return NULL properly.
+		// [APG]RoboCop[CL]
+		if (m_Head == nullptr)
+			return nullptr;
+
 		return &m_Head->m_NodeData;
 	}
 

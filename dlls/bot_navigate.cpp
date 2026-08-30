@@ -598,41 +598,38 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, bool bContinue)
 		return -1;
 	}
 
-	if (bFoundGoal)
+	iCurrentNode = iTo;
+
+	iLoops = 0;
+
+	// Free any previous path info
+	pBot->m_stBotPaths.Destroy();
+
+	while (iCurrentNode != -1 && iCurrentNode != iFrom && iLoops < MAX_WAYPOINTS)
 	{
-		iCurrentNode = iTo;
+		iLoops++;
+		// Add to the bots waypoint visit stack (path)
+		pBot->m_stBotPaths.Push(iCurrentNode);
 
-		iLoops = 0;
+		iNextWaypoint = iCurrentNode;
 
-		// Free any previous path info
+		sSuccNodeInfo = &aPathsFound[iCurrentNode];
+
+		// Update bots next waypoint after current waypoint
+		//if ( sSuccNodeInfo->m_iParent == iFrom )
+		//	pBot->m_iNextWaypoint = iCurrentNode;
+
+		iCurrentNode = sSuccNodeInfo->getParent();
+	}
+
+	if (iLoops == MAX_WAYPOINTS)
+	{
+		if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
+			DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "AStarAlgo() %s Too many waypoints to go to", pBot->m_szBotName);
+
 		pBot->m_stBotPaths.Destroy();
 
-		while (iCurrentNode != -1 && iCurrentNode != iFrom && iLoops < MAX_WAYPOINTS)
-		{
-			iLoops++;
-			// Add to the bots waypoint visit stack (path)
-			pBot->m_stBotPaths.Push(iCurrentNode);
-
-			iNextWaypoint = iCurrentNode;
-
-			sSuccNodeInfo = &aPathsFound[iCurrentNode];
-
-			// Update bots next waypoint after current waypoint
-			//if ( sSuccNodeInfo->m_iParent == iFrom )
-			//	pBot->m_iNextWaypoint = iCurrentNode;
-
-			iCurrentNode = sSuccNodeInfo->getParent();
-		}
-
-		if (iLoops == MAX_WAYPOINTS)
-		{
-			if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
-				DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "AStarAlgo() %s Too many waypoints to go to", pBot->m_szBotName);
-
-			pBot->m_stBotPaths.Destroy();
-
-			return -1;
-		}
+		return -1;
 	}
 
 	return iNextWaypoint;
