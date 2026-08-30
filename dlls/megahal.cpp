@@ -1311,12 +1311,8 @@ void FillStringArea(char* string, const int maxstring, char* fill, int maxfill, 
 	//	if (before != NULL)
 	std::free(before);
 
-	before = nullptr;
-
 	//	if (after != NULL)
 	std::free(after);
-
-	after = nullptr;
 }
 
 void BotHALAddKeyword(const CBot* pBot, HAL_DICTIONARY* keys, const HAL_STRING word)
@@ -1878,8 +1874,6 @@ void HAL_FreeModel(HAL_MODEL* model)
 
 	//	if (model != NULL)
 	std::free(model);
-
-	model = nullptr;
 }
 
 void HAL_FreeTree(HAL_TREE* tree)
@@ -1899,8 +1893,6 @@ void HAL_FreeTree(HAL_TREE* tree)
 	}
 
 	std::free(tree);
-
-	tree = nullptr;
 }
 
 void HAL_FreeSwap(HAL_SWAP* swap)
@@ -1937,7 +1929,6 @@ void HAL_FreeSwap(HAL_SWAP* swap)
 	swap->to = nullptr;
 
 	std::free(swap); // free the swap structure itself
-	swap = nullptr;
 }
 
 // return true if need to pre-train
