@@ -9006,8 +9006,8 @@ void CBot::UpdateMsec()
 	// turning e.g. a 256 ms gap into 0 ms (bot doesn't move) or 300 ms into 44 ms.
 	// That manifests as occasional teleport-style stutters / "speedhacking". [APG]RoboCop[CL]
 	float fMsec = (gpGlobals->time - m_fLastCallRunPlayerMove) * 1000.0f;
-	if (fMsec < 0.0f) fMsec = 0.0f;
-	if (fMsec > 255.0f) fMsec = 255.0f;
+	fMsec = std::max(fMsec, 0.0f);
+	fMsec = std::min(fMsec, 255.0f);
 	m_iMsecVal = static_cast<unsigned char>(fMsec);
 
     m_iMsecVal = std::min(m_iMsecVal, static_cast<decltype(m_iMsecVal)>(255));
