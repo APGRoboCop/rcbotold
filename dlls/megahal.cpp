@@ -1855,13 +1855,11 @@ void HAL_FreeModel(HAL_MODEL* model)
 	if (model == nullptr)
 		return; // reliability check
 
-	if (model->forward != nullptr)
-		HAL_FreeTree(model->forward);
+	HAL_FreeTree(model->forward); // HAL_FreeTree() checks for NULL itself
 
 	model->forward = nullptr;
 
-	if (model->backward != nullptr)
-		HAL_FreeTree(model->backward);
+	HAL_FreeTree(model->backward);
 
 	model->backward = nullptr;
 
