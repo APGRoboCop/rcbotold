@@ -322,7 +322,7 @@ void CBot::ProcessLaserToggle()
 
 void CBot::UseWeaponLaser()
 {
-	// See BOT_EAGLE_LASER_CVAR. [APG]RoboCop[CL]
+	// See BOT_EAGLE_LASER_CVAR [APG]RoboCop[CL]
 	if (bot_eagle_laser_cvar.value <= 0.0f)
 		return;
 

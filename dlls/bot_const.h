@@ -1334,7 +1334,7 @@ constexpr const char* BOT_VER = "1.51b14";
 #define BOT_TAG "[RCBOT]"
 #define BOT_VER_CVAR "rcbot_ver"
 
-// Opposing Force: let bots switch the Desert Eagle laser sight on themselves.
+// Opposing Force: let bots switch the Desert Eagle laser sight on themselves
 #define BOT_EAGLE_LASER_CVAR "rcbot_eagle_laser"
 
 #define BOT_COMMAND_ACCESS "rcbot" // main bot command
