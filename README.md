@@ -69,6 +69,7 @@ V 1.51-beta13
 * changed: Fixed the waypoint loop counters and delete usage
 * changed: Extracted the SeedFlyGAValues() and simplified the GA init
 * changed: Simplified the BotNavigate_AStarAlgo() path
+* changed: Fixed uninitialised m_pMenuFunction in Bot Menu
 
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors - maybe allow them to instantly switch weapons?
 * TODO: To allow bots in Op4 use Deagle's Laser Sight to improve its accuracy - In Progress

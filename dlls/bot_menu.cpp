@@ -331,9 +331,7 @@ CBotMenuItem :: ~CBotMenuItem()
 
 CBotMenuItem::CBotMenuItem(const char* szMenuCaption, CBotMenu* pNextMenu)
 {
-	m_pMenuFunction = nullptr;
-	m_szMenuCaption = nullptr;
-	m_pNextMenu = nullptr;
+	this->Init();
 
 	if (!szMenuCaption)
 		return;
@@ -352,13 +350,18 @@ CBotMenuItem::CBotMenuItem(const char* szMenuCaption)
 {
 	this->Init();
 
+	if (!szMenuCaption)
+		return;
+
+	if (!*szMenuCaption)
+		return;
+
 	m_szMenuCaption = gBotGlobals.m_Strings.GetString(szMenuCaption);
 }
 
 CBotMenuItem::CBotMenuItem(const char* szMenuCaption, void (*pMenuFunction)(CClient*))
 {
-	m_szMenuCaption = nullptr;
-	m_pNextMenu = nullptr;
+	this->Init();
 
 	if (!szMenuCaption)
 		return;
