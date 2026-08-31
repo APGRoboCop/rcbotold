@@ -3875,13 +3875,11 @@ bool CBot::WantToFindEnemy() const
 void CBot::LookForNewTasks()
 {
 	// Do a big check for new tasks
-	///////////////////////////////
 	bool bRoam = false;
 
 	StopMoving();
 
 	// Find a new task for the bot
-	//////////////////////////////
 	Vector vOrigin;
 
 	int iBestStructureToBuild = 0;
@@ -3912,7 +3910,6 @@ void CBot::LookForNewTasks()
 	edict_t* pNearestAmmoDisp = nullptr;
 	edict_t* pNearestWeldable = nullptr;
 	// Nearest edict that an alien can build nearby
-	///////////////////////////////////////////////
 	edict_t* pNearestBuildEdict = nullptr;
 	edict_t* pNearestPickupEntity = nullptr;
 	edict_t* pNearestHive = nullptr;
@@ -3950,7 +3947,6 @@ void CBot::LookForNewTasks()
 
 	int iToBuild = 0;
 
-	/////////////////////////////////////
 	// Check Visibles for stuff right now
 	m_pVisibles->resetIter();
 
@@ -3982,7 +3978,6 @@ void CBot::LookForNewTasks()
 				{
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					//continue;
 				}
 			}
 		}
@@ -3992,7 +3987,6 @@ void CBot::LookForNewTasks()
 				if (CanPickup(pEntity)) {
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					//continue;
 				}
 			}
 			break;
@@ -4119,7 +4113,6 @@ void CBot::LookForNewTasks()
 				{
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					//continue;
 				}
 			}
 			break;
@@ -4173,7 +4166,6 @@ void CBot::LookForNewTasks()
 				{
 					fNearestPickupEntityDist = fDistance;
 					pNearestPickupEntity = pEntity;
-					//continue;
 				}
 			}
 		}
@@ -4283,7 +4275,6 @@ void CBot::LookForNewTasks()
 					{
 						pNearestCommandStation = pEntity;
 						fNearestCommandStationDist = fDistance;
-						continue;
 					}
 				}
 			}
@@ -4436,7 +4427,6 @@ void CBot::LookForNewTasks()
 			}
 			// can I use an ammo disp?
 			if (pNearestAmmoDisp &&
-				//m_bCanUseAmmoDispenser &&
 				m_pCurrentWeapon &&
 				m_pCurrentWeapon->HasWeapon(m_pEdict) &&
 				m_pCurrentWeapon->CanGetMorePrimaryAmmo())
@@ -4760,9 +4750,6 @@ void CBot::LookForNewTasks()
 						}
 					}
 				}
-
-				// restore memory
-				//iThingsICanDo.Clear();
 			}
 			else if (IsFade())
 			{
@@ -4821,8 +4808,6 @@ void CBot::LookForNewTasks()
 					}
 				}
 
-				// do some upgrading
-				// ...
 				if (gBotGlobals.m_bCanUpgradeDef)
 				{
 					if (!HasUpgraded(BOT_UPGRADE_DEF))
@@ -5222,7 +5207,6 @@ void CBot::LookForNewTasks()
 	{
 		int iWpt;
 
-		// get to the end
 		if (m_iCurrentWaypointIndex != -1)
 		{
 			if (WaypointFlags(m_iCurrentWaypointIndex) & W_FL_ENDLEVEL)
@@ -5248,8 +5232,6 @@ void CBot::LookForNewTasks()
 	break;
 	case MOD_GEARBOX:
 	{
-		//gBotGlobals.m_bTeamPlay = true; //Required to prevent team shooting in Op4CTF? [APG]RoboCop[CL]
-
 		if (m_bHasFlag)//Important? [APG]RoboCop[CL]
 		{
 			bRoam = true;
@@ -5271,7 +5253,6 @@ void CBot::LookForNewTasks()
 			break;
 		}
 
-		// HEV charger nearby and bot needs armour
 		if (pNearestHEVcharger)
 		{
 			AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHEVcharger));
@@ -5925,7 +5906,6 @@ void CBot::LookForNewTasks()
 		if (IsGorge() && hasWeb())
 			AddTask(CBotTask(BOT_TASK_WEB, iNewScheduleId)); // do a little webbing
 	}
-	// End bLookForNewTasks
 }
 
 bool CBot::UpdateVisibles()
