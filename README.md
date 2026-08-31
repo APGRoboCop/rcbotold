@@ -47,6 +47,7 @@ V 1.51-beta13
 * added: Improved on the CBot::Init(), model loading, and directory checks
 * added: SeedTSWeaponSelectValues() helper
 * added: Initialised m_szCaption in CBotMenu::InitMenu()
+* added: Initialised AStarNode via member init list
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
@@ -71,6 +72,8 @@ V 1.51-beta13
 * changed: Extracted the SeedFlyGAValues() and simplified the GA init
 * changed: Simplified the BotNavigate_AStarAlgo() path
 * changed: Fixed uninitialised m_pMenuFunction in Bot Menu
+* changed: Removed some redundant bot null checks
+* changed: Replaced memset with std::fill_n for AStarNode()
 
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors - maybe allow them to instantly switch weapons?
 * TODO: To allow bots in Op4 use Deagle's Laser Sight to improve its accuracy - In Progress

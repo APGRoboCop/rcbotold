@@ -70,10 +70,8 @@ extern WAYPOINTS waypoints;//[MAX_WAYPOINTS];
 extern CWaypointLocations WaypointLocations;
 extern CBotGlobals gBotGlobals;
 
-AStarNode::AStarNode()
+AStarNode::AStarNode() : m_iWaypoint(-1), m_fCost(0.0f), m_fHeuristic(0.0f), m_iParent(0), flags(0)
 {
-	std::memset(this, 0, sizeof(AStarNode));
-	m_iWaypoint = -1;
 }
 
 bool AStarNode::heuristicSet() const
