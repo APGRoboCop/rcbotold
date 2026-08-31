@@ -1031,7 +1031,7 @@ void BotMenu_Func_KickBotFromTeam(CClient* pClient)
 	{
 		pBot = &m_Bot;
 
-		if (pBot && pBot->IsUsed())
+		if (pBot->IsUsed())
 		{
 			const int iBotTeam = UTIL_GetTeam(pBot->m_pEdict);
 

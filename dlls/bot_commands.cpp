@@ -1724,11 +1724,8 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 
 	if (gBotGlobals.m_iMaxBots != -1 && gBotGlobals.m_iNumBots >= gBotGlobals.m_iMaxBots)
 	{
-		if (pBot)
-		{
-			if (pBot->m_Profile.m_iProfileId != 0)
-				pBot->Init();
-		}
+		if (pBot->m_Profile.m_iProfileId != 0)
+			pBot->Init();
 
 		BotMessage(pEntity, 0, "Can't add bot, Number of bots reached max_bots");
 		BotMessage(pEntity, 0, "max bots = %d, numbots = %d", gBotGlobals.m_iMaxBots, gBotGlobals.m_iNumBots, UTIL_GetNumClients());
@@ -1815,7 +1812,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		{
 			const CBot* tempBot = &m_Bot;
 
-			if (tempBot && tempBot->m_bIsUsed && tempBot->m_pEdict)
+			if (tempBot->m_bIsUsed && tempBot->m_pEdict)
 				l_IdsInUse.Push(tempBot->m_Profile.m_iProfileId);
 		}
 
@@ -1876,7 +1873,7 @@ eBotCvarState BotFunc_AddBot(CClient* pClient, const char* arg1, const char* arg
 		{
 			char szBotProfilePath[128];
 			dataUnconstArray<int> CanUseIds;
-			while (!std::feof(fp1) && !pProfileToOpen)
+			while (!std::feof(fp1))
 			{
 				// pickup a string first (safer)
 				std::fscanf(fp1, "%9s\n", szBotProfile);

@@ -1398,7 +1398,7 @@ void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* va
 				{
 					CBot* pBot = &m_Bot;
 
-					if (pBot && pBot->m_iRespawnState == RESPAWN_IDLE)
+					if (pBot->m_iRespawnState == RESPAWN_IDLE)
 					{
 						if (pBot->m_pEdict && pBot->m_bIsUsed)
 						{

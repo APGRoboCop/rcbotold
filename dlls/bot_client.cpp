@@ -361,7 +361,7 @@ void BotClient_TS_ClipInfo::execute(void* p, const int iIndex)
 		CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 
 		// Remove try-catch with empty handler - validate data instead
-		if (pBot && pBot->m_pCurrentWeapon)
+		if (pBot->m_pCurrentWeapon)
 		{
 			const int clipValue = *static_cast<int*>(p);
 			pBot->m_pCurrentWeapon->UpdateWeapon(clipValue);

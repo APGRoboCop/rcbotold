@@ -480,7 +480,7 @@ void GetAllowedWeapons(CBot* pBot, edict_t* pEnemy, const float fEnemyDist, shor
 		iAllowedWeapons[static_cast<int>(SIWeapon::TRANSISTOR)] = 0;
 
 		// Against scientists: ONLY use briefcase (to steal, not kill)
-		if (pEnemy && FStrEq("monster_scientist", STRING(pEnemy->v.classname)))
+		if (FStrEq("monster_scientist", STRING(pEnemy->v.classname)))
 		{
 			// Disable all weapons except briefcase when targeting a scientist
 			for (int w = 0; w < MAX_WEAPONS; w++)
