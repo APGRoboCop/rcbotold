@@ -61,6 +61,7 @@
 #include "bot.h"
 #include "waypoint.h"
 
+#include <algorithm>
 #include <vector>
 
 static std::FILE* fp;
@@ -222,7 +223,7 @@ int BotNavigate_AStarAlgo(CBot* pBot, int iFrom, int iTo, bool bContinue)
 				//
 				//sOpenList->Destroy();
 
-		std::memset(aPathsFound, 0, sizeof(AStarNode) * MAX_WAYPOINTS);
+		std::fill_n(aPathsFound, MAX_WAYPOINTS, AStarNode());
 
 		//	for ( i = 0; i < MAX_WAYPOINTS; i ++ )
 			//	aPathsFound[i].m_iParent = -1;
