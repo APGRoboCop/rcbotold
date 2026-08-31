@@ -11200,7 +11200,7 @@ void BotFunc_MakeSquad(CClient* pClient)
 	{
 		CBot* pBot = &m_Bot;
 
-		if (!pBot || !pBot->IsUsed())
+		if (!pBot->IsUsed())
 			continue;
 		if (pBot->DistanceFromEdict(pEntity) > 512)
 			continue;
@@ -16441,7 +16441,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 			}
 
 			// Finished Task OK or FAILED?
-			if (m_CurrentTask && bDone)
+			if (bDone)
 			{
 				CBotTask LastTask = *m_CurrentTask;
 
