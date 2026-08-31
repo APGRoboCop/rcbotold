@@ -1001,7 +1001,7 @@ void BotMenu_Func_Squad_RemoveAllBotSquads(CClient* pClient)
 	{
 		CBot* pBot = &m_Bot;
 
-		if (!pBot || !pBot->IsUsed())
+		if (!pBot->IsUsed())
 			continue;
 		// only remove bot squads on same team to avoid
 		// players removing squads from other teams
