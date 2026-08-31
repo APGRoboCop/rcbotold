@@ -46,6 +46,7 @@ V 1.51-beta13
 * added: "rcbot waypoint setteam" and "rcbot waypoint flag <WPT-TYPE>" for S&I that doesn't support "rcbot waypoint_menu" GUI
 * added: Improved on the CBot::Init(), model loading, and directory checks
 * added: SeedTSWeaponSelectValues() helper
+* added: Initialised m_szCaption in CBotMenu::InitMenu()
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat

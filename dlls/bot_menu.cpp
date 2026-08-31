@@ -303,6 +303,12 @@ CBotMenu::CBotMenu(const char* szCaption)
 {
 	this->InitMenu();
 
+	if (!szCaption)
+		return;
+
+	if (!*szCaption)
+		return;
+
 	m_szCaption = gBotGlobals.m_Strings.GetString(szCaption);
 }
 
@@ -318,6 +324,7 @@ void CBotMenu::DestroyMenu() const
 void CBotMenu::InitMenu()
 {
 	std::memset(m_Menus, 0, sizeof(CBotMenuItem*) * 10);
+	m_szCaption = nullptr;
 	//m_iExitItem = -1;
 }
 
@@ -410,7 +417,7 @@ void CBotMenu::Render(CClient* pClient)
 
 	pClient->m_pMenu = this;
 
-	snprintf(szMenuText, sizeof(szMenuText), "%s\n-----\nOptions:\n", m_szCaption);
+	snprintf(szMenuText, sizeof(szMenuText), "%s\n-----\nOptions:\n", m_szCaption ? m_szCaption : "");
 
 	for (int i = 0; i < 10; i++)
 	{
