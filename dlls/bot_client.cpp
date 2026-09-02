@@ -502,10 +502,9 @@ void BotClient_NS_TechSlots::execute(void* p, const int iIndex)
 		return;
 	}
 
-	// Use an integer pointer instead of short* for alignment safety
-	int* iState = reinterpret_cast<int*>(&gBotGlobals.m_iCurrentMessageState);
+	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
-	switch (*iState) // Dereference the pointer to get the value directly
+	switch (POINTER_VALUE(iState))
 	{
 	case 0:
 		iSlots = POINTER_TO_INT(p);
@@ -517,8 +516,7 @@ void BotClient_NS_TechSlots::execute(void* p, const int iIndex)
 	}
 
 	iSlots = POINTER_TO_INT(p);
-	// Increment the value pointed to by iState
-	(*iState)++;
+	POINTER_INCREMENT_VALUE(iState);
 }
 
 void BotClient_BG_MakeMessage::execute(void* p, const int iIndex)
@@ -531,7 +529,7 @@ void BotClient_BG_MakeMessage::execute(void* p, const int iIndex)
 
 	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
-	if (POINTER_TO_INT(iState) == 0)
+	if (POINTER_VALUE(iState) == 0)
 	{
 		iSenderId = POINTER_TO_INT(p);
 	}
@@ -665,7 +663,7 @@ void BotClient_SI_TeamCash::execute(void* p, const int iIndex)
 
 	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
-	if (POINTER_TO_INT(iState) == 0)
+	if (POINTER_VALUE(iState) == 0)
 	{
 		iCash = POINTER_TO_INT(p);
 	}
@@ -686,7 +684,7 @@ void BotClient_SI_SciCount::execute(void* p, const int iIndex)
 
 	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
-	if (POINTER_TO_INT(iState) == 0)
+	if (POINTER_VALUE(iState) == 0)
 	{
 		iSciCount = POINTER_TO_INT(p);
 	}
@@ -707,7 +705,7 @@ void BotClient_SI_CarryInfo::execute(void* p, const int iIndex)
 
 	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
-	if (POINTER_TO_INT(iState) == 0)
+	if (POINTER_VALUE(iState) == 0)
 	{
 		iCarry = POINTER_TO_INT(p);
 
@@ -721,7 +719,7 @@ void BotClient_SI_CarryInfo::execute(void* p, const int iIndex)
 
 		gBotGlobals.m_iCarry = iCarry;
 	}
-	else if (POINTER_TO_INT(iState) == 1)
+	else if (POINTER_VALUE(iState) == 1)
 	{
 		// Second field is the carry name (string) — just consume it
 	}
@@ -739,11 +737,11 @@ void BotClient_SI_Goal::execute(void* p, const int iIndex)
 
 	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
-	if (POINTER_TO_INT(iState) == 0)
+	if (POINTER_VALUE(iState) == 0)
 	{
 		iGoal = POINTER_TO_INT(p);
 	}
-	else if (POINTER_TO_INT(iState) == 1)
+	else if (POINTER_VALUE(iState) == 1)
 	{
 		iGoalTeam = POINTER_TO_INT(p);
 
@@ -769,11 +767,11 @@ void BotClient_SI_Notice::execute(void* p, const int iIndex)
 
 	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
-	if (POINTER_TO_INT(iState) == 0)
+	if (POINTER_VALUE(iState) == 0)
 	{
 		iNotice = POINTER_TO_INT(p);
 	}
-	else if (POINTER_TO_INT(iState) == 3)
+	else if (POINTER_VALUE(iState) == 3)
 	{
 		// After reading all 4 fields (notice + 3 string params), process the notice
 		const CBot* pBot = &gBotGlobals.m_Bots[iIndex];
@@ -812,7 +810,7 @@ void BotClient_SI_VoteInfo::execute(void* p, const int iIndex)
 		return;
 
 	short* iState = &gBotGlobals.m_iCurrentMessageState;
-	const int state = POINTER_TO_INT(iState);
+	const int state = POINTER_VALUE(iState);
 
 	// Determine the team from the entity this message is sent to
 	const CBot* pBot = &gBotGlobals.m_Bots[iIndex];
@@ -881,11 +879,11 @@ void BotClient_SI_Battery::execute(void* p, const int iIndex)
 
 	short* iState = &gBotGlobals.m_iCurrentMessageState;
 
-	if (POINTER_TO_INT(iState) == 0)
+	if (POINTER_VALUE(iState) == 0)
 	{
 		// First field: current battery (armour) value — just consume it
 	}
-	else if (POINTER_TO_INT(iState) == 1)
+	else if (POINTER_VALUE(iState) == 1)
 	{
 		iMaxBattery = POINTER_TO_INT(p);
 
@@ -929,7 +927,7 @@ void BotClient_Generic_TextMessage::execute(void* p, const int iIndex)
 		return;
 	}*/
 
-	switch (short* iState = &gBotGlobals.m_iCurrentMessageState; POINTER_TO_INT(iState))
+	switch (short* iState = &gBotGlobals.m_iCurrentMessageState; POINTER_VALUE(iState))
 	{
 	case 0:
 		POINTER_INCREMENT_VALUE(iState);
