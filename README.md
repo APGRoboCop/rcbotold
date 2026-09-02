@@ -50,6 +50,7 @@ V 1.51-beta13
 * added: Initialised AStarNode via member init list
 * added: Adding weapon null checks for improved stability
 * added: Handle allocation failures in HAL_AddWord()
+* added: Add null checks and allocation handling to megaHAL
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat

@@ -159,7 +159,7 @@ public:
 	// initialization functions
 	virtual void	Spawn() {}
 	virtual void	Precache() {}
-	virtual void	KeyValue(KeyValueData* pkvd) { pkvd->fHandled = false; }
+	virtual void	KeyValue(KeyValueData* pkvd) { pkvd->fHandled = 0; }
 	virtual int		Save(CSave& save);
 	virtual int		Restore(CRestore& restore);
 	virtual int		ObjectCaps() { return FCAP_ACROSS_TRANSITION; }

@@ -519,6 +519,9 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, const HAL_STRING word)
 	int i;
 	bool found;
 
+	if (dictionary == nullptr)
+		return 0; // reliability check
+
 	// if the word's already in the dictionary, there is no need to add it
 	const int position = HAL_SearchDictionary(dictionary, word, &found);
 	// Check if dictionary->index is not nullptr before using it
@@ -701,6 +704,9 @@ void HAL_InitializeDictionary(HAL_DICTIONARY* dictionary)
 {
 	// this function adds dummy words to the dictionary
 
+	if (dictionary == nullptr)
+		return; // reliability check
+
 	constexpr HAL_STRING word = { 7, "<ERROR>" };
 	constexpr HAL_STRING end = { 5, "<FIN>" };
 
@@ -714,7 +720,10 @@ HAL_DICTIONARY* HAL_NewDictionary()
 
 	HAL_DICTIONARY* dictionary = static_cast<HAL_DICTIONARY*>(std::malloc(sizeof(HAL_DICTIONARY)));
 	if (dictionary == nullptr)
+	{
 		BotMessage(nullptr, 1, "HAL: HAL_NewDictionary() unable to allocate dictionary\n");
+		return nullptr;
+	}
 
 	dictionary->size = 0;
 	dictionary->index = nullptr;
@@ -726,6 +735,9 @@ HAL_DICTIONARY* HAL_NewDictionary()
 void HAL_SaveDictionary(std::FILE* file, const HAL_DICTIONARY* dictionary)
 {
 	// this function saves a dictionary to the specified file
+
+	if (file == nullptr || dictionary == nullptr)
+		return; // reliability check
 
 	std::fwrite(&dictionary->size, sizeof(unsigned long), 1, file);
 
@@ -784,7 +796,10 @@ HAL_TREE* HAL_NewNode()
 	// allocate memory for the new node
 	HAL_TREE* node = static_cast<HAL_TREE*>(std::malloc(sizeof(HAL_TREE)));
 	if (node == nullptr)
+	{
 		BotMessage(nullptr, 1, "HAL: HAL_NewNode() unable to allocate node\n");
+		return nullptr;
+	}
 
 	// initialise the contents of the node
 	node->symbol = 0;
@@ -802,7 +817,10 @@ HAL_MODEL* HAL_NewModel(const int order)
 
 	HAL_MODEL* model = static_cast<HAL_MODEL*>(std::malloc(sizeof(HAL_MODEL)));
 	if (model == nullptr)
+	{
 		BotMessage(nullptr, 1, "HAL: HAL_NewModel() unable to allocate model\n");
+		return nullptr;
+	}
 
 	model->order = static_cast<unsigned char>(order);
 	model->forward = HAL_NewNode();
@@ -810,6 +828,15 @@ HAL_MODEL* HAL_NewModel(const int order)
 	model->context = static_cast<HAL_TREE**>(std::malloc(sizeof(HAL_TREE*) * (order + 2)));
 	if (model->context == nullptr)
 		BotMessage(nullptr, 1, "HAL: HAL_NewModel() unable to allocate context array\n");
+
+	if (model->forward == nullptr || model->backward == nullptr || model->context == nullptr)
+	{
+		std::free(model->forward);
+		std::free(model->backward);
+		std::free(model->context);
+		std::free(model);
+		return nullptr;
+	}
 
 	HAL_InitializeContext(model);
 	model->dictionary = HAL_NewDictionary();
@@ -846,6 +873,9 @@ HAL_TREE* HAL_AddSymbol(HAL_TREE* tree, const unsigned short symbol)
 
 	// search for the symbol in the subtree of the tree node
 	HAL_TREE* node = HAL_FindSymbolAdd(tree, symbol);
+
+	if (node == nullptr)
+		return nullptr; // out of memory
 
 	// increment the symbol counts
 	if (node->count < 65535)
@@ -889,6 +919,10 @@ HAL_TREE* HAL_FindSymbolAdd(HAL_TREE* node, const int symbol)
 	else
 	{
 		found = HAL_NewNode();
+
+		if (found == nullptr)
+			return nullptr; // out of memory
+
 		found->symbol = static_cast<unsigned short>(symbol);
 		HAL_AddNode(node, found, i);
 	}
@@ -994,6 +1028,9 @@ void HAL_Learn(const HAL_MODEL* model, const HAL_DICTIONARY* words)
 	int i;
 	unsigned short symbol;
 
+	if (model == nullptr || words == nullptr)
+		return; // reliability check
+
 	if (words->size <= model->order)
 		return; // only learn from inputs which are long enough
 
@@ -1058,11 +1095,22 @@ void HAL_LoadTree(std::FILE* file, HAL_TREE* node)
 
 	node->tree = static_cast<HAL_TREE**>(std::malloc(sizeof(HAL_TREE*) * node->branch));
 	if (node->tree == nullptr)
+	{
 		BotMessage(nullptr, 1, "HAL: HAL_LoadTree() unable to allocate subtree\n");
+		node->branch = 0;
+		return;
+	}
 
 	for (int i = 0; i < node->branch; ++i)
 	{
 		node->tree[i] = HAL_NewNode();
+
+		if (node->tree[i] == nullptr)
+		{
+			node->branch = static_cast<unsigned short>(i); // only keep what was allocated
+			return;
+		}
+
 		HAL_LoadTree(file, node->tree[i]);
 	}
 }
@@ -1072,7 +1120,7 @@ void HAL_MakeWords(char* input, HAL_DICTIONARY* words)
 	// this function breaks a string into an array of words
 	int offset = 0;
 
-	if (!input || !*input)
+	if (!input || !*input || words == nullptr)
 		return; // if void, return
 
 	// re-written
@@ -1254,6 +1302,9 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, const HAL_DICTIONARY* words)
 
 	if (keys == nullptr)
 		keys = HAL_NewDictionary();
+
+	if (keys == nullptr)
+		return nullptr; // out of memory
 
 	for (i = 0; i < static_cast<int>(keys->size); ++i)
 	{
@@ -1486,6 +1537,9 @@ HAL_DICTIONARY* BotHALBuildReplyDictionary(CBot* pBot, HAL_DICTIONARY* keys)
 
 	if (replies == nullptr)
 		replies = HAL_NewDictionary();
+
+	if (replies == nullptr)
+		return nullptr; // out of memory
 
 	HAL_EmptyDictionary(replies);
 
@@ -1979,6 +2033,13 @@ bool PrepareHALBrainForPersonality(bot_profile_t* pBotProfile)
 
 	pBotProfile->m_HAL->bot_model = HAL_NewModel(BOT_HAL_MODEL_ORDER); // create a language model of a certain order
 
+	if (pBotProfile->m_HAL->bot_model == nullptr)
+	{
+		std::free(pBotProfile->m_HAL);
+		pBotProfile->m_HAL = nullptr;
+		return false; // reliability check
+	}
+
 	// build the file names
 
 	UTIL_BuildFileName(ban_filename, BOT_PROFILES_FOLDER, nullptr);
@@ -2080,6 +2141,9 @@ bool LoadHALBrainForPersonality(const bot_profile_t* pBotProfile, const bool bPr
 	char filename[512];
 	char file[256];
 	char cookie[sizeof"RCBOTHAL"];
+
+	if (pBotProfile->m_HAL == nullptr || pBotProfile->m_HAL->bot_model == nullptr)
+		return true; // there was an error, return true
 
 	//int iNameLength;
 	//char *szName;
@@ -2185,6 +2249,9 @@ void SaveHALBrainForPersonality(const bot_profile_t* pBotProfile)
 	char file[256];
 	char filename[256];
 
+	if (pBotProfile->m_HAL == nullptr || pBotProfile->m_HAL->bot_model == nullptr)
+		return; // reliability check
+
 	snprintf(file, sizeof(file), "%d_hal.brn", pBotProfile->m_iProfileId);
 
 	UTIL_BuildFileName(filename, "botprofiles", file);
@@ -2208,7 +2275,7 @@ void SaveHALBrainForPersonality(const bot_profile_t* pBotProfile)
 
 void FreeHALBrain(const bot_profile_t* pBotProfile)
 {
-	if (!pBotProfile->m_HAL)
+	if (!pBotProfile->m_HAL || !pBotProfile->m_HAL->bot_model)
 		return;
 	// free every word in their global chat dictionary
 	if (pBotProfile->m_HAL->bot_model->dictionary)
