@@ -136,7 +136,6 @@ public:
 			tempNode = NULL;
 		}
 
-		m_Head = NULL;
 		m_Tail = NULL;
 	}
 
@@ -646,8 +645,6 @@ public:
 
 			tempNode = NULL;
 		}
-
-		m_Head = NULL;
 	}
 
 	bool IsEmpty()
