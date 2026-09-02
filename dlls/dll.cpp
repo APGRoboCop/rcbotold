@@ -885,7 +885,7 @@ void ClientCommand(edict_t* pEntity)
 						i++;
 					}
 				}
-				else
+				else if (arg1 && *arg1)
 				{
 					// Allocate memory for szMessage
 					szMessage.reset(new char[std::strlen(arg1) + 1]);
