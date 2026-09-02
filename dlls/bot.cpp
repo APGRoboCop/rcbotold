@@ -4665,6 +4665,9 @@ void CBot::LookForNewTasks()
 						}
 						break;
 					case BOT_CAN_HEAL:
+						if (pNearestHealablePlayer == nullptr)
+							break;
+
 						AddTask(CBotTask(BOT_TASK_FIND_PATH, iNewScheduleId, pNearestHealablePlayer));
 
 						if (UTIL_EntityIsHive(pNearestHealablePlayer))
