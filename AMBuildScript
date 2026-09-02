@@ -58,11 +58,23 @@ if builder.cxx.target.platform == 'linux':
     '-Wno-uninitialized',
     '-Wno-unused',
     '-Wno-switch',
-    '-Wno-unknown-attributes',
-    '-Wno-logical-op-parentheses',
-    '-Wno-return-stack-address',
     '-m32',
   ]
+  # Compiler-specific warning suppressions. These three names only exist in
+  # Clang; GCC prints "unrecognized command-line option" notes for them
+  # whenever another warning fires, so each compiler gets its own spelling.
+  if builder.cxx.family == 'clang':
+    builder.cxx.cflags += [
+      '-Wno-unknown-attributes',
+      '-Wno-logical-op-parentheses',
+      '-Wno-return-stack-address',
+    ]
+  elif builder.cxx.family == 'gcc':
+    builder.cxx.cflags += [
+      '-Wno-attributes',
+      '-Wno-parentheses',
+      '-Wno-return-local-addr',
+    ]
   # Linux compiler C++ flags
   builder.cxx.cxxflags += [
     '-Wno-invalid-offsetof',
@@ -124,9 +136,12 @@ if builder.options.optimize:
   builder.cxx.defines += ['NDEBUG']
   if builder.cxx.target.platform == 'linux':
     # Linux optimization flags
-    builder.cxx.cflags += ['-O3', '-flto=auto']
-	# Linux optimization link flags - LTO must be in link flags too - [APG]RoboCop[CL]
-    builder.cxx.linkflags += ['-flto=auto', '-s', '-Wl,-z,relro,-z,now', '-Wl,-z,noexecstack',]
+    builder.cxx.cflags += ['-O2', '-flto=auto', '-ffunction-sections', '-fdata-sections']
+    # Linux optimization link flags - LTO must be in link flags too - [APG]RoboCop[CL]
+    builder.cxx.linkflags += ['-flto=auto', '-Wl,-z,relro,-z,now', '-Wl,-z,noexecstack',]
+    # Clang LTO through GNU ld needs the LLVMgold plugin; lld handles it natively.
+    if builder.cxx.family == 'clang':
+      builder.cxx.linkflags += ['-fuse-ld=lld']
   elif builder.cxx.target.platform == 'windows':
     # Windows optimization flags - /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
     builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GL', '/MD']
@@ -140,8 +155,18 @@ if builder.options.debug:
   # Shared debug definitions
   builder.cxx.defines += ['DEBUG', '_DEBUG']
   if builder.cxx.target.platform == 'linux':
-    # Linux debug flags
-    builder.cxx.cflags += ['-g3', '-Og', '-ggdb3', '-fsanitize=address', '-fsanitize=undefined', '-fsanitize=leak']
+    # Linux debug flags. LeakSanitizer is 64-bit only, so it is not used for
+    # this 32-bit build. The sanitizers must be passed at link time as well or
+    # the __asan_*/__ubsan_* references stay unresolved (and --no-undefined
+    # then fails the link). Clang links the runtime statically by default,
+    # which is not allowed into a shared object, hence -shared-libsan. At run
+    # time hlds itself is not instrumented, so start it with the matching
+    # libasan/libclang_rt.asan in LD_PRELOAD. [APG]RoboCop[CL]
+    builder.cxx.cflags += ['-g3', '-Og', '-ggdb3', '-fsanitize=address,undefined', '-fno-omit-frame-pointer']
+    builder.cxx.linkflags += ['-fsanitize=address,undefined']
+    if builder.cxx.family == 'clang':
+      builder.cxx.cflags += ['-shared-libsan']
+      builder.cxx.linkflags += ['-shared-libsan']
   elif builder.cxx.target.platform == 'windows':
     # Windows debug flags
     builder.cxx.cflags += ['/Od', '/RTC1', '/MTd']
