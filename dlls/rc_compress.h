@@ -28,17 +28,17 @@
  *    version.
  *
  */
-//////////////////////////////////////////////////
-// RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
-//
-// (http://www.rcbot.net)
-//
-// rc_compress.h
-//
-// Compression utilities using miniz for
-// visibility tables and learned data files
-//
-//////////////////////////////////////////////////
+ //////////////////////////////////////////////////
+ // RCBOT : Paul Murphy @ {cheeseh@rcbot.net}
+ //
+ // (http://www.rcbot.net)
+ //
+ // rc_compress.h
+ //
+ // Compression utilities using miniz for
+ // visibility tables and learned data files
+ //
+ //////////////////////////////////////////////////
 
 #ifndef RC_COMPRESS_H
 #define RC_COMPRESS_H
@@ -53,10 +53,10 @@ constexpr uint32_t RCZ_VERSION = 1;
 #pragma pack(push, 1)
 struct RCZHeader
 {
-char magic[4];
-uint32_t version;
-uint32_t uncompressedSize;
-uint32_t compressedSize;
+	char magic[4];
+	uint32_t version;
+	uint32_t uncompressedSize;
+	uint32_t compressedSize;
 };
 #pragma pack(pop)
 
