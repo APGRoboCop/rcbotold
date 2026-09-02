@@ -12668,7 +12668,6 @@ void CBot::DoTasks()
 			}
 			else
 			{
-				// init.
 				m_CurrentTask->SetFloat(gpGlobals->time + m_CurrentTask->TaskFloat());
 				m_CurrentTask->SetInt(1);
 			}
@@ -12685,7 +12684,6 @@ void CBot::DoTasks()
 			}
 			else
 			{
-				// init.
 				m_CurrentTask->SetFloat(gpGlobals->time + m_CurrentTask->TaskFloat());
 				m_CurrentTask->SetInt(1);
 			}
@@ -12708,16 +12706,13 @@ void CBot::DoTasks()
 			}
 			else
 			{
-				// init.
-
-			   // look at entity for ... taskfloat() seconds
+				// look at entity for ... taskfloat() seconds
 				m_CurrentTask->SetFloat(gpGlobals->time + m_CurrentTask->TaskFloat());
 				m_CurrentTask->SetInt(1); // set "state 1"
 			}
 
 			break;
 			/*		m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_EDICT;
-
 							bDone = UTIL_IsFacingEnt(pTaskEdict);*/
 		}
 		case BOT_TASK_GOTO_OBJECT:/*
@@ -12822,10 +12817,7 @@ void CBot::DoTasks()
 
 			if (iState == 0)
 			{
-				//
 				m_CurrentTask->SetFloat(gpGlobals->time + m_CurrentTask->TaskFloat());
-
-				// update state
 				m_CurrentTask->SetInt(1);
 			}
 			else if (m_CurrentTask->TaskFloat() <= gpGlobals->time)
@@ -12907,7 +12899,6 @@ void CBot::DoTasks()
 				{
 					Vector vOrigin = EntityOrigin(pFuncResource);
 					TraceResult tr;
-					//bBuild = true;
 
 					UTIL_TraceLine(GetGunPosition(), vOrigin, dont_ignore_monsters, ignore_glass, m_pEdict, &tr);
 
@@ -12933,8 +12924,6 @@ void CBot::DoTasks()
 				// set next build time so we dont keep trying to build...
 				m_fNextBuildTime = gpGlobals->time + 1.0f;
 				Impulse(iToBuild);
-				// only try once
-				//bDone = true;
 				m_Tasks.FinishedCurrentTask();
 
 				if (iToBuild != ALIEN_BUILD_HIVE)
@@ -13009,8 +12998,6 @@ void CBot::DoTasks()
 		{
 			Vector vLeaderOrigin;
 
-			//m_pSquadLeader = m_CurrentTask->TaskEdict();
-
 			if (m_pSquadLeader == nullptr || m_stSquad == nullptr)
 			{
 				bTaskFailed = true;
@@ -13043,7 +13030,6 @@ void CBot::DoTasks()
 			if (HasCondition(BOT_CONDITION_SQUAD_LEADER_DEAD))
 			{
 				// Pick a new leader or become new leader or stop following
-
 				if (m_stSquad)
 				{
 					gBotGlobals.m_Squads.ChangeLeader(m_stSquad);
@@ -13093,7 +13079,6 @@ void CBot::DoTasks()
 				else if (bFindPath)
 				{
 					// look for squad leader
-
 					if (!m_CurrentTask->HasPath())
 					{
 						AddPriorityTask(CBotTask(BOT_TASK_FIND_PATH, m_CurrentTask->GetScheduleId(), m_pSquadLeader, -1));
@@ -13144,7 +13129,6 @@ void CBot::DoTasks()
 				else
 				{
 					bTaskFailed = true;
-					//m_szChatString[0] = 0;
 				}
 			}
 		}
@@ -13182,10 +13166,7 @@ void CBot::DoTasks()
 							UTIL_MakeVectors(vAngle);
 
 							m_CurrentTask->SetInt(1);
-
 							m_CurrentTask->SetVector(GetGunPosition() + gpGlobals->v_forward * 320);
-
-							// gren hold time
 							m_CurrentTask->SetFloat(gpGlobals->time + RANDOM_FLOAT(0.5f, 1.0f));
 						}
 						else
@@ -13510,8 +13491,6 @@ void CBot::DoTasks()
 				if (m_iWaypointGoalIndex != m_CurrentTask->TaskInt())
 				{
 					m_CurrentTask->SetPathInfo(false);
-
-					//bTaskFailed = true;
 					break;
 				}
 
@@ -14797,7 +14776,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 						}
 					}
 
-					if (m_pCurrentWeapon->IsMelee())
+					if (m_pCurrentWeapon != nullptr && m_pCurrentWeapon->IsMelee())
 					{
 						if (fEnemyDist > pev->size.Length2D())
 						{
@@ -14832,7 +14811,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 						decideJumpDuckStrafe(fEnemyDist, vEnemyOrigin);
 					}
-					else if (m_pCurrentWeapon->PrimaryInRange(fEnemyDist) == -1)
+					else if (m_pCurrentWeapon != nullptr && m_pCurrentWeapon->PrimaryInRange(fEnemyDist) == -1)
 					{
 						// naive "is melee" check
 						if (fEnemyDist > m_pCurrentWeapon->PrimMinRange())
@@ -14865,7 +14844,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 
 					if (IsMarine())
 					{
-						if (!m_pCurrentWeapon->IsMelee())
+						if (m_pCurrentWeapon != nullptr && !m_pCurrentWeapon->IsMelee())
 						{
 							if (m_pCurrentWeapon->OutOfAmmo())
 							{
@@ -14886,7 +14865,6 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 							{
 								if (fEnemyDist < 256.0f)
 								{
-									//------------------
 									SetMoveVector(m_vLowestEnemyCostVec);
 									// stay away from enemy
 									//m_pAvoidEntity = m_pEnemy;
@@ -14933,7 +14911,6 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 				break;
 				case MOD_BUMPERCARS:
 					// bump into em!!!
-
 					if (fEnemyDist < REACHABLE_RANGE)
 					{
 						SetMoveVector(vEnemyOrigin);
@@ -15696,7 +15673,6 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 				if (!theTeamList.IsEmpty())
 				{
 					// pick best to join
-
 					dataStack <edict_t*> tempStack = theTeamList;
 					edict_t* pBest = nullptr;
 					float fFactor;
@@ -15727,7 +15703,6 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 		{
 			// Crouch for a while
 			// ...
-
 			Duck();
 
 			if (!m_CurrentTask->TaskInt())
@@ -15738,7 +15713,6 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 			else if (m_CurrentTask->TaskFloat() < gpGlobals->time)
 			{
 				// fini
-
 				bDone = true;
 			}
 		}
@@ -15789,7 +15763,6 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 			}
 
 			m_CurrentLookTask = BOT_LOOK_TASK_FACE_TASK_VECTOR;
-
 			m_CurrentTask->SetVector(m_vMoveToVector + Vector(0, 0, pev->size.z / 2));
 
 			bDone = DistanceFrom(m_vMoveToVector, true) < std::pow(pev->size.x + pev->size.y, 0.5f) && m_vMoveToVector.z < pev->origin.z;
@@ -15900,7 +15873,6 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 			if (gBotGlobals.IsMod(MOD_DMC) && pToUse->v.health > 0)
 			{
 				// shoot it to open it
-
 				m_Tasks.FinishedCurrentTask();
 				UpdateCondition(BOT_CONDITION_SEE_ENEMY);
 				AddPriorityTask(CBotTask(BOT_TASK_NORMAL_ATTACK, 0, pToUse, 0, gpGlobals->time + 2.0f));
@@ -16441,7 +16413,6 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 		if (TaskToAdd.Task() != BOT_TASK_NONE)
 			AddPriorityTask(TaskToAdd);
 
-		// end TASK CODE
 	}
 }
 
