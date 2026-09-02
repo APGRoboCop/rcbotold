@@ -10377,8 +10377,6 @@ edict_t* BotFunc_FindNearestButton(const Vector& vOrigin, const entvars_t* pDoor
 	if (pTarget)
 		return pTarget;
 
-	pTarget = nullptr;
-
 	while ((pTarget = UTIL_FindEntityByString(pTarget, "target", szTargetname)) != nullptr)
 	{
 		Vector vEntityOrigin = EntityOrigin(pTarget);
@@ -15161,7 +15159,7 @@ if ( !HasUser4Mask(MASK_UPGRADE_9) )
 							m_pTSWeaponSelect->set(8+iweapid,0.5f);
 						*/
 
-						if (m_pCurrentWeapon->NeedToReload())
+						if (m_pCurrentWeapon && m_pCurrentWeapon->NeedToReload())
 						{
 							RunForCover(vEnemyOrigin);
 							Reload(); // reload the weapon [APG]RoboCop[CL]
