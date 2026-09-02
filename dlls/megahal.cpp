@@ -530,7 +530,15 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, const HAL_STRING word)
 
 	// allocate one more entry for the word index
 	if (dictionary->index == nullptr)
+	{
 		dictionary->index = static_cast<unsigned short*>(std::malloc(sizeof(unsigned short) * dictionary->size));
+		if (dictionary->index == nullptr)
+		{
+			BotMessage(nullptr, 1, "HAL: HAL_AddWord() unable to allocate the dictionary index\n");
+			dictionary->size--; // the arrays were not grown, so undo the count
+			return 0;
+		}
+	}
 	else
 	{
 		unsigned short* temp = static_cast<unsigned short*>(std::realloc(dictionary->index,
@@ -538,6 +546,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, const HAL_STRING word)
 		if (temp == nullptr)
 		{
 			BotMessage(nullptr, 1, "HAL: HAL_AddWord() unable to reallocate the dictionary index\n");
+			dictionary->size--; // the arrays were not grown, so undo the count
 			return 0; // Return error indicator
 		}
 		dictionary->index = temp;
@@ -545,7 +554,15 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, const HAL_STRING word)
 
 	// allocate one more entry for the word array
 	if (dictionary->entry == nullptr)
+	{
 		dictionary->entry = static_cast<HAL_STRING*>(std::malloc(sizeof(HAL_STRING) * dictionary->size));
+		if (dictionary->entry == nullptr)
+		{
+			BotMessage(nullptr, 1, "HAL: HAL_AddWord() unable to allocate the dictionary to %d elements\n", dictionary->size);
+			dictionary->size--; // the arrays were not grown, so undo the count
+			return 0;
+		}
+	}
 	else
 	{
 		HAL_STRING* tempEntry = static_cast<HAL_STRING*>(std::realloc(dictionary->entry,
@@ -553,6 +570,7 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, const HAL_STRING word)
 		if (tempEntry == nullptr)
 		{
 			BotMessage(nullptr, 1, "HAL: HAL_AddWord() unable to reallocate the dictionary to %d elements\n", dictionary->size);
+			dictionary->size--; // the arrays were not grown, so undo the count
 			return 0;
 		}
 		dictionary->entry = tempEntry;
@@ -562,7 +580,12 @@ unsigned short HAL_AddWord(HAL_DICTIONARY* dictionary, const HAL_STRING word)
 	dictionary->entry[dictionary->size - 1].length = word.length;
 	dictionary->entry[dictionary->size - 1].word = static_cast<char*>(std::malloc(sizeof(char) * (word.length + 1)));
 	if (dictionary->entry[dictionary->size - 1].word == nullptr)
+	{
 		BotMessage(nullptr, 1, "HAL: HAL_AddWord() unable to allocate the word\n");
+		dictionary->entry[dictionary->size - 1].length = 0;
+		dictionary->size--; // the word was not stored, so undo the count
+		return 0;
+	}
 
 	for (i = 0; i < word.length; ++i)
 		dictionary->entry[dictionary->size - 1].word[i] = word.word[i];
