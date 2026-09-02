@@ -1105,7 +1105,7 @@ int BotNavigate_FindNextWaypoint(CBot* pBot)
 		if (gBotGlobals.IsDebugLevelOn(BOT_DEBUG_NAV_LEVEL))
 			DebugMessage(BOT_DEBUG_NAV_LEVEL, nullptr, 0, "BotFindNextWaypoint() %s has no current waypoint", pBot->m_szBotName);
 
-		return false;
+		return 0;
 	}
 
 	return -1;

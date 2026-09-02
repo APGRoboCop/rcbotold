@@ -609,6 +609,13 @@ int HAL_SearchDictionary(const HAL_DICTIONARY* dictionary, const HAL_STRING word
 	// search the dictionary for the specified word, returning its position in the index if
 	// found, or the position where it should be inserted otherwise
 
+	// a dictionary that failed to allocate holds nothing either
+	if (dictionary == nullptr)
+	{
+		*find = false;
+		return 0;
+	}
+
 	// if the dictionary is empty, then obviously the word won't be found
 	if (dictionary->size == 0)
 	{
@@ -1297,7 +1304,7 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, const HAL_DICTIONARY* words)
 
 	if (!pBot)
 		return nullptr;
-	if (!pBot->IsUsed())
+	if (!pBot->IsUsed() || pBot->m_Profile.m_HAL == nullptr || words == nullptr)
 		return nullptr;
 
 	if (keys == nullptr)
@@ -1323,12 +1330,13 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, const HAL_DICTIONARY* words)
 
 		c = 0;
 
-		for (j = 0; j < pBot->m_Profile.m_HAL->swappable_keywords->size; ++j)
-			if (HAL_CompareWords(pBot->m_Profile.m_HAL->swappable_keywords->from[j], words->entry[i]) == 0)
-			{
-				BotHALAddKeyword(pBot, keys, pBot->m_Profile.m_HAL->swappable_keywords->to[j]);
-				++c;
-			}
+		if (pBot->m_Profile.m_HAL->swappable_keywords != nullptr)
+			for (j = 0; j < pBot->m_Profile.m_HAL->swappable_keywords->size; ++j)
+				if (HAL_CompareWords(pBot->m_Profile.m_HAL->swappable_keywords->from[j], words->entry[i]) == 0)
+				{
+					BotHALAddKeyword(pBot, keys, pBot->m_Profile.m_HAL->swappable_keywords->to[j]);
+					++c;
+				}
 
 		if (c == 0)
 			BotHALAddKeyword(pBot, keys, words->entry[i]);
@@ -1339,12 +1347,13 @@ HAL_DICTIONARY* BotHALMakeKeywords(CBot* pBot, const HAL_DICTIONARY* words)
 		{
 			c = 0;
 
-			for (j = 0; j < pBot->m_Profile.m_HAL->swappable_keywords->size; ++j)
-				if (HAL_CompareWords(pBot->m_Profile.m_HAL->swappable_keywords->from[j], words->entry[i]) == 0)
-				{
-					BotHALAddAuxiliaryKeyword(pBot, keys, pBot->m_Profile.m_HAL->swappable_keywords->to[j]);
-					++c;
-				}
+			if (pBot->m_Profile.m_HAL->swappable_keywords != nullptr)
+				for (j = 0; j < pBot->m_Profile.m_HAL->swappable_keywords->size; ++j)
+					if (HAL_CompareWords(pBot->m_Profile.m_HAL->swappable_keywords->from[j], words->entry[i]) == 0)
+					{
+						BotHALAddAuxiliaryKeyword(pBot, keys, pBot->m_Profile.m_HAL->swappable_keywords->to[j]);
+						++c;
+					}
 
 			if (c == 0)
 				BotHALAddAuxiliaryKeyword(pBot, keys, words->entry[i]);
@@ -1753,7 +1762,10 @@ HAL_SWAP* HAL_NewSwap()
 
 	HAL_SWAP* list = static_cast<HAL_SWAP*>(std::malloc(sizeof(HAL_SWAP)));
 	if (list == nullptr)
+	{
 		BotMessage(nullptr, 1, "HAL: HAL_NewSwap() unable to allocate swap\n");
+		return nullptr;
+	}
 
 	list->size = 0; // initialize to defaults
 	list->from = nullptr;
@@ -1765,6 +1777,9 @@ HAL_SWAP* HAL_NewSwap()
 void HAL_AddSwap(HAL_SWAP* list, const char* s, const char* d)
 {
 	// this function adds a new entry to the swap structure.
+
+	if (list == nullptr)
+		return; // reliability check
 
 	if (list->from == nullptr)
 	{
