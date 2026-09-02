@@ -4360,18 +4360,13 @@ public:
 
 	char* GetString(const char* szString)
 	{
-		char iHashNum = szString[0];
-
-		if (iHashNum < 0)
-			iHashNum = -iHashNum;
+		// hash on the first character, unsigned so that the index can never go
+		// negative (negating CHAR_MIN does not fit back into a char)
+		const unsigned char iHashNum = static_cast<unsigned char>(szString[0]);
 
 		const int iHashValue = iHashNum % STRING_HASHES;
 
-		assert(iHashValue >= 0);
 		assert(iHashValue < STRING_HASHES);
-
-		if (iHashValue < 0 || iHashValue >= STRING_HASHES)
-			return nullptr; // problem...
 
 		dataStack<char*> s_tempStack = szStringsHead[iHashValue];
 
