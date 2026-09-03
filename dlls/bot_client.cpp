@@ -1599,10 +1599,8 @@ void BotClient_NS_HudText::execute(void* p, int iIndex)
 	{
 		msg = static_cast<const char*>(p);
 
-		if (msg)
+		if (const size_t length = std::strlen(msg); length >= 3)
 		{
-			const size_t length = std::strlen(msg);
-
 			// If a team has won (used to say "one" duhhh), round is over
 			if (!strcmpi(&msg[length - 3], "Won"))
 			{
@@ -1678,10 +1676,12 @@ void BotClient_NS_SetTech::execute(void* p, const int iIndex)
 	  WRITE_BYTE(7) // ?? 6
 		*/
 
-	const CBot* pBot = &gBotGlobals.m_Bots[iIndex];
-
 	if (p == nullptr || iIndex == -1)
 		return;
+
+	// Taken after the bounds check: with iIndex -1 this used to form the
+	// address of m_Bots[-1] before anything had validated it. [APG]RoboCop[CL]
+	const CBot* pBot = &gBotGlobals.m_Bots[iIndex];
 
 	switch (POINTER_VALUE(state))
 	{
@@ -1702,17 +1702,17 @@ void BotClient_NS_SetTech::execute(void* p, const int iIndex)
 		iRadius = POINTER_TO_INT(p);
 		break;
 	case 6:
-		if (pBot)
-		{
-			const int team = pBot->GetTeam();
+	{
+		// pBot is the address of an array element, so it is never null
+		const int team = pBot->GetTeam();
 
-			if (team >= 0 && team < MAX_TEAMS) {
-				const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, true, iRadius, iSlot);
-				gBotGlobals.m_TeamTechs[team].addTech(tech);
-			}
+		if (team >= 0 && team < MAX_TEAMS) {
+			const CBotNSTech tech = CBotNSTech(iImpulsemessage, iCost, true, iRadius, iSlot);
+			gBotGlobals.m_TeamTechs[team].addTech(tech);
 		}
+	}
 
-		break;
+	break;
 	}
 
 	POINTER_INCREMENT_VALUE(state);
