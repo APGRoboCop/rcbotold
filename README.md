@@ -51,6 +51,7 @@ V 1.51-beta13
 * added: Adding weapon null checks for improved stability
 * added: Handle allocation failures in HAL_AddWord()
 * added: Add null checks and allocation handling to megaHAL
+* added: TS 3.0 missing single Beretta finally added
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
