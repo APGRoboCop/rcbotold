@@ -95,7 +95,7 @@ bool RCZ_CompressToFileHandle(std::FILE* fp, const void* pData, const uint32_t d
 		return false;
 
 	// Allocate worst-case compressed buffer
-	mz_ulong compBound = mz_compressBound(dataSize);
+	const mz_ulong compBound = mz_compressBound(dataSize);
 	unsigned char* pCompressed = static_cast<unsigned char*>(std::malloc(compBound));
 	if (!pCompressed)
 		return false;
