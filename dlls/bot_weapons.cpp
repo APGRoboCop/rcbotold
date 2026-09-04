@@ -76,9 +76,9 @@
 
 // begin -- TS metamod weapon restriction plugin
 
-constexpr std::array<std::string_view, 36> pszTSWeaponModels = { "0","models/w_glock18.mdl","models/w_beretta.mdl","models/w_uzi.mdl"
+constexpr std::array<std::string_view, 36> pszTSWeaponModels = { "0","models/w_glock18.mdl","models/v_beretta.mdl","models/w_uzi.mdl"
 ,"models/w_m3.mdl","models/w_m4.mdl","models/w_mp5sd.mdl","models/w_mp5k.mdl"
-,"models/w_berettas.mdl","models/w_mk23.mdl","models/w_mk23_akimbo.mdl","models/w_usas.mdl"
+,"models/w_berettas.mdl","models/w_mk23.mdl","models/v_mk23_akimbo.mdl","models/w_usas.mdl"
 ,"models/w_desert.mdl","models/w_ak47.mdl","models/w_fnh.mdl","models/w_aug.mdl"
 ,"models/w_uzi.mdl","models/w_skorpion.mdl","models/w_m82.mdl","models/w_pdw.mdl"
 ,"models/w_spas12.mdl","models/w_gold.mdl","models/w_glock22.mdl","models/w_ump.mdl"
