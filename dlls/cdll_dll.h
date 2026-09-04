@@ -21,7 +21,7 @@
 #define CDLL_DLL_H
 
 //#ifdef RCBOT_TS_BUILD
-constexpr int MAX_WEAPONS = 37;		// ??? 37 for TS;
+constexpr int MAX_WEAPONS = 39;		// 38 TS weapons (0-37) + the Kung Fu remap at 38
 //#else
 //	#define MAX_WEAPONS	32
 //#endif

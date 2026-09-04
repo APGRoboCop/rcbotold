@@ -332,12 +332,15 @@ enum class TSWeapon : std::uint8_t
 	RugerMk1 = 28,
 	M61Grenade = 24,
 	C4 = 29,
+	AkimboFiveSeven = 30,
 	RagingBull = 31,
 	M60 = 32,
 	Sawedoff = 33,
 	Katana = 34,
 	SealKnife = 35,
-	KungFu = 36
+	ContenderG2 = 36,
+	AkimboSkorpions = 37,
+	KungFu = 38
 };
 
 // weapon ID values for Science and Industry
