@@ -2776,16 +2776,16 @@ public:
 		m_vOrigin = Vector(0, 0, 0);
 		m_szName = nullptr;
 	}
+
 	TSObjective(const int id, const Vector& origin, char* name)
 		: m_iId(id), m_vOrigin(origin), m_szName(name)
 	{
 	}
-	/*guurk*/
-	int operator ==(TSObjective& comp) const
+
+	bool operator ==(const TSObjective& comp) const
 	{
-		return m_iId;
+		return m_iId == comp.m_iId;
 	}
-	/*/guurk*/
 
 	int getID() const { return m_iId; }
 

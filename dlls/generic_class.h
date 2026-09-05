@@ -946,8 +946,12 @@ public:
 
 	void RemoveByIndex(const int index)
 	{
-		for (unsigned i = index; i < size - 1; i++)
+		if (index < 0 || static_cast<unsigned>(index) >= size)
+			return;
+
+		for (unsigned i = static_cast<unsigned>(index); i + 1 < size; i++)
 			buffer[i] = buffer[i + 1];
+
 		size--;
 	}
 

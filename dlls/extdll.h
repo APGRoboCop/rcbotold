@@ -68,8 +68,11 @@
 #else
 #define ULONG ulong
 #endif
+
+#ifndef __cplusplus
 #define false 0
 #define true  1
+#endif
 
 //Fix for GCC 7 - [APG]RoboCop[CL]
 #include <algorithm>
