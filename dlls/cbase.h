@@ -28,6 +28,10 @@ CBaseEntity
 #ifndef CBASE_H
 #define CBASE_H
 
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC system_header
+#endif
+
 constexpr int MAX_PATH_SIZE = 10; // max number of nodes available for a path.
 
 // These are caps bits to indicate what an object's capabilities (currently used for save/restore and level transitions)

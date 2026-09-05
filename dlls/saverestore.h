@@ -16,6 +16,10 @@
 #ifndef SAVERESTORE_H
 #define SAVERESTORE_H
 
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC system_header
+#endif
+
 class CBaseEntity;
 
 class CSaveRestoreBuffer

@@ -53,7 +53,7 @@ if builder.cxx.target.platform == 'linux':
     '-Wconversion',
     #'-Wsign-conversion',
     '-Wnull-dereference',
-    '-Wdouble-promotion',
+    #'-Wdouble-promotion',
     '-Wformat-security',
     '-Wno-uninitialized',
     '-Wno-unused',
