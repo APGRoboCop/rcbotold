@@ -5762,9 +5762,9 @@ public:
 		return m_iGoal;
 	}
 
-	bool isForGroup(int iGroup) const
+	bool isForGroup(const int iGroup) const
 	{
-		return m_iGroup;
+		return m_iGroup == iGroup;
 	}
 
 	bool isForGoal(const int goal) const
@@ -6037,7 +6037,7 @@ public:
 
 	inline bool isForGroup ( int iGroup )
 	{
-		return m_iGroup;
+		return m_iGroup == iGroup;
 	}
 
 	inline void setGroup ( int group )

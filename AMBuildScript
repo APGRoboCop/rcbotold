@@ -51,7 +51,7 @@ if builder.cxx.target.platform == 'linux':
     '-Woverloaded-virtual',
     '-Wpedantic',
     '-Wconversion',
-    #'-Wsign-conversion',
+    '-Wno-sign-conversion',
     '-Wnull-dereference',
     #'-Wdouble-promotion',
     '-Wformat-security',

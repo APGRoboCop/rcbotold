@@ -56,7 +56,7 @@ constexpr int BOT_COMMAND_ACCESS_DEBUG = (1 << 4);
 constexpr int BOT_COMMAND_ACCESS_USERS = (1 << 5);
 
 // test function
-void GiveTSWeapon(edict_t* pEdict, int id);
+//void GiveTSWeapon(edict_t* pEdict, int id);
 
 void SetupCommands();
 

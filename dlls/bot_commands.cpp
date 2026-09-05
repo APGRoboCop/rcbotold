@@ -2333,7 +2333,11 @@ void RCBot_ServerCommand()
 	}
 }
 
-void GiveTSWeapon(edict_t* pEdict, int id)
+// GiveTSWeapon() lived here. It never read the weapon id it was handed - it
+// always spawned a bare "weapon_tsgun" - and its only caller was already
+// commented out above. UTIL_makeTSweapon() does the job properly.
+// [APG]RoboCop[CL]
+/*void GiveTSWeapon(edict_t* pEdict, int id)
 {
 	edict_t* weapon = g_engfuncs.pfnCreateNamedEntity(MAKE_STRING("weapon_tsgun"));
 
@@ -2345,4 +2349,4 @@ void GiveTSWeapon(edict_t* pEdict, int id)
 	weapon->v.owner = pEdict;
 
 	DispatchTouch(pEdict, weapon);
-}
+}*/

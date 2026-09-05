@@ -80,6 +80,7 @@ V 1.51-beta13
 * changed: Replaced memset with std::fill_n for AStarNode()
 * changed: Using safe pointer macros for message state
 * changed: Fixed the TSObjective() equality comparison
+* changed: Removed the redundant GiveTSWeapon()
 
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors - maybe allow them to instantly switch weapons?
 * TODO: To allow bots in Op4 use Deagle's Laser Sight to improve its accuracy - In Progress
