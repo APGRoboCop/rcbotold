@@ -974,7 +974,7 @@ CClient* CClients::ClientConnected(edict_t* pPlayer)
 
 	//	gBotGlobals.m_iNumClients ++;
 
-	if (const int i = ENTINDEX(pPlayer) - 1; i < MAX_PLAYERS)
+	if (const int i = ENTINDEX(pPlayer) - 1; i >= 0 && i < MAX_PLAYERS)
 	{
 		CClient* pClient = GetClientByIndex(i);
 
