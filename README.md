@@ -53,6 +53,7 @@ V 1.51-beta13
 * added: Add null checks and allocation handling to MegaHAL
 * added: TS 3.0 missing single Beretta, ContenderG2, Akimbo Five-seveNs and Akimbo Skorpions finally added
 * added: Validate player index range in ClientConnected()
+* added: Validate player indices and use unsigned bitmasks
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
