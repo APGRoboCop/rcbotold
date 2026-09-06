@@ -174,7 +174,7 @@ bool HasSubDirectories(const char* path)
 	strncat_s(search_path, MAX_PATH, "\\*", _TRUNCATE);
 
 	WIN32_FIND_DATA find_data;
-	HANDLE directory = FindFirstFile(search_path, &find_data);
+	const HANDLE directory = FindFirstFile(search_path, &find_data);
 
 	if (directory == INVALID_HANDLE_VALUE)
 		return false;

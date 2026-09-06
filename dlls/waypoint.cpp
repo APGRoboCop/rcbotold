@@ -987,7 +987,7 @@ void WaypointFree()
 
 			while (p)  // free the linked list
 			{
-				PATH* p_next = p->next;
+				const PATH* p_next = p->next;
 				delete p;
 				p = p_next;
 #ifdef _DEBUG
@@ -1869,7 +1869,7 @@ void WaypointDelete(CClient* pClient)
 
 	if (paths[index] != nullptr)
 	{
-		PATH* p = paths[index];
+		const PATH* p = paths[index];
 
 #ifdef _DEBUG
 		int count = 0;
