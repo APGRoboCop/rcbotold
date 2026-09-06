@@ -838,7 +838,7 @@ eBotCvarState CDebugCommand::action(CClient* pClient, const char* arg1, const ch
 
 	if (!arg1 || !*arg1 || (!arg2 || !*arg2))
 	{
-		BotMessage(nullptr, 0, "Usage: rcbot_debug <level> <1 : on, 0 : off>");
+		BotMessage(nullptr, 0, "Usage: rcbot debug <option> <1 : on, 0 : off>", BOT_COMMAND_ACCESS);
 		return BOT_CVAR_ERROR;
 	}
 

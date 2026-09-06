@@ -363,9 +363,9 @@ public:
 	{
 		BotMessage(pEntity, 0, "debug command help");
 		BotMessage(pEntity, 0, "------------------");
-		BotMessage(pEntity, 0, "Usage: rcbot debug <debug level> <on/off>");
+		BotMessage(pEntity, 0, "Usage: rcbot debug <option> <on/off>");
 		BotMessage(pEntity, 0, "on = 1, off = 0");
-		BotMessage(pEntity, 0, "Available debug levels are:");
+		BotMessage(pEntity, 0, "Available debug options are:");
 		BotMessage(pEntity, 0, "\"touch\"");
 		BotMessage(pEntity, 0, "\"think\"");
 		BotMessage(pEntity, 0, "\"hear\"");
