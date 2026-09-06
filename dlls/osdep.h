@@ -201,7 +201,7 @@ char* DLLINTERNAL my_strlwr(char* s);
 #include <stdlib.h>
 #define NAME_MAX	_MAX_FNAME
 
-#if !defined (PATH_MAX)
+#ifndef PATH_MAX
 #  define PATH_MAX	_MAX_PATH
 #endif
 #endif /* _WIN32 */
