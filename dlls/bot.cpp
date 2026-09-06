@@ -1974,9 +1974,12 @@ void CBot::BotChat(eBotChatType iChatType, edict_t* pChatEdict, const bool bSayN
 	{
 		const int iIndex = ENTINDEX(pChatEdict) - 1;
 
-		if (!(m_iSaidGreetingsTo & 1 << iIndex))
+		if (iIndex < 0 || iIndex >= MAX_PLAYERS)
+			return;
+
+		if (!(m_iSaidGreetingsTo & 1u << iIndex))
 		{
-			m_iSaidGreetingsTo |= 1 << iIndex;
+			m_iSaidGreetingsTo |= 1u << iIndex;
 
 			iArrayNum = BotFunc_GetRepArrayNum(m_Profile.m_Rep.GetClientRep(pClient));
 			pChatArray = &gBotGlobals.m_BotChat.m_Greetings[iArrayNum];

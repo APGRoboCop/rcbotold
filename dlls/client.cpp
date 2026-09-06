@@ -1095,7 +1095,7 @@ void CClients::ClientDisconnected(CClient* pClient)
 	// give a few seconds before adding more bots.
 	gBotGlobals.m_fBotRejoinTime = gpGlobals->time + 5.0f;
 
-	const bool RemoveGreeting = iPlayerIndex != -1;
+	const bool RemoveGreeting = iPlayerIndex >= 0 && iPlayerIndex < MAX_PLAYERS;
 
 	if (iPlayerRepId >= 0)
 	{
@@ -1109,7 +1109,7 @@ void CClients::ClientDisconnected(CClient* pClient)
 			pBot->m_Profile.m_Rep.RemoveSaveRep(pBot->m_Profile.m_iProfileId, iPlayerRepId);
 
 			if (RemoveGreeting)
-				pBot->m_iSaidGreetingsTo &= ~(1 << iPlayerIndex);
+				pBot->m_iSaidGreetingsTo &= ~(1u << iPlayerIndex);
 		}
 	}
 

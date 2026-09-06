@@ -421,7 +421,8 @@ int ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress,
 
 		CClient* pClient = gBotGlobals.m_Clients.GetClientByIndex(iIndex);
 
-		gBotGlobals.m_iJoiningClients[iIndex] = 0;
+		if (iIndex >= 0 && iIndex < MAX_PLAYERS)
+			gBotGlobals.m_iJoiningClients[iIndex] = 0;
 
 		if (pClient)
 		{
@@ -540,7 +541,7 @@ void ClientDisconnect(edict_t* pEntity)
 	if (EntityIsCommander(pEntity))
 		gBotGlobals.SetCommander(nullptr);
 
-	if (iIndex < MAX_PLAYERS)
+	if (iIndex >= 0 && iIndex < MAX_PLAYERS)
 		gBotGlobals.m_iJoiningClients[iIndex] = 0;
 
 	if (pBot)
