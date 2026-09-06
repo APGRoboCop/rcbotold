@@ -693,7 +693,7 @@ int CBotWeapons::GetBestWeaponId(CBot* pBot, edict_t* pEnemy)
 		}
 	}
 
-	return gBotGlobals.IsMod(MOD_TS) ? 36 : 0;
+	return gBotGlobals.IsMod(MOD_TS) ? static_cast<int>(TSWeapon::KungFu) : 0;
 }
 
 bool CBotWeapon::NeedToReload() const

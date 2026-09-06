@@ -84,6 +84,7 @@ V 1.51-beta13
 * changed: Fixed the TSObjective() equality comparison
 * changed: Removed the redundant GiveTSWeapon()
 * changed: Removed the legacy dataArray helper
+* changed: Replaced magic number '36' with TSWeapon::KungFu
 
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors - maybe allow them to instantly switch weapons?
 * TODO: To allow bots in Op4 use Deagle's Laser Sight to improve its accuracy - In Progress

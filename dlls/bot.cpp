@@ -774,7 +774,7 @@ void CBot::EnemyFound(edict_t* pEnemy)
 		FakeClientCommand(m_pEdict, "usepowerup");
 
 		// more chance of using special if good skilled
-		if (m_pCurrentWeapon && m_pCurrentWeapon->GetID() != 36 && DistanceFrom(pEnemy->v.origin) > 200 && RANDOM_LONG(0, 100) < m_Profile.m_iSkill)
+		if (m_pCurrentWeapon && m_pCurrentWeapon->GetID() != static_cast<int>(TSWeapon::KungFu) && DistanceFrom(pEnemy->v.origin) > 200 && RANDOM_LONG(0, 100) < m_Profile.m_iSkill)
 		{
 			// this won't work anyway.. why was it put in ;P
 			pev->button |= IN_ALT1;

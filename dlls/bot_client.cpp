@@ -446,7 +446,7 @@ void BotClient_TS_WeaponInfo::execute(void* p, const int iIndex)
 	case 0:
 		id = *static_cast<int*>(p);
 		if (!id)
-			id = 36; // kung fu
+			id = static_cast<int>(TSWeapon::KungFu); // TS sends 0 for Kung Fu
 		break;
 	case 1:
 		clip = *static_cast<int*>(p);
