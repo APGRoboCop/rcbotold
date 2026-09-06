@@ -642,8 +642,21 @@ void CBot::BotEvent(const eBotEvent iEvent, edict_t* pInfo, edict_t* pExtInfo, f
 		BotEvent_Died(pInfo);
 		break;
 	case BOT_EVENT_HURT:
-		// got hurt
 		m_pHurtEdict = pInfo;
+
+		if (pFloatInfo != nullptr)
+		{
+			m_vHurtOrigin = Vector(pFloatInfo[0], pFloatInfo[1], pFloatInfo[2]);
+			m_fHurtTime = gpGlobals->time;
+
+			// An enemy already in view outranks a guess about where a bullet came
+			// from, and so does anything the bot is deliberately aiming at - [APG]RoboCop[CL]
+			if (m_pEnemy == nullptr &&
+				(m_CurrentLookTask == BOT_LOOK_TASK_NEXT_WAYPOINT ||
+				 m_CurrentLookTask == BOT_LOOK_TASK_LOOK_AROUND ||
+				 m_CurrentLookTask == BOT_LOOK_TASK_NONE))
+				m_CurrentLookTask = BOT_LOOK_TASK_FACE_HURT_ORIGIN;
+		}
 		break;
 	default:
 		break;
@@ -7269,6 +7282,15 @@ void CBot::WorkViewAngles()
 		}
 		else
 			m_CurrentLookTask = BOT_LOOK_TASK_NEXT_WAYPOINT;
+
+		break;
+	case BOT_LOOK_TASK_FACE_HURT_ORIGIN:
+
+		// Spotting the shooter, or the shot going stale, ends it - [APG]RoboCop[CL]
+		if (m_pEnemy != nullptr || m_fHurtTime + BOT_FACE_HURT_TIME < gpGlobals->time)
+			m_CurrentLookTask = BOT_LOOK_TASK_NEXT_WAYPOINT;
+		else
+			SetViewAngles(m_vHurtOrigin);
 
 		break;
 	case BOT_LOOK_TASK_FACE_GROUND:

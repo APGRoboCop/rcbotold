@@ -1021,7 +1021,8 @@ typedef enum : std::uint8_t
 	BOT_LOOK_TASK_SEARCH_FOR_LAST_ENEMY,
 	BOT_LOOK_TASK_LOOK_AROUND,
 	BOT_LOOK_TASK_FACE_GROUND,
-	BOT_LOOK_TASK_FACE_NEAREST_REMEMBER_POS
+	BOT_LOOK_TASK_FACE_NEAREST_REMEMBER_POS,
+	BOT_LOOK_TASK_FACE_HURT_ORIGIN
 }eBotLookTask;
 
 // bot events.
@@ -1340,6 +1341,10 @@ constexpr const char* BOT_VER = "1.51b14";
 #define BOT_COMMAND_ACCESS "rcbot" // main bot command
 
 constexpr int MAX_PLAYERS = 32;
+
+// How long a bot keeps turning towards the place a shot came from, once it has
+// been hit and has no enemy of its own to look at - [APG]RoboCop[CL]
+constexpr float BOT_FACE_HURT_TIME = 0.5f;
 constexpr int RCBOT_ACCESS_FORCE_GRIP = 9;
 
 constexpr const char* BOT_CRASHLOG_FILE = "rcbot_crashlog.txt";

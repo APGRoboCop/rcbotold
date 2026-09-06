@@ -54,6 +54,7 @@ V 1.51-beta13
 * added: TS 3.0 missing single Beretta, ContenderG2, Akimbo Five-seveNs and Akimbo Skorpions finally added
 * added: Validate player index range in ClientConnected()
 * added: Validate player indices and use unsigned bitmasks
+* added: Have the bots briefly respond hurt origin when hit at 0.5 seconds
 
 * changed: Increased the bot's flexibility
 * changed: Avoid using welder in NS Combat
