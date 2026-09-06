@@ -50,7 +50,7 @@ V 1.51-beta13
 * added: Initialised AStarNode via member init list
 * added: Adding weapon null checks for improved stability
 * added: Handle allocation failures in HAL_AddWord()
-* added: Add null checks and allocation handling to megaHAL
+* added: Add null checks and allocation handling to MegaHAL
 * added: TS 3.0 missing single Beretta, ContenderG2, Akimbo Five-seveNs and Akimbo Skorpions finally added
 
 * changed: Increased the bot's flexibility
@@ -81,6 +81,7 @@ V 1.51-beta13
 * changed: Using safe pointer macros for message state
 * changed: Fixed the TSObjective() equality comparison
 * changed: Removed the redundant GiveTSWeapon()
+* changed: Removed the legacy dataArray helper
 
 * TODO: To prevent bots in TS v3.0 on firing empty rounds and lying proning on floors - maybe allow them to instantly switch weapons?
 * TODO: To allow bots in Op4 use Deagle's Laser Sight to improve its accuracy - In Progress
