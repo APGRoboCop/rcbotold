@@ -1786,10 +1786,11 @@ void CBot::SpawnInit(const bool bInit)
 
 	m_fLastThinkTime = 0.0f;
 
-	m_vStuckSampleOrigin = Vector(0, 0, 0);
-	m_fStuckSampleTime = 0.0f;
-	m_fMeasured3dSpeed = 0.0f;
-	m_fMeasured2dSpeed = 0.0f;
+	//m_vStuckSampleOrigin = Vector(0, 0, 0);
+	//m_fStuckSampleTime = 0.0f;
+	//m_fMeasured3dSpeed = 0.0f;
+	//m_fMeasured2dSpeed = 0.0f;
+
 	m_fUpdateWaypointTime = 0.0f;
 
 	//    m_pSound = NULL;
