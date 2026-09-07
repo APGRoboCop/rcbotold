@@ -3734,6 +3734,8 @@ public:
 	edict_t* m_pKilledEdict;
 	edict_t* m_pKillerEdict;
 	edict_t* m_pHurtEdict;
+	Vector m_vHurtOrigin;   // where the last damage came from
+	float m_fHurtTime;      // when it landed
 
 	bool m_bSaidGreetings;
 
