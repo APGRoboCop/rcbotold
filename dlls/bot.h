@@ -1502,6 +1502,9 @@ public:
 	{
 		CBotTask* pTask = CurrentTask();
 
+		if (pTask == nullptr)
+			return;
+
 		const eBotTask iTask = pTask->Task();
 		const bool bPathInfo = pTask->HasPath();
 		const int iScheduleId = pTask->GetScheduleId();
@@ -3170,6 +3173,8 @@ public:
 			return "BOT_LOOK_TASK_FACE_GROUND";
 		case BOT_LOOK_TASK_FACE_NEAREST_REMEMBER_POS:
 			return "BOT_LOOK_TASK_FACE_NEAREST_REMEMBER_POS";
+		case BOT_LOOK_TASK_FACE_HURT_ORIGIN:
+			return "BOT_LOOK_TASK_FACE_HURT_ORIGIN";
 		}
 
 		return "Unknown";
@@ -4846,8 +4851,6 @@ public:
 
 	//AddClient(
 private:
-	//  use our dataArray generic class
-	//  for easy initialisation etc..
 	CClient m_Clients[MAX_PLAYERS];
 };
 
