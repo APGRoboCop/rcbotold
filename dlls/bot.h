@@ -3507,7 +3507,7 @@ public:
 	edict_t* m_pNearestBuildable;
 
 	// Bit mask of players bot has greeted.
-	int m_iSaidGreetingsTo;
+	unsigned m_iSaidGreetingsTo;
 
 	float m_fKickTime;
 
