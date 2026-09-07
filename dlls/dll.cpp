@@ -521,7 +521,8 @@ int ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress,
 			}
 		}
 
-		gBotGlobals.m_iJoiningClients[iIndex] = 1;
+		if (iIndex >= 0 && iIndex < MAX_PLAYERS)
+			gBotGlobals.m_iJoiningClients[iIndex] = 1;
 	}
 
 #ifdef RCBOT_META_BUILD
