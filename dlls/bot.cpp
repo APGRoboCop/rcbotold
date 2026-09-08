@@ -1881,6 +1881,10 @@ void CBot::SpawnInit(const bool bInit)
 	m_CurrentLookTask = BOT_LOOK_TASK_NEXT_WAYPOINT;
 	m_fLastLookTime = 0.0f;
 
+	m_pHurtEdict = nullptr;
+	m_vHurtOrigin = Vector(0, 0, 0);
+	m_fHurtTime = 0.0f;
+
 	m_fGetAimVectorTime = 0.0f;
 
 	m_fNextUseSayMessage = 0.0f;

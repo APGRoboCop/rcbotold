@@ -987,8 +987,8 @@ int UTIL_GetTeam(edict_t* pEntity)
 	case MOD_DMC:
 	case MOD_HL_DM:
 		return GetTeamFromModelInfo(pEntity);
-	case MOD_SI: //TODO: Science and Industry support [APG]RoboCop[CL]
-		return pEntity->v.team - 1;
+	case MOD_SI:
+		return pEntity->v.team;
 	case MOD_WW: //TODO: Wizard Wars support [APG]RoboCop[CL]
 		return pEntity->v.team - 1;
 	case MOD_FLF: //TODO: Front Line Force support [APG]RoboCop[CL]
