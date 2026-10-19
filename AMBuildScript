@@ -58,6 +58,11 @@ if builder.cxx.target.platform == 'linux':
     '-Wno-uninitialized',
     '-Wno-unused',
     '-Wno-switch',
+    # Struct padding is mandated by the ABI, so -Wpadded cannot report a bug -
+    # it fires on any struct mixing bool/int/float and reported ~3.7KB across
+    # every CBotWeapon on a full server. Off so it does not crowd out warnings
+    # that do mean something. [APG]RoboCop[CL]
+    '-Wno-padded',
     '-m32',
   ]
   # Compiler-specific warning suppressions. These three names only exist in
@@ -139,7 +144,7 @@ if builder.options.optimize:
     builder.cxx.cflags += ['-O2', '-flto=auto', '-ffunction-sections', '-fdata-sections']
     # Linux optimization link flags - LTO must be in link flags too - [APG]RoboCop[CL]
     builder.cxx.linkflags += ['-flto=auto', '-Wl,-z,relro,-z,now', '-Wl,-z,noexecstack',]
-    # Clang LTO through GNU ld needs the LLVMgold plugin; lld handles it natively.
+    # Clang LTO through GNU ld needs the LLVMgold plugin; lld handles it natively - [APG]RoboCop[CL]
     if builder.cxx.family == 'clang':
       builder.cxx.linkflags += ['-fuse-ld=lld']
   elif builder.cxx.target.platform == 'windows':
